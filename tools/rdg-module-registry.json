@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "base": {
+    "id": "rdg-base",
+    "version": 1,
+    "nodeKinds": [
+      "requirement",
+      "action"
+    ],
+    "graphOperations": [
+      "add_action",
+      "select_action",
+      "link_action_requirement",
+      "reconsider_action",
+      "withdraw_action",
+      "append_qrpe",
+      "append_finding",
+      "transition_qrpe",
+      "graph_edit",
+      "record_action_execution",
+      "record_requirement_achievement",
+      "configure_modules",
+      "module_operation"
+    ],
+    "graphEdits": [
+      "create_requirement",
+      "create_context",
+      "edit_node",
+      "reformulate_requirement",
+      "delete_candidate",
+      "delete_orphan_requirement",
+      "deactivate_requirement",
+      "detach_requirement",
+      "archive_edge",
+      "add_edge",
+      "set_reconsideration_policy",
+      "reparent_requirement",
+      "prepare_action_requirement"
+    ],
+    "planStepKinds": [
+      "requirement",
+      "action",
+      "event",
+      "decision_gate",
+      "milestone"
+    ]
+  },
+  "modules": {
+    "rdg-test": {
+      "1": {
+        "requiresBase": 1,
+        "testOnly": true,
+        "allowedOwners": {
+          "graph": [
+            {
+              "id": "module-test",
+              "identitySpace": "rdg-module-test"
+            }
+          ],
+          "plan": [
+            {
+              "id": "module-test",
+              "identitySpace": "rdg-module-test"
+            }
+          ]
+        },
+        "graph": {
+          "entities": {
+            "rdg-test.marker": {
+              "fields": {
+                "value": "text",
+                "inputs": "requirementRefs"
+              }
+            }
+          },
+          "operations": {
+            "rdg-test.create": {
+              "handler": "create_entity",
+              "kind": "rdg-test.marker",
+              "label": "Создана тестовая запись модуля"
+            },
+            "rdg-test.update": {
+              "handler": "update_entity",
+              "kind": "rdg-test.marker",
+              "label": "Обновлена тестовая запись модуля"
+            }
+          }
+        },
+        "plan": {
+          "fields": {
+            "annotation": "text",
+            "score": "integer"
+          },
+          "label": "Изменена тестовая аннотация Plan"
+        },
+        "entry": "rdg-module-test.py"
+      }
+    }
+  }
+}

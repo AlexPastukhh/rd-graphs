@@ -1,0 +1,249 @@
+{
+  "schemaVersion": 1,
+  "id": "context-working-root",
+  "identitySpace": "rdg-context-working",
+  "planningScale": "module",
+  "rootRequirementId": "R-CTX",
+  "revision": 2,
+  "title": "Контекст: выбор способа подготовки интерфейса",
+  "readOnly": true,
+  "exampleOnly": true,
+  "nodes": [
+    {
+      "id": "R-CTX",
+      "kind": "requirement",
+      "title": "Контекст: выбор способа подготовки интерфейса"
+    },
+    {
+      "id": "O-CTX-A",
+      "kind": "option",
+      "title": "Через ключевые пользовательские задачи",
+      "origin": "prepared",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "plus-O-CTX-A",
+            "text": "Учитывать доступность при оценке способа.",
+            "contextUses": [
+              {
+                "fieldRef": {
+                  "graphSlug": "context-prepared-root",
+                  "fieldId": "accessibility"
+                },
+                "purpose": "Проверить потребности людей до выбора способа"
+              }
+            ]
+          }
+        ],
+        "contraindicated": [],
+        "sourceRefs": [
+          {
+            "graphSlug": "context-prepared-root",
+            "sourceId": "wai-planning"
+          }
+        ],
+        "preparation": "interpreted",
+        "interpretation": "Для цели подготовки интерфейса проверяем, сможет ли этот способ учесть потребности пользователей; общая теория не выбирает D за проект.",
+        "fieldsComplete": true
+      },
+      "preparedSource": {
+        "graphSlug": "context-prepared-root",
+        "sourceOptionId": "O-CTX-A",
+        "version": "1",
+        "canonHash": "761c4f2d439b233cc7b3ae6772a5af0ee545f0cb8d637b7d71d0bbfc6d3f0005"
+      }
+    },
+    {
+      "id": "O-CTX-B",
+      "kind": "option",
+      "title": "Через отдельное исследование альтернатив",
+      "origin": "prepared",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "plus-O-CTX-B",
+            "text": "Учитывать доступность при оценке способа.",
+            "contextUses": [
+              {
+                "fieldRef": {
+                  "graphSlug": "context-prepared-root",
+                  "fieldId": "accessibility"
+                },
+                "purpose": "Проверить потребности людей до выбора способа"
+              }
+            ]
+          }
+        ],
+        "contraindicated": [],
+        "sourceRefs": [
+          {
+            "graphSlug": "context-prepared-root",
+            "sourceId": "wai-planning"
+          }
+        ],
+        "preparation": "link-only",
+        "fieldsComplete": false
+      },
+      "preparedSource": {
+        "graphSlug": "context-prepared-root",
+        "sourceOptionId": "O-CTX-B",
+        "version": "1",
+        "canonHash": "f94f7d926c8a4502390bb544401b3a5ad43820d1f5dc6e72dd9eb5091b0e2c3c"
+      }
+    },
+    {
+      "id": "R-CTX-CURRENT",
+      "kind": "requirement",
+      "title": "Контекст: реализовать выбранный способ",
+      "status": "active"
+    },
+    {
+      "id": "R-CTX-ALT",
+      "kind": "requirement",
+      "title": "Контекст: альтернативный способ",
+      "status": "candidate"
+    },
+    {
+      "id": "D-CTX-A",
+      "kind": "decision",
+      "title": "Выбран способ по ключевым задачам — учебный выбор",
+      "status": "selected-in-example-only",
+      "selectedOptionId": "O-CTX-A",
+      "selectionBasis": {
+        "compositeSnapshot": {
+          "id": "R-CTX",
+          "kind": "requirement",
+          "title": "Контекст: выбор способа подготовки интерфейса"
+        },
+        "optionSnapshot": {
+          "id": "O-CTX-A",
+          "kind": "option",
+          "title": "Через ключевые пользовательские задачи",
+          "origin": "prepared",
+          "canonBlock": {
+            "recommended": [
+              {
+                "id": "plus-O-CTX-A",
+                "text": "Учитывать доступность при оценке способа.",
+                "contextUses": [
+                  {
+                    "fieldRef": {
+                      "graphSlug": "context-prepared-root",
+                      "fieldId": "accessibility"
+                    },
+                    "purpose": "Проверить потребности людей до выбора способа"
+                  }
+                ]
+              }
+            ],
+            "contraindicated": [],
+            "sourceRefs": [
+              {
+                "graphSlug": "context-prepared-root",
+                "sourceId": "wai-planning"
+              }
+            ],
+            "preparation": "interpreted",
+            "interpretation": "Для цели подготовки интерфейса проверяем, сможет ли этот способ учесть потребности пользователей; общая теория не выбирает D за проект.",
+            "fieldsComplete": true
+          },
+          "preparedSource": {
+            "graphSlug": "context-prepared-root",
+            "sourceOptionId": "O-CTX-A",
+            "version": "1",
+            "canonHash": "761c4f2d439b233cc7b3ae6772a5af0ee545f0cb8d637b7d71d0bbfc6d3f0005"
+          }
+        },
+        "note": "Условный пример, не решение реального проекта"
+      }
+    },
+    {
+      "id": "C-CTX-ACCESS",
+      "kind": "context",
+      "title": "Ответ получен до подключения дочернего графа",
+      "contextFieldRef": {
+        "graphSlug": "context-prepared-root",
+        "fieldId": "accessibility"
+      },
+      "contextValue": {
+        "value": "Интерфейс должен поддерживать работу с клавиатуры; уточнения аудитории ещё возможны.",
+        "source": "Учебный ответ, полученный ранее",
+        "scope": "project"
+      }
+    },
+    {
+      "id": "C-CTX-FREE",
+      "kind": "context",
+      "title": "Срок из свободной записи",
+      "description": "Результат нужен к концу ноября; статус жёсткости срока ещё уточнить."
+    }
+  ],
+  "edges": [
+    {
+      "id": "option-O-CTX-A",
+      "type": "OPTION_FOR",
+      "from": "R-CTX",
+      "to": "O-CTX-A"
+    },
+    {
+      "id": "option-O-CTX-B",
+      "type": "OPTION_FOR",
+      "from": "R-CTX",
+      "to": "O-CTX-B"
+    },
+    {
+      "id": "out-O-CTX-A",
+      "type": "OUTCOME_OF",
+      "from": "O-CTX-A",
+      "to": "R-CTX-CURRENT",
+      "archived": true
+    },
+    {
+      "id": "out-O-CTX-B",
+      "type": "OUTCOME_OF",
+      "from": "O-CTX-B",
+      "to": "R-CTX-ALT"
+    },
+    {
+      "id": "drive-ctx",
+      "type": "DRIVES",
+      "from": "R-CTX",
+      "to": "D-CTX-A"
+    },
+    {
+      "id": "intro-ctx",
+      "type": "INTRODUCES",
+      "parent": "R-CTX",
+      "from": "D-CTX-A",
+      "to": "R-CTX-CURRENT"
+    }
+  ],
+  "events": [
+    {
+      "id": "ctx-selection",
+      "type": "decision_selected",
+      "decisionId": "D-CTX-A",
+      "by": "assistant",
+      "note": "Условная история учебного примера, не выбор пользователя"
+    }
+  ],
+  "contextFieldsComplete": true,
+  "presentation": {
+    "usage": "working",
+    "exampleOnly": true
+  },
+  "contextUses": [
+    {
+      "fieldRef": {
+        "graphSlug": "context-prepared-root",
+        "fieldId": "delivery"
+      },
+      "purpose": "Оценить допустимость способов до выбора"
+    }
+  ],
+  "view": {
+    "requirementDepth": 1
+  },
+  "hypothetical": true,
+  "selectedInProject": false
+}

@@ -1,0 +1,41 @@
+{
+  "audit_complete": true,
+  "dependencies": [
+    {
+      "baseline_hash": "sha256:ad76151fd55e716e13719dffb7ff170b7c0fa46ca6445077ff0c13e1e3f006c7",
+      "comparator": "exact",
+      "granularity": "field",
+      "observed_version": "ddbd68c3ef52f2b2f13efa44e722566e2ca733e7a9c8d090f3a420f863efba67",
+      "snapshot_ref": "baseline://sha256/ad76151fd55e716e13719dffb7ff170b7c0fa46ca6445077ff0c13e1e3f006c7",
+      "source": "resource://rdg/graph.workflow-v1.74b90cb9d1b181ddf0eaf80a#/nodesById/R-CANON",
+      "source_kind": "raw"
+    },
+    {
+      "baseline_hash": "sha256:cde13f59ab48300ee52c1d4aedc506f1091c912d5b05fe8ed5b6fa6c21334064",
+      "comparator": "exact",
+      "granularity": "field",
+      "observed_version": "11aa516915f7e3e99beea524a7f4f59874e9ab9a6262b0b81c6047701aa13958",
+      "snapshot_ref": "baseline://sha256/cde13f59ab48300ee52c1d4aedc506f1091c912d5b05fe8ed5b6fa6c21334064",
+      "source": "resource://rdg/graph.workflow-v1.74b90cb9d1b181ddf0eaf80a#/nodesById/R-VERIFY",
+      "source_kind": "raw"
+    },
+    {
+      "baseline_hash": "sha256:ceb30c045c282f5efd5d47d98a5dd7f076239d842961318f65528c68db616b3c",
+      "comparator": "exact",
+      "granularity": "field",
+      "observed_version": "d0196ee5b6e848ad6a969a8da87a535b88400f76e91803012ab8adb0285b060c",
+      "snapshot_ref": "baseline://sha256/ceb30c045c282f5efd5d47d98a5dd7f076239d842961318f65528c68db616b3c",
+      "source": "resource://rdg/graph.workflow-v1.74b90cb9d1b181ddf0eaf80a#/nodesById/R0",
+      "source_kind": "raw"
+    }
+  ],
+  "dependency_type": "semantic_review",
+  "receipt_hash": "sha256:4b2d9f8a9ffb5c3e33b1bf233962bb17ee5f4379c451a37b8fd88c6401412550",
+  "receipt_id": "receipt-52bc8d43b624daee2450c3c34ad23bda2bc85d6a2f1857199880a182c12e1b51",
+  "semantic_rule_id": "rdg-requirement.9727abc40417d4a4c385ad89",
+  "semantic_rule_revision": "sha256:36d578f86b96593d52877752aab59c440ac38a5300fb1811b89b0af862d23e86",
+  "state_schema_version": "1.0.0",
+  "target": "file://review/ea3807b99ed93331cde568c8.md",
+  "target_revision": "22c6a52128f922c4ee506f608b248c85dc9c9ab8d544a239c400ceb83aefe068",
+  "validated_at": "2026-10-21T02:04:04.787492Z"
+}

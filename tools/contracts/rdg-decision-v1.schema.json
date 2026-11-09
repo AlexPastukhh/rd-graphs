@@ -1,0 +1,7981 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:rdg:decision-contract:v1",
+  "title": "RDG Decision transition contract v1",
+  "$comment": "Decision v1 schema. Optional typed dependency policy catalog, bindings and historical trigger metadata added 2026-11-05. Runtime semantic validation is implemented by decision kernel.",
+  "$defs": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120,
+      "pattern": "^(?!occ-)(?!__proto__$)(?!prototype$)(?!constructor$)[A-Za-z0-9][A-Za-z0-9_.:-]*$"
+    },
+    "uuid": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "artifactRef": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "pattern": "^evidence/[^\\\\]*$"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "required": [
+        "path",
+        "sha256"
+      ],
+      "additionalProperties": false
+    },
+    "graphPin": {
+      "type": "object",
+      "properties": {
+        "packageId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "identitySpace": {
+          "$ref": "#/$defs/uuid"
+        },
+        "graphRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "required": [
+        "packageId",
+        "identitySpace",
+        "graphRevision",
+        "sha256"
+      ],
+      "additionalProperties": false
+    },
+    "entityRef": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "packageId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "identitySpace": {
+          "$ref": "#/$defs/uuid"
+        },
+        "nodeId": {
+          "$ref": "#/$defs/id"
+        },
+        "mode": {
+          "enum": [
+            "current",
+            "historical",
+            "inherited"
+          ]
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "graphRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "packageId",
+        "identitySpace",
+        "nodeId",
+        "mode",
+        "revision",
+        "graphRevision",
+        "sha256"
+      ],
+      "additionalProperties": false
+    },
+    "policy": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "enum": [
+            "ordinary",
+            "stable",
+            "protected"
+          ]
+        },
+        "authorityPrincipal": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        }
+      },
+      "required": [
+        "mode"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "protected"
+              }
+            },
+            "required": [
+              "mode"
+            ],
+            "type": "object"
+          },
+          "then": {
+            "required": [
+              "authorityPrincipal"
+            ]
+          }
+        }
+      ]
+    },
+    "lock": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "enum": [
+            "warning",
+            "hard"
+          ]
+        },
+        "principals": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        }
+      },
+      "required": [
+        "mode",
+        "principals",
+        "message"
+      ],
+      "additionalProperties": false
+    },
+    "locks": {
+      "type": "object",
+      "propertyNames": {
+        "enum": [
+          "edit",
+          "link",
+          "unlink",
+          "select",
+          "withdraw",
+          "complete",
+          "falsify",
+          "reopen",
+          "review",
+          "assess",
+          "remove",
+          "dependency_add",
+          "dependency_remove",
+          "lock_set",
+          "lock_remove"
+        ]
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/lock"
+      }
+    },
+    "result": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "enum": [
+            "open",
+            "confirmed"
+          ]
+        },
+        "truth": {
+          "enum": [
+            "unknown",
+            "true",
+            "false"
+          ]
+        },
+        "eventId": {
+          "$ref": "#/$defs/id"
+        }
+      },
+      "required": [
+        "state",
+        "truth"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "confirmed"
+              }
+            },
+            "required": [
+              "state"
+            ],
+            "type": "object"
+          },
+          "then": {
+            "properties": {
+              "truth": {
+                "const": "true"
+              }
+            },
+            "required": [
+              "eventId"
+            ],
+            "type": "object"
+          },
+          "else": {
+            "properties": {
+              "truth": {
+                "enum": [
+                  "unknown",
+                  "false"
+                ]
+              }
+            },
+            "type": "object"
+          }
+        }
+      ]
+    },
+    "review": {
+      "type": "object",
+      "properties": {
+        "required": {
+          "type": "boolean"
+        },
+        "causeEventIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "pins": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/entityRef"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "required",
+        "causeEventIds",
+        "pins"
+      ],
+      "additionalProperties": false
+    },
+    "requirement": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "const": "requirement"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "description": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "policy": {
+          "$ref": "#/$defs/policy"
+        },
+        "locks": {
+          "$ref": "#/$defs/locks"
+        },
+        "review": {
+          "$ref": "#/$defs/review"
+        },
+        "result": {
+          "$ref": "#/$defs/result"
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "title",
+        "description",
+        "revision",
+        "result",
+        "scope"
+      ],
+      "additionalProperties": false
+    },
+    "decision": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "const": "decision"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "description": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "policy": {
+          "$ref": "#/$defs/policy"
+        },
+        "locks": {
+          "$ref": "#/$defs/locks"
+        },
+        "review": {
+          "$ref": "#/$defs/review"
+        },
+        "result": {
+          "$ref": "#/$defs/result"
+        },
+        "selectionState": {
+          "enum": [
+            "discovered",
+            "unselected",
+            "selected"
+          ]
+        },
+        "decisionContextIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "uniqueItems": true
+        },
+        "questions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/findingQuestion"
+          }
+        },
+        "reviewLimitations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/reviewLimitation"
+          }
+        },
+        "interventionPriority": {
+          "type": "string"
+        },
+        "userReviewPriority": {
+          "type": "string"
+        },
+        "findingOrigin": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "findingId",
+            "subjectId",
+            "title",
+            "role"
+          ],
+          "properties": {
+            "findingId": {
+              "$ref": "#/$defs/id"
+            },
+            "subjectId": {
+              "$ref": "#/$defs/id"
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "role": {
+              "enum": [
+                "response",
+                "proposal"
+              ]
+            },
+            "recordedOnly": {
+              "type": "boolean"
+            }
+          }
+        },
+        "userAssistance": {
+          "type": "string"
+        },
+        "impactTargetIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "uniqueItems": true
+        },
+        "contextNotes": {
+          "type": "object",
+          "propertyNames": {
+            "$ref": "#/$defs/id"
+          },
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        },
+        "analysisSources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "sourceId",
+              "revision",
+              "excerpt"
+            ],
+            "properties": {
+              "sourceId": {
+                "$ref": "#/$defs/id"
+              },
+              "revision": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "excerpt": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "title",
+        "description",
+        "revision",
+        "result",
+        "selectionState"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "properties": {
+            "result": {
+              "properties": {
+                "truth": {
+                  "enum": [
+                    "true",
+                    "unknown"
+                  ]
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "object"
+        }
+      ]
+    },
+    "action": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "const": "action"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "description": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "policy": {
+          "$ref": "#/$defs/policy"
+        },
+        "locks": {
+          "$ref": "#/$defs/locks"
+        },
+        "review": {
+          "$ref": "#/$defs/review"
+        },
+        "result": {
+          "$ref": "#/$defs/result"
+        },
+        "actionType": {
+          "enum": [
+            "task",
+            "select_decision",
+            "decide_acceptance",
+            "discover_requirement",
+            "discover_decision",
+            "rename_block"
+          ]
+        },
+        "lowLevel": {
+          "type": "boolean"
+        },
+        "targetIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "groupIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "estimates": {
+          "$ref": "#/$defs/actionEstimates"
+        },
+        "subjectRefs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/entityRef"
+              },
+              {
+                "$ref": "#/$defs/scopeRef"
+              }
+            ]
+          }
+        },
+        "referenceBindings": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "resultCondition": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "title",
+        "description",
+        "revision",
+        "result",
+        "actionType",
+        "lowLevel",
+        "targetIds",
+        "groupIds"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "properties": {
+            "result": {
+              "properties": {
+                "truth": {
+                  "enum": [
+                    "true",
+                    "unknown"
+                  ]
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        {
+          "if": {
+            "type": "object",
+            "properties": {
+              "actionType": {
+                "const": "decide_acceptance"
+              }
+            },
+            "required": [
+              "actionType"
+            ]
+          },
+          "then": {
+            "type": "object",
+            "properties": {
+              "targetIds": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 1
+              }
+            },
+            "required": []
+          }
+        },
+        {
+          "if": {
+            "type": "object",
+            "properties": {
+              "actionType": {
+                "const": "select_decision"
+              }
+            },
+            "required": [
+              "actionType"
+            ]
+          },
+          "then": {
+            "type": "object",
+            "properties": {
+              "targetIds": {
+                "type": "array",
+                "minItems": 1
+              }
+            },
+            "required": []
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "lowLevel": {
+                "const": true
+              },
+              "actionType": {
+                "not": {
+                  "const": "task"
+                }
+              }
+            },
+            "required": [
+              "lowLevel",
+              "actionType"
+            ]
+          },
+          "then": {
+            "not": {
+              "required": [
+                "estimates"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "subjectRefs"
+            ]
+          },
+          "then": {
+            "properties": {
+              "actionType": {
+                "const": "task"
+              },
+              "lowLevel": {
+                "const": false
+              }
+            }
+          }
+        }
+      ]
+    },
+    "canon": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "const": "canon"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "description": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "policy": {
+          "$ref": "#/$defs/policy"
+        },
+        "locks": {
+          "$ref": "#/$defs/locks"
+        },
+        "review": {
+          "$ref": "#/$defs/review"
+        },
+        "guidance": {
+          "type": "string"
+        },
+        "canons": {
+          "type": "string"
+        },
+        "knownErrors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/canonKnownError"
+          },
+          "uniqueItems": true,
+          "$comment": "Local id uniqueness is additionally enforced by the kernel, including unequal records with the same id."
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "title",
+        "description",
+        "revision",
+        "guidance"
+      ],
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "properties": {
+            "guidance": {
+              "type": "string",
+              "pattern": "\\S"
+            }
+          },
+          "required": [
+            "guidance"
+          ]
+        },
+        {
+          "properties": {
+            "canons": {
+              "type": "string",
+              "pattern": "\\S"
+            }
+          },
+          "required": [
+            "canons"
+          ]
+        },
+        {
+          "properties": {
+            "knownErrors": {
+              "type": "array",
+              "minItems": 1
+            }
+          },
+          "required": [
+            "knownErrors"
+          ]
+        }
+      ]
+    },
+    "context": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "const": "context"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "description": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "policy": {
+          "$ref": "#/$defs/policy"
+        },
+        "locks": {
+          "$ref": "#/$defs/locks"
+        },
+        "review": {
+          "$ref": "#/$defs/review"
+        },
+        "value": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "contextGroupId": {
+          "$ref": "#/$defs/id"
+        },
+        "scope": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        },
+        "artifact": {
+          "$ref": "#/$defs/artifactRef"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "title",
+        "description",
+        "revision",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "info": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "const": "info"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "description": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "policy": {
+          "$ref": "#/$defs/policy"
+        },
+        "locks": {
+          "$ref": "#/$defs/locks"
+        },
+        "review": {
+          "$ref": "#/$defs/review"
+        },
+        "value": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "title",
+        "description",
+        "revision",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "evidence": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "const": "evidence"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "description": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "policy": {
+          "$ref": "#/$defs/policy"
+        },
+        "locks": {
+          "$ref": "#/$defs/locks"
+        },
+        "review": {
+          "$ref": "#/$defs/review"
+        },
+        "claim": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "artifact": {
+          "$ref": "#/$defs/artifactRef"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "title",
+        "description",
+        "revision",
+        "claim",
+        "scope",
+        "version",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "entity": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/requirement"
+        },
+        {
+          "$ref": "#/$defs/decision"
+        },
+        {
+          "$ref": "#/$defs/action"
+        },
+        {
+          "$ref": "#/$defs/canon"
+        },
+        {
+          "$ref": "#/$defs/context"
+        },
+        {
+          "$ref": "#/$defs/info"
+        },
+        {
+          "$ref": "#/$defs/evidence"
+        },
+        {
+          "$ref": "#/$defs/finding"
+        },
+        {
+          "$ref": "#/$defs/question"
+        }
+      ]
+    },
+    "graphAction": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/action"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "lowLevel": {
+              "const": false
+            },
+            "actionType": {
+              "enum": [
+                "task",
+                "select_decision",
+                "decide_acceptance"
+              ]
+            }
+          }
+        },
+        {
+          "not": {
+            "required": [
+              "subjectRefs"
+            ]
+          },
+          "type": "object"
+        }
+      ]
+    },
+    "membership": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "decisionId": {
+          "$ref": "#/$defs/id"
+        }
+      },
+      "required": [
+        "id",
+        "decisionId"
+      ],
+      "additionalProperties": false
+    },
+    "decisionGroup": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "parentId": {
+          "$ref": "#/$defs/id"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "selectionRequired": {
+          "type": "boolean"
+        },
+        "mutuallyExclusive": {
+          "type": "boolean"
+        },
+        "members": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/membership"
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "id",
+        "parentId",
+        "title",
+        "selectionRequired",
+        "mutuallyExclusive",
+        "members"
+      ],
+      "additionalProperties": false
+    },
+    "workGraph": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "rootIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "memberIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "colorKey": {
+          "enum": [
+            "blue",
+            "teal",
+            "amber",
+            "violet",
+            "rose",
+            "lime",
+            "cyan",
+            "slate"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "rootIds",
+        "memberIds"
+      ],
+      "additionalProperties": false
+    },
+    "rootCause": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "requirementId": {
+          "$ref": "#/$defs/id"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "enabled": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "requirementId",
+        "reason",
+        "enabled"
+      ],
+      "additionalProperties": false
+    },
+    "relation": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "type": {
+          "enum": [
+            "DERIVES",
+            "INTRODUCES",
+            "DRIVES",
+            "REQUIRES_ACTION",
+            "CANON_FOR",
+            "CONTEXT_FOR",
+            "INFO_FOR",
+            "EVIDENCE_FOR",
+            "DEPENDS_ON",
+            "FINDING_RESPONSE",
+            "FINDING_PROPOSAL"
+          ]
+        },
+        "from": {
+          "$ref": "#/$defs/id"
+        },
+        "to": {
+          "$ref": "#/$defs/id"
+        },
+        "dependencyLevel": {
+          "enum": [
+            "L1",
+            "L2"
+          ]
+        },
+        "dependencyRule": {
+          "$ref": "#/$defs/dependencyRule"
+        },
+        "dependencyPurpose": {
+          "const": "decisionContext"
+        },
+        "findingId": {
+          "$ref": "#/$defs/id"
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "from",
+        "to"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "DEPENDS_ON"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "then": {
+            "oneOf": [
+              {
+                "required": [
+                  "dependencyLevel"
+                ],
+                "not": {
+                  "required": [
+                    "dependencyRule"
+                  ]
+                }
+              },
+              {
+                "required": [
+                  "dependencyRule"
+                ],
+                "not": {
+                  "required": [
+                    "dependencyLevel"
+                  ]
+                }
+              }
+            ]
+          },
+          "else": {
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "dependencyLevel"
+                  ]
+                },
+                {
+                  "required": [
+                    "dependencyRule"
+                  ]
+                },
+                {
+                  "required": [
+                    "dependencyPurpose"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "enum": [
+                  "FINDING_RESPONSE",
+                  "FINDING_PROPOSAL"
+                ]
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "then": {
+            "required": [
+              "findingId"
+            ]
+          },
+          "else": {
+            "not": {
+              "required": [
+                "findingId"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "event": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "type": {
+          "enum": [
+            "created",
+            "edited",
+            "linked",
+            "unlinked",
+            "group_changed",
+            "work_graph_changed",
+            "root_cause_changed",
+            "lock_set",
+            "lock_removed",
+            "decision_selected",
+            "decision_unselected",
+            "branch_cancelled",
+            "action_executed",
+            "requirement_achieved",
+            "decision_completed",
+            "reopened",
+            "removed",
+            "lens_application_recorded",
+            "policy_changed",
+            "binding_changed"
+          ]
+        },
+        "transactionId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "recordedAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T.*(?:Z|[+-]\\d{2}:\\d{2})$"
+        },
+        "by": {
+          "enum": [
+            "user",
+            "assistant"
+          ]
+        },
+        "nodeIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "basis": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "evidenceIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "placementIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "lockWarnings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "nodeId": {
+                "$ref": "#/$defs/id"
+              },
+              "operation": {
+                "type": "string",
+                "minLength": 1
+              },
+              "message": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "nodeId",
+              "operation",
+              "message"
+            ],
+            "additionalProperties": false
+          },
+          "uniqueItems": true
+        },
+        "observedPins": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/entityRef"
+          },
+          "minItems": 0
+        },
+        "operationActionId": {
+          "$ref": "#/$defs/id"
+        },
+        "recommendationPins": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/recommendationPin"
+          },
+          "minItems": 0
+        },
+        "lensPins": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/graphPin"
+          },
+          "minItems": 0
+        },
+        "actionResult": {
+          "$ref": "#/$defs/actionResult"
+        },
+        "relationIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "uniqueItems": true
+        },
+        "workGraphChange": {
+          "$ref": "#/$defs/workGraphChange"
+        },
+        "dependencyImpacts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/dependencyImpact"
+          }
+        },
+        "dependencyTransitions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "bindingId",
+              "policyId",
+              "policyVersion",
+              "policyName",
+              "from",
+              "to",
+              "reasonCode",
+              "violations",
+              "participants",
+              "relations"
+            ],
+            "properties": {
+              "bindingId": {
+                "type": "string"
+              },
+              "policyId": {
+                "type": "string"
+              },
+              "policyVersion": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "policyName": {
+                "type": "string"
+              },
+              "from": {
+                "enum": [
+                  "active",
+                  "disabled"
+                ]
+              },
+              "to": {
+                "enum": [
+                  "active",
+                  "disabled",
+                  "deleted"
+                ]
+              },
+              "reasonCode": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "violations": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "participants": {
+                "type": "object"
+              },
+              "relations": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "targetId": {
+                "$ref": "#/$defs/id"
+              },
+              "participantRoles": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "array",
+                  "uniqueItems": true,
+                  "items": {
+                    "$ref": "#/$defs/id"
+                  }
+                }
+              },
+              "relationSnapshot": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "id"
+                  ],
+                  "properties": {
+                    "id": {
+                      "$ref": "#/$defs/id"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "reviewResolutions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "nodeId",
+              "causeEventIds"
+            ],
+            "properties": {
+              "nodeId": {
+                "$ref": "#/$defs/id"
+              },
+              "causeEventIds": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "$ref": "#/$defs/id"
+                }
+              }
+            }
+          }
+        },
+        "findingChange": {
+          "type": "object",
+          "required": [
+            "findingId",
+            "before",
+            "after"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "findingId": {
+              "$ref": "#/$defs/id"
+            },
+            "before": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/finding"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "after": {
+              "$ref": "#/$defs/finding"
+            }
+          }
+        },
+        "historyDetail": {
+          "$ref": "#/$defs/historyDetail"
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "transactionId",
+        "recordedAt",
+        "by",
+        "nodeIds",
+        "basis"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "lens_application_recorded"
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "type": "object"
+          },
+          "then": {
+            "required": [
+              "observedPins",
+              "recommendationPins",
+              "lensPins",
+              "evidenceIds"
+            ]
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "actionResult"
+            ]
+          },
+          "then": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "action_executed"
+              }
+            },
+            "required": [
+              "operationActionId"
+            ]
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "workGraphChange"
+            ]
+          },
+          "then": {
+            "properties": {
+              "type": {
+                "const": "work_graph_changed"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "recommendationPin": {
+      "type": "object",
+      "properties": {
+        "packageId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "required": [
+        "packageId",
+        "revision",
+        "sha256"
+      ],
+      "additionalProperties": false
+    },
+    "graph": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "actionModel": {
+          "const": "candidate-v6"
+        },
+        "coreModel": {
+          "const": "rdg-decision-v1"
+        },
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "identitySpace": {
+          "$ref": "#/$defs/uuid"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "rootRequirementId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "rootCauses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/rootCause"
+          },
+          "minItems": 0
+        },
+        "nodes": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/requirement"
+              },
+              {
+                "$ref": "#/$defs/decision"
+              },
+              {
+                "$ref": "#/$defs/graphAction"
+              }
+            ]
+          },
+          "minItems": 0
+        },
+        "objects": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/canon"
+              },
+              {
+                "$ref": "#/$defs/context"
+              },
+              {
+                "$ref": "#/$defs/info"
+              },
+              {
+                "$ref": "#/$defs/evidence"
+              },
+              {
+                "$ref": "#/$defs/finding"
+              },
+              {
+                "$ref": "#/$defs/question"
+              }
+            ]
+          },
+          "minItems": 0
+        },
+        "externalActions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/action"
+          },
+          "minItems": 0
+        },
+        "edges": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/relation"
+          },
+          "minItems": 0
+        },
+        "decisionGroups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/decisionGroup"
+          },
+          "minItems": 0
+        },
+        "workGraphs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/workGraph"
+          },
+          "minItems": 0
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/event"
+          },
+          "minItems": 0
+        },
+        "recommendationPackageIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/uuid"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "externalRefs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "$ref": "#/$defs/id"
+              },
+              "localId": {
+                "$ref": "#/$defs/id"
+              },
+              "direction": {
+                "enum": [
+                  "incoming",
+                  "outgoing",
+                  "peer"
+                ]
+              },
+              "relation": {
+                "type": "object"
+              },
+              "target": {
+                "$ref": "#/$defs/entityRef"
+              },
+              "observed": {
+                "type": "object"
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "id",
+              "localId",
+              "direction",
+              "relation",
+              "target",
+              "observed",
+              "reason"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "entityLineage": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/entityRef"
+            }
+          }
+        },
+        "factLineage": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "historyKey": {
+                  "$ref": "#/$defs/sha256"
+                },
+                "sourceId": {
+                  "$ref": "#/$defs/id"
+                }
+              },
+              "required": [
+                "historyKey",
+                "sourceId"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "inheritedHistory": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "source": {
+                "$ref": "#/$defs/graphPin"
+              },
+              "events": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/event"
+                }
+              },
+              "eventsSHA256": {
+                "$ref": "#/$defs/sha256"
+              }
+            },
+            "required": [
+              "source",
+              "events",
+              "eventsSHA256"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "dependencyPolicies": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/dependencyPolicy"
+          }
+        },
+        "dependencyBindings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/dependencyBinding"
+          }
+        },
+        "dependencyPresets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/dependencyPreset"
+          }
+        },
+        "dependencyAutomaticStates": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "dependencyPolicyAliases": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "contextGroups": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "title",
+              "parentId"
+            ],
+            "properties": {
+              "id": {
+                "$ref": "#/$defs/id"
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "parentId": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/id"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "actionModel",
+        "coreModel",
+        "id",
+        "title",
+        "identitySpace",
+        "revision",
+        "rootRequirementId",
+        "rootCauses",
+        "nodes",
+        "objects",
+        "externalActions",
+        "edges",
+        "decisionGroups",
+        "workGraphs",
+        "events",
+        "recommendationPackageIds"
+      ],
+      "additionalProperties": false
+    },
+    "step": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "kind": {
+          "enum": [
+            "requirement",
+            "decision",
+            "action"
+          ]
+        },
+        "state": {
+          "enum": [
+            "planned",
+            "possible"
+          ]
+        },
+        "ref": {
+          "$ref": "#/$defs/entityRef"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "kind",
+        "state",
+        "ref"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "properties": {
+            "ref": {
+              "properties": {
+                "mode": {
+                  "const": "current"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "object"
+        }
+      ]
+    },
+    "planCase": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "decisionIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "stepIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "decisionIds",
+        "stepIds"
+      ],
+      "additionalProperties": false
+    },
+    "fork": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "afterStepId": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "cases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/planCase"
+          },
+          "minItems": 2
+        },
+        "startAt": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}(?:T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2}))?$"
+        },
+        "end": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "at": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}(?:T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2}))?$"
+            }
+          },
+          "required": [
+            "title"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "afterStepId",
+        "cases"
+      ],
+      "additionalProperties": false
+    },
+    "timeConstraint": {
+      "type": "object",
+      "properties": {
+        "stepId": {
+          "$ref": "#/$defs/id"
+        },
+        "type": {
+          "enum": [
+            "deadline",
+            "notBefore"
+          ]
+        },
+        "at": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}(?:T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2}))?$"
+        },
+        "strength": {
+          "enum": [
+            "hard",
+            "soft"
+          ]
+        },
+        "basis": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        }
+      },
+      "required": [
+        "stepId",
+        "type",
+        "at",
+        "strength",
+        "basis"
+      ],
+      "additionalProperties": false
+    },
+    "plan": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": 3
+        },
+        "kind": {
+          "const": "temporalPlan"
+        },
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "identitySpace": {
+          "$ref": "#/$defs/uuid"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "status": {
+          "const": "candidate"
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/step"
+          },
+          "minItems": 0
+        },
+        "mainStepIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "forks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/fork"
+          },
+          "minItems": 0
+        },
+        "timeConstraints": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/timeConstraint"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "kind",
+        "id",
+        "title",
+        "identitySpace",
+        "revision",
+        "status",
+        "steps",
+        "mainStepIds",
+        "forks",
+        "timeConstraints"
+      ],
+      "additionalProperties": false
+    },
+    "lensRef": {
+      "type": "object",
+      "properties": {
+        "packageId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "identitySpace": {
+          "$ref": "#/$defs/uuid"
+        },
+        "lensKey": {
+          "$ref": "#/$defs/id"
+        },
+        "nodeId": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "packageId",
+        "identitySpace",
+        "lensKey"
+      ],
+      "additionalProperties": false
+    },
+    "anchor": {
+      "type": "object",
+      "properties": {
+        "packageId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "identitySpace": {
+          "$ref": "#/$defs/uuid"
+        },
+        "nodeId": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "enum": [
+            "entity",
+            "process",
+            "workGraph"
+          ]
+        }
+      },
+      "required": [
+        "packageId",
+        "identitySpace",
+        "nodeId"
+      ],
+      "additionalProperties": false
+    },
+    "rule": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "nodeKinds": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "requirement",
+              "decision",
+              "action",
+              "canon",
+              "context",
+              "info",
+              "evidence",
+              "finding",
+              "question",
+              "process",
+              "workGraph"
+            ]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "scope": {
+          "enum": [
+            "all",
+            "identity",
+            "children",
+            "descendants"
+          ]
+        },
+        "anchor": {
+          "$ref": "#/$defs/anchor"
+        },
+        "state": {
+          "enum": [
+            "any",
+            "open",
+            "selected",
+            "unselected",
+            "discovered",
+            "completed",
+            "review_required"
+          ]
+        },
+        "tag": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "lensRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/lensRef"
+          },
+          "minItems": 1
+        },
+        "whenText": {
+          "type": "string"
+        },
+        "usageText": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "nodeKinds",
+        "scope",
+        "state",
+        "lensRefs"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "scope": {
+                "const": "all"
+              }
+            },
+            "required": [
+              "scope"
+            ],
+            "type": "object"
+          },
+          "then": {
+            "not": {
+              "required": [
+                "anchor"
+              ]
+            }
+          },
+          "else": {
+            "required": [
+              "anchor"
+            ]
+          }
+        }
+      ]
+    },
+    "recommendationPackage": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "key": {
+          "$ref": "#/$defs/id"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "supplied": {
+          "type": "boolean"
+        },
+        "rules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/rule"
+          },
+          "minItems": 1
+        },
+        "instance": {
+          "type": "object",
+          "properties": {
+            "sourceDefinition": {
+              "$ref": "#/$defs/recommendationPin"
+            },
+            "graphBinding": {
+              "$ref": "#/$defs/graphAddress"
+            },
+            "memberIds": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/id"
+              },
+              "uniqueItems": true
+            },
+            "rootIds": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/id"
+              },
+              "uniqueItems": true
+            }
+          },
+          "required": [
+            "sourceDefinition",
+            "graphBinding",
+            "memberIds",
+            "rootIds"
+          ],
+          "additionalProperties": false
+        },
+        "authored": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "revision",
+        "key",
+        "title",
+        "supplied",
+        "rules"
+      ],
+      "additionalProperties": false
+    },
+    "registry": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "kind": {
+          "const": "rdgRecommendationRegistry"
+        },
+        "namespaceId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "packages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/recommendationPackage"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "kind",
+        "namespaceId",
+        "revision",
+        "packages"
+      ],
+      "additionalProperties": false
+    },
+    "view": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "packageId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "identitySpace": {
+          "$ref": "#/$defs/uuid"
+        },
+        "scope": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "enum": [
+                "process",
+                "workGraph",
+                "focus"
+              ]
+            },
+            "id": {
+              "$ref": "#/$defs/id"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "additionalProperties": false,
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "kind": {
+                    "enum": [
+                      "workGraph",
+                      "focus"
+                    ]
+                  }
+                },
+                "required": [
+                  "kind"
+                ],
+                "type": "object"
+              },
+              "then": {
+                "required": [
+                  "id"
+                ]
+              },
+              "else": {
+                "not": {
+                  "required": [
+                    "id"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "showExcludedAlternatives": {
+          "type": "boolean"
+        },
+        "camera": {
+          "type": "object",
+          "properties": {
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            },
+            "width": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "height": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            }
+          },
+          "required": [
+            "x",
+            "y",
+            "width",
+            "height"
+          ],
+          "additionalProperties": false
+        },
+        "expandedOccurrenceIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^occ-"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "shownCases": {
+          "type": "object",
+          "propertyNames": {
+            "$ref": "#/$defs/id"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "historyWindow": {
+          "$ref": "#/$defs/window"
+        },
+        "planWindow": {
+          "$ref": "#/$defs/window"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "packageId",
+        "identitySpace",
+        "scope",
+        "showExcludedAlternatives",
+        "camera",
+        "expandedOccurrenceIds",
+        "shownCases",
+        "historyWindow",
+        "planWindow"
+      ],
+      "additionalProperties": false
+    },
+    "window": {
+      "type": "object",
+      "properties": {
+        "from": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "to": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        }
+      },
+      "required": [
+        "from",
+        "to"
+      ],
+      "additionalProperties": false
+    },
+    "command_add": {
+      "type": "object",
+      "properties": {
+        "op": {
+          "const": "core"
+        },
+        "transactionId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "targetPackageId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "expectedPackageRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "expectedGraphRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "command": {
+          "const": "add"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "entity": {
+              "allOf": [
+                {
+                  "$ref": "#/$defs/entity"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "revision": {
+                      "const": 1
+                    },
+                    "result": {
+                      "type": "object",
+                      "properties": {
+                        "state": {
+                          "const": "open"
+                        },
+                        "truth": {
+                          "const": "unknown"
+                        }
+                      },
+                      "required": [
+                        "state",
+                        "truth"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "selectionState": {
+                      "enum": [
+                        "discovered",
+                        "unselected"
+                      ]
+                    }
+                  },
+                  "not": {
+                    "anyOf": [
+                      {
+                        "required": [
+                          "review"
+                        ]
+                      },
+                      {
+                        "properties": {
+                          "kind": {
+                            "const": "evidence"
+                          }
+                        },
+                        "required": [
+                          "kind"
+                        ]
+                      }
+                    ]
+                  },
+                  "allOf": [
+                    {
+                      "if": {
+                        "properties": {
+                          "kind": {
+                            "const": "action"
+                          }
+                        },
+                        "required": [
+                          "kind"
+                        ],
+                        "type": "object"
+                      },
+                      "then": {
+                        "properties": {
+                          "actionType": {
+                            "enum": [
+                              "task",
+                              "select_decision",
+                              "decide_acceptance"
+                            ]
+                          }
+                        },
+                        "type": "object"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "location": {
+              "enum": [
+                "graph",
+                "external"
+              ]
+            },
+            "workGraphId": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/id"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "initialRelations": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/relation"
+              },
+              "uniqueItems": true
+            }
+          },
+          "required": [
+            "entity",
+            "location"
+          ],
+          "additionalProperties": false,
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "location": {
+                    "const": "external"
+                  }
+                },
+                "required": [
+                  "location"
+                ],
+                "type": "object"
+              },
+              "then": {
+                "properties": {
+                  "entity": {
+                    "$ref": "#/$defs/action"
+                  }
+                },
+                "type": "object",
+                "not": {
+                  "required": [
+                    "initialRelations"
+                  ]
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "location": {
+                    "const": "graph"
+                  }
+                },
+                "required": [
+                  "location"
+                ],
+                "type": "object"
+              },
+              "then": {
+                "properties": {
+                  "entity": {
+                    "if": {
+                      "properties": {
+                        "kind": {
+                          "const": "action"
+                        }
+                      },
+                      "required": [
+                        "kind"
+                      ],
+                      "type": "object"
+                    },
+                    "then": {
+                      "$ref": "#/$defs/graphAction"
+                    }
+                  }
+                },
+                "type": "object"
+              }
+            }
+          ]
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/artifactRef"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "op",
+        "transactionId",
+        "targetPackageId",
+        "expectedPackageRevision",
+        "expectedGraphRevision",
+        "command",
+        "data",
+        "note"
+      ],
+      "additionalProperties": false
+    },
+    "command_edit": {
+      "type": "object",
+      "properties": {
+        "op": {
+          "const": "core"
+        },
+        "transactionId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "targetPackageId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "expectedPackageRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "expectedGraphRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "command": {
+          "const": "edit"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "nodeId": {
+              "$ref": "#/$defs/id"
+            },
+            "changes": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "\\S"
+                  },
+                  "minItems": 0,
+                  "uniqueItems": true
+                },
+                "scope": {
+                  "type": "string"
+                },
+                "decisionContextIds": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/id"
+                  },
+                  "uniqueItems": true
+                },
+                "guidance": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "claim": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "version": {
+                  "type": "string"
+                },
+                "source": {
+                  "type": "string"
+                },
+                "actionType": {
+                  "enum": [
+                    "task",
+                    "select_decision",
+                    "decide_acceptance"
+                  ]
+                },
+                "targetIds": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/id"
+                  },
+                  "uniqueItems": true
+                },
+                "groupIds": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/id"
+                  },
+                  "uniqueItems": true
+                },
+                "questions": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/findingQuestion"
+                  }
+                },
+                "reviewLimitations": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/reviewLimitation"
+                  }
+                },
+                "interventionPriority": {
+                  "type": "string"
+                },
+                "userReviewPriority": {
+                  "type": "string"
+                },
+                "findingType": {
+                  "enum": [
+                    "problem",
+                    "risk",
+                    "decision_uncertainty",
+                    "improvement_opportunity"
+                  ]
+                },
+                "rationale": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "evidenceIds": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/id"
+                  },
+                  "uniqueItems": true
+                },
+                "reviewScope": {
+                  "type": "string"
+                },
+                "userAssistance": {
+                  "type": "string"
+                },
+                "impactTargetIds": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/id"
+                  },
+                  "uniqueItems": true
+                },
+                "contextNotes": {
+                  "type": "object",
+                  "propertyNames": {
+                    "$ref": "#/$defs/id"
+                  },
+                  "additionalProperties": {
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "\\S"
+                  }
+                },
+                "contextGroupId": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/id"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "analysisSources": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "sourceId",
+                      "revision",
+                      "excerpt"
+                    ],
+                    "properties": {
+                      "sourceId": {
+                        "$ref": "#/$defs/id"
+                      },
+                      "revision": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "excerpt": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "artifact": {
+                  "$ref": "#/$defs/artifactRef"
+                },
+                "canons": {
+                  "type": "string"
+                },
+                "knownErrors": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/canonKnownError"
+                  },
+                  "uniqueItems": true,
+                  "$comment": "Local id uniqueness is additionally enforced by the kernel, including unequal records with the same id."
+                }
+              },
+              "required": [],
+              "additionalProperties": false,
+              "minProperties": 1
+            },
+            "cosmetic": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "nodeId",
+            "changes",
+            "cosmetic"
+          ],
+          "additionalProperties": false,
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "cosmetic": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "cosmetic"
+                ],
+                "type": "object"
+              },
+              "then": {
+                "properties": {
+                  "changes": {
+                    "type": "object",
+                    "properties": {
+                      "title": {
+                        "type": "string",
+                        "minLength": 1,
+                        "pattern": "\\S"
+                      }
+                    },
+                    "required": [
+                      "title"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "type": "object"
+              }
+            }
+          ]
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/artifactRef"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "op",
+        "transactionId",
+        "targetPackageId",
+        "expectedPackageRevision",
+        "expectedGraphRevision",
+        "command",
+        "data",
+        "note"
+      ],
+      "additionalProperties": false
+    },
+    "command_select": {
+      "type": "object",
+      "properties": {
+        "op": {
+          "const": "core"
+        },
+        "transactionId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "targetPackageId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "expectedPackageRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "expectedGraphRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "command": {
+          "const": "select"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "nodeId": {
+              "$ref": "#/$defs/id"
+            }
+          },
+          "required": [
+            "nodeId"
+          ],
+          "additionalProperties": false
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/artifactRef"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "op",
+        "transactionId",
+        "targetPackageId",
+        "expectedPackageRevision",
+        "expectedGraphRevision",
+        "command",
+        "data",
+        "note"
+      ],
+      "additionalProperties": false
+    },
+    "command_withdraw": {
+      "type": "object",
+      "properties": {
+        "op": {
+          "const": "core"
+        },
+        "transactionId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "targetPackageId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "expectedPackageRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "expectedGraphRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "command": {
+          "const": "withdraw"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "nodeId": {
+              "$ref": "#/$defs/id"
+            }
+          },
+          "required": [
+            "nodeId"
+          ],
+          "additionalProperties": false
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/artifactRef"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "op",
+        "transactionId",
+        "targetPackageId",
+        "expectedPackageRevision",
+        "expectedGraphRevision",
+        "command",
+        "data",
+        "note"
+      ],
+      "additionalProperties": false
+    },
+    "command_complete": {
+      "type": "object",
+      "properties": {
+        "op": {
+          "const": "core"
+        },
+        "transactionId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "targetPackageId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "expectedPackageRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "expectedGraphRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "command": {
+          "const": "complete"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "nodeId": {
+              "$ref": "#/$defs/id"
+            },
+            "basis": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "evidenceIds": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/id"
+              },
+              "minItems": 0,
+              "uniqueItems": true
+            },
+            "decisionOutcome": {
+              "enum": [
+                "selected",
+                "unselected"
+              ]
+            }
+          },
+          "required": [
+            "nodeId",
+            "basis",
+            "evidenceIds"
+          ],
+          "additionalProperties": false
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/artifactRef"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "op",
+        "transactionId",
+        "targetPackageId",
+        "expectedPackageRevision",
+        "expectedGraphRevision",
+        "command",
+        "data",
+        "note"
+      ],
+      "additionalProperties": false
+    },
+    "command_reopen": {
+      "type": "object",
+      "properties": {
+        "op": {
+          "const": "core"
+        },
+        "transactionId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "targetPackageId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "expectedPackageRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "expectedGraphRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "command": {
+          "const": "reopen"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "nodeId": {
+              "$ref": "#/$defs/id"
+            },
+            "basis": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            }
+          },
+          "required": [
+            "nodeId",
+            "basis"
+          ],
+          "additionalProperties": false
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/artifactRef"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "op",
+        "transactionId",
+        "targetPackageId",
+        "expectedPackageRevision",
+        "expectedGraphRevision",
+        "command",
+        "data",
+        "note"
+      ],
+      "additionalProperties": false
+    },
+    "command_link": {
+      "type": "object",
+      "properties": {
+        "op": {
+          "const": "core"
+        },
+        "transactionId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "targetPackageId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "expectedPackageRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "expectedGraphRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "command": {
+          "const": "link"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "relation": {
+              "$ref": "#/$defs/relation"
+            }
+          },
+          "required": [
+            "relation"
+          ],
+          "additionalProperties": false
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/artifactRef"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "op",
+        "transactionId",
+        "targetPackageId",
+        "expectedPackageRevision",
+        "expectedGraphRevision",
+        "command",
+        "data",
+        "note"
+      ],
+      "additionalProperties": false
+    },
+    "command_decision_group": {
+      "type": "object",
+      "properties": {
+        "op": {
+          "const": "core"
+        },
+        "transactionId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "targetPackageId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "expectedPackageRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "expectedGraphRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "command": {
+          "const": "decision_group"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "group": {
+              "$ref": "#/$defs/decisionGroup"
+            }
+          },
+          "required": [
+            "group"
+          ],
+          "additionalProperties": false
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/artifactRef"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "op",
+        "transactionId",
+        "targetPackageId",
+        "expectedPackageRevision",
+        "expectedGraphRevision",
+        "command",
+        "data",
+        "note"
+      ],
+      "additionalProperties": false
+    },
+    "command_work_graph": {
+      "type": "object",
+      "properties": {
+        "op": {
+          "const": "core"
+        },
+        "transactionId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "targetPackageId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "expectedPackageRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "expectedGraphRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "command": {
+          "const": "work_graph"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "workGraph": {
+              "$ref": "#/$defs/workGraph"
+            }
+          },
+          "required": [
+            "workGraph"
+          ],
+          "additionalProperties": false
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/artifactRef"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "op",
+        "transactionId",
+        "targetPackageId",
+        "expectedPackageRevision",
+        "expectedGraphRevision",
+        "command",
+        "data",
+        "note"
+      ],
+      "additionalProperties": false
+    },
+    "command_root_cause": {
+      "type": "object",
+      "properties": {
+        "op": {
+          "const": "core"
+        },
+        "transactionId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "targetPackageId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "expectedPackageRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "expectedGraphRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "command": {
+          "const": "root_cause"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "cause": {
+              "$ref": "#/$defs/rootCause"
+            }
+          },
+          "required": [
+            "cause"
+          ],
+          "additionalProperties": false
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/artifactRef"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "op",
+        "transactionId",
+        "targetPackageId",
+        "expectedPackageRevision",
+        "expectedGraphRevision",
+        "command",
+        "data",
+        "note"
+      ],
+      "additionalProperties": false
+    },
+    "command_review": {
+      "type": "object",
+      "properties": {
+        "op": {
+          "const": "core"
+        },
+        "transactionId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "targetPackageId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "expectedPackageRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "expectedGraphRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "command": {
+          "const": "review"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "nodeId": {
+              "$ref": "#/$defs/id"
+            },
+            "pins": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/entityRef"
+              },
+              "minItems": 0
+            },
+            "basis": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "evidenceIds": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/id"
+              },
+              "minItems": 0,
+              "uniqueItems": true
+            }
+          },
+          "required": [
+            "nodeId",
+            "pins",
+            "basis",
+            "evidenceIds"
+          ],
+          "additionalProperties": false
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/artifactRef"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "op",
+        "transactionId",
+        "targetPackageId",
+        "expectedPackageRevision",
+        "expectedGraphRevision",
+        "command",
+        "data",
+        "note"
+      ],
+      "additionalProperties": false
+    },
+    "coreRequest": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/command_add"
+        },
+        {
+          "$ref": "#/$defs/command_edit"
+        },
+        {
+          "$ref": "#/$defs/command_select"
+        },
+        {
+          "$ref": "#/$defs/command_withdraw"
+        },
+        {
+          "$ref": "#/$defs/command_complete"
+        },
+        {
+          "$ref": "#/$defs/command_reopen"
+        },
+        {
+          "$ref": "#/$defs/command_link"
+        },
+        {
+          "$ref": "#/$defs/command_decision_group"
+        },
+        {
+          "$ref": "#/$defs/command_work_graph"
+        },
+        {
+          "$ref": "#/$defs/command_root_cause"
+        },
+        {
+          "$ref": "#/$defs/command_review"
+        },
+        {
+          "$ref": "#/$defs/command_policy_change"
+        },
+        {
+          "$ref": "#/$defs/command_finding_disposition"
+        },
+        {
+          "$ref": "#/$defs/command_finding_transfer"
+        },
+        {
+          "$ref": "#/$defs/command_context_group"
+        },
+        {
+          "$ref": "#/$defs/command_decision_context"
+        },
+        {
+          "$ref": "#/$defs/command_requirement_decision"
+        },
+        {
+          "$ref": "#/$defs/command_context_record"
+        }
+      ]
+    },
+    "unlinkRequest": {
+      "type": "object",
+      "properties": {
+        "op": {
+          "const": "unlink"
+        },
+        "transactionId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "targetPackageId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "expectedPackageRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "expectedGraphRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "edgeId": {
+              "$ref": "#/$defs/id"
+            }
+          },
+          "required": [
+            "edgeId"
+          ],
+          "additionalProperties": false
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        }
+      },
+      "required": [
+        "op",
+        "transactionId",
+        "targetPackageId",
+        "expectedPackageRevision",
+        "expectedGraphRevision",
+        "data",
+        "note"
+      ],
+      "additionalProperties": false
+    },
+    "deleteRequest": {
+      "type": "object",
+      "properties": {
+        "op": {
+          "const": "delete"
+        },
+        "transactionId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "targetPackageId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "expectedPackageRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "expectedGraphRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "nodeIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        }
+      },
+      "required": [
+        "op",
+        "transactionId",
+        "targetPackageId",
+        "expectedPackageRevision",
+        "expectedGraphRevision",
+        "nodeIds",
+        "note"
+      ],
+      "additionalProperties": false
+    },
+    "createRequest": {
+      "type": "object",
+      "properties": {
+        "op": {
+          "const": "create"
+        },
+        "transactionId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "coreModel": {
+          "const": "rdg-decision-v1"
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "role": {
+          "enum": [
+            "working",
+            "ready",
+            "lens"
+          ]
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "rootReason": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "lensKey": {
+          "$ref": "#/$defs/id"
+        }
+      },
+      "required": [
+        "op",
+        "transactionId",
+        "coreModel",
+        "path",
+        "role",
+        "title",
+        "scope",
+        "rootReason"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "role": {
+                "const": "lens"
+              }
+            },
+            "required": [
+              "role"
+            ],
+            "type": "object"
+          },
+          "then": {
+            "required": [
+              "lensKey"
+            ]
+          },
+          "else": {
+            "not": {
+              "required": [
+                "lensKey"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "request": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/coreRequest"
+        },
+        {
+          "$ref": "#/$defs/unlinkRequest"
+        },
+        {
+          "$ref": "#/$defs/deleteRequest"
+        },
+        {
+          "$ref": "#/$defs/createRequest"
+        },
+        {
+          "$ref": "#/$defs/planActionRequest"
+        }
+      ]
+    },
+    "ownerAddress": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "enum": [
+            "package",
+            "recommendationRegistry"
+          ]
+        },
+        "namespaceId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "packageId": {
+          "$ref": "#/$defs/uuid"
+        }
+      },
+      "required": [
+        "kind",
+        "namespaceId"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "package"
+              }
+            },
+            "required": [
+              "kind"
+            ],
+            "type": "object"
+          },
+          "then": {
+            "required": [
+              "packageId"
+            ]
+          },
+          "else": {
+            "not": {
+              "required": [
+                "packageId"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "ownerPin": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "enum": [
+            "package",
+            "recommendationRegistry"
+          ]
+        },
+        "namespaceId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "packageId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "required": [
+        "kind",
+        "namespaceId",
+        "revision",
+        "sha256"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "package"
+              }
+            },
+            "required": [
+              "kind"
+            ],
+            "type": "object"
+          },
+          "then": {
+            "required": [
+              "packageId"
+            ]
+          },
+          "else": {
+            "not": {
+              "required": [
+                "packageId"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "inputBinding": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": 2
+        },
+        "policy": {
+          "const": "typed-owner-read-set-v1"
+        },
+        "namespaceId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "actorGrantId": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "requestSHA256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "ownerPins": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ownerPin"
+          },
+          "minItems": 0
+        },
+        "requiredPermissions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "owner": {
+                "$ref": "#/$defs/ownerAddress"
+              },
+              "permissions": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "minItems": 1,
+                "uniqueItems": true
+              }
+            },
+            "required": [
+              "owner",
+              "permissions"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 0
+        },
+        "catalog": {
+          "type": "object",
+          "properties": {
+            "sha256": {
+              "$ref": "#/$defs/sha256"
+            },
+            "ignoreIds": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/uuid"
+              },
+              "minItems": 0,
+              "uniqueItems": true
+            }
+          },
+          "required": [
+            "sha256",
+            "ignoreIds"
+          ],
+          "additionalProperties": false
+        },
+        "effectOwners": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ownerAddress"
+          },
+          "minItems": 0
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "policy",
+        "namespaceId",
+        "actorGrantId",
+        "requestSHA256",
+        "ownerPins",
+        "requiredPermissions",
+        "catalog",
+        "effectOwners",
+        "sha256"
+      ],
+      "additionalProperties": false
+    },
+    "expectation": {
+      "type": "object",
+      "properties": {
+        "outcome": {
+          "enum": [
+            "apply",
+            "reject",
+            "read"
+          ]
+        },
+        "errorCode": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "activeIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "inactiveIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "visibleIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "hiddenIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "unselectedIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "preservedIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "graphWrites": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "planWrites": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "layoutWrites": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "eventTypes": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "created",
+              "edited",
+              "linked",
+              "unlinked",
+              "group_changed",
+              "work_graph_changed",
+              "root_cause_changed",
+              "decision_selected",
+              "decision_unselected",
+              "branch_cancelled",
+              "action_executed",
+              "requirement_achieved",
+              "decision_completed",
+              "reopened",
+              "removed",
+              "lens_application_recorded"
+            ]
+          },
+          "minItems": 0
+        },
+        "checks": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "minItems": 1
+        },
+        "groupVisibility": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/groupVisibility"
+          }
+        },
+        "conflictingGroupIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "outcome",
+        "checks"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "outcome": {
+                "const": "reject"
+              }
+            },
+            "required": [
+              "outcome"
+            ],
+            "type": "object"
+          },
+          "then": {
+            "required": [
+              "errorCode",
+              "graphWrites",
+              "planWrites",
+              "layoutWrites"
+            ],
+            "properties": {
+              "graphWrites": {
+                "const": 0
+              },
+              "planWrites": {
+                "const": 0
+              },
+              "layoutWrites": {
+                "const": 0
+              }
+            },
+            "type": "object"
+          }
+        }
+      ]
+    },
+    "patch": {
+      "type": "object",
+      "properties": {
+        "op": {
+          "enum": [
+            "add",
+            "replace",
+            "remove"
+          ]
+        },
+        "path": {
+          "type": "string",
+          "pattern": "^/"
+        },
+        "value": {}
+      },
+      "required": [
+        "op",
+        "path"
+      ],
+      "additionalProperties": false
+    },
+    "case": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "axis": {
+          "enum": [
+            "model",
+            "activity",
+            "visibility",
+            "completion",
+            "commands",
+            "ownership",
+            "refs",
+            "client",
+            "plan",
+            "registry",
+            "profile",
+            "layout"
+          ]
+        },
+        "seed": {
+          "$ref": "#/$defs/id"
+        },
+        "mutation": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "setup": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/patch"
+          },
+          "minItems": 0
+        },
+        "request": {
+          "$ref": "#/$defs/request"
+        },
+        "requests": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/request"
+          },
+          "minItems": 1
+        },
+        "view": {
+          "$ref": "#/$defs/view"
+        },
+        "expect": {
+          "$ref": "#/$defs/expectation"
+        },
+        "verification": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "id",
+        "axis",
+        "seed",
+        "mutation",
+        "expect",
+        "verification"
+      ],
+      "additionalProperties": false,
+      "not": {
+        "required": [
+          "request",
+          "requests"
+        ]
+      }
+    },
+    "completionContext": {
+      "type": "object",
+      "properties": {
+        "entity": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/requirement"
+            },
+            {
+              "$ref": "#/$defs/decision"
+            },
+            {
+              "$ref": "#/$defs/action"
+            }
+          ]
+        },
+        "decisionTargets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/decision"
+          },
+          "uniqueItems": true
+        },
+        "request": {
+          "$ref": "#/$defs/command_complete"
+        }
+      },
+      "required": [
+        "entity",
+        "request"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "type": "object",
+            "properties": {
+              "entity": {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "const": "action"
+                  },
+                  "actionType": {
+                    "const": "decide_acceptance"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "actionType"
+                ]
+              }
+            },
+            "required": [
+              "entity"
+            ]
+          },
+          "then": {
+            "allOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "request": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "object",
+                        "required": [
+                          "decisionOutcome"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "data"
+                    ]
+                  }
+                },
+                "required": [
+                  "request"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "decisionTargets": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 1
+                  }
+                },
+                "required": [
+                  "decisionTargets"
+                ]
+              }
+            ]
+          },
+          "else": {
+            "type": "object",
+            "properties": {
+              "request": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "object",
+                    "not": {
+                      "required": [
+                        "decisionOutcome"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "data"
+                ]
+              }
+            },
+            "required": [
+              "request"
+            ]
+          }
+        },
+        {
+          "if": {
+            "type": "object",
+            "properties": {
+              "entity": {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "const": "action"
+                  },
+                  "actionType": {
+                    "const": "select_decision"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "actionType"
+                ]
+              }
+            },
+            "required": [
+              "entity"
+            ]
+          },
+          "then": {
+            "type": "object",
+            "properties": {
+              "decisionTargets": {
+                "type": "array",
+                "minItems": 1
+              }
+            },
+            "required": [
+              "decisionTargets"
+            ]
+          }
+        },
+        {
+          "if": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "entity": {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "const": "action"
+                      },
+                      "actionType": {
+                        "const": "decide_acceptance"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "actionType"
+                    ]
+                  }
+                },
+                "required": [
+                  "entity"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "entity": {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "const": "action"
+                      },
+                      "actionType": {
+                        "const": "select_decision"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "actionType"
+                    ]
+                  }
+                },
+                "required": [
+                  "entity"
+                ]
+              }
+            ]
+          },
+          "else": {
+            "not": {
+              "required": [
+                "decisionTargets"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "actionResult": {
+      "type": "object",
+      "properties": {
+        "decisionId": {
+          "$ref": "#/$defs/id"
+        },
+        "decisionOutcome": {
+          "enum": [
+            "selected",
+            "unselected"
+          ]
+        }
+      },
+      "required": [
+        "decisionId",
+        "decisionOutcome"
+      ],
+      "additionalProperties": false
+    },
+    "graphAddress": {
+      "type": "object",
+      "properties": {
+        "packageId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "identitySpace": {
+          "$ref": "#/$defs/uuid"
+        }
+      },
+      "required": [
+        "packageId",
+        "identitySpace"
+      ],
+      "additionalProperties": false
+    },
+    "groupVisibility": {
+      "type": "object",
+      "properties": {
+        "groupId": {
+          "$ref": "#/$defs/id"
+        },
+        "visibleIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "uniqueItems": true
+        },
+        "hiddenIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "groupId",
+        "visibleIds",
+        "hiddenIds"
+      ],
+      "additionalProperties": false
+    },
+    "view_spec": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "enum": [
+            "graph",
+            "focus",
+            "workGraph"
+          ]
+        },
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "workGraphId": {
+          "$ref": "#/$defs/id"
+        },
+        "groupIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "uniqueItems": true
+        },
+        "showLowLevel": {
+          "type": "boolean"
+        },
+        "showAllBlocks": {
+          "type": "boolean"
+        },
+        "showExcludedAlternatives": {
+          "type": "boolean"
+        },
+        "shownCases": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "expandedOccurrenceIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "uniqueItems": true
+        },
+        "camera": {
+          "type": "object",
+          "properties": {
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            },
+            "width": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "height": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            }
+          },
+          "required": [
+            "x",
+            "y",
+            "width",
+            "height"
+          ],
+          "additionalProperties": false
+        },
+        "historyWindow": {
+          "type": "object",
+          "properties": {
+            "from": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            "to": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            }
+          },
+          "additionalProperties": false
+        },
+        "planWindow": {
+          "type": "object",
+          "properties": {
+            "from": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            "to": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            }
+          },
+          "additionalProperties": false
+        },
+        "historyMode": {
+          "enum": [
+            "important",
+            "meaningful",
+            "technical",
+            "all"
+          ]
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "additionalProperties": false
+    },
+    "workGraphSnapshot": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "rootIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "memberIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "colorKey": {
+          "enum": [
+            "blue",
+            "teal",
+            "amber",
+            "violet",
+            "rose",
+            "lime",
+            "cyan",
+            "slate"
+          ]
+        }
+      },
+      "required": [
+        "title",
+        "rootIds",
+        "memberIds"
+      ],
+      "additionalProperties": false
+    },
+    "workGraphChange": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "enum": [
+            "created",
+            "updated"
+          ]
+        },
+        "workGraphId": {
+          "$ref": "#/$defs/id"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "before": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/workGraphSnapshot"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "after": {
+          "$ref": "#/$defs/workGraphSnapshot"
+        }
+      },
+      "required": [
+        "action",
+        "workGraphId",
+        "title",
+        "before",
+        "after"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "action": {
+                "const": "created"
+              }
+            },
+            "required": [
+              "action"
+            ]
+          },
+          "then": {
+            "properties": {
+              "before": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "action": {
+                "const": "updated"
+              }
+            },
+            "required": [
+              "action"
+            ]
+          },
+          "then": {
+            "properties": {
+              "before": {
+                "$ref": "#/$defs/workGraphSnapshot"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "policyRule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "watch",
+        "operations",
+        "enabled"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "watch": {
+          "enum": [
+            "definition",
+            "directScope",
+            "selection",
+            "result",
+            "context",
+            "canon",
+            "info",
+            "relations",
+            "workGraphs",
+            "rootCauses",
+            "locks",
+            "event",
+            "predicate",
+            "membership",
+            "structuralScope",
+            "canonInfo"
+          ]
+        },
+        "operations": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "changed",
+              "added",
+              "removed"
+            ]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "role": {
+          "type": "string"
+        },
+        "eventType": {
+          "type": "string"
+        },
+        "predicate": {
+          "$ref": "#/$defs/policyPredicate"
+        },
+        "whenKinds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "requirement",
+              "decision",
+              "action",
+              "canon",
+              "context",
+              "info",
+              "evidence"
+            ]
+          }
+        },
+        "memberRole": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "dependencyPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "name",
+        "description",
+        "status",
+        "pattern",
+        "sourceKinds",
+        "targetKinds",
+        "rules"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "active",
+            "disabled",
+            "archived"
+          ]
+        },
+        "pattern": {
+          "enum": [
+            "direct",
+            "parentDecisionContext",
+            "roles"
+          ]
+        },
+        "sourceKinds": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "requirement",
+              "decision",
+              "action",
+              "context",
+              "canon",
+              "info",
+              "evidence",
+              "finding"
+            ]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "targetKinds": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "requirement",
+              "decision",
+              "action",
+              "finding"
+            ]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "rules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/policyRule"
+          },
+          "minItems": 1
+        },
+        "origin": {
+          "enum": [
+            "system",
+            "user"
+          ]
+        },
+        "roles": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 32,
+          "items": {
+            "$ref": "#/$defs/policyRole"
+          }
+        },
+        "relations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "from",
+              "to",
+              "type"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "from": {
+                "type": "string",
+                "minLength": 1
+              },
+              "to": {
+                "type": "string",
+                "minLength": 1
+              },
+              "type": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "automatic": {
+          "const": true
+        }
+      }
+    },
+    "dependencyPreset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "sourceKinds",
+        "watch",
+        "operations"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sourceKinds": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "requirement",
+              "decision",
+              "action",
+              "context",
+              "canon",
+              "info"
+            ]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "watch": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "definition",
+              "directScope",
+              "selection",
+              "result",
+              "context",
+              "canon",
+              "info"
+            ]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "operations": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "changed",
+              "added",
+              "removed"
+            ]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      }
+    },
+    "dependencyBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "policyId",
+        "policyVersion",
+        "targetId",
+        "sourceId",
+        "parentId",
+        "enabled"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "policyId": {
+          "$ref": "#/$defs/id"
+        },
+        "policyVersion": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "targetId": {
+          "$ref": "#/$defs/id"
+        },
+        "sourceId": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "parentId": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "participantBindings": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "status": {
+          "enum": [
+            "active",
+            "disabled",
+            "deleted"
+          ]
+        },
+        "reasonCode": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "disabledAt": {
+          "type": "string"
+        },
+        "disabledEventId": {
+          "type": "string"
+        },
+        "violations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "participantSnapshot": {
+          "type": "object"
+        },
+        "relationSnapshot": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "observedSources": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "kind",
+                "title"
+              ],
+              "properties": {
+                "id": {
+                  "$ref": "#/$defs/id"
+                },
+                "kind": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "dependencyRule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "preset",
+        "watch"
+      ],
+      "properties": {
+        "preset": {
+          "enum": [
+            "L1",
+            "L2",
+            "decision_state",
+            "decision_context",
+            "decision_canon",
+            "canon_criteria",
+            "custom"
+          ]
+        },
+        "watch": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "definition",
+              "directScope",
+              "selection",
+              "result",
+              "context",
+              "canon",
+              "info"
+            ]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      }
+    },
+    "dependencyImpact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "edgeId",
+        "sourceId",
+        "dependentId",
+        "level",
+        "changedParts"
+      ],
+      "properties": {
+        "edgeId": {
+          "$ref": "#/$defs/id"
+        },
+        "sourceId": {
+          "$ref": "#/$defs/id"
+        },
+        "dependentId": {
+          "$ref": "#/$defs/id"
+        },
+        "level": {
+          "enum": [
+            "L1",
+            "L2",
+            "custom"
+          ]
+        },
+        "changedParts": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "enum": [
+              "definition",
+              "direct-scope",
+              "source-removed",
+              "source-added",
+              "selection",
+              "result",
+              "context",
+              "canon",
+              "info",
+              "structure",
+              "basis"
+            ]
+          }
+        },
+        "origin": {
+          "enum": [
+            "structural",
+            "manual",
+            "decisionContext",
+            "canon",
+            "policy",
+            "finding-subject"
+          ]
+        },
+        "preset": {
+          "$ref": "#/$defs/id"
+        },
+        "viaIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "policyId": {
+          "$ref": "#/$defs/id"
+        },
+        "policyVersion": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "policyName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ruleId": {
+          "$ref": "#/$defs/id"
+        },
+        "ruleName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "bindingId": {
+          "$ref": "#/$defs/id"
+        },
+        "triggerOperation": {
+          "enum": [
+            "changed",
+            "added",
+            "removed"
+          ]
+        },
+        "matchedParticipants": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "matchedRelations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "ruleSnapshot": {
+          "$ref": "#/$defs/policyRule"
+        },
+        "participantSnapshot": {
+          "type": "object"
+        },
+        "valueSnapshot": {
+          "type": "object",
+          "required": [
+            "before",
+            "after"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "before": {
+              "type": [
+                "object",
+                "null"
+              ]
+            },
+            "after": {
+              "type": [
+                "object",
+                "null"
+              ]
+            }
+          }
+        },
+        "observedSources": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "kind",
+                "title"
+              ],
+              "properties": {
+                "id": {
+                  "$ref": "#/$defs/id"
+                },
+                "kind": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "policyPredicate": {
+      "type": "object",
+      "required": [
+        "field",
+        "equals"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "field": {
+          "enum": [
+            "selectionState",
+            "result.state",
+            "result.truth",
+            "tag",
+            "active"
+          ]
+        },
+        "equals": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "boolean"
+            }
+          ]
+        }
+      }
+    },
+    "policyRole": {
+      "type": "object",
+      "required": [
+        "id",
+        "kinds"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kinds": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "requirement",
+              "decision",
+              "action",
+              "context",
+              "canon",
+              "info",
+              "evidence",
+              "finding"
+            ]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "conditions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/policyPredicate"
+          }
+        },
+        "selector": {
+          "type": "object",
+          "required": [
+            "anchor",
+            "relation",
+            "direction",
+            "minDepth",
+            "maxDepth"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "anchor": {
+              "type": "string"
+            },
+            "relation": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "array",
+                  "minItems": 1,
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              ]
+            },
+            "direction": {
+              "enum": [
+                "in",
+                "out"
+              ]
+            },
+            "minDepth": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 32
+            },
+            "maxDepth": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 32
+            }
+          }
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "command_policy_change": {
+      "type": "object",
+      "properties": {
+        "op": {
+          "const": "core"
+        },
+        "transactionId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "targetPackageId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "expectedPackageRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "expectedGraphRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "command": {
+          "const": "policy_change"
+        },
+        "data": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "action",
+                "value"
+              ],
+              "properties": {
+                "action": {
+                  "const": "policy_save"
+                },
+                "value": {
+                  "$ref": "#/$defs/dependencyPolicy"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "action",
+                "value"
+              ],
+              "properties": {
+                "action": {
+                  "const": "policy_status"
+                },
+                "value": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "id",
+                    "version",
+                    "status"
+                  ],
+                  "properties": {
+                    "id": {
+                      "$ref": "#/$defs/id"
+                    },
+                    "version": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "status": {
+                      "enum": [
+                        "active",
+                        "disabled",
+                        "archived"
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "action",
+                "value"
+              ],
+              "properties": {
+                "action": {
+                  "const": "binding_save"
+                },
+                "value": {
+                  "$ref": "#/$defs/dependencyBinding"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "action",
+                "value"
+              ],
+              "properties": {
+                "action": {
+                  "const": "preset_save"
+                },
+                "value": {
+                  "$ref": "#/$defs/dependencyPreset"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "action",
+                "value"
+              ],
+              "properties": {
+                "action": {
+                  "const": "catalog_migrate"
+                },
+                "value": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "maxProperties": 0
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "action",
+                "value"
+              ],
+              "properties": {
+                "action": {
+                  "const": "binding_activate"
+                },
+                "value": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "id"
+                  ],
+                  "properties": {
+                    "id": {
+                      "$ref": "#/$defs/id"
+                    },
+                    "expectedRevision": {
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "action",
+                "value"
+              ],
+              "properties": {
+                "action": {
+                  "const": "binding_disable"
+                },
+                "value": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "id"
+                  ],
+                  "properties": {
+                    "id": {
+                      "$ref": "#/$defs/id"
+                    },
+                    "expectedRevision": {
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "action",
+                "value"
+              ],
+              "properties": {
+                "action": {
+                  "const": "binding_remove"
+                },
+                "value": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "id"
+                  ],
+                  "properties": {
+                    "id": {
+                      "$ref": "#/$defs/id"
+                    },
+                    "expectedRevision": {
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "action",
+                "value"
+              ],
+              "properties": {
+                "action": {
+                  "const": "automatic_activate"
+                },
+                "value": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "id"
+                  ],
+                  "properties": {
+                    "id": {
+                      "$ref": "#/$defs/id"
+                    },
+                    "expectedRevision": {
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "action",
+                "value"
+              ],
+              "properties": {
+                "action": {
+                  "const": "automatic_disable"
+                },
+                "value": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "id"
+                  ],
+                  "properties": {
+                    "id": {
+                      "$ref": "#/$defs/id"
+                    },
+                    "expectedRevision": {
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "action",
+                "value"
+              ],
+              "properties": {
+                "action": {
+                  "const": "automatic_remove"
+                },
+                "value": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "id"
+                  ],
+                  "properties": {
+                    "id": {
+                      "$ref": "#/$defs/id"
+                    },
+                    "expectedRevision": {
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/artifactRef"
+          },
+          "minItems": 0
+        },
+        "expectedDependencyCatalogRevision": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "op",
+        "transactionId",
+        "targetPackageId",
+        "expectedPackageRevision",
+        "expectedGraphRevision",
+        "command",
+        "data",
+        "note"
+      ],
+      "additionalProperties": false
+    },
+    "findingQuestion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "question",
+        "impact",
+        "blocking",
+        "scope",
+        "closeCondition"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "question": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "impact": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "blocking": {
+          "enum": [
+            "blocking",
+            "non-blocking",
+            "partially-blocking"
+          ]
+        },
+        "scope": {
+          "type": "string"
+        },
+        "closeCondition": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        }
+      }
+    },
+    "reviewLimitation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "claim",
+        "reason",
+        "limitation"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "claim": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "limitation": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        }
+      }
+    },
+    "findingDisposition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "basis",
+        "evidenceIds"
+      ],
+      "properties": {
+        "code": {
+          "enum": [
+            "unresolved",
+            "deferred",
+            "resolved",
+            "invalidated",
+            "superseded"
+          ]
+        },
+        "basis": {
+          "type": "string"
+        },
+        "evidenceIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "uniqueItems": true
+        },
+        "eventId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "recordedAt": {
+          "type": "string"
+        },
+        "reviewRevision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "revisitTrigger": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "replacementId": {
+          "$ref": "#/$defs/id"
+        },
+        "label": {
+          "type": "string"
+        }
+      }
+    },
+    "finding": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "const": "finding"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "description": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "policy": {
+          "$ref": "#/$defs/policy"
+        },
+        "locks": {
+          "$ref": "#/$defs/locks"
+        },
+        "review": {
+          "$ref": "#/$defs/review"
+        },
+        "questions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/findingQuestion"
+          }
+        },
+        "reviewLimitations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/reviewLimitation"
+          }
+        },
+        "interventionPriority": {
+          "type": "string"
+        },
+        "userReviewPriority": {
+          "type": "string"
+        },
+        "subjectId": {
+          "$ref": "#/$defs/id"
+        },
+        "subjectSnapshot": {
+          "type": "object",
+          "required": [
+            "id",
+            "kind",
+            "title"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "$ref": "#/$defs/id"
+            },
+            "kind": {
+              "enum": [
+                "requirement",
+                "decision",
+                "action"
+              ]
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "revision": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "definition": {
+              "type": "object"
+            }
+          }
+        },
+        "findingType": {
+          "enum": [
+            "problem",
+            "risk",
+            "decision_uncertainty",
+            "improvement_opportunity"
+          ]
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "evidenceIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "uniqueItems": true
+        },
+        "disposition": {
+          "$ref": "#/$defs/findingDisposition"
+        },
+        "dispositionHistory": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/findingDisposition"
+          }
+        },
+        "reviewScope": {
+          "type": "string"
+        },
+        "userAssistance": {
+          "type": "string"
+        },
+        "analysisSources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "sourceId",
+              "revision",
+              "excerpt"
+            ],
+            "properties": {
+              "sourceId": {
+                "$ref": "#/$defs/id"
+              },
+              "revision": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "excerpt": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "title",
+        "description",
+        "revision",
+        "subjectId",
+        "findingType",
+        "rationale",
+        "evidenceIds"
+      ],
+      "additionalProperties": false
+    },
+    "command_finding_response": {
+      "type": "object",
+      "properties": {
+        "op": {
+          "const": "core"
+        },
+        "transactionId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "targetPackageId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "expectedPackageRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "expectedGraphRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "command": {
+          "const": "finding_response"
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "findingId": {
+              "$ref": "#/$defs/id"
+            },
+            "decisionId": {
+              "$ref": "#/$defs/id"
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "description": {
+              "type": "string"
+            },
+            "parentDecisionId": {
+              "$ref": "#/$defs/id"
+            },
+            "workGraphId": {
+              "$ref": "#/$defs/id"
+            },
+            "impactTargetIds": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/id"
+              },
+              "uniqueItems": true
+            }
+          },
+          "required": [
+            "findingId",
+            "decisionId",
+            "title"
+          ]
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/artifactRef"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "op",
+        "transactionId",
+        "targetPackageId",
+        "expectedPackageRevision",
+        "expectedGraphRevision",
+        "command",
+        "data",
+        "note"
+      ],
+      "additionalProperties": false
+    },
+    "command_finding_proposal": {
+      "type": "object",
+      "properties": {
+        "op": {
+          "const": "core"
+        },
+        "transactionId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "targetPackageId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "expectedPackageRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "expectedGraphRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "command": {
+          "const": "finding_proposal"
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "findingId": {
+              "$ref": "#/$defs/id"
+            },
+            "decisionId": {
+              "$ref": "#/$defs/id"
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "description": {
+              "type": "string"
+            },
+            "parentDecisionId": {
+              "$ref": "#/$defs/id"
+            },
+            "workGraphId": {
+              "$ref": "#/$defs/id"
+            },
+            "impactTargetIds": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/id"
+              },
+              "uniqueItems": true
+            }
+          },
+          "required": [
+            "findingId",
+            "decisionId",
+            "title",
+            "parentDecisionId"
+          ]
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/artifactRef"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "op",
+        "transactionId",
+        "targetPackageId",
+        "expectedPackageRevision",
+        "expectedGraphRevision",
+        "command",
+        "data",
+        "note"
+      ],
+      "additionalProperties": false
+    },
+    "command_finding_disposition": {
+      "type": "object",
+      "properties": {
+        "op": {
+          "const": "core"
+        },
+        "transactionId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "targetPackageId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "expectedPackageRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "expectedGraphRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "command": {
+          "const": "finding_disposition"
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "nodeId": {
+              "$ref": "#/$defs/id"
+            },
+            "disposition": {
+              "$ref": "#/$defs/findingDisposition"
+            },
+            "observed": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "integer",
+                "minimum": 1
+              }
+            }
+          },
+          "required": [
+            "nodeId",
+            "disposition",
+            "observed"
+          ]
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/artifactRef"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "op",
+        "transactionId",
+        "targetPackageId",
+        "expectedPackageRevision",
+        "expectedGraphRevision",
+        "command",
+        "data",
+        "note"
+      ],
+      "additionalProperties": false
+    },
+    "command_finding_transfer": {
+      "type": "object",
+      "properties": {
+        "op": {
+          "const": "core"
+        },
+        "transactionId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "targetPackageId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "expectedPackageRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "expectedGraphRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "command": {
+          "const": "finding_transfer"
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "nodeId": {
+              "$ref": "#/$defs/id"
+            },
+            "subjectId": {
+              "$ref": "#/$defs/id"
+            },
+            "detachLegacy": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "nodeId",
+            "subjectId"
+          ]
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/artifactRef"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "op",
+        "transactionId",
+        "targetPackageId",
+        "expectedPackageRevision",
+        "expectedGraphRevision",
+        "command",
+        "data",
+        "note"
+      ],
+      "additionalProperties": false
+    },
+    "command_context_group": {
+      "type": "object",
+      "properties": {
+        "op": {
+          "const": "core"
+        },
+        "transactionId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "targetPackageId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "expectedPackageRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "expectedGraphRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "command": {
+          "const": "context_group"
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "action": {
+              "enum": [
+                "save",
+                "remove"
+              ]
+            },
+            "id": {
+              "$ref": "#/$defs/id"
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "parentId": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/id"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "action",
+            "id"
+          ]
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/artifactRef"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "op",
+        "transactionId",
+        "targetPackageId",
+        "expectedPackageRevision",
+        "expectedGraphRevision",
+        "command",
+        "data",
+        "note"
+      ],
+      "additionalProperties": false
+    },
+    "command_decision_context": {
+      "type": "object",
+      "properties": {
+        "op": {
+          "const": "core"
+        },
+        "transactionId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "targetPackageId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "expectedPackageRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "expectedGraphRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "command": {
+          "const": "decision_context"
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "nodeId": {
+              "$ref": "#/$defs/id"
+            },
+            "sourceId": {
+              "$ref": "#/$defs/id"
+            },
+            "action": {
+              "enum": [
+                "save",
+                "remove",
+                "note"
+              ]
+            },
+            "comment": {
+              "type": "string"
+            },
+            "rule": {
+              "$ref": "#/$defs/dependencyRule"
+            },
+            "analysisSources": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "sourceId",
+                  "revision",
+                  "excerpt"
+                ],
+                "properties": {
+                  "sourceId": {
+                    "$ref": "#/$defs/id"
+                  },
+                  "revision": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "excerpt": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "required": [
+            "nodeId",
+            "sourceId",
+            "action"
+          ]
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/artifactRef"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "op",
+        "transactionId",
+        "targetPackageId",
+        "expectedPackageRevision",
+        "expectedGraphRevision",
+        "command",
+        "data",
+        "note"
+      ],
+      "additionalProperties": false
+    },
+    "command_requirement_decision": {
+      "type": "object",
+      "properties": {
+        "op": {
+          "const": "core"
+        },
+        "transactionId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "targetPackageId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "expectedPackageRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "expectedGraphRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "command": {
+          "const": "requirement_decision"
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "nodeId": {
+              "$ref": "#/$defs/id"
+            },
+            "parentId": {
+              "$ref": "#/$defs/id"
+            },
+            "decisionId": {
+              "$ref": "#/$defs/id"
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "description": {
+              "type": "string"
+            },
+            "replaceEdgeId": {
+              "$ref": "#/$defs/id"
+            },
+            "workGraphId": {
+              "$ref": "#/$defs/id"
+            }
+          },
+          "required": [
+            "nodeId",
+            "parentId",
+            "decisionId",
+            "title"
+          ]
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/artifactRef"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "op",
+        "transactionId",
+        "targetPackageId",
+        "expectedPackageRevision",
+        "expectedGraphRevision",
+        "command",
+        "data",
+        "note"
+      ],
+      "additionalProperties": false
+    },
+    "command_context_record": {
+      "type": "object",
+      "properties": {
+        "op": {
+          "const": "core"
+        },
+        "transactionId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "targetPackageId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "expectedPackageRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "expectedGraphRevision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "command": {
+          "const": "context_record"
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "nodeId": {
+              "$ref": "#/$defs/id"
+            },
+            "contextGroupId": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/id"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "nodeId"
+          ]
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/artifactRef"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "op",
+        "transactionId",
+        "targetPackageId",
+        "expectedPackageRevision",
+        "expectedGraphRevision",
+        "command",
+        "data",
+        "note"
+      ],
+      "additionalProperties": false
+    },
+    "historyDetail": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "type": "string",
+          "minLength": 1
+        },
+        "targetIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "uniqueItems": true
+        },
+        "createdIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "uniqueItems": true
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "uniqueItems": true
+        },
+        "subjects": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "$ref": "#/$defs/id"
+              },
+              "kind": {
+                "enum": [
+                  "requirement",
+                  "decision",
+                  "action",
+                  "canon",
+                  "context",
+                  "info",
+                  "evidence",
+                  "finding"
+                ]
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1
+              },
+              "lowLevel": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "id",
+              "kind",
+              "title"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "cosmetic": {
+          "type": "boolean"
+        },
+        "process": {
+          "type": "boolean"
+        },
+        "relations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "$ref": "#/$defs/id"
+              },
+              "from": {
+                "$ref": "#/$defs/id"
+              },
+              "to": {
+                "$ref": "#/$defs/id"
+              },
+              "type": {
+                "enum": [
+                  "DERIVES",
+                  "INTRODUCES",
+                  "DRIVES",
+                  "REQUIRES_ACTION",
+                  "CANON_FOR",
+                  "CONTEXT_FOR",
+                  "INFO_FOR",
+                  "EVIDENCE_FOR",
+                  "DEPENDS_ON",
+                  "FINDING_RESPONSE",
+                  "FINDING_PROPOSAL"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "type",
+              "from",
+              "to"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "activatedRequirementIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "uniqueItems": true
+        },
+        "deactivatedRequirementIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "uniqueItems": true
+        },
+        "edits": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "field": {
+                "type": "string",
+                "minLength": 1
+              },
+              "beforePresent": {
+                "type": "boolean"
+              },
+              "before": {},
+              "afterPresent": {
+                "type": "boolean"
+              },
+              "after": {}
+            },
+            "required": [
+              "field",
+              "beforePresent",
+              "before",
+              "afterPresent",
+              "after"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "command",
+        "targetIds",
+        "createdIds",
+        "fields",
+        "subjects",
+        "cosmetic",
+        "process",
+        "relations",
+        "activatedRequirementIds",
+        "deactivatedRequirementIds",
+        "edits"
+      ],
+      "additionalProperties": false
+    },
+    "question": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "const": "question"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "description": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "minItems": 0,
+          "uniqueItems": true
+        },
+        "policy": {
+          "$ref": "#/$defs/policy"
+        },
+        "locks": {
+          "$ref": "#/$defs/locks"
+        },
+        "review": {
+          "$ref": "#/$defs/review"
+        },
+        "relatedRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/questionRef"
+          },
+          "minItems": 0
+        },
+        "sourceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/questionRef"
+          },
+          "minItems": 0
+        },
+        "impact": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "answerCondition": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "blocking": {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "enum": [
+                "blocking",
+                "non-blocking",
+                "partially-blocking"
+              ]
+            },
+            "scope": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            }
+          },
+          "required": [
+            "mode"
+          ],
+          "additionalProperties": false
+        },
+        "answers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/questionAnswer"
+          }
+        },
+        "assessment": {
+          "$ref": "#/$defs/questionAssessment"
+        },
+        "assessmentHistory": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/questionAssessment"
+          }
+        },
+        "assessmentReviewRequired": {
+          "type": "boolean"
+        },
+        "answerHistory": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/questionAnswerHistoryEntry"
+          }
+        },
+        "referenceBindings": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/id"
+          },
+          "description": "Writer-derived copy identity bindings; not editable through add/edit."
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "title",
+        "description",
+        "revision",
+        "relatedRefs",
+        "sourceRefs",
+        "impact",
+        "answerCondition",
+        "answers",
+        "assessmentHistory",
+        "assessmentReviewRequired"
+      ],
+      "additionalProperties": false
+    },
+    "questionAnswer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "text",
+        "sourceRefs",
+        "recordedBy",
+        "recordedAt",
+        "eventId"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "kind": {
+          "enum": [
+            "hypothesis",
+            "observation",
+            "user_answer"
+          ]
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "sourceRefs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/questionRef"
+          },
+          "minItems": 0
+        },
+        "recordedBy": {
+          "enum": [
+            "user",
+            "assistant"
+          ]
+        },
+        "recordedAt": {
+          "type": "string"
+        },
+        "eventId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "userSource": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mode",
+            "eventId"
+          ],
+          "properties": {
+            "mode": {
+              "enum": [
+                "direct-user-entry",
+                "user-context"
+              ]
+            },
+            "eventId": {
+              "$ref": "#/$defs/uuid"
+            },
+            "nodeId": {
+              "$ref": "#/$defs/id"
+            }
+          }
+        }
+      }
+    },
+    "questionAssessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "answerIds",
+        "sufficient",
+        "basis",
+        "recordedBy",
+        "recordedAt",
+        "eventId"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/uuid"
+        },
+        "answerIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/uuid"
+          },
+          "uniqueItems": true
+        },
+        "sufficient": {
+          "type": "boolean"
+        },
+        "basis": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "recordedBy": {
+          "enum": [
+            "user",
+            "assistant"
+          ]
+        },
+        "recordedAt": {
+          "type": "string"
+        },
+        "eventId": {
+          "$ref": "#/$defs/uuid"
+        }
+      }
+    },
+    "questionAnswerHistoryEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "action",
+        "previous",
+        "eventId",
+        "recordedBy",
+        "recordedAt"
+      ],
+      "properties": {
+        "action": {
+          "enum": [
+            "edit",
+            "remove"
+          ]
+        },
+        "previous": {
+          "$ref": "#/$defs/questionAnswer"
+        },
+        "eventId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "recordedBy": {
+          "enum": [
+            "user",
+            "assistant"
+          ]
+        },
+        "recordedAt": {
+          "type": "string"
+        }
+      }
+    },
+    "actionEstimates": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "complexity": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "basis": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "time": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "minSeconds",
+            "maxSeconds"
+          ],
+          "properties": {
+            "minSeconds": {
+              "type": "number",
+              "minimum": 0
+            },
+            "maxSeconds": {
+              "type": "number",
+              "minimum": 0
+            }
+          }
+        }
+      },
+      "anyOf": [
+        {
+          "required": [
+            "complexity"
+          ]
+        },
+        {
+          "required": [
+            "time"
+          ]
+        }
+      ]
+    },
+    "questionRef": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/entityRef"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "schemaVersion",
+            "kind",
+            "uri"
+          ],
+          "properties": {
+            "schemaVersion": {
+              "const": 1
+            },
+            "kind": {
+              "const": "document"
+            },
+            "uri": {
+              "type": "string",
+              "pattern": "^https://"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "schemaVersion",
+            "kind",
+            "packageId",
+            "identitySpace"
+          ],
+          "properties": {
+            "schemaVersion": {
+              "const": 1
+            },
+            "kind": {
+              "enum": [
+                "process",
+                "lens",
+                "workGraph"
+              ]
+            },
+            "packageId": {
+              "$ref": "#/$defs/uuid"
+            },
+            "identitySpace": {
+              "$ref": "#/$defs/uuid"
+            },
+            "workGraphId": {
+              "$ref": "#/$defs/id"
+            }
+          }
+        }
+      ]
+    },
+    "canonKnownError": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "description"
+      ],
+      "additionalProperties": false
+    },
+    "scopeRef": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "kind": {
+          "enum": [
+            "process",
+            "workGraph",
+            "lens"
+          ]
+        },
+        "packageId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "identitySpace": {
+          "$ref": "#/$defs/uuid"
+        },
+        "graphRevision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "workGraphId": {
+          "$ref": "#/$defs/id"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "kind",
+        "packageId",
+        "identitySpace",
+        "graphRevision",
+        "sha256"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "workGraph"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "required": [
+              "workGraphId"
+            ]
+          },
+          "else": {
+            "not": {
+              "required": [
+                "workGraphId"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "planActionRequest": {
+      "type": "object",
+      "properties": {
+        "op": {
+          "const": "plan_action"
+        },
+        "transactionId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "targetPackageId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "expectedPackageRevision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "expectedGraphRevision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "expectedPlanRevision": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "note": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "entity": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "$ref": "#/$defs/id"
+            },
+            "kind": {
+              "const": "action"
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            "description": {
+              "type": "string"
+            },
+            "tags": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              "minItems": 0,
+              "uniqueItems": true
+            },
+            "policy": {
+              "$ref": "#/$defs/policy"
+            },
+            "locks": {
+              "$ref": "#/$defs/locks"
+            },
+            "actionType": {
+              "const": "task"
+            },
+            "lowLevel": {
+              "const": false
+            },
+            "targetIds": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/id"
+              },
+              "minItems": 0,
+              "uniqueItems": true
+            },
+            "groupIds": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/id"
+              },
+              "minItems": 0,
+              "uniqueItems": true
+            },
+            "estimates": {
+              "$ref": "#/$defs/actionEstimates"
+            },
+            "subjectRefs": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/entityRef"
+                  },
+                  {
+                    "$ref": "#/$defs/scopeRef"
+                  }
+                ]
+              }
+            },
+            "resultCondition": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "title",
+            "description"
+          ],
+          "additionalProperties": false
+        },
+        "placement": {
+          "type": "object",
+          "properties": {
+            "stepId": {
+              "$ref": "#/$defs/id"
+            },
+            "afterStepId": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "caseId": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "at": {
+              "type": "string"
+            },
+            "deadline": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "op",
+        "transactionId",
+        "targetPackageId",
+        "expectedPackageRevision",
+        "expectedGraphRevision",
+        "expectedPlanRevision",
+        "note",
+        "entity"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "oneOf": [
+    {
+      "$ref": "#/$defs/graph"
+    },
+    {
+      "$ref": "#/$defs/plan"
+    },
+    {
+      "$ref": "#/$defs/registry"
+    },
+    {
+      "$ref": "#/$defs/view"
+    },
+    {
+      "$ref": "#/$defs/request"
+    },
+    {
+      "$ref": "#/$defs/inputBinding"
+    }
+  ]
+}

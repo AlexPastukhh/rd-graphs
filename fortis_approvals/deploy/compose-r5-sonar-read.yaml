@@ -1,0 +1,49 @@
+# SOURCE-ONLY R5 candidate. NOT APPROVED to deploy/upgrade existing A3.
+# Deliberately separate R5 volumes/ports, no G2/G4/A3 mounts.
+# EXTERNAL volumes must be provisioned and audited by the owner BEFORE start.
+# Fortis Repo must never receive the Sonar service token or Docker socket.
+services:
+  fortis:
+    build:
+      context: ../..
+      dockerfile: fortis_approvals/deploy/Dockerfile-R5-Sonar-Read-Candidate
+    image: fortis-r5-sonar-read-candidate:local
+    restart: "no"
+    init: true
+    read_only: true
+    user: "10001:10001"
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    pids_limit: 100
+    environment:
+      FORTIS_SONAR_REGION: eu
+      FORTIS_SONAR_ORGANIZATIONS: ${FORTIS_SONAR_ORGANIZATIONS:?owner_allowlist_required}
+    ports:
+      - "127.0.0.1:19103:19103"  # owner-only local browser
+      - "127.0.0.1:19104:19104"  # machine TLS, distinct authorization
+    volumes:
+      - r5_state:/state
+      - r5_identity:/run/r5-identity:ro
+      - r5_grant:/run/r5-grant:ro
+      - r5_sonar_token:/run/r5-sonar-token:ro
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+    healthcheck:
+      test: ["CMD","python","-m","fortis_approvals.r5_read_server","health"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+volumes:
+  r5_state:
+    external: true
+    name: fortis-r5-state
+  r5_identity:
+    external: true
+    name: fortis-r5-identity
+  r5_grant:
+    external: true
+    name: fortis-r5-grant
+  r5_sonar_token:
+    external: true
+    name: fortis-r5-sonar-token

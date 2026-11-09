@@ -1,0 +1,168 @@
+{
+  "schemaVersion": 1,
+  "readOnly": true,
+  "exampleOnly": true,
+  "planningScale": "module",
+  "identitySpace": "rdg-example-mixed-v7",
+  "hypothetical": true,
+  "selectedInProject": false,
+  "id": "reference-mixed-change-log",
+  "title": "Обеспечить единый учёт изменений",
+  "revision": 1,
+  "rootRequirementId": "R-OTHER",
+  "catalogHidden": true,
+  "view": {
+    "requirementDepth": 1
+  },
+  "expansionOf": {
+    "graphSlug": "reference-mixed-active-work",
+    "nodeId": "R-OTHER"
+  },
+  "description": "Отдельный уровень той же R. Канонические записи и история остаются у владельца; это учебная проекция, не новое решение.",
+  "nodes": [
+    {
+      "id": "R-OTHER",
+      "kind": "requirement",
+      "title": "Обеспечить единый учёт изменений",
+      "qrpe": [],
+      "effectiveAt": "T0",
+      "knownAt": "T1",
+      "sourceRef": "example:change-log-need",
+      "projectionOf": {
+        "graphSlug": "reference-mixed-active-work",
+        "nodeId": "R-OTHER"
+      }
+    },
+    {
+      "id": "D-OTHER",
+      "kind": "decision",
+      "title": "В примере принято использовать общий журнал изменений",
+      "status": "selected-in-example-only",
+      "selectedInExampleOnly": true,
+      "qrpe": [],
+      "implementationStatus": "not-demonstrated",
+      "goalAchievementStatus": "unverified",
+      "effectiveAt": "T3",
+      "knownAt": "T3",
+      "recordedAt": "T3",
+      "projectionOf": {
+        "graphSlug": "reference-mixed-active-work",
+        "nodeId": "D-OTHER"
+      }
+    },
+    {
+      "id": "R-AUDIT-CONSISTENCY",
+      "kind": "requirement",
+      "title": "Проверять согласованность нового общего журнала изменений",
+      "status": "active",
+      "effectiveAt": "T3",
+      "knownAt": "T3",
+      "recordedAt": "T3",
+      "sourceRef": "EX-EV-OTHER",
+      "qrpe": [],
+      "projectionOf": {
+        "graphSlug": "reference-mixed-active-work",
+        "nodeId": "R-AUDIT-CONSISTENCY"
+      }
+    },
+    {
+      "id": "R-RELINK",
+      "kind": "requirement",
+      "title": "Проверить непротиворечивость интеграционных контрактов",
+      "status": "active",
+      "qrpe": [
+        {
+          "id": "Q-R-RELINK",
+          "text": "От какого D зависит проверка контрактов?",
+          "status": "resolved",
+          "recordedAt": "T3",
+          "statusHistory": [
+            {
+              "id": "QRR-OPEN",
+              "status": "open",
+              "recordedAt": "T3"
+            },
+            {
+              "id": "QRR-RESOLVED",
+              "status": "resolved",
+              "recordedAt": "T4",
+              "note": "Перенесено к D-A с сохранением старой связи."
+            }
+          ]
+        }
+      ],
+      "projectionOf": {
+        "graphSlug": "reference-mixed-active-work",
+        "nodeId": "R-RELINK"
+      }
+    },
+    {
+      "id": "R-INACTIVE",
+      "kind": "requirement",
+      "title": "Создать отдельный служебный справочник для каждого изменения",
+      "status": "inactive",
+      "active": false,
+      "qrpe": [
+        {
+          "id": "Q-R-INACTIVE",
+          "text": "Нужен ли отдельный справочник помимо единого журнала?",
+          "status": "resolved",
+          "recordedAt": "T3",
+          "statusHistory": [
+            {
+              "id": "QRI-OPEN",
+              "status": "open",
+              "recordedAt": "T3"
+            },
+            {
+              "id": "QRI-RESOLVED",
+              "status": "resolved",
+              "recordedAt": "T4",
+              "note": "Дублирование признано ненужным."
+            }
+          ]
+        }
+      ],
+      "projectionOf": {
+        "graphSlug": "reference-mixed-active-work",
+        "nodeId": "R-INACTIVE"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "DRV-OTHER",
+      "type": "DRIVES",
+      "from": "R-OTHER",
+      "to": "D-OTHER"
+    },
+    {
+      "id": "INTRO-AUDIT",
+      "type": "INTRODUCES",
+      "from": "D-OTHER",
+      "to": "R-AUDIT-CONSISTENCY",
+      "parent": "R-OTHER",
+      "childRole": "method_correctness"
+    },
+    {
+      "id": "INTRO-RELINK-WRONG",
+      "type": "INTRODUCES",
+      "from": "D-OTHER",
+      "to": "R-RELINK",
+      "parent": "R-OTHER",
+      "childRole": "subgoal",
+      "archived": true
+    },
+    {
+      "id": "INTRO-INACTIVE",
+      "type": "INTRODUCES",
+      "from": "D-OTHER",
+      "to": "R-INACTIVE",
+      "parent": "R-OTHER",
+      "childRole": "subgoal",
+      "archived": true
+    }
+  ],
+  "collections": [],
+  "events": []
+}

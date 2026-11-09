@@ -1,0 +1,294 @@
+{
+  "schemaVersion": 1,
+  "id": "reference-behavior-review",
+  "title": "Эталон §4–5 · Behavior, варианты и пересмотр",
+  "revision": 1,
+  "exampleOnly": true,
+  "readOnly": true,
+  "origin": "requirements-decisions-graph-examples-v0.1(2).md — версия содержимого 0.2 (2026-10-10); EX-* только иллюстративные ID",
+  "sourceDocument": "docs/examples/requirements-decisions-graph-examples-v0.2.source.md",
+  "sourceSections": [
+    "§4",
+    "§5"
+  ],
+  "note": "Учебная проекция исходного примера, а не реальное решение пользователя. Часть отношений описательная, формат записи graph-apply.py поддерживает не все их типы.",
+  "nodes": [
+    {
+      "id": "EX-R-BEHAVIOR",
+      "kind": "requirement",
+      "title": "Описать Behavior фич приложения",
+      "source": "§4",
+      "scope": "Behavior всех Feature Target Modules"
+    },
+    {
+      "id": "EX-C-BEHAVIOR",
+      "kind": "context",
+      "title": "Сейчас важна последовательность подтверждения",
+      "source": "§4"
+    },
+    {
+      "id": "EX-D-BEHAVIOR",
+      "kind": "decision",
+      "title": "Выбрать Behavior Path в общем scope",
+      "status": "example",
+      "scope": "Behavior всех Feature Target Modules данного приложения",
+      "source": "§4–5",
+      "description": "Единое выбранное решение условного примера. Reusable variant не подменяет конкретный D; другой контекст позже инициирует пересмотр, но не отменяет его."
+    },
+    {
+      "id": "EX-V-BEHAVIOR-PATH",
+      "kind": "variant",
+      "title": "Behavior Path: шаги действий и реакций",
+      "source": "§4",
+      "description": "Готовый повторно используемый вариант, не отдельное committed D."
+    },
+    {
+      "id": "EX-V-STATE-TRANSITIONS",
+      "kind": "variant",
+      "title": "State Transitions: состояния, события, переходы",
+      "source": "§4",
+      "description": "Готовый вариант, потенциально подходящий для нового контекста."
+    },
+    {
+      "id": "EX-PR-STATE",
+      "kind": "proposal",
+      "title": "Пересмотреть State Transitions как основную форму",
+      "status": "pending",
+      "source": "§4",
+      "description": "Не выбранный кандидат. Оценка может измениться в новом контексте."
+    },
+    {
+      "id": "EX-PR-HYBRID",
+      "kind": "proposal",
+      "title": "Сохранить Behavior Path, добавить переходы где нужно",
+      "status": "pending",
+      "source": "§4",
+      "description": "Не выбранный кандидат. Цена — согласованность двух форм описания."
+    },
+    {
+      "id": "EX-C-BEHAVIOR-NEW",
+      "kind": "context",
+      "title": "Появились внешние события, зависящие от состояния",
+      "origin": "assistant/example extension",
+      "source": "§4",
+      "description": "Условное расширение примера, не новое подтверждённое требование пользователя."
+    },
+    {
+      "id": "EX-Q-D-BEHAVIOR",
+      "kind": "question",
+      "title": "Достаточен ли Behavior Path в новом контексте?",
+      "source": "§4",
+      "status": "open",
+      "description": "QRPE обоснованности D — не событие принятия."
+    },
+    {
+      "id": "EX-R-ERRORS-CONFIRM",
+      "kind": "requirement",
+      "title": "Описать ошибки подтверждения в F-RESERVATION",
+      "source": "§4",
+      "scope": "Под-R общего EX-R-BEHAVIOR; обработка потерянного ответа — только часть"
+    },
+    {
+      "id": "EX-R-RESULT",
+      "kind": "requirement",
+      "title": "Узнать результат подтверждения без дубля",
+      "source": "§3–4",
+      "description": "Функциональный драйвер локального решения, возникший при описании Scenario."
+    },
+    {
+      "id": "EX-D-STATUS",
+      "kind": "decision",
+      "title": "Проверить доступный статус, неизвестность не объявлять отказом",
+      "status": "example",
+      "source": "§3–4",
+      "scope": "Локальная обработка потери ответа в F-RESERVATION",
+      "evidenceStatus": "unverified"
+    },
+    {
+      "id": "EX-C-STATUS",
+      "kind": "context",
+      "title": "Есть доступный способ проверить статус",
+      "source": "§3"
+    },
+    {
+      "id": "EX-RR-STATUS-FEAS",
+      "kind": "requirement",
+      "title": "Использовать доступные средства",
+      "source": "§3"
+    },
+    {
+      "id": "EX-Q-D-STATUS",
+      "kind": "question",
+      "title": "Установит ли статус окончательный результат?",
+      "source": "§3",
+      "status": "partially-blocking"
+    },
+    {
+      "id": "EX-R-STATE-RESERVATION",
+      "kind": "requirement",
+      "title": "Описать состояние бронирования",
+      "scope": "Только F-RESERVATION",
+      "source": "§5"
+    },
+    {
+      "id": "EX-D-STATE-RESERVATION",
+      "kind": "decision",
+      "title": "Выбрать таблицу состояний бронирования",
+      "status": "example",
+      "scope": "Только F-RESERVATION",
+      "source": "§5"
+    },
+    {
+      "id": "EX-R-STATE-SELECTION",
+      "kind": "requirement",
+      "title": "Описать состояние выбора комнаты и времени",
+      "source": "§5",
+      "scope": "Соответствующая Feature"
+    },
+    {
+      "id": "EX-D-STATE-SELECTION",
+      "kind": "decision",
+      "title": "Выбрать простой список данных для состояния выбора",
+      "status": "example",
+      "scope": "Соответствующая Feature",
+      "source": "§5"
+    }
+  ],
+  "edges": [
+    {
+      "id": "REF-B-01",
+      "type": "DRIVES",
+      "from": "EX-R-BEHAVIOR",
+      "to": "EX-D-BEHAVIOR"
+    },
+    {
+      "id": "REF-B-02",
+      "type": "CONTEXT_FOR",
+      "from": "EX-C-BEHAVIOR",
+      "to": "EX-D-BEHAVIOR"
+    },
+    {
+      "id": "REF-B-03",
+      "type": "USES_VARIANT",
+      "from": "EX-D-BEHAVIOR",
+      "to": "EX-V-BEHAVIOR-PATH",
+      "illustrative": true
+    },
+    {
+      "id": "REF-B-04",
+      "type": "INTRODUCES",
+      "from": "EX-D-BEHAVIOR",
+      "to": "EX-R-ERRORS-CONFIRM",
+      "parent": "EX-R-BEHAVIOR"
+    },
+    {
+      "id": "REF-B-05",
+      "type": "DRIVES",
+      "from": "EX-R-ERRORS-CONFIRM",
+      "to": "EX-D-STATUS"
+    },
+    {
+      "id": "REF-B-06",
+      "type": "DRIVES",
+      "from": "EX-R-RESULT",
+      "to": "EX-D-STATUS"
+    },
+    {
+      "id": "REF-B-07",
+      "type": "DRIVES",
+      "from": "EX-RR-STATUS-FEAS",
+      "to": "EX-D-STATUS"
+    },
+    {
+      "id": "REF-B-08",
+      "type": "CONTEXT_FOR",
+      "from": "EX-C-STATUS",
+      "to": "EX-D-STATUS"
+    },
+    {
+      "id": "REF-B-09",
+      "type": "QRPE_FOR",
+      "from": "EX-Q-D-STATUS",
+      "to": "EX-D-STATUS",
+      "illustrative": true
+    },
+    {
+      "id": "REF-B-10",
+      "type": "QRPE_FOR",
+      "from": "EX-Q-D-BEHAVIOR",
+      "to": "EX-D-BEHAVIOR",
+      "illustrative": true
+    },
+    {
+      "id": "REF-B-11",
+      "type": "RECONSIDERS",
+      "from": "EX-PR-STATE",
+      "to": "EX-D-BEHAVIOR",
+      "illustrative": true
+    },
+    {
+      "id": "REF-B-12",
+      "type": "RECONSIDERS",
+      "from": "EX-PR-HYBRID",
+      "to": "EX-D-BEHAVIOR",
+      "illustrative": true
+    },
+    {
+      "id": "REF-B-13",
+      "type": "USES_VARIANT",
+      "from": "EX-PR-STATE",
+      "to": "EX-V-STATE-TRANSITIONS",
+      "illustrative": true
+    },
+    {
+      "id": "REF-B-14",
+      "type": "CONTEXT_FOR",
+      "from": "EX-C-BEHAVIOR-NEW",
+      "to": "EX-D-BEHAVIOR"
+    },
+    {
+      "id": "REF-B-15",
+      "type": "DRIVES",
+      "from": "EX-R-STATE-RESERVATION",
+      "to": "EX-D-STATE-RESERVATION"
+    },
+    {
+      "id": "REF-B-16",
+      "type": "DRIVES",
+      "from": "EX-R-STATE-SELECTION",
+      "to": "EX-D-STATE-SELECTION"
+    }
+  ],
+  "events": [
+    {
+      "id": "EX-E1",
+      "type": "decision_selected",
+      "decisionId": "EX-D-BEHAVIOR",
+      "by": "example",
+      "note": "В исходном контексте условно выбран Behavior Path на все Feature TMs приложения; это не решение реального пользователя."
+    },
+    {
+      "id": "EX-E2",
+      "type": "context_changed",
+      "by": "example",
+      "contextId": "EX-C-BEHAVIOR-NEW",
+      "note": "Добавлен новый условный контекст: внешние события и зависимость от состояния. Предыдущее D не отменено."
+    },
+    {
+      "id": "EX-E3",
+      "type": "candidates_prepared",
+      "by": "example",
+      "candidateIds": [
+        "EX-PR-HYBRID",
+        "EX-PR-STATE"
+      ],
+      "note": "Подготовлены альтернативные предложения; ни одна не принята."
+    }
+  ],
+  "coverage": "Готовый вариант ≠ выбранный D, глобальный scope против локального, QRPE, pending-кандидаты и отдельная условная история.",
+  "illustrativeTypes": [
+    "USES_VARIANT",
+    "QRPE_FOR",
+    "RECONSIDERS"
+  ]
+}

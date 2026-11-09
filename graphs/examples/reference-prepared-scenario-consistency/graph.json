@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "readOnly": true,
+  "exampleOnly": true,
+  "templateOnly": true,
+  "planningScale": "unit",
+  "identitySpace": "rdg-example-prepared-v7",
+  "hypothetical": true,
+  "selectedInProject": false,
+  "id": "reference-prepared-scenario-consistency",
+  "title": "Согласовать пересекающиеся сценарии",
+  "revision": 2,
+  "rootRequirementId": "RS-2",
+  "catalogHidden": true,
+  "view": {
+    "requirementDepth": 1
+  },
+  "expansionOf": {
+    "graphSlug": "reference-prepared-planning-tree",
+    "nodeId": "RS-2"
+  },
+  "description": "Отдельный уровень той же R. Канонические записи и история остаются у владельца; это учебная проекция, не новое решение.",
+  "nodes": [
+    {
+      "id": "RS-2",
+      "kind": "requirement",
+      "status": "candidate",
+      "title": "Согласовать пересекающиеся сценарии",
+      "qrpe": [],
+      "projectionOf": {
+        "graphSlug": "reference-prepared-planning-tree",
+        "nodeId": "RS-2"
+      }
+    },
+    {
+      "id": "RS-2-O1",
+      "kind": "option",
+      "title": "Согласовать общие шаги в одной спецификации",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RS-2-O1-plus-1",
+            "text": "Пересекающиеся сценарии используют одинаковые шаги и правила; есть общий владелец этих правил.",
+            "checkCategories": []
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RS-2-O1-minus-1",
+            "text": "Совпадение шагов только внешнее, а права, данные или правила результата различаются; унификация исказит поведение.",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": [],
+      "projectionOf": {
+        "graphSlug": "reference-prepared-planning-tree",
+        "nodeId": "RS-2-O1"
+      },
+      "description": "Результат: общие шаги с едиными условиями и явными отличиями каждого сценария."
+    },
+    {
+      "id": "RS-2-O2",
+      "kind": "option",
+      "title": "Проверять пересечения сквозными тестами",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RS-2-O2-plus-1",
+            "text": "Сценарии принадлежат разным командам; общие данные и конфликты можно наблюдать через конечный результат.",
+            "checkCategories": []
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RS-2-O2-minus-1",
+            "text": "Нет воспроизводимой среды и наблюдаемого результата; сквозные тесты дадут неоднозначную диагностику.",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": [],
+      "projectionOf": {
+        "graphSlug": "reference-prepared-planning-tree",
+        "nodeId": "RS-2-O2"
+      },
+      "description": "Результат: совместные сценарии с конфликтами обновления, повтором и согласованным ожидаемым результатом."
+    }
+  ],
+  "edges": [
+    {
+      "id": "OPT-RS-2-O1",
+      "type": "OPTION_FOR",
+      "from": "RS-2",
+      "to": "RS-2-O1"
+    },
+    {
+      "id": "OPT-RS-2-O2",
+      "type": "OPTION_FOR",
+      "from": "RS-2",
+      "to": "RS-2-O2"
+    }
+  ],
+  "collections": [],
+  "events": []
+}

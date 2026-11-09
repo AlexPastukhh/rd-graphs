@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "id": "reference-unit-split",
+  "title": "Unit · Проработать состояние и переходы",
+  "revision": 1,
+  "planningScale": "unit",
+  "identitySpace": "example:module-unit-v1",
+  "rootRequirementId": "UD-R-STATE-PATH",
+  "readOnly": true,
+  "templateOnly": true,
+  "catalogHidden": true,
+  "sourceDocument": "docs/examples/MODULE-UNIT-GUIDE.md",
+  "sourceContentSHA256": "e98eecb98f3f28589e803ece81bcb5069a4db07b1b4c63436bdebc83944da7d0",
+  "preparedModule": {
+    "id": "UD-D-STATE-PATH",
+    "version": "e98eecb98f3f28589e803ece81bcb5069a4db07b1b4c63436bdebc83944da7d0",
+    "goalRequirementId": "UD-R-STATE-PATH",
+    "methodDecisionId": "UD-D-STATE-PATH",
+    "childRequirementIds": [
+      "UD-R-STATES",
+      "UD-R-TRANSITIONS"
+    ],
+    "applicability": "Проработать состояние и переходы",
+    "successCriteria": "Отдельно определить состояния и переходы между ними"
+  },
+  "nodes": [
+    {
+      "id": "UD-R-STATE-PATH",
+      "kind": "requirement",
+      "title": "Проработать состояние и переходы",
+      "projectionOf": {
+        "graphSlug": "reference-module-units",
+        "nodeId": "UD-R-STATE-PATH"
+      },
+      "referenceOnly": true
+    },
+    {
+      "id": "UD-D-STATE-PATH",
+      "kind": "decision",
+      "title": "Отдельно определить состояния и переходы между ними",
+      "status": "reusable-unselected",
+      "selected": false
+    },
+    {
+      "id": "UD-R-STATES",
+      "kind": "requirement",
+      "title": "Определить состояния"
+    },
+    {
+      "id": "UD-R-TRANSITIONS",
+      "kind": "requirement",
+      "title": "Определить переходы"
+    }
+  ],
+  "edges": [
+    {
+      "id": "UD-D-STATE-PATH-drive",
+      "type": "DRIVES",
+      "from": "UD-R-STATE-PATH",
+      "to": "UD-D-STATE-PATH",
+      "templateOnly": true,
+      "meaning": "Подготовленный способ ответа на R; реального выбора нет."
+    },
+    {
+      "id": "UD-D-STATE-PATH-UD-R-STATES",
+      "type": "INTRODUCES",
+      "from": "UD-D-STATE-PATH",
+      "to": "UD-R-STATES",
+      "parent": "UD-R-STATE-PATH",
+      "templateOnly": true,
+      "meaning": "Потенциальный под-R этого способа; не принятый план."
+    },
+    {
+      "id": "UD-D-STATE-PATH-UD-R-TRANSITIONS",
+      "type": "INTRODUCES",
+      "from": "UD-D-STATE-PATH",
+      "to": "UD-R-TRANSITIONS",
+      "parent": "UD-R-STATE-PATH",
+      "templateOnly": true,
+      "meaning": "Потенциальный под-R этого способа; не принятый план."
+    }
+  ],
+  "events": [],
+  "sourceOwnerGraphSlug": "reference-module-units"
+}

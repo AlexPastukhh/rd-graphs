@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "examples": {
+    "requirements-dependencies-demo": {
+      "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+      "identitySpace": "rdg-working-requirements-dependencies-demo",
+      "planFile": "plans/requirements-dependencies-demo/plan.json",
+      "engineDir": ".rdg-gendocen-projects/requirements-dependencies-demo",
+      "expectedPurpose": "real-api-teaching-workflow",
+      "builder": "tools/rdg-build-working-example.py"
+    }
+  }
+}

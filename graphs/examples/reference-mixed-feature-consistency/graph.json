@@ -1,0 +1,157 @@
+{
+  "schemaVersion": 1,
+  "id": "reference-mixed-feature-consistency",
+  "title": "Учебная под-R: правильность применения Features",
+  "revision": 3,
+  "readOnly": true,
+  "exampleOnly": true,
+  "hypothetical": true,
+  "selectedInProject": false,
+  "planningScale": "unit",
+  "identitySpace": "rdg-example-mixed-v7",
+  "rootRequirementId": "R-ACT-2",
+  "description": "Собственная плановая R того же ID; условно выбран один прямой ответ без дальнейшей под-R. Сам факт выбора не означает выполнения.",
+  "nodes": [
+    {
+      "id": "R-ACT-2",
+      "kind": "requirement",
+      "title": "Обеспечить согласованность Features",
+      "projectionOf": {
+        "graphSlug": "reference-mixed-active-work",
+        "nodeId": "R-ACT-2"
+      },
+      "qrpe": []
+    },
+    {
+      "id": "D-ACT-2",
+      "kind": "decision",
+      "title": "Общая схема контрактов",
+      "status": "selected-in-example-only",
+      "selectedInExampleOnly": true,
+      "qrpe": [
+        {
+          "id": "QR-ACT",
+          "status": "resolved",
+          "text": "Границы интеграции согласованы",
+          "recordedAt": "T2"
+        }
+      ],
+      "implementationStatus": "not-demonstrated",
+      "goalAchievementStatus": "unverified"
+    },
+    {
+      "id": "O-A11Y-INTERPRETED-WORK",
+      "kind": "option",
+      "title": "Согласовать общие контракты и клавиатурные переходы",
+      "origin": "situational",
+      "status": "candidate",
+      "qrpe": [],
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "O-A11Y-INTERPRETED-WORK-PLUS",
+            "text": "Features используют общие компоненты и могут согласовать единый контракт данных, ошибок и клавиатурного взаимодействия до выпуска.",
+            "contextUses": [
+              {
+                "fieldRef": {
+                  "graphSlug": "reference-mixed-active-work",
+                  "fieldId": "accessibility"
+                },
+                "purpose": "Переиспользовать известный контекст доступности"
+              }
+            ]
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "O-A11Y-INTERPRETED-WORK-MINUS",
+            "text": "Команды не могут синхронно обновить общий контракт; сначала требуется стратегия версий и совместимости."
+          }
+        ],
+        "sourceRefs": [
+          {
+            "graphSlug": "reference-mixed-active-work",
+            "sourceId": "wai-planning"
+          }
+        ],
+        "preparation": "interpreted",
+        "fieldsComplete": true,
+        "interpretation": "Материал WAI используется как направление проверки клавиатурного взаимодействия. Согласованность данных и ошибок задаётся контрактом проекта; ссылка сама не доказывает достаточность способа."
+      },
+      "description": "Результат: согласованные данные, ошибки и правила передачи фокуса на границах Features; проверка каждого потребителя контракта."
+    },
+    {
+      "id": "O-A11Y-LINK-ONLY-WORK",
+      "kind": "option",
+      "title": "Обеспечить согласованность сквозными приёмочными сценариями",
+      "origin": "situational",
+      "status": "candidate",
+      "qrpe": [],
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "O-A11Y-LINK-ONLY-WORK-PLUS",
+            "text": "Features поставляются независимо, а согласованность данных и доступность целого пути можно проверить на наблюдаемом результате сквозного сценария.",
+            "contextUses": [
+              {
+                "fieldRef": {
+                  "graphSlug": "reference-mixed-active-work",
+                  "fieldId": "accessibility"
+                },
+                "purpose": "Переиспользовать известный контекст доступности"
+              }
+            ]
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "O-A11Y-LINK-ONLY-WORK-MINUS",
+            "text": "Нет воспроизводимого сквозного окружения или проверка доступности ограничена финальным экраном; такой тест пропустит ошибки промежуточных переходов."
+          }
+        ],
+        "sourceRefs": [
+          {
+            "graphSlug": "reference-mixed-active-work",
+            "sourceId": "wai-planning"
+          }
+        ],
+        "preparation": "link-only",
+        "fieldsComplete": false
+      },
+      "description": "Результат: исполняемые пользовательские сценарии через несколько Features с едиными ожидаемыми данными и доступным завершением. Ссылка WAI пока не проработана; это пробел подготовки канона, а не отдельный способ изучения теории."
+    }
+  ],
+  "edges": [
+    {
+      "id": "DRV-ACT2",
+      "type": "DRIVES",
+      "from": "R-ACT-2",
+      "to": "D-ACT-2"
+    },
+    {
+      "id": "OPTION-FOR-O-A11Y-INTERPRETED-WORK",
+      "type": "OPTION_FOR",
+      "from": "R-ACT-2",
+      "to": "O-A11Y-INTERPRETED-WORK"
+    },
+    {
+      "id": "OPTION-FOR-O-A11Y-LINK-ONLY-WORK",
+      "type": "OPTION_FOR",
+      "from": "R-ACT-2",
+      "to": "O-A11Y-LINK-ONLY-WORK"
+    }
+  ],
+  "collections": [],
+  "events": [
+    {
+      "id": "EX-EV-ACT2",
+      "type": "decision_selected",
+      "decisionId": "D-ACT-2",
+      "by": "example",
+      "exampleOnly": true,
+      "note": "Учебное решение корректности",
+      "recordedAt": "T2",
+      "hypothetical": true
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+{"format":"canonical_json","state_schema_version":"1.0.0","value":{"id":"R0","kind":"requirement","requirementText":"Продемонстрировать реальные Graph/Plan/API события и Gendocen-обнаружение зависимостей.","status":"active","title":"Сделать проверяемую рабочую демонстрацию зависимостей RDG"}}

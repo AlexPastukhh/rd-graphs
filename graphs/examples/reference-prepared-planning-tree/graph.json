@@ -1,0 +1,585 @@
+{
+  "schemaVersion": 1,
+  "id": "reference-prepared-planning-tree",
+  "title": "Длинный подготовленный граф — только варианты",
+  "revision": 6,
+  "readOnly": true,
+  "exampleOnly": true,
+  "templateOnly": true,
+  "planningScale": "module",
+  "identitySpace": "rdg-example-prepared-v7",
+  "rootRequirementId": "R-PLAN",
+  "description": "Read-only подготовленные варианты; ни один не выбран. Листовой способ RF-1-O1 достаточен без новых дочерних R, если его канон применим. Роли child R остаются потенциальными, QRPE=[] не доказывает отсутствие риска.  Контекстные поля, материал источника и веточно-зависимые вопросы встроены в этот полный пример, а не вынесены в отдельный маленький пример.",
+  "nodes": [
+    {
+      "id": "R-PLAN",
+      "kind": "requirement",
+      "title": "Разбить функциональность приложения",
+      "qrpe": []
+    },
+    {
+      "id": "O-FEATURE",
+      "kind": "option",
+      "title": "По Features",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "O-FEATURE-plus-1",
+            "text": "Нужна независимая проработка частей",
+            "checkCategories": [
+              "согласованность"
+            ]
+          },
+          {
+            "id": "O-FEATURE-plus-2",
+            "text": "Есть команды для отдельных функциональных областей",
+            "checkCategories": [
+              "согласованность"
+            ]
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "O-FEATURE-minus-1",
+            "text": "Критичны сквозные зависимости",
+            "checkCategories": [
+              "согласованность"
+            ]
+          },
+          {
+            "id": "O-FEATURE-minus-2",
+            "text": "Трудно поддерживать единые правила",
+            "checkCategories": [
+              "согласованность"
+            ]
+          }
+        ]
+      },
+      "qrpe": [],
+      "contextUses": [
+        {
+          "fieldRef": {
+            "graphSlug": "reference-prepared-planning-tree",
+            "fieldId": "accessibility"
+          },
+          "purpose": "Проверить доступность интерфейса и клавиатурную навигацию при разбиении Features"
+        }
+      ]
+    },
+    {
+      "id": "O-SCENARIO",
+      "kind": "option",
+      "title": "По пользовательским сценариям",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "O-SCENARIO-plus-1",
+            "text": "Ценность состоит в сквозных пользовательских путях",
+            "checkCategories": [
+              "сквозные процессы"
+            ]
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "O-SCENARIO-minus-1",
+            "text": "Нужно переиспользовать общие единицы функциональности",
+            "checkCategories": [
+              "сквозные процессы"
+            ]
+          }
+        ]
+      },
+      "qrpe": [],
+      "contextUses": [
+        {
+          "fieldRef": {
+            "graphSlug": "reference-prepared-planning-tree",
+            "fieldId": "alternative-details"
+          },
+          "purpose": "Условный вопрос при выборе сценарного способа",
+          "when": {
+            "allSelected": [
+              {
+                "graphSlug": "reference-prepared-planning-tree",
+                "optionId": "O-SCENARIO"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "RF-1",
+      "kind": "requirement",
+      "status": "candidate",
+      "title": "Проработать выбранную Feature",
+      "qrpe": []
+    },
+    {
+      "id": "RF-1-O1",
+      "kind": "option",
+      "title": "Описать операции Feature с предусловиями и результатами",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RF-1-O1-plus-1",
+            "text": "Набор операций невелик, границы Feature известны; достаточно явно задать вход, результат и отказ каждой операции.",
+            "checkCategories": []
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RF-1-O1-minus-1",
+            "text": "Промежуточные состояния влияют на доступность операций; одних входов и выходов недостаточно.",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": [],
+      "directAnswer": true,
+      "description": "Результат: спецификация операций Feature с проверяемыми примерами; прямой ответ без искусственной дочерней R."
+    },
+    {
+      "id": "RF-1-O2",
+      "kind": "option",
+      "title": "Построить модель состояний Feature",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RF-1-O2-plus-1",
+            "text": "Доступные операции зависят от состояния объекта; переходы можно перечислить и проверить.",
+            "checkCategories": []
+          },
+          {
+            "id": "RF-1-O2-advice-research",
+            "text": "Перед выбором этого содержательного способа: Если канон зависит от дальнейшей архитектуры, нарисовать альтернативные следующие R-графы и сопоставить последствия ДО выбора.",
+            "evidence": "Это только условная учебная рекомендация; фактического эксперимента нет."
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RF-1-O2-minus-1",
+            "text": "Поведение почти не зависит от состояния или его границы пока меняются; модель создаст лишнюю работу.",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": [],
+      "description": "Результат: состояния и переходы Feature; дочерняя R проверяет допустимость переходов."
+    },
+    {
+      "id": "RF-2",
+      "kind": "requirement",
+      "status": "candidate",
+      "title": "Обеспечить согласованность Features",
+      "qrpe": []
+    },
+    {
+      "id": "RF-2-O1",
+      "kind": "option",
+      "title": "Зафиксировать единый контракт общих данных",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RF-2-O1-plus-1",
+            "text": "Features разделяют одну модель данных и могут согласованно принять общие типы, правила обновления и ошибки.",
+            "checkCategories": []
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RF-2-O1-minus-1",
+            "text": "Features выпускаются независимо с разными версиями протокола; единый контракт без совместимости ограничит выпуск.",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": [],
+      "description": "Результат: общий контракт и проверка совместимости потребителей, включая правила ошибок и версий."
+    },
+    {
+      "id": "RF-2-O2",
+      "kind": "option",
+      "title": "Проверять парные взаимодействия Features",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RF-2-O2-plus-1",
+            "text": "Features независимо поставляются, а границы взаимодействия и ожидаемые сообщения перечислимы.",
+            "checkCategories": []
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RF-2-O2-minus-1",
+            "text": "Число связей слишком велико или общий инвариант нельзя доказать парными проверками; требуется единая модель.",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": [],
+      "description": "Результат: матрица взаимодействий и проверки контрактов на каждой границе."
+    },
+    {
+      "id": "RS-1",
+      "kind": "requirement",
+      "status": "candidate",
+      "title": "Проработать пользовательский сценарий",
+      "qrpe": []
+    },
+    {
+      "id": "RS-1-O1",
+      "kind": "option",
+      "title": "Описать основной путь и исключения сценария",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RS-1-O1-plus-1",
+            "text": "Порядок шагов устойчив, роли и наблюдаемый результат известны; исключения можно перечислить рядом с шагами.",
+            "checkCategories": []
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RS-1-O1-minus-1",
+            "text": "Есть длительные паузы, параллельные роли или возвраты; линейное описание скрывает допустимые продолжения.",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": [],
+      "description": "Результат: основной путь, исключения и критерии завершения пользовательского сценария."
+    },
+    {
+      "id": "RS-1-O2",
+      "kind": "option",
+      "title": "Смоделировать состояния участника сценария",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RS-1-O2-plus-1",
+            "text": "Сценарий прерывается и возобновляется, доступные шаги зависят от накопленного состояния.",
+            "checkCategories": []
+          },
+          {
+            "id": "RS-1-O2-advice-research",
+            "text": "Перед выбором этого содержательного способа: Если анализ и плановые каноны недостаточны, предложить изолированные испытания A и B с одинаковым критерием сравнения и последующим одним итоговым выбором.",
+            "evidence": "Это только условная учебная рекомендация; фактического эксперимента нет."
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RS-1-O2-minus-1",
+            "text": "Сценарий короткий и однопроходный; отдельная модель состояний не добавит проверяемых различий.",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": [],
+      "description": "Результат: состояния участника, разрешённые переходы, отмена и возобновление сценария."
+    },
+    {
+      "id": "RS-2",
+      "kind": "requirement",
+      "status": "candidate",
+      "title": "Согласовать пересекающиеся сценарии",
+      "qrpe": []
+    },
+    {
+      "id": "RS-2-O1",
+      "kind": "option",
+      "title": "Согласовать общие шаги в одной спецификации",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RS-2-O1-plus-1",
+            "text": "Пересекающиеся сценарии используют одинаковые шаги и правила; есть общий владелец этих правил.",
+            "checkCategories": []
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RS-2-O1-minus-1",
+            "text": "Совпадение шагов только внешнее, а права, данные или правила результата различаются; унификация исказит поведение.",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": [],
+      "description": "Результат: общие шаги с едиными условиями и явными отличиями каждого сценария."
+    },
+    {
+      "id": "RS-2-O2",
+      "kind": "option",
+      "title": "Проверять пересечения сквозными тестами",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RS-2-O2-plus-1",
+            "text": "Сценарии принадлежат разным командам; общие данные и конфликты можно наблюдать через конечный результат.",
+            "checkCategories": []
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RS-2-O2-minus-1",
+            "text": "Нет воспроизводимой среды и наблюдаемого результата; сквозные тесты дадут неоднозначную диагностику.",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": [],
+      "description": "Результат: совместные сценарии с конфликтами обновления, повтором и согласованным ожидаемым результатом."
+    },
+    {
+      "id": "RF-DEEP",
+      "kind": "requirement",
+      "status": "candidate",
+      "title": "Проверить переходы внутри Feature",
+      "qrpe": []
+    },
+    {
+      "id": "RF-DEEP-O1",
+      "kind": "option",
+      "title": "Проверить таблицу допустимых переходов",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RF-DEEP-O1-plus-1",
+            "text": "Состояния конечны, и для каждой операции можно задать допустимые начальное и конечное состояния.",
+            "checkCategories": []
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RF-DEEP-O1-minus-1",
+            "text": "Состояния непрерывны или комбинаций слишком много; полное перечисление переходов непрактично.",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": [],
+      "description": "Результат: таблица разрешённых и запрещённых переходов с проверками каждого класса."
+    },
+    {
+      "id": "RF-DEEP-O2",
+      "kind": "option",
+      "title": "Проверить инварианты после каждой операции",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RF-DEEP-O2-plus-1",
+            "text": "Важны общие ограничения данных, сохраняемые при любом допустимом порядке операций.",
+            "checkCategories": []
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RF-DEEP-O2-minus-1",
+            "text": "Критичен конкретный порядок видимых пользователю состояний; инварианты сами по себе не проверяют этот порядок.",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": [],
+      "description": "Результат: инварианты, генерация последовательностей операций и проверка сохранения ограничений."
+    }
+  ],
+  "edges": [
+    {
+      "id": "OPT-O-FEATURE",
+      "type": "OPTION_FOR",
+      "from": "R-PLAN",
+      "to": "O-FEATURE"
+    },
+    {
+      "id": "OPT-O-SCENARIO",
+      "type": "OPTION_FOR",
+      "from": "R-PLAN",
+      "to": "O-SCENARIO"
+    },
+    {
+      "id": "POT-RF-1",
+      "type": "OUTCOME_OF",
+      "from": "O-FEATURE",
+      "to": "RF-1",
+      "candidateChildRole": "subgoal"
+    },
+    {
+      "id": "OPT-RF-1-O1",
+      "type": "OPTION_FOR",
+      "from": "RF-1",
+      "to": "RF-1-O1"
+    },
+    {
+      "id": "OPT-RF-1-O2",
+      "type": "OPTION_FOR",
+      "from": "RF-1",
+      "to": "RF-1-O2"
+    },
+    {
+      "id": "POT-RF-2",
+      "type": "OUTCOME_OF",
+      "from": "O-FEATURE",
+      "to": "RF-2",
+      "candidateChildRole": "method_correctness"
+    },
+    {
+      "id": "OPT-RF-2-O1",
+      "type": "OPTION_FOR",
+      "from": "RF-2",
+      "to": "RF-2-O1"
+    },
+    {
+      "id": "OPT-RF-2-O2",
+      "type": "OPTION_FOR",
+      "from": "RF-2",
+      "to": "RF-2-O2"
+    },
+    {
+      "id": "POT-RS-1",
+      "type": "OUTCOME_OF",
+      "from": "O-SCENARIO",
+      "to": "RS-1",
+      "candidateChildRole": "subgoal"
+    },
+    {
+      "id": "OPT-RS-1-O1",
+      "type": "OPTION_FOR",
+      "from": "RS-1",
+      "to": "RS-1-O1"
+    },
+    {
+      "id": "OPT-RS-1-O2",
+      "type": "OPTION_FOR",
+      "from": "RS-1",
+      "to": "RS-1-O2"
+    },
+    {
+      "id": "POT-RS-2",
+      "type": "OUTCOME_OF",
+      "from": "O-SCENARIO",
+      "to": "RS-2",
+      "candidateChildRole": "method_correctness"
+    },
+    {
+      "id": "OPT-RS-2-O1",
+      "type": "OPTION_FOR",
+      "from": "RS-2",
+      "to": "RS-2-O1"
+    },
+    {
+      "id": "OPT-RS-2-O2",
+      "type": "OPTION_FOR",
+      "from": "RS-2",
+      "to": "RS-2-O2"
+    },
+    {
+      "id": "POT-RF-DEEP",
+      "type": "OUTCOME_OF",
+      "from": "RF-1-O2",
+      "to": "RF-DEEP",
+      "candidateChildRole": "subgoal"
+    },
+    {
+      "id": "OPT-RF-DEEP-O1",
+      "type": "OPTION_FOR",
+      "from": "RF-DEEP",
+      "to": "RF-DEEP-O1"
+    },
+    {
+      "id": "OPT-RF-DEEP-O2",
+      "type": "OPTION_FOR",
+      "from": "RF-DEEP",
+      "to": "RF-DEEP-O2"
+    }
+  ],
+  "events": [],
+  "collections": [
+    {
+      "id": "FEATURE-POTENTIAL",
+      "title": "Потенциальные Requirements разбиения по Features",
+      "anchor": "O-FEATURE",
+      "memberRefs": [
+        "RF-1",
+        "RF-2"
+      ]
+    },
+    {
+      "id": "SCENARIO-POTENTIAL",
+      "title": "Потенциальные Requirements сценариев",
+      "anchor": "O-SCENARIO",
+      "memberRefs": [
+        "RS-1",
+        "RS-2"
+      ]
+    }
+  ],
+  "hypothetical": true,
+  "selectedInProject": false,
+  "contextFieldsComplete": true,
+  "knowledgeSources": [
+    {
+      "id": "wai-planning",
+      "title": "W3C WAI: планирование доступности",
+      "url": "https://www.w3.org/WAI/planning/"
+    }
+  ],
+  "contextFields": [
+    {
+      "id": "accessibility",
+      "title": "Доступность интерфейса при разбиении на Features/сценарии",
+      "explanation": "Какие функции и сквозные сценарии должны поддерживать доступную работу с интерфейсом (включая клавиатуру); W3C WAI — источник критериев проверки, не подтверждение нашего состояния.",
+      "sourceRefs": [
+        {
+          "graphSlug": "reference-prepared-planning-tree",
+          "sourceId": "wai-planning"
+        }
+      ]
+    },
+    {
+      "id": "delivery",
+      "title": "Срок готовности разбиения",
+      "explanation": "К какому сроку нужны проработанные Features и сквозные интеграции, насколько срок обязателен; свободная запись не равна подтверждённому ответу."
+    },
+    {
+      "id": "alternative-details",
+      "title": "Условия альтернативного разбиения по сценариям",
+      "explanation": "Какие шаги и условия реализации потребуются, только если будет выбран сценарный способ. Не спрашивать это как актуальную обязанность при выборе Features."
+    }
+  ],
+  "contextUses": [
+    {
+      "fieldRef": {
+        "graphSlug": "reference-prepared-planning-tree",
+        "fieldId": "delivery"
+      },
+      "purpose": "Проверить реальный срок, прежде чем сравнивать разбиение на Features и сценарии"
+    }
+  ]
+}

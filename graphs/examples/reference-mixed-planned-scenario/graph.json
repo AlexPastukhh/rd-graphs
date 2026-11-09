@@ -1,0 +1,143 @@
+{
+  "schemaVersion": 1,
+  "id": "reference-mixed-planned-scenario",
+  "title": "Рабочее предварительное продолжение: Проработать пользовательский сценарий",
+  "revision": 5,
+  "readOnly": true,
+  "exampleOnly": true,
+  "planningScale": "unit",
+  "identitySpace": "rdg-example-mixed-v7",
+  "rootRequirementId": "P-RS-1",
+  "hypothetical": true,
+  "selectedInProject": false,
+  "expansionOf": {
+    "graphSlug": "reference-mixed-active-work",
+    "nodeId": "P-RS-1"
+  },
+  "sourcePreparedGraphSlug": "reference-prepared-scenario-path",
+  "description": "Учебный потенциальный путь, который существует до выбора. Пин на prepared-канон добавлен только для новых готовых вариантов. Нет принятия D и нет фактического исполнения.",
+  "nodes": [
+    {
+      "id": "P-RS-1",
+      "kind": "requirement",
+      "status": "candidate",
+      "title": "Проработать пользовательский сценарий",
+      "qrpe": [],
+      "sourcePreparedNodeId": "RS-1",
+      "projectionOf": {
+        "graphSlug": "reference-mixed-active-work",
+        "nodeId": "P-RS-1"
+      }
+    },
+    {
+      "id": "P-RS-1-O1",
+      "kind": "option",
+      "title": "Описать основной путь и исключения сценария",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RS-1-O1-plus-1",
+            "text": "Порядок шагов устойчив, роли и наблюдаемый результат известны; исключения можно перечислить рядом с шагами.",
+            "checkCategories": []
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RS-1-O1-minus-1",
+            "text": "Есть длительные паузы, параллельные роли или возвраты; линейное описание скрывает допустимые продолжения.",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": [],
+      "sourcePreparedNodeId": "RS-1-O1",
+      "preparedSource": {
+        "graphSlug": "reference-prepared-planning-tree",
+        "sourceOptionId": "RS-1-O1",
+        "version": "6",
+        "canonHash": "a128a2459a0a48cee18a877f8545866ab3f3ed8b5cfb56ec2e73e1976e88c866"
+      },
+      "projectionOf": {
+        "graphSlug": "reference-mixed-active-work",
+        "nodeId": "P-RS-1-O1"
+      },
+      "description": "Результат: основной путь, исключения и критерии завершения пользовательского сценария."
+    },
+    {
+      "id": "P-RS-1-O2",
+      "kind": "option",
+      "title": "Смоделировать состояния участника сценария",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RS-1-O2-plus-1",
+            "text": "Сценарий прерывается и возобновляется, доступные шаги зависят от накопленного состояния.",
+            "checkCategories": []
+          },
+          {
+            "id": "RS-1-O2-advice-research",
+            "text": "Перед выбором этого содержательного способа: Если анализ и плановые каноны недостаточны, предложить изолированные испытания A и B с одинаковым критерием сравнения и последующим одним итоговым выбором.",
+            "evidence": "Это только условная учебная рекомендация; фактического эксперимента нет."
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RS-1-O2-minus-1",
+            "text": "Сценарий короткий и однопроходный; отдельная модель состояний не добавит проверяемых различий.",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": [],
+      "sourcePreparedNodeId": "RS-1-O2",
+      "preparedSource": {
+        "graphSlug": "reference-prepared-planning-tree",
+        "sourceOptionId": "RS-1-O2",
+        "version": "6",
+        "canonHash": "dd5cc17fa9961174867d9f0c5e58fb274c7f16e9937e9d6bde5fd92b04d8ca34"
+      },
+      "projectionOf": {
+        "graphSlug": "reference-mixed-active-work",
+        "nodeId": "P-RS-1-O2"
+      },
+      "description": "Результат: состояния участника, разрешённые переходы, отмена и возобновление сценария."
+    }
+  ],
+  "edges": [
+    {
+      "id": "OPT-P-RS-1-O1",
+      "type": "OPTION_FOR",
+      "from": "P-RS-1",
+      "to": "P-RS-1-O1"
+    },
+    {
+      "id": "OPT-P-RS-1-O2",
+      "type": "OPTION_FOR",
+      "from": "P-RS-1",
+      "to": "P-RS-1-O2"
+    }
+  ],
+  "collections": [],
+  "events": [],
+  "contextUses": [
+    {
+      "fieldRef": {
+        "graphSlug": "reference-mixed-active-work",
+        "fieldId": "alternative-details"
+      },
+      "purpose": "Сценарные детали потребуются только при выборе альтернативы",
+      "when": {
+        "allSelected": [
+          {
+            "graphSlug": "reference-mixed-active-work",
+            "optionId": "O-B"
+          }
+        ]
+      }
+    }
+  ]
+}

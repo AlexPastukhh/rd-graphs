@@ -1,0 +1,18 @@
+# R5 SOURCE CANDIDATE ONLY, NOT AN APPROVED WINDOWS INSTALLATION.
+# Single Fortis runtime: existing owner UI/Core + typed Sonar READ ingress.
+# No operator/bootstrap/CI/G2/G4 service tokens, no synthetic executor.
+# Not a runnable production service until independent source/base-image
+# acceptance, isolated owner-provisioned R5 volumes, TLS and grant lifecycle.
+FROM python:3.11-slim
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
+WORKDIR /opt/fortis
+COPY fortis_approvals/requirements-owner.txt /opt/requirements-owner.txt
+RUN python -m pip install --disable-pip-version-check --no-cache-dir -r /opt/requirements-owner.txt && \
+    groupadd -g 10001 fortis && \
+    useradd --no-log-init -u 10001 -g 10001 -M -s /usr/sbin/nologin fortis
+RUN mkdir -p /opt/fortis/fortis_approvals/static /state /run/r5-identity /run/r5-grant /run/r5-sonar-token
+COPY fortis_approvals/__init__.py fortis_approvals/core.py fortis_approvals/owner_auth.py fortis_approvals/owner_portal.py fortis_approvals/repo_action_contract.py fortis_approvals/repo_ingress.py fortis_approvals/sonar.py fortis_approvals/sonar_inventory.py fortis_approvals/sonar_read.py fortis_approvals/r5_read_candidate.py fortis_approvals/r5_read_server.py fortis_approvals/a3_server.py fortis_approvals/server.py /opt/fortis/fortis_approvals/
+COPY fortis_approvals/static /opt/fortis/fortis_approvals/static
+USER 10001:10001
+EXPOSE 19103 19104
+CMD ["python","-m","fortis_approvals.r5_read_server"]

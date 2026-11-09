@@ -1,0 +1,15 @@
+# Search convenience only. These files remain versioned and may be dependencies.
+# Read explicit references; use rg --no-ignore inside the required archive.
+# git ls-files provides the complete tracked inventory.
+/docs/handoffs/
+/docs/2d/
+/docs/examples/
+/graphs/2d/
+/graphs/examples/
+/kit/
+/work-kit/
+/tests/legacy-set-contract/
+*-HISTORY.md
+/fortis_approvals/archive/
+/docs/archive/
+/docs/guides/RDG-CURRENT-STATE-HISTORY-20261103.md

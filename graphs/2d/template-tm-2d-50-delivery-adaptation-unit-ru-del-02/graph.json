@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "id": "template-tm-2d-50-delivery-adaptation-unit-ru-del-02",
+  "title": "Unit · Adaptation Rules And Must-holds",
+  "revision": 1,
+  "planningScale": "unit",
+  "identitySpace": "prepared:TM-2D-50-DELIVERY-ADAPTATION",
+  "rootRequirementId": "RU-DEL-02",
+  "readOnly": true,
+  "templateOnly": true,
+  "selected": false,
+  "catalogHidden": true,
+  "preparedModule": {
+    "id": "TEMPLATE-D-RU-DEL-02",
+    "version": "c37777d65106e3d3fafca978c0e721d5a811d97c68f90d1fb98771ff714770ea",
+    "goalRequirementId": "RU-DEL-02",
+    "methodDecisionId": "TEMPLATE-D-RU-DEL-02",
+    "childRequirementIds": [],
+    "applicability": "what may change vs must remain invariant across delivery contexts",
+    "successCriteria": "Достаточно выполнить применимую Unit-specific Guidance и её checkpoints; инструкция не доказывает результат."
+  },
+  "sourceDocument": "/workspace/repos/obs-planning-docs/planning/documentation/idtspe-methodology/active/profiles/visual-production-2d/target-modules/TM-2D-50-DELIVERY-ADAPTATION.md#ru-del-02",
+  "sourceContentSHA256": "c37777d65106e3d3fafca978c0e721d5a811d97c68f90d1fb98771ff714770ea",
+  "sourceOwnerGraphSlug": "template-tm-2d-50-delivery-adaptation",
+  "sourceAnchor": "ru-del-02",
+  "coverage": "Готовый способ одного узкого R; без выдуманных под-R и без выбора проекта.",
+  "nodes": [
+    {
+      "id": "RU-DEL-02",
+      "kind": "requirement",
+      "title": "Adaptation Rules And Must-holds",
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "template-tm-2d-50-delivery-adaptation",
+        "nodeId": "RU-DEL-02"
+      }
+    },
+    {
+      "id": "TEMPLATE-D-RU-DEL-02",
+      "kind": "decision",
+      "status": "reusable-unselected",
+      "templateRole": "unit-prepared-guidance",
+      "selected": false,
+      "title": "Готовый способ проработки: Adaptation Rules And Must-holds",
+      "description": "<a id=\"ru-del-02\"></a>\n### Adaptation Rules And Must-holds\n\n`RU-DEL-02`\n\nOwn crop/safe-area/hierarchy/simplification/localization invariants and allowed changes when they require design judgment.",
+      "source": "/workspace/repos/obs-planning-docs/planning/documentation/idtspe-methodology/active/profiles/visual-production-2d/target-modules/TM-2D-50-DELIVERY-ADAPTATION.md#ru-del-02",
+      "sourceUnitId": "RU-DEL-02",
+      "explicitSubrequirements": false,
+      "note": "Source defines Unit guidance; no explicit nested R inventory is declared here."
+    }
+  ],
+  "edges": [
+    {
+      "id": "UNIT-E-DRIVE",
+      "type": "DRIVES",
+      "from": "RU-DEL-02",
+      "to": "TEMPLATE-D-RU-DEL-02",
+      "templateOnly": true,
+      "meaning": "Готовый ответ на узкую задачу; пока не выбран."
+    }
+  ],
+  "events": []
+}

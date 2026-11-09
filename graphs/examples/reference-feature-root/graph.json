@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "revision": 1,
+  "readOnly": true,
+  "exampleOnly": true,
+  "hypothetical": true,
+  "selectedInProject": false,
+  "events": [],
+  "sourceDocument": "docs/examples/EXAMPLE-COVERAGE.md",
+  "origin": "Новая условная учебная многоуровневая проекция, не данные из первоисточника и не решение пользователя.",
+  "id": "reference-feature-root",
+  "title": "Уровень 1 · Описать приложение",
+  "rootRequirementId": "DEMO-R-APP",
+  "hierarchyRole": "parent",
+  "coverage": "Корневое R «Описать приложение» и его примерное разбиение. Дочерний R «Расписать функционал» нейтрален: решение «через Features» находится только на его собственном уровне. Нажмите дочерний R для перехода.",
+  "nodes": [
+    {
+      "id": "DEMO-R-APP",
+      "kind": "requirement",
+      "title": "Описать приложение",
+      "status": "example-root",
+      "description": "Исходная цель условного примера, на этом уровне не выбирают способы разбиения функционала."
+    },
+    {
+      "id": "DEMO-D-APP",
+      "kind": "decision",
+      "title": "Выделить направления описания",
+      "status": "selected-in-example-only",
+      "selectedInProject": false,
+      "scope": "Условное приложение",
+      "description": "Условное решение вводит две дочерние задачи без предрешённого способа их проработки."
+    },
+    {
+      "id": "DEMO-R-FUNCTIONALITY",
+      "kind": "requirement",
+      "title": "Расписать функционал",
+      "status": "example-child",
+      "description": "Не упоминает Features: на СЛЕДУЮЩЕМ уровне у этого R можно выбрать готовое решение через Features или альтернативный способ."
+    },
+    {
+      "id": "DEMO-R-CONSTRAINTS",
+      "kind": "requirement",
+      "title": "Определить ограничения",
+      "status": "example-child",
+      "description": "Соседнее R; следующего уровня в учебной иллюстрации не создано."
+    }
+  ],
+  "edges": [
+    {
+      "id": "DEMO-P-E1",
+      "type": "DRIVES",
+      "from": "DEMO-R-APP",
+      "to": "DEMO-D-APP"
+    },
+    {
+      "id": "DEMO-P-E2",
+      "type": "INTRODUCES",
+      "from": "DEMO-D-APP",
+      "to": "DEMO-R-FUNCTIONALITY",
+      "parent": "DEMO-R-APP"
+    },
+    {
+      "id": "DEMO-P-E3",
+      "type": "INTRODUCES",
+      "from": "DEMO-D-APP",
+      "to": "DEMO-R-CONSTRAINTS",
+      "parent": "DEMO-R-APP"
+    }
+  ],
+  "identitySpace": "demo:feature-functional",
+  "planningScale": "module"
+}

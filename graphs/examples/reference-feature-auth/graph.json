@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "revision": 1,
+  "readOnly": true,
+  "exampleOnly": true,
+  "hypothetical": true,
+  "selectedInProject": false,
+  "events": [],
+  "sourceDocument": "docs/examples/EXAMPLE-COVERAGE.md",
+  "origin": "Новое условное многоуровневое учебное представление, не принятое решение пользователя.",
+  "id": "reference-feature-auth",
+  "title": "Уровень 3 · Feature: Авторизация",
+  "rootRequirementId": "DEMO-R-FEATURE-AUTH",
+  "catalogHidden": true,
+  "coverage": "Тот же R «Расписать Feature: Авторизация», что в родительском уровне. Готовый TM-FEATURE — вариант, не принятое решение. Конкретный Unit Inventory/реализация здесь не выдумываются.",
+  "illustrativeTypes": [
+    "OPTION_FOR"
+  ],
+  "nodes": [
+    {
+      "id": "DEMO-R-FEATURE-AUTH",
+      "kind": "requirement",
+      "title": "Расписать Feature: Авторизация",
+      "status": "example-root",
+      "description": "Тот же ID Requirement, который ввело D предыдущего уровня. Разбиение самой Feature ещё не выбрано.",
+      "projectionOf": {
+        "graphSlug": "reference-reusable-vs-concrete",
+        "nodeId": "DEMO-R-FEATURE-AUTH"
+      }
+    },
+    {
+      "id": "DEMO-V-TM-FEATURE-AUTH",
+      "kind": "variant",
+      "title": "Готовое: использовать TM-FEATURE",
+      "status": "reusable-unselected",
+      "selected": false,
+      "templateOnly": true,
+      "preparedModelRef": "TM-FEATURE",
+      "source": "/workspace/repos/obs-planning-docs/planning/documentation/idtspe-methodology/active/profiles/sds/target-modules/TM-FEATURE.md",
+      "description": "Одна внешняя готовая Target Module Model. Её Unit Inventory и результаты не скопированы. Здесь пока нет принятого конкретного D."
+    },
+    {
+      "id": "DEMO-V-LOCAL-AUTH",
+      "kind": "variant",
+      "title": "Альтернатива: другой способ проработки",
+      "status": "reusable-unselected",
+      "selected": false,
+      "description": "Иллюстрация другого возможного решения; не утверждена как новый канонический Target Module."
+    }
+  ],
+  "edges": [
+    {
+      "id": "DEMO-F-AUTH-E1",
+      "type": "OPTION_FOR",
+      "from": "DEMO-R-FEATURE-AUTH",
+      "to": "DEMO-V-TM-FEATURE-AUTH",
+      "illustrative": true
+    },
+    {
+      "id": "DEMO-F-AUTH-E2",
+      "type": "OPTION_FOR",
+      "from": "DEMO-R-FEATURE-AUTH",
+      "to": "DEMO-V-LOCAL-AUTH",
+      "illustrative": true
+    }
+  ],
+  "identitySpace": "demo:feature-functional",
+  "planningScale": "unit"
+}

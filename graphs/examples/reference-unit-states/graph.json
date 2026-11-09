@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "id": "reference-unit-states",
+  "title": "Unit · Определить состояния",
+  "revision": 1,
+  "planningScale": "unit",
+  "identitySpace": "example:module-unit-v1",
+  "rootRequirementId": "UD-R-STATES",
+  "readOnly": true,
+  "templateOnly": true,
+  "catalogHidden": true,
+  "sourceDocument": "docs/examples/MODULE-UNIT-GUIDE.md",
+  "sourceContentSHA256": "e98eecb98f3f28589e803ece81bcb5069a4db07b1b4c63436bdebc83944da7d0",
+  "preparedModule": {
+    "id": "UD-D-STATES",
+    "version": "e98eecb98f3f28589e803ece81bcb5069a4db07b1b4c63436bdebc83944da7d0",
+    "goalRequirementId": "UD-R-STATES",
+    "methodDecisionId": "UD-D-STATES",
+    "childRequirementIds": [],
+    "applicability": "Определить состояния",
+    "successCriteria": "Перечислить только различимые состояния"
+  },
+  "nodes": [
+    {
+      "id": "UD-R-STATES",
+      "kind": "requirement",
+      "title": "Определить состояния",
+      "projectionOf": {
+        "graphSlug": "reference-unit-split",
+        "nodeId": "UD-R-STATES"
+      },
+      "referenceOnly": true
+    },
+    {
+      "id": "UD-D-STATES",
+      "kind": "decision",
+      "title": "Перечислить только различимые состояния",
+      "status": "reusable-unselected",
+      "selected": false
+    }
+  ],
+  "edges": [
+    {
+      "id": "UD-D-STATES-drive",
+      "type": "DRIVES",
+      "from": "UD-R-STATES",
+      "to": "UD-D-STATES",
+      "templateOnly": true,
+      "meaning": "Подготовленный способ ответа на R; реального выбора нет."
+    }
+  ],
+  "events": [],
+  "sourceOwnerGraphSlug": "reference-module-units"
+}

@@ -1,0 +1,10 @@
+{
+  "bindings": {
+    "ef4c0865ef761a614bfaac9ccb705a8de1dc4e67f98a5ba67195a76f9f8ce260": {
+      "identitySpace": "rdg-working-requirements-dependencies-demo",
+      "planId": "requirements-dependencies-demo",
+      "sourcePath": "plans/requirements-dependencies-demo/plan.json"
+    }
+  },
+  "schemaVersion": 1
+}

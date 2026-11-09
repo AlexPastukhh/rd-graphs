@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "id": "template-tm-2d-31-vector-construction-unit-ru-vec-03",
+  "title": "Unit · Internal Geometry And Overlaps",
+  "revision": 1,
+  "planningScale": "unit",
+  "identitySpace": "prepared:TM-2D-31-VECTOR-CONSTRUCTION",
+  "rootRequirementId": "RU-VEC-03",
+  "readOnly": true,
+  "templateOnly": true,
+  "selected": false,
+  "catalogHidden": true,
+  "preparedModule": {
+    "id": "TEMPLATE-D-RU-VEC-03",
+    "version": "574bfe1d7b2e35c760ee72b651a2c0f339a982c76e319929aa194329332b84d4",
+    "goalRequirementId": "RU-VEC-03",
+    "methodDecisionId": "TEMPLATE-D-RU-VEC-03",
+    "childRequirementIds": [],
+    "applicability": "internal paths, overlap/layer relationships and secondary geometric structure",
+    "successCriteria": "Достаточно выполнить применимую Unit-specific Guidance и её checkpoints; инструкция не доказывает результат."
+  },
+  "sourceDocument": "/workspace/repos/obs-planning-docs/planning/documentation/idtspe-methodology/active/profiles/visual-production-2d/target-modules/TM-2D-31-VECTOR-CONSTRUCTION.md#ru-vec-03",
+  "sourceContentSHA256": "574bfe1d7b2e35c760ee72b651a2c0f339a982c76e319929aa194329332b84d4",
+  "sourceOwnerGraphSlug": "template-tm-2d-31-vector-construction",
+  "sourceAnchor": "ru-vec-03",
+  "coverage": "Готовый способ одного узкого R; без выдуманных под-R и без выбора проекта.",
+  "nodes": [
+    {
+      "id": "RU-VEC-03",
+      "kind": "requirement",
+      "title": "Internal Geometry And Overlaps",
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "template-tm-2d-31-vector-construction",
+        "nodeId": "RU-VEC-03"
+      }
+    },
+    {
+      "id": "TEMPLATE-D-RU-VEC-03",
+      "kind": "decision",
+      "status": "reusable-unselected",
+      "templateRole": "unit-prepared-guidance",
+      "selected": false,
+      "title": "Готовый способ проработки: Internal Geometry And Overlaps",
+      "description": "<a id=\"ru-vec-03\"></a>\n### Internal Geometry And Overlaps\n\n`RU-VEC-03`\n\nOwn only internal/overlap geometry that materially affects the editable result.",
+      "source": "/workspace/repos/obs-planning-docs/planning/documentation/idtspe-methodology/active/profiles/visual-production-2d/target-modules/TM-2D-31-VECTOR-CONSTRUCTION.md#ru-vec-03",
+      "sourceUnitId": "RU-VEC-03",
+      "explicitSubrequirements": false,
+      "note": "Source defines Unit guidance; no explicit nested R inventory is declared here."
+    }
+  ],
+  "edges": [
+    {
+      "id": "UNIT-E-DRIVE",
+      "type": "DRIVES",
+      "from": "RU-VEC-03",
+      "to": "TEMPLATE-D-RU-VEC-03",
+      "templateOnly": true,
+      "meaning": "Готовый ответ на узкую задачу; пока не выбран."
+    }
+  ],
+  "events": []
+}

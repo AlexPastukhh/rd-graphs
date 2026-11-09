@@ -1,0 +1,174 @@
+{
+  "schemaVersion": 1,
+  "revision": 1,
+  "readOnly": true,
+  "exampleOnly": true,
+  "hypothetical": true,
+  "selectedInProject": false,
+  "events": [],
+  "sourceDocument": "docs/examples/EXAMPLE-COVERAGE.md",
+  "origin": "Новое условное многоуровневое учебное представление, не принятое решение пользователя.",
+  "id": "reference-reusable-vs-concrete",
+  "title": "Уровень 2 · Расписать функционал",
+  "rootRequirementId": "DEMO-R-FUNCTIONALITY",
+  "catalogHidden": true,
+  "coverage": "Драйвер R «Расписать функционал» НЕ предписывает Features. Существуют разные готовые варианты: через Features 1..N и альтернативный способ. Только в условном примере выбирается одно D «через Features», вводящее РОВНО четыре R. Нажмите дочерний R для его уровня.",
+  "illustrativeTypes": [
+    "OPTION_FOR",
+    "USES_PREPARED"
+  ],
+  "nodes": [
+    {
+      "id": "DEMO-R-FUNCTIONALITY",
+      "kind": "requirement",
+      "title": "Расписать функционал",
+      "status": "example-root",
+      "description": "Нейтральное исходное требование. Способ разбить функционал — предмет последующего выбора.",
+      "projectionOf": {
+        "graphSlug": "reference-feature-root",
+        "nodeId": "DEMO-R-FUNCTIONALITY"
+      }
+    },
+    {
+      "id": "DEMO-V-BY-FEATURE",
+      "kind": "variant",
+      "title": "Готовое: разбиение по Features (1..N)",
+      "status": "reusable-unselected",
+      "selected": false,
+      "templateOnly": true,
+      "preparedDecomposition": true,
+      "description": "Один готовый вариант: повторять создание Requirement и применение одной TM-FEATURE Model для каждого элемента Features 1..N. Никаких реальных ветвей здесь ещё нет.",
+      "preparedModelRef": "TM-FEATURE",
+      "repetition": {
+        "mode": "PER_ITEM",
+        "cardinality": "1..N",
+        "collectionRole": "Features",
+        "itemRequirementPattern": "Расписать Feature {item}",
+        "preparedModelId": "TM-FEATURE",
+        "oneApplicationPerItem": true
+      }
+    },
+    {
+      "id": "DEMO-V-OTHER",
+      "kind": "variant",
+      "title": "Другой вариант: через сценарии",
+      "status": "reusable-unselected",
+      "selected": false,
+      "templateOnly": true,
+      "description": "Отдельный возможный способ описания функциональности через сценарии. Учебный кандидат, не объявленный равноценной заменой Feature TM и не выбранный."
+    },
+    {
+      "id": "DEMO-D-BY-FEATURE",
+      "kind": "decision",
+      "title": "Условное D: разбить через 4 Features",
+      "status": "selected-in-example-only",
+      "selectedInExample": true,
+      "selectedInProject": false,
+      "scope": "Только условный пример",
+      "usesPreparedDecompositionRef": "DEMO-V-BY-FEATURE",
+      "preparedModelRef": "TM-FEATURE",
+      "concreteBranchCount": 4,
+      "modelApplicationCount": 4,
+      "description": "ОДНО условное выбранное D использует готовый способ «через Features»; РОВНО четыре разных дочерних R и потенциально четыре применения ОДНОЙ TM-FEATURE Model. Никакое решение в настоящем проекте не принято."
+    },
+    {
+      "id": "DEMO-R-FEATURE-AUTH",
+      "kind": "requirement",
+      "title": "Расписать Feature: Авторизация",
+      "status": "example-child",
+      "parentRequirementId": "DEMO-R-FUNCTIONALITY",
+      "introducedByDecision": "DEMO-D-BY-FEATURE",
+      "preparedModelRef": "TM-FEATURE",
+      "description": "Это отдельный R из условных четырёх ветвей. Дочерний граф начинается с того же ID R. Нажмите, чтобы открыть уровень."
+    },
+    {
+      "id": "DEMO-R-FEATURE-CATALOG",
+      "kind": "requirement",
+      "title": "Расписать Feature: Каталог",
+      "status": "example-child",
+      "parentRequirementId": "DEMO-R-FUNCTIONALITY",
+      "introducedByDecision": "DEMO-D-BY-FEATURE",
+      "preparedModelRef": "TM-FEATURE",
+      "description": "Это отдельный R из условных четырёх ветвей. Дочерний граф начинается с того же ID R. Нажмите, чтобы открыть уровень."
+    },
+    {
+      "id": "DEMO-R-FEATURE-CART",
+      "kind": "requirement",
+      "title": "Расписать Feature: Корзина",
+      "status": "example-child",
+      "parentRequirementId": "DEMO-R-FUNCTIONALITY",
+      "introducedByDecision": "DEMO-D-BY-FEATURE",
+      "preparedModelRef": "TM-FEATURE",
+      "description": "Это отдельный R из условных четырёх ветвей. Дочерний граф начинается с того же ID R. Нажмите, чтобы открыть уровень."
+    },
+    {
+      "id": "DEMO-R-FEATURE-PAYMENT",
+      "kind": "requirement",
+      "title": "Расписать Feature: Оплата",
+      "status": "example-child",
+      "parentRequirementId": "DEMO-R-FUNCTIONALITY",
+      "introducedByDecision": "DEMO-D-BY-FEATURE",
+      "preparedModelRef": "TM-FEATURE",
+      "description": "Это отдельный R из условных четырёх ветвей. Дочерний граф начинается с того же ID R. Нажмите, чтобы открыть уровень."
+    }
+  ],
+  "edges": [
+    {
+      "id": "DEMO-M-E1",
+      "type": "OPTION_FOR",
+      "from": "DEMO-R-FUNCTIONALITY",
+      "to": "DEMO-V-BY-FEATURE",
+      "illustrative": true
+    },
+    {
+      "id": "DEMO-M-E2",
+      "type": "OPTION_FOR",
+      "from": "DEMO-R-FUNCTIONALITY",
+      "to": "DEMO-V-OTHER",
+      "illustrative": true
+    },
+    {
+      "id": "DEMO-M-E3",
+      "type": "DRIVES",
+      "from": "DEMO-R-FUNCTIONALITY",
+      "to": "DEMO-D-BY-FEATURE"
+    },
+    {
+      "id": "DEMO-M-E4",
+      "type": "USES_PREPARED",
+      "from": "DEMO-D-BY-FEATURE",
+      "to": "DEMO-V-BY-FEATURE",
+      "illustrative": true
+    },
+    {
+      "id": "DEMO-M-INTRO-AUTH",
+      "type": "INTRODUCES",
+      "from": "DEMO-D-BY-FEATURE",
+      "to": "DEMO-R-FEATURE-AUTH",
+      "parent": "DEMO-R-FUNCTIONALITY"
+    },
+    {
+      "id": "DEMO-M-INTRO-CATALOG",
+      "type": "INTRODUCES",
+      "from": "DEMO-D-BY-FEATURE",
+      "to": "DEMO-R-FEATURE-CATALOG",
+      "parent": "DEMO-R-FUNCTIONALITY"
+    },
+    {
+      "id": "DEMO-M-INTRO-CART",
+      "type": "INTRODUCES",
+      "from": "DEMO-D-BY-FEATURE",
+      "to": "DEMO-R-FEATURE-CART",
+      "parent": "DEMO-R-FUNCTIONALITY"
+    },
+    {
+      "id": "DEMO-M-INTRO-PAYMENT",
+      "type": "INTRODUCES",
+      "from": "DEMO-D-BY-FEATURE",
+      "to": "DEMO-R-FEATURE-PAYMENT",
+      "parent": "DEMO-R-FUNCTIONALITY"
+    }
+  ],
+  "identitySpace": "demo:feature-functional",
+  "planningScale": "module"
+}

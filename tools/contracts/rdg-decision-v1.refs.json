@@ -1,0 +1,583 @@
+{
+  "schemaVersion": 1,
+  "contractId": "rdg-decision-v1",
+  "definitionNamespaces": {
+    "entity": [
+      "graph.nodes[].id",
+      "graph.objects[].id",
+      "graph.externalActions[].id"
+    ],
+    "relation": [
+      "graph.edges[].id",
+      "graph.decisionGroups[].members[].id"
+    ],
+    "decisionGroup": [
+      "graph.decisionGroups[].id"
+    ],
+    "rootCause": [
+      "graph.rootCauses[].id"
+    ],
+    "workGraph": [
+      "graph.workGraphs[].id"
+    ],
+    "event": [
+      "graph.events[].id"
+    ],
+    "placement": [
+      "plan.steps[].id"
+    ],
+    "fork": [
+      "plan.forks[].id"
+    ],
+    "case": [
+      "plan.forks[].cases[].id"
+    ],
+    "recommendationPackage": [
+      "registry.packages[].id"
+    ],
+    "rule": [
+      "registry.packages[].rules[].id"
+    ],
+    "occurrence": [
+      "layouts.layouts{}.occurrences{key}"
+    ],
+    "externalReference": [
+      "graph.externalRefs[].id"
+    ]
+  },
+  "relationPairs": {
+    "DERIVES": {
+      "from": [
+        "requirement"
+      ],
+      "to": [
+        "requirement"
+      ]
+    },
+    "INTRODUCES": {
+      "from": [
+        "decision"
+      ],
+      "to": [
+        "requirement"
+      ]
+    },
+    "DRIVES": {
+      "from": [
+        "requirement"
+      ],
+      "to": [
+        "decision"
+      ]
+    },
+    "DECISION_MEMBER": {
+      "from": [
+        "requirement"
+      ],
+      "to": [
+        "decision"
+      ]
+    },
+    "REQUIRES_ACTION": {
+      "from": [
+        "requirement",
+        "decision"
+      ],
+      "to": [
+        "action"
+      ]
+    },
+    "CANON_FOR": {
+      "from": [
+        "canon"
+      ],
+      "to": [
+        "requirement",
+        "decision",
+        "action"
+      ]
+    },
+    "CONTEXT_FOR": {
+      "from": [
+        "context"
+      ],
+      "to": [
+        "requirement",
+        "decision",
+        "action"
+      ]
+    },
+    "INFO_FOR": {
+      "from": [
+        "info"
+      ],
+      "to": [
+        "requirement",
+        "decision",
+        "action",
+        "canon",
+        "context"
+      ]
+    },
+    "EVIDENCE_FOR": {
+      "from": [
+        "evidence"
+      ],
+      "to": [
+        "requirement",
+        "decision",
+        "action"
+      ]
+    },
+    "DEPENDS_ON": {
+      "from": [
+        "requirement",
+        "decision",
+        "action",
+        "canon",
+        "context",
+        "info"
+      ],
+      "to": [
+        "requirement",
+        "decision",
+        "action",
+        "canon",
+        "context",
+        "info"
+      ]
+    }
+  },
+  "composition": [
+    "DERIVES",
+    "INTRODUCES",
+    "DRIVES",
+    "DECISION_MEMBER",
+    "REQUIRES_ACTION"
+  ],
+  "slots": [
+    {
+      "path": "graph.rootRequirementId",
+      "namespace": "entity",
+      "mode": "current",
+      "missing": "reject",
+      "copy": "remap"
+    },
+    {
+      "path": "graph.rootCauses[].requirementId",
+      "namespace": "entity",
+      "mode": "current",
+      "missing": "reject",
+      "copy": "remap"
+    },
+    {
+      "path": "graph.edges[].from",
+      "namespace": "entity",
+      "mode": "current",
+      "missing": "reject",
+      "copy": "remap"
+    },
+    {
+      "path": "graph.edges[].to",
+      "namespace": "entity",
+      "mode": "current",
+      "missing": "reject",
+      "copy": "remap"
+    },
+    {
+      "path": "graph.decisionGroups[].parentId",
+      "namespace": "entity",
+      "mode": "current",
+      "missing": "reject",
+      "copy": "remap"
+    },
+    {
+      "path": "graph.decisionGroups[].members[].decisionId",
+      "namespace": "entity",
+      "mode": "current",
+      "missing": "reject",
+      "copy": "remap"
+    },
+    {
+      "path": "graph.workGraphs[].rootIds[]",
+      "namespace": "entity",
+      "mode": "current",
+      "missing": "remove-on-explicit-delete",
+      "copy": "remap"
+    },
+    {
+      "path": "graph.workGraphs[].memberIds[]",
+      "namespace": "entity",
+      "mode": "current",
+      "missing": "remove-on-explicit-delete",
+      "copy": "remap"
+    },
+    {
+      "path": "graph.nodes[action].targetIds[]",
+      "namespace": "entity",
+      "mode": "current",
+      "missing": "reject",
+      "copy": "remap"
+    },
+    {
+      "path": "graph.externalActions[].targetIds[]",
+      "namespace": "entity",
+      "mode": "current",
+      "missing": "reject",
+      "copy": "remap"
+    },
+    {
+      "path": "graph.nodes[action].groupIds[]",
+      "namespace": "decisionGroup",
+      "mode": "current",
+      "missing": "reject",
+      "copy": "remap"
+    },
+    {
+      "path": "graph.externalActions[].groupIds[]",
+      "namespace": "decisionGroup",
+      "mode": "current",
+      "missing": "reject",
+      "copy": "remap"
+    },
+    {
+      "path": "graph.recommendationPackageIds[]",
+      "namespace": "recommendationPackage",
+      "mode": "current",
+      "missing": "unavailable",
+      "copy": "preserve-shared-fork-owned-instance"
+    },
+    {
+      "path": "plan.steps[].ref",
+      "namespace": "entity",
+      "mode": "current",
+      "missing": "historical-or-unavailable",
+      "copy": "remap-local-preserve-foreign"
+    },
+    {
+      "path": "plan.mainStepIds[]",
+      "namespace": "placement",
+      "mode": "current",
+      "missing": "reject",
+      "copy": "remap"
+    },
+    {
+      "path": "plan.forks[].afterStepId",
+      "namespace": "placement",
+      "mode": "current",
+      "missing": "reject",
+      "copy": "remap"
+    },
+    {
+      "path": "plan.forks[].cases[].stepIds[]",
+      "namespace": "placement",
+      "mode": "current",
+      "missing": "reject",
+      "copy": "remap"
+    },
+    {
+      "path": "plan.timeConstraints[].stepId",
+      "namespace": "placement",
+      "mode": "current",
+      "missing": "reject",
+      "copy": "remap"
+    },
+    {
+      "path": "plan.forks[].cases[].decisionIds[]",
+      "namespace": "entity",
+      "mode": "current",
+      "missing": "unavailable",
+      "copy": "remap"
+    },
+    {
+      "path": "registry.packages[].rules[].anchor",
+      "namespace": "entity",
+      "mode": "current",
+      "missing": "inactive-rule",
+      "copy": "remap-local-preserve-foreign"
+    },
+    {
+      "path": "registry.packages[].rules[].lensRefs[]",
+      "namespace": "lens",
+      "mode": "current",
+      "missing": "unavailable",
+      "copy": "preserve-definition-id"
+    },
+    {
+      "path": "registry.packages[].instance.memberIds[]",
+      "namespace": "entity",
+      "mode": "current",
+      "missing": "scope-empty-never-all",
+      "copy": "remap-only-matching-graph-binding",
+      "qualifiedBy": "sibling instance.graphBinding"
+    },
+    {
+      "path": "registry.packages[].instance.rootIds[]",
+      "namespace": "entity",
+      "mode": "current",
+      "missing": "scope-empty-never-all",
+      "copy": "remap-only-matching-graph-binding",
+      "qualifiedBy": "sibling instance.graphBinding"
+    },
+    {
+      "path": "graph.nodes[].result.eventId",
+      "namespace": "event",
+      "mode": "observed",
+      "missing": "historical",
+      "copy": "preserve-with-lineage"
+    },
+    {
+      "path": "graph.nodes[].review.causeEventIds[]",
+      "namespace": "event",
+      "mode": "observed",
+      "missing": "historical",
+      "copy": "preserve-with-lineage"
+    },
+    {
+      "path": "graph.nodes[].review.pins[]",
+      "namespace": "entity",
+      "mode": "observed",
+      "missing": "historical",
+      "copy": "preserve-with-lineage"
+    },
+    {
+      "path": "graph.objects[].result.eventId",
+      "namespace": "event",
+      "mode": "observed",
+      "missing": "historical",
+      "copy": "preserve-with-lineage"
+    },
+    {
+      "path": "graph.objects[].review.causeEventIds[]",
+      "namespace": "event",
+      "mode": "observed",
+      "missing": "historical",
+      "copy": "preserve-with-lineage"
+    },
+    {
+      "path": "graph.objects[].review.pins[]",
+      "namespace": "entity",
+      "mode": "observed",
+      "missing": "historical",
+      "copy": "preserve-with-lineage"
+    },
+    {
+      "path": "graph.externalActions[].result.eventId",
+      "namespace": "event",
+      "mode": "observed",
+      "missing": "historical",
+      "copy": "preserve-with-lineage"
+    },
+    {
+      "path": "graph.externalActions[].review.causeEventIds[]",
+      "namespace": "event",
+      "mode": "observed",
+      "missing": "historical",
+      "copy": "preserve-with-lineage"
+    },
+    {
+      "path": "graph.externalActions[].review.pins[]",
+      "namespace": "entity",
+      "mode": "observed",
+      "missing": "historical",
+      "copy": "preserve-with-lineage"
+    },
+    {
+      "path": "graph.events[].nodeIds[]",
+      "namespace": "entity",
+      "mode": "historical",
+      "missing": "historical",
+      "copy": "preserve-with-lineage"
+    },
+    {
+      "path": "graph.events[].evidenceIds[]",
+      "namespace": "entity",
+      "mode": "historical",
+      "missing": "historical",
+      "copy": "preserve-with-lineage"
+    },
+    {
+      "path": "graph.events[].placementIds[]",
+      "namespace": "placement",
+      "mode": "historical",
+      "missing": "historical",
+      "copy": "preserve-with-lineage"
+    },
+    {
+      "path": "graph.events[].observedPins[]",
+      "namespace": "entity",
+      "mode": "historical",
+      "missing": "historical",
+      "copy": "preserve-with-lineage"
+    },
+    {
+      "path": "graph.events[].operationActionId",
+      "namespace": "entity",
+      "mode": "historical",
+      "missing": "historical",
+      "copy": "preserve-with-lineage"
+    },
+    {
+      "path": "graph.events[].recommendationPins[]",
+      "namespace": "recommendationPackage",
+      "mode": "historical",
+      "missing": "historical",
+      "copy": "preserve-definition-version"
+    },
+    {
+      "path": "graph.events[].lensPins[]",
+      "namespace": "lens",
+      "mode": "historical",
+      "missing": "historical",
+      "copy": "preserve-definition-version"
+    },
+    {
+      "path": "graph.objects[evidence].artifact",
+      "namespace": "artifact",
+      "mode": "observed",
+      "missing": "unavailable",
+      "copy": "preserve-with-lineage"
+    },
+    {
+      "path": "layouts.layouts{key}",
+      "namespace": "viewKey",
+      "mode": "current",
+      "missing": "drop-image-with-diagnostic",
+      "copy": "rebuild-key-and-remap"
+    },
+    {
+      "path": "layouts.layouts{}.positions{key}",
+      "namespace": "entity",
+      "mode": "current",
+      "missing": "drop-image-with-diagnostic",
+      "copy": "rebuild-key-and-remap"
+    },
+    {
+      "path": "layouts.layouts{}.occurrences{key}",
+      "namespace": "occurrence",
+      "mode": "current",
+      "missing": "drop-image-with-diagnostic",
+      "copy": "rebuild-key-and-remap"
+    },
+    {
+      "path": "layouts.layouts{}.occurrences{}.entityId",
+      "namespace": "entity",
+      "mode": "current",
+      "missing": "drop-image-with-diagnostic",
+      "copy": "rebuild-key-and-remap"
+    },
+    {
+      "path": "layouts.layouts{}.occurrences{}.parentId",
+      "namespace": "entity-or-occurrence",
+      "mode": "current",
+      "missing": "drop-image-with-diagnostic",
+      "copy": "rebuild-key-and-remap"
+    },
+    {
+      "path": "layouts.layouts{}.occurrences{}.viaEdgeId",
+      "namespace": "relation",
+      "mode": "current",
+      "missing": "drop-image-with-diagnostic",
+      "copy": "rebuild-key-and-remap"
+    },
+    {
+      "path": "registry.packages[].instance.graphBinding",
+      "namespace": "graph",
+      "mode": "current",
+      "missing": "scope-empty-never-all",
+      "copy": "remap-only-matching-graph-binding"
+    },
+    {
+      "path": "registry.packages[].instance.sourceDefinition",
+      "namespace": "recommendationPackage",
+      "mode": "observed",
+      "missing": "unavailable-provenance",
+      "copy": "preserve-definition-version"
+    },
+    {
+      "path": "graph.events[].actionResult.decisionId",
+      "namespace": "entity",
+      "mode": "historical",
+      "missing": "historical",
+      "copy": "preserve-with-lineage"
+    },
+    {
+      "path": "graph.events[].relationIds[]",
+      "namespace": "relation",
+      "mode": "historical",
+      "missing": "historical",
+      "copy": "preserve-with-lineage"
+    },
+    {
+      "path": "graph.externalRefs[].localId",
+      "namespace": "entity",
+      "mode": "current",
+      "missing": "reject",
+      "copy": "remap"
+    },
+    {
+      "path": "graph.externalRefs[].target",
+      "namespace": "entity",
+      "mode": "observed",
+      "missing": "unavailable",
+      "copy": "preserve-qualified"
+    },
+    {
+      "path": "graph.entityLineage{key}",
+      "namespace": "entity",
+      "mode": "current",
+      "missing": "reject",
+      "copy": "remap"
+    },
+    {
+      "path": "graph.entityLineage{}",
+      "namespace": "entity",
+      "mode": "historical",
+      "missing": "historical",
+      "copy": "preserve-with-lineage"
+    },
+    {
+      "path": "graph.factLineage{key}",
+      "namespace": "entity",
+      "mode": "current",
+      "missing": "reject",
+      "copy": "remap"
+    },
+    {
+      "path": "graph.factLineage{}",
+      "namespace": "entity",
+      "mode": "historical",
+      "missing": "historical",
+      "copy": "preserve-with-lineage"
+    },
+    {
+      "path": "graph.inheritedHistory{}.source",
+      "namespace": "graph",
+      "mode": "historical",
+      "missing": "historical",
+      "copy": "preserve-with-lineage"
+    }
+  ],
+  "forbiddenEndpointPairs": [
+    [
+      "decision",
+      "decision"
+    ]
+  ],
+  "contractRevision": 3,
+  "selectorGrammar": {
+    "[]": "array values",
+    "[kind]": "array entries with kind (action or evidence)",
+    "{}": "object map values",
+    "{key}": "object map keys",
+    "plain": "one property, missing/null produce no values"
+  },
+  "recommendationTransferPolicy": {
+    "sharedDefinition": "preserve-definition-id-and-qualified-foreign-anchors",
+    "ownedInstance": "fork-definition-pin-immediate-source-remap-matching-graph-binding-and-scope",
+    "foreignInstanceOnCopy": "preserve-definition-id-and-foreign-binding-inactive",
+    "foreignAnchorOnTemplate": "reject-before-write",
+    "missingScope": "empty-never-all",
+    "scopeExpansion": "members-plus-composition-descendants-of-roots-never-upward"
+  }
+}

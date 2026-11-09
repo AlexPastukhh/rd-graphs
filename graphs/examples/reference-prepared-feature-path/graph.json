@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 1,
+  "id": "reference-prepared-feature-path",
+  "title": "Готовое потенциальное продолжение: Проработать выбранную Feature",
+  "revision": 4,
+  "readOnly": true,
+  "exampleOnly": true,
+  "templateOnly": true,
+  "planningScale": "unit",
+  "identitySpace": "rdg-example-prepared-v7",
+  "rootRequirementId": "RF-1",
+  "hypothetical": true,
+  "selectedInProject": false,
+  "expansionOf": {
+    "graphSlug": "reference-prepared-planning-tree",
+    "nodeId": "RF-1"
+  },
+  "description": "Потенциальный дочерний R-граф; все варианты доступны, ни одно D не принято.",
+  "nodes": [
+    {
+      "id": "RF-1",
+      "kind": "requirement",
+      "status": "candidate",
+      "title": "Проработать выбранную Feature",
+      "qrpe": [],
+      "projectionOf": {
+        "graphSlug": "reference-prepared-planning-tree",
+        "nodeId": "RF-1"
+      }
+    },
+    {
+      "id": "RF-1-O1",
+      "kind": "option",
+      "title": "Описать операции Feature с предусловиями и результатами",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RF-1-O1-plus-1",
+            "text": "Набор операций невелик, границы Feature известны; достаточно явно задать вход, результат и отказ каждой операции.",
+            "checkCategories": []
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RF-1-O1-minus-1",
+            "text": "Промежуточные состояния влияют на доступность операций; одних входов и выходов недостаточно.",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": [],
+      "directAnswer": true,
+      "description": "Результат: спецификация операций Feature с проверяемыми примерами; прямой ответ без искусственной дочерней R.",
+      "projectionOf": {
+        "graphSlug": "reference-prepared-planning-tree",
+        "nodeId": "RF-1-O1"
+      }
+    },
+    {
+      "id": "RF-1-O2",
+      "kind": "option",
+      "title": "Построить модель состояний Feature",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RF-1-O2-plus-1",
+            "text": "Доступные операции зависят от состояния объекта; переходы можно перечислить и проверить.",
+            "checkCategories": []
+          },
+          {
+            "id": "RF-1-O2-advice-research",
+            "text": "Перед выбором этого содержательного способа: Если канон зависит от дальнейшей архитектуры, нарисовать альтернативные следующие R-графы и сопоставить последствия ДО выбора.",
+            "evidence": "Это только условная учебная рекомендация; фактического эксперимента нет."
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RF-1-O2-minus-1",
+            "text": "Поведение почти не зависит от состояния или его границы пока меняются; модель создаст лишнюю работу.",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": [],
+      "projectionOf": {
+        "graphSlug": "reference-prepared-planning-tree",
+        "nodeId": "RF-1-O2"
+      },
+      "description": "Результат: состояния и переходы Feature; дочерняя R проверяет допустимость переходов."
+    },
+    {
+      "id": "RF-DEEP",
+      "kind": "requirement",
+      "status": "candidate",
+      "title": "Проверить переходы внутри Feature",
+      "qrpe": [],
+      "projectionOf": {
+        "graphSlug": "reference-prepared-planning-tree",
+        "nodeId": "RF-DEEP"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "OPT-RF-1-O1",
+      "type": "OPTION_FOR",
+      "from": "RF-1",
+      "to": "RF-1-O1"
+    },
+    {
+      "id": "OPT-RF-1-O2",
+      "type": "OPTION_FOR",
+      "from": "RF-1",
+      "to": "RF-1-O2"
+    },
+    {
+      "id": "OUT-RF-DEEP",
+      "type": "OUTCOME_OF",
+      "from": "RF-1-O2",
+      "to": "RF-DEEP"
+    }
+  ],
+  "collections": [],
+  "events": [],
+  "contextUses": [
+    {
+      "fieldRef": {
+        "graphSlug": "reference-prepared-planning-tree",
+        "fieldId": "accessibility"
+      },
+      "purpose": "Уточнить требования доступности в глубокой Feature до выбора способа"
+    }
+  ]
+}

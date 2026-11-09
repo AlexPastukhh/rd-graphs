@@ -1,0 +1,179 @@
+{
+  "schemaVersion": 1,
+  "id": "reference-complete-availability",
+  "revision": 4,
+  "title": "R · Проработать Feature Availability",
+  "identitySpace": "showcase:booking-example-v1",
+  "rootRequirementId": "SH-R-FEAT-AVAIL",
+  "readOnly": true,
+  "exampleOnly": true,
+  "hypothetical": true,
+  "selectedInProject": false,
+  "catalogHidden": true,
+  "canonicality": "ILLUSTRATION_ONLY",
+  "demonstrationGroup": "complete-booking-showcase",
+  "origin": "New complete hypothetical illustration, NOT original EX-* and NOT a real project.",
+  "sourceDocument": "docs/examples/COMPLETE-REFERENCE-GUIDE.md",
+  "coverage": "ПРЯМОЙ D без под-R, пример изолированной истории реального изменения D и superseded состояния: события только учебные, формат их by не допускает запись writer.",
+  "nodes": [
+    {
+      "id": "SH-R-FEAT-AVAIL",
+      "kind": "requirement",
+      "title": "Проработать Feature Availability",
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "reference-complete-functionality",
+        "nodeId": "SH-R-FEAT-AVAIL"
+      },
+      "description": "Ссылка на ту же смысловую запись. Полный ответ и основания находятся в указанном источнике."
+    },
+    {
+      "id": "SH-D-AVAIL-OLD",
+      "kind": "decision",
+      "title": "Прежний примерный ответ: только просмотр интервалов",
+      "status": "superseded-in-example-only",
+      "scope": "Только условная Availability",
+      "description": "Устаревшее D в придуманной истории. Не переписывать прошлое и не выдавать за действующий выбор."
+    },
+    {
+      "id": "SH-C-REFRESH",
+      "kind": "context",
+      "title": "Появилась необходимость обновлять доступность",
+      "description": "Иллюстративное изменение контекста, не автоматически принятая ревизия."
+    },
+    {
+      "id": "SH-D-AVAIL-NEW",
+      "kind": "decision",
+      "title": "Новый примерный ответ: обновление и явная неизвестность",
+      "status": "selected-in-example-only",
+      "selectedInExample": true,
+      "selectedInProject": false,
+      "scope": "Только условная Availability",
+      "description": "Конкретный ответ напрямую на R без дочерних R. Событие пересмотра отдельно, не связано с Proposal."
+    },
+    {
+      "id": "SH-R-BEHAVIOR",
+      "kind": "requirement",
+      "title": "Описать Behavior обеих Features",
+      "scope": "Behavior Availability и Reservation",
+      "crosscutting": true,
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "reference-complete-functionality",
+        "nodeId": "SH-R-BEHAVIOR"
+      },
+      "description": "Ссылка на ту же смысловую запись. Полный ответ и основания находятся в указанном источнике."
+    },
+    {
+      "id": "SH-D-BEHAVIOR-SHARED",
+      "kind": "decision",
+      "title": "Общий выбор: Behavior Path для обеих Features",
+      "status": "selected-in-example-only",
+      "scope": "Behavior Availability и Reservation",
+      "selectedInExample": true,
+      "selectedInProject": false,
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "reference-complete-functionality",
+        "nodeId": "SH-D-BEHAVIOR-SHARED"
+      },
+      "description": "Ссылка на ту же смысловую запись. Полный ответ и основания находятся в указанном источнике."
+    },
+    {
+      "id": "SH-R-STATE-SELECTION",
+      "kind": "requirement",
+      "title": "Описать состояние выбора комнаты и времени",
+      "scope": "Описать состояние выбора комнаты и времени",
+      "description": "Самостоятельный локальный предмет, уточнённый из Feature R; не новый Scenario."
+    },
+    {
+      "id": "SH-D-STATE-SELECTION",
+      "kind": "decision",
+      "title": "Локальный ответ: список данных",
+      "status": "selected-in-example-only",
+      "selectedInExample": true,
+      "selectedInProject": false,
+      "scope": "Описать состояние выбора комнаты и времени",
+      "description": "Простой список данных: выбранная комната и интервал; не таблица состояний бронирования.",
+      "evidenceStatus": "unverified"
+    }
+  ],
+  "edges": [
+    {
+      "id": "SH-E-AV-01",
+      "type": "DRIVES",
+      "from": "SH-R-FEAT-AVAIL",
+      "to": "SH-D-AVAIL-OLD",
+      "meaning": "Прежний ответ на тот же R; сейчас superseded в условной истории."
+    },
+    {
+      "id": "SH-E-AV-02",
+      "type": "DRIVES",
+      "from": "SH-R-FEAT-AVAIL",
+      "to": "SH-D-AVAIL-NEW",
+      "meaning": "Новый ответ на тот же R. Для прямого ответа под-R не обязателен."
+    },
+    {
+      "id": "SH-E-AV-03",
+      "type": "CONTEXT_FOR",
+      "from": "SH-C-REFRESH",
+      "to": "SH-D-AVAIL-NEW",
+      "meaning": "Новый контекст учтён при изменении ответа."
+    },
+    {
+      "id": "SH-E-AV-04",
+      "type": "DRIVES",
+      "from": "SH-R-BEHAVIOR",
+      "to": "SH-D-BEHAVIOR-SHARED",
+      "meaning": "То же общее R/D видны в области Availability."
+    },
+    {
+      "id": "SH-E-AV-05",
+      "type": "GOVERNED_BY_SHARED_CHOICE",
+      "from": "SH-D-BEHAVIOR-SHARED",
+      "to": "SH-D-AVAIL-NEW",
+      "meaning": "Локальное описание Availability использует общее решение о форме."
+    },
+    {
+      "id": "SH-E-STATE-SELECTION-01",
+      "type": "DERIVES",
+      "from": "SH-R-FEAT-AVAIL",
+      "to": "SH-R-STATE-SELECTION",
+      "meaning": "Содержательное уточнение предмета локального состояния, не введение задачи общим D."
+    },
+    {
+      "id": "SH-E-STATE-SELECTION-02",
+      "type": "DRIVES",
+      "from": "SH-R-STATE-SELECTION",
+      "to": "SH-D-STATE-SELECTION",
+      "meaning": "Разные локальные R получают разные D, общий выбор Behavior не изменяется."
+    }
+  ],
+  "events": [
+    {
+      "id": "SH-EVENT-AV-SELECT-OLD",
+      "type": "decision_selected",
+      "decisionId": "SH-D-AVAIL-OLD",
+      "by": "example-only",
+      "note": "Событие выбора в условной истории, не запись пользователя.",
+      "exampleOnly": true
+    },
+    {
+      "id": "SH-EVENT-AV-REVISED",
+      "type": "decision_revised",
+      "decisionId": "SH-D-AVAIL-NEW",
+      "by": "example-only",
+      "note": "Условно принято новое D вместо старого; это не равнозначно одному RECONSIDERS.",
+      "exampleOnly": true
+    },
+    {
+      "id": "SH-EVENT-SELECT-D-STATE-SELECTION",
+      "type": "decision_selected",
+      "decisionId": "SH-D-STATE-SELECTION",
+      "by": "example-only",
+      "note": "Выбор только в вымышленном сюжете; не решение реального пользователя.",
+      "exampleOnly": true
+    }
+  ],
+  "planningScale": "module"
+}

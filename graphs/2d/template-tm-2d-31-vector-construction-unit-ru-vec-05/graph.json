@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "id": "template-tm-2d-31-vector-construction-unit-ru-vec-05",
+  "title": "Unit · Effects Clipping And Secondary Structure",
+  "revision": 1,
+  "planningScale": "unit",
+  "identitySpace": "prepared:TM-2D-31-VECTOR-CONSTRUCTION",
+  "rootRequirementId": "RU-VEC-05",
+  "readOnly": true,
+  "templateOnly": true,
+  "selected": false,
+  "catalogHidden": true,
+  "preparedModule": {
+    "id": "TEMPLATE-D-RU-VEC-05",
+    "version": "574bfe1d7b2e35c760ee72b651a2c0f339a982c76e319929aa194329332b84d4",
+    "goalRequirementId": "RU-VEC-05",
+    "methodDecisionId": "TEMPLATE-D-RU-VEC-05",
+    "childRequirementIds": [],
+    "applicability": "material masks/clipping/effects/secondary structure that has independent editable value",
+    "successCriteria": "Достаточно выполнить применимую Unit-specific Guidance и её checkpoints; инструкция не доказывает результат."
+  },
+  "sourceDocument": "/workspace/repos/obs-planning-docs/planning/documentation/idtspe-methodology/active/profiles/visual-production-2d/target-modules/TM-2D-31-VECTOR-CONSTRUCTION.md#ru-vec-05",
+  "sourceContentSHA256": "574bfe1d7b2e35c760ee72b651a2c0f339a982c76e319929aa194329332b84d4",
+  "sourceOwnerGraphSlug": "template-tm-2d-31-vector-construction",
+  "sourceAnchor": "ru-vec-05",
+  "coverage": "Готовый способ одного узкого R; без выдуманных под-R и без выбора проекта.",
+  "nodes": [
+    {
+      "id": "RU-VEC-05",
+      "kind": "requirement",
+      "title": "Effects Clipping And Secondary Structure",
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "template-tm-2d-31-vector-construction",
+        "nodeId": "RU-VEC-05"
+      }
+    },
+    {
+      "id": "TEMPLATE-D-RU-VEC-05",
+      "kind": "decision",
+      "status": "reusable-unselected",
+      "templateRole": "unit-prepared-guidance",
+      "selected": false,
+      "title": "Готовый способ проработки: Effects Clipping And Secondary Structure",
+      "description": "<a id=\"ru-vec-05\"></a>\n### Effects Clipping And Secondary Structure\n\n`RU-VEC-05`\n\nUse only when masks/clips/effects or secondary structures have independent construction value; final geometry cleanup alone is not a separate responsibility.",
+      "source": "/workspace/repos/obs-planning-docs/planning/documentation/idtspe-methodology/active/profiles/visual-production-2d/target-modules/TM-2D-31-VECTOR-CONSTRUCTION.md#ru-vec-05",
+      "sourceUnitId": "RU-VEC-05",
+      "explicitSubrequirements": false,
+      "note": "Source defines Unit guidance; no explicit nested R inventory is declared here."
+    }
+  ],
+  "edges": [
+    {
+      "id": "UNIT-E-DRIVE",
+      "type": "DRIVES",
+      "from": "RU-VEC-05",
+      "to": "TEMPLATE-D-RU-VEC-05",
+      "templateOnly": true,
+      "meaning": "Готовый ответ на узкую задачу; пока не выбран."
+    }
+  ],
+  "events": []
+}

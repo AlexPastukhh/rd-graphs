@@ -1,0 +1,439 @@
+{
+  "schemaVersion": 1,
+  "readOnly": true,
+  "exampleOnly": true,
+  "planningScale": "module",
+  "identitySpace": "rdg-example-mixed-v7",
+  "hypothetical": true,
+  "selectedInProject": false,
+  "id": "reference-mixed-contextual-split",
+  "title": "Сохранить разбиение, учитывая новые требования к совместной проверке",
+  "revision": 3,
+  "rootRequirementId": "R-COMP",
+  "catalogHidden": true,
+  "view": {
+    "requirementDepth": 1
+  },
+  "expansionOf": {
+    "graphSlug": "reference-mixed-active-work",
+    "nodeId": "R-COMP"
+  },
+  "description": "Отдельный уровень той же R. Канонические записи и история остаются у владельца; это учебная проекция, не новое решение.",
+  "nodes": [
+    {
+      "id": "R-COMP",
+      "kind": "requirement",
+      "title": "Сохранить разбиение, учитывая новые требования к совместной проверке",
+      "compositeOf": "R0",
+      "status": "active",
+      "history": [
+        {
+          "id": "T1",
+          "recordedAt": "T1",
+          "knownAt": "T1",
+          "effectiveAt": "T1",
+          "statement": "Проработать Features параллельно, сохранив согласованность сквозных процессов",
+          "facts": [
+            {
+              "ref": "R0",
+              "state": "checked-present"
+            },
+            {
+              "ref": "R-TECH",
+              "state": "checked-present"
+            },
+            {
+              "ref": "C-PLATFORM",
+              "state": "checked-present"
+            }
+          ],
+          "sourceRef": "example:preselection-review-T1"
+        },
+        {
+          "id": "T2",
+          "recordedAt": "T2",
+          "knownAt": "T2",
+          "effectiveAt": "T0",
+          "statement": "Сохранить параллельность, учитывая ранее не найденную совместимость старого обмена данными",
+          "facts": [
+            {
+              "ref": "R-LEGACY-API",
+              "state": "checked-present"
+            }
+          ],
+          "reason": "Требование фактически действовало в T1, но стало известно только в T2; T1 остаётся неизменным.",
+          "sourceRef": "example:legacy-integration-notice"
+        },
+        {
+          "id": "T3",
+          "recordedAt": "T3",
+          "knownAt": "T3",
+          "effectiveAt": "T3",
+          "statement": "Сохранить согласованность Features при новом общем журнале изменений",
+          "facts": [
+            {
+              "ref": "D-OTHER",
+              "state": "checked-present"
+            },
+            {
+              "ref": "R-AUDIT-CONSISTENCY",
+              "state": "checked-present"
+            }
+          ],
+          "reason": "Только после условного D-OTHER в T3 появилось новое требование к общей проверке журнала.",
+          "sourceRef": "EX-EV-OTHER"
+        }
+      ],
+      "qrpe": [
+        {
+          "id": "Q-COMP",
+          "text": "Достаточно ли учтены требования из соседних областей?",
+          "status": "open",
+          "recordedAt": "T2",
+          "sourceRefs": [
+            "R-LEGACY-API"
+          ],
+          "knownAt": "T2"
+        }
+      ],
+      "currentStatement": "Сохранить согласованность Features при новом общем журнале изменений",
+      "projectionOf": {
+        "graphSlug": "reference-mixed-active-work",
+        "nodeId": "R-COMP"
+      }
+    },
+    {
+      "id": "D-A",
+      "kind": "decision",
+      "status": "selected-in-example-only",
+      "title": "В примере принято разбиение по Features",
+      "selectedOptionId": "O-A",
+      "selectedInExampleOnly": true,
+      "selectionBasis": {
+        "compositeSnapshot": {
+          "id": "R-COMP",
+          "history": [
+            {
+              "id": "T1",
+              "recordedAt": "T1",
+              "knownAt": "T1",
+              "effectiveAt": "T1",
+              "statement": "Проработать Features параллельно, сохранив согласованность сквозных процессов",
+              "facts": [
+                {
+                  "ref": "R0",
+                  "state": "checked-present"
+                },
+                {
+                  "ref": "R-TECH",
+                  "state": "checked-present"
+                },
+                {
+                  "ref": "C-PLATFORM",
+                  "state": "checked-present"
+                }
+              ],
+              "sourceRef": "example:preselection-review-T1"
+            }
+          ]
+        },
+        "optionSnapshot": {
+          "id": "O-A",
+          "canonBlock": {
+            "recommended": [
+              {
+                "id": "O-FEATURE-plus-1",
+                "text": "Нужна независимая проработка частей",
+                "checkCategories": [
+                  "согласованность"
+                ]
+              },
+              {
+                "id": "O-FEATURE-plus-2",
+                "text": "Есть команды для отдельных функциональных областей",
+                "checkCategories": [
+                  "согласованность"
+                ]
+              }
+            ],
+            "contraindicated": [
+              {
+                "id": "O-FEATURE-minus-1",
+                "text": "Критичны сквозные зависимости",
+                "checkCategories": [
+                  "согласованность"
+                ]
+              },
+              {
+                "id": "O-FEATURE-minus-2",
+                "text": "Трудно поддерживать единые правила",
+                "checkCategories": [
+                  "согласованность"
+                ]
+              }
+            ]
+          },
+          "preparedSource": {
+            "graphSlug": "reference-prepared-planning-tree",
+            "sourceOptionId": "O-FEATURE",
+            "version": "3",
+            "canonHash": "8b05b0b36badf8621345a12dffda73fb3ab6a81ea359c4481f00641911de417e"
+          }
+        },
+        "note": "Только учебное принятие; реальной санкции пользователя нет.",
+        "knownAt": "T1",
+        "recordedAt": "T1",
+        "rationale": "Иллюстративно предпочли параллельную независимую разработку Features; сильный риск сквозной несогласованности признан, а не компенсирован плюсами. До реализации обязательно проверить контракты в R-ACT-2; QR-A остаётся открытым, выбор пересмотреть при провале проверки.",
+        "acceptedContraindicationCaseIds": [
+          "O-FEATURE-minus-1"
+        ],
+        "outstandingRiskIssueIds": [
+          "QR-A"
+        ]
+      },
+      "qrpe": [
+        {
+          "id": "QR-A",
+          "text": "Не нарушится ли согласованность сквозных процессов?",
+          "status": "open",
+          "recordedAt": "T1",
+          "sourceRefs": [
+            "R-TECH",
+            "O-A"
+          ],
+          "knownAt": "T1"
+        },
+        {
+          "id": "QR-T2",
+          "text": "Требование существовало в T1, но было замечено позже",
+          "status": "open",
+          "recordedAt": "T2",
+          "effectiveAt": "before-T1",
+          "sourceRefs": [
+            "R-LEGACY-API"
+          ],
+          "knownAt": "T2"
+        },
+        {
+          "id": "QR-A-RES",
+          "text": "Нужно ли делать отдельный согласующий Unit для каждой Feature?",
+          "status": "resolved",
+          "recordedAt": "T0",
+          "sourceRefs": [
+            "R0"
+          ],
+          "statusHistory": [
+            {
+              "id": "QAR-OPEN",
+              "status": "open",
+              "recordedAt": "T0"
+            },
+            {
+              "id": "QAR-RESOLVED",
+              "status": "resolved",
+              "recordedAt": "T1",
+              "note": "Условный план допускает общий R-ACT-2 вместо автоматического Unit на каждую Feature."
+            }
+          ]
+        }
+      ],
+      "implementationStatus": "not-demonstrated",
+      "goalAchievementStatus": "unverified",
+      "projectionOf": {
+        "graphSlug": "reference-mixed-active-work",
+        "nodeId": "D-A"
+      }
+    },
+    {
+      "id": "O-A",
+      "kind": "option",
+      "title": "По Features",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "O-FEATURE-plus-1",
+            "text": "Нужна независимая проработка частей",
+            "checkCategories": [
+              "согласованность"
+            ]
+          },
+          {
+            "id": "O-FEATURE-plus-2",
+            "text": "Есть команды для отдельных функциональных областей",
+            "checkCategories": [
+              "согласованность"
+            ]
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "O-FEATURE-minus-1",
+            "text": "Критичны сквозные зависимости",
+            "checkCategories": [
+              "согласованность"
+            ]
+          },
+          {
+            "id": "O-FEATURE-minus-2",
+            "text": "Трудно поддерживать единые правила",
+            "checkCategories": [
+              "согласованность"
+            ]
+          }
+        ]
+      },
+      "qrpe": [
+        {
+          "id": "QR-A",
+          "text": "Не нарушится ли согласованность сквозных процессов?",
+          "status": "open",
+          "recordedAt": "T1",
+          "sourceRefs": [
+            "R-TECH"
+          ],
+          "knownAt": "T1"
+        },
+        {
+          "id": "QR-A-RES",
+          "text": "Нужно ли делать отдельный согласующий Unit для каждой Feature?",
+          "status": "resolved",
+          "recordedAt": "T0",
+          "sourceRefs": [
+            "R0"
+          ],
+          "statusHistory": [
+            {
+              "id": "QAR-OPEN",
+              "status": "open",
+              "recordedAt": "T0"
+            },
+            {
+              "id": "QAR-RESOLVED",
+              "status": "resolved",
+              "recordedAt": "T1",
+              "note": "Условный план допускает общий R-ACT-2 вместо автоматического Unit на каждую Feature."
+            }
+          ]
+        }
+      ],
+      "preparedSource": {
+        "graphSlug": "reference-prepared-planning-tree",
+        "sourceOptionId": "O-FEATURE",
+        "version": "6",
+        "canonHash": "8b05b0b36badf8621345a12dffda73fb3ab6a81ea359c4481f00641911de417e"
+      },
+      "compositeRequirementId": "R-COMP",
+      "contextAssessment": "Оба подготовленных варианта рассматриваются относительно общего R-COMP; канонические ситуации не утверждаются автоматически.",
+      "contextChecks": [
+        {
+          "canonCaseId": "O-FEATURE-plus-1",
+          "requirementId": "R0",
+          "state": "checked-present",
+          "knownAt": "T1",
+          "sourceRef": "R0"
+        },
+        {
+          "canonCaseId": "O-FEATURE-minus-1",
+          "requirementId": "R-TECH",
+          "state": "checked-present",
+          "knownAt": "T1",
+          "sourceRef": "R-TECH",
+          "impact": "contraindication-open"
+        }
+      ],
+      "projectionOf": {
+        "graphSlug": "reference-mixed-active-work",
+        "nodeId": "O-A"
+      }
+    },
+    {
+      "id": "R-ACT-1",
+      "kind": "requirement",
+      "title": "Проработать Feature Availability",
+      "status": "active",
+      "qrpe": [],
+      "projectionOf": {
+        "graphSlug": "reference-mixed-active-work",
+        "nodeId": "R-ACT-1"
+      }
+    },
+    {
+      "id": "R-ACT-2",
+      "kind": "requirement",
+      "title": "Обеспечить согласованность Features",
+      "status": "active",
+      "qrpe": [],
+      "projectionOf": {
+        "graphSlug": "reference-mixed-active-work",
+        "nodeId": "R-ACT-2"
+      }
+    },
+    {
+      "id": "R-RELINK",
+      "kind": "requirement",
+      "title": "Проверить непротиворечивость интеграционных контрактов",
+      "status": "active",
+      "qrpe": [
+        {
+          "id": "Q-R-RELINK",
+          "text": "От какого D зависит проверка контрактов?",
+          "status": "resolved",
+          "recordedAt": "T3",
+          "statusHistory": [
+            {
+              "id": "QRR-OPEN",
+              "status": "open",
+              "recordedAt": "T3"
+            },
+            {
+              "id": "QRR-RESOLVED",
+              "status": "resolved",
+              "recordedAt": "T4",
+              "note": "Перенесено к D-A с сохранением старой связи."
+            }
+          ]
+        }
+      ],
+      "projectionOf": {
+        "graphSlug": "reference-mixed-active-work",
+        "nodeId": "R-RELINK"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "DRV-A",
+      "type": "DRIVES",
+      "from": "R-COMP",
+      "to": "D-A"
+    },
+    {
+      "id": "INT-R-ACT-1",
+      "type": "INTRODUCES",
+      "from": "D-A",
+      "to": "R-ACT-1",
+      "parent": "R-COMP",
+      "childRole": "subgoal"
+    },
+    {
+      "id": "INT-R-ACT-2",
+      "type": "INTRODUCES",
+      "from": "D-A",
+      "to": "R-ACT-2",
+      "parent": "R-COMP",
+      "childRole": "method_correctness"
+    },
+    {
+      "id": "INTRO-RELINK-CORRECT",
+      "type": "INTRODUCES",
+      "from": "D-A",
+      "to": "R-RELINK",
+      "parent": "R-COMP",
+      "childRole": "method_correctness"
+    }
+  ],
+  "collections": [],
+  "events": []
+}

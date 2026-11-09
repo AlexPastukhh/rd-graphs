@@ -1,0 +1,213 @@
+{
+  "schemaVersion": 1,
+  "revision": 3,
+  "id": "v6-action-optin-fixture",
+  "title": "Action — учебный рабочий граф",
+  "planningScale": "module",
+  "identitySpace": "v6-action-optin-fixture",
+  "rootRequirementId": "R0",
+  "actionModel": "candidate-v6",
+  "nodes": [
+    {
+      "id": "R0",
+      "kind": "requirement",
+      "title": "Подготовить часть приложения",
+      "status": "active"
+    },
+    {
+      "id": "A1",
+      "kind": "action",
+      "title": "Разделить работу на независимые части",
+      "status": "selected",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "C1",
+            "text": "Части могут разрабатываться отдельно"
+          }
+        ],
+        "contraindicated": []
+      },
+      "qrpe": [
+        {
+          "id": "Q1",
+          "text": "Есть ли скрытая сквозная зависимость?",
+          "status": "open"
+        }
+      ],
+      "selectionBasis": {
+        "driverSnapshot": {
+          "id": "R0",
+          "kind": "requirement",
+          "title": "Подготовить часть приложения",
+          "status": "active"
+        },
+        "actionSnapshot": {
+          "id": "A1",
+          "kind": "action",
+          "title": "Разделить работу на независимые части",
+          "status": "candidate",
+          "canonBlock": {
+            "recommended": [
+              {
+                "id": "C1",
+                "text": "Части могут разрабатываться отдельно"
+              }
+            ],
+            "contraindicated": []
+          },
+          "qrpe": [
+            {
+              "id": "Q1",
+              "text": "Есть ли скрытая сквозная зависимость?",
+              "status": "open"
+            }
+          ]
+        },
+        "note": "Синтетический тест writer; не решение пользователя о проекте"
+      }
+    },
+    {
+      "id": "R1",
+      "kind": "requirement",
+      "title": "Проработать первую часть",
+      "status": "active"
+    },
+    {
+      "id": "R2",
+      "kind": "requirement",
+      "title": "Проработать вторую часть",
+      "status": "active"
+    },
+    {
+      "id": "CTX-MAINT",
+      "kind": "context",
+      "title": "Synthetic anchored maintenance comparison",
+      "maintenanceComparison": {
+        "selectedActionId": "A1",
+        "current": {
+          "cost": 10,
+          "outcomeCovered": true
+        },
+        "alternative": {
+          "id": "A-NEW",
+          "evidence": {
+            "cost": 4,
+            "outcomeCovered": true
+          },
+          "introduces": [
+            "R1"
+          ]
+        },
+        "stale": false
+      }
+    },
+    {
+      "id": "A-REVIEW",
+      "kind": "action",
+      "title": "Review A1 through Maintenance Lens",
+      "status": "selected",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "C-REVIEW",
+            "text": "Alternative reduces burden with adequate outcome"
+          }
+        ],
+        "contraindicated": []
+      },
+      "qrpe": [
+        {
+          "id": "Q-REVIEW",
+          "text": "Assess dependency and external effects",
+          "status": "resolved",
+          "resolutionEvidenceRefs": [
+            "graph-node:CTX-MAINT@04b3e11c34e2641db8c4c01d8fbad71ab11c0217b65acc903c66191ec866f4ea"
+          ]
+        }
+      ],
+      "selectionBasis": {
+        "driverSnapshot": {
+          "id": "R0",
+          "kind": "requirement",
+          "title": "Подготовить часть приложения",
+          "status": "active"
+        },
+        "actionSnapshot": {
+          "id": "A-REVIEW",
+          "kind": "action",
+          "title": "Review A1 through Maintenance Lens",
+          "status": "candidate",
+          "canonBlock": {
+            "recommended": [
+              {
+                "id": "C-REVIEW",
+                "text": "Alternative reduces burden with adequate outcome"
+              }
+            ],
+            "contraindicated": []
+          },
+          "qrpe": [
+            {
+              "id": "Q-REVIEW",
+              "text": "Assess dependency and external effects",
+              "status": "resolved",
+              "resolutionEvidenceRefs": [
+                "graph-node:CTX-MAINT@04b3e11c34e2641db8c4c01d8fbad71ab11c0217b65acc903c66191ec866f4ea"
+              ]
+            }
+          ]
+        },
+        "note": "Synthetic setup of review action for test-only Lens application"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "action-drive-A1",
+      "type": "DRIVES",
+      "from": "R0",
+      "to": "A1"
+    },
+    {
+      "id": "action-introduces-A1-R1",
+      "type": "INTRODUCES",
+      "from": "A1",
+      "to": "R1",
+      "parent": "R0",
+      "childRole": "subgoal"
+    },
+    {
+      "id": "action-introduces-A1-R2",
+      "type": "INTRODUCES",
+      "from": "A1",
+      "to": "R2",
+      "parent": "R0",
+      "childRole": "subgoal"
+    },
+    {
+      "id": "action-drive-A-REVIEW",
+      "type": "DRIVES",
+      "from": "R0",
+      "to": "A-REVIEW"
+    }
+  ],
+  "events": [
+    {
+      "id": "EV1",
+      "type": "action_selected",
+      "actionId": "A1",
+      "driverRequirementId": "R0",
+      "by": "assistant",
+      "note": "Синтетический тест writer; не решение пользователя о проекте"
+    },
+    {
+      "id": "EV-REVIEW",
+      "type": "action_selected",
+      "actionId": "A-REVIEW",
+      "driverRequirementId": "R0",
+      "by": "user",
+      "note": "Synthetic setup of review action for test-only Lens application"
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 2,
+  "transactionId": "demo-add-A-DESIGN",
+  "requestSHA256": "6041046211197ec8677656728fdb5dc67616209805b6a1d1ac98a7d9099259e3",
+  "preparedAt": "2026-10-21T02:02:12.100376+00:00",
+  "recordedAt": "2026-10-21T02:02:12.816822+00:00",
+  "state": "completed",
+  "records": [
+    {
+      "file": "workspaces/requirements-dependencies-demo/graph.json",
+      "before": {
+        "schemaVersion": 1,
+        "id": "requirements-dependencies-demo",
+        "title": "Учебная реальная работа: изменение R и зависимые Actions",
+        "revision": 1,
+        "planningScale": "module",
+        "identitySpace": "rdg-working-requirements-dependencies-demo",
+        "rootRequirementId": "R0",
+        "actionModel": "candidate-v6",
+        "purpose": "real-api-teaching-workflow",
+        "presentation": {
+          "usage": "working",
+          "title": "Рабочий пример · зависимые Requirements и Actions",
+          "description": "Настоящие Graph/Plan owners, история Graph API и Gendocen receipts. Работа ведётся обычными writers."
+        },
+        "nodes": [
+          {
+            "id": "R0",
+            "kind": "requirement",
+            "status": "active",
+            "title": "Сделать проверяемую рабочую демонстрацию зависимостей RDG",
+            "requirementText": "Продемонстрировать реальные Graph/Plan/API события и Gendocen-обнаружение зависимостей."
+          }
+        ],
+        "edges": [],
+        "events": []
+      },
+      "after": {
+        "schemaVersion": 1,
+        "id": "requirements-dependencies-demo",
+        "title": "Учебная реальная работа: изменение R и зависимые Actions",
+        "revision": 2,
+        "planningScale": "module",
+        "identitySpace": "rdg-working-requirements-dependencies-demo",
+        "rootRequirementId": "R0",
+        "actionModel": "candidate-v6",
+        "purpose": "real-api-teaching-workflow",
+        "presentation": {
+          "usage": "working",
+          "title": "Рабочий пример · зависимые Requirements и Actions",
+          "description": "Настоящие Graph/Plan owners, история Graph API и Gendocen receipts. Работа ведётся обычными writers."
+        },
+        "nodes": [
+          {
+            "id": "R0",
+            "kind": "requirement",
+            "status": "active",
+            "title": "Сделать проверяемую рабочую демонстрацию зависимостей RDG",
+            "requirementText": "Продемонстрировать реальные Graph/Plan/API события и Gendocen-обнаружение зависимостей."
+          },
+          {
+            "id": "A-DESIGN",
+            "kind": "action",
+            "title": "Развернуть работу в проверяемые подцели",
+            "actionType": "decomposition",
+            "status": "candidate",
+            "canonBlock": {
+              "recommended": [
+                {
+                  "id": "C-A-DESIGN",
+                  "text": "Когда нужна явная декомпозиция через Action и последующий независимый контроль подцелей."
+                }
+              ],
+              "contraindicated": [
+                {
+                  "id": "N-A-DESIGN",
+                  "text": "Не создавать пустые подцели без связи с корневой Requirement."
+                }
+              ]
+            },
+            "qrpe": []
+          }
+        ],
+        "edges": [
+          {
+            "id": "action-drive-A-DESIGN",
+            "type": "DRIVES",
+            "from": "R0",
+            "to": "A-DESIGN"
+          }
+        ],
+        "events": []
+      },
+      "changed": true
+    }
+  ],
+  "authorityPrincipal": "bearer:root"
+}

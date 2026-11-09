@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "id": "reference-complete-app",
+  "revision": 4,
+  "title": "R · Спланировать приложение бронирования",
+  "identitySpace": "showcase:booking-example-v1",
+  "rootRequirementId": "SH-R-APP",
+  "readOnly": true,
+  "exampleOnly": true,
+  "hypothetical": true,
+  "selectedInProject": false,
+  "catalogHidden": false,
+  "canonicality": "ILLUSTRATION_ONLY",
+  "demonstrationGroup": "complete-booking-showcase",
+  "origin": "New complete hypothetical illustration, NOT original EX-* and NOT a real project.",
+  "sourceDocument": "docs/examples/COMPLETE-REFERENCE-GUIDE.md",
+  "coverage": "Входной граф; нейтральные дочерние Requirements вводятся D, а отдельные их уровни определяются через identitySpace/rootRequirementId.",
+  "nodes": [
+    {
+      "id": "SH-R-APP",
+      "kind": "requirement",
+      "title": "Спланировать приложение бронирования",
+      "description": "Условная цель. Само слово «Features» здесь не навязывает метод планирования."
+    },
+    {
+      "id": "SH-C-TEAM",
+      "kind": "context",
+      "title": "Команда ограничена по ресурсам",
+      "description": "Условный контекст, не нормативное R."
+    },
+    {
+      "id": "SH-D-APP-SPLIT",
+      "kind": "decision",
+      "title": "Выделить функционал, сценарии и реализационные требования",
+      "status": "selected-in-example-only",
+      "selectedInExample": true,
+      "selectedInProject": false,
+      "scope": "Планирование условного приложения",
+      "description": "Конкретное примерное D вводит РОВНО три R. Готовые решения по дальнейшим уровням здесь не выбраны.",
+      "concreteBranchCount": 3
+    },
+    {
+      "id": "SH-R-FUNC",
+      "kind": "requirement",
+      "title": "Расписать функционал",
+      "description": "Нейтральный дочерний R; только на ЕГО уровне решается «через Features» или другим способом."
+    },
+    {
+      "id": "SH-R-SCENARIOS",
+      "kind": "requirement",
+      "title": "Описать сценарии",
+      "description": "Отдельный уровень Scenarios; не копия R-FUNC."
+    },
+    {
+      "id": "SH-R-REALIZATION",
+      "kind": "requirement",
+      "title": "Определить реализационные ограничения",
+      "description": "Найти актуальные ограничения, а не придумать дочерние задачи."
+    }
+  ],
+  "edges": [
+    {
+      "id": "SH-E-APP-01",
+      "type": "DRIVES",
+      "from": "SH-R-APP",
+      "to": "SH-D-APP-SPLIT",
+      "meaning": "Требование требует ответа о плане."
+    },
+    {
+      "id": "SH-E-APP-02",
+      "type": "CONTEXT_FOR",
+      "from": "SH-C-TEAM",
+      "to": "SH-D-APP-SPLIT",
+      "meaning": "Ограниченные ресурсы учитываются при выборе границ."
+    },
+    {
+      "id": "SH-E-APP-03",
+      "type": "INTRODUCES",
+      "from": "SH-D-APP-SPLIT",
+      "to": "SH-R-FUNC",
+      "meaning": "Первый из трёх точных дочерних R.",
+      "parent": "SH-R-APP"
+    },
+    {
+      "id": "SH-E-APP-04",
+      "type": "INTRODUCES",
+      "from": "SH-D-APP-SPLIT",
+      "to": "SH-R-SCENARIOS",
+      "meaning": "Второй дочерний R.",
+      "parent": "SH-R-APP"
+    },
+    {
+      "id": "SH-E-APP-05",
+      "type": "INTRODUCES",
+      "from": "SH-D-APP-SPLIT",
+      "to": "SH-R-REALIZATION",
+      "meaning": "Третий дочерний R.",
+      "parent": "SH-R-APP"
+    }
+  ],
+  "events": [
+    {
+      "id": "SH-EVENT-APP-SELECT",
+      "type": "decision_selected",
+      "decisionId": "SH-D-APP-SPLIT",
+      "by": "example-only",
+      "note": "В вымышленной истории выбран состав из трёх R. НЕ событие пользователя.",
+      "exampleOnly": true
+    }
+  ],
+  "planningScale": "module"
+}

@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "id": "template-tm-2d-20-whole-visual-design-unit-ru-wvd-02",
+  "title": "Unit · Composition And Attention Structure",
+  "revision": 1,
+  "planningScale": "unit",
+  "identitySpace": "prepared:TM-2D-20-WHOLE-VISUAL-DESIGN",
+  "rootRequirementId": "RU-WVD-02",
+  "readOnly": true,
+  "templateOnly": true,
+  "selected": false,
+  "catalogHidden": true,
+  "preparedModule": {
+    "id": "TEMPLATE-D-RU-WVD-02",
+    "version": "d1be106c3c71595aa3e9972e41542ed9a8ca9e8d73fd5c78996a067efdd74e23",
+    "goalRequirementId": "RU-WVD-02",
+    "methodDecisionId": "TEMPLATE-D-RU-WVD-02",
+    "childRequirementIds": [],
+    "applicability": "global framing, placement, hierarchy, depth/attention/focal relationships and meaningful negative-space/text-region intent",
+    "successCriteria": "Достаточно выполнить применимую Unit-specific Guidance и её checkpoints; инструкция не доказывает результат."
+  },
+  "sourceDocument": "/workspace/repos/obs-planning-docs/planning/documentation/idtspe-methodology/active/profiles/visual-production-2d/target-modules/TM-2D-20-WHOLE-VISUAL-DESIGN.md#ru-wvd-02",
+  "sourceContentSHA256": "d1be106c3c71595aa3e9972e41542ed9a8ca9e8d73fd5c78996a067efdd74e23",
+  "sourceOwnerGraphSlug": "template-tm-2d-20-whole-visual-design",
+  "sourceAnchor": "ru-wvd-02",
+  "coverage": "Готовый способ одного узкого R; без выдуманных под-R и без выбора проекта.",
+  "nodes": [
+    {
+      "id": "RU-WVD-02",
+      "kind": "requirement",
+      "title": "Composition And Attention Structure",
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "template-tm-2d-20-whole-visual-design",
+        "nodeId": "RU-WVD-02"
+      }
+    },
+    {
+      "id": "TEMPLATE-D-RU-WVD-02",
+      "kind": "decision",
+      "status": "reusable-unselected",
+      "templateRole": "unit-prepared-guidance",
+      "selected": false,
+      "title": "Готовый способ проработки: Composition And Attention Structure",
+      "description": "<a id=\"ru-wvd-02\"></a>\n### Composition And Attention Structure\n\n`RU-WVD-02`\n\nOwn global visual relationships such as framing/hierarchy/attention/depth. If an accepted reference already fixes them, this responsibility may resolve very lightly when still worth explicit ownership.",
+      "source": "/workspace/repos/obs-planning-docs/planning/documentation/idtspe-methodology/active/profiles/visual-production-2d/target-modules/TM-2D-20-WHOLE-VISUAL-DESIGN.md#ru-wvd-02",
+      "sourceUnitId": "RU-WVD-02",
+      "explicitSubrequirements": false,
+      "note": "Source defines Unit guidance; no explicit nested R inventory is declared here."
+    }
+  ],
+  "edges": [
+    {
+      "id": "UNIT-E-DRIVE",
+      "type": "DRIVES",
+      "from": "RU-WVD-02",
+      "to": "TEMPLATE-D-RU-WVD-02",
+      "templateOnly": true,
+      "meaning": "Готовый ответ на узкую задачу; пока не выбран."
+    }
+  ],
+  "events": []
+}

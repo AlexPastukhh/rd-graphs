@@ -1,0 +1,46 @@
+# Independent owner-only G4 ASK candidate; NOT the existing G2 project.
+# The READ-only Sonar adapter and owner UI explicitly forbid Sonar POST.
+services:
+  owner:
+    build:
+      context: ../..
+      dockerfile: fortis_approvals/deploy/Dockerfile-G4-Candidate
+    image: fortis-approvals-g4-candidate:local
+    restart: unless-stopped
+    init: true
+    read_only: true
+    user: "10001:10001"
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    pids_limit: 100
+    ports:
+      - "127.0.0.1:18991:18991"
+    environment:
+      FORTIS_STATE_DIR: /state/private
+      FORTIS_OWNER_ORIGIN: http://localhost:18991
+      FORTIS_PORT: "18991"
+      FORTIS_OWNER_SESSION_SECONDS: "43200"
+      FORTIS_G4_REGION: eu
+      FORTIS_G4_ORGANIZATIONS: alexpastukhh
+      FORTIS_G4_TOKEN_FILE: /run/g4-token/private/sonar_token
+    volumes:
+      - g4_state:/state
+      - g4_token:/run/g4-token:ro
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+    healthcheck:
+      test: ["CMD","python","-c","import urllib.request;urllib.request.urlopen('http://localhost:18991/',timeout=3).close()"]
+      interval: 20s
+      timeout: 4s
+      retries: 3
+      start_period: 20s
+
+# Pre-created and permission-initialized by the trusted owner-side scripts.
+# external:true is intentional: Compose must not create, own or delete them.
+volumes:
+  g4_state:
+    external: true
+    name: fortis-approvals-g4_state
+  g4_token:
+    external: true
+    name: fortis-approvals-g4_token
