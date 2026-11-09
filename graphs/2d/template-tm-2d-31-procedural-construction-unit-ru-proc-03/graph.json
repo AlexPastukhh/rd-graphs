@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "id": "template-tm-2d-31-procedural-construction-unit-ru-proc-03",
+  "title": "Unit · Region Mask And Composition Logic",
+  "revision": 1,
+  "planningScale": "unit",
+  "identitySpace": "prepared:TM-2D-31-PROCEDURAL-CONSTRUCTION",
+  "rootRequirementId": "RU-PROC-03",
+  "readOnly": true,
+  "templateOnly": true,
+  "selected": false,
+  "catalogHidden": true,
+  "preparedModule": {
+    "id": "TEMPLATE-D-RU-PROC-03",
+    "version": "f2cba21065e00f2592c382fb71a2aafab377f04641188aea7f0c85aaab874049",
+    "goalRequirementId": "RU-PROC-03",
+    "methodDecisionId": "TEMPLATE-D-RU-PROC-03",
+    "childRequirementIds": [],
+    "applicability": "region/mask/composition logic when explicit spatial ownership between procedural parts is useful",
+    "successCriteria": "Достаточно выполнить применимую Unit-specific Guidance и её checkpoints; инструкция не доказывает результат."
+  },
+  "sourceDocument": "/workspace/repos/obs-planning-docs/planning/documentation/idtspe-methodology/active/profiles/visual-production-2d/target-modules/TM-2D-31-PROCEDURAL-CONSTRUCTION.md#ru-proc-03",
+  "sourceContentSHA256": "f2cba21065e00f2592c382fb71a2aafab377f04641188aea7f0c85aaab874049",
+  "sourceOwnerGraphSlug": "template-tm-2d-31-procedural-construction",
+  "sourceAnchor": "ru-proc-03",
+  "coverage": "Готовый способ одного узкого R; без выдуманных под-R и без выбора проекта.",
+  "nodes": [
+    {
+      "id": "RU-PROC-03",
+      "kind": "requirement",
+      "title": "Region Mask And Composition Logic",
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "template-tm-2d-31-procedural-construction",
+        "nodeId": "RU-PROC-03"
+      }
+    },
+    {
+      "id": "TEMPLATE-D-RU-PROC-03",
+      "kind": "decision",
+      "status": "reusable-unselected",
+      "templateRole": "unit-prepared-guidance",
+      "selected": false,
+      "title": "Готовый способ проработки: Region Mask And Composition Logic",
+      "description": "<a id=\"ru-proc-03\"></a>\n### Region Mask And Composition Logic\n\n`RU-PROC-03`\n\nUse only when explicit regions/masks/composition logic have independent semantic value; direct field-to-appearance mapping may make it unnecessary.",
+      "source": "/workspace/repos/obs-planning-docs/planning/documentation/idtspe-methodology/active/profiles/visual-production-2d/target-modules/TM-2D-31-PROCEDURAL-CONSTRUCTION.md#ru-proc-03",
+      "sourceUnitId": "RU-PROC-03",
+      "explicitSubrequirements": false,
+      "note": "Source defines Unit guidance; no explicit nested R inventory is declared here."
+    }
+  ],
+  "edges": [
+    {
+      "id": "UNIT-E-DRIVE",
+      "type": "DRIVES",
+      "from": "RU-PROC-03",
+      "to": "TEMPLATE-D-RU-PROC-03",
+      "templateOnly": true,
+      "meaning": "Готовый ответ на узкую задачу; пока не выбран."
+    }
+  ],
+  "events": []
+}

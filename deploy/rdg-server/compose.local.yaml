@@ -1,0 +1,25 @@
+services:
+  proxy:
+    image: caddy:2
+    restart: unless-stopped
+    user: "10001:10001"
+    read_only: true
+    cap_drop: [ALL]
+    cap_add: [NET_BIND_SERVICE]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 64
+    mem_limit: 128m
+    ports:
+      - "127.0.0.1:18880:8080"
+    volumes:
+      - ./Caddyfile.local:/etc/caddy/Caddyfile:ro
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+      - /config:size=1m,uid=10001,gid=10001,mode=0700
+      - /data:size=1m,uid=10001,gid=10001,mode=0700
+    networks: [backend, edge]
+    depends_on:
+      rdg:
+        condition: service_healthy
+networks:
+  edge:

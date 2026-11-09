@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "readOnly": true,
+  "exampleOnly": true,
+  "planningScale": "unit",
+  "identitySpace": "rdg-example-mixed-v7",
+  "hypothetical": true,
+  "selectedInProject": false,
+  "id": "reference-mixed-planned-feature-consistency",
+  "title": "Обеспечить согласованность Features",
+  "revision": 3,
+  "rootRequirementId": "P-RF-2",
+  "catalogHidden": true,
+  "view": {
+    "requirementDepth": 1
+  },
+  "expansionOf": {
+    "graphSlug": "reference-mixed-active-work",
+    "nodeId": "P-RF-2"
+  },
+  "description": "Отдельный уровень той же R. Канонические записи и история остаются у владельца; это учебная проекция, не новое решение.",
+  "nodes": [
+    {
+      "id": "P-RF-2",
+      "kind": "requirement",
+      "status": "candidate",
+      "title": "Обеспечить согласованность Features",
+      "qrpe": [],
+      "sourcePreparedNodeId": "RF-2",
+      "projectionOf": {
+        "graphSlug": "reference-mixed-active-work",
+        "nodeId": "P-RF-2"
+      }
+    },
+    {
+      "id": "P-RF-2-O1",
+      "kind": "option",
+      "title": "Зафиксировать единый контракт общих данных",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RF-2-O1-plus-1",
+            "text": "Features разделяют одну модель данных и могут согласованно принять общие типы, правила обновления и ошибки.",
+            "checkCategories": []
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RF-2-O1-minus-1",
+            "text": "Features выпускаются независимо с разными версиями протокола; единый контракт без совместимости ограничит выпуск.",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": [],
+      "sourcePreparedNodeId": "RF-2-O1",
+      "preparedSource": {
+        "graphSlug": "reference-prepared-planning-tree",
+        "sourceOptionId": "RF-2-O1",
+        "version": "6",
+        "canonHash": "9152b732d3e41ca3b0c43ebe9db0a8df53d5fd0aaebf02b751188bb4d3662346"
+      },
+      "projectionOf": {
+        "graphSlug": "reference-mixed-active-work",
+        "nodeId": "P-RF-2-O1"
+      },
+      "description": "Результат: общий контракт и проверка совместимости потребителей, включая правила ошибок и версий."
+    },
+    {
+      "id": "P-RF-2-O2",
+      "kind": "option",
+      "title": "Проверять парные взаимодействия Features",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RF-2-O2-plus-1",
+            "text": "Features независимо поставляются, а границы взаимодействия и ожидаемые сообщения перечислимы.",
+            "checkCategories": []
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RF-2-O2-minus-1",
+            "text": "Число связей слишком велико или общий инвариант нельзя доказать парными проверками; требуется единая модель.",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": [],
+      "sourcePreparedNodeId": "RF-2-O2",
+      "preparedSource": {
+        "graphSlug": "reference-prepared-planning-tree",
+        "sourceOptionId": "RF-2-O2",
+        "version": "6",
+        "canonHash": "562cf47178b5b52d81a57797ade2e9d3c253a91337074e4f0f9a121220bb95e9"
+      },
+      "projectionOf": {
+        "graphSlug": "reference-mixed-active-work",
+        "nodeId": "P-RF-2-O2"
+      },
+      "description": "Результат: матрица взаимодействий и проверки контрактов на каждой границе."
+    }
+  ],
+  "edges": [
+    {
+      "id": "PREP-OPT-RF-2-O1",
+      "type": "OPTION_FOR",
+      "from": "P-RF-2",
+      "to": "P-RF-2-O1"
+    },
+    {
+      "id": "PREP-OPT-RF-2-O2",
+      "type": "OPTION_FOR",
+      "from": "P-RF-2",
+      "to": "P-RF-2-O2"
+    }
+  ],
+  "collections": [],
+  "events": []
+}

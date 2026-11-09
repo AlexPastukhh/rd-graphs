@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "id": "template-tm-2d-50-delivery-adaptation-unit-ru-del-03",
+  "title": "Unit · Accepted Delivery Variant Set",
+  "revision": 1,
+  "planningScale": "unit",
+  "identitySpace": "prepared:TM-2D-50-DELIVERY-ADAPTATION",
+  "rootRequirementId": "RU-DEL-03",
+  "readOnly": true,
+  "templateOnly": true,
+  "selected": false,
+  "catalogHidden": true,
+  "preparedModule": {
+    "id": "TEMPLATE-D-RU-DEL-03",
+    "version": "c37777d65106e3d3fafca978c0e721d5a811d97c68f90d1fb98771ff714770ea",
+    "goalRequirementId": "RU-DEL-03",
+    "methodDecisionId": "TEMPLATE-D-RU-DEL-03",
+    "childRequirementIds": [],
+    "applicability": "actual accepted visually adapted variants/family when adaptation itself contains design meaning",
+    "successCriteria": "Достаточно выполнить применимую Unit-specific Guidance и её checkpoints; инструкция не доказывает результат."
+  },
+  "sourceDocument": "/workspace/repos/obs-planning-docs/planning/documentation/idtspe-methodology/active/profiles/visual-production-2d/target-modules/TM-2D-50-DELIVERY-ADAPTATION.md#ru-del-03",
+  "sourceContentSHA256": "c37777d65106e3d3fafca978c0e721d5a811d97c68f90d1fb98771ff714770ea",
+  "sourceOwnerGraphSlug": "template-tm-2d-50-delivery-adaptation",
+  "sourceAnchor": "ru-del-03",
+  "coverage": "Готовый способ одного узкого R; без выдуманных под-R и без выбора проекта.",
+  "nodes": [
+    {
+      "id": "RU-DEL-03",
+      "kind": "requirement",
+      "title": "Accepted Delivery Variant Set",
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "template-tm-2d-50-delivery-adaptation",
+        "nodeId": "RU-DEL-03"
+      }
+    },
+    {
+      "id": "TEMPLATE-D-RU-DEL-03",
+      "kind": "decision",
+      "status": "reusable-unselected",
+      "templateRole": "unit-prepared-guidance",
+      "selected": false,
+      "title": "Готовый способ проработки: Accepted Delivery Variant Set",
+      "description": "<a id=\"ru-del-03\"></a>\n### Accepted Delivery Variant Set\n\n`RU-DEL-03`\n\nOwn the accepted visually adapted family. Pure deterministic export artifacts may remain implementation/output products without a separate Unit.",
+      "source": "/workspace/repos/obs-planning-docs/planning/documentation/idtspe-methodology/active/profiles/visual-production-2d/target-modules/TM-2D-50-DELIVERY-ADAPTATION.md#ru-del-03",
+      "sourceUnitId": "RU-DEL-03",
+      "explicitSubrequirements": false,
+      "note": "Source defines Unit guidance; no explicit nested R inventory is declared here."
+    }
+  ],
+  "edges": [
+    {
+      "id": "UNIT-E-DRIVE",
+      "type": "DRIVES",
+      "from": "RU-DEL-03",
+      "to": "TEMPLATE-D-RU-DEL-03",
+      "templateOnly": true,
+      "meaning": "Готовый ответ на узкую задачу; пока не выбран."
+    }
+  ],
+  "events": []
+}

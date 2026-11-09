@@ -1,0 +1,10 @@
+# Separate one-shot G4 READ probe, no owner state and no write-capable service.
+# Build from owner-reviewed archive outside AI-writable workspaces.
+FROM python:3.11-slim
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
+WORKDIR /opt/fortis
+# Copy only exactly the modules needed by the read probe, not G2 owner state.
+RUN mkdir -p /opt/fortis/fortis_approvals
+COPY fortis_approvals/__init__.py fortis_approvals/core.py fortis_approvals/sonar.py fortis_approvals/sonar_probe.py fortis_approvals/sonar_inventory.py /opt/fortis/fortis_approvals/
+USER 10001:10001
+ENTRYPOINT ["python", "-m", "fortis_approvals.sonar_probe"]

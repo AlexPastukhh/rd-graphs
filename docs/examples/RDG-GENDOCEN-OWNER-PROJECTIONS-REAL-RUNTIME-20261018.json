@@ -1,0 +1,56 @@
+{
+  "date": "2026-10-18",
+  "status": "PASS",
+  "sourceMode": "owner-generated-exact-adapter-projections",
+  "engineVersion": "0.1.0.dev25",
+  "engineArchiveSHA256": "740d4845ab19911740f80cbaa8d91b118e8537623acad467ae7fa52fbb0bf8a2",
+  "ownerProjectionBundleSHA256": "337118899d3c5f0cf7d7a9bc5f3712b0f6c8c58f5f2ef778d33422ea9e0836dc",
+  "ownerSourceHashes": {
+    "tools/rdg-gendocen-adapter.py": "bc35ede7cc39a5425758192a68e7405b273edd1e663c0d1c4c2fa7a0beb124cf",
+    "tools/rdg-temporal-plan.py": "a72b037a21740eec5d7ece9af29aa91f3fdf9fd59eb8a4b1da65faf62a8e9179",
+    "docs/examples/temporal-plan-candidate-v1.json": "8ea7def804338b3c1eede415b75da639c56fa4c825882e32782408a2395f54c0"
+  },
+  "syntheticSnapCount": 6,
+  "gendocenCLIInvocations": 25,
+  "cases": [
+    {
+      "test": "initial_persistent_baseline",
+      "A1": "valid",
+      "A2": "valid"
+    },
+    {
+      "test": "cosmetic_reordering",
+      "A1": "valid",
+      "A2": "valid"
+    },
+    {
+      "test": "A2_only_constraint",
+      "A1": "valid",
+      "A2": "review_required"
+    },
+    {
+      "test": "shared_deadline",
+      "A1": "review_required",
+      "A2": "review_required"
+    },
+    {
+      "test": "stale_review_context",
+      "result": "validation_failed"
+    },
+    {
+      "test": "A1_only_canon",
+      "A1": "review_required",
+      "A2": "valid"
+    }
+  ],
+  "invariants": {
+    "workingGraphsChanged": false,
+    "actionSelected": false,
+    "confirmedFPWritten": false,
+    "reviewMarkdownRewritten": false
+  },
+  "actualAdapterExecutedInOwner": true,
+  "engineOnExactResourceBytes": true,
+  "adapterEngineCoLocated": false,
+  "productionStage4Accepted": false
+}

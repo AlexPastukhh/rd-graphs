@@ -1,0 +1,170 @@
+{
+  "schemaVersion": 1,
+  "id": "context-prepared-root",
+  "identitySpace": "rdg-context-prepared",
+  "planningScale": "module",
+  "rootRequirementId": "R-CTX",
+  "revision": 1,
+  "title": "Контекст: выбор способа подготовки интерфейса",
+  "readOnly": true,
+  "exampleOnly": true,
+  "templateOnly": true,
+  "nodes": [
+    {
+      "id": "R-CTX",
+      "kind": "requirement",
+      "title": "Контекст: выбор способа подготовки интерфейса"
+    },
+    {
+      "id": "O-CTX-A",
+      "kind": "option",
+      "title": "Через ключевые пользовательские задачи",
+      "origin": "prepared",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "plus-O-CTX-A",
+            "text": "Учитывать доступность при оценке способа.",
+            "contextUses": [
+              {
+                "fieldRef": {
+                  "graphSlug": "context-prepared-root",
+                  "fieldId": "accessibility"
+                },
+                "purpose": "Проверить потребности людей до выбора способа"
+              }
+            ]
+          }
+        ],
+        "contraindicated": [],
+        "sourceRefs": [
+          {
+            "graphSlug": "context-prepared-root",
+            "sourceId": "wai-planning"
+          }
+        ],
+        "preparation": "interpreted",
+        "interpretation": "Для цели подготовки интерфейса проверяем, сможет ли этот способ учесть потребности пользователей; общая теория не выбирает D за проект.",
+        "fieldsComplete": true
+      }
+    },
+    {
+      "id": "O-CTX-B",
+      "kind": "option",
+      "title": "Через отдельное исследование альтернатив",
+      "origin": "prepared",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "plus-O-CTX-B",
+            "text": "Учитывать доступность при оценке способа.",
+            "contextUses": [
+              {
+                "fieldRef": {
+                  "graphSlug": "context-prepared-root",
+                  "fieldId": "accessibility"
+                },
+                "purpose": "Проверить потребности людей до выбора способа"
+              }
+            ]
+          }
+        ],
+        "contraindicated": [],
+        "sourceRefs": [
+          {
+            "graphSlug": "context-prepared-root",
+            "sourceId": "wai-planning"
+          }
+        ],
+        "preparation": "link-only",
+        "fieldsComplete": false
+      }
+    },
+    {
+      "id": "R-CTX-CURRENT",
+      "kind": "requirement",
+      "title": "Контекст: реализовать выбранный способ",
+      "status": "candidate"
+    },
+    {
+      "id": "R-CTX-ALT",
+      "kind": "requirement",
+      "title": "Контекст: альтернативный способ",
+      "status": "candidate"
+    }
+  ],
+  "edges": [
+    {
+      "id": "option-O-CTX-A",
+      "type": "OPTION_FOR",
+      "from": "R-CTX",
+      "to": "O-CTX-A"
+    },
+    {
+      "id": "option-O-CTX-B",
+      "type": "OPTION_FOR",
+      "from": "R-CTX",
+      "to": "O-CTX-B"
+    },
+    {
+      "id": "out-O-CTX-A",
+      "type": "OUTCOME_OF",
+      "from": "O-CTX-A",
+      "to": "R-CTX-CURRENT"
+    },
+    {
+      "id": "out-O-CTX-B",
+      "type": "OUTCOME_OF",
+      "from": "O-CTX-B",
+      "to": "R-CTX-ALT"
+    }
+  ],
+  "events": [],
+  "contextFieldsComplete": true,
+  "presentation": {
+    "usage": "ready",
+    "exampleOnly": true
+  },
+  "knowledgeSources": [
+    {
+      "id": "wai-planning",
+      "title": "W3C WAI: планирование доступности",
+      "url": "https://www.w3.org/WAI/planning/"
+    }
+  ],
+  "contextFields": [
+    {
+      "id": "accessibility",
+      "title": "Контекст доступности",
+      "explanation": "Кому предстоит пользоваться интерфейсом и какие потребности доступности нужно учесть. Ответ описывает людей и условия использования; ссылка помогает понять концепт.",
+      "sourceRefs": [
+        {
+          "graphSlug": "context-prepared-root",
+          "sourceId": "wai-planning"
+        }
+      ]
+    },
+    {
+      "id": "delivery",
+      "title": "Срок готовности",
+      "explanation": "Когда результат должен быть доступен и какие ограничения срока действительно обязательны."
+    },
+    {
+      "id": "alternative-details",
+      "title": "Детали альтернативного способа",
+      "explanation": "Уточнения исполнения, нужные только после выбора альтернативы."
+    }
+  ],
+  "contextUses": [
+    {
+      "fieldRef": {
+        "graphSlug": "context-prepared-root",
+        "fieldId": "delivery"
+      },
+      "purpose": "Оценить допустимость способов до выбора"
+    }
+  ],
+  "view": {
+    "requirementDepth": 1
+  }
+}

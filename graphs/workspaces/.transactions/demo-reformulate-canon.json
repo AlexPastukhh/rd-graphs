@@ -1,0 +1,774 @@
+{
+  "schemaVersion": 2,
+  "transactionId": "demo-reformulate-canon",
+  "requestSHA256": "66957ac758fe8051c5501bcc16a1bbe0d3783d09fb693981c507339a10235daa",
+  "preparedAt": "2026-10-21T02:04:32.906699+00:00",
+  "recordedAt": "2026-10-21T02:04:33.734641+00:00",
+  "state": "completed",
+  "records": [
+    {
+      "file": "workspaces/requirements-dependencies-demo/graph.json",
+      "before": {
+        "schemaVersion": 1,
+        "id": "requirements-dependencies-demo",
+        "title": "Учебная реальная работа: изменение R и зависимые Actions",
+        "revision": 9,
+        "planningScale": "module",
+        "identitySpace": "rdg-working-requirements-dependencies-demo",
+        "rootRequirementId": "R0",
+        "actionModel": "candidate-v6",
+        "purpose": "real-api-teaching-workflow",
+        "presentation": {
+          "usage": "working",
+          "title": "Рабочий пример · зависимые Requirements и Actions",
+          "description": "Настоящие Graph/Plan owners, история Graph API и Gendocen receipts. Работа ведётся обычными writers."
+        },
+        "nodes": [
+          {
+            "id": "R0",
+            "kind": "requirement",
+            "status": "active",
+            "title": "Сделать проверяемую рабочую демонстрацию зависимостей RDG",
+            "requirementText": "Продемонстрировать реальные Graph/Plan/API события и Gendocen-обнаружение зависимостей."
+          },
+          {
+            "id": "A-DESIGN",
+            "kind": "action",
+            "title": "Развернуть работу в проверяемые подцели",
+            "actionType": "decomposition",
+            "status": "selected",
+            "canonBlock": {
+              "recommended": [
+                {
+                  "id": "C-A-DESIGN",
+                  "text": "Когда нужна явная декомпозиция через Action и последующий независимый контроль подцелей."
+                }
+              ],
+              "contraindicated": [
+                {
+                  "id": "N-A-DESIGN",
+                  "text": "Не создавать пустые подцели без связи с корневой Requirement."
+                }
+              ]
+            },
+            "qrpe": [],
+            "selectionBasis": {
+              "driverSnapshot": {
+                "id": "R0",
+                "kind": "requirement",
+                "status": "active",
+                "title": "Сделать проверяемую рабочую демонстрацию зависимостей RDG",
+                "requirementText": "Продемонстрировать реальные Graph/Plan/API события и Gendocen-обнаружение зависимостей."
+              },
+              "actionSnapshot": {
+                "id": "A-DESIGN",
+                "kind": "action",
+                "title": "Развернуть работу в проверяемые подцели",
+                "actionType": "decomposition",
+                "status": "candidate",
+                "canonBlock": {
+                  "recommended": [
+                    {
+                      "id": "C-A-DESIGN",
+                      "text": "Когда нужна явная декомпозиция через Action и последующий независимый контроль подцелей."
+                    }
+                  ],
+                  "contraindicated": [
+                    {
+                      "id": "N-A-DESIGN",
+                      "text": "Не создавать пустые подцели без связи с корневой Requirement."
+                    }
+                  ]
+                },
+                "qrpe": []
+              },
+              "note": "Выбран существующий Action после проверки его канона. Это не выполнение."
+            }
+          },
+          {
+            "id": "A-DESIGN-ALTERNATIVE",
+            "kind": "action",
+            "title": "Альтернатива: решить задачу без декомпозиции",
+            "actionType": "general",
+            "status": "candidate",
+            "canonBlock": {
+              "recommended": [
+                {
+                  "id": "C-A-DESIGN-ALTERNATIVE",
+                  "text": "Когда работа настолько мала, что декомпозиция не повышает проверяемость."
+                }
+              ],
+              "contraindicated": [
+                {
+                  "id": "N-A-DESIGN-ALTERNATIVE",
+                  "text": "Не применять для демонстрации ссылок между подцелями и канонами."
+                }
+              ]
+            },
+            "qrpe": []
+          },
+          {
+            "id": "R-CANON",
+            "kind": "requirement",
+            "title": "Проследить, какие способы зависят от актуальности канона",
+            "status": "active"
+          },
+          {
+            "id": "R-VERIFY",
+            "kind": "requirement",
+            "title": "Проверить в Gendocen изменение подписанных входов",
+            "status": "active"
+          },
+          {
+            "id": "A-CANON",
+            "kind": "action",
+            "title": "Поддерживать способ работы с зависимым каноном",
+            "actionType": "general",
+            "status": "selected",
+            "canonBlock": {
+              "recommended": [
+                {
+                  "id": "C-A-CANON",
+                  "text": "Применить только если актуальная формулировка R-CANON соответствует выбранному сценарию.",
+                  "checkRequirements": [
+                    "R-CANON"
+                  ]
+                }
+              ],
+              "contraindicated": [
+                {
+                  "id": "N-A-CANON",
+                  "text": "Не считать канон пригодным без пересмотра после новой редакции R-CANON."
+                }
+              ]
+            },
+            "qrpe": [],
+            "selectionBasis": {
+              "driverSnapshot": {
+                "id": "R-CANON",
+                "kind": "requirement",
+                "title": "Проследить, какие способы зависят от актуальности канона",
+                "status": "active"
+              },
+              "actionSnapshot": {
+                "id": "A-CANON",
+                "kind": "action",
+                "title": "Поддерживать способ работы с зависимым каноном",
+                "actionType": "general",
+                "status": "candidate",
+                "canonBlock": {
+                  "recommended": [
+                    {
+                      "id": "C-A-CANON",
+                      "text": "Применить только если актуальная формулировка R-CANON соответствует выбранному сценарию.",
+                      "checkRequirements": [
+                        "R-CANON"
+                      ]
+                    }
+                  ],
+                  "contraindicated": [
+                    {
+                      "id": "N-A-CANON",
+                      "text": "Не считать канон пригодным без пересмотра после новой редакции R-CANON."
+                    }
+                  ]
+                },
+                "qrpe": []
+              },
+              "note": "Выбран существующий Action после проверки его канона. Это не выполнение."
+            }
+          },
+          {
+            "id": "A-CANON-ALT",
+            "kind": "action",
+            "title": "Альтернативный способ: заменить проверку ручным осмотром",
+            "actionType": "general",
+            "status": "candidate",
+            "canonBlock": {
+              "recommended": [
+                {
+                  "id": "C-A-CANON-ALT",
+                  "text": "Применить, если Gendocen невозможно использовать в данной области."
+                }
+              ],
+              "contraindicated": [
+                {
+                  "id": "N-A-CANON-ALT",
+                  "text": "Не скрывать отсутствие двигателя под видом подтверждённой актуальности."
+                }
+              ]
+            },
+            "qrpe": []
+          },
+          {
+            "id": "A-VERIFY",
+            "kind": "action",
+            "title": "Проверить API и Gendocen на настоящем рабочем графе",
+            "actionType": "general",
+            "status": "selected",
+            "canonBlock": {
+              "recommended": [
+                {
+                  "id": "C-A-VERIFY",
+                  "text": "Запускать после создания Graph и Plan owners; читать только реальные engine receipts.",
+                  "checkRequirements": [
+                    "R-CANON"
+                  ]
+                }
+              ],
+              "contraindicated": [
+                {
+                  "id": "N-A-VERIFY",
+                  "text": "Не объявлять review_required доказательством ошибочности решения."
+                }
+              ]
+            },
+            "qrpe": [],
+            "selectionBasis": {
+              "driverSnapshot": {
+                "id": "R-VERIFY",
+                "kind": "requirement",
+                "title": "Проверить в Gendocen изменение подписанных входов",
+                "status": "active"
+              },
+              "actionSnapshot": {
+                "id": "A-VERIFY",
+                "kind": "action",
+                "title": "Проверить API и Gendocen на настоящем рабочем графе",
+                "actionType": "general",
+                "status": "candidate",
+                "canonBlock": {
+                  "recommended": [
+                    {
+                      "id": "C-A-VERIFY",
+                      "text": "Запускать после создания Graph и Plan owners; читать только реальные engine receipts.",
+                      "checkRequirements": [
+                        "R-CANON"
+                      ]
+                    }
+                  ],
+                  "contraindicated": [
+                    {
+                      "id": "N-A-VERIFY",
+                      "text": "Не объявлять review_required доказательством ошибочности решения."
+                    }
+                  ]
+                },
+                "qrpe": []
+              },
+              "note": "Выбран существующий Action после проверки его канона. Это не выполнение."
+            }
+          }
+        ],
+        "edges": [
+          {
+            "id": "action-drive-A-DESIGN",
+            "type": "DRIVES",
+            "from": "R0",
+            "to": "A-DESIGN"
+          },
+          {
+            "id": "action-drive-A-DESIGN-ALTERNATIVE",
+            "type": "DRIVES",
+            "from": "R0",
+            "to": "A-DESIGN-ALTERNATIVE"
+          },
+          {
+            "id": "action-introduces-A-DESIGN-R-CANON",
+            "type": "INTRODUCES",
+            "from": "A-DESIGN",
+            "to": "R-CANON",
+            "parent": "R0",
+            "childRole": "subgoal"
+          },
+          {
+            "id": "action-introduces-A-DESIGN-R-VERIFY",
+            "type": "INTRODUCES",
+            "from": "A-DESIGN",
+            "to": "R-VERIFY",
+            "parent": "R0",
+            "childRole": "subgoal"
+          },
+          {
+            "id": "action-drive-A-CANON",
+            "type": "DRIVES",
+            "from": "R-CANON",
+            "to": "A-CANON"
+          },
+          {
+            "id": "action-drive-A-CANON-ALT",
+            "type": "DRIVES",
+            "from": "R-CANON",
+            "to": "A-CANON-ALT"
+          },
+          {
+            "id": "action-drive-A-VERIFY",
+            "type": "DRIVES",
+            "from": "R-VERIFY",
+            "to": "A-VERIFY"
+          }
+        ],
+        "events": [
+          {
+            "id": "EV-DEMO-SELECT-A-DESIGN",
+            "type": "action_selected",
+            "actionId": "A-DESIGN",
+            "driverRequirementId": "R0",
+            "by": "assistant",
+            "note": "Выбран существующий Action после проверки его канона. Это не выполнение.",
+            "authorityPrincipal": "bearer:root",
+            "verifiedTrustReceipt": {
+              "mode": "local-manual-session",
+              "principal": "bearer:root",
+              "grantId": "root",
+              "grantRevision": 1,
+              "transactionId": "demo-select-A-DESIGN",
+              "changesSHA256": "daedab637f19e01e2879e88f9e2175906fd9df84c32950085c005f1dea86cec8"
+            },
+            "recordedAt": "2026-10-21T02:02:14.824533+00:00"
+          },
+          {
+            "id": "EV-DEMO-SELECT-A-CANON",
+            "type": "action_selected",
+            "actionId": "A-CANON",
+            "driverRequirementId": "R-CANON",
+            "by": "assistant",
+            "note": "Выбран существующий Action после проверки его канона. Это не выполнение.",
+            "authorityPrincipal": "bearer:root",
+            "verifiedTrustReceipt": {
+              "mode": "local-manual-session",
+              "principal": "bearer:root",
+              "grantId": "root",
+              "grantRevision": 1,
+              "transactionId": "demo-select-A-CANON",
+              "changesSHA256": "137d7ab4c10f5d1d02cd00930b1fc2bb7bcf1de722ff6fa47510075462afb5eb"
+            },
+            "recordedAt": "2026-10-21T02:02:21.359262+00:00"
+          },
+          {
+            "id": "EV-DEMO-SELECT-A-VERIFY",
+            "type": "action_selected",
+            "actionId": "A-VERIFY",
+            "driverRequirementId": "R-VERIFY",
+            "by": "assistant",
+            "note": "Выбран существующий Action после проверки его канона. Это не выполнение.",
+            "authorityPrincipal": "bearer:root",
+            "verifiedTrustReceipt": {
+              "mode": "local-manual-session",
+              "principal": "bearer:root",
+              "grantId": "root",
+              "grantRevision": 1,
+              "transactionId": "demo-select-A-VERIFY",
+              "changesSHA256": "c2a557529f9b7c15c4e7c377a7c7a7b16c6275eeb906f7f1bbb3977c20465496"
+            },
+            "recordedAt": "2026-10-21T02:02:23.118792+00:00"
+          }
+        ]
+      },
+      "after": {
+        "schemaVersion": 1,
+        "id": "requirements-dependencies-demo",
+        "title": "Учебная реальная работа: изменение R и зависимые Actions",
+        "revision": 10,
+        "planningScale": "module",
+        "identitySpace": "rdg-working-requirements-dependencies-demo",
+        "rootRequirementId": "R0",
+        "actionModel": "candidate-v6",
+        "purpose": "real-api-teaching-workflow",
+        "presentation": {
+          "usage": "working",
+          "title": "Рабочий пример · зависимые Requirements и Actions",
+          "description": "Настоящие Graph/Plan owners, история Graph API и Gendocen receipts. Работа ведётся обычными writers."
+        },
+        "nodes": [
+          {
+            "id": "R0",
+            "kind": "requirement",
+            "status": "active",
+            "title": "Сделать проверяемую рабочую демонстрацию зависимостей RDG",
+            "requirementText": "Продемонстрировать реальные Graph/Plan/API события и Gendocen-обнаружение зависимостей."
+          },
+          {
+            "id": "A-DESIGN",
+            "kind": "action",
+            "title": "Развернуть работу в проверяемые подцели",
+            "actionType": "decomposition",
+            "status": "selected",
+            "canonBlock": {
+              "recommended": [
+                {
+                  "id": "C-A-DESIGN",
+                  "text": "Когда нужна явная декомпозиция через Action и последующий независимый контроль подцелей."
+                }
+              ],
+              "contraindicated": [
+                {
+                  "id": "N-A-DESIGN",
+                  "text": "Не создавать пустые подцели без связи с корневой Requirement."
+                }
+              ]
+            },
+            "qrpe": [],
+            "selectionBasis": {
+              "driverSnapshot": {
+                "id": "R0",
+                "kind": "requirement",
+                "status": "active",
+                "title": "Сделать проверяемую рабочую демонстрацию зависимостей RDG",
+                "requirementText": "Продемонстрировать реальные Graph/Plan/API события и Gendocen-обнаружение зависимостей."
+              },
+              "actionSnapshot": {
+                "id": "A-DESIGN",
+                "kind": "action",
+                "title": "Развернуть работу в проверяемые подцели",
+                "actionType": "decomposition",
+                "status": "candidate",
+                "canonBlock": {
+                  "recommended": [
+                    {
+                      "id": "C-A-DESIGN",
+                      "text": "Когда нужна явная декомпозиция через Action и последующий независимый контроль подцелей."
+                    }
+                  ],
+                  "contraindicated": [
+                    {
+                      "id": "N-A-DESIGN",
+                      "text": "Не создавать пустые подцели без связи с корневой Requirement."
+                    }
+                  ]
+                },
+                "qrpe": []
+              },
+              "note": "Выбран существующий Action после проверки его канона. Это не выполнение."
+            }
+          },
+          {
+            "id": "A-DESIGN-ALTERNATIVE",
+            "kind": "action",
+            "title": "Альтернатива: решить задачу без декомпозиции",
+            "actionType": "general",
+            "status": "candidate",
+            "canonBlock": {
+              "recommended": [
+                {
+                  "id": "C-A-DESIGN-ALTERNATIVE",
+                  "text": "Когда работа настолько мала, что декомпозиция не повышает проверяемость."
+                }
+              ],
+              "contraindicated": [
+                {
+                  "id": "N-A-DESIGN-ALTERNATIVE",
+                  "text": "Не применять для демонстрации ссылок между подцелями и канонами."
+                }
+              ]
+            },
+            "qrpe": []
+          },
+          {
+            "id": "R-CANON",
+            "kind": "requirement",
+            "title": "Проверить каноны с учётом новой редакции требований",
+            "status": "active",
+            "requirementText": "Нужно повторно оценить канон каждого зависимого Action после уточнения R-CANON."
+          },
+          {
+            "id": "R-VERIFY",
+            "kind": "requirement",
+            "title": "Проверить в Gendocen изменение подписанных входов",
+            "status": "active"
+          },
+          {
+            "id": "A-CANON",
+            "kind": "action",
+            "title": "Поддерживать способ работы с зависимым каноном",
+            "actionType": "general",
+            "status": "selected",
+            "canonBlock": {
+              "recommended": [
+                {
+                  "id": "C-A-CANON",
+                  "text": "Применить только если актуальная формулировка R-CANON соответствует выбранному сценарию.",
+                  "checkRequirements": [
+                    "R-CANON"
+                  ]
+                }
+              ],
+              "contraindicated": [
+                {
+                  "id": "N-A-CANON",
+                  "text": "Не считать канон пригодным без пересмотра после новой редакции R-CANON."
+                }
+              ]
+            },
+            "qrpe": [],
+            "selectionBasis": {
+              "driverSnapshot": {
+                "id": "R-CANON",
+                "kind": "requirement",
+                "title": "Проследить, какие способы зависят от актуальности канона",
+                "status": "active"
+              },
+              "actionSnapshot": {
+                "id": "A-CANON",
+                "kind": "action",
+                "title": "Поддерживать способ работы с зависимым каноном",
+                "actionType": "general",
+                "status": "candidate",
+                "canonBlock": {
+                  "recommended": [
+                    {
+                      "id": "C-A-CANON",
+                      "text": "Применить только если актуальная формулировка R-CANON соответствует выбранному сценарию.",
+                      "checkRequirements": [
+                        "R-CANON"
+                      ]
+                    }
+                  ],
+                  "contraindicated": [
+                    {
+                      "id": "N-A-CANON",
+                      "text": "Не считать канон пригодным без пересмотра после новой редакции R-CANON."
+                    }
+                  ]
+                },
+                "qrpe": []
+              },
+              "note": "Выбран существующий Action после проверки его канона. Это не выполнение."
+            }
+          },
+          {
+            "id": "A-CANON-ALT",
+            "kind": "action",
+            "title": "Альтернативный способ: заменить проверку ручным осмотром",
+            "actionType": "general",
+            "status": "candidate",
+            "canonBlock": {
+              "recommended": [
+                {
+                  "id": "C-A-CANON-ALT",
+                  "text": "Применить, если Gendocen невозможно использовать в данной области."
+                }
+              ],
+              "contraindicated": [
+                {
+                  "id": "N-A-CANON-ALT",
+                  "text": "Не скрывать отсутствие двигателя под видом подтверждённой актуальности."
+                }
+              ]
+            },
+            "qrpe": []
+          },
+          {
+            "id": "A-VERIFY",
+            "kind": "action",
+            "title": "Проверить API и Gendocen на настоящем рабочем графе",
+            "actionType": "general",
+            "status": "selected",
+            "canonBlock": {
+              "recommended": [
+                {
+                  "id": "C-A-VERIFY",
+                  "text": "Запускать после создания Graph и Plan owners; читать только реальные engine receipts.",
+                  "checkRequirements": [
+                    "R-CANON"
+                  ]
+                }
+              ],
+              "contraindicated": [
+                {
+                  "id": "N-A-VERIFY",
+                  "text": "Не объявлять review_required доказательством ошибочности решения."
+                }
+              ]
+            },
+            "qrpe": [],
+            "selectionBasis": {
+              "driverSnapshot": {
+                "id": "R-VERIFY",
+                "kind": "requirement",
+                "title": "Проверить в Gendocen изменение подписанных входов",
+                "status": "active"
+              },
+              "actionSnapshot": {
+                "id": "A-VERIFY",
+                "kind": "action",
+                "title": "Проверить API и Gendocen на настоящем рабочем графе",
+                "actionType": "general",
+                "status": "candidate",
+                "canonBlock": {
+                  "recommended": [
+                    {
+                      "id": "C-A-VERIFY",
+                      "text": "Запускать после создания Graph и Plan owners; читать только реальные engine receipts.",
+                      "checkRequirements": [
+                        "R-CANON"
+                      ]
+                    }
+                  ],
+                  "contraindicated": [
+                    {
+                      "id": "N-A-VERIFY",
+                      "text": "Не объявлять review_required доказательством ошибочности решения."
+                    }
+                  ]
+                },
+                "qrpe": []
+              },
+              "note": "Выбран существующий Action после проверки его канона. Это не выполнение."
+            }
+          }
+        ],
+        "edges": [
+          {
+            "id": "action-drive-A-DESIGN",
+            "type": "DRIVES",
+            "from": "R0",
+            "to": "A-DESIGN"
+          },
+          {
+            "id": "action-drive-A-DESIGN-ALTERNATIVE",
+            "type": "DRIVES",
+            "from": "R0",
+            "to": "A-DESIGN-ALTERNATIVE"
+          },
+          {
+            "id": "action-introduces-A-DESIGN-R-CANON",
+            "type": "INTRODUCES",
+            "from": "A-DESIGN",
+            "to": "R-CANON",
+            "parent": "R0",
+            "childRole": "subgoal"
+          },
+          {
+            "id": "action-introduces-A-DESIGN-R-VERIFY",
+            "type": "INTRODUCES",
+            "from": "A-DESIGN",
+            "to": "R-VERIFY",
+            "parent": "R0",
+            "childRole": "subgoal"
+          },
+          {
+            "id": "action-drive-A-CANON",
+            "type": "DRIVES",
+            "from": "R-CANON",
+            "to": "A-CANON"
+          },
+          {
+            "id": "action-drive-A-CANON-ALT",
+            "type": "DRIVES",
+            "from": "R-CANON",
+            "to": "A-CANON-ALT"
+          },
+          {
+            "id": "action-drive-A-VERIFY",
+            "type": "DRIVES",
+            "from": "R-VERIFY",
+            "to": "A-VERIFY"
+          }
+        ],
+        "events": [
+          {
+            "id": "EV-DEMO-SELECT-A-DESIGN",
+            "type": "action_selected",
+            "actionId": "A-DESIGN",
+            "driverRequirementId": "R0",
+            "by": "assistant",
+            "note": "Выбран существующий Action после проверки его канона. Это не выполнение.",
+            "authorityPrincipal": "bearer:root",
+            "verifiedTrustReceipt": {
+              "mode": "local-manual-session",
+              "principal": "bearer:root",
+              "grantId": "root",
+              "grantRevision": 1,
+              "transactionId": "demo-select-A-DESIGN",
+              "changesSHA256": "daedab637f19e01e2879e88f9e2175906fd9df84c32950085c005f1dea86cec8"
+            },
+            "recordedAt": "2026-10-21T02:02:14.824533+00:00"
+          },
+          {
+            "id": "EV-DEMO-SELECT-A-CANON",
+            "type": "action_selected",
+            "actionId": "A-CANON",
+            "driverRequirementId": "R-CANON",
+            "by": "assistant",
+            "note": "Выбран существующий Action после проверки его канона. Это не выполнение.",
+            "authorityPrincipal": "bearer:root",
+            "verifiedTrustReceipt": {
+              "mode": "local-manual-session",
+              "principal": "bearer:root",
+              "grantId": "root",
+              "grantRevision": 1,
+              "transactionId": "demo-select-A-CANON",
+              "changesSHA256": "137d7ab4c10f5d1d02cd00930b1fc2bb7bcf1de722ff6fa47510075462afb5eb"
+            },
+            "recordedAt": "2026-10-21T02:02:21.359262+00:00"
+          },
+          {
+            "id": "EV-DEMO-SELECT-A-VERIFY",
+            "type": "action_selected",
+            "actionId": "A-VERIFY",
+            "driverRequirementId": "R-VERIFY",
+            "by": "assistant",
+            "note": "Выбран существующий Action после проверки его канона. Это не выполнение.",
+            "authorityPrincipal": "bearer:root",
+            "verifiedTrustReceipt": {
+              "mode": "local-manual-session",
+              "principal": "bearer:root",
+              "grantId": "root",
+              "grantRevision": 1,
+              "transactionId": "demo-select-A-VERIFY",
+              "changesSHA256": "c2a557529f9b7c15c4e7c377a7c7a7b16c6275eeb906f7f1bbb3977c20465496"
+            },
+            "recordedAt": "2026-10-21T02:02:23.118792+00:00"
+          },
+          {
+            "id": "EV-DEMO-reformulate-canon",
+            "type": "requirement_reformulated",
+            "operation": "reformulate_requirement",
+            "by": "assistant",
+            "note": "После принятой исходной версии обновили формулировку R-CANON; каноны ссылались на старый снимок.",
+            "authorityPrincipal": "bearer:root",
+            "verifiedTrustReceipt": {
+              "mode": "local-manual-session",
+              "principal": "bearer:root",
+              "grantId": "root",
+              "grantRevision": 1,
+              "transactionId": "demo-reformulate-canon",
+              "changesSHA256": "f804650d4e57b5bbac101478acad2af7c5d2acb1c2908af491daf337a0ad6de8"
+            },
+            "changes": {
+              "title": "Проверить каноны с учётом новой редакции требований",
+              "requirementText": "Нужно повторно оценить канон каждого зависимого Action после уточнения R-CANON."
+            },
+            "previousRequirementSnapshot": {
+              "id": "R-CANON",
+              "kind": "requirement",
+              "title": "Проследить, какие способы зависят от актуальности канона",
+              "status": "active"
+            },
+            "newRequirementSnapshot": {
+              "id": "R-CANON",
+              "kind": "requirement",
+              "title": "Проверить каноны с учётом новой редакции требований",
+              "status": "active",
+              "requirementText": "Нужно повторно оценить канон каждого зависимого Action после уточнения R-CANON."
+            },
+            "targetId": "R-CANON",
+            "priorNodeSnapshot": {
+              "id": "R-CANON",
+              "kind": "requirement",
+              "title": "Проследить, какие способы зависят от актуальности канона",
+              "status": "active"
+            },
+            "priorEdges": [],
+            "edgeIds": [],
+            "targetDeleted": false,
+            "recordedAt": "2026-10-21T02:04:32.450243+00:00"
+          }
+        ]
+      },
+      "changed": true
+    }
+  ],
+  "authorityPrincipal": "bearer:root"
+}

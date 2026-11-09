@@ -1,0 +1,74 @@
+services:
+  rdg:
+    image: rdg-personal-server:${RDG_IMAGE_TAG:-20261029}
+    build: .
+    restart: unless-stopped
+    user: "10001:10001"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 64
+    mem_limit: 512m
+    environment:
+      RDG_DATA_DIR: /data
+      RDG_PUBLIC_ORIGIN: ${RDG_PUBLIC_ORIGIN:?Run Start-RDG.ps1 or configure .env}
+    volumes:
+      - rdg_data:/data
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    networks: [backend]
+    healthcheck:
+      test: [CMD, python3, -c, "import os,urllib.request,urllib.parse; u=urllib.parse.urlsplit(os.environ['RDG_PUBLIC_ORIGIN']); r=urllib.request.Request('http://127.0.0.1:8080/healthz',headers={'Host':u.netloc}); urllib.request.build_opener(urllib.request.ProxyHandler({})).open(r,timeout=5).read()"]
+      interval: 15s
+      timeout: 6s
+      retries: 3
+  rdg-api-gateway:
+    image: rdg-personal-server:${RDG_IMAGE_TAG:-20261029}
+    restart: unless-stopped
+    user: "10001:10001"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 32
+    mem_limit: 128m
+    environment:
+      RDG_PUBLIC_ORIGIN: ${RDG_PUBLIC_ORIGIN:?Run Start-RDG.ps1 or configure .env}
+    command: [python3, -m, gunicorn, --chdir, /app/tools, --bind, "0.0.0.0:8081", --workers, "1", --threads, "1", --timeout, "65", --worker-tmp-dir, /tmp, --access-logfile, /dev/null, --log-level, warning, "rdg_gateway_entry:application"]
+    volumes:
+      - rdg_gateway_secret:/run/rdg-gateway:ro
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+    networks: [backend, agents]
+    depends_on:
+      rdg:
+        condition: service_healthy
+    healthcheck:
+      test: [CMD, python3, -c, "import urllib.request; r=urllib.request.Request('http://127.0.0.1:8081/healthz',headers={'Host':'rdg-api-gateway:8081'}); urllib.request.build_opener(urllib.request.ProxyHandler({})).open(r,timeout=8).read()"]
+      interval: 15s
+      timeout: 9s
+      retries: 3
+  setup:
+    image: rdg-personal-server:${RDG_IMAGE_TAG:-20261029}
+    profiles: [setup]
+    user: "0:0"
+    read_only: true
+    cap_drop: [ALL]
+    cap_add: [CHOWN, DAC_OVERRIDE, FOWNER]
+    security_opt: [no-new-privileges:true]
+    network_mode: none
+    entrypoint: [python3, /app/tools/rdg-server-setup.py]
+    command: [--data-dir, /data, --credentials-dir, /setup, --gateway-dir, /gateway, --runtime-uid, "10001"]
+    volumes:
+      - rdg_data:/data
+      - ${RDG_SETUP_DIR:-./secrets}:/setup
+      - rdg_gateway_secret:/gateway
+    tmpfs:
+      - /tmp:size=32m,mode=1777
+volumes:
+  rdg_data:
+  rdg_gateway_secret:
+networks:
+  backend:
+    internal: true
+  agents:
+    internal: true

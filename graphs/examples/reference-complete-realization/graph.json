@@ -1,0 +1,153 @@
+{
+  "schemaVersion": 1,
+  "id": "reference-complete-realization",
+  "revision": 4,
+  "title": "R · Определить реализационные ограничения",
+  "identitySpace": "showcase:booking-example-v1",
+  "rootRequirementId": "SH-R-REALIZATION",
+  "readOnly": true,
+  "exampleOnly": true,
+  "hypothetical": true,
+  "selectedInProject": false,
+  "catalogHidden": true,
+  "canonicality": "ILLUSTRATION_ONLY",
+  "demonstrationGroup": "complete-booking-showcase",
+  "origin": "New complete hypothetical illustration, NOT original EX-* and NOT a real project.",
+  "sourceDocument": "docs/examples/COMPLETE-REFERENCE-GUIDE.md",
+  "coverage": "Происхождение R через IDENTIFIES, содержательное DERIVES, две прямые области APPLIES_TO от одного crosscutting R, проверка необходимости.",
+  "nodes": [
+    {
+      "id": "SH-R-REALIZATION",
+      "kind": "requirement",
+      "title": "Определить реализационные ограничения",
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "reference-complete-app",
+        "nodeId": "SH-R-REALIZATION"
+      },
+      "description": "Ссылка на ту же смысловую запись. Полный ответ и основания находятся в указанном источнике."
+    },
+    {
+      "id": "SH-C-INDEPENDENT",
+      "kind": "context",
+      "title": "Команда условно требует независимых слайсов",
+      "description": "Не превращать сведения об организации работы в отдельное R без реального обоснования."
+    },
+    {
+      "id": "SH-D-FIND-RR",
+      "kind": "decision",
+      "title": "Выявлены ограничения независимости и изменений",
+      "status": "selected-in-example-only",
+      "selectedInExample": true,
+      "selectedInProject": false,
+      "scope": "Условная команда",
+      "description": "Иллюстративное обнаружение требований, не разбиение по дочерним задачам."
+    },
+    {
+      "id": "SH-R-INDEPENDENT",
+      "kind": "requirement",
+      "title": "Обеспечить независимые изменения Features",
+      "crosscutting": true,
+      "status": "example-crosscutting",
+      "description": "ОДИН сквозной R; применяется к двум существующим Features, не создаёт копии."
+    },
+    {
+      "id": "SH-R-BOUNDARY",
+      "kind": "requirement",
+      "title": "Уточнить границы ответственности",
+      "status": "derived-clarification",
+      "description": "Содержательное уточнение исходного R через DERIVES, не INTRODUCES."
+    },
+    {
+      "id": "SH-R-FEAT-AVAIL",
+      "kind": "requirement",
+      "title": "Проработать Feature Availability",
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "reference-complete-functionality",
+        "nodeId": "SH-R-FEAT-AVAIL"
+      },
+      "description": "Ссылка на ту же смысловую запись. Полный ответ и основания находятся в указанном источнике."
+    },
+    {
+      "id": "SH-R-FEAT-RES",
+      "kind": "requirement",
+      "title": "Проработать Feature Reservation",
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "reference-complete-functionality",
+        "nodeId": "SH-R-FEAT-RES"
+      },
+      "description": "Ссылка на ту же смысловую запись. Полный ответ и основания находятся в указанном источнике."
+    },
+    {
+      "id": "SH-Q-NEED-INDEPENDENCE",
+      "kind": "question",
+      "title": "Нужна ли именно независимая разработка?",
+      "status": "open",
+      "description": "QRPE необходимости R. Может привести к уточнению при проверке, не отменяет R автоматически."
+    }
+  ],
+  "edges": [
+    {
+      "id": "SH-E-RR-01",
+      "type": "DRIVES",
+      "from": "SH-R-REALIZATION",
+      "to": "SH-D-FIND-RR",
+      "meaning": "Найти действующие для проекта ограничения."
+    },
+    {
+      "id": "SH-E-RR-02",
+      "type": "CONTEXT_FOR",
+      "from": "SH-C-INDEPENDENT",
+      "to": "SH-D-FIND-RR",
+      "meaning": "Основание поиска, не автоматически нормативное R."
+    },
+    {
+      "id": "SH-E-RR-03",
+      "type": "IDENTIFIES",
+      "from": "SH-D-FIND-RR",
+      "to": "SH-R-INDEPENDENT",
+      "meaning": "Выявлен сквозной R; НЕ введён дочерний R планирования."
+    },
+    {
+      "id": "SH-E-RR-04",
+      "type": "DERIVES",
+      "from": "SH-R-INDEPENDENT",
+      "to": "SH-R-BOUNDARY",
+      "meaning": "Содержательное уточнение R, без создания задачи через D."
+    },
+    {
+      "id": "SH-E-RR-05",
+      "type": "APPLIES_TO",
+      "from": "SH-R-INDEPENDENT",
+      "to": "SH-R-FEAT-AVAIL",
+      "meaning": "Один сквозной R прямо применяется к Availability."
+    },
+    {
+      "id": "SH-E-RR-06",
+      "type": "APPLIES_TO",
+      "from": "SH-R-INDEPENDENT",
+      "to": "SH-R-FEAT-RES",
+      "meaning": "Тот же R прямо применяется к Reservation, без копирования."
+    },
+    {
+      "id": "SH-E-RR-07",
+      "type": "QRPE_FOR",
+      "from": "SH-Q-NEED-INDEPENDENCE",
+      "to": "SH-R-INDEPENDENT",
+      "meaning": "Проверка необходимости именно этого нормативного R."
+    }
+  ],
+  "events": [
+    {
+      "id": "SH-EVENT-SELECT-D-FIND-RR",
+      "type": "decision_selected",
+      "decisionId": "SH-D-FIND-RR",
+      "by": "example-only",
+      "note": "Выбор только в вымышленном сюжете; не решение реального пользователя.",
+      "exampleOnly": true
+    }
+  ],
+  "planningScale": "module"
+}

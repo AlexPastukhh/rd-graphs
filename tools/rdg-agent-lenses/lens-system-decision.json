@@ -1,0 +1,392 @@
+{
+  "schemaVersion": 1,
+  "actionModel": "candidate-v6",
+  "coreModel": "rdg-decision-v1",
+  "id": "rdg-fundamental-lens-system-decision",
+  "title": "Фундаментальные линзы и рекомендации RDG · Decision v1",
+  "identitySpace": "ef83dd7a-6f8f-52e9-8972-5d5f873259ed",
+  "revision": 1,
+  "rootRequirementId": "R-LENS-SYSTEM",
+  "rootCauses": [
+    {
+      "id": "RC-LENS-SYSTEM",
+      "requirementId": "R-LENS-SYSTEM",
+      "reason": "Paper-only fundamental instruction",
+      "enabled": true
+    }
+  ],
+  "nodes": [
+    {
+      "id": "R-LENS-SYSTEM",
+      "kind": "requirement",
+      "title": "Использовать сеть графов линз для объяснения RDG без ложного исполнения",
+      "description": "Учебная цель готового графа. Открытие не означает достижения или исполнения.",
+      "revision": 1,
+      "scope": "Фундаментальное объяснение RDG · rdg-decision-v1",
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "R-LENS-SYSTEM-KINDS",
+      "kind": "requirement",
+      "title": "Шаблон и граф линзы различаются",
+      "description": "Шаблон и граф линзы различаются. Учебный критерий, не подтверждённое достижение.",
+      "revision": 1,
+      "scope": "Ориентиры корректного применения RDG",
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "D-LENS-SYSTEM-KINDS",
+      "kind": "decision",
+      "title": "Открывать инструкцию вместо вставки шаблона",
+      "description": "Граф линзы имеет роль lens и собственную identity; opening не создаёт working-объекты.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "selectionState": "discovered"
+    },
+    {
+      "id": "R-LENS-SYSTEM-CHOICE",
+      "kind": "requirement",
+      "title": "Релевантные инструкции выбраны осмысленно",
+      "description": "Релевантные инструкции выбраны осмысленно. Учебный критерий, не подтверждённое достижение.",
+      "revision": 1,
+      "scope": "Ориентиры корректного применения RDG",
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "D-LENS-SYSTEM-CHOICE",
+      "kind": "decision",
+      "title": "Сопоставлять задачу с каталогом линз",
+      "description": "Подсказки дополняют собственную оценку исполнителя; универсального semantic matcher нет.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "selectionState": "discovered"
+    },
+    {
+      "id": "R-LENS-SYSTEM-RULES",
+      "kind": "requirement",
+      "title": "Пакеты рекомендаций имеют точные опоры",
+      "description": "Пакеты рекомендаций имеют точные опоры. Учебный критерий, не подтверждённое достижение.",
+      "revision": 1,
+      "scope": "Ориентиры корректного применения RDG",
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "D-LENS-SYSTEM-RULES",
+      "kind": "decision",
+      "title": "Оценивать применимость rules по identity",
+      "description": "Package/registry имеют версии; тип/state/tag/identity/children/descendants определяют matches и reasons.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "selectionState": "discovered"
+    },
+    {
+      "id": "R-LENS-SYSTEM-NESTED",
+      "kind": "requirement",
+      "title": "Вложенные переходы сохраняют контекст",
+      "description": "Вложенные переходы сохраняют контекст. Учебный критерий, не подтверждённое достижение.",
+      "revision": 1,
+      "scope": "Ориентиры корректного применения RDG",
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "D-LENS-SYSTEM-NESTED",
+      "kind": "decision",
+      "title": "Открывать рекомендуемую линзу вручную",
+      "description": "Линза может рекомендовать несколько следующих линз, и сама получать рекомендации.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "selectionState": "discovered"
+    },
+    {
+      "id": "R-LENS-SYSTEM-VERIFY",
+      "kind": "requirement",
+      "title": "Применение отдельно от чтения",
+      "description": "Применение отдельно от чтения. Учебный критерий, не подтверждённое достижение.",
+      "revision": 1,
+      "scope": "Ориентиры корректного применения RDG",
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "D-LENS-SYSTEM-VERIFY",
+      "kind": "decision",
+      "title": "Разделять чтение, результат и receipt",
+      "description": "При реальном применении сохраняются pins линзы/пакета и Evidence; open не создаёт completion.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "selectionState": "discovered"
+    }
+  ],
+  "objects": [
+    {
+      "id": "I-LENS-SYSTEM-LENS",
+      "kind": "info",
+      "title": "Что представляет собой граф линзы",
+      "description": "Нормативное объяснение; точную форму операций сверяйте с действующей schema/API.",
+      "revision": 1,
+      "value": "Готовый Graph role=lens, coreModel=rdg-decision-v1, readonly paper. Содержимое R/D/Graph Action/Canon/Info/Context показывает способы работы; оно не должно само объявлять факт предметного исполнения."
+    },
+    {
+      "id": "I-LENS-SYSTEM-REGISTRY",
+      "kind": "info",
+      "title": "Где живут рекомендации",
+      "description": "Нормативное объяснение; точную форму операций сверяйте с действующей schema/API.",
+      "revision": 1,
+      "value": "Typed recommendationRegistry содержит versioned definitions; Graph (working, ready, lens) хранит recommendationPackageIds. Одно rule может вернуть несколько lensRefs и несколько reasons для одного совпадения."
+    },
+    {
+      "id": "I-LENS-SYSTEM-SCOPES",
+      "kind": "info",
+      "title": "Что означает совпадение правила",
+      "description": "Нормативное объяснение; точную форму операций сверяйте с действующей schema/API.",
+      "revision": 1,
+      "value": "Правила: nodeKinds, scope all/identity/children/descendants, state, optional tag, qualified anchor packageId+identitySpace+nodeId. Foreign/missing anchor не превращается во все."
+    },
+    {
+      "id": "I-LENS-SYSTEM-NESTING",
+      "kind": "info",
+      "title": "Переходы между линзами",
+      "description": "Нормативное объяснение; точную форму операций сверяйте с действующей schema/API.",
+      "revision": 1,
+      "value": "source Graph→lens A→lens B→lens C — контекстная цепочка экранов. Каждый Graph использует собственные IDs и подключённые пакеты. Возврат сохраняет прежний фокус; циклы разрешены, но не auto-run."
+    },
+    {
+      "id": "I-LENS-SYSTEM-APPLY",
+      "kind": "info",
+      "title": "Что считается фактическим применением",
+      "description": "Нормативное объяснение; точную форму операций сверяйте с действующей schema/API.",
+      "revision": 1,
+      "value": "Recommendation match предлагает открыть линзу, но не исполняет её. lens_apply записывает pins использованных определений и фактические Evidence в working Graph; чтение без readback и события не означает выполнение."
+    },
+    {
+      "id": "I-LENS-SYSTEM-UPDATES",
+      "kind": "info",
+      "title": "Обновление поставляемых инструкций",
+      "description": "Нормативное объяснение; точную форму операций сверяйте с действующей schema/API.",
+      "revision": 1,
+      "value": "Supplied graph/registry definitions readonly, source files не мигрируют существующие packages автоматически. Нужен контролируемый versioned upgrade с сохранением исторических pins."
+    },
+    {
+      "id": "K-LENS-SYSTEM-NO-RUN",
+      "kind": "canon",
+      "title": "Рекомендация не означает автоматическое исполнение",
+      "description": "Принцип предметной корректности, не обязательная подцель.",
+      "revision": 1,
+      "guidance": "Совпадение, открытие, прочтение или возврат из вложенной линзы не записывает selected/completed/Plan/History в рабочем Graph."
+    },
+    {
+      "id": "K-LENS-SYSTEM-SCOPE",
+      "kind": "canon",
+      "title": "Контекст и идентичность разных линз изолированы",
+      "description": "Принцип предметной корректности, не обязательная подцель.",
+      "revision": 1,
+      "guidance": "При переходах не смешивать R1 исходного процесса и R1 линзы; только qualified refs, правильный identitySpace и версия определения."
+    },
+    {
+      "id": "K-LENS-SYSTEM-SOURCE",
+      "kind": "canon",
+      "title": "Справка не заменяет schema и API",
+      "description": "Принцип предметной корректности, не обязательная подцель.",
+      "revision": 1,
+      "guidance": "Схема, Application и фактический readback имеют приоритет над запомненным текстом определения; нельзя объявить capability из одного JSON."
+    },
+    {
+      "id": "C-LENS-SYSTEM-CONTEXT",
+      "kind": "context",
+      "title": "Процесс и цепочка экранов",
+      "description": "Условия применимости объяснения.",
+      "revision": 1,
+      "value": "Вложенная линза сохраняет рабочий источник/фокус отдельно от своего namespace. Возвращение к процессу не пересоздаёт сущности."
+    }
+  ],
+  "externalActions": [],
+  "edges": [
+    {
+      "id": "E-1",
+      "type": "DERIVES",
+      "from": "R-LENS-SYSTEM",
+      "to": "R-LENS-SYSTEM-KINDS"
+    },
+    {
+      "id": "E-2",
+      "type": "DRIVES",
+      "from": "R-LENS-SYSTEM-KINDS",
+      "to": "D-LENS-SYSTEM-KINDS"
+    },
+    {
+      "id": "E-3",
+      "type": "DERIVES",
+      "from": "R-LENS-SYSTEM",
+      "to": "R-LENS-SYSTEM-CHOICE"
+    },
+    {
+      "id": "E-4",
+      "type": "DRIVES",
+      "from": "R-LENS-SYSTEM-CHOICE",
+      "to": "D-LENS-SYSTEM-CHOICE"
+    },
+    {
+      "id": "E-5",
+      "type": "DERIVES",
+      "from": "R-LENS-SYSTEM",
+      "to": "R-LENS-SYSTEM-RULES"
+    },
+    {
+      "id": "E-6",
+      "type": "DRIVES",
+      "from": "R-LENS-SYSTEM-RULES",
+      "to": "D-LENS-SYSTEM-RULES"
+    },
+    {
+      "id": "E-7",
+      "type": "DERIVES",
+      "from": "R-LENS-SYSTEM",
+      "to": "R-LENS-SYSTEM-NESTED"
+    },
+    {
+      "id": "E-8",
+      "type": "DRIVES",
+      "from": "R-LENS-SYSTEM-NESTED",
+      "to": "D-LENS-SYSTEM-NESTED"
+    },
+    {
+      "id": "E-9",
+      "type": "DERIVES",
+      "from": "R-LENS-SYSTEM",
+      "to": "R-LENS-SYSTEM-VERIFY"
+    },
+    {
+      "id": "E-10",
+      "type": "DRIVES",
+      "from": "R-LENS-SYSTEM-VERIFY",
+      "to": "D-LENS-SYSTEM-VERIFY"
+    },
+    {
+      "id": "E-11",
+      "type": "INFO_FOR",
+      "from": "I-LENS-SYSTEM-LENS",
+      "to": "R-LENS-SYSTEM-KINDS"
+    },
+    {
+      "id": "E-12",
+      "type": "INFO_FOR",
+      "from": "I-LENS-SYSTEM-REGISTRY",
+      "to": "R-LENS-SYSTEM-RULES"
+    },
+    {
+      "id": "E-13",
+      "type": "INFO_FOR",
+      "from": "I-LENS-SYSTEM-SCOPES",
+      "to": "R-LENS-SYSTEM-RULES"
+    },
+    {
+      "id": "E-14",
+      "type": "INFO_FOR",
+      "from": "I-LENS-SYSTEM-NESTING",
+      "to": "R-LENS-SYSTEM-NESTED"
+    },
+    {
+      "id": "E-15",
+      "type": "INFO_FOR",
+      "from": "I-LENS-SYSTEM-APPLY",
+      "to": "R-LENS-SYSTEM-VERIFY"
+    },
+    {
+      "id": "E-16",
+      "type": "INFO_FOR",
+      "from": "I-LENS-SYSTEM-UPDATES",
+      "to": "R-LENS-SYSTEM-VERIFY"
+    },
+    {
+      "id": "E-17",
+      "type": "CANON_FOR",
+      "from": "K-LENS-SYSTEM-NO-RUN",
+      "to": "D-LENS-SYSTEM-NESTED"
+    },
+    {
+      "id": "E-18",
+      "type": "CANON_FOR",
+      "from": "K-LENS-SYSTEM-SCOPE",
+      "to": "D-LENS-SYSTEM-RULES"
+    },
+    {
+      "id": "E-19",
+      "type": "CANON_FOR",
+      "from": "K-LENS-SYSTEM-SOURCE",
+      "to": "D-LENS-SYSTEM-VERIFY"
+    },
+    {
+      "id": "E-20",
+      "type": "CONTEXT_FOR",
+      "from": "C-LENS-SYSTEM-CONTEXT",
+      "to": "R-LENS-SYSTEM-NESTED"
+    }
+  ],
+  "decisionGroups": [],
+  "workGraphs": [
+    {
+      "id": "WG-LENS-SYSTEM",
+      "title": "Объясняющая структура",
+      "rootIds": [
+        "R-LENS-SYSTEM"
+      ],
+      "memberIds": [
+        "R-LENS-SYSTEM",
+        "R-LENS-SYSTEM-KINDS",
+        "D-LENS-SYSTEM-KINDS",
+        "R-LENS-SYSTEM-CHOICE",
+        "D-LENS-SYSTEM-CHOICE",
+        "R-LENS-SYSTEM-RULES",
+        "D-LENS-SYSTEM-RULES",
+        "R-LENS-SYSTEM-NESTED",
+        "D-LENS-SYSTEM-NESTED",
+        "R-LENS-SYSTEM-VERIFY",
+        "D-LENS-SYSTEM-VERIFY",
+        "I-LENS-SYSTEM-LENS",
+        "I-LENS-SYSTEM-REGISTRY",
+        "I-LENS-SYSTEM-SCOPES",
+        "I-LENS-SYSTEM-NESTING",
+        "I-LENS-SYSTEM-APPLY",
+        "I-LENS-SYSTEM-UPDATES",
+        "K-LENS-SYSTEM-NO-RUN",
+        "K-LENS-SYSTEM-SCOPE",
+        "K-LENS-SYSTEM-SOURCE",
+        "C-LENS-SYSTEM-CONTEXT"
+      ]
+    }
+  ],
+  "events": [],
+  "recommendationPackageIds": []
+}

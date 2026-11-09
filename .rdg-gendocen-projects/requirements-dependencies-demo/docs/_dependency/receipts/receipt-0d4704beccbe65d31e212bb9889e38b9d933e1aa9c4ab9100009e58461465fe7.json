@@ -1,0 +1,23 @@
+{
+  "audit_complete": true,
+  "dependencies": [
+    {
+      "baseline_hash": "sha256:ceb30c045c282f5efd5d47d98a5dd7f076239d842961318f65528c68db616b3c",
+      "comparator": "exact",
+      "granularity": "field",
+      "observed_version": "d0196ee5b6e848ad6a969a8da87a535b88400f76e91803012ab8adb0285b060c",
+      "snapshot_ref": "baseline://sha256/ceb30c045c282f5efd5d47d98a5dd7f076239d842961318f65528c68db616b3c",
+      "source": "resource://rdg/graph.workflow-v1.74b90cb9d1b181ddf0eaf80a#/nodesById/R0",
+      "source_kind": "raw"
+    }
+  ],
+  "dependency_type": "semantic_review",
+  "receipt_hash": "sha256:d19be00a6cb6fdc8f2c795bc733ab65731cfaff61f6b078026258db4a22e5faf",
+  "receipt_id": "receipt-0d4704beccbe65d31e212bb9889e38b9d933e1aa9c4ab9100009e58461465fe7",
+  "semantic_rule_id": "rdg-requirement.44d5a4349965add1eb50689d",
+  "semantic_rule_revision": "sha256:70926413b8a1ebd95f35c2c5252da2ddcc2046b44deaefb45a22da3d9ef01651",
+  "state_schema_version": "1.0.0",
+  "target": "file://review/ff0d12e12b785980022422d9.md",
+  "target_revision": "26e449dfe95e10aca8ff2071ec530980f798dc7ec56d3c726c5f92748f0a8a00",
+  "validated_at": "2026-10-21T02:03:52.352451Z"
+}

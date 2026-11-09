@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "id": "template-tm-2d-31-pixel-art-construction-unit-ru-px-01",
+  "title": "Unit · Pixel Abstraction",
+  "revision": 1,
+  "planningScale": "unit",
+  "identitySpace": "prepared:TM-2D-31-PIXEL-ART-CONSTRUCTION",
+  "rootRequirementId": "RU-PX-01",
+  "readOnly": true,
+  "templateOnly": true,
+  "selected": false,
+  "catalogHidden": true,
+  "preparedModule": {
+    "id": "TEMPLATE-D-RU-PX-01",
+    "version": "752e205cf5f797709211836e548b1aa980b10e4d74cd90dedaba4b130851df63",
+    "goalRequirementId": "RU-PX-01",
+    "methodDecisionId": "TEMPLATE-D-RU-PX-01",
+    "childRequirementIds": [],
+    "applicability": "target-grid abstraction: which identity/form/design cues survive and which detail is intentionally discarded",
+    "successCriteria": "Достаточно выполнить применимую Unit-specific Guidance и её checkpoints; инструкция не доказывает результат."
+  },
+  "sourceDocument": "/workspace/repos/obs-planning-docs/planning/documentation/idtspe-methodology/active/profiles/visual-production-2d/target-modules/TM-2D-31-PIXEL-ART-CONSTRUCTION.md#ru-px-01",
+  "sourceContentSHA256": "752e205cf5f797709211836e548b1aa980b10e4d74cd90dedaba4b130851df63",
+  "sourceOwnerGraphSlug": "template-tm-2d-31-pixel-art-construction",
+  "sourceAnchor": "ru-px-01",
+  "coverage": "Готовый способ одного узкого R; без выдуманных под-R и без выбора проекта.",
+  "nodes": [
+    {
+      "id": "RU-PX-01",
+      "kind": "requirement",
+      "title": "Pixel Abstraction",
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "template-tm-2d-31-pixel-art-construction",
+        "nodeId": "RU-PX-01"
+      }
+    },
+    {
+      "id": "TEMPLATE-D-RU-PX-01",
+      "kind": "decision",
+      "status": "reusable-unselected",
+      "templateRole": "unit-prepared-guidance",
+      "selected": false,
+      "title": "Готовый способ проработки: Pixel Abstraction",
+      "description": "<a id=\"ru-px-01\"></a>\n### Pixel Abstraction\n\n`RU-PX-01`\n\nUse target grid, intended viewing scale and must-survive recognition cues. Existing accepted native-pixel Sources can make the responsibility nearly direct/source-derived.",
+      "source": "/workspace/repos/obs-planning-docs/planning/documentation/idtspe-methodology/active/profiles/visual-production-2d/target-modules/TM-2D-31-PIXEL-ART-CONSTRUCTION.md#ru-px-01",
+      "sourceUnitId": "RU-PX-01",
+      "explicitSubrequirements": false,
+      "note": "Source defines Unit guidance; no explicit nested R inventory is declared here."
+    }
+  ],
+  "edges": [
+    {
+      "id": "UNIT-E-DRIVE",
+      "type": "DRIVES",
+      "from": "RU-PX-01",
+      "to": "TEMPLATE-D-RU-PX-01",
+      "templateOnly": true,
+      "meaning": "Готовый ответ на узкую задачу; пока не выбран."
+    }
+  ],
+  "events": []
+}

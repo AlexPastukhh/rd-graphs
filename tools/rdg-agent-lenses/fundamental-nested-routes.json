@@ -1,0 +1,175 @@
+{
+  "schemaVersion": 1,
+  "scope": "first-decision-namespace-install-only",
+  "nestedRules": [
+    {
+      "sourceLensKey": "model",
+      "anchorNodeId": "R-MODEL-TYPES",
+      "recommendedLensKeys": [
+        "shape",
+        "clarify"
+      ]
+    },
+    {
+      "sourceLensKey": "model",
+      "anchorNodeId": "R-MODEL-IDENTITY",
+      "recommendedLensKeys": [
+        "shape",
+        "review"
+      ]
+    },
+    {
+      "sourceLensKey": "model",
+      "anchorNodeId": "R-MODEL-EDGES",
+      "recommendedLensKeys": [
+        "decision-logic",
+        "shape",
+        "review"
+      ]
+    },
+    {
+      "sourceLensKey": "model",
+      "anchorNodeId": "R-MODEL-OWNERS",
+      "recommendedLensKeys": [
+        "operate",
+        "plan-history"
+      ]
+    },
+    {
+      "sourceLensKey": "model",
+      "anchorNodeId": "R-MODEL-TIME",
+      "recommendedLensKeys": [
+        "plan-history"
+      ]
+    },
+    {
+      "sourceLensKey": "model",
+      "anchorNodeId": "R-MODEL-LENSES",
+      "recommendedLensKeys": [
+        "lens-system"
+      ]
+    },
+    {
+      "sourceLensKey": "decision-logic",
+      "anchorNodeId": "R-DECISION-LOGIC-CHOICE",
+      "recommendedLensKeys": [
+        "explore",
+        "checkpoint",
+        "work"
+      ]
+    },
+    {
+      "sourceLensKey": "decision-logic",
+      "anchorNodeId": "R-DECISION-LOGIC-GROUPS",
+      "recommendedLensKeys": [
+        "model",
+        "review"
+      ]
+    },
+    {
+      "sourceLensKey": "decision-logic",
+      "anchorNodeId": "R-DECISION-LOGIC-SUPPORT",
+      "recommendedLensKeys": [
+        "model",
+        "review"
+      ]
+    },
+    {
+      "sourceLensKey": "decision-logic",
+      "anchorNodeId": "R-DECISION-LOGIC-CANCEL",
+      "recommendedLensKeys": [
+        "review",
+        "checkpoint"
+      ]
+    },
+    {
+      "sourceLensKey": "decision-logic",
+      "anchorNodeId": "R-DECISION-LOGIC-COMPLETE",
+      "recommendedLensKeys": [
+        "plan-history",
+        "work",
+        "review"
+      ]
+    },
+    {
+      "sourceLensKey": "plan-history",
+      "anchorNodeId": "R-PLAN-HISTORY-IDENTITIES",
+      "recommendedLensKeys": [
+        "model"
+      ]
+    },
+    {
+      "sourceLensKey": "plan-history",
+      "anchorNodeId": "R-PLAN-HISTORY-PLACEMENT",
+      "recommendedLensKeys": [
+        "work",
+        "decision-logic"
+      ]
+    },
+    {
+      "sourceLensKey": "plan-history",
+      "anchorNodeId": "R-PLAN-HISTORY-FACTS",
+      "recommendedLensKeys": [
+        "work",
+        "handoff"
+      ]
+    },
+    {
+      "sourceLensKey": "plan-history",
+      "anchorNodeId": "R-PLAN-HISTORY-EVIDENCE",
+      "recommendedLensKeys": [
+        "review",
+        "work"
+      ]
+    },
+    {
+      "sourceLensKey": "plan-history",
+      "anchorNodeId": "R-PLAN-HISTORY-VIEW",
+      "recommendedLensKeys": [
+        "operate"
+      ]
+    },
+    {
+      "sourceLensKey": "lens-system",
+      "anchorNodeId": "R-LENS-SYSTEM-KINDS",
+      "recommendedLensKeys": [
+        "model",
+        "shape"
+      ]
+    },
+    {
+      "sourceLensKey": "lens-system",
+      "anchorNodeId": "R-LENS-SYSTEM-CHOICE",
+      "recommendedLensKeys": [
+        "orient",
+        "clarify",
+        "explore",
+        "shape"
+      ]
+    },
+    {
+      "sourceLensKey": "lens-system",
+      "anchorNodeId": "R-LENS-SYSTEM-RULES",
+      "recommendedLensKeys": [
+        "model",
+        "review"
+      ]
+    },
+    {
+      "sourceLensKey": "lens-system",
+      "anchorNodeId": "R-LENS-SYSTEM-NESTED",
+      "recommendedLensKeys": [
+        "lens-system",
+        "review"
+      ]
+    },
+    {
+      "sourceLensKey": "lens-system",
+      "anchorNodeId": "R-LENS-SYSTEM-VERIFY",
+      "recommendedLensKeys": [
+        "review",
+        "develop"
+      ]
+    }
+  ]
+}

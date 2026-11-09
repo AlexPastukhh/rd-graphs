@@ -1,0 +1,416 @@
+{
+  "note": "RDG candidate v6 semantic PILOT only; NOT graph.json, not graph-apply schema, not an adopted decision or run log.",
+  "version": "rdg-action-lens-pilot/v1",
+  "mode": "read-only-test-fixture",
+  "lensDefinitions": [
+    {
+      "id": "L-DRY",
+      "rootRequirement": {
+        "id": "R-L-DRY",
+        "title": "Обоснованно проверить существенное дублирование в target",
+        "success": "Выявить значимые повторения с учётом смысла и стоимости исправления"
+      },
+      "requirements": [
+        {
+          "id": "R-L-DRY-OBS",
+          "title": "Найти потенциальные повторы",
+          "applicability": "required"
+        },
+        {
+          "id": "R-L-DRY-ASSESS",
+          "title": "Установить реальную избыточность",
+          "applicability": "required"
+        },
+        {
+          "id": "R-L-DRY-REMEDY",
+          "title": "Рассмотреть изменение способа",
+          "applicability": "conditional"
+        }
+      ],
+      "actions": [
+        {
+          "id": "A-L-DRY-SCAN",
+          "title": "Сопоставить цели по смыслу",
+          "reaches": [
+            "R-L-DRY-OBS"
+          ],
+          "canonBlock": {
+            "recommended": [
+              {
+                "id": "C-DRY-OBS",
+                "text": "Есть актуальные R для сравнения",
+                "inputRefs": [
+                  "target.requirements"
+                ]
+              }
+            ],
+            "contraindicated": []
+          },
+          "qrpe": [
+            {
+              "id": "Q-DRY-INPUT",
+              "text": "Полон ли список Requirements и есть ли признаки для сравнения?",
+              "status": "candidate"
+            }
+          ]
+        },
+        {
+          "id": "A-L-DRY-ASSESS",
+          "title": "Проверить, является ли найденное совпадение неоправданным",
+          "reaches": [
+            "R-L-DRY-ASSESS"
+          ],
+          "canonBlock": {
+            "recommended": [
+              {
+                "id": "C-DRY-COST",
+                "text": "Решение учитывать независимость поведения и контекст",
+                "inputRefs": [
+                  "target.context",
+                  "target.requirements"
+                ]
+              }
+            ],
+            "contraindicated": []
+          },
+          "qrpe": [
+            {
+              "id": "Q-DRY-DIVERGE",
+              "text": "Не должны ли похожие части развиваться независимо?",
+              "status": "candidate"
+            }
+          ]
+        },
+        {
+          "id": "A-L-DRY-REMEDY",
+          "title": "Рассмотреть исправление только при существенной избыточности",
+          "reaches": [
+            "R-L-DRY-REMEDY"
+          ],
+          "canonBlock": {
+            "recommended": [
+              {
+                "id": "C-DRY-CHANGE",
+                "text": "Выгода исправления больше стоимости и рисков",
+                "inputRefs": [
+                  "target.context"
+                ]
+              }
+            ],
+            "contraindicated": []
+          },
+          "qrpe": []
+        }
+      ],
+      "edges": [
+        {
+          "id": "DRV-A-L-DRY-SCAN",
+          "type": "DRIVES",
+          "from": "R-L-DRY",
+          "to": "A-L-DRY-SCAN"
+        },
+        {
+          "id": "INTRO-A-L-DRY-SCAN-R-L-DRY-OBS",
+          "type": "INTRODUCES",
+          "from": "A-L-DRY-SCAN",
+          "to": "R-L-DRY-OBS"
+        },
+        {
+          "id": "DRV-A-L-DRY-ASSESS",
+          "type": "DRIVES",
+          "from": "R-L-DRY-OBS",
+          "to": "A-L-DRY-ASSESS"
+        },
+        {
+          "id": "INTRO-A-L-DRY-ASSESS-R-L-DRY-ASSESS",
+          "type": "INTRODUCES",
+          "from": "A-L-DRY-ASSESS",
+          "to": "R-L-DRY-ASSESS"
+        },
+        {
+          "id": "DRV-A-L-DRY-REMEDY",
+          "type": "DRIVES",
+          "from": "R-L-DRY-ASSESS",
+          "to": "A-L-DRY-REMEDY"
+        },
+        {
+          "id": "INTRO-A-L-DRY-REMEDY-R-L-DRY-REMEDY",
+          "type": "INTRODUCES",
+          "from": "A-L-DRY-REMEDY",
+          "to": "R-L-DRY-REMEDY"
+        }
+      ]
+    },
+    {
+      "id": "L-MAINT",
+      "rootRequirement": {
+        "id": "R-L-MAINT",
+        "title": "Оценить оправданность выбранного способа и сопровождающих R",
+        "success": "Обоснованно сохранить или предложить изменить состав решений/подцелей"
+      },
+      "requirements": [
+        {
+          "id": "R-L-MAINT-CAUSE",
+          "title": "Установить происхождение и необходимость подцелей",
+          "applicability": "required"
+        },
+        {
+          "id": "R-L-MAINT-ALTS",
+          "title": "Найти упущенные подходящие Actions",
+          "applicability": "required"
+        },
+        {
+          "id": "R-L-MAINT-CHANGE",
+          "title": "Изменить рабочий граф, если разрешено и обоснованно",
+          "applicability": "conditional"
+        }
+      ],
+      "actions": [
+        {
+          "id": "A-L-MAINT-CHECK",
+          "title": "Проверить вводящие Actions и другие основания для R",
+          "reaches": [
+            "R-L-MAINT-CAUSE"
+          ],
+          "canonBlock": {
+            "recommended": [
+              {
+                "id": "C-MAINT-SUPPORT",
+                "text": "Сохранить R, если она нужна другому способу",
+                "inputRefs": [
+                  "target.actions",
+                  "target.requirements"
+                ]
+              }
+            ],
+            "contraindicated": []
+          },
+          "qrpe": []
+        },
+        {
+          "id": "A-L-MAINT-DISCOVER",
+          "title": "Найти и сравнить невыбранный Action",
+          "reaches": [
+            "R-L-MAINT-ALTS"
+          ],
+          "canonBlock": {
+            "recommended": [
+              {
+                "id": "C-MAINT-ALT",
+                "text": "Сравнивать кандидаты по актуальным evidence и стоимости",
+                "inputRefs": [
+                  "target.actionEvidence"
+                ]
+              }
+            ],
+            "contraindicated": []
+          },
+          "qrpe": [
+            {
+              "id": "Q-MAINT-ALTERNATIVE",
+              "text": "Достаточно ли evidence в пользу другого Action?",
+              "status": "candidate"
+            }
+          ]
+        },
+        {
+          "id": "A-L-MAINT-REVOKE",
+          "title": "Отозвать выбранный Action и пересмотреть введённые им R",
+          "reaches": [
+            "R-L-MAINT-CHANGE"
+          ],
+          "effect": "reconsider_selected_action",
+          "canonBlock": {
+            "recommended": [
+              {
+                "id": "C-MAINT-REVOKE",
+                "text": "Изменение разрешено, исходная цель покрыта другим A, последствия известны",
+                "inputRefs": [
+                  "target.actions",
+                  "target.requirements",
+                  "target.context"
+                ]
+              }
+            ],
+            "contraindicated": [
+              {
+                "id": "C-MAINT-KEEP",
+                "text": "R имеет иное независимое основание — не удалять автоматически",
+                "inputRefs": [
+                  "target.actions"
+                ]
+              }
+            ]
+          },
+          "qrpe": [
+            {
+              "id": "Q-MAINT-EFFECTS",
+              "text": "Сохранились ли используемые результаты и обязательные зависимые R?",
+              "status": "candidate"
+            }
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "id": "DRV-A-L-MAINT-CHECK",
+          "type": "DRIVES",
+          "from": "R-L-MAINT",
+          "to": "A-L-MAINT-CHECK"
+        },
+        {
+          "id": "INTRO-A-L-MAINT-CHECK-R-L-MAINT-CAUSE",
+          "type": "INTRODUCES",
+          "from": "A-L-MAINT-CHECK",
+          "to": "R-L-MAINT-CAUSE"
+        },
+        {
+          "id": "DRV-A-L-MAINT-DISCOVER",
+          "type": "DRIVES",
+          "from": "R-L-MAINT-CAUSE",
+          "to": "A-L-MAINT-DISCOVER"
+        },
+        {
+          "id": "INTRO-A-L-MAINT-DISCOVER-R-L-MAINT-ALTS",
+          "type": "INTRODUCES",
+          "from": "A-L-MAINT-DISCOVER",
+          "to": "R-L-MAINT-ALTS"
+        },
+        {
+          "id": "DRV-A-L-MAINT-REVOKE",
+          "type": "DRIVES",
+          "from": "R-L-MAINT-ALTS",
+          "to": "A-L-MAINT-REVOKE"
+        },
+        {
+          "id": "INTRO-A-L-MAINT-REVOKE-R-L-MAINT-CHANGE",
+          "type": "INTRODUCES",
+          "from": "A-L-MAINT-REVOKE",
+          "to": "R-L-MAINT-CHANGE"
+        }
+      ]
+    }
+  ],
+  "targets": [
+    {
+      "id": "T-CLEAN",
+      "context": {
+        "separateBehaviors": false
+      },
+      "requirements": [
+        {
+          "id": "R-AVAIL",
+          "concept": "availability",
+          "title": "Управлять доступностью"
+        },
+        {
+          "id": "R-RES",
+          "concept": "reservations",
+          "title": "Управлять бронированием"
+        }
+      ],
+      "actions": [],
+      "actionEvidence": {}
+    },
+    {
+      "id": "T-DUP",
+      "context": {
+        "separateBehaviors": false
+      },
+      "requirements": [
+        {
+          "id": "R-USER-LOGIN",
+          "concept": "auth-shared",
+          "title": "Общая авторизация"
+        },
+        {
+          "id": "R-ADMIN-LOGIN",
+          "concept": "auth-shared",
+          "title": "Авторизация админки — возможный дубль"
+        }
+      ],
+      "actions": [],
+      "actionEvidence": {}
+    },
+    {
+      "id": "T-MAINT",
+      "context": {
+        "approval": "not-granted"
+      },
+      "requirements": [
+        {
+          "id": "R-SHARED",
+          "title": "Соблюсти общее ограничение"
+        },
+        {
+          "id": "R-REPORT",
+          "title": "Получить результат"
+        },
+        {
+          "id": "R-OVERHEAD",
+          "title": "Поддерживать ненужный отдельный сервис"
+        }
+      ],
+      "actions": [
+        {
+          "id": "A-OLD",
+          "status": "selected",
+          "introduces": [
+            "R-SHARED",
+            "R-REPORT",
+            "R-OVERHEAD"
+          ]
+        },
+        {
+          "id": "A-OTHER",
+          "status": "selected",
+          "introduces": [
+            "R-SHARED"
+          ]
+        }
+      ],
+      "actionEvidence": {
+        "A-OLD": {
+          "cost": 8,
+          "outcomeCovered": true
+        },
+        "A-NEW": {
+          "cost": 3,
+          "outcomeCovered": true
+        }
+      },
+      "researchFindings": [
+        {
+          "kind": "previously_untracked_action",
+          "action": {
+            "id": "A-NEW",
+            "introduces": [
+              "R-REPORT"
+            ]
+          },
+          "basis": "comparison of outcomes and cost outside current action list"
+        }
+      ]
+    }
+  ],
+  "illustrativeExpectations": [
+    {
+      "lensId": "L-DRY",
+      "targetId": "T-CLEAN",
+      "result": "no_material_duplicate",
+      "graphWrites": 0
+    },
+    {
+      "lensId": "L-DRY",
+      "targetId": "T-DUP",
+      "result": "needs_duplicate_research",
+      "graphWrites": 0
+    },
+    {
+      "lensId": "L-MAINT",
+      "targetId": "T-MAINT",
+      "result": "propose_reconsideration",
+      "graphWrites": 0
+    }
+  ]
+}

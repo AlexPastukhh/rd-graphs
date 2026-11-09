@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "id": "template-tm-2d-31-procedural-construction-unit-ru-proc-02",
+  "title": "Unit · Field And Pattern Structure",
+  "revision": 1,
+  "planningScale": "unit",
+  "identitySpace": "prepared:TM-2D-31-PROCEDURAL-CONSTRUCTION",
+  "rootRequirementId": "RU-PROC-02",
+  "readOnly": true,
+  "templateOnly": true,
+  "selected": false,
+  "catalogHidden": true,
+  "preparedModule": {
+    "id": "TEMPLATE-D-RU-PROC-02",
+    "version": "f2cba21065e00f2592c382fb71a2aafab377f04641188aea7f0c85aaab874049",
+    "goalRequirementId": "RU-PROC-02",
+    "methodDecisionId": "TEMPLATE-D-RU-PROC-02",
+    "childRequirementIds": [],
+    "applicability": "deterministic spatial/noise/pattern field structure that creates the primary visual organization",
+    "successCriteria": "Достаточно выполнить применимую Unit-specific Guidance и её checkpoints; инструкция не доказывает результат."
+  },
+  "sourceDocument": "/workspace/repos/obs-planning-docs/planning/documentation/idtspe-methodology/active/profiles/visual-production-2d/target-modules/TM-2D-31-PROCEDURAL-CONSTRUCTION.md#ru-proc-02",
+  "sourceContentSHA256": "f2cba21065e00f2592c382fb71a2aafab377f04641188aea7f0c85aaab874049",
+  "sourceOwnerGraphSlug": "template-tm-2d-31-procedural-construction",
+  "sourceAnchor": "ru-proc-02",
+  "coverage": "Готовый способ одного узкого R; без выдуманных под-R и без выбора проекта.",
+  "nodes": [
+    {
+      "id": "RU-PROC-02",
+      "kind": "requirement",
+      "title": "Field And Pattern Structure",
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "template-tm-2d-31-procedural-construction",
+        "nodeId": "RU-PROC-02"
+      }
+    },
+    {
+      "id": "TEMPLATE-D-RU-PROC-02",
+      "kind": "decision",
+      "status": "reusable-unselected",
+      "templateRole": "unit-prepared-guidance",
+      "selected": false,
+      "title": "Готовый способ проработки: Field And Pattern Structure",
+      "description": "<a id=\"ru-proc-02\"></a>\n### Field And Pattern Structure\n\n`RU-PROC-02`\n\nOwn the generative field/pattern relationships, not incidental code organization.",
+      "source": "/workspace/repos/obs-planning-docs/planning/documentation/idtspe-methodology/active/profiles/visual-production-2d/target-modules/TM-2D-31-PROCEDURAL-CONSTRUCTION.md#ru-proc-02",
+      "sourceUnitId": "RU-PROC-02",
+      "explicitSubrequirements": false,
+      "note": "Source defines Unit guidance; no explicit nested R inventory is declared here."
+    }
+  ],
+  "edges": [
+    {
+      "id": "UNIT-E-DRIVE",
+      "type": "DRIVES",
+      "from": "RU-PROC-02",
+      "to": "TEMPLATE-D-RU-PROC-02",
+      "templateOnly": true,
+      "meaning": "Готовый ответ на узкую задачу; пока не выбран."
+    }
+  ],
+  "events": []
+}

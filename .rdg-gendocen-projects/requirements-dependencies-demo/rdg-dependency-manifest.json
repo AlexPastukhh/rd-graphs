@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "coverage": "declared edges and explicit references, authorized single identitySpace",
+  "identitySpace": "rdg-working-requirements-dependencies-demo",
+  "graphFiles": [
+    "workspaces/requirements-dependencies-demo/graph.json"
+  ],
+  "entries": [
+    {
+      "target": "file://review/06de591a45780247a7c732fa.md",
+      "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+      "nodeId": "A-CANON",
+      "kind": "action",
+      "title": "Поддерживать способ работы с зависимым каноном",
+      "uses": [
+        {
+          "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+          "nodeId": "R-CANON",
+          "reasons": [
+            "canon:canonBlock/recommended/0/checkRequirements",
+            "canon:selectionBasis/actionSnapshot/canonBlock/recommended/0/checkRequirements",
+            "edge:action-drive-A-CANON"
+          ]
+        },
+        {
+          "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+          "nodeId": "R0",
+          "reasons": [
+            "inherited:action-child:action-introduces-A-DESIGN-R-CANON"
+          ]
+        }
+      ]
+    },
+    {
+      "target": "file://review/515d993fbe59e3641889848b.md",
+      "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+      "nodeId": "A-CANON-ALT",
+      "kind": "action",
+      "title": "Альтернативный способ: заменить проверку ручным осмотром",
+      "uses": [
+        {
+          "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+          "nodeId": "R-CANON",
+          "reasons": [
+            "edge:action-drive-A-CANON-ALT"
+          ]
+        },
+        {
+          "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+          "nodeId": "R0",
+          "reasons": [
+            "inherited:action-child:action-introduces-A-DESIGN-R-CANON"
+          ]
+        }
+      ]
+    },
+    {
+      "target": "file://review/2be970574257466f1c077138.md",
+      "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+      "nodeId": "A-DESIGN",
+      "kind": "action",
+      "title": "Развернуть работу в проверяемые подцели",
+      "uses": [
+        {
+          "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+          "nodeId": "R0",
+          "reasons": [
+            "edge:action-drive-A-DESIGN"
+          ]
+        }
+      ]
+    },
+    {
+      "target": "file://review/ff0d12e12b785980022422d9.md",
+      "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+      "nodeId": "A-DESIGN-ALTERNATIVE",
+      "kind": "action",
+      "title": "Альтернатива: решить задачу без декомпозиции",
+      "uses": [
+        {
+          "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+          "nodeId": "R0",
+          "reasons": [
+            "edge:action-drive-A-DESIGN-ALTERNATIVE"
+          ]
+        }
+      ]
+    },
+    {
+      "target": "file://review/ea3807b99ed93331cde568c8.md",
+      "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+      "nodeId": "A-VERIFY",
+      "kind": "action",
+      "title": "Проверить API и Gendocen на настоящем рабочем графе",
+      "uses": [
+        {
+          "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+          "nodeId": "R-CANON",
+          "reasons": [
+            "canon:canonBlock/recommended/0/checkRequirements",
+            "canon:selectionBasis/actionSnapshot/canonBlock/recommended/0/checkRequirements"
+          ]
+        },
+        {
+          "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+          "nodeId": "R-VERIFY",
+          "reasons": [
+            "edge:action-drive-A-VERIFY"
+          ]
+        },
+        {
+          "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+          "nodeId": "R0",
+          "reasons": [
+            "inherited:action-child:action-introduces-A-DESIGN-R-CANON",
+            "inherited:action-child:action-introduces-A-DESIGN-R-VERIFY"
+          ]
+        }
+      ]
+    },
+    {
+      "target": "file://review/c8b0a63710a3857673cc875e.md",
+      "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+      "nodeId": "R-CANON",
+      "kind": "requirement",
+      "title": "Проверить каноны с учётом новой редакции требований",
+      "uses": [
+        {
+          "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+          "nodeId": "R0",
+          "reasons": [
+            "action-child:action-introduces-A-DESIGN-R-CANON"
+          ]
+        }
+      ]
+    },
+    {
+      "target": "file://review/31f358024fde3d2e55842d8c.md",
+      "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+      "nodeId": "R-VERIFY",
+      "kind": "requirement",
+      "title": "Проверить в Gendocen изменение подписанных входов",
+      "uses": [
+        {
+          "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+          "nodeId": "R0",
+          "reasons": [
+            "action-child:action-introduces-A-DESIGN-R-VERIFY"
+          ]
+        }
+      ]
+    }
+  ],
+  "externalEvidenceCoverage": "not-attested",
+  "completionTruthAttested": false
+}

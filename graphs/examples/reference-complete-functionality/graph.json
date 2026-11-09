@@ -1,0 +1,389 @@
+{
+  "schemaVersion": 1,
+  "id": "reference-complete-functionality",
+  "revision": 4,
+  "title": "R · Расписать функционал",
+  "identitySpace": "showcase:booking-example-v1",
+  "rootRequirementId": "SH-R-FUNC",
+  "readOnly": true,
+  "exampleOnly": true,
+  "hypothetical": true,
+  "selectedInProject": false,
+  "catalogHidden": true,
+  "canonicality": "ILLUSTRATION_ONLY",
+  "demonstrationGroup": "complete-booking-showcase",
+  "origin": "New complete hypothetical illustration, NOT original EX-* and NOT a real project.",
+  "sourceDocument": "docs/examples/COMPLETE-REFERENCE-GUIDE.md",
+  "coverage": "Готовое разбиение 1..N против точных двух дочерних R, альтернативы, единая модель TM-FEATURE, два её применения, общий scope и открытый вопрос.",
+  "nodes": [
+    {
+      "id": "SH-R-FUNC",
+      "kind": "requirement",
+      "title": "Расписать функционал",
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "reference-complete-app",
+        "nodeId": "SH-R-FUNC"
+      },
+      "description": "Ссылка на ту же смысловую запись. Полный ответ и основания находятся в указанном источнике."
+    },
+    {
+      "id": "SH-V-BY-FEATURES",
+      "kind": "variant",
+      "title": "Готовое разбиение по Features · 1..N",
+      "status": "reusable-unselected",
+      "selected": false,
+      "templateOnly": true,
+      "description": "Повторяемое правило: для каждого элемента будущей коллекции Features создать R и проработать через один и тот же TM-FEATURE. НЕ фактические 2 ветви.",
+      "repetition": {
+        "mode": "PER_ITEM",
+        "cardinality": "1..N",
+        "collectionRole": "Features",
+        "itemRequirementPattern": "Расписать Feature {item}",
+        "preparedModelId": "TM-FEATURE",
+        "oneApplicationPerItem": true
+      }
+    },
+    {
+      "id": "SH-V-BY-SCENARIOS",
+      "kind": "variant",
+      "title": "Готовый альтернативный способ: по сценариям",
+      "status": "reusable-unselected",
+      "selected": false,
+      "templateOnly": true,
+      "description": "Иной возможный способ описания функционала, не выбранный. Альтернативность обсуждаемая, не доказанная эквивалентность."
+    },
+    {
+      "id": "SH-R-FEATURE-ROLE",
+      "kind": "requirement",
+      "title": "Шаблон будущего R для одной Feature",
+      "status": "template-placeholder",
+      "templateOnly": true,
+      "description": "Это роль, НЕ третий конкретный R и НЕ принятая Feature."
+    },
+    {
+      "id": "SH-V-TM-FEATURE",
+      "kind": "variant",
+      "title": "Одна готовая модель TM-FEATURE",
+      "status": "reusable-unselected",
+      "selected": false,
+      "templateOnly": true,
+      "description": "Одна reusable Target Module Model из SDS. Проекция здесь не копирует её исходные Units.",
+      "preparedModelId": "TM-FEATURE",
+      "source": "obs-planning-docs/planning/documentation/idtspe-methodology/active/profiles/sds/target-modules/TM-FEATURE.md"
+    },
+    {
+      "id": "SH-C-SCOPE",
+      "kind": "context",
+      "title": "Для условной первой версии нужны две области",
+      "description": "Условное основание выбора двух Features, не свойство любого приложения."
+    },
+    {
+      "id": "SH-D-CHOOSE-FEATURES",
+      "kind": "decision",
+      "title": "В примере выбрано 2 Features",
+      "status": "selected-in-example-only",
+      "selectedInExample": true,
+      "selectedInProject": false,
+      "scope": "SH-R-FUNC; условная первая версия",
+      "description": "Одно условное D использует готовое правило 1..N и вводит РОВНО два R: Availability и Reservation. Одна TM-FEATURE Model применяется два раза. Никаких реальных решений пользователя. Границы основаны на конкретных частях описаний создания и отмены; независимость разработки остаётся непроверенной.",
+      "usesPreparedDecompositionRef": "SH-V-BY-FEATURES",
+      "concreteBranchCount": 2,
+      "modelApplicationCount": 2,
+      "preparedModelRef": "TM-FEATURE"
+    },
+    {
+      "id": "SH-R-FEAT-AVAIL",
+      "kind": "requirement",
+      "title": "Проработать Feature Availability",
+      "description": "Первая из ровно двух конкретных дочерних R. Следующий граф начинается с того же ID."
+    },
+    {
+      "id": "SH-R-FEAT-RES",
+      "kind": "requirement",
+      "title": "Проработать Feature Reservation",
+      "description": "Вторая конкретная дочерняя R, не клон модели."
+    },
+    {
+      "id": "SH-APP-AVAIL",
+      "kind": "application",
+      "title": "Применение TM-FEATURE к Availability",
+      "status": "example-application",
+      "targetRequirementId": "SH-R-FEAT-AVAIL",
+      "preparedModelRef": "TM-FEATURE",
+      "governingDecisionRef": "SH-D-CHOOSE-FEATURES",
+      "description": "Демонстрационное отдельное применение модели; kind=application не поддерживается текущим writer."
+    },
+    {
+      "id": "SH-APP-RES",
+      "kind": "application",
+      "title": "Применение TM-FEATURE к Reservation",
+      "status": "example-application",
+      "targetRequirementId": "SH-R-FEAT-RES",
+      "preparedModelRef": "TM-FEATURE",
+      "governingDecisionRef": "SH-D-CHOOSE-FEATURES",
+      "description": "Второе применение той же модели, без повторного общего D."
+    },
+    {
+      "id": "SH-Q-FEATURE-COVERAGE",
+      "kind": "question",
+      "title": "Покрывают ли две Features потребности сценариев?",
+      "status": "open",
+      "description": "QRPE достаточности. Наличие вопроса не отменяет автоматически выбранное D.",
+      "blocking": "partially-blocking",
+      "blocks": "положительное заключение о полноте и независимости выбранных границ",
+      "closesWith": "сопоставление всех существенных потребностей Scenario с конкретными ответами Features"
+    },
+    {
+      "id": "SH-D-DESCRIBE",
+      "kind": "decision",
+      "title": "Условное описание создания бронирования",
+      "status": "selected-in-example-only",
+      "scope": "Scenario создания бронирования",
+      "selectedInExample": true,
+      "selectedInProject": false,
+      "targetModule": "SH-TM-SCREATE · Scenario S-CREATE",
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "reference-complete-scenario-create",
+        "nodeId": "SH-D-DESCRIBE"
+      },
+      "description": "Ссылка на ту же смысловую запись. Полный ответ и основания находятся в указанном источнике."
+    },
+    {
+      "id": "SH-D-CANCEL",
+      "kind": "decision",
+      "title": "Описание отмены и её результата",
+      "status": "selected-in-example-only",
+      "scope": "Scenario отмены бронирования",
+      "selectedInExample": true,
+      "selectedInProject": false,
+      "evidenceStatus": "unverified",
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "reference-complete-scenarios",
+        "nodeId": "SH-D-CANCEL"
+      },
+      "description": "Ссылка на ту же смысловую запись. Полный ответ и основания находятся в указанном источнике."
+    },
+    {
+      "id": "SH-R-BEHAVIOR",
+      "kind": "requirement",
+      "title": "Описать Behavior обеих Features",
+      "crosscutting": true,
+      "scope": "Behavior Availability и Reservation",
+      "description": "Одна общая потребность описать действия, реакции, ошибки и правила обеих Features; это не одинаковое поведение."
+    },
+    {
+      "id": "SH-V-BEHAVIOR-PATH",
+      "kind": "variant",
+      "title": "Готовый Behavior Path",
+      "status": "reusable-unselected",
+      "selected": false,
+      "templateOnly": true,
+      "description": "Переиспользуемое описание поведения по действиям/реакциям/ошибкам, не committed D."
+    },
+    {
+      "id": "SH-V-STATES",
+      "kind": "variant",
+      "title": "Готовые State Transitions",
+      "status": "reusable-unselected",
+      "selected": false,
+      "templateOnly": true,
+      "description": "Альтернативный готовый вариант со состояниями и переходами."
+    },
+    {
+      "id": "SH-C-INTERACTION",
+      "kind": "context",
+      "title": "В исходном контексте удобна последовательность шагов",
+      "description": "Исходное условное основание."
+    },
+    {
+      "id": "SH-D-BEHAVIOR-SHARED",
+      "kind": "decision",
+      "title": "Общий выбор: Behavior Path для обеих Features",
+      "status": "selected-in-example-only",
+      "selectedInExample": true,
+      "selectedInProject": false,
+      "scope": "Behavior Availability и Reservation",
+      "description": "ОДНО условное D о форме описания. Availability и Reservation используют его, но имеют разные локальные ответы. Новое событие или вопрос не отменяют его автоматически."
+    }
+  ],
+  "edges": [
+    {
+      "id": "SH-E-FUN-01",
+      "type": "OPTION_FOR",
+      "from": "SH-R-FUNC",
+      "to": "SH-V-BY-FEATURES",
+      "meaning": "Готовый альтернативный способ для R, ещё не принято."
+    },
+    {
+      "id": "SH-E-FUN-02",
+      "type": "OPTION_FOR",
+      "from": "SH-R-FUNC",
+      "to": "SH-V-BY-SCENARIOS",
+      "meaning": "Другая готовая схема; не выбранная."
+    },
+    {
+      "id": "SH-E-FUN-03",
+      "type": "GENERATES_ITEM_ROLE",
+      "from": "SH-V-BY-FEATURES",
+      "to": "SH-R-FEATURE-ROLE",
+      "meaning": "Роль одного повторяемого R, а не фактическая ветвь."
+    },
+    {
+      "id": "SH-E-FUN-04",
+      "type": "PER_ITEM_MODEL",
+      "from": "SH-V-BY-FEATURES",
+      "to": "SH-V-TM-FEATURE",
+      "meaning": "Для каждого элемента используется ОДНА готовая TM-FEATURE Model."
+    },
+    {
+      "id": "SH-E-FUN-05",
+      "type": "DRIVES",
+      "from": "SH-R-FUNC",
+      "to": "SH-D-CHOOSE-FEATURES",
+      "meaning": "R требует конкретного выбора способа."
+    },
+    {
+      "id": "SH-E-FUN-06",
+      "type": "CONTEXT_FOR",
+      "from": "SH-C-SCOPE",
+      "to": "SH-D-CHOOSE-FEATURES",
+      "meaning": "Ограничение первой версии учитывается в конкретном выборе."
+    },
+    {
+      "id": "SH-E-FUN-07",
+      "type": "USES_PREPARED",
+      "from": "SH-D-CHOOSE-FEATURES",
+      "to": "SH-V-BY-FEATURES",
+      "meaning": "Выбранное условное D ссылается на готовую схему 1..N."
+    },
+    {
+      "id": "SH-E-FUN-08",
+      "type": "INTRODUCES",
+      "from": "SH-D-CHOOSE-FEATURES",
+      "to": "SH-R-FEAT-AVAIL",
+      "meaning": "Первая конкретная Feature: Availability.",
+      "parent": "SH-R-FUNC"
+    },
+    {
+      "id": "SH-E-FUN-09",
+      "type": "INTRODUCES",
+      "from": "SH-D-CHOOSE-FEATURES",
+      "to": "SH-R-FEAT-RES",
+      "meaning": "Вторая конкретная Feature: Reservation.",
+      "parent": "SH-R-FUNC"
+    },
+    {
+      "id": "SH-E-FUN-10",
+      "type": "INSTANCE_OF_MODEL",
+      "from": "SH-V-TM-FEATURE",
+      "to": "SH-APP-AVAIL",
+      "meaning": "Одна модель, применение 1 из 2."
+    },
+    {
+      "id": "SH-E-FUN-11",
+      "type": "INSTANCE_OF_MODEL",
+      "from": "SH-V-TM-FEATURE",
+      "to": "SH-APP-RES",
+      "meaning": "Одна модель, применение 2 из 2."
+    },
+    {
+      "id": "SH-E-FUN-12",
+      "type": "GOVERNED_BY_SHARED_CHOICE",
+      "from": "SH-D-CHOOSE-FEATURES",
+      "to": "SH-APP-AVAIL",
+      "meaning": "Одно общее D управляет первым применением."
+    },
+    {
+      "id": "SH-E-FUN-13",
+      "type": "GOVERNED_BY_SHARED_CHOICE",
+      "from": "SH-D-CHOOSE-FEATURES",
+      "to": "SH-APP-RES",
+      "meaning": "То же общее D управляет вторым применением."
+    },
+    {
+      "id": "SH-E-FUN-14",
+      "type": "QRPE_FOR",
+      "from": "SH-Q-FEATURE-COVERAGE",
+      "to": "SH-D-CHOOSE-FEATURES",
+      "meaning": "Нужно проверить полноту покрытия условных сценариев, не пересматривать автоматически."
+    },
+    {
+      "id": "SH-E-FUN-15",
+      "type": "INFORMS",
+      "from": "SH-D-DESCRIBE",
+      "to": "SH-D-CHOOSE-FEATURES",
+      "meaning": "Использует SH-CREATE-SLOT для Availability и SH-CREATE-CONFIRM для Reservation; НЕ всю документацию Scenario.",
+      "usedParts": [
+        "SH-CREATE-SLOT",
+        "SH-CREATE-CONFIRM"
+      ]
+    },
+    {
+      "id": "SH-E-FUN-16",
+      "type": "INFORMS",
+      "from": "SH-D-CANCEL",
+      "to": "SH-D-CHOOSE-FEATURES",
+      "meaning": "Использует SH-CANCEL-RESULT: отмена и её результат относятся к Reservation.",
+      "usedParts": [
+        "SH-CANCEL-RESULT"
+      ]
+    },
+    {
+      "id": "SH-E-SHARED-01",
+      "type": "DRIVES",
+      "from": "SH-R-BEHAVIOR",
+      "to": "SH-D-BEHAVIOR-SHARED",
+      "meaning": "Один R с общим scope требует одного выбора формы."
+    },
+    {
+      "id": "SH-E-SHARED-02",
+      "type": "CONTEXT_FOR",
+      "from": "SH-C-INTERACTION",
+      "to": "SH-D-BEHAVIOR-SHARED",
+      "meaning": "Исходное основание общего выбора формы."
+    },
+    {
+      "id": "SH-E-SHARED-03",
+      "type": "USES_VARIANT",
+      "from": "SH-D-BEHAVIOR-SHARED",
+      "to": "SH-V-BEHAVIOR-PATH",
+      "meaning": "Общее D использует одну reusable форму."
+    },
+    {
+      "id": "SH-E-SHARED-04",
+      "type": "APPLIES_TO",
+      "from": "SH-R-BEHAVIOR",
+      "to": "SH-R-FEAT-AVAIL",
+      "meaning": "Требование описания Behavior относится к Availability."
+    },
+    {
+      "id": "SH-E-SHARED-05",
+      "type": "APPLIES_TO",
+      "from": "SH-R-BEHAVIOR",
+      "to": "SH-R-FEAT-RES",
+      "meaning": "То же требование относится к Reservation."
+    }
+  ],
+  "events": [
+    {
+      "id": "SH-EVENT-SELECT-D-CHOOSE-FEATURES",
+      "type": "decision_selected",
+      "decisionId": "SH-D-CHOOSE-FEATURES",
+      "by": "example-only",
+      "note": "Выбор только в вымышленном сюжете; не решение реального пользователя.",
+      "exampleOnly": true
+    },
+    {
+      "id": "SH-EVENT-SELECT-D-BEHAVIOR-SHARED",
+      "type": "decision_selected",
+      "decisionId": "SH-D-BEHAVIOR-SHARED",
+      "by": "example-only",
+      "note": "Выбор только в вымышленном сюжете; не решение реального пользователя.",
+      "exampleOnly": true
+    }
+  ],
+  "planningScale": "module"
+}

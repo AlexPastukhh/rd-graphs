@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "id": "template-tm-2d-30-visual-construction-unit-ru-vc-01",
+  "title": "Unit · Route Composition",
+  "revision": 1,
+  "planningScale": "unit",
+  "identitySpace": "prepared:TM-2D-30-VISUAL-CONSTRUCTION",
+  "rootRequirementId": "RU-VC-01",
+  "readOnly": true,
+  "templateOnly": true,
+  "selected": false,
+  "catalogHidden": true,
+  "preparedModule": {
+    "id": "TEMPLATE-D-RU-VC-01",
+    "version": "4d5aebac622c23b0857cbe490c9def40658cc93a47faff2d08e091e2311e8f53",
+    "goalRequirementId": "RU-VC-01",
+    "methodDecisionId": "TEMPLATE-D-RU-VC-01",
+    "childRequirementIds": [],
+    "applicability": "selected relationship/order/ownership of multiple construction routes when the composition itself is a material decision",
+    "successCriteria": "Достаточно выполнить применимую Unit-specific Guidance и её checkpoints; инструкция не доказывает результат."
+  },
+  "sourceDocument": "/workspace/repos/obs-planning-docs/planning/documentation/idtspe-methodology/active/profiles/visual-production-2d/target-modules/TM-2D-30-VISUAL-CONSTRUCTION.md#ru-vc-01",
+  "sourceContentSHA256": "4d5aebac622c23b0857cbe490c9def40658cc93a47faff2d08e091e2311e8f53",
+  "sourceOwnerGraphSlug": "template-tm-2d-30-visual-construction",
+  "sourceAnchor": "ru-vc-01",
+  "coverage": "Готовый способ одного узкого R; без выдуманных под-R и без выбора проекта.",
+  "nodes": [
+    {
+      "id": "RU-VC-01",
+      "kind": "requirement",
+      "title": "Route Composition",
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "template-tm-2d-30-visual-construction",
+        "nodeId": "RU-VC-01"
+      }
+    },
+    {
+      "id": "TEMPLATE-D-RU-VC-01",
+      "kind": "decision",
+      "status": "reusable-unselected",
+      "templateRole": "unit-prepared-guidance",
+      "selected": false,
+      "title": "Готовый способ проработки: Route Composition",
+      "description": "<a id=\"ru-vc-01\"></a>\n### Route Composition\n\n`RU-VC-01`\n\nUse only when the combination has a real decision/result beyond `use A then B`. Mechanical aggregation belongs in handoff/source packaging, not a composition Target.",
+      "source": "/workspace/repos/obs-planning-docs/planning/documentation/idtspe-methodology/active/profiles/visual-production-2d/target-modules/TM-2D-30-VISUAL-CONSTRUCTION.md#ru-vc-01",
+      "sourceUnitId": "RU-VC-01",
+      "explicitSubrequirements": false,
+      "note": "Source defines Unit guidance; no explicit nested R inventory is declared here."
+    }
+  ],
+  "edges": [
+    {
+      "id": "UNIT-E-DRIVE",
+      "type": "DRIVES",
+      "from": "RU-VC-01",
+      "to": "TEMPLATE-D-RU-VC-01",
+      "templateOnly": true,
+      "meaning": "Готовый ответ на узкую задачу; пока не выбран."
+    }
+  ],
+  "events": []
+}

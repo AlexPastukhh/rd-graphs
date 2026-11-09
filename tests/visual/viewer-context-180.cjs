@@ -1,0 +1,42 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
+const puppeteer=require('/opt/dc/node_modules/puppeteer-core');
+const out=path.resolve(process.env.RDG_SCREENSHOT_DIR);fs.mkdirSync(out,{recursive:true});
+(async()=>{
+ const browser=await puppeteer.launch({executablePath:process.env.RDG_CHROME_PATH,headless:true,args:['--no-sandbox','--disable-dev-shm-usage','--disable-gpu','--allow-file-access-from-files'],userDataDir:path.join(out,'profile')});
+ const page=await browser.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.stack));page.on('dialog',d=>d.accept());
+ await page.setViewport({width:1440,height:1000});
+ const run=fn=>page.evaluate(fn);
+ const click=id=>page.evaluate(id=>document.getElementById('rdg-viewer-root').shadowRoot.getElementById(id).dispatchEvent(new MouseEvent('click',{bubbles:true})),id);
+ const open=id=>page.evaluate(id=>document.getElementById('rdg-viewer-root').rdgExplorer.openSet(id),id);
+ const shot=async name=>{await page.evaluate(()=>document.fonts.ready);await page.screenshot({path:path.join(out,name+'.png')});};
+ try{
+ await page.goto('file://'+path.join(__dirname,'rdg-viewer.html'));
+ await page.waitForFunction(()=>document.getElementById('rdg-viewer-root')?.rdgExplorer?.getCatalog());await click('launch');
+ await open('context-working');await click('fit');await shot('01-working-context-card');
+ assert.equal(await run(()=>document.getElementById('rdg-viewer-root').shadowRoot.querySelectorAll('.node').length),2);
+ const baseline=await run(()=>JSON.stringify(document.getElementById('rdg-viewer-root').rdgLayout.getDocument()));
+ await click('context-mode');
+ await run(()=>document.getElementById('rdg-viewer-root').shadowRoot.querySelector('[data-id="context-working-current"]').dispatchEvent(new MouseEvent('click',{bubbles:true})));
+ assert((await run(()=>document.getElementById('rdg-viewer-root').shadowRoot.getElementById('info').textContent)).includes('поле заполнено'));
+ await shot('02-graph-context-inspector');
+ await click('context-summary');
+ const aggregate=await run(()=>{const s=document.getElementById('rdg-viewer-root').shadowRoot;return {text:s.getElementById('info').textContent,links:[...s.getElementById('info').querySelectorAll('a')].map(a=>({href:a.href,rel:a.rel})),fields:s.querySelectorAll('[data-state-field]').length};});
+ assert(aggregate.text.includes('После выбора ветки'));assert(aggregate.text.includes('НЕПОЛНЫЙ'));assert.equal(aggregate.fields,3);assert(aggregate.links.some(a=>a.href==='https://www.w3.org/WAI/planning/'&&a.rel.includes('noopener')));
+ await shot('03-aggregate-and-theory');
+ assert.equal(await run(()=>JSON.stringify(document.getElementById('rdg-viewer-root').rdgLayout.getDocument())),baseline);
+ await click('context-mode');
+ await run(()=>document.getElementById('rdg-viewer-root').shadowRoot.querySelector('[data-id="context-working-current"]').dispatchEvent(new MouseEvent('click',{bubbles:true})));
+ await page.waitForFunction(()=>document.getElementById('rdg-viewer-root').rdgLayout.graphKey().includes('context-working-current'));
+ await click('context-fields');await shot('04-single-graph-reused-answer');
+ await open('context-prepared');await click('fit');await shot('05-prepared-context');
+ await page.evaluate(()=>document.getElementById('rdg-viewer-root').rdgExplorer.openGraph('context-prepared-root'));
+ await run(()=>document.getElementById('rdg-viewer-root').shadowRoot.querySelector('[data-id="__canon__O-CTX-B"]').dispatchEvent(new MouseEvent('click',{bubbles:true})));
+ assert((await run(()=>document.getElementById('rdg-viewer-root').shadowRoot.getElementById('info').textContent)).includes('пока только ссылка'));
+ await shot('06-link-only-canon');
+ await page.setViewport({width:560,height:820});await click('context-fields');await shot('07-narrow-context');
+ assert.equal(errors.length,0,errors.join('\n'));
+ fs.writeFileSync(path.join(out,'results.json'),JSON.stringify({version:'1.8.0',aggregate,errors,readOnlyInspection:true,modeNavigation:true},null,2));
+ console.log('BROWSER_CONTEXT_OK 7 screenshots');
+ }finally{await browser.close();}
+})().catch(e=>{console.error(e.stack);process.exitCode=1;});

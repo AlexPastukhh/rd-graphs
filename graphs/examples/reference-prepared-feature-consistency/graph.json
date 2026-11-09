@@ -1,0 +1,203 @@
+{
+  "schemaVersion": 1,
+  "readOnly": true,
+  "exampleOnly": true,
+  "templateOnly": true,
+  "planningScale": "unit",
+  "identitySpace": "rdg-example-prepared-v7",
+  "hypothetical": true,
+  "selectedInProject": false,
+  "id": "reference-prepared-feature-consistency",
+  "title": "Обеспечить согласованность Features",
+  "revision": 3,
+  "rootRequirementId": "RF-2",
+  "catalogHidden": true,
+  "view": {
+    "requirementDepth": 1
+  },
+  "expansionOf": {
+    "graphSlug": "reference-prepared-planning-tree",
+    "nodeId": "RF-2"
+  },
+  "description": "Отдельный уровень той же R. Канонические записи и история остаются у владельца; это учебная проекция, не новое решение.",
+  "nodes": [
+    {
+      "id": "RF-2",
+      "kind": "requirement",
+      "status": "candidate",
+      "title": "Обеспечить согласованность Features",
+      "qrpe": [],
+      "projectionOf": {
+        "graphSlug": "reference-prepared-planning-tree",
+        "nodeId": "RF-2"
+      }
+    },
+    {
+      "id": "RF-2-O1",
+      "kind": "option",
+      "title": "Зафиксировать единый контракт общих данных",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RF-2-O1-plus-1",
+            "text": "Features разделяют одну модель данных и могут согласованно принять общие типы, правила обновления и ошибки.",
+            "checkCategories": []
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RF-2-O1-minus-1",
+            "text": "Features выпускаются независимо с разными версиями протокола; единый контракт без совместимости ограничит выпуск.",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": [],
+      "projectionOf": {
+        "graphSlug": "reference-prepared-planning-tree",
+        "nodeId": "RF-2-O1"
+      },
+      "description": "Результат: общий контракт и проверка совместимости потребителей, включая правила ошибок и версий."
+    },
+    {
+      "id": "RF-2-O2",
+      "kind": "option",
+      "title": "Проверять парные взаимодействия Features",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RF-2-O2-plus-1",
+            "text": "Features независимо поставляются, а границы взаимодействия и ожидаемые сообщения перечислимы.",
+            "checkCategories": []
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RF-2-O2-minus-1",
+            "text": "Число связей слишком велико или общий инвариант нельзя доказать парными проверками; требуется единая модель.",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": [],
+      "projectionOf": {
+        "graphSlug": "reference-prepared-planning-tree",
+        "nodeId": "RF-2-O2"
+      },
+      "description": "Результат: матрица взаимодействий и проверки контрактов на каждой границе."
+    },
+    {
+      "id": "O-A11Y-INTERPRETED",
+      "kind": "option",
+      "title": "Согласовать общие контракты и клавиатурные переходы",
+      "origin": "prepared",
+      "status": "candidate",
+      "qrpe": [],
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "O-A11Y-INTERPRETED-PLUS",
+            "text": "Features используют общие компоненты и могут согласовать единый контракт данных, ошибок и клавиатурного взаимодействия до выпуска.",
+            "contextUses": [
+              {
+                "fieldRef": {
+                  "graphSlug": "reference-prepared-planning-tree",
+                  "fieldId": "accessibility"
+                },
+                "purpose": "Переиспользовать известный контекст доступности"
+              }
+            ]
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "O-A11Y-INTERPRETED-MINUS",
+            "text": "Команды не могут синхронно обновить общий контракт; сначала требуется стратегия версий и совместимости."
+          }
+        ],
+        "sourceRefs": [
+          {
+            "graphSlug": "reference-prepared-planning-tree",
+            "sourceId": "wai-planning"
+          }
+        ],
+        "preparation": "interpreted",
+        "fieldsComplete": true,
+        "interpretation": "Материал WAI используется как направление проверки клавиатурного взаимодействия. Согласованность данных и ошибок задаётся контрактом проекта; ссылка сама не доказывает достаточность способа."
+      },
+      "description": "Результат: согласованные данные, ошибки и правила передачи фокуса на границах Features; проверка каждого потребителя контракта."
+    },
+    {
+      "id": "O-A11Y-LINK-ONLY",
+      "kind": "option",
+      "title": "Обеспечить согласованность сквозными приёмочными сценариями",
+      "origin": "prepared",
+      "status": "candidate",
+      "qrpe": [],
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "O-A11Y-LINK-ONLY-PLUS",
+            "text": "Features поставляются независимо, а согласованность данных и доступность целого пути можно проверить на наблюдаемом результате сквозного сценария.",
+            "contextUses": [
+              {
+                "fieldRef": {
+                  "graphSlug": "reference-prepared-planning-tree",
+                  "fieldId": "accessibility"
+                },
+                "purpose": "Переиспользовать известный контекст доступности"
+              }
+            ]
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "O-A11Y-LINK-ONLY-MINUS",
+            "text": "Нет воспроизводимого сквозного окружения или проверка доступности ограничена финальным экраном; такой тест пропустит ошибки промежуточных переходов."
+          }
+        ],
+        "sourceRefs": [
+          {
+            "graphSlug": "reference-prepared-planning-tree",
+            "sourceId": "wai-planning"
+          }
+        ],
+        "preparation": "link-only",
+        "fieldsComplete": false
+      },
+      "description": "Результат: исполняемые пользовательские сценарии через несколько Features с едиными ожидаемыми данными и доступным завершением. Ссылка WAI пока не проработана; это пробел подготовки канона, а не отдельный способ изучения теории."
+    }
+  ],
+  "edges": [
+    {
+      "id": "OPT-RF-2-O1",
+      "type": "OPTION_FOR",
+      "from": "RF-2",
+      "to": "RF-2-O1"
+    },
+    {
+      "id": "OPT-RF-2-O2",
+      "type": "OPTION_FOR",
+      "from": "RF-2",
+      "to": "RF-2-O2"
+    },
+    {
+      "id": "OPTION-FOR-O-A11Y-INTERPRETED",
+      "type": "OPTION_FOR",
+      "from": "RF-2",
+      "to": "O-A11Y-INTERPRETED"
+    },
+    {
+      "id": "OPTION-FOR-O-A11Y-LINK-ONLY",
+      "type": "OPTION_FOR",
+      "from": "RF-2",
+      "to": "O-A11Y-LINK-ONLY"
+    }
+  ],
+  "collections": [],
+  "events": []
+}

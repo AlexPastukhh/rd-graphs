@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "id": "reference-prepared-scenario-path",
+  "title": "Готовое потенциальное продолжение: Проработать пользовательский сценарий",
+  "revision": 4,
+  "readOnly": true,
+  "exampleOnly": true,
+  "templateOnly": true,
+  "planningScale": "unit",
+  "identitySpace": "rdg-example-prepared-v7",
+  "rootRequirementId": "RS-1",
+  "hypothetical": true,
+  "selectedInProject": false,
+  "expansionOf": {
+    "graphSlug": "reference-prepared-planning-tree",
+    "nodeId": "RS-1"
+  },
+  "description": "Потенциальный дочерний R-граф; все варианты доступны, ни одно D не принято.",
+  "nodes": [
+    {
+      "id": "RS-1",
+      "kind": "requirement",
+      "status": "candidate",
+      "title": "Проработать пользовательский сценарий",
+      "qrpe": [],
+      "projectionOf": {
+        "graphSlug": "reference-prepared-planning-tree",
+        "nodeId": "RS-1"
+      }
+    },
+    {
+      "id": "RS-1-O1",
+      "kind": "option",
+      "title": "Описать основной путь и исключения сценария",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RS-1-O1-plus-1",
+            "text": "Порядок шагов устойчив, роли и наблюдаемый результат известны; исключения можно перечислить рядом с шагами.",
+            "checkCategories": []
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RS-1-O1-minus-1",
+            "text": "Есть длительные паузы, параллельные роли или возвраты; линейное описание скрывает допустимые продолжения.",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": [],
+      "projectionOf": {
+        "graphSlug": "reference-prepared-planning-tree",
+        "nodeId": "RS-1-O1"
+      },
+      "description": "Результат: основной путь, исключения и критерии завершения пользовательского сценария."
+    },
+    {
+      "id": "RS-1-O2",
+      "kind": "option",
+      "title": "Смоделировать состояния участника сценария",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RS-1-O2-plus-1",
+            "text": "Сценарий прерывается и возобновляется, доступные шаги зависят от накопленного состояния.",
+            "checkCategories": []
+          },
+          {
+            "id": "RS-1-O2-advice-research",
+            "text": "Перед выбором этого содержательного способа: Если анализ и плановые каноны недостаточны, предложить изолированные испытания A и B с одинаковым критерием сравнения и последующим одним итоговым выбором.",
+            "evidence": "Это только условная учебная рекомендация; фактического эксперимента нет."
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RS-1-O2-minus-1",
+            "text": "Сценарий короткий и однопроходный; отдельная модель состояний не добавит проверяемых различий.",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": [],
+      "projectionOf": {
+        "graphSlug": "reference-prepared-planning-tree",
+        "nodeId": "RS-1-O2"
+      },
+      "description": "Результат: состояния участника, разрешённые переходы, отмена и возобновление сценария."
+    }
+  ],
+  "edges": [
+    {
+      "id": "OPT-RS-1-O1",
+      "type": "OPTION_FOR",
+      "from": "RS-1",
+      "to": "RS-1-O1"
+    },
+    {
+      "id": "OPT-RS-1-O2",
+      "type": "OPTION_FOR",
+      "from": "RS-1",
+      "to": "RS-1-O2"
+    }
+  ],
+  "collections": [],
+  "events": [],
+  "contextUses": [
+    {
+      "fieldRef": {
+        "graphSlug": "reference-prepared-planning-tree",
+        "fieldId": "alternative-details"
+      },
+      "purpose": "Возможное продолжение сценарного способа, только после выбора",
+      "when": {
+        "allSelected": [
+          {
+            "graphSlug": "reference-prepared-planning-tree",
+            "optionId": "O-SCENARIO"
+          }
+        ]
+      }
+    }
+  ]
+}

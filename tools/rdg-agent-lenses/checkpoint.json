@@ -1,0 +1,519 @@
+{
+  "schemaVersion": 1,
+  "actionModel": "candidate-v6",
+  "coreModel": "rdg-core-v1",
+  "id": "rdg-agent-checkpoint-lens",
+  "title": "Соразмерно пересмотреть принятое решение",
+  "identitySpace": "rdg-prepared-checkpoint-lens",
+  "revision": 1,
+  "rootRequirementId": "R-LENS-CHECKPOINT",
+  "planningScale": "module",
+  "nodes": [
+    {
+      "id": "R-LENS-CHECKPOINT",
+      "kind": "requirement",
+      "title": "Решение пересмотрено с достаточным основанием и реальными полномочиями",
+      "description": "При собственном намерении ИИ содержательно пересмотреть уже принятое решение обязателен хотя бы базовый checkpoint. Прямое распоряжение пользователя само по себе не запускает предварительный checkpoint; реальные права, замки, writer invariants и history остаются обязательными. Любой сработавший checkpoint включает соразмерное self-review релевантного Graph, Canon, QRPE и нужных существующих lenses. Minor rename допускает минимальный объём; найденные последствия могут расширить review и пересмотр upstream. Семь критериев общие для пяти маршрутов. Их сочетание оценивается содержательно, без машинного veto. Ответы остаются в текущем контексте; только ценные выводы сохраняются через preserve. Маршруты можно применять последовательно: advisory→self, discussion→higher AI/human. Независимые права исполнителя не следуют из принятого решения. Существенный handoff содержит Benefit, релевантные R/A, Context, Canon/QRPE, свою оценку, ограничения и точный вопрос с типом ответа: факт, мнение, финальное решение или разрешение на конкретное исполнение. Недоступного peer AI нельзя изображать существующим. Запрос конкретного защищённого исполнения через API→Viewer не является шестым checkpoint-маршрутом.",
+      "scope": "Checkpoint текущего решения и текущей версии Graph/Canon/Context/QRPE",
+      "status": "active",
+      "qrpe": [],
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "CP-A1",
+      "kind": "action",
+      "title": "Self",
+      "description": "Решение принимает инициатор в своей компетенции.",
+      "status": "candidate",
+      "qrpe": [],
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "CP-A2",
+      "kind": "action",
+      "title": "Higher AI final",
+      "description": "Финальное решение принимает действительно полномочный другой ИИ; исполняет имеющий право holder.",
+      "status": "candidate",
+      "qrpe": [],
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "CP-A3",
+      "kind": "action",
+      "title": "Human final",
+      "description": "Финальное решение принимает человек; собственное решение или распоряжение человека ИИ не заменяет своим.",
+      "status": "candidate",
+      "qrpe": [],
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "CP-A4",
+      "kind": "action",
+      "title": "Advisory",
+      "description": "У другого ИИ получают сведения, мнение или оба; у человека — сведения, если он сам не решает вопрос. Инициатор решает лишь в своей компетенции.",
+      "status": "candidate",
+      "qrpe": [],
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "CP-A5",
+      "kind": "action",
+      "title": "Deliberation",
+      "description": "Диалог с другим ИИ. При неразрешённом расхождении инициатор сам обращается к третьей более ответственной стороне.",
+      "status": "candidate",
+      "qrpe": [],
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    }
+  ],
+  "objects": [
+    {
+      "id": "CP-C1",
+      "kind": "info",
+      "title": "Компетентность и реальные полномочия текущего ИИ и доступных ответственных участников",
+      "description": "Компетентность и реальные полномочия текущего ИИ и доступных ответственных участников",
+      "revision": 1
+    },
+    {
+      "id": "CP-C2",
+      "kind": "info",
+      "title": "User Benefit и затраты времени, денег, поддержки, багов и усложнения",
+      "description": "User Benefit и затраты времени, денег, поддержки, багов и усложнения",
+      "revision": 1
+    },
+    {
+      "id": "CP-C3",
+      "kind": "info",
+      "title": "Значимость стратегической развилки и альтернативных комбинаций решений",
+      "description": "Значимость стратегической развилки и альтернативных комбинаций решений",
+      "revision": 1
+    },
+    {
+      "id": "CP-C4",
+      "kind": "info",
+      "title": "Обратимость, цена переделки, риск дорогих downstream последствий; не stability field",
+      "description": "Обратимость, цена переделки, риск дорогих downstream последствий; не stability field",
+      "revision": 1
+    },
+    {
+      "id": "CP-C5",
+      "kind": "info",
+      "title": "Зависимости и объём настоящих stale/review последствий",
+      "description": "Зависимости и объём настоящих stale/review последствий",
+      "revision": 1
+    },
+    {
+      "id": "CP-C6",
+      "kind": "info",
+      "title": "Действующие ограничения, locks и правила ответственности/консультаций",
+      "description": "Действующие ограничения, locks и правила ответственности/консультаций",
+      "revision": 1
+    },
+    {
+      "id": "CP-C7",
+      "kind": "info",
+      "title": "Достаточность Context/knowledge/Evidence и доступные источники недостающего",
+      "description": "Достаточность Context/knowledge/Evidence и доступные источники недостающего",
+      "revision": 1
+    },
+    {
+      "id": "CANON-CP-A1",
+      "kind": "canon",
+      "title": "Применимость: Self",
+      "evaluationMode": "comment-only-v1",
+      "comment": "Самостоятельное решение уместно при достаточной компетенции и контексте. Учитывайте цену ошибки, обратимость и реальные downstream зависимости; значимый риск может потребовать консультации.",
+      "arguments": [],
+      "revision": 1
+    },
+    {
+      "id": "CANON-CP-A2",
+      "kind": "canon",
+      "title": "Применимость: Higher AI final",
+      "evaluationMode": "comment-only-v1",
+      "comment": "Передача финального решения оправданна компетенцией и реальной ответственностью другого ИИ. Его решение не создаёт writer right или object key у инициатора.",
+      "arguments": [],
+      "revision": 1
+    },
+    {
+      "id": "CANON-CP-A3",
+      "kind": "canon",
+      "title": "Применимость: Human final",
+      "evaluationMode": "comment-only-v1",
+      "comment": "Человек нужен для финальной позиции, когда решение относится к его ответственности или полномочиям. Можно обсуждать альтернативы, сохраняя принятое им решение.",
+      "arguments": [],
+      "revision": 1
+    },
+    {
+      "id": "CANON-CP-A4",
+      "kind": "canon",
+      "title": "Применимость: Advisory",
+      "evaluationMode": "comment-only-v1",
+      "comment": "Консультация полезна при конкретном пробеле данных или оценки. Если человек дал своё решение, его нельзя выдать за простую информацию и заменить своим.",
+      "arguments": [],
+      "revision": 1
+    },
+    {
+      "id": "CANON-CP-A5",
+      "kind": "canon",
+      "title": "Применимость: Deliberation",
+      "evaluationMode": "comment-only-v1",
+      "comment": "Обмен позициями полезен при содержательном расхождении. Не приписывайте peer полномочия эскалации инициатора; учитывайте цену ожидания и доступность реального участника.",
+      "arguments": [],
+      "revision": 1
+    }
+  ],
+  "edges": [
+    {
+      "id": "D-CP-A1",
+      "type": "DRIVES",
+      "from": "R-LENS-CHECKPOINT",
+      "to": "CP-A1"
+    },
+    {
+      "id": "K-CP-A1",
+      "type": "CANON_FOR",
+      "from": "CANON-CP-A1",
+      "to": "CP-A1"
+    },
+    {
+      "id": "CP-C1-CP-A1",
+      "type": "INFO_FOR",
+      "from": "CP-C1",
+      "to": "CANON-CP-A1"
+    },
+    {
+      "id": "CP-C2-CP-A1",
+      "type": "INFO_FOR",
+      "from": "CP-C2",
+      "to": "CANON-CP-A1"
+    },
+    {
+      "id": "CP-C3-CP-A1",
+      "type": "INFO_FOR",
+      "from": "CP-C3",
+      "to": "CANON-CP-A1"
+    },
+    {
+      "id": "CP-C4-CP-A1",
+      "type": "INFO_FOR",
+      "from": "CP-C4",
+      "to": "CANON-CP-A1"
+    },
+    {
+      "id": "CP-C5-CP-A1",
+      "type": "INFO_FOR",
+      "from": "CP-C5",
+      "to": "CANON-CP-A1"
+    },
+    {
+      "id": "CP-C6-CP-A1",
+      "type": "INFO_FOR",
+      "from": "CP-C6",
+      "to": "CANON-CP-A1"
+    },
+    {
+      "id": "CP-C7-CP-A1",
+      "type": "INFO_FOR",
+      "from": "CP-C7",
+      "to": "CANON-CP-A1"
+    },
+    {
+      "id": "D-CP-A2",
+      "type": "DRIVES",
+      "from": "R-LENS-CHECKPOINT",
+      "to": "CP-A2"
+    },
+    {
+      "id": "K-CP-A2",
+      "type": "CANON_FOR",
+      "from": "CANON-CP-A2",
+      "to": "CP-A2"
+    },
+    {
+      "id": "CP-C1-CP-A2",
+      "type": "INFO_FOR",
+      "from": "CP-C1",
+      "to": "CANON-CP-A2"
+    },
+    {
+      "id": "CP-C2-CP-A2",
+      "type": "INFO_FOR",
+      "from": "CP-C2",
+      "to": "CANON-CP-A2"
+    },
+    {
+      "id": "CP-C3-CP-A2",
+      "type": "INFO_FOR",
+      "from": "CP-C3",
+      "to": "CANON-CP-A2"
+    },
+    {
+      "id": "CP-C4-CP-A2",
+      "type": "INFO_FOR",
+      "from": "CP-C4",
+      "to": "CANON-CP-A2"
+    },
+    {
+      "id": "CP-C5-CP-A2",
+      "type": "INFO_FOR",
+      "from": "CP-C5",
+      "to": "CANON-CP-A2"
+    },
+    {
+      "id": "CP-C6-CP-A2",
+      "type": "INFO_FOR",
+      "from": "CP-C6",
+      "to": "CANON-CP-A2"
+    },
+    {
+      "id": "CP-C7-CP-A2",
+      "type": "INFO_FOR",
+      "from": "CP-C7",
+      "to": "CANON-CP-A2"
+    },
+    {
+      "id": "D-CP-A3",
+      "type": "DRIVES",
+      "from": "R-LENS-CHECKPOINT",
+      "to": "CP-A3"
+    },
+    {
+      "id": "K-CP-A3",
+      "type": "CANON_FOR",
+      "from": "CANON-CP-A3",
+      "to": "CP-A3"
+    },
+    {
+      "id": "CP-C1-CP-A3",
+      "type": "INFO_FOR",
+      "from": "CP-C1",
+      "to": "CANON-CP-A3"
+    },
+    {
+      "id": "CP-C2-CP-A3",
+      "type": "INFO_FOR",
+      "from": "CP-C2",
+      "to": "CANON-CP-A3"
+    },
+    {
+      "id": "CP-C3-CP-A3",
+      "type": "INFO_FOR",
+      "from": "CP-C3",
+      "to": "CANON-CP-A3"
+    },
+    {
+      "id": "CP-C4-CP-A3",
+      "type": "INFO_FOR",
+      "from": "CP-C4",
+      "to": "CANON-CP-A3"
+    },
+    {
+      "id": "CP-C5-CP-A3",
+      "type": "INFO_FOR",
+      "from": "CP-C5",
+      "to": "CANON-CP-A3"
+    },
+    {
+      "id": "CP-C6-CP-A3",
+      "type": "INFO_FOR",
+      "from": "CP-C6",
+      "to": "CANON-CP-A3"
+    },
+    {
+      "id": "CP-C7-CP-A3",
+      "type": "INFO_FOR",
+      "from": "CP-C7",
+      "to": "CANON-CP-A3"
+    },
+    {
+      "id": "D-CP-A4",
+      "type": "DRIVES",
+      "from": "R-LENS-CHECKPOINT",
+      "to": "CP-A4"
+    },
+    {
+      "id": "K-CP-A4",
+      "type": "CANON_FOR",
+      "from": "CANON-CP-A4",
+      "to": "CP-A4"
+    },
+    {
+      "id": "CP-C1-CP-A4",
+      "type": "INFO_FOR",
+      "from": "CP-C1",
+      "to": "CANON-CP-A4"
+    },
+    {
+      "id": "CP-C2-CP-A4",
+      "type": "INFO_FOR",
+      "from": "CP-C2",
+      "to": "CANON-CP-A4"
+    },
+    {
+      "id": "CP-C3-CP-A4",
+      "type": "INFO_FOR",
+      "from": "CP-C3",
+      "to": "CANON-CP-A4"
+    },
+    {
+      "id": "CP-C4-CP-A4",
+      "type": "INFO_FOR",
+      "from": "CP-C4",
+      "to": "CANON-CP-A4"
+    },
+    {
+      "id": "CP-C5-CP-A4",
+      "type": "INFO_FOR",
+      "from": "CP-C5",
+      "to": "CANON-CP-A4"
+    },
+    {
+      "id": "CP-C6-CP-A4",
+      "type": "INFO_FOR",
+      "from": "CP-C6",
+      "to": "CANON-CP-A4"
+    },
+    {
+      "id": "CP-C7-CP-A4",
+      "type": "INFO_FOR",
+      "from": "CP-C7",
+      "to": "CANON-CP-A4"
+    },
+    {
+      "id": "D-CP-A5",
+      "type": "DRIVES",
+      "from": "R-LENS-CHECKPOINT",
+      "to": "CP-A5"
+    },
+    {
+      "id": "K-CP-A5",
+      "type": "CANON_FOR",
+      "from": "CANON-CP-A5",
+      "to": "CP-A5"
+    },
+    {
+      "id": "CP-C1-CP-A5",
+      "type": "INFO_FOR",
+      "from": "CP-C1",
+      "to": "CANON-CP-A5"
+    },
+    {
+      "id": "CP-C2-CP-A5",
+      "type": "INFO_FOR",
+      "from": "CP-C2",
+      "to": "CANON-CP-A5"
+    },
+    {
+      "id": "CP-C3-CP-A5",
+      "type": "INFO_FOR",
+      "from": "CP-C3",
+      "to": "CANON-CP-A5"
+    },
+    {
+      "id": "CP-C4-CP-A5",
+      "type": "INFO_FOR",
+      "from": "CP-C4",
+      "to": "CANON-CP-A5"
+    },
+    {
+      "id": "CP-C5-CP-A5",
+      "type": "INFO_FOR",
+      "from": "CP-C5",
+      "to": "CANON-CP-A5"
+    },
+    {
+      "id": "CP-C6-CP-A5",
+      "type": "INFO_FOR",
+      "from": "CP-C6",
+      "to": "CANON-CP-A5"
+    },
+    {
+      "id": "CP-C7-CP-A5",
+      "type": "INFO_FOR",
+      "from": "CP-C7",
+      "to": "CANON-CP-A5"
+    }
+  ],
+  "events": [],
+  "collections": [],
+  "workGraphs": [
+    {
+      "id": "WG-main",
+      "title": "Соразмерно пересмотреть принятое решение",
+      "rootIds": [
+        "R-LENS-CHECKPOINT"
+      ],
+      "memberIds": [
+        "R-LENS-CHECKPOINT",
+        "CP-A1",
+        "CP-A2",
+        "CP-A3",
+        "CP-A4",
+        "CP-A5",
+        "CP-C1",
+        "CP-C2",
+        "CP-C3",
+        "CP-C4",
+        "CP-C5",
+        "CP-C6",
+        "CP-C7",
+        "CANON-CP-A1",
+        "CANON-CP-A2",
+        "CANON-CP-A3",
+        "CANON-CP-A4",
+        "CANON-CP-A5"
+      ]
+    }
+  ],
+  "workGraphLinks": [],
+  "exclusionGroups": [],
+  "readOnly": true,
+  "templateOnly": true,
+  "sourceVersion": "unified-prework-v9-20261024",
+  "preparationRole": "lens-definition",
+  "lensRecommendations": [
+    {
+      "lensKey": "review",
+      "targetId": "R-LENS-CHECKPOINT",
+      "text": "Соразмерное self-review после trigger; найденные последствия могут расширить проверку."
+    },
+    {
+      "lensKey": "preserve",
+      "targetId": "R-LENS-CHECKPOINT",
+      "text": "Сохранять только ценные выводы по действующей preserve lens, без автоматической записи ответов."
+    },
+    {
+      "lensKey": "explore",
+      "targetId": "R-LENS-CHECKPOINT",
+      "text": "При необходимости рассмотреть upstream и другие совместимые Actions на бумаге."
+    },
+    {
+      "lensKey": "clarify",
+      "targetId": "R-LENS-CHECKPOINT",
+      "text": "Уточнить существенный пробел в исходной цели или реальном контексте."
+    }
+  ]
+}

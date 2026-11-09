@@ -1,0 +1,418 @@
+{
+  "schemaVersion": 1,
+  "revision": 5,
+  "id": "v6-action-optin-fixture",
+  "title": "Action — учебный рабочий граф",
+  "planningScale": "module",
+  "identitySpace": "v6-action-optin-fixture",
+  "rootRequirementId": "R0",
+  "actionModel": "candidate-v6",
+  "nodes": [
+    {
+      "id": "R0",
+      "kind": "requirement",
+      "title": "Подготовить часть приложения",
+      "status": "active"
+    },
+    {
+      "id": "A1",
+      "kind": "action",
+      "title": "Разделить работу на независимые части",
+      "status": "superseded",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "C1",
+            "text": "Части могут разрабатываться отдельно"
+          }
+        ],
+        "contraindicated": []
+      },
+      "qrpe": [
+        {
+          "id": "Q1",
+          "text": "Есть ли скрытая сквозная зависимость?",
+          "status": "open"
+        }
+      ],
+      "selectionBasis": {
+        "driverSnapshot": {
+          "id": "R0",
+          "kind": "requirement",
+          "title": "Подготовить часть приложения",
+          "status": "active"
+        },
+        "actionSnapshot": {
+          "id": "A1",
+          "kind": "action",
+          "title": "Разделить работу на независимые части",
+          "status": "candidate",
+          "canonBlock": {
+            "recommended": [
+              {
+                "id": "C1",
+                "text": "Части могут разрабатываться отдельно"
+              }
+            ],
+            "contraindicated": []
+          },
+          "qrpe": [
+            {
+              "id": "Q1",
+              "text": "Есть ли скрытая сквозная зависимость?",
+              "status": "open"
+            }
+          ]
+        },
+        "note": "Синтетический тест writer; не решение пользователя о проекте"
+      },
+      "reconsideredByActionId": "A-REVIEW",
+      "reconsiderationEventId": "EV-RECONSIDER"
+    },
+    {
+      "id": "R1",
+      "kind": "requirement",
+      "title": "Проработать первую часть",
+      "status": "active"
+    },
+    {
+      "id": "R2",
+      "kind": "requirement",
+      "title": "Проработать вторую часть",
+      "status": "inactive",
+      "deactivatedByActionId": "A-REVIEW",
+      "deactivatedByEventId": "EV-RECONSIDER"
+    },
+    {
+      "id": "A3",
+      "kind": "action",
+      "title": "Independent support for R1",
+      "status": "selected",
+      "selectionBasis": {
+        "driverSnapshot": {
+          "id": "R0",
+          "kind": "requirement",
+          "title": "Подготовить часть приложения",
+          "status": "active"
+        },
+        "actionSnapshot": {
+          "id": "A3",
+          "kind": "action",
+          "title": "Independent support for R1",
+          "status": "candidate"
+        },
+        "note": "Synthetic example, no real user project approval"
+      }
+    },
+    {
+      "id": "A-REVIEW",
+      "kind": "action",
+      "title": "Review and cancel the old Action A1",
+      "status": "selected",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "C-REVIEW",
+            "text": "Old Action no longer justifies all introduced R, and effects are understood"
+          }
+        ],
+        "contraindicated": []
+      },
+      "qrpe": [
+        {
+          "id": "Q-REVIEW",
+          "text": "Are outcomes or external effects left unmanaged?",
+          "status": "resolved",
+          "resolutionEvidenceRefs": [
+            "example:scope-read-only"
+          ]
+        }
+      ],
+      "selectionBasis": {
+        "driverSnapshot": {
+          "id": "R0",
+          "kind": "requirement",
+          "title": "Подготовить часть приложения",
+          "status": "active"
+        },
+        "actionSnapshot": {
+          "id": "A-REVIEW",
+          "kind": "action",
+          "title": "Review and cancel the old Action A1",
+          "status": "candidate",
+          "canonBlock": {
+            "recommended": [
+              {
+                "id": "C-REVIEW",
+                "text": "Old Action no longer justifies all introduced R, and effects are understood"
+              }
+            ],
+            "contraindicated": []
+          },
+          "qrpe": [
+            {
+              "id": "Q-REVIEW",
+              "text": "Are outcomes or external effects left unmanaged?",
+              "status": "resolved",
+              "resolutionEvidenceRefs": [
+                "example:scope-read-only"
+              ]
+            }
+          ]
+        },
+        "note": "Synthetic test; selection is not a live user decision"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "action-drive-A1",
+      "type": "DRIVES",
+      "from": "R0",
+      "to": "A1"
+    },
+    {
+      "id": "action-introduces-A1-R1",
+      "type": "INTRODUCES",
+      "from": "A1",
+      "to": "R1",
+      "parent": "R0",
+      "childRole": "subgoal",
+      "archived": true,
+      "archivedByEventId": "EV-RECONSIDER"
+    },
+    {
+      "id": "action-introduces-A1-R2",
+      "type": "INTRODUCES",
+      "from": "A1",
+      "to": "R2",
+      "parent": "R0",
+      "childRole": "subgoal",
+      "archived": true,
+      "archivedByEventId": "EV-RECONSIDER"
+    },
+    {
+      "id": "action-drive-A3",
+      "type": "DRIVES",
+      "from": "R0",
+      "to": "A3"
+    },
+    {
+      "id": "LINK-A3-R1",
+      "type": "INTRODUCES",
+      "from": "A3",
+      "to": "R1",
+      "parent": "R0",
+      "childRole": "subgoal"
+    },
+    {
+      "id": "action-drive-A-REVIEW",
+      "type": "DRIVES",
+      "from": "R0",
+      "to": "A-REVIEW"
+    }
+  ],
+  "events": [
+    {
+      "id": "EV1",
+      "type": "action_selected",
+      "actionId": "A1",
+      "driverRequirementId": "R0",
+      "by": "assistant",
+      "note": "Синтетический тест writer; не решение пользователя о проекте"
+    },
+    {
+      "id": "EV-A3",
+      "type": "action_selected",
+      "actionId": "A3",
+      "driverRequirementId": "R0",
+      "by": "user",
+      "note": "Synthetic example, no real user project approval"
+    },
+    {
+      "id": "EV-A3-LINK",
+      "type": "action_requirement_linked",
+      "actionId": "A3",
+      "requirementId": "R1",
+      "edgeId": "LINK-A3-R1",
+      "driverRequirementId": "R0",
+      "by": "user",
+      "note": "Synthetic independent reason to keep R1"
+    },
+    {
+      "id": "EV-REVIEW",
+      "type": "action_selected",
+      "actionId": "A-REVIEW",
+      "driverRequirementId": "R0",
+      "by": "user",
+      "note": "Synthetic test; selection is not a live user decision"
+    },
+    {
+      "id": "EV-RECONSIDER",
+      "type": "action_reconsidered",
+      "actionId": "A1",
+      "reviewActionId": "A-REVIEW",
+      "driverRequirementId": "R0",
+      "by": "user",
+      "approvalRef": "synthetic-test-approval",
+      "contextVersion": "T2-example",
+      "note": "Synthetic example revision, not actual user approval",
+      "canonChecks": [
+        {
+          "caseId": "C-REVIEW",
+          "result": "applicable",
+          "reason": "Isolated toy example only",
+          "evidenceRefs": [
+            "test:example-scope"
+          ]
+        }
+      ],
+      "priorActionSnapshot": {
+        "id": "A1",
+        "kind": "action",
+        "title": "Разделить работу на независимые части",
+        "status": "selected",
+        "canonBlock": {
+          "recommended": [
+            {
+              "id": "C1",
+              "text": "Части могут разрабатываться отдельно"
+            }
+          ],
+          "contraindicated": []
+        },
+        "qrpe": [
+          {
+            "id": "Q1",
+            "text": "Есть ли скрытая сквозная зависимость?",
+            "status": "open"
+          }
+        ],
+        "selectionBasis": {
+          "driverSnapshot": {
+            "id": "R0",
+            "kind": "requirement",
+            "title": "Подготовить часть приложения",
+            "status": "active"
+          },
+          "actionSnapshot": {
+            "id": "A1",
+            "kind": "action",
+            "title": "Разделить работу на независимые части",
+            "status": "candidate",
+            "canonBlock": {
+              "recommended": [
+                {
+                  "id": "C1",
+                  "text": "Части могут разрабатываться отдельно"
+                }
+              ],
+              "contraindicated": []
+            },
+            "qrpe": [
+              {
+                "id": "Q1",
+                "text": "Есть ли скрытая сквозная зависимость?",
+                "status": "open"
+              }
+            ]
+          },
+          "note": "Синтетический тест writer; не решение пользователя о проекте"
+        }
+      },
+      "reviewActionSnapshot": {
+        "id": "A-REVIEW",
+        "kind": "action",
+        "title": "Review and cancel the old Action A1",
+        "status": "selected",
+        "canonBlock": {
+          "recommended": [
+            {
+              "id": "C-REVIEW",
+              "text": "Old Action no longer justifies all introduced R, and effects are understood"
+            }
+          ],
+          "contraindicated": []
+        },
+        "qrpe": [
+          {
+            "id": "Q-REVIEW",
+            "text": "Are outcomes or external effects left unmanaged?",
+            "status": "resolved",
+            "resolutionEvidenceRefs": [
+              "example:scope-read-only"
+            ]
+          }
+        ],
+        "selectionBasis": {
+          "driverSnapshot": {
+            "id": "R0",
+            "kind": "requirement",
+            "title": "Подготовить часть приложения",
+            "status": "active"
+          },
+          "actionSnapshot": {
+            "id": "A-REVIEW",
+            "kind": "action",
+            "title": "Review and cancel the old Action A1",
+            "status": "candidate",
+            "canonBlock": {
+              "recommended": [
+                {
+                  "id": "C-REVIEW",
+                  "text": "Old Action no longer justifies all introduced R, and effects are understood"
+                }
+              ],
+              "contraindicated": []
+            },
+            "qrpe": [
+              {
+                "id": "Q-REVIEW",
+                "text": "Are outcomes or external effects left unmanaged?",
+                "status": "resolved",
+                "resolutionEvidenceRefs": [
+                  "example:scope-read-only"
+                ]
+              }
+            ]
+          },
+          "note": "Synthetic test; selection is not a live user decision"
+        }
+      },
+      "priorIntroductionEdges": [
+        {
+          "id": "action-introduces-A1-R1",
+          "type": "INTRODUCES",
+          "from": "A1",
+          "to": "R1",
+          "parent": "R0",
+          "childRole": "subgoal"
+        },
+        {
+          "id": "action-introduces-A1-R2",
+          "type": "INTRODUCES",
+          "from": "A1",
+          "to": "R2",
+          "parent": "R0",
+          "childRole": "subgoal"
+        }
+      ],
+      "childDispositions": [
+        {
+          "requirementId": "R1",
+          "effect": "retain_supported",
+          "reason": "R1 also has independent selected A3",
+          "supportingActionIds": [
+            "A3"
+          ]
+        },
+        {
+          "requirementId": "R2",
+          "effect": "deactivate",
+          "reason": "Exclusive leaf R2 is obsolete for synthetic target",
+          "downstreamScope": "single_graph_verified"
+        }
+      ]
+    }
+  ]
+}
