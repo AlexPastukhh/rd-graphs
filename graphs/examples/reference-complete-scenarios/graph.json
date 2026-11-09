@@ -1,0 +1,134 @@
+{
+  "schemaVersion": 1,
+  "id": "reference-complete-scenarios",
+  "revision": 4,
+  "title": "R · Описать сценарии",
+  "identitySpace": "showcase:booking-example-v1",
+  "rootRequirementId": "SH-R-SCENARIOS",
+  "readOnly": true,
+  "exampleOnly": true,
+  "hypothetical": true,
+  "selectedInProject": false,
+  "catalogHidden": true,
+  "canonicality": "ILLUSTRATION_ONLY",
+  "demonstrationGroup": "complete-booking-showcase",
+  "origin": "New complete hypothetical illustration, NOT original EX-* and NOT a real project.",
+  "sourceDocument": "docs/examples/COMPLETE-REFERENCE-GUIDE.md",
+  "coverage": "Два конкретных сценария, но только для первого существует собственный граф.",
+  "nodes": [
+    {
+      "id": "SH-R-SCENARIOS",
+      "kind": "requirement",
+      "title": "Описать сценарии",
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "reference-complete-app",
+        "nodeId": "SH-R-SCENARIOS"
+      },
+      "description": "Ссылка на ту же смысловую запись. Полный ответ и основания находятся в указанном источнике."
+    },
+    {
+      "id": "SH-D-SCENARIO-SET",
+      "kind": "decision",
+      "title": "Для примера определить создание и отмену",
+      "status": "selected-in-example-only",
+      "selectedInExample": true,
+      "selectedInProject": false,
+      "scope": "Первая условная версия сценариев",
+      "description": "Два конкретных R описания отдельных сценариев, ещё не результаты их выполнения.",
+      "concreteBranchCount": 2
+    },
+    {
+      "id": "SH-R-SCREATE",
+      "kind": "requirement",
+      "title": "Описать сценарий создания бронирования",
+      "description": "Дочернее R делегируется в отдельный уровень того же ID; там возможен Scenario Target Module.",
+      "targetModule": "SH-TM-SCREATE · Scenario S-CREATE",
+      "delegations": [
+        {
+          "targetModuleInstance": "SH-TM-SCREATE",
+          "modelRef": "TM-SCENARIO-PLANNING",
+          "requirementId": "SH-R-SCREATE",
+          "answerRef": "SH-D-DESCRIBE",
+          "answerGraph": "reference-complete-scenario-create",
+          "status": "delegated-in-example-only",
+          "fulfillment": "unverified"
+        }
+      ]
+    },
+    {
+      "id": "SH-R-SCANCEL",
+      "kind": "requirement",
+      "title": "Описать сценарий отмены бронирования",
+      "description": "Тот же R получает локальный ответ в этом файле; отдельный граф отмены не нужен для данного примера."
+    },
+    {
+      "id": "SH-D-CANCEL",
+      "kind": "decision",
+      "title": "Описание отмены и её результата",
+      "status": "selected-in-example-only",
+      "selectedInExample": true,
+      "selectedInProject": false,
+      "scope": "Scenario отмены бронирования",
+      "description": "Пользователь находит существующее бронирование, отменяет его и видит результат. Условное описание; работа приложения не доказана.",
+      "evidenceStatus": "unverified",
+      "answerParts": [
+        {
+          "id": "SH-CANCEL-RESULT",
+          "text": "Найти бронирование, отменить его и получить понятный результат отмены."
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "SH-E-SC-01",
+      "type": "DRIVES",
+      "from": "SH-R-SCENARIOS",
+      "to": "SH-D-SCENARIO-SET",
+      "meaning": "Состав сценариев отвечает требованию."
+    },
+    {
+      "id": "SH-E-SC-02",
+      "type": "INTRODUCES",
+      "from": "SH-D-SCENARIO-SET",
+      "to": "SH-R-SCREATE",
+      "meaning": "Первый определённый сценарий, не placeholder.",
+      "parent": "SH-R-SCENARIOS"
+    },
+    {
+      "id": "SH-E-SC-03",
+      "type": "INTRODUCES",
+      "from": "SH-D-SCENARIO-SET",
+      "to": "SH-R-SCANCEL",
+      "meaning": "Второй определённый сценарий.",
+      "parent": "SH-R-SCENARIOS"
+    },
+    {
+      "id": "SH-E-SC-04",
+      "type": "DRIVES",
+      "from": "SH-R-SCANCEL",
+      "to": "SH-D-CANCEL",
+      "meaning": "Конкретный ответ на описание отмены, не исполнение отмены."
+    }
+  ],
+  "events": [
+    {
+      "id": "SH-EVENT-SELECT-D-SCENARIO-SET",
+      "type": "decision_selected",
+      "decisionId": "SH-D-SCENARIO-SET",
+      "by": "example-only",
+      "note": "Выбор только в вымышленном сюжете; не решение реального пользователя.",
+      "exampleOnly": true
+    },
+    {
+      "id": "SH-EVENT-SELECT-D-CANCEL",
+      "type": "decision_selected",
+      "decisionId": "SH-D-CANCEL",
+      "by": "example-only",
+      "note": "Выбор только в вымышленном сюжете; не решение реального пользователя.",
+      "exampleOnly": true
+    }
+  ],
+  "planningScale": "module"
+}

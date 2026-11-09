@@ -1,0 +1,490 @@
+{
+  "schemaVersion": 2,
+  "transactionId": "demo-add-A-VERIFY",
+  "requestSHA256": "78c24e79a58c4a05f88768a443cfe136d205264c85dd0cae0f67fd34205bbd82",
+  "preparedAt": "2026-10-21T02:02:20.082848+00:00",
+  "recordedAt": "2026-10-21T02:02:20.855614+00:00",
+  "state": "completed",
+  "records": [
+    {
+      "file": "workspaces/requirements-dependencies-demo/graph.json",
+      "before": {
+        "schemaVersion": 1,
+        "id": "requirements-dependencies-demo",
+        "title": "Учебная реальная работа: изменение R и зависимые Actions",
+        "revision": 6,
+        "planningScale": "module",
+        "identitySpace": "rdg-working-requirements-dependencies-demo",
+        "rootRequirementId": "R0",
+        "actionModel": "candidate-v6",
+        "purpose": "real-api-teaching-workflow",
+        "presentation": {
+          "usage": "working",
+          "title": "Рабочий пример · зависимые Requirements и Actions",
+          "description": "Настоящие Graph/Plan owners, история Graph API и Gendocen receipts. Работа ведётся обычными writers."
+        },
+        "nodes": [
+          {
+            "id": "R0",
+            "kind": "requirement",
+            "status": "active",
+            "title": "Сделать проверяемую рабочую демонстрацию зависимостей RDG",
+            "requirementText": "Продемонстрировать реальные Graph/Plan/API события и Gendocen-обнаружение зависимостей."
+          },
+          {
+            "id": "A-DESIGN",
+            "kind": "action",
+            "title": "Развернуть работу в проверяемые подцели",
+            "actionType": "decomposition",
+            "status": "selected",
+            "canonBlock": {
+              "recommended": [
+                {
+                  "id": "C-A-DESIGN",
+                  "text": "Когда нужна явная декомпозиция через Action и последующий независимый контроль подцелей."
+                }
+              ],
+              "contraindicated": [
+                {
+                  "id": "N-A-DESIGN",
+                  "text": "Не создавать пустые подцели без связи с корневой Requirement."
+                }
+              ]
+            },
+            "qrpe": [],
+            "selectionBasis": {
+              "driverSnapshot": {
+                "id": "R0",
+                "kind": "requirement",
+                "status": "active",
+                "title": "Сделать проверяемую рабочую демонстрацию зависимостей RDG",
+                "requirementText": "Продемонстрировать реальные Graph/Plan/API события и Gendocen-обнаружение зависимостей."
+              },
+              "actionSnapshot": {
+                "id": "A-DESIGN",
+                "kind": "action",
+                "title": "Развернуть работу в проверяемые подцели",
+                "actionType": "decomposition",
+                "status": "candidate",
+                "canonBlock": {
+                  "recommended": [
+                    {
+                      "id": "C-A-DESIGN",
+                      "text": "Когда нужна явная декомпозиция через Action и последующий независимый контроль подцелей."
+                    }
+                  ],
+                  "contraindicated": [
+                    {
+                      "id": "N-A-DESIGN",
+                      "text": "Не создавать пустые подцели без связи с корневой Requirement."
+                    }
+                  ]
+                },
+                "qrpe": []
+              },
+              "note": "Выбран существующий Action после проверки его канона. Это не выполнение."
+            }
+          },
+          {
+            "id": "A-DESIGN-ALTERNATIVE",
+            "kind": "action",
+            "title": "Альтернатива: решить задачу без декомпозиции",
+            "actionType": "general",
+            "status": "candidate",
+            "canonBlock": {
+              "recommended": [
+                {
+                  "id": "C-A-DESIGN-ALTERNATIVE",
+                  "text": "Когда работа настолько мала, что декомпозиция не повышает проверяемость."
+                }
+              ],
+              "contraindicated": [
+                {
+                  "id": "N-A-DESIGN-ALTERNATIVE",
+                  "text": "Не применять для демонстрации ссылок между подцелями и канонами."
+                }
+              ]
+            },
+            "qrpe": []
+          },
+          {
+            "id": "R-CANON",
+            "kind": "requirement",
+            "title": "Проследить, какие способы зависят от актуальности канона",
+            "status": "active"
+          },
+          {
+            "id": "R-VERIFY",
+            "kind": "requirement",
+            "title": "Проверить в Gendocen изменение подписанных входов",
+            "status": "active"
+          },
+          {
+            "id": "A-CANON",
+            "kind": "action",
+            "title": "Поддерживать способ работы с зависимым каноном",
+            "actionType": "general",
+            "status": "candidate",
+            "canonBlock": {
+              "recommended": [
+                {
+                  "id": "C-A-CANON",
+                  "text": "Применить только если актуальная формулировка R-CANON соответствует выбранному сценарию.",
+                  "checkRequirements": [
+                    "R-CANON"
+                  ]
+                }
+              ],
+              "contraindicated": [
+                {
+                  "id": "N-A-CANON",
+                  "text": "Не считать канон пригодным без пересмотра после новой редакции R-CANON."
+                }
+              ]
+            },
+            "qrpe": []
+          },
+          {
+            "id": "A-CANON-ALT",
+            "kind": "action",
+            "title": "Альтернативный способ: заменить проверку ручным осмотром",
+            "actionType": "general",
+            "status": "candidate",
+            "canonBlock": {
+              "recommended": [
+                {
+                  "id": "C-A-CANON-ALT",
+                  "text": "Применить, если Gendocen невозможно использовать в данной области."
+                }
+              ],
+              "contraindicated": [
+                {
+                  "id": "N-A-CANON-ALT",
+                  "text": "Не скрывать отсутствие двигателя под видом подтверждённой актуальности."
+                }
+              ]
+            },
+            "qrpe": []
+          }
+        ],
+        "edges": [
+          {
+            "id": "action-drive-A-DESIGN",
+            "type": "DRIVES",
+            "from": "R0",
+            "to": "A-DESIGN"
+          },
+          {
+            "id": "action-drive-A-DESIGN-ALTERNATIVE",
+            "type": "DRIVES",
+            "from": "R0",
+            "to": "A-DESIGN-ALTERNATIVE"
+          },
+          {
+            "id": "action-introduces-A-DESIGN-R-CANON",
+            "type": "INTRODUCES",
+            "from": "A-DESIGN",
+            "to": "R-CANON",
+            "parent": "R0",
+            "childRole": "subgoal"
+          },
+          {
+            "id": "action-introduces-A-DESIGN-R-VERIFY",
+            "type": "INTRODUCES",
+            "from": "A-DESIGN",
+            "to": "R-VERIFY",
+            "parent": "R0",
+            "childRole": "subgoal"
+          },
+          {
+            "id": "action-drive-A-CANON",
+            "type": "DRIVES",
+            "from": "R-CANON",
+            "to": "A-CANON"
+          },
+          {
+            "id": "action-drive-A-CANON-ALT",
+            "type": "DRIVES",
+            "from": "R-CANON",
+            "to": "A-CANON-ALT"
+          }
+        ],
+        "events": [
+          {
+            "id": "EV-DEMO-SELECT-A-DESIGN",
+            "type": "action_selected",
+            "actionId": "A-DESIGN",
+            "driverRequirementId": "R0",
+            "by": "assistant",
+            "note": "Выбран существующий Action после проверки его канона. Это не выполнение.",
+            "authorityPrincipal": "bearer:root",
+            "verifiedTrustReceipt": {
+              "mode": "local-manual-session",
+              "principal": "bearer:root",
+              "grantId": "root",
+              "grantRevision": 1,
+              "transactionId": "demo-select-A-DESIGN",
+              "changesSHA256": "daedab637f19e01e2879e88f9e2175906fd9df84c32950085c005f1dea86cec8"
+            },
+            "recordedAt": "2026-10-21T02:02:14.824533+00:00"
+          }
+        ]
+      },
+      "after": {
+        "schemaVersion": 1,
+        "id": "requirements-dependencies-demo",
+        "title": "Учебная реальная работа: изменение R и зависимые Actions",
+        "revision": 7,
+        "planningScale": "module",
+        "identitySpace": "rdg-working-requirements-dependencies-demo",
+        "rootRequirementId": "R0",
+        "actionModel": "candidate-v6",
+        "purpose": "real-api-teaching-workflow",
+        "presentation": {
+          "usage": "working",
+          "title": "Рабочий пример · зависимые Requirements и Actions",
+          "description": "Настоящие Graph/Plan owners, история Graph API и Gendocen receipts. Работа ведётся обычными writers."
+        },
+        "nodes": [
+          {
+            "id": "R0",
+            "kind": "requirement",
+            "status": "active",
+            "title": "Сделать проверяемую рабочую демонстрацию зависимостей RDG",
+            "requirementText": "Продемонстрировать реальные Graph/Plan/API события и Gendocen-обнаружение зависимостей."
+          },
+          {
+            "id": "A-DESIGN",
+            "kind": "action",
+            "title": "Развернуть работу в проверяемые подцели",
+            "actionType": "decomposition",
+            "status": "selected",
+            "canonBlock": {
+              "recommended": [
+                {
+                  "id": "C-A-DESIGN",
+                  "text": "Когда нужна явная декомпозиция через Action и последующий независимый контроль подцелей."
+                }
+              ],
+              "contraindicated": [
+                {
+                  "id": "N-A-DESIGN",
+                  "text": "Не создавать пустые подцели без связи с корневой Requirement."
+                }
+              ]
+            },
+            "qrpe": [],
+            "selectionBasis": {
+              "driverSnapshot": {
+                "id": "R0",
+                "kind": "requirement",
+                "status": "active",
+                "title": "Сделать проверяемую рабочую демонстрацию зависимостей RDG",
+                "requirementText": "Продемонстрировать реальные Graph/Plan/API события и Gendocen-обнаружение зависимостей."
+              },
+              "actionSnapshot": {
+                "id": "A-DESIGN",
+                "kind": "action",
+                "title": "Развернуть работу в проверяемые подцели",
+                "actionType": "decomposition",
+                "status": "candidate",
+                "canonBlock": {
+                  "recommended": [
+                    {
+                      "id": "C-A-DESIGN",
+                      "text": "Когда нужна явная декомпозиция через Action и последующий независимый контроль подцелей."
+                    }
+                  ],
+                  "contraindicated": [
+                    {
+                      "id": "N-A-DESIGN",
+                      "text": "Не создавать пустые подцели без связи с корневой Requirement."
+                    }
+                  ]
+                },
+                "qrpe": []
+              },
+              "note": "Выбран существующий Action после проверки его канона. Это не выполнение."
+            }
+          },
+          {
+            "id": "A-DESIGN-ALTERNATIVE",
+            "kind": "action",
+            "title": "Альтернатива: решить задачу без декомпозиции",
+            "actionType": "general",
+            "status": "candidate",
+            "canonBlock": {
+              "recommended": [
+                {
+                  "id": "C-A-DESIGN-ALTERNATIVE",
+                  "text": "Когда работа настолько мала, что декомпозиция не повышает проверяемость."
+                }
+              ],
+              "contraindicated": [
+                {
+                  "id": "N-A-DESIGN-ALTERNATIVE",
+                  "text": "Не применять для демонстрации ссылок между подцелями и канонами."
+                }
+              ]
+            },
+            "qrpe": []
+          },
+          {
+            "id": "R-CANON",
+            "kind": "requirement",
+            "title": "Проследить, какие способы зависят от актуальности канона",
+            "status": "active"
+          },
+          {
+            "id": "R-VERIFY",
+            "kind": "requirement",
+            "title": "Проверить в Gendocen изменение подписанных входов",
+            "status": "active"
+          },
+          {
+            "id": "A-CANON",
+            "kind": "action",
+            "title": "Поддерживать способ работы с зависимым каноном",
+            "actionType": "general",
+            "status": "candidate",
+            "canonBlock": {
+              "recommended": [
+                {
+                  "id": "C-A-CANON",
+                  "text": "Применить только если актуальная формулировка R-CANON соответствует выбранному сценарию.",
+                  "checkRequirements": [
+                    "R-CANON"
+                  ]
+                }
+              ],
+              "contraindicated": [
+                {
+                  "id": "N-A-CANON",
+                  "text": "Не считать канон пригодным без пересмотра после новой редакции R-CANON."
+                }
+              ]
+            },
+            "qrpe": []
+          },
+          {
+            "id": "A-CANON-ALT",
+            "kind": "action",
+            "title": "Альтернативный способ: заменить проверку ручным осмотром",
+            "actionType": "general",
+            "status": "candidate",
+            "canonBlock": {
+              "recommended": [
+                {
+                  "id": "C-A-CANON-ALT",
+                  "text": "Применить, если Gendocen невозможно использовать в данной области."
+                }
+              ],
+              "contraindicated": [
+                {
+                  "id": "N-A-CANON-ALT",
+                  "text": "Не скрывать отсутствие двигателя под видом подтверждённой актуальности."
+                }
+              ]
+            },
+            "qrpe": []
+          },
+          {
+            "id": "A-VERIFY",
+            "kind": "action",
+            "title": "Проверить API и Gendocen на настоящем рабочем графе",
+            "actionType": "general",
+            "status": "candidate",
+            "canonBlock": {
+              "recommended": [
+                {
+                  "id": "C-A-VERIFY",
+                  "text": "Запускать после создания Graph и Plan owners; читать только реальные engine receipts.",
+                  "checkRequirements": [
+                    "R-CANON"
+                  ]
+                }
+              ],
+              "contraindicated": [
+                {
+                  "id": "N-A-VERIFY",
+                  "text": "Не объявлять review_required доказательством ошибочности решения."
+                }
+              ]
+            },
+            "qrpe": []
+          }
+        ],
+        "edges": [
+          {
+            "id": "action-drive-A-DESIGN",
+            "type": "DRIVES",
+            "from": "R0",
+            "to": "A-DESIGN"
+          },
+          {
+            "id": "action-drive-A-DESIGN-ALTERNATIVE",
+            "type": "DRIVES",
+            "from": "R0",
+            "to": "A-DESIGN-ALTERNATIVE"
+          },
+          {
+            "id": "action-introduces-A-DESIGN-R-CANON",
+            "type": "INTRODUCES",
+            "from": "A-DESIGN",
+            "to": "R-CANON",
+            "parent": "R0",
+            "childRole": "subgoal"
+          },
+          {
+            "id": "action-introduces-A-DESIGN-R-VERIFY",
+            "type": "INTRODUCES",
+            "from": "A-DESIGN",
+            "to": "R-VERIFY",
+            "parent": "R0",
+            "childRole": "subgoal"
+          },
+          {
+            "id": "action-drive-A-CANON",
+            "type": "DRIVES",
+            "from": "R-CANON",
+            "to": "A-CANON"
+          },
+          {
+            "id": "action-drive-A-CANON-ALT",
+            "type": "DRIVES",
+            "from": "R-CANON",
+            "to": "A-CANON-ALT"
+          },
+          {
+            "id": "action-drive-A-VERIFY",
+            "type": "DRIVES",
+            "from": "R-VERIFY",
+            "to": "A-VERIFY"
+          }
+        ],
+        "events": [
+          {
+            "id": "EV-DEMO-SELECT-A-DESIGN",
+            "type": "action_selected",
+            "actionId": "A-DESIGN",
+            "driverRequirementId": "R0",
+            "by": "assistant",
+            "note": "Выбран существующий Action после проверки его канона. Это не выполнение.",
+            "authorityPrincipal": "bearer:root",
+            "verifiedTrustReceipt": {
+              "mode": "local-manual-session",
+              "principal": "bearer:root",
+              "grantId": "root",
+              "grantRevision": 1,
+              "transactionId": "demo-select-A-DESIGN",
+              "changesSHA256": "daedab637f19e01e2879e88f9e2175906fd9df84c32950085c005f1dea86cec8"
+            },
+            "recordedAt": "2026-10-21T02:02:14.824533+00:00"
+          }
+        ]
+      },
+      "changed": true
+    }
+  ],
+  "authorityPrincipal": "bearer:root"
+}

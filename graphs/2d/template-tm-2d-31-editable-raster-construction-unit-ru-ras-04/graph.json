@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "id": "template-tm-2d-31-editable-raster-construction-unit-ru-ras-04",
+  "title": "Unit · Color Light And Material Realization",
+  "revision": 1,
+  "planningScale": "unit",
+  "identitySpace": "prepared:TM-2D-31-EDITABLE-RASTER-CONSTRUCTION",
+  "rootRequirementId": "RU-RAS-04",
+  "readOnly": true,
+  "templateOnly": true,
+  "selected": false,
+  "catalogHidden": true,
+  "preparedModule": {
+    "id": "TEMPLATE-D-RU-RAS-04",
+    "version": "a2c9f75289b24b82290e2e93e86adebca2afed43e2c597ce50be1e794dabf949",
+    "goalRequirementId": "RU-RAS-04",
+    "methodDecisionId": "TEMPLATE-D-RU-RAS-04",
+    "childRequirementIds": [],
+    "applicability": "actual color/light/material relationships in the raster source",
+    "successCriteria": "Достаточно выполнить применимую Unit-specific Guidance и её checkpoints; инструкция не доказывает результат."
+  },
+  "sourceDocument": "/workspace/repos/obs-planning-docs/planning/documentation/idtspe-methodology/active/profiles/visual-production-2d/target-modules/TM-2D-31-EDITABLE-RASTER-CONSTRUCTION.md#ru-ras-04",
+  "sourceContentSHA256": "a2c9f75289b24b82290e2e93e86adebca2afed43e2c597ce50be1e794dabf949",
+  "sourceOwnerGraphSlug": "template-tm-2d-31-editable-raster-construction",
+  "sourceAnchor": "ru-ras-04",
+  "coverage": "Готовый способ одного узкого R; без выдуманных под-R и без выбора проекта.",
+  "nodes": [
+    {
+      "id": "RU-RAS-04",
+      "kind": "requirement",
+      "title": "Color Light And Material Realization",
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "template-tm-2d-31-editable-raster-construction",
+        "nodeId": "RU-RAS-04"
+      }
+    },
+    {
+      "id": "TEMPLATE-D-RU-RAS-04",
+      "kind": "decision",
+      "status": "reusable-unselected",
+      "templateRole": "unit-prepared-guidance",
+      "selected": false,
+      "title": "Готовый способ проработки: Color Light And Material Realization",
+      "description": "<a id=\"ru-ras-04\"></a>\n### Color Light And Material Realization\n\n`RU-RAS-04`\n\nRealize accepted visual-language direction as actual color/light/material relationships rather than re-designing them.",
+      "source": "/workspace/repos/obs-planning-docs/planning/documentation/idtspe-methodology/active/profiles/visual-production-2d/target-modules/TM-2D-31-EDITABLE-RASTER-CONSTRUCTION.md#ru-ras-04",
+      "sourceUnitId": "RU-RAS-04",
+      "explicitSubrequirements": false,
+      "note": "Source defines Unit guidance; no explicit nested R inventory is declared here."
+    }
+  ],
+  "edges": [
+    {
+      "id": "UNIT-E-DRIVE",
+      "type": "DRIVES",
+      "from": "RU-RAS-04",
+      "to": "TEMPLATE-D-RU-RAS-04",
+      "templateOnly": true,
+      "meaning": "Готовый ответ на узкую задачу; пока не выбран."
+    }
+  ],
+  "events": []
+}

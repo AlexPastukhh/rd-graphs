@@ -1,0 +1,11 @@
+{
+    admin off
+}
+
+{$RDG_DOMAIN} {
+    route {
+        @machine path /api /api/*
+        respond @machine 404
+        reverse_proxy rdg:8080
+    }
+}

@@ -1,0 +1,516 @@
+{
+  "schemaVersion": 1,
+  "actionModel": "candidate-v6",
+  "coreModel": "rdg-core-v1",
+  "id": "rdg-agent-clarify-lens",
+  "title": "Уточнить цели и контекст",
+  "identitySpace": "rdg-prepared-clarify-lens",
+  "revision": 2,
+  "rootRequirementId": "R-LENS-CLARIFY",
+  "planningScale": "module",
+  "nodes": [
+    {
+      "id": "R-LENS-CLARIFY",
+      "kind": "requirement",
+      "title": "Иметь достаточно уточнённые требования и данные для следующего содержательного шага",
+      "status": "active",
+      "qrpe": [],
+      "revision": 2,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "description": "Иметь достаточно уточнённые требования и данные для следующего содержательного шага",
+      "scope": "Применение clarify к задаче и её текущей версии"
+    },
+    {
+      "id": "A-CLARIFY-BUILD",
+      "kind": "action",
+      "title": "Уточнить цели и контекст",
+      "status": "candidate",
+      "description": "Рассмотреть состав подцелей и доступные способы. Порядок массива не задаёт время; присутствие ветви не означает выбор или исполнение.",
+      "qrpe": [],
+      "revision": 2,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "R-CLARIFY-GOAL",
+      "kind": "requirement",
+      "title": "Ясны желаемый результат и его смысл",
+      "status": "potential",
+      "qrpe": [],
+      "revision": 2,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "description": "Ясны желаемый результат и его смысл",
+      "scope": "Применение clarify к задаче и её текущей версии"
+    },
+    {
+      "id": "A-CLARIFY-INTENT",
+      "kind": "action",
+      "title": "Уточнить цель и upstream",
+      "description": "R задаёт положение дел, которое должно стать или оставаться истинным в понятной области. Уточнить смысл, описание и достаточность; отделить текущее требование от исторического события. Не подменять обязательство предложенным способом.",
+      "status": "candidate",
+      "qrpe": [],
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "R-CLARIFY-CRITERIA",
+      "kind": "requirement",
+      "title": "Понятно, как проверить результат",
+      "status": "potential",
+      "qrpe": [],
+      "revision": 2,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "description": "Понятно, как проверить результат",
+      "scope": "Применение clarify к задаче и её текущей версии"
+    },
+    {
+      "id": "A-CLARIFY-SUCCESS",
+      "kind": "action",
+      "title": "Сформулировать критерии достаточности",
+      "description": "Определить наблюдаемый результат и условия его проверки; отделить обязательные ограничения от предпочтений. Проверить согласованность с upstream.",
+      "status": "candidate",
+      "qrpe": [],
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "R-CLARIFY-CONTEXT",
+      "kind": "requirement",
+      "title": "Собраны значимые факты и ограничения",
+      "status": "potential",
+      "qrpe": [],
+      "revision": 2,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "description": "Собраны значимые факты и ограничения",
+      "scope": "Применение clarify к задаче и её текущей версии"
+    },
+    {
+      "id": "A-CLARIFY-INPUTS",
+      "kind": "action",
+      "title": "Проверить данные задачи",
+      "description": "Сверить актуальные источники, доступную scope, зависимости и ограничения. Отделить проверенные факты, предположения и неизвестные. Использовать разрешённые R/A, описания, каноны и QRPE.",
+      "status": "candidate",
+      "qrpe": [],
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "R-CLARIFY-UNKNOWNS",
+      "kind": "requirement",
+      "title": "Неизвестные управляются явно",
+      "status": "potential",
+      "qrpe": [],
+      "revision": 2,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "description": "Неизвестные управляются явно",
+      "scope": "Применение clarify к задаче и её текущей версии"
+    },
+    {
+      "id": "A-CLARIFY-QUESTIONS",
+      "kind": "action",
+      "title": "Разрешить вопросы, меняющие следующий шаг",
+      "description": "Задать существенные уточнения либо наметить исследование на бумаге. Оставшиеся неизвестные и предположения отметить в QRPE; определить, какие можно проверить позже.",
+      "status": "candidate",
+      "qrpe": [],
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    }
+  ],
+  "objects": [
+    {
+      "id": "K-A-CLARIFY-BUILD",
+      "kind": "canon",
+      "title": "Применимость: Уточнить цели и контекст",
+      "revision": 1,
+      "arguments": [
+        {
+          "id": "ARG-A-CLARIFY-BUILD",
+          "text": "Ситуация оправдывает этот способ в пределах его вклада",
+          "polarity": "for",
+          "strength": "soft",
+          "condition": {
+            "all": [
+              {
+                "id": "NEED-A-CLARIFY-BUILD",
+                "kind": "requirement",
+                "text": "Иметь достаточно уточнённые требования и данные для следующего содержательного шага",
+                "scope": "Иллюстративное применение процедуры в соответствующей задаче"
+              },
+              {
+                "id": "LOCAL-A-CLARIFY-BUILD",
+                "kind": "context",
+                "text": "Смысл требуемой истинности, входные R/Context или критерии достаточности ещё не ясны для следующего решения."
+              }
+            ]
+          }
+        },
+        {
+          "id": "COST-A-CLARIFY-BUILD",
+          "text": "Лишнее действие при уже достаточном состоянии",
+          "polarity": "against",
+          "strength": "soft",
+          "condition": {
+            "id": "ENOUGH-A-CLARIFY-BUILD",
+            "kind": "context",
+            "text": "Достаточное evidence уже есть; повтор не даст существенного нового знания, и текущая задача не требует независимой повторной проверки."
+          }
+        }
+      ]
+    },
+    {
+      "id": "K-A-CLARIFY-INTENT",
+      "kind": "canon",
+      "title": "Применимость: Уточнить цель и upstream",
+      "revision": 1,
+      "arguments": [
+        {
+          "id": "ARG-A-CLARIFY-INTENT",
+          "text": "Ситуация оправдывает этот способ в пределах его вклада",
+          "polarity": "for",
+          "strength": "soft",
+          "condition": {
+            "all": [
+              {
+                "id": "NEED-A-CLARIFY-INTENT",
+                "kind": "requirement",
+                "text": "Ясны желаемый результат и его смысл",
+                "scope": "Иллюстративное применение процедуры в соответствующей задаче"
+              },
+              {
+                "id": "LOCAL-A-CLARIFY-INTENT",
+                "kind": "context",
+                "text": "Смысл требуемой истинности, входные R/Context или критерии достаточности ещё не ясны для следующего решения."
+              }
+            ]
+          }
+        },
+        {
+          "id": "COST-A-CLARIFY-INTENT",
+          "text": "Лишнее действие при уже достаточном состоянии",
+          "polarity": "against",
+          "strength": "soft",
+          "condition": {
+            "id": "ENOUGH-A-CLARIFY-INTENT",
+            "kind": "context",
+            "text": "Достаточное evidence уже есть; повтор не даст существенного нового знания, и текущая задача не требует независимой повторной проверки."
+          }
+        }
+      ]
+    },
+    {
+      "id": "K-A-CLARIFY-SUCCESS",
+      "kind": "canon",
+      "title": "Применимость: Сформулировать критерии достаточности",
+      "revision": 1,
+      "arguments": [
+        {
+          "id": "ARG-A-CLARIFY-SUCCESS",
+          "text": "Ситуация оправдывает этот способ в пределах его вклада",
+          "polarity": "for",
+          "strength": "soft",
+          "condition": {
+            "all": [
+              {
+                "id": "NEED-A-CLARIFY-SUCCESS",
+                "kind": "requirement",
+                "text": "Понятно, как проверить результат",
+                "scope": "Иллюстративное применение процедуры в соответствующей задаче"
+              },
+              {
+                "id": "LOCAL-A-CLARIFY-SUCCESS",
+                "kind": "context",
+                "text": "Смысл требуемой истинности, входные R/Context или критерии достаточности ещё не ясны для следующего решения."
+              }
+            ]
+          }
+        },
+        {
+          "id": "COST-A-CLARIFY-SUCCESS",
+          "text": "Лишнее действие при уже достаточном состоянии",
+          "polarity": "against",
+          "strength": "soft",
+          "condition": {
+            "id": "ENOUGH-A-CLARIFY-SUCCESS",
+            "kind": "context",
+            "text": "Достаточное evidence уже есть; повтор не даст существенного нового знания, и текущая задача не требует независимой повторной проверки."
+          }
+        }
+      ]
+    },
+    {
+      "id": "K-A-CLARIFY-INPUTS",
+      "kind": "canon",
+      "title": "Применимость: Проверить данные задачи",
+      "revision": 1,
+      "arguments": [
+        {
+          "id": "ARG-A-CLARIFY-INPUTS",
+          "text": "Ситуация оправдывает этот способ в пределах его вклада",
+          "polarity": "for",
+          "strength": "soft",
+          "condition": {
+            "all": [
+              {
+                "id": "NEED-A-CLARIFY-INPUTS",
+                "kind": "requirement",
+                "text": "Собраны значимые факты и ограничения",
+                "scope": "Иллюстративное применение процедуры в соответствующей задаче"
+              },
+              {
+                "id": "LOCAL-A-CLARIFY-INPUTS",
+                "kind": "context",
+                "text": "Смысл требуемой истинности, входные R/Context или критерии достаточности ещё не ясны для следующего решения."
+              }
+            ]
+          }
+        },
+        {
+          "id": "COST-A-CLARIFY-INPUTS",
+          "text": "Лишнее действие при уже достаточном состоянии",
+          "polarity": "against",
+          "strength": "soft",
+          "condition": {
+            "id": "ENOUGH-A-CLARIFY-INPUTS",
+            "kind": "context",
+            "text": "Достаточное evidence уже есть; повтор не даст существенного нового знания, и текущая задача не требует независимой повторной проверки."
+          }
+        }
+      ]
+    },
+    {
+      "id": "K-A-CLARIFY-QUESTIONS",
+      "kind": "canon",
+      "title": "Применимость: Разрешить вопросы, меняющие следующий шаг",
+      "revision": 1,
+      "arguments": [
+        {
+          "id": "ARG-A-CLARIFY-QUESTIONS",
+          "text": "Ситуация оправдывает этот способ в пределах его вклада",
+          "polarity": "for",
+          "strength": "soft",
+          "condition": {
+            "all": [
+              {
+                "id": "NEED-A-CLARIFY-QUESTIONS",
+                "kind": "requirement",
+                "text": "Неизвестные управляются явно",
+                "scope": "Иллюстративное применение процедуры в соответствующей задаче"
+              },
+              {
+                "id": "LOCAL-A-CLARIFY-QUESTIONS",
+                "kind": "context",
+                "text": "Смысл требуемой истинности, входные R/Context или критерии достаточности ещё не ясны для следующего решения."
+              }
+            ]
+          }
+        },
+        {
+          "id": "COST-A-CLARIFY-QUESTIONS",
+          "text": "Лишнее действие при уже достаточном состоянии",
+          "polarity": "against",
+          "strength": "soft",
+          "condition": {
+            "id": "ENOUGH-A-CLARIFY-QUESTIONS",
+            "kind": "context",
+            "text": "Достаточное evidence уже есть; повтор не даст существенного нового знания, и текущая задача не требует независимой повторной проверки."
+          }
+        }
+      ]
+    },
+    {
+      "id": "I-LENS-CLARIFY",
+      "kind": "info",
+      "title": "Применение и границы линзы",
+      "description": "Определение линзы — бумага для исследования. Чтение, выбор линзы, применение к конкретной версии, выбор предметного A, Plan, исполнение и результат различаются. Рассматривать только применимые части. Условия канона показательны; реальные факты находятся в R/Context рабочей ситуации. Порядок в JSON не задаёт расписание. Точные команды и права остаются у технических владельцев.",
+      "revision": 1
+    }
+  ],
+  "edges": [
+    {
+      "id": "D-A-CLARIFY-BUILD",
+      "type": "DRIVES",
+      "from": "R-LENS-CLARIFY",
+      "to": "A-CLARIFY-BUILD"
+    },
+    {
+      "id": "O-R-CLARIFY-GOAL",
+      "type": "INTRODUCES",
+      "from": "A-CLARIFY-BUILD",
+      "to": "R-CLARIFY-GOAL",
+      "parent": "R-LENS-CLARIFY",
+      "childRole": "subgoal",
+      "origin": {
+        "role": "subgoal",
+        "requirementIds": [
+          "R-LENS-CLARIFY"
+        ]
+      }
+    },
+    {
+      "id": "D-A-CLARIFY-INTENT",
+      "type": "DRIVES",
+      "from": "R-CLARIFY-GOAL",
+      "to": "A-CLARIFY-INTENT"
+    },
+    {
+      "id": "O-R-CLARIFY-CRITERIA",
+      "type": "INTRODUCES",
+      "from": "A-CLARIFY-BUILD",
+      "to": "R-CLARIFY-CRITERIA",
+      "parent": "R-LENS-CLARIFY",
+      "childRole": "subgoal",
+      "origin": {
+        "role": "subgoal",
+        "requirementIds": [
+          "R-LENS-CLARIFY"
+        ]
+      }
+    },
+    {
+      "id": "D-A-CLARIFY-SUCCESS",
+      "type": "DRIVES",
+      "from": "R-CLARIFY-CRITERIA",
+      "to": "A-CLARIFY-SUCCESS"
+    },
+    {
+      "id": "O-R-CLARIFY-CONTEXT",
+      "type": "INTRODUCES",
+      "from": "A-CLARIFY-BUILD",
+      "to": "R-CLARIFY-CONTEXT",
+      "parent": "R-LENS-CLARIFY",
+      "childRole": "subgoal",
+      "origin": {
+        "role": "subgoal",
+        "requirementIds": [
+          "R-LENS-CLARIFY"
+        ]
+      }
+    },
+    {
+      "id": "D-A-CLARIFY-INPUTS",
+      "type": "DRIVES",
+      "from": "R-CLARIFY-CONTEXT",
+      "to": "A-CLARIFY-INPUTS"
+    },
+    {
+      "id": "O-R-CLARIFY-UNKNOWNS",
+      "type": "INTRODUCES",
+      "from": "A-CLARIFY-BUILD",
+      "to": "R-CLARIFY-UNKNOWNS",
+      "parent": "R-LENS-CLARIFY",
+      "childRole": "subgoal",
+      "origin": {
+        "role": "subgoal",
+        "requirementIds": [
+          "R-LENS-CLARIFY"
+        ]
+      }
+    },
+    {
+      "id": "D-A-CLARIFY-QUESTIONS",
+      "type": "DRIVES",
+      "from": "R-CLARIFY-UNKNOWNS",
+      "to": "A-CLARIFY-QUESTIONS"
+    },
+    {
+      "id": "CANON-A-CLARIFY-BUILD",
+      "type": "CANON_FOR",
+      "from": "K-A-CLARIFY-BUILD",
+      "to": "A-CLARIFY-BUILD"
+    },
+    {
+      "id": "CANON-A-CLARIFY-INTENT",
+      "type": "CANON_FOR",
+      "from": "K-A-CLARIFY-INTENT",
+      "to": "A-CLARIFY-INTENT"
+    },
+    {
+      "id": "CANON-A-CLARIFY-SUCCESS",
+      "type": "CANON_FOR",
+      "from": "K-A-CLARIFY-SUCCESS",
+      "to": "A-CLARIFY-SUCCESS"
+    },
+    {
+      "id": "CANON-A-CLARIFY-INPUTS",
+      "type": "CANON_FOR",
+      "from": "K-A-CLARIFY-INPUTS",
+      "to": "A-CLARIFY-INPUTS"
+    },
+    {
+      "id": "CANON-A-CLARIFY-QUESTIONS",
+      "type": "CANON_FOR",
+      "from": "K-A-CLARIFY-QUESTIONS",
+      "to": "A-CLARIFY-QUESTIONS"
+    },
+    {
+      "id": "INFO-clarify",
+      "type": "INFO_FOR",
+      "from": "I-LENS-CLARIFY",
+      "to": "R-LENS-CLARIFY"
+    }
+  ],
+  "events": [],
+  "collections": [],
+  "workGraphs": [
+    {
+      "id": "WG-main",
+      "title": "Уточнить цели и контекст",
+      "rootIds": [
+        "R-LENS-CLARIFY"
+      ],
+      "memberIds": [
+        "R-LENS-CLARIFY",
+        "A-CLARIFY-BUILD",
+        "R-CLARIFY-GOAL",
+        "A-CLARIFY-INTENT",
+        "R-CLARIFY-CRITERIA",
+        "A-CLARIFY-SUCCESS",
+        "R-CLARIFY-CONTEXT",
+        "A-CLARIFY-INPUTS",
+        "R-CLARIFY-UNKNOWNS",
+        "A-CLARIFY-QUESTIONS",
+        "K-A-CLARIFY-BUILD",
+        "K-A-CLARIFY-INTENT",
+        "K-A-CLARIFY-SUCCESS",
+        "K-A-CLARIFY-INPUTS",
+        "K-A-CLARIFY-QUESTIONS",
+        "I-LENS-CLARIFY"
+      ]
+    }
+  ],
+  "workGraphLinks": [],
+  "exclusionGroups": [],
+  "readOnly": true,
+  "templateOnly": true,
+  "sourceVersion": "explicit-output-origins-20261022-v2",
+  "preparationRole": "lens-definition"
+}

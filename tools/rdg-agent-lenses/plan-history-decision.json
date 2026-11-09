@@ -1,0 +1,384 @@
+{
+  "schemaVersion": 1,
+  "actionModel": "candidate-v6",
+  "coreModel": "rdg-decision-v1",
+  "id": "rdg-fundamental-plan-history-decision",
+  "title": "План, исполнение и история RDG · Decision v1",
+  "identitySpace": "ab4a4c3a-0d7c-5bea-a515-6e1b9cf4e408",
+  "revision": 1,
+  "rootRequirementId": "R-PLAN-HISTORY",
+  "rootCauses": [
+    {
+      "id": "RC-PLAN-HISTORY",
+      "requirementId": "R-PLAN-HISTORY",
+      "reason": "Paper-only fundamental instruction",
+      "enabled": true
+    }
+  ],
+  "nodes": [
+    {
+      "id": "R-PLAN-HISTORY",
+      "kind": "requirement",
+      "title": "Отделять порядок работы, временной контекст и подтверждённые факты",
+      "description": "Учебная цель готового графа. Открытие не означает достижения или исполнения.",
+      "revision": 1,
+      "scope": "Фундаментальное объяснение RDG · rdg-decision-v1",
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "R-PLAN-HISTORY-IDENTITIES",
+      "kind": "requirement",
+      "title": "Plan ссылается на существующее содержание",
+      "description": "Plan ссылается на существующее содержание. Учебный критерий, не подтверждённое достижение.",
+      "revision": 1,
+      "scope": "Ориентиры корректного применения RDG",
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "D-PLAN-HISTORY-IDENTITIES",
+      "kind": "decision",
+      "title": "Размещать исходную identity",
+      "description": "Создавать placements только на реальные R/D/Action; не путать placement с entity или occurrence.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "selectionState": "discovered"
+    },
+    {
+      "id": "R-PLAN-HISTORY-PLACEMENT",
+      "kind": "requirement",
+      "title": "Порядок и время не подменяют выбор",
+      "description": "Порядок и время не подменяют выбор. Учебный критерий, не подтверждённое достижение.",
+      "revision": 1,
+      "scope": "Ориентиры корректного применения RDG",
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "D-PLAN-HISTORY-PLACEMENT",
+      "kind": "decision",
+      "title": "Строить Plan v3 независимо от selected",
+      "description": "mainStepIds, forks/cases, optional timeConstraints; порядок может быть без даты.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "selectionState": "discovered"
+    },
+    {
+      "id": "R-PLAN-HISTORY-FACTS",
+      "kind": "requirement",
+      "title": "History содержит принятые события",
+      "description": "History содержит принятые события. Учебный критерий, не подтверждённое достижение.",
+      "revision": 1,
+      "scope": "Ориентиры корректного применения RDG",
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "D-PLAN-HISTORY-FACTS",
+      "kind": "decision",
+      "title": "Сохранять результат только после проверки",
+      "description": "Различать graph_saved, decision_selected, action_executed и requirement_achieved.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "selectionState": "discovered"
+    },
+    {
+      "id": "R-PLAN-HISTORY-EVIDENCE",
+      "kind": "requirement",
+      "title": "Основания результата проверяемы",
+      "description": "Основания результата проверяемы. Учебный критерий, не подтверждённое достижение.",
+      "revision": 1,
+      "scope": "Ориентиры корректного применения RDG",
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "D-PLAN-HISTORY-EVIDENCE",
+      "kind": "decision",
+      "title": "Подключать Evidence и pins по действительной версии",
+      "description": "Наблюдения, artifact hash, review/freshness и receipt не подменять текстовой декларацией.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "selectionState": "discovered"
+    },
+    {
+      "id": "R-PLAN-HISTORY-VIEW",
+      "kind": "requirement",
+      "title": "Показ времени и ветвей не меняет данные",
+      "description": "Показ времени и ветвей не меняет данные. Учебный критерий, не подтверждённое достижение.",
+      "revision": 1,
+      "scope": "Ориентиры корректного применения RDG",
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "D-PLAN-HISTORY-VIEW",
+      "kind": "decision",
+      "title": "Использовать фильтры History/Plan как view",
+      "description": "shownCases, границы History/Plan и камера принадлежат виду; исходные факты не переписываются.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "selectionState": "discovered"
+    },
+    {
+      "id": "A-PLAN-HISTORY-CHECK",
+      "kind": "action",
+      "title": "Проверить реальный результат через Application",
+      "description": "Иллюстрация обязательного Graph Action: считать результат только после отдельной фактической проверки. В самой линзе не исполнять.",
+      "revision": 1,
+      "actionType": "task",
+      "lowLevel": false,
+      "targetIds": [],
+      "groupIds": [],
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    }
+  ],
+  "objects": [
+    {
+      "id": "I-PLAN-HISTORY-PLAN",
+      "kind": "info",
+      "title": "Структура Plan v3",
+      "description": "Нормативное объяснение; точную форму операций сверяйте с действующей schema/API.",
+      "revision": 1,
+      "value": "Plan v3 относится к одному процессу. mainStepIds задаёт общий порядок; forks[].cases[].stepIds — альтернативные продолжения; fork.afterStepId задаёт точку развилки. Шаг может иметь порядок без даты и без selected D."
+    },
+    {
+      "id": "I-PLAN-HISTORY-PLACEMENTS",
+      "kind": "info",
+      "title": "Что обозначает размещение",
+      "description": "Нормативное объяснение; точную форму операций сверяйте с действующей schema/API.",
+      "revision": 1,
+      "value": "Plan step содержит ref на существующую Graph/External Action identity, а не копию узла. Placement не выбирает Decision, не запускает Action, не достигает R."
+    },
+    {
+      "id": "I-PLAN-HISTORY-EVENTS",
+      "kind": "info",
+      "title": "История реальных фактов",
+      "description": "Нормативное объяснение; точную форму операций сверяйте с действующей schema/API.",
+      "revision": 1,
+      "value": "History — принятые события из writer с тогдашними refs, pins и placement IDs. Поздняя новая связь или размещение не вставляется в прошлый event задним числом."
+    },
+    {
+      "id": "I-PLAN-HISTORY-EVIDENCE",
+      "kind": "info",
+      "title": "Evidence и фактическое принятие",
+      "description": "Нормативное объяснение; точную форму операций сверяйте с действующей schema/API.",
+      "revision": 1,
+      "value": "core/complete требует basis, реальных evidenceIds и актуальных обязательств; artifact bytes проверяются отдельно. Preflight сам не пишет, apply/receipt/readback фиксируют принятое."
+    },
+    {
+      "id": "I-PLAN-HISTORY-VIEW",
+      "kind": "info",
+      "title": "Временной вид",
+      "description": "Нормативное объяснение; точную форму операций сверяйте с действующей schema/API.",
+      "revision": 1,
+      "value": "Видимые периоды, shownCases и раскрытые ветви меняют только projection/view_session. Раскладка сохраняется отдельно; экран и камера не являются событиями работы."
+    },
+    {
+      "id": "K-PLAN-HISTORY-FACT",
+      "kind": "canon",
+      "title": "Не выводить исполнение из плана",
+      "description": "Принцип предметной корректности, не обязательная подцель.",
+      "revision": 1,
+      "guidance": "Наличие placement, выбранной D или изображения на экране не доказывает фактического выполнения действия."
+    },
+    {
+      "id": "K-PLAN-HISTORY-EVIDENCE",
+      "kind": "canon",
+      "title": "Не завершать без наблюдений",
+      "description": "Принцип предметной корректности, не обязательная подцель.",
+      "revision": 1,
+      "guidance": "Истинность и подтверждение результата требуют свежих Evidence/пинов и авторизованной команды; review отдельно от false/complete."
+    },
+    {
+      "id": "K-PLAN-HISTORY-VIEW",
+      "kind": "canon",
+      "title": "Фильтр не меняет историю",
+      "description": "Принцип предметной корректности, не обязательная подцель.",
+      "revision": 1,
+      "guidance": "Переключение shownCases или времени не удаляет события, Plan steps, ветви или причины."
+    }
+  ],
+  "externalActions": [],
+  "edges": [
+    {
+      "id": "E-1",
+      "type": "DERIVES",
+      "from": "R-PLAN-HISTORY",
+      "to": "R-PLAN-HISTORY-IDENTITIES"
+    },
+    {
+      "id": "E-2",
+      "type": "DRIVES",
+      "from": "R-PLAN-HISTORY-IDENTITIES",
+      "to": "D-PLAN-HISTORY-IDENTITIES"
+    },
+    {
+      "id": "E-3",
+      "type": "DERIVES",
+      "from": "R-PLAN-HISTORY",
+      "to": "R-PLAN-HISTORY-PLACEMENT"
+    },
+    {
+      "id": "E-4",
+      "type": "DRIVES",
+      "from": "R-PLAN-HISTORY-PLACEMENT",
+      "to": "D-PLAN-HISTORY-PLACEMENT"
+    },
+    {
+      "id": "E-5",
+      "type": "DERIVES",
+      "from": "R-PLAN-HISTORY",
+      "to": "R-PLAN-HISTORY-FACTS"
+    },
+    {
+      "id": "E-6",
+      "type": "DRIVES",
+      "from": "R-PLAN-HISTORY-FACTS",
+      "to": "D-PLAN-HISTORY-FACTS"
+    },
+    {
+      "id": "E-7",
+      "type": "DERIVES",
+      "from": "R-PLAN-HISTORY",
+      "to": "R-PLAN-HISTORY-EVIDENCE"
+    },
+    {
+      "id": "E-8",
+      "type": "DRIVES",
+      "from": "R-PLAN-HISTORY-EVIDENCE",
+      "to": "D-PLAN-HISTORY-EVIDENCE"
+    },
+    {
+      "id": "E-9",
+      "type": "DERIVES",
+      "from": "R-PLAN-HISTORY",
+      "to": "R-PLAN-HISTORY-VIEW"
+    },
+    {
+      "id": "E-10",
+      "type": "DRIVES",
+      "from": "R-PLAN-HISTORY-VIEW",
+      "to": "D-PLAN-HISTORY-VIEW"
+    },
+    {
+      "id": "E-11",
+      "type": "INFO_FOR",
+      "from": "I-PLAN-HISTORY-PLAN",
+      "to": "R-PLAN-HISTORY-PLACEMENT"
+    },
+    {
+      "id": "E-12",
+      "type": "INFO_FOR",
+      "from": "I-PLAN-HISTORY-PLACEMENTS",
+      "to": "R-PLAN-HISTORY-IDENTITIES"
+    },
+    {
+      "id": "E-13",
+      "type": "INFO_FOR",
+      "from": "I-PLAN-HISTORY-EVENTS",
+      "to": "R-PLAN-HISTORY-FACTS"
+    },
+    {
+      "id": "E-14",
+      "type": "INFO_FOR",
+      "from": "I-PLAN-HISTORY-EVIDENCE",
+      "to": "R-PLAN-HISTORY-EVIDENCE"
+    },
+    {
+      "id": "E-15",
+      "type": "INFO_FOR",
+      "from": "I-PLAN-HISTORY-VIEW",
+      "to": "R-PLAN-HISTORY-VIEW"
+    },
+    {
+      "id": "E-16",
+      "type": "CANON_FOR",
+      "from": "K-PLAN-HISTORY-FACT",
+      "to": "D-PLAN-HISTORY-FACTS"
+    },
+    {
+      "id": "E-17",
+      "type": "CANON_FOR",
+      "from": "K-PLAN-HISTORY-EVIDENCE",
+      "to": "D-PLAN-HISTORY-EVIDENCE"
+    },
+    {
+      "id": "E-18",
+      "type": "CANON_FOR",
+      "from": "K-PLAN-HISTORY-VIEW",
+      "to": "D-PLAN-HISTORY-VIEW"
+    },
+    {
+      "id": "E-19",
+      "type": "REQUIRES_ACTION",
+      "from": "D-PLAN-HISTORY-EVIDENCE",
+      "to": "A-PLAN-HISTORY-CHECK"
+    }
+  ],
+  "decisionGroups": [],
+  "workGraphs": [
+    {
+      "id": "WG-PLAN-HISTORY",
+      "title": "Объясняющая структура",
+      "rootIds": [
+        "R-PLAN-HISTORY"
+      ],
+      "memberIds": [
+        "R-PLAN-HISTORY",
+        "R-PLAN-HISTORY-IDENTITIES",
+        "D-PLAN-HISTORY-IDENTITIES",
+        "R-PLAN-HISTORY-PLACEMENT",
+        "D-PLAN-HISTORY-PLACEMENT",
+        "R-PLAN-HISTORY-FACTS",
+        "D-PLAN-HISTORY-FACTS",
+        "R-PLAN-HISTORY-EVIDENCE",
+        "D-PLAN-HISTORY-EVIDENCE",
+        "R-PLAN-HISTORY-VIEW",
+        "D-PLAN-HISTORY-VIEW",
+        "A-PLAN-HISTORY-CHECK",
+        "I-PLAN-HISTORY-PLAN",
+        "I-PLAN-HISTORY-PLACEMENTS",
+        "I-PLAN-HISTORY-EVENTS",
+        "I-PLAN-HISTORY-EVIDENCE",
+        "I-PLAN-HISTORY-VIEW",
+        "K-PLAN-HISTORY-FACT",
+        "K-PLAN-HISTORY-EVIDENCE",
+        "K-PLAN-HISTORY-VIEW"
+      ]
+    }
+  ],
+  "events": [],
+  "recommendationPackageIds": []
+}

@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "normative": [
+    "AGENTS.md",
+    "README.md",
+    "docs/README.md",
+    "BACKLOG-IMPROVEMENTS.md",
+    "docs/use-cases/README.md",
+    "docs/use-cases/getting-started.md",
+    "docs/use-cases/ai-work.md",
+    "docs/use-cases/development.md",
+    "graphs/README.md",
+    "tests/visual/README.md",
+    "docs/guides/RDG-CURRENT-STATE.md",
+    "docs/guides/RDG-ACTIVE-CONTRACT.md",
+    "docs/guides/RDG-OPERATIONS.md",
+    "docs/guides/RDG-DEVELOPMENT-PLAN.md",
+    "docs/guides/VIEWER-EXPLORER.md",
+    "docs/guides/RDG-GENDOCEN-REQUIREMENT-DEPENDENCIES.md",
+    "docs/guides/RDG-LIVE-TEACHING-WORKSPACE.md",
+    "docs/guides/RDG-TEACHING-EXAMPLE-RESET.md",
+    "docs/guides/RDG-MODULES.md",
+    "docs/guides/RDG-AGENT-BOOTSTRAP.md",
+    "docs/guides/RDG-LENSES.md",
+    "docs/guides/RDG-DECISION-V1-CONTRACT.md",
+    "docs/guides/FORTIS-APPROVALS-SECURE-DEVELOPMENT.md",
+    "fortis_approvals/README.md",
+    "fortis_approvals/deploy/README.md",
+    "docs/guides/RDG-FUNCTIONS-AND-TESTS.md"
+  ],
+  "immutableArchives": [
+    "docs/handoffs/**",
+    "docs/examples/requirements-decisions-graph-examples-v0.2.source.md",
+    "work-kit/modules/**",
+    "work-kit/prompts/**",
+    "kit/modules/**",
+    "kit/prompts/**",
+    ".rdg-gendocen-projects/**",
+    "docs/archive/**",
+    "fortis_approvals/archive/**"
+  ],
+  "archiveSources": [
+    "docs/guides/*-HISTORY.md",
+    "README-HISTORY.md",
+    "graphs/README-HISTORY.md",
+    "tests/visual/README-HISTORY.md",
+    "docs/reviews/RDG-IMPLEMENTATION-PLAN-REVIEW-20261027-v1.md",
+    "docs/reviews/RDG-REQUIREMENTS-PROTOTYPE-REVIEW-20261027-v1.md",
+    "docs/reviews/RDG-STAGE1-REVIEW-20261027-v1.md"
+  ],
+  "canonicalFacts": {
+    "viewerVersion": "tools/rd-graph-viewer.user.js",
+    "activeGraph": "graphs/workspaces/requirements-dependencies-demo/graph.json",
+    "temporalPlan": "plans/requirements-dependencies-demo/plan.json",
+    "publishedOwner": "tools/rdg-published-owners.json",
+    "allowedKinds": "tools/rdg-node-type-registry.json",
+    "resetAllowlist": "tools/rdg-resettable-examples.json",
+    "modules": "tools/rdg-module-registry.json",
+    "primaryProfile": "tools/rdg-decision-model.py",
+    "primaryProfileSchema": "tools/contracts/rdg-decision-v1.schema.json",
+    "releaseGate": "tools/rdg-ci.py"
+  },
+  "statusMarkers": {
+    "normative": "СТАТУС:",
+    "archived": "СТАТУС: АРХИВ"
+  },
+  "rules": [
+    "Normative docs own the present contract; historical docs never supersede them",
+    "Use code and actual owner files for mutable revisions/versions",
+    "Do not edit immutable handoffs or primary example source documents",
+    "A new markdown guide must be classified explicitly and pass documentation audit",
+    "The active document list is owned here; development plans and candidate designs do not prove implementation",
+    "Obsolete committed artifacts may leave the working tree after stage completion and dependency checks in RDG-OPERATIONS; retained snapshot bytes must not be rewritten to appear current",
+    "Documentation validation checks classification and references, not a minimum volume of historical artifacts"
+  ]
+}

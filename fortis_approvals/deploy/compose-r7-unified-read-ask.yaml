@@ -1,0 +1,48 @@
+# SOURCE-ONLY / NOT DEPLOYMENT-APPROVED: one Fortis R7 pilot, never A3 state.
+# DO NOT "up" before owner independent image/TLS/secret/GUARD GO.
+services:
+  fortis:
+    build:
+      context: ../..
+      dockerfile: fortis_approvals/deploy/Dockerfile-R7-Unified-Read-Ask-Candidate
+    image: fortis-r7-unified-read-ask-candidate:local
+    restart: "no"
+    init: true
+    read_only: true
+    user: "10001:10001"
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    pids_limit: 100
+    environment:
+      FORTIS_SONAR_REGION: eu
+      FORTIS_SONAR_ORGANIZATIONS: ${FORTIS_SONAR_ORGANIZATIONS:?owner_allowlist_required}
+      FORTIS_SONAR_PROJECT_KEY: ${FORTIS_SONAR_PROJECT_KEY:?owner_exact_project_required}
+    ports:
+      - "127.0.0.1:19103:19103"
+      - "127.0.0.1:19104:19104"
+    volumes:
+      - r7_state:/state
+      - r7_identity:/run/r7-identity:ro
+      - r7_grant:/run/r7-grant:ro
+      - r7_sonar_token:/run/r7-sonar-token:ro
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+    healthcheck:
+      test: ["CMD","python","-m","fortis_approvals.r7_unified_server","health"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+volumes:
+  r7_state:
+    external: true
+    name: fortis-r7-state
+  r7_identity:
+    external: true
+    name: fortis-r7-identity
+  r7_grant:
+    external: true
+    name: fortis-r7-grant
+  r7_sonar_token:
+    external: true
+    name: fortis-r7-sonar-token

@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "id": "template-tm-2d-50-delivery-adaptation-unit-ru-del-01",
+  "title": "Unit · Delivery Context Map",
+  "revision": 1,
+  "planningScale": "unit",
+  "identitySpace": "prepared:TM-2D-50-DELIVERY-ADAPTATION",
+  "rootRequirementId": "RU-DEL-01",
+  "readOnly": true,
+  "templateOnly": true,
+  "selected": false,
+  "catalogHidden": true,
+  "preparedModule": {
+    "id": "TEMPLATE-D-RU-DEL-01",
+    "version": "c37777d65106e3d3fafca978c0e721d5a811d97c68f90d1fb98771ff714770ea",
+    "goalRequirementId": "RU-DEL-01",
+    "methodDecisionId": "TEMPLATE-D-RU-DEL-01",
+    "childRequirementIds": [],
+    "applicability": "material output contexts/aspect ratios/sizes/locales/surfaces that impose distinct visual needs",
+    "successCriteria": "Достаточно выполнить применимую Unit-specific Guidance и её checkpoints; инструкция не доказывает результат."
+  },
+  "sourceDocument": "/workspace/repos/obs-planning-docs/planning/documentation/idtspe-methodology/active/profiles/visual-production-2d/target-modules/TM-2D-50-DELIVERY-ADAPTATION.md#ru-del-01",
+  "sourceContentSHA256": "c37777d65106e3d3fafca978c0e721d5a811d97c68f90d1fb98771ff714770ea",
+  "sourceOwnerGraphSlug": "template-tm-2d-50-delivery-adaptation",
+  "sourceAnchor": "ru-del-01",
+  "coverage": "Готовый способ одного узкого R; без выдуманных под-R и без выбора проекта.",
+  "nodes": [
+    {
+      "id": "RU-DEL-01",
+      "kind": "requirement",
+      "title": "Delivery Context Map",
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "template-tm-2d-50-delivery-adaptation",
+        "nodeId": "RU-DEL-01"
+      }
+    },
+    {
+      "id": "TEMPLATE-D-RU-DEL-01",
+      "kind": "decision",
+      "status": "reusable-unselected",
+      "templateRole": "unit-prepared-guidance",
+      "selected": false,
+      "title": "Готовый способ проработки: Delivery Context Map",
+      "description": "<a id=\"ru-del-01\"></a>\n### Delivery Context Map\n\n`RU-DEL-01`\n\nModel only contexts that materially change visual adaptation; do not inflate equivalent export sizes into separate semantics.",
+      "source": "/workspace/repos/obs-planning-docs/planning/documentation/idtspe-methodology/active/profiles/visual-production-2d/target-modules/TM-2D-50-DELIVERY-ADAPTATION.md#ru-del-01",
+      "sourceUnitId": "RU-DEL-01",
+      "explicitSubrequirements": false,
+      "note": "Source defines Unit guidance; no explicit nested R inventory is declared here."
+    }
+  ],
+  "edges": [
+    {
+      "id": "UNIT-E-DRIVE",
+      "type": "DRIVES",
+      "from": "RU-DEL-01",
+      "to": "TEMPLATE-D-RU-DEL-01",
+      "templateOnly": true,
+      "meaning": "Готовый ответ на узкую задачу; пока не выбран."
+    }
+  ],
+  "events": []
+}

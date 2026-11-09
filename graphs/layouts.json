@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "revision": 1,
+  "layouts": {
+    "[\"rdg-example-prepared-v7\",\"reference-prepared-planning-tree\"]": {
+      "positions": {
+        "R-PLAN": {
+          "x": 60,
+          "y": 300
+        },
+        "O-FEATURE": {
+          "x": 420,
+          "y": 100
+        },
+        "O-SCENARIO": {
+          "x": 420,
+          "y": 380
+        },
+        "RF-1": {
+          "x": 820,
+          "y": 30
+        },
+        "RF-2": {
+          "x": 820,
+          "y": 135
+        },
+        "__canon__O-FEATURE": {
+          "x": 820,
+          "y": 240
+        },
+        "RS-1": {
+          "x": 820,
+          "y": 345
+        },
+        "RS-2": {
+          "x": 820,
+          "y": 450
+        },
+        "__canon__O-SCENARIO": {
+          "x": 820,
+          "y": 555
+        }
+      }
+    }
+  }
+}

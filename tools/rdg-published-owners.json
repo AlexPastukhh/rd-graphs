@@ -1,0 +1,1502 @@
+{
+  "schemaVersion": 1,
+  "owners": {
+    "requirements-dependencies-demo": {
+      "schemaVersion": 1,
+      "mode": "published-owner-snapshot",
+      "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+      "identitySpace": "rdg-working-requirements-dependencies-demo",
+      "rootRequirementId": "R0",
+      "graphRevision": 10,
+      "graphSha256": "f96fe888280d2a2181690379ea6e86d0bcee19e0e6efbfbcbb67ffa34a0db694",
+      "planRevision": 4,
+      "planSha256": "21478d5d5905052af23851a8ed9557b6218b132ed7eb4fa43201ae0b7c4f7925",
+      "recordedAt": "2026-10-21T02:02:26.072722+00:00",
+      "planOwner": {
+        "kind": "temporalPlanOwner",
+        "owner": {
+          "identitySpace": "rdg-working-requirements-dependencies-demo",
+          "planId": "requirements-dependencies-demo",
+          "sourcePath": "plans/requirements-dependencies-demo/plan.json"
+        },
+        "revision": 4,
+        "schemaVersion": 1,
+        "transactions": {
+          "demo-init-plan": {
+            "recordDigest": "f2cf2b830c2d8a3a910e42282fefadd66401920abff6571a087fc767dc3d02d4",
+            "requestSHA256": "4e390efa71b4888291b0a252effa63f365f31589e10578dab7b939e88903c28e",
+            "revision": 1
+          },
+          "demo-place-a-canon": {
+            "recordDigest": "0697bf332c87a16e9c84a5ce335b8735b4dd9117ec8c29a14d619092010f81a4",
+            "requestSHA256": "11b64d7f70f41a0a482476279e1fd2f9e2c9a737e02cc8a8a3d8668abfbe87ee",
+            "revision": 3
+          },
+          "demo-place-r-canon": {
+            "recordDigest": "a62514a5f0b8781969456e5876ce37e092253870b529cc22b85f28b54e631307",
+            "requestSHA256": "ed43eb8a7fd9355f477eafc7b8169e08d65ef3e0f55d599fb7f328f1a2b9640b",
+            "revision": 2
+          },
+          "demo-place-r-verify": {
+            "recordDigest": "e6d47654e0d4560a17e091cdd1fb6305ae30c96e9a0e1cded67edb034ca65797",
+            "requestSHA256": "bce1a50cbb50922295705e1e478baf2f1b99ca3f5a1f67b07b4d46cef2bdfb33",
+            "revision": 4
+          }
+        },
+        "versions": [
+          {
+            "digest": "f2cf2b830c2d8a3a910e42282fefadd66401920abff6571a087fc767dc3d02d4",
+            "operation": "create",
+            "plan": {
+              "branches": [],
+              "id": "requirements-dependencies-demo",
+              "identitySpace": "rdg-working-requirements-dependencies-demo",
+              "kind": "temporalPlan",
+              "revision": 1,
+              "schemaVersion": 1,
+              "sequence": [],
+              "status": "candidate",
+              "steps": [],
+              "timeConstraints": [],
+              "title": "План во времени · Учебная реальная работа: изменение R и зависимые Actions"
+            },
+            "previousDigest": null,
+            "receipt": {
+              "grantId": "root",
+              "grantRevision": 1,
+              "mode": "bearer",
+              "principal": "bearer:root"
+            },
+            "recordedAt": "2026-10-21T02:02:24.456418+00:00",
+            "requestSHA256": "4e390efa71b4888291b0a252effa63f365f31589e10578dab7b939e88903c28e",
+            "revision": 1,
+            "transactionId": "demo-init-plan"
+          },
+          {
+            "digest": "a62514a5f0b8781969456e5876ce37e092253870b529cc22b85f28b54e631307",
+            "operation": "edit",
+            "plan": {
+              "branches": [],
+              "id": "requirements-dependencies-demo",
+              "identitySpace": "rdg-working-requirements-dependencies-demo",
+              "kind": "temporalPlan",
+              "revision": 2,
+              "schemaVersion": 1,
+              "sequence": [],
+              "status": "candidate",
+              "steps": [
+                {
+                  "id": "S-R-CANON",
+                  "kind": "requirement",
+                  "requirementRef": {
+                    "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+                    "identitySpace": "rdg-working-requirements-dependencies-demo",
+                    "nodeId": "R-CANON"
+                  },
+                  "state": "planned",
+                  "title": "Проследить, какие способы зависят от актуальности канона"
+                }
+              ],
+              "timeConstraints": [
+                {
+                  "at": "2026-11-05",
+                  "basis": "Запланированное положение существующего Graph узла",
+                  "stepId": "S-R-CANON",
+                  "strength": "soft",
+                  "type": "notBefore"
+                }
+              ],
+              "title": "План во времени · Учебная реальная работа: изменение R и зависимые Actions"
+            },
+            "previousDigest": "f2cf2b830c2d8a3a910e42282fefadd66401920abff6571a087fc767dc3d02d4",
+            "receipt": {
+              "grantId": "root",
+              "grantRevision": 1,
+              "mode": "bearer",
+              "principal": "bearer:root"
+            },
+            "recordedAt": "2026-10-21T02:02:24.885761+00:00",
+            "requestSHA256": "ed43eb8a7fd9355f477eafc7b8169e08d65ef3e0f55d599fb7f328f1a2b9640b",
+            "revision": 2,
+            "transactionId": "demo-place-r-canon"
+          },
+          {
+            "digest": "0697bf332c87a16e9c84a5ce335b8735b4dd9117ec8c29a14d619092010f81a4",
+            "operation": "edit",
+            "plan": {
+              "branches": [],
+              "id": "requirements-dependencies-demo",
+              "identitySpace": "rdg-working-requirements-dependencies-demo",
+              "kind": "temporalPlan",
+              "revision": 3,
+              "schemaVersion": 1,
+              "sequence": [],
+              "status": "candidate",
+              "steps": [
+                {
+                  "id": "S-R-CANON",
+                  "kind": "requirement",
+                  "requirementRef": {
+                    "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+                    "identitySpace": "rdg-working-requirements-dependencies-demo",
+                    "nodeId": "R-CANON"
+                  },
+                  "state": "planned",
+                  "title": "Проследить, какие способы зависят от актуальности канона"
+                },
+                {
+                  "actionRef": {
+                    "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+                    "identitySpace": "rdg-working-requirements-dependencies-demo",
+                    "nodeId": "A-CANON"
+                  },
+                  "id": "S-A-CANON",
+                  "kind": "action",
+                  "state": "planned",
+                  "title": "Поддерживать способ работы с зависимым каноном"
+                }
+              ],
+              "timeConstraints": [
+                {
+                  "at": "2026-11-05",
+                  "basis": "Запланированное положение существующего Graph узла",
+                  "stepId": "S-R-CANON",
+                  "strength": "soft",
+                  "type": "notBefore"
+                },
+                {
+                  "at": "2026-11-06",
+                  "basis": "Запланированное положение существующего Graph узла",
+                  "stepId": "S-A-CANON",
+                  "strength": "soft",
+                  "type": "notBefore"
+                }
+              ],
+              "title": "План во времени · Учебная реальная работа: изменение R и зависимые Actions"
+            },
+            "previousDigest": "a62514a5f0b8781969456e5876ce37e092253870b529cc22b85f28b54e631307",
+            "receipt": {
+              "grantId": "root",
+              "grantRevision": 1,
+              "mode": "bearer",
+              "principal": "bearer:root"
+            },
+            "recordedAt": "2026-10-21T02:02:25.436928+00:00",
+            "requestSHA256": "11b64d7f70f41a0a482476279e1fd2f9e2c9a737e02cc8a8a3d8668abfbe87ee",
+            "revision": 3,
+            "transactionId": "demo-place-a-canon"
+          },
+          {
+            "digest": "e6d47654e0d4560a17e091cdd1fb6305ae30c96e9a0e1cded67edb034ca65797",
+            "operation": "edit",
+            "plan": {
+              "branches": [],
+              "id": "requirements-dependencies-demo",
+              "identitySpace": "rdg-working-requirements-dependencies-demo",
+              "kind": "temporalPlan",
+              "revision": 4,
+              "schemaVersion": 1,
+              "sequence": [],
+              "status": "candidate",
+              "steps": [
+                {
+                  "id": "S-R-CANON",
+                  "kind": "requirement",
+                  "requirementRef": {
+                    "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+                    "identitySpace": "rdg-working-requirements-dependencies-demo",
+                    "nodeId": "R-CANON"
+                  },
+                  "state": "planned",
+                  "title": "Проследить, какие способы зависят от актуальности канона"
+                },
+                {
+                  "actionRef": {
+                    "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+                    "identitySpace": "rdg-working-requirements-dependencies-demo",
+                    "nodeId": "A-CANON"
+                  },
+                  "id": "S-A-CANON",
+                  "kind": "action",
+                  "state": "planned",
+                  "title": "Поддерживать способ работы с зависимым каноном"
+                },
+                {
+                  "id": "S-R-VERIFY",
+                  "kind": "requirement",
+                  "requirementRef": {
+                    "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+                    "identitySpace": "rdg-working-requirements-dependencies-demo",
+                    "nodeId": "R-VERIFY"
+                  },
+                  "state": "planned",
+                  "title": "Проверить в Gendocen изменение подписанных входов"
+                }
+              ],
+              "timeConstraints": [
+                {
+                  "at": "2026-11-05",
+                  "basis": "Запланированное положение существующего Graph узла",
+                  "stepId": "S-R-CANON",
+                  "strength": "soft",
+                  "type": "notBefore"
+                },
+                {
+                  "at": "2026-11-06",
+                  "basis": "Запланированное положение существующего Graph узла",
+                  "stepId": "S-A-CANON",
+                  "strength": "soft",
+                  "type": "notBefore"
+                },
+                {
+                  "at": "2026-11-07",
+                  "basis": "Запланированное положение существующего Graph узла",
+                  "stepId": "S-R-VERIFY",
+                  "strength": "soft",
+                  "type": "notBefore"
+                }
+              ],
+              "title": "План во времени · Учебная реальная работа: изменение R и зависимые Actions"
+            },
+            "previousDigest": "0697bf332c87a16e9c84a5ce335b8735b4dd9117ec8c29a14d619092010f81a4",
+            "receipt": {
+              "grantId": "root",
+              "grantRevision": 1,
+              "mode": "bearer",
+              "principal": "bearer:root"
+            },
+            "recordedAt": "2026-10-21T02:02:26.072722+00:00",
+            "requestSHA256": "bce1a50cbb50922295705e1e478baf2f1b99ca3f5a1f67b07b4d46cef2bdfb33",
+            "revision": 4,
+            "transactionId": "demo-place-r-verify"
+          }
+        ]
+      },
+      "history": [
+        {
+          "id": "demo-create-owner::workspaces/requirements-dependencies-demo/graph.json::saved",
+          "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+          "kind": "graph_saved",
+          "recordedAt": "2026-10-21T02:02:11.286577+00:00",
+          "transactionId": "demo-create-owner",
+          "revision": 1,
+          "previousRevision": null,
+          "changed": {
+            "nodes": [
+              "R0"
+            ],
+            "edges": []
+          },
+          "changeKind": "graph_created",
+          "changeTargetId": null,
+          "changeTargetKind": null,
+          "changeTargetSnapshot": null,
+          "authorityPrincipals": [
+            "bearer:root"
+          ],
+          "note": "",
+          "summary": "Создан рабочий Graph: Учебная реальная работа: изменение R и зависимые Actions",
+          "operations": []
+        },
+        {
+          "id": "demo-add-A-DESIGN::workspaces/requirements-dependencies-demo/graph.json::saved",
+          "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+          "kind": "graph_saved",
+          "recordedAt": "2026-10-21T02:02:12.816822+00:00",
+          "transactionId": "demo-add-A-DESIGN",
+          "revision": 2,
+          "previousRevision": 1,
+          "changed": {
+            "nodes": [
+              "A-DESIGN"
+            ],
+            "edges": [
+              "action-drive-A-DESIGN"
+            ]
+          },
+          "changeKind": "action_added",
+          "changeTargetId": "A-DESIGN",
+          "changeTargetKind": "action",
+          "changeTargetSnapshot": {
+            "id": "A-DESIGN",
+            "kind": "action",
+            "title": "Развернуть работу в проверяемые подцели",
+            "actionType": "decomposition",
+            "status": "candidate",
+            "canonBlock": {
+              "recommended": [
+                {
+                  "id": "C-A-DESIGN",
+                  "text": "Когда нужна явная декомпозиция через Action и последующий независимый контроль подцелей."
+                }
+              ],
+              "contraindicated": [
+                {
+                  "id": "N-A-DESIGN",
+                  "text": "Не создавать пустые подцели без связи с корневой Requirement."
+                }
+              ]
+            },
+            "qrpe": []
+          },
+          "authorityPrincipals": [
+            "bearer:root"
+          ],
+          "note": "",
+          "summary": "Добавлен кандидат Action: Развернуть работу в проверяемые подцели",
+          "operations": []
+        },
+        {
+          "id": "demo-add-A-DESIGN-ALTERNATIVE::workspaces/requirements-dependencies-demo/graph.json::saved",
+          "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+          "kind": "graph_saved",
+          "recordedAt": "2026-10-21T02:02:14.373561+00:00",
+          "transactionId": "demo-add-A-DESIGN-ALTERNATIVE",
+          "revision": 3,
+          "previousRevision": 2,
+          "changed": {
+            "nodes": [
+              "A-DESIGN-ALTERNATIVE"
+            ],
+            "edges": [
+              "action-drive-A-DESIGN-ALTERNATIVE"
+            ]
+          },
+          "changeKind": "action_added",
+          "changeTargetId": "A-DESIGN-ALTERNATIVE",
+          "changeTargetKind": "action",
+          "changeTargetSnapshot": {
+            "id": "A-DESIGN-ALTERNATIVE",
+            "kind": "action",
+            "title": "Альтернатива: решить задачу без декомпозиции",
+            "actionType": "general",
+            "status": "candidate",
+            "canonBlock": {
+              "recommended": [
+                {
+                  "id": "C-A-DESIGN-ALTERNATIVE",
+                  "text": "Когда работа настолько мала, что декомпозиция не повышает проверяемость."
+                }
+              ],
+              "contraindicated": [
+                {
+                  "id": "N-A-DESIGN-ALTERNATIVE",
+                  "text": "Не применять для демонстрации ссылок между подцелями и канонами."
+                }
+              ]
+            },
+            "qrpe": []
+          },
+          "authorityPrincipals": [
+            "bearer:root"
+          ],
+          "note": "",
+          "summary": "Добавлен кандидат Action: Альтернатива: решить задачу без декомпозиции",
+          "operations": []
+        },
+        {
+          "id": "demo-select-A-DESIGN::workspaces/requirements-dependencies-demo/graph.json::saved",
+          "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+          "kind": "graph_saved",
+          "recordedAt": "2026-10-21T02:02:15.969249+00:00",
+          "transactionId": "demo-select-A-DESIGN",
+          "revision": 4,
+          "previousRevision": 3,
+          "changed": {
+            "nodes": [
+              "A-DESIGN",
+              "R-CANON",
+              "R-VERIFY"
+            ],
+            "edges": [
+              "action-introduces-A-DESIGN-R-CANON",
+              "action-introduces-A-DESIGN-R-VERIFY"
+            ]
+          },
+          "changeKind": "graph_saved",
+          "changeTargetId": null,
+          "changeTargetKind": null,
+          "changeTargetSnapshot": null,
+          "authorityPrincipals": [
+            "bearer:root"
+          ],
+          "note": "",
+          "summary": "Выбран существующий Action после проверки его канона. Это не выполнение.",
+          "operations": [
+            "action_selected"
+          ]
+        },
+        {
+          "id": "workspaces/requirements-dependencies-demo/graph.json::EV-DEMO-SELECT-A-DESIGN",
+          "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+          "kind": "action_selected",
+          "sourceEventType": "action_selected",
+          "targetId": "A-DESIGN",
+          "previousRequirementSnapshot": null,
+          "newRequirementSnapshot": null,
+          "title": "Развернуть работу в проверяемые подцели",
+          "nodeSnapshot": {
+            "id": "A-DESIGN",
+            "kind": "action",
+            "title": "Развернуть работу в проверяемые подцели",
+            "actionType": "decomposition",
+            "status": "candidate",
+            "canonBlock": {
+              "recommended": [
+                {
+                  "id": "C-A-DESIGN",
+                  "text": "Когда нужна явная декомпозиция через Action и последующий независимый контроль подцелей."
+                }
+              ],
+              "contraindicated": [
+                {
+                  "id": "N-A-DESIGN",
+                  "text": "Не создавать пустые подцели без связи с корневой Requirement."
+                }
+              ]
+            },
+            "qrpe": []
+          },
+          "materialSnapshotAvailable": true,
+          "snapshotProvenance": "action-selection-basis",
+          "viewSnapshotSHA256": null,
+          "eventOrder": 0,
+          "compositionOrder": null,
+          "recordedAt": "2026-10-21T02:02:15.969249+00:00",
+          "occurredAt": null,
+          "by": "assistant",
+          "authorityPrincipal": "bearer:root",
+          "completionMode": null,
+          "reviewActionId": null,
+          "transition": null,
+          "introducedRequirements": [
+            {
+              "nodeId": "R-CANON",
+              "title": "Проследить, какие способы зависят от актуальности канона",
+              "kind": "requirement",
+              "status": "active",
+              "previousStatus": null,
+              "introductionMode": "created",
+              "childRole": "subgoal",
+              "graphFile": "workspaces/requirements-dependencies-demo/graph.json"
+            },
+            {
+              "nodeId": "R-VERIFY",
+              "title": "Проверить в Gendocen изменение подписанных входов",
+              "kind": "requirement",
+              "status": "active",
+              "previousStatus": null,
+              "introductionMode": "created",
+              "childRole": "subgoal",
+              "graphFile": "workspaces/requirements-dependencies-demo/graph.json"
+            }
+          ],
+          "basisSHA256": null,
+          "note": "Выбран существующий Action после проверки его канона. Это не выполнение.",
+          "transactionId": "demo-select-A-DESIGN"
+        },
+        {
+          "id": "demo-add-A-CANON::workspaces/requirements-dependencies-demo/graph.json::saved",
+          "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+          "kind": "graph_saved",
+          "recordedAt": "2026-10-21T02:02:17.586984+00:00",
+          "transactionId": "demo-add-A-CANON",
+          "revision": 5,
+          "previousRevision": 4,
+          "changed": {
+            "nodes": [
+              "A-CANON"
+            ],
+            "edges": [
+              "action-drive-A-CANON"
+            ]
+          },
+          "changeKind": "action_added",
+          "changeTargetId": "A-CANON",
+          "changeTargetKind": "action",
+          "changeTargetSnapshot": {
+            "id": "A-CANON",
+            "kind": "action",
+            "title": "Поддерживать способ работы с зависимым каноном",
+            "actionType": "general",
+            "status": "candidate",
+            "canonBlock": {
+              "recommended": [
+                {
+                  "id": "C-A-CANON",
+                  "text": "Применить только если актуальная формулировка R-CANON соответствует выбранному сценарию.",
+                  "checkRequirements": [
+                    "R-CANON"
+                  ]
+                }
+              ],
+              "contraindicated": [
+                {
+                  "id": "N-A-CANON",
+                  "text": "Не считать канон пригодным без пересмотра после новой редакции R-CANON."
+                }
+              ]
+            },
+            "qrpe": []
+          },
+          "authorityPrincipals": [
+            "bearer:root"
+          ],
+          "note": "",
+          "summary": "Добавлен кандидат Action: Поддерживать способ работы с зависимым каноном",
+          "operations": []
+        },
+        {
+          "id": "demo-add-A-CANON-ALT::workspaces/requirements-dependencies-demo/graph.json::saved",
+          "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+          "kind": "graph_saved",
+          "recordedAt": "2026-10-21T02:02:19.207344+00:00",
+          "transactionId": "demo-add-A-CANON-ALT",
+          "revision": 6,
+          "previousRevision": 5,
+          "changed": {
+            "nodes": [
+              "A-CANON-ALT"
+            ],
+            "edges": [
+              "action-drive-A-CANON-ALT"
+            ]
+          },
+          "changeKind": "action_added",
+          "changeTargetId": "A-CANON-ALT",
+          "changeTargetKind": "action",
+          "changeTargetSnapshot": {
+            "id": "A-CANON-ALT",
+            "kind": "action",
+            "title": "Альтернативный способ: заменить проверку ручным осмотром",
+            "actionType": "general",
+            "status": "candidate",
+            "canonBlock": {
+              "recommended": [
+                {
+                  "id": "C-A-CANON-ALT",
+                  "text": "Применить, если Gendocen невозможно использовать в данной области."
+                }
+              ],
+              "contraindicated": [
+                {
+                  "id": "N-A-CANON-ALT",
+                  "text": "Не скрывать отсутствие двигателя под видом подтверждённой актуальности."
+                }
+              ]
+            },
+            "qrpe": []
+          },
+          "authorityPrincipals": [
+            "bearer:root"
+          ],
+          "note": "",
+          "summary": "Добавлен кандидат Action: Альтернативный способ: заменить проверку ручным осмотром",
+          "operations": []
+        },
+        {
+          "id": "demo-add-A-VERIFY::workspaces/requirements-dependencies-demo/graph.json::saved",
+          "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+          "kind": "graph_saved",
+          "recordedAt": "2026-10-21T02:02:20.855614+00:00",
+          "transactionId": "demo-add-A-VERIFY",
+          "revision": 7,
+          "previousRevision": 6,
+          "changed": {
+            "nodes": [
+              "A-VERIFY"
+            ],
+            "edges": [
+              "action-drive-A-VERIFY"
+            ]
+          },
+          "changeKind": "action_added",
+          "changeTargetId": "A-VERIFY",
+          "changeTargetKind": "action",
+          "changeTargetSnapshot": {
+            "id": "A-VERIFY",
+            "kind": "action",
+            "title": "Проверить API и Gendocen на настоящем рабочем графе",
+            "actionType": "general",
+            "status": "candidate",
+            "canonBlock": {
+              "recommended": [
+                {
+                  "id": "C-A-VERIFY",
+                  "text": "Запускать после создания Graph и Plan owners; читать только реальные engine receipts.",
+                  "checkRequirements": [
+                    "R-CANON"
+                  ]
+                }
+              ],
+              "contraindicated": [
+                {
+                  "id": "N-A-VERIFY",
+                  "text": "Не объявлять review_required доказательством ошибочности решения."
+                }
+              ]
+            },
+            "qrpe": []
+          },
+          "authorityPrincipals": [
+            "bearer:root"
+          ],
+          "note": "",
+          "summary": "Добавлен кандидат Action: Проверить API и Gendocen на настоящем рабочем графе",
+          "operations": []
+        },
+        {
+          "id": "demo-select-A-CANON::workspaces/requirements-dependencies-demo/graph.json::saved",
+          "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+          "kind": "graph_saved",
+          "recordedAt": "2026-10-21T02:02:22.565188+00:00",
+          "transactionId": "demo-select-A-CANON",
+          "revision": 8,
+          "previousRevision": 7,
+          "changed": {
+            "nodes": [
+              "A-CANON"
+            ],
+            "edges": []
+          },
+          "changeKind": "graph_saved",
+          "changeTargetId": null,
+          "changeTargetKind": null,
+          "changeTargetSnapshot": null,
+          "authorityPrincipals": [
+            "bearer:root"
+          ],
+          "note": "",
+          "summary": "Выбран существующий Action после проверки его канона. Это не выполнение.",
+          "operations": [
+            "action_selected"
+          ]
+        },
+        {
+          "id": "workspaces/requirements-dependencies-demo/graph.json::EV-DEMO-SELECT-A-CANON",
+          "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+          "kind": "action_selected",
+          "sourceEventType": "action_selected",
+          "targetId": "A-CANON",
+          "previousRequirementSnapshot": null,
+          "newRequirementSnapshot": null,
+          "title": "Поддерживать способ работы с зависимым каноном",
+          "nodeSnapshot": {
+            "id": "A-CANON",
+            "kind": "action",
+            "title": "Поддерживать способ работы с зависимым каноном",
+            "actionType": "general",
+            "status": "candidate",
+            "canonBlock": {
+              "recommended": [
+                {
+                  "id": "C-A-CANON",
+                  "text": "Применить только если актуальная формулировка R-CANON соответствует выбранному сценарию.",
+                  "checkRequirements": [
+                    "R-CANON"
+                  ]
+                }
+              ],
+              "contraindicated": [
+                {
+                  "id": "N-A-CANON",
+                  "text": "Не считать канон пригодным без пересмотра после новой редакции R-CANON."
+                }
+              ]
+            },
+            "qrpe": []
+          },
+          "materialSnapshotAvailable": true,
+          "snapshotProvenance": "action-selection-basis",
+          "viewSnapshotSHA256": null,
+          "eventOrder": 1,
+          "compositionOrder": null,
+          "recordedAt": "2026-10-21T02:02:22.565188+00:00",
+          "occurredAt": null,
+          "by": "assistant",
+          "authorityPrincipal": "bearer:root",
+          "completionMode": null,
+          "reviewActionId": null,
+          "transition": null,
+          "introducedRequirements": [],
+          "basisSHA256": null,
+          "note": "Выбран существующий Action после проверки его канона. Это не выполнение.",
+          "transactionId": "demo-select-A-CANON"
+        },
+        {
+          "id": "demo-select-A-VERIFY::workspaces/requirements-dependencies-demo/graph.json::saved",
+          "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+          "kind": "graph_saved",
+          "recordedAt": "2026-10-21T02:02:24.294143+00:00",
+          "transactionId": "demo-select-A-VERIFY",
+          "revision": 9,
+          "previousRevision": 8,
+          "changed": {
+            "nodes": [
+              "A-VERIFY"
+            ],
+            "edges": []
+          },
+          "changeKind": "graph_saved",
+          "changeTargetId": null,
+          "changeTargetKind": null,
+          "changeTargetSnapshot": null,
+          "authorityPrincipals": [
+            "bearer:root"
+          ],
+          "note": "",
+          "summary": "Выбран существующий Action после проверки его канона. Это не выполнение.",
+          "operations": [
+            "action_selected"
+          ]
+        },
+        {
+          "id": "workspaces/requirements-dependencies-demo/graph.json::EV-DEMO-SELECT-A-VERIFY",
+          "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+          "kind": "action_selected",
+          "sourceEventType": "action_selected",
+          "targetId": "A-VERIFY",
+          "previousRequirementSnapshot": null,
+          "newRequirementSnapshot": null,
+          "title": "Проверить API и Gendocen на настоящем рабочем графе",
+          "nodeSnapshot": {
+            "id": "A-VERIFY",
+            "kind": "action",
+            "title": "Проверить API и Gendocen на настоящем рабочем графе",
+            "actionType": "general",
+            "status": "candidate",
+            "canonBlock": {
+              "recommended": [
+                {
+                  "id": "C-A-VERIFY",
+                  "text": "Запускать после создания Graph и Plan owners; читать только реальные engine receipts.",
+                  "checkRequirements": [
+                    "R-CANON"
+                  ]
+                }
+              ],
+              "contraindicated": [
+                {
+                  "id": "N-A-VERIFY",
+                  "text": "Не объявлять review_required доказательством ошибочности решения."
+                }
+              ]
+            },
+            "qrpe": []
+          },
+          "materialSnapshotAvailable": true,
+          "snapshotProvenance": "action-selection-basis",
+          "viewSnapshotSHA256": null,
+          "eventOrder": 2,
+          "compositionOrder": null,
+          "recordedAt": "2026-10-21T02:02:24.294143+00:00",
+          "occurredAt": null,
+          "by": "assistant",
+          "authorityPrincipal": "bearer:root",
+          "completionMode": null,
+          "reviewActionId": null,
+          "transition": null,
+          "introducedRequirements": [],
+          "basisSHA256": null,
+          "note": "Выбран существующий Action после проверки его канона. Это не выполнение.",
+          "transactionId": "demo-select-A-VERIFY"
+        },
+        {
+          "id": "plans/requirements-dependencies-demo/plan.json::created",
+          "kind": "plan_created",
+          "summary": "Создан настоящий Plan owner requirements-dependencies-demo. Исходная версия может быть пустой.",
+          "planId": "requirements-dependencies-demo",
+          "planRevision": 1,
+          "recordedAt": "2026-10-21T02:02:24.456418+00:00",
+          "transactionId": "demo-init-plan",
+          "receiptDigest": "f2cf2b830c2d8a3a910e42282fefadd66401920abff6571a087fc767dc3d02d4",
+          "snapshotProvenance": "plan-owner-version",
+          "materialSnapshotAvailable": false
+        },
+        {
+          "id": "plans/requirements-dependencies-demo/plan.json::plan-r2::S-R-CANON",
+          "kind": "plan_placement_saved",
+          "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+          "targetId": "R-CANON",
+          "identitySpace": "rdg-working-requirements-dependencies-demo",
+          "title": "Проследить, какие способы зависят от актуальности канона",
+          "summary": "Сохранено размещение requirement R-CANON в Plan owner, revision 2",
+          "stepId": "S-R-CANON",
+          "recordedAt": "2026-10-21T02:02:24.885761+00:00",
+          "planRevision": 2,
+          "planId": "requirements-dependencies-demo",
+          "transactionId": "demo-place-r-canon",
+          "receiptDigest": "a62514a5f0b8781969456e5876ce37e092253870b529cc22b85f28b54e631307",
+          "previousPlacementSnapshot": null,
+          "newPlacementSnapshot": {
+            "timeConstraints": [
+              {
+                "at": "2026-11-05",
+                "basis": "Запланированное положение существующего Graph узла",
+                "stepId": "S-R-CANON",
+                "strength": "soft",
+                "type": "notBefore"
+              }
+            ],
+            "sequence": []
+          },
+          "snapshotProvenance": "plan-owner-version",
+          "materialSnapshotAvailable": false
+        },
+        {
+          "id": "plans/requirements-dependencies-demo/plan.json::plan-r3::S-A-CANON",
+          "kind": "plan_placement_saved",
+          "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+          "targetId": "A-CANON",
+          "identitySpace": "rdg-working-requirements-dependencies-demo",
+          "title": "Поддерживать способ работы с зависимым каноном",
+          "summary": "Сохранено размещение action A-CANON в Plan owner, revision 3",
+          "stepId": "S-A-CANON",
+          "recordedAt": "2026-10-21T02:02:25.436928+00:00",
+          "planRevision": 3,
+          "planId": "requirements-dependencies-demo",
+          "transactionId": "demo-place-a-canon",
+          "receiptDigest": "0697bf332c87a16e9c84a5ce335b8735b4dd9117ec8c29a14d619092010f81a4",
+          "previousPlacementSnapshot": null,
+          "newPlacementSnapshot": {
+            "timeConstraints": [
+              {
+                "at": "2026-11-06",
+                "basis": "Запланированное положение существующего Graph узла",
+                "stepId": "S-A-CANON",
+                "strength": "soft",
+                "type": "notBefore"
+              }
+            ],
+            "sequence": []
+          },
+          "snapshotProvenance": "plan-owner-version",
+          "materialSnapshotAvailable": false
+        },
+        {
+          "id": "plans/requirements-dependencies-demo/plan.json::plan-r4::S-R-VERIFY",
+          "kind": "plan_placement_saved",
+          "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+          "targetId": "R-VERIFY",
+          "identitySpace": "rdg-working-requirements-dependencies-demo",
+          "title": "Проверить в Gendocen изменение подписанных входов",
+          "summary": "Сохранено размещение requirement R-VERIFY в Plan owner, revision 4",
+          "stepId": "S-R-VERIFY",
+          "recordedAt": "2026-10-21T02:02:26.072722+00:00",
+          "planRevision": 4,
+          "planId": "requirements-dependencies-demo",
+          "transactionId": "demo-place-r-verify",
+          "receiptDigest": "e6d47654e0d4560a17e091cdd1fb6305ae30c96e9a0e1cded67edb034ca65797",
+          "previousPlacementSnapshot": null,
+          "newPlacementSnapshot": {
+            "timeConstraints": [
+              {
+                "at": "2026-11-07",
+                "basis": "Запланированное положение существующего Graph узла",
+                "stepId": "S-R-VERIFY",
+                "strength": "soft",
+                "type": "notBefore"
+              }
+            ],
+            "sequence": []
+          },
+          "snapshotProvenance": "plan-owner-version",
+          "materialSnapshotAvailable": false
+        },
+        {
+          "id": "demo-reformulate-canon::workspaces/requirements-dependencies-demo/graph.json::saved",
+          "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+          "kind": "graph_saved",
+          "recordedAt": "2026-10-21T02:04:33.734641+00:00",
+          "transactionId": "demo-reformulate-canon",
+          "revision": 10,
+          "previousRevision": 9,
+          "changed": {
+            "nodes": [
+              "R-CANON"
+            ],
+            "edges": []
+          },
+          "changeKind": "graph_saved",
+          "changeTargetId": null,
+          "changeTargetKind": null,
+          "changeTargetSnapshot": null,
+          "authorityPrincipals": [
+            "bearer:root"
+          ],
+          "note": "",
+          "summary": "После принятой исходной версии обновили формулировку R-CANON; каноны ссылались на старый снимок.",
+          "operations": [
+            "reformulate_requirement"
+          ]
+        },
+        {
+          "id": "workspaces/requirements-dependencies-demo/graph.json::EV-DEMO-reformulate-canon",
+          "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+          "kind": "requirement_reformulated",
+          "sourceEventType": "requirement_reformulated",
+          "targetId": "R-CANON",
+          "previousRequirementSnapshot": {
+            "id": "R-CANON",
+            "kind": "requirement",
+            "title": "Проследить, какие способы зависят от актуальности канона",
+            "status": "active"
+          },
+          "newRequirementSnapshot": {
+            "id": "R-CANON",
+            "kind": "requirement",
+            "title": "Проверить каноны с учётом новой редакции требований",
+            "status": "active",
+            "requirementText": "Нужно повторно оценить канон каждого зависимого Action после уточнения R-CANON."
+          },
+          "title": "Проследить, какие способы зависят от актуальности канона",
+          "nodeSnapshot": {
+            "id": "R-CANON",
+            "kind": "requirement",
+            "title": "Проследить, какие способы зависят от актуальности канона",
+            "status": "active"
+          },
+          "materialSnapshotAvailable": true,
+          "snapshotProvenance": "event-view-snapshot",
+          "viewSnapshotSHA256": null,
+          "eventOrder": 3,
+          "compositionOrder": null,
+          "recordedAt": "2026-10-21T02:04:33.734641+00:00",
+          "occurredAt": null,
+          "by": "assistant",
+          "authorityPrincipal": "bearer:root",
+          "completionMode": null,
+          "reviewActionId": null,
+          "transition": null,
+          "introducedRequirements": null,
+          "basisSHA256": null,
+          "note": "После принятой исходной версии обновили формулировку R-CANON; каноны ссылались на старый снимок.",
+          "transactionId": "demo-reformulate-canon"
+        }
+      ],
+      "dependencies": {
+        "schemaVersion": 1,
+        "engine": "gendocen",
+        "coverage": "declared edges and explicit references, authorized single identitySpace",
+        "sourceGraphs": [
+          "workspaces/requirements-dependencies-demo/graph.json"
+        ],
+        "identitySpace": "rdg-working-requirements-dependencies-demo",
+        "externalEvidenceCoverage": "not-attested",
+        "completionTruthAttested": false,
+        "rows": [
+          {
+            "target": "file://review/06de591a45780247a7c732fa.md",
+            "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+            "nodeId": "A-CANON",
+            "kind": "action",
+            "title": "Поддерживать способ работы с зависимым каноном",
+            "uses": [
+              {
+                "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+                "nodeId": "R-CANON",
+                "reasons": [
+                  "canon:canonBlock/recommended/0/checkRequirements",
+                  "canon:selectionBasis/actionSnapshot/canonBlock/recommended/0/checkRequirements",
+                  "edge:action-drive-A-CANON"
+                ]
+              },
+              {
+                "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+                "nodeId": "R0",
+                "reasons": [
+                  "inherited:action-child:action-introduces-A-DESIGN-R-CANON"
+                ]
+              }
+            ],
+            "status": "review_required",
+            "changedDependencies": [
+              "resource://rdg/graph.workflow-v1.74b90cb9d1b181ddf0eaf80a#/nodesById/R-CANON"
+            ],
+            "engineTarget": "file://review/06de591a45780247a7c732fa.md"
+          },
+          {
+            "target": "file://review/515d993fbe59e3641889848b.md",
+            "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+            "nodeId": "A-CANON-ALT",
+            "kind": "action",
+            "title": "Альтернативный способ: заменить проверку ручным осмотром",
+            "uses": [
+              {
+                "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+                "nodeId": "R-CANON",
+                "reasons": [
+                  "edge:action-drive-A-CANON-ALT"
+                ]
+              },
+              {
+                "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+                "nodeId": "R0",
+                "reasons": [
+                  "inherited:action-child:action-introduces-A-DESIGN-R-CANON"
+                ]
+              }
+            ],
+            "status": "review_required",
+            "changedDependencies": [
+              "resource://rdg/graph.workflow-v1.74b90cb9d1b181ddf0eaf80a#/nodesById/R-CANON"
+            ],
+            "engineTarget": "file://review/515d993fbe59e3641889848b.md"
+          },
+          {
+            "target": "file://review/2be970574257466f1c077138.md",
+            "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+            "nodeId": "A-DESIGN",
+            "kind": "action",
+            "title": "Развернуть работу в проверяемые подцели",
+            "uses": [
+              {
+                "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+                "nodeId": "R0",
+                "reasons": [
+                  "edge:action-drive-A-DESIGN"
+                ]
+              }
+            ],
+            "status": "valid",
+            "changedDependencies": [],
+            "engineTarget": "file://review/2be970574257466f1c077138.md"
+          },
+          {
+            "target": "file://review/ff0d12e12b785980022422d9.md",
+            "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+            "nodeId": "A-DESIGN-ALTERNATIVE",
+            "kind": "action",
+            "title": "Альтернатива: решить задачу без декомпозиции",
+            "uses": [
+              {
+                "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+                "nodeId": "R0",
+                "reasons": [
+                  "edge:action-drive-A-DESIGN-ALTERNATIVE"
+                ]
+              }
+            ],
+            "status": "valid",
+            "changedDependencies": [],
+            "engineTarget": "file://review/ff0d12e12b785980022422d9.md"
+          },
+          {
+            "target": "file://review/ea3807b99ed93331cde568c8.md",
+            "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+            "nodeId": "A-VERIFY",
+            "kind": "action",
+            "title": "Проверить API и Gendocen на настоящем рабочем графе",
+            "uses": [
+              {
+                "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+                "nodeId": "R-CANON",
+                "reasons": [
+                  "canon:canonBlock/recommended/0/checkRequirements",
+                  "canon:selectionBasis/actionSnapshot/canonBlock/recommended/0/checkRequirements"
+                ]
+              },
+              {
+                "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+                "nodeId": "R-VERIFY",
+                "reasons": [
+                  "edge:action-drive-A-VERIFY"
+                ]
+              },
+              {
+                "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+                "nodeId": "R0",
+                "reasons": [
+                  "inherited:action-child:action-introduces-A-DESIGN-R-CANON",
+                  "inherited:action-child:action-introduces-A-DESIGN-R-VERIFY"
+                ]
+              }
+            ],
+            "status": "review_required",
+            "changedDependencies": [
+              "resource://rdg/graph.workflow-v1.74b90cb9d1b181ddf0eaf80a#/nodesById/R-CANON"
+            ],
+            "engineTarget": "file://review/ea3807b99ed93331cde568c8.md"
+          },
+          {
+            "target": "file://review/c8b0a63710a3857673cc875e.md",
+            "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+            "nodeId": "R-CANON",
+            "kind": "requirement",
+            "title": "Проверить каноны с учётом новой редакции требований",
+            "uses": [
+              {
+                "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+                "nodeId": "R0",
+                "reasons": [
+                  "action-child:action-introduces-A-DESIGN-R-CANON"
+                ]
+              }
+            ],
+            "status": "valid",
+            "changedDependencies": [],
+            "engineTarget": "file://review/c8b0a63710a3857673cc875e.md"
+          },
+          {
+            "target": "file://review/31f358024fde3d2e55842d8c.md",
+            "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+            "nodeId": "R-VERIFY",
+            "kind": "requirement",
+            "title": "Проверить в Gendocen изменение подписанных входов",
+            "uses": [
+              {
+                "graphFile": "workspaces/requirements-dependencies-demo/graph.json",
+                "nodeId": "R0",
+                "reasons": [
+                  "action-child:action-introduces-A-DESIGN-R-VERIFY"
+                ]
+              }
+            ],
+            "status": "valid",
+            "changedDependencies": [],
+            "engineTarget": "file://review/31f358024fde3d2e55842d8c.md"
+          }
+        ],
+        "total": 7
+      },
+      "dependencyHistory": {
+        "file://review/06de591a45780247a7c732fa.md": {
+          "events": [
+            {
+              "changed_dependencies": [
+                "resource://rdg/graph.workflow-v1.74b90cb9d1b181ddf0eaf80a#/nodesById/R-CANON",
+                "resource://rdg/graph.workflow-v1.74b90cb9d1b181ddf0eaf80a#/nodesById/R0"
+              ],
+              "event_id": "event-f819ec1b300c6a6789ea184452b248c49afaee91327d22993d884e066f5f2ac8",
+              "event_type": "semantic_validation",
+              "reason_codes": [
+                "initial_dependency",
+                "initial_validation_required",
+                "semantic_still-valid"
+              ],
+              "receipt_id": "receipt-1a63e5a6ad41ee06f88a314335f997dfc95b1422bb22159425d82d835e684891",
+              "recorded_at": "2026-10-21T02:03:18.045323Z",
+              "review": {
+                "actor_kind": "unknown",
+                "context_id": "reviewctx-2f50c8ea22c870b7c9bbae2172267e4174167a06bee7ea6041ec7bb7fad3dbce",
+                "decision": "still-valid",
+                "evidence": [],
+                "prior_receipt_id": null,
+                "reason": "Начальная структурная проверка: ссылки действительно указывают на существующие Graph IDs; не доказательство корректности бизнеса.",
+                "rule_id": "rdg-requirement.9b3e555d66ac4c9911355ccf",
+                "rule_revision": "sha256:efd26dac8451c2730f5114567e531e69d61b301b73e2ac69516421e5e50906e2"
+              },
+              "state_revision": 1,
+              "status": "valid",
+              "target": "file://review/06de591a45780247a7c732fa.md"
+            },
+            {
+              "changed_dependencies": [
+                "resource://rdg/graph.workflow-v1.74b90cb9d1b181ddf0eaf80a#/nodesById/R-CANON"
+              ],
+              "event_id": "event-04bdab8e5684b513662a87e33dfdd9cf9482c4542c4a20630258fb79ea4ed552",
+              "event_type": "dependency_state_changed",
+              "reason_codes": [
+                "dependency_changed"
+              ],
+              "receipt_id": "receipt-1a63e5a6ad41ee06f88a314335f997dfc95b1422bb22159425d82d835e684891",
+              "recorded_at": "2026-10-21T02:04:41.783553Z",
+              "state_revision": 8,
+              "status": "review_required",
+              "target": "file://review/06de591a45780247a7c732fa.md"
+            }
+          ],
+          "receipt_ids": [
+            "receipt-1a63e5a6ad41ee06f88a314335f997dfc95b1422bb22159425d82d835e684891"
+          ],
+          "roots": {
+            "documentation_root": "/workspace/repos/rd-graphs/.rdg-gendocen-projects/requirements-dependencies-demo/docs",
+            "project_root": "/workspace/repos/rd-graphs/.rdg-gendocen-projects/requirements-dependencies-demo",
+            "source": "explicit"
+          },
+          "runtime_diagnostics": [],
+          "target": "file://review/06de591a45780247a7c732fa.md"
+        },
+        "file://review/515d993fbe59e3641889848b.md": {
+          "events": [
+            {
+              "changed_dependencies": [
+                "resource://rdg/graph.workflow-v1.74b90cb9d1b181ddf0eaf80a#/nodesById/R-CANON",
+                "resource://rdg/graph.workflow-v1.74b90cb9d1b181ddf0eaf80a#/nodesById/R0"
+              ],
+              "event_id": "event-8e900d0225619da08b9308412b19cf9bf572a42e83c227e44d706d21086a7a62",
+              "event_type": "semantic_validation",
+              "reason_codes": [
+                "initial_dependency",
+                "initial_validation_required",
+                "semantic_still-valid"
+              ],
+              "receipt_id": "receipt-ac4836746d807c9f9f19fbae9b2edb45dc25a23e2453c5f390b9eeb1aac5acd1",
+              "recorded_at": "2026-10-21T02:03:29.761154Z",
+              "review": {
+                "actor_kind": "unknown",
+                "context_id": "reviewctx-d32f1125f3502ccd5f0e0f9d3351d6d1c47793e3de0b986a3a82b99097cd91aa",
+                "decision": "still-valid",
+                "evidence": [],
+                "prior_receipt_id": null,
+                "reason": "Начальная структурная проверка: ссылки действительно указывают на существующие Graph IDs; не доказательство корректности бизнеса.",
+                "rule_id": "rdg-requirement.0afb17015ce805633f2ee0e3",
+                "rule_revision": "sha256:032977ef7dd80ef2f12b46d9c018fa98d501765ef251c7cd0849533cd4bd670f"
+              },
+              "state_revision": 2,
+              "status": "valid",
+              "target": "file://review/515d993fbe59e3641889848b.md"
+            },
+            {
+              "changed_dependencies": [
+                "resource://rdg/graph.workflow-v1.74b90cb9d1b181ddf0eaf80a#/nodesById/R-CANON"
+              ],
+              "event_id": "event-6b32ced58fd90a06c60583cd65dab53bc4d9d8db214f12000fa3ced57bccba1b",
+              "event_type": "dependency_state_changed",
+              "reason_codes": [
+                "dependency_changed"
+              ],
+              "receipt_id": "receipt-ac4836746d807c9f9f19fbae9b2edb45dc25a23e2453c5f390b9eeb1aac5acd1",
+              "recorded_at": "2026-10-21T02:04:44.585656Z",
+              "state_revision": 9,
+              "status": "review_required",
+              "target": "file://review/515d993fbe59e3641889848b.md"
+            }
+          ],
+          "receipt_ids": [
+            "receipt-ac4836746d807c9f9f19fbae9b2edb45dc25a23e2453c5f390b9eeb1aac5acd1"
+          ],
+          "roots": {
+            "documentation_root": "/workspace/repos/rd-graphs/.rdg-gendocen-projects/requirements-dependencies-demo/docs",
+            "project_root": "/workspace/repos/rd-graphs/.rdg-gendocen-projects/requirements-dependencies-demo",
+            "source": "explicit"
+          },
+          "runtime_diagnostics": [],
+          "target": "file://review/515d993fbe59e3641889848b.md"
+        },
+        "file://review/2be970574257466f1c077138.md": {
+          "events": [
+            {
+              "changed_dependencies": [
+                "resource://rdg/graph.workflow-v1.74b90cb9d1b181ddf0eaf80a#/nodesById/R0"
+              ],
+              "event_id": "event-958c56b810f7d8e00d1d2a37213a357046ddd743d1e8dbddb5c735dfebbc2827",
+              "event_type": "semantic_validation",
+              "reason_codes": [
+                "initial_dependency",
+                "initial_validation_required",
+                "semantic_still-valid"
+              ],
+              "receipt_id": "receipt-fc6854011492ad624f50bc560ca04d1a5dc62e9eca6164f583513615b655b331",
+              "recorded_at": "2026-10-21T02:03:41.831875Z",
+              "review": {
+                "actor_kind": "unknown",
+                "context_id": "reviewctx-5babdebeecd6e38b9631c9c463f4b359af58eac1196d21183d29d00a1f88ed76",
+                "decision": "still-valid",
+                "evidence": [],
+                "prior_receipt_id": null,
+                "reason": "Начальная структурная проверка: ссылки действительно указывают на существующие Graph IDs; не доказательство корректности бизнеса.",
+                "rule_id": "rdg-requirement.8b2de1436c77e0a5f3440c0d",
+                "rule_revision": "sha256:3089e97b6e7c369d01a67c604e7f1e0e6c459a11f44b5794b46cf681c75f025b"
+              },
+              "state_revision": 3,
+              "status": "valid",
+              "target": "file://review/2be970574257466f1c077138.md"
+            }
+          ],
+          "receipt_ids": [
+            "receipt-fc6854011492ad624f50bc560ca04d1a5dc62e9eca6164f583513615b655b331"
+          ],
+          "roots": {
+            "documentation_root": "/workspace/repos/rd-graphs/.rdg-gendocen-projects/requirements-dependencies-demo/docs",
+            "project_root": "/workspace/repos/rd-graphs/.rdg-gendocen-projects/requirements-dependencies-demo",
+            "source": "explicit"
+          },
+          "runtime_diagnostics": [],
+          "target": "file://review/2be970574257466f1c077138.md"
+        },
+        "file://review/ff0d12e12b785980022422d9.md": {
+          "events": [
+            {
+              "changed_dependencies": [
+                "resource://rdg/graph.workflow-v1.74b90cb9d1b181ddf0eaf80a#/nodesById/R0"
+              ],
+              "event_id": "event-9c993737e65032992eb388f01e0795877a2d575d8846d1c0c1d76a2e597fb1f4",
+              "event_type": "semantic_validation",
+              "reason_codes": [
+                "initial_dependency",
+                "initial_validation_required",
+                "semantic_still-valid"
+              ],
+              "receipt_id": "receipt-0d4704beccbe65d31e212bb9889e38b9d933e1aa9c4ab9100009e58461465fe7",
+              "recorded_at": "2026-10-21T02:03:53.369119Z",
+              "review": {
+                "actor_kind": "unknown",
+                "context_id": "reviewctx-a8e2c5699c3f0730765a1cb5bd9adb5ece43a9c537110df7438c1ede867aefb8",
+                "decision": "still-valid",
+                "evidence": [],
+                "prior_receipt_id": null,
+                "reason": "Начальная структурная проверка: ссылки действительно указывают на существующие Graph IDs; не доказательство корректности бизнеса.",
+                "rule_id": "rdg-requirement.44d5a4349965add1eb50689d",
+                "rule_revision": "sha256:70926413b8a1ebd95f35c2c5252da2ddcc2046b44deaefb45a22da3d9ef01651"
+              },
+              "state_revision": 4,
+              "status": "valid",
+              "target": "file://review/ff0d12e12b785980022422d9.md"
+            }
+          ],
+          "receipt_ids": [
+            "receipt-0d4704beccbe65d31e212bb9889e38b9d933e1aa9c4ab9100009e58461465fe7"
+          ],
+          "roots": {
+            "documentation_root": "/workspace/repos/rd-graphs/.rdg-gendocen-projects/requirements-dependencies-demo/docs",
+            "project_root": "/workspace/repos/rd-graphs/.rdg-gendocen-projects/requirements-dependencies-demo",
+            "source": "explicit"
+          },
+          "runtime_diagnostics": [],
+          "target": "file://review/ff0d12e12b785980022422d9.md"
+        },
+        "file://review/ea3807b99ed93331cde568c8.md": {
+          "events": [
+            {
+              "changed_dependencies": [
+                "resource://rdg/graph.workflow-v1.74b90cb9d1b181ddf0eaf80a#/nodesById/R-CANON",
+                "resource://rdg/graph.workflow-v1.74b90cb9d1b181ddf0eaf80a#/nodesById/R-VERIFY",
+                "resource://rdg/graph.workflow-v1.74b90cb9d1b181ddf0eaf80a#/nodesById/R0"
+              ],
+              "event_id": "event-0c321e17c7eb6e1b66de7f512c034c7d120bb625e1570423cd7ec4b709e7f634",
+              "event_type": "semantic_validation",
+              "reason_codes": [
+                "initial_dependency",
+                "initial_validation_required",
+                "semantic_still-valid"
+              ],
+              "receipt_id": "receipt-52bc8d43b624daee2450c3c34ad23bda2bc85d6a2f1857199880a182c12e1b51",
+              "recorded_at": "2026-10-21T02:04:05.934622Z",
+              "review": {
+                "actor_kind": "unknown",
+                "context_id": "reviewctx-587b4ff0629cce30f0a717e90e842e6a91b890772e84ab2d673b297a4519ff84",
+                "decision": "still-valid",
+                "evidence": [],
+                "prior_receipt_id": null,
+                "reason": "Начальная структурная проверка: ссылки действительно указывают на существующие Graph IDs; не доказательство корректности бизнеса.",
+                "rule_id": "rdg-requirement.9727abc40417d4a4c385ad89",
+                "rule_revision": "sha256:36d578f86b96593d52877752aab59c440ac38a5300fb1811b89b0af862d23e86"
+              },
+              "state_revision": 5,
+              "status": "valid",
+              "target": "file://review/ea3807b99ed93331cde568c8.md"
+            },
+            {
+              "changed_dependencies": [
+                "resource://rdg/graph.workflow-v1.74b90cb9d1b181ddf0eaf80a#/nodesById/R-CANON"
+              ],
+              "event_id": "event-eed2f1efd96297f02206ca68c14d96b25ceba490c8960a11d71fb4fc514bd775",
+              "event_type": "dependency_state_changed",
+              "reason_codes": [
+                "dependency_changed"
+              ],
+              "receipt_id": "receipt-52bc8d43b624daee2450c3c34ad23bda2bc85d6a2f1857199880a182c12e1b51",
+              "recorded_at": "2026-10-21T02:04:46.944828Z",
+              "state_revision": 10,
+              "status": "review_required",
+              "target": "file://review/ea3807b99ed93331cde568c8.md"
+            }
+          ],
+          "receipt_ids": [
+            "receipt-52bc8d43b624daee2450c3c34ad23bda2bc85d6a2f1857199880a182c12e1b51"
+          ],
+          "roots": {
+            "documentation_root": "/workspace/repos/rd-graphs/.rdg-gendocen-projects/requirements-dependencies-demo/docs",
+            "project_root": "/workspace/repos/rd-graphs/.rdg-gendocen-projects/requirements-dependencies-demo",
+            "source": "explicit"
+          },
+          "runtime_diagnostics": [],
+          "target": "file://review/ea3807b99ed93331cde568c8.md"
+        },
+        "file://review/c8b0a63710a3857673cc875e.md": {
+          "events": [
+            {
+              "changed_dependencies": [
+                "resource://rdg/graph.workflow-v1.74b90cb9d1b181ddf0eaf80a#/nodesById/R0"
+              ],
+              "event_id": "event-047c4964ac9ed573a730fb87aae4842fa9fd0ee5b983fb56f6951f62a051f321",
+              "event_type": "semantic_validation",
+              "reason_codes": [
+                "initial_dependency",
+                "initial_validation_required",
+                "semantic_still-valid"
+              ],
+              "receipt_id": "receipt-7c0f0e1acb635983125e4f87da6d57781d2874fe584e25806dcd7be436094322",
+              "recorded_at": "2026-10-21T02:04:17.871877Z",
+              "review": {
+                "actor_kind": "unknown",
+                "context_id": "reviewctx-2fc9635c62cc923108f58bfee297809675d966f1fd92615f56c2933146fb5dca",
+                "decision": "still-valid",
+                "evidence": [],
+                "prior_receipt_id": null,
+                "reason": "Начальная структурная проверка: ссылки действительно указывают на существующие Graph IDs; не доказательство корректности бизнеса.",
+                "rule_id": "rdg-requirement.3ea59a100e5b568d94569d59",
+                "rule_revision": "sha256:58965318fa3f4285d63021d413507716017b086c090aeb068cdf5731ac1a7145"
+              },
+              "state_revision": 6,
+              "status": "valid",
+              "target": "file://review/c8b0a63710a3857673cc875e.md"
+            }
+          ],
+          "receipt_ids": [
+            "receipt-7c0f0e1acb635983125e4f87da6d57781d2874fe584e25806dcd7be436094322"
+          ],
+          "roots": {
+            "documentation_root": "/workspace/repos/rd-graphs/.rdg-gendocen-projects/requirements-dependencies-demo/docs",
+            "project_root": "/workspace/repos/rd-graphs/.rdg-gendocen-projects/requirements-dependencies-demo",
+            "source": "explicit"
+          },
+          "runtime_diagnostics": [],
+          "target": "file://review/c8b0a63710a3857673cc875e.md"
+        },
+        "file://review/31f358024fde3d2e55842d8c.md": {
+          "events": [
+            {
+              "changed_dependencies": [
+                "resource://rdg/graph.workflow-v1.74b90cb9d1b181ddf0eaf80a#/nodesById/R0"
+              ],
+              "event_id": "event-c7defddbf3bff62e635791682e9489904a297434022100c1c1c962e251295cd9",
+              "event_type": "semantic_validation",
+              "reason_codes": [
+                "initial_dependency",
+                "initial_validation_required",
+                "semantic_still-valid"
+              ],
+              "receipt_id": "receipt-e474a04f6ae414e32901fcfcf6e0823d19b9c9dafe8edcfff4452ca6c918fdc2",
+              "recorded_at": "2026-10-21T02:04:29.912732Z",
+              "review": {
+                "actor_kind": "unknown",
+                "context_id": "reviewctx-c68b806cd798d012886fb3ece28d923088e7f4edc75424e7b9863c8f4a7a3673",
+                "decision": "still-valid",
+                "evidence": [],
+                "prior_receipt_id": null,
+                "reason": "Начальная структурная проверка: ссылки действительно указывают на существующие Graph IDs; не доказательство корректности бизнеса.",
+                "rule_id": "rdg-requirement.cfdd6e6f19274ad1867e9d90",
+                "rule_revision": "sha256:92ed92123e9d4340a69a648917a274e78b34d601d1226186b2ded1cfb33cc252"
+              },
+              "state_revision": 7,
+              "status": "valid",
+              "target": "file://review/31f358024fde3d2e55842d8c.md"
+            }
+          ],
+          "receipt_ids": [
+            "receipt-e474a04f6ae414e32901fcfcf6e0823d19b9c9dafe8edcfff4452ca6c918fdc2"
+          ],
+          "roots": {
+            "documentation_root": "/workspace/repos/rd-graphs/.rdg-gendocen-projects/requirements-dependencies-demo/docs",
+            "project_root": "/workspace/repos/rd-graphs/.rdg-gendocen-projects/requirements-dependencies-demo",
+            "source": "explicit"
+          },
+          "runtime_diagnostics": [],
+          "target": "file://review/31f358024fde3d2e55842d8c.md"
+        }
+      }
+    }
+  }
+}

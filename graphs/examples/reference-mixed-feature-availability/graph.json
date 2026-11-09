@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "id": "reference-mixed-feature-availability",
+  "title": "Учебная под-R: Availability — ещё выбираем способ",
+  "revision": 2,
+  "readOnly": true,
+  "exampleOnly": true,
+  "hypothetical": true,
+  "selectedInProject": false,
+  "planningScale": "unit",
+  "identitySpace": "rdg-example-mixed-v7",
+  "rootRequirementId": "R-ACT-1",
+  "description": "Собственная плановая R того же ID с projectionOf на parent-граф; D пока не выбрано. Оба ситуативных варианта видны.",
+  "nodes": [
+    {
+      "id": "R-ACT-1",
+      "kind": "requirement",
+      "title": "Проработать Feature Availability",
+      "projectionOf": {
+        "graphSlug": "reference-mixed-active-work",
+        "nodeId": "R-ACT-1"
+      },
+      "qrpe": []
+    },
+    {
+      "id": "O-ACT-1",
+      "kind": "option",
+      "title": "Через список состояний",
+      "origin": "situational",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "O-ACT-1-plus-1",
+            "text": "Состояния чётко известны",
+            "checkCategories": [],
+            "checkRequirements": [
+              "R-TECH"
+            ],
+            "checkCollections": [
+              {
+                "graphSlug": "reference-mixed-active-work",
+                "collectionId": "COL-ROOT-TECH"
+              }
+            ]
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "O-ACT-1-minus-1",
+            "text": "Зависит от других Features",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": [],
+      "compositeRequirementId": "R-COMP"
+    },
+    {
+      "id": "O-ACT-2",
+      "kind": "option",
+      "title": "Через пользовательские операции",
+      "origin": "situational",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "O-ACT-2-plus-1",
+            "text": "Критична последовательность действий",
+            "checkCategories": []
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "O-ACT-2-minus-1",
+            "text": "Дублируются проверки",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": []
+    }
+  ],
+  "edges": [
+    {
+      "id": "OPT-O-ACT-1",
+      "type": "OPTION_FOR",
+      "from": "R-ACT-1",
+      "to": "O-ACT-1"
+    },
+    {
+      "id": "OPT-O-ACT-2",
+      "type": "OPTION_FOR",
+      "from": "R-ACT-1",
+      "to": "O-ACT-2"
+    }
+  ],
+  "collections": [],
+  "events": [],
+  "contextUses": [
+    {
+      "fieldRef": {
+        "graphSlug": "reference-mixed-active-work",
+        "fieldId": "accessibility"
+      },
+      "purpose": "Повторно использовать текущее значение доступности для Availability Feature"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "baseKinds": ["requirement", "action"],
+  "optionalKinds": {
+    "context": {
+      "allowedOwners": [
+        {"id": "node-extension-example", "identitySpace": "rdg-explicit-context-example"}
+      ]
+    }
+  }
+}

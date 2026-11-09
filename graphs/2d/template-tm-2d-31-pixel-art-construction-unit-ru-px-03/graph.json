@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "id": "template-tm-2d-31-pixel-art-construction-unit-ru-px-03",
+  "title": "Unit · Color And Value Cluster System",
+  "revision": 1,
+  "planningScale": "unit",
+  "identitySpace": "prepared:TM-2D-31-PIXEL-ART-CONSTRUCTION",
+  "rootRequirementId": "RU-PX-03",
+  "readOnly": true,
+  "templateOnly": true,
+  "selected": false,
+  "catalogHidden": true,
+  "preparedModule": {
+    "id": "TEMPLATE-D-RU-PX-03",
+    "version": "752e205cf5f797709211836e548b1aa980b10e4d74cd90dedaba4b130851df63",
+    "goalRequirementId": "RU-PX-03",
+    "methodDecisionId": "TEMPLATE-D-RU-PX-03",
+    "childRequirementIds": [],
+    "applicability": "actual palette use, large value groups, contrast hierarchy and major color clusters",
+    "successCriteria": "Достаточно выполнить применимую Unit-specific Guidance и её checkpoints; инструкция не доказывает результат."
+  },
+  "sourceDocument": "/workspace/repos/obs-planning-docs/planning/documentation/idtspe-methodology/active/profiles/visual-production-2d/target-modules/TM-2D-31-PIXEL-ART-CONSTRUCTION.md#ru-px-03",
+  "sourceContentSHA256": "752e205cf5f797709211836e548b1aa980b10e4d74cd90dedaba4b130851df63",
+  "sourceOwnerGraphSlug": "template-tm-2d-31-pixel-art-construction",
+  "sourceAnchor": "ru-px-03",
+  "coverage": "Готовый способ одного узкого R; без выдуманных под-R и без выбора проекта.",
+  "nodes": [
+    {
+      "id": "RU-PX-03",
+      "kind": "requirement",
+      "title": "Color And Value Cluster System",
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "template-tm-2d-31-pixel-art-construction",
+        "nodeId": "RU-PX-03"
+      }
+    },
+    {
+      "id": "TEMPLATE-D-RU-PX-03",
+      "kind": "decision",
+      "status": "reusable-unselected",
+      "templateRole": "unit-prepared-guidance",
+      "selected": false,
+      "title": "Готовый способ проработки: Color And Value Cluster System",
+      "description": "<a id=\"ru-px-03\"></a>\n### Color And Value Cluster System\n\n`RU-PX-03`\n\nTreat palette/contrast as cluster structure rather than high-resolution painting logic.",
+      "source": "/workspace/repos/obs-planning-docs/planning/documentation/idtspe-methodology/active/profiles/visual-production-2d/target-modules/TM-2D-31-PIXEL-ART-CONSTRUCTION.md#ru-px-03",
+      "sourceUnitId": "RU-PX-03",
+      "explicitSubrequirements": false,
+      "note": "Source defines Unit guidance; no explicit nested R inventory is declared here."
+    }
+  ],
+  "edges": [
+    {
+      "id": "UNIT-E-DRIVE",
+      "type": "DRIVES",
+      "from": "RU-PX-03",
+      "to": "TEMPLATE-D-RU-PX-03",
+      "templateOnly": true,
+      "meaning": "Готовый ответ на узкую задачу; пока не выбран."
+    }
+  ],
+  "events": []
+}

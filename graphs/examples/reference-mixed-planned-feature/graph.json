@@ -1,0 +1,145 @@
+{
+  "schemaVersion": 1,
+  "id": "reference-mixed-planned-feature",
+  "title": "Рабочее предварительное продолжение: Проработать выбранную Feature",
+  "revision": 4,
+  "readOnly": true,
+  "exampleOnly": true,
+  "planningScale": "unit",
+  "identitySpace": "rdg-example-mixed-v7",
+  "rootRequirementId": "P-RF-1",
+  "hypothetical": true,
+  "selectedInProject": false,
+  "expansionOf": {
+    "graphSlug": "reference-mixed-active-work",
+    "nodeId": "P-RF-1"
+  },
+  "sourcePreparedGraphSlug": "reference-prepared-feature-path",
+  "description": "Учебный потенциальный путь, который существует до выбора. Пин на prepared-канон добавлен только для новых готовых вариантов. Нет принятия D и нет фактического исполнения.",
+  "nodes": [
+    {
+      "id": "P-RF-1",
+      "kind": "requirement",
+      "status": "candidate",
+      "title": "Проработать выбранную Feature",
+      "qrpe": [],
+      "sourcePreparedNodeId": "RF-1",
+      "projectionOf": {
+        "graphSlug": "reference-mixed-active-work",
+        "nodeId": "P-RF-1"
+      }
+    },
+    {
+      "id": "P-RF-1-O1",
+      "kind": "option",
+      "title": "Описать операции Feature с предусловиями и результатами",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RF-1-O1-plus-1",
+            "text": "Набор операций невелик, границы Feature известны; достаточно явно задать вход, результат и отказ каждой операции.",
+            "checkCategories": []
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RF-1-O1-minus-1",
+            "text": "Промежуточные состояния влияют на доступность операций; одних входов и выходов недостаточно.",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": [],
+      "directAnswer": true,
+      "description": "Результат: спецификация операций Feature с проверяемыми примерами; прямой ответ без искусственной дочерней R.",
+      "sourcePreparedNodeId": "RF-1-O1",
+      "preparedSource": {
+        "graphSlug": "reference-prepared-planning-tree",
+        "sourceOptionId": "RF-1-O1",
+        "version": "6",
+        "canonHash": "cf90accb99882328ea3610d9672dc1d9b01c994294a6838704e421cd3d8e325d"
+      },
+      "projectionOf": {
+        "graphSlug": "reference-mixed-active-work",
+        "nodeId": "P-RF-1-O1"
+      }
+    },
+    {
+      "id": "P-RF-1-O2",
+      "kind": "option",
+      "title": "Построить модель состояний Feature",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RF-1-O2-plus-1",
+            "text": "Доступные операции зависят от состояния объекта; переходы можно перечислить и проверить.",
+            "checkCategories": []
+          },
+          {
+            "id": "RF-1-O2-advice-research",
+            "text": "Перед выбором этого содержательного способа: Если канон зависит от дальнейшей архитектуры, нарисовать альтернативные следующие R-графы и сопоставить последствия ДО выбора.",
+            "evidence": "Это только условная учебная рекомендация; фактического эксперимента нет."
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RF-1-O2-minus-1",
+            "text": "Поведение почти не зависит от состояния или его границы пока меняются; модель создаст лишнюю работу.",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": [],
+      "sourcePreparedNodeId": "RF-1-O2",
+      "preparedSource": {
+        "graphSlug": "reference-prepared-planning-tree",
+        "sourceOptionId": "RF-1-O2",
+        "version": "6",
+        "canonHash": "07e17b65461cc3eabebf8911d19a32566cb5594da8768f64910b2d0969e147b7"
+      },
+      "projectionOf": {
+        "graphSlug": "reference-mixed-active-work",
+        "nodeId": "P-RF-1-O2"
+      },
+      "description": "Результат: состояния и переходы Feature; дочерняя R проверяет допустимость переходов."
+    },
+    {
+      "id": "P-RF-DEEP",
+      "kind": "requirement",
+      "status": "candidate",
+      "title": "Проверить переходы внутри Feature",
+      "qrpe": [],
+      "sourcePreparedNodeId": "RF-DEEP",
+      "projectionOf": {
+        "graphSlug": "reference-mixed-active-work",
+        "nodeId": "P-RF-DEEP"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "OPT-P-RF-1-O1",
+      "type": "OPTION_FOR",
+      "from": "P-RF-1",
+      "to": "P-RF-1-O1"
+    },
+    {
+      "id": "OPT-P-RF-1-O2",
+      "type": "OPTION_FOR",
+      "from": "P-RF-1",
+      "to": "P-RF-1-O2"
+    },
+    {
+      "id": "OUT-P-RF-DEEP",
+      "type": "OUTCOME_OF",
+      "from": "P-RF-1-O2",
+      "to": "P-RF-DEEP"
+    }
+  ],
+  "collections": [],
+  "events": []
+}

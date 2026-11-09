@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "id": "reference-prepared-feature-depth",
+  "title": "Готовое потенциальное продолжение: Проверить переходы внутри Feature",
+  "revision": 2,
+  "readOnly": true,
+  "exampleOnly": true,
+  "templateOnly": true,
+  "planningScale": "unit",
+  "identitySpace": "rdg-example-prepared-v7",
+  "rootRequirementId": "RF-DEEP",
+  "hypothetical": true,
+  "selectedInProject": false,
+  "expansionOf": {
+    "graphSlug": "reference-prepared-feature-path",
+    "nodeId": "RF-DEEP"
+  },
+  "description": "Потенциальный дочерний R-граф; все варианты доступны, ни одно D не принято.",
+  "nodes": [
+    {
+      "id": "RF-DEEP",
+      "kind": "requirement",
+      "status": "candidate",
+      "title": "Проверить переходы внутри Feature",
+      "qrpe": [],
+      "projectionOf": {
+        "graphSlug": "reference-prepared-feature-path",
+        "nodeId": "RF-DEEP"
+      }
+    },
+    {
+      "id": "RF-DEEP-O1",
+      "kind": "option",
+      "title": "Проверить таблицу допустимых переходов",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RF-DEEP-O1-plus-1",
+            "text": "Состояния конечны, и для каждой операции можно задать допустимые начальное и конечное состояния.",
+            "checkCategories": []
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RF-DEEP-O1-minus-1",
+            "text": "Состояния непрерывны или комбинаций слишком много; полное перечисление переходов непрактично.",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": [],
+      "projectionOf": {
+        "graphSlug": "reference-prepared-planning-tree",
+        "nodeId": "RF-DEEP-O1"
+      },
+      "description": "Результат: таблица разрешённых и запрещённых переходов с проверками каждого класса."
+    },
+    {
+      "id": "RF-DEEP-O2",
+      "kind": "option",
+      "title": "Проверить инварианты после каждой операции",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RF-DEEP-O2-plus-1",
+            "text": "Важны общие ограничения данных, сохраняемые при любом допустимом порядке операций.",
+            "checkCategories": []
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RF-DEEP-O2-minus-1",
+            "text": "Критичен конкретный порядок видимых пользователю состояний; инварианты сами по себе не проверяют этот порядок.",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": [],
+      "projectionOf": {
+        "graphSlug": "reference-prepared-planning-tree",
+        "nodeId": "RF-DEEP-O2"
+      },
+      "description": "Результат: инварианты, генерация последовательностей операций и проверка сохранения ограничений."
+    }
+  ],
+  "edges": [
+    {
+      "id": "OPT-RF-DEEP-O1",
+      "type": "OPTION_FOR",
+      "from": "RF-DEEP",
+      "to": "RF-DEEP-O1"
+    },
+    {
+      "id": "OPT-RF-DEEP-O2",
+      "type": "OPTION_FOR",
+      "from": "RF-DEEP",
+      "to": "RF-DEEP-O2"
+    }
+  ],
+  "collections": [],
+  "events": []
+}

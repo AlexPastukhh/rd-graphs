@@ -1,0 +1,155 @@
+{
+  "schemaVersion": 2,
+  "transactionId": "demo-add-A-DESIGN-ALTERNATIVE",
+  "requestSHA256": "2c216d090fb194fd203ad56390c65169aee1f68890e48bc6e430a02f254ad293",
+  "preparedAt": "2026-10-21T02:02:13.629951+00:00",
+  "recordedAt": "2026-10-21T02:02:14.373561+00:00",
+  "state": "completed",
+  "records": [
+    {
+      "file": "workspaces/requirements-dependencies-demo/graph.json",
+      "before": {
+        "schemaVersion": 1,
+        "id": "requirements-dependencies-demo",
+        "title": "Учебная реальная работа: изменение R и зависимые Actions",
+        "revision": 2,
+        "planningScale": "module",
+        "identitySpace": "rdg-working-requirements-dependencies-demo",
+        "rootRequirementId": "R0",
+        "actionModel": "candidate-v6",
+        "purpose": "real-api-teaching-workflow",
+        "presentation": {
+          "usage": "working",
+          "title": "Рабочий пример · зависимые Requirements и Actions",
+          "description": "Настоящие Graph/Plan owners, история Graph API и Gendocen receipts. Работа ведётся обычными writers."
+        },
+        "nodes": [
+          {
+            "id": "R0",
+            "kind": "requirement",
+            "status": "active",
+            "title": "Сделать проверяемую рабочую демонстрацию зависимостей RDG",
+            "requirementText": "Продемонстрировать реальные Graph/Plan/API события и Gendocen-обнаружение зависимостей."
+          },
+          {
+            "id": "A-DESIGN",
+            "kind": "action",
+            "title": "Развернуть работу в проверяемые подцели",
+            "actionType": "decomposition",
+            "status": "candidate",
+            "canonBlock": {
+              "recommended": [
+                {
+                  "id": "C-A-DESIGN",
+                  "text": "Когда нужна явная декомпозиция через Action и последующий независимый контроль подцелей."
+                }
+              ],
+              "contraindicated": [
+                {
+                  "id": "N-A-DESIGN",
+                  "text": "Не создавать пустые подцели без связи с корневой Requirement."
+                }
+              ]
+            },
+            "qrpe": []
+          }
+        ],
+        "edges": [
+          {
+            "id": "action-drive-A-DESIGN",
+            "type": "DRIVES",
+            "from": "R0",
+            "to": "A-DESIGN"
+          }
+        ],
+        "events": []
+      },
+      "after": {
+        "schemaVersion": 1,
+        "id": "requirements-dependencies-demo",
+        "title": "Учебная реальная работа: изменение R и зависимые Actions",
+        "revision": 3,
+        "planningScale": "module",
+        "identitySpace": "rdg-working-requirements-dependencies-demo",
+        "rootRequirementId": "R0",
+        "actionModel": "candidate-v6",
+        "purpose": "real-api-teaching-workflow",
+        "presentation": {
+          "usage": "working",
+          "title": "Рабочий пример · зависимые Requirements и Actions",
+          "description": "Настоящие Graph/Plan owners, история Graph API и Gendocen receipts. Работа ведётся обычными writers."
+        },
+        "nodes": [
+          {
+            "id": "R0",
+            "kind": "requirement",
+            "status": "active",
+            "title": "Сделать проверяемую рабочую демонстрацию зависимостей RDG",
+            "requirementText": "Продемонстрировать реальные Graph/Plan/API события и Gendocen-обнаружение зависимостей."
+          },
+          {
+            "id": "A-DESIGN",
+            "kind": "action",
+            "title": "Развернуть работу в проверяемые подцели",
+            "actionType": "decomposition",
+            "status": "candidate",
+            "canonBlock": {
+              "recommended": [
+                {
+                  "id": "C-A-DESIGN",
+                  "text": "Когда нужна явная декомпозиция через Action и последующий независимый контроль подцелей."
+                }
+              ],
+              "contraindicated": [
+                {
+                  "id": "N-A-DESIGN",
+                  "text": "Не создавать пустые подцели без связи с корневой Requirement."
+                }
+              ]
+            },
+            "qrpe": []
+          },
+          {
+            "id": "A-DESIGN-ALTERNATIVE",
+            "kind": "action",
+            "title": "Альтернатива: решить задачу без декомпозиции",
+            "actionType": "general",
+            "status": "candidate",
+            "canonBlock": {
+              "recommended": [
+                {
+                  "id": "C-A-DESIGN-ALTERNATIVE",
+                  "text": "Когда работа настолько мала, что декомпозиция не повышает проверяемость."
+                }
+              ],
+              "contraindicated": [
+                {
+                  "id": "N-A-DESIGN-ALTERNATIVE",
+                  "text": "Не применять для демонстрации ссылок между подцелями и канонами."
+                }
+              ]
+            },
+            "qrpe": []
+          }
+        ],
+        "edges": [
+          {
+            "id": "action-drive-A-DESIGN",
+            "type": "DRIVES",
+            "from": "R0",
+            "to": "A-DESIGN"
+          },
+          {
+            "id": "action-drive-A-DESIGN-ALTERNATIVE",
+            "type": "DRIVES",
+            "from": "R0",
+            "to": "A-DESIGN-ALTERNATIVE"
+          }
+        ],
+        "events": []
+      },
+      "changed": true
+    }
+  ],
+  "authorityPrincipal": "bearer:root"
+}

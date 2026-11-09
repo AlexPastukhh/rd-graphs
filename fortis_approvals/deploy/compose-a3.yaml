@@ -1,0 +1,41 @@
+# Owner-installed disposable A3 synthetic candidate. No G2/G4 state/keys.
+# Bootstrap dedicated external volumes first with owner-reviewed Start-A3-Synthetic.ps1.
+services:
+  fortis:
+    build:
+      context: ../..
+      dockerfile: fortis_approvals/deploy/Dockerfile-A3-Synthetic
+    image: fortis-a3-synthetic:local
+    restart: "no"
+    init: true
+    read_only: true
+    user: "10001:10001"
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    pids_limit: 100
+    ports:
+      - "127.0.0.1:19093:19093"  # Owner browser local secure context (WebAuthn)
+      - "127.0.0.1:19094:19094"  # Repo machine HTTPS, distinct route
+    volumes:
+      - a3_state:/state
+      - a3_identity:/run/a3-identity:ro
+      - a3_grant:/run/a3-grant:ro
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+    healthcheck:
+      test: ["CMD","python","-m","fortis_approvals.a3_operator","health"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+volumes:
+  a3_state:
+    external: true
+    name: fortis-a3-state
+  a3_identity:
+    external: true
+    name: fortis-a3-identity
+  a3_grant:
+    external: true
+    name: fortis-a3-grant

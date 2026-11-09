@@ -1,0 +1,395 @@
+{
+  "schemaVersion": 1,
+  "id": "reference-app-definition",
+  "title": "Эталон §1–2 · App Definition и драйверы Feature",
+  "revision": 1,
+  "exampleOnly": true,
+  "readOnly": true,
+  "origin": "requirements-decisions-graph-examples-v0.1(2).md — версия содержимого 0.2 (2026-10-10); EX-* только иллюстративные ID",
+  "sourceDocument": "docs/examples/requirements-decisions-graph-examples-v0.2.source.md",
+  "sourceSections": [
+    "§1",
+    "§2"
+  ],
+  "note": "Учебная проекция исходного примера, а не реальное решение пользователя. Часть отношений описательная, формат записи graph-apply.py поддерживает не все их типы.",
+  "nodes": [
+    {
+      "id": "EX-R-PLAN",
+      "kind": "requirement",
+      "title": "Спланировать реализацию приложения бронирования",
+      "description": "Первая версия с учётом известного развития; корневая R в иллюстрации. (§1)",
+      "source": "§1"
+    },
+    {
+      "id": "EX-C-APP",
+      "kind": "context",
+      "title": "Общий контекст приложения",
+      "description": "Несколько сценариев и общих функций; нужно разрабатывать функциональные части независимо; повторяющиеся бронирования — известное развитие; ресурсы первой версии ограничены.",
+      "source": "§1–2"
+    },
+    {
+      "id": "EX-D-APP",
+      "kind": "decision",
+      "title": "Выбрать структуру App Definition из семи Units",
+      "status": "example",
+      "scope": "App Definition условного приложения",
+      "description": "Ответ EX-R-PLAN из примера P01/M12. Семь соседних Requirements, порядок не задаётся.",
+      "source": "§1"
+    },
+    {
+      "id": "EX-R-CONCEPT",
+      "kind": "requirement",
+      "title": "Сформулировать назначение, пользователей и границы",
+      "source": "§1",
+      "description": "Соседняя подцель EX-R-PLAN, введённая EX-D-APP (не этап календарного плана)."
+    },
+    {
+      "id": "EX-R-SCENARIOS",
+      "kind": "requirement",
+      "title": "Определить необходимые сценарии",
+      "source": "§1",
+      "description": "Соседняя подцель EX-R-PLAN, введённая EX-D-APP (не этап календарного плана)."
+    },
+    {
+      "id": "EX-R-ALTERNATIVES",
+      "kind": "requirement",
+      "title": "Рассмотреть альтернативы и готовые решения",
+      "source": "§1",
+      "description": "Соседняя подцель EX-R-PLAN, введённая EX-D-APP (не этап календарного плана)."
+    },
+    {
+      "id": "EX-R-RR",
+      "kind": "requirement",
+      "title": "Найти актуальные Realization Requirements",
+      "source": "§1",
+      "description": "Соседняя подцель EX-R-PLAN, введённая EX-D-APP (не этап календарного плана)."
+    },
+    {
+      "id": "EX-R-FEATURES",
+      "kind": "requirement",
+      "title": "Определить фичи исходя из нужд сценариев",
+      "source": "§1",
+      "description": "Соседняя подцель EX-R-PLAN, введённая EX-D-APP (не этап календарного плана)."
+    },
+    {
+      "id": "EX-R-WIDGETS",
+      "kind": "requirement",
+      "title": "Определить UI-компоненты",
+      "source": "§1",
+      "description": "Соседняя подцель EX-R-PLAN, введённая EX-D-APP (не этап календарного плана)."
+    },
+    {
+      "id": "EX-R-SCREENS",
+      "kind": "requirement",
+      "title": "Определить экраны и участие в сценариях",
+      "source": "§1",
+      "description": "Соседняя подцель EX-R-PLAN, введённая EX-D-APP (не этап календарного плана)."
+    },
+    {
+      "id": "EX-D-SCENARIOS",
+      "kind": "decision",
+      "title": "Для v1 выбрать создание, отмену, просмотр доступности",
+      "status": "example",
+      "description": "Повторяющиеся бронирования — известный будущий сценарий, не часть выбранного состава v1.",
+      "source": "§1"
+    },
+    {
+      "id": "EX-R-DESCRIBE-CREATE",
+      "kind": "requirement",
+      "title": "Подробно описать создание бронирования",
+      "source": "§1",
+      "description": "Отдельный Scenario Target Module получает тот же R, без копии идентификатора."
+    },
+    {
+      "id": "EX-R-DESCRIBE-CANCEL",
+      "kind": "requirement",
+      "title": "Подробно описать отмену бронирования",
+      "source": "§1",
+      "description": "Отдельный Scenario Target Module получает тот же R, без копии идентификатора."
+    },
+    {
+      "id": "EX-R-DESCRIBE-LOOKUP",
+      "kind": "requirement",
+      "title": "Подробно описать просмотр доступности",
+      "source": "§1",
+      "description": "Отдельный Scenario Target Module получает тот же R, без копии идентификатора."
+    },
+    {
+      "id": "EX-D-SCREATE",
+      "kind": "decision",
+      "title": "Описание создания: слот, подтверждение, отказ",
+      "status": "example",
+      "source": "§1, §3",
+      "description": "Потребности сценария: выбрать доступный слот, подтвердить, обработать занятый слот и потерю ответа."
+    },
+    {
+      "id": "EX-D-SCANCEL",
+      "kind": "decision",
+      "title": "Описание отмены: найти, отменить, увидеть результат",
+      "status": "example",
+      "source": "§1",
+      "description": "Уточняет потребность F-RESERVATION в отмене."
+    },
+    {
+      "id": "EX-D-SLOOKUP",
+      "kind": "decision",
+      "title": "Описание просмотра: запрос комнаты и свободных интервалов",
+      "status": "example",
+      "source": "§1",
+      "description": "Уточняет потребность F-AVAILABILITY в свободных интервалах."
+    },
+    {
+      "id": "EX-D-FEATURES",
+      "kind": "decision",
+      "title": "Выделить F-AVAILABILITY и F-RESERVATION",
+      "status": "example",
+      "source": "§1–2",
+      "scope": "Границы функциональных фич первой версии",
+      "description": "F-AVAILABILITY: доступность слотов; F-RESERVATION: подтверждение, отказ и отмена. Драйверы включают описания Scenario и Realization Requirements; независимость разработки ещё не подтверждена."
+    },
+    {
+      "id": "EX-D-RR",
+      "kind": "decision",
+      "title": "Найти актуальные Realization Requirements",
+      "status": "example",
+      "source": "§2",
+      "description": "В условном контексте выявлены независимые слайсы, развитие без полной перегруппировки и осуществимость первой версии."
+    },
+    {
+      "id": "EX-RR-INDEPENDENT",
+      "kind": "requirement",
+      "title": "Обеспечить независимую разработку функциональных слайсов",
+      "source": "§2",
+      "description": "Актуальная потребность команды, не фундаментальное требование графовой модели."
+    },
+    {
+      "id": "EX-RR-EVOLUTION",
+      "kind": "requirement",
+      "title": "Известные повторения не должны требовать полной перегруппировки фич",
+      "source": "§2",
+      "description": "Из известного планируемого развития, а не гипотетического будущего."
+    },
+    {
+      "id": "EX-RR-FEASIBILITY",
+      "kind": "requirement",
+      "title": "Состав первой версии осуществим с имеющимися ресурсами",
+      "source": "§2",
+      "description": "Реализационное ограничение выбора границ и объёма."
+    },
+    {
+      "id": "EX-Q-R-INDEPENDENT",
+      "kind": "question",
+      "title": "Действительно ли нужна независимая разработка фич?",
+      "status": "open",
+      "source": "§2 и §4",
+      "description": "QRPE необходимости EX-RR-INDEPENDENT. Отличается от проверки обоснованности выбранного D; решение о фактической нужности R пока требует рассмотрения."
+    }
+  ],
+  "edges": [
+    {
+      "id": "REF-A-01",
+      "type": "DRIVES",
+      "from": "EX-R-PLAN",
+      "to": "EX-D-APP"
+    },
+    {
+      "id": "REF-A-02",
+      "type": "CONTEXT_FOR",
+      "from": "EX-C-APP",
+      "to": "EX-D-APP"
+    },
+    {
+      "id": "REF-A-03",
+      "type": "INTRODUCES",
+      "from": "EX-D-APP",
+      "to": "EX-R-CONCEPT",
+      "parent": "EX-R-PLAN"
+    },
+    {
+      "id": "REF-A-04",
+      "type": "INTRODUCES",
+      "from": "EX-D-APP",
+      "to": "EX-R-SCENARIOS",
+      "parent": "EX-R-PLAN"
+    },
+    {
+      "id": "REF-A-05",
+      "type": "INTRODUCES",
+      "from": "EX-D-APP",
+      "to": "EX-R-ALTERNATIVES",
+      "parent": "EX-R-PLAN"
+    },
+    {
+      "id": "REF-A-06",
+      "type": "INTRODUCES",
+      "from": "EX-D-APP",
+      "to": "EX-R-RR",
+      "parent": "EX-R-PLAN"
+    },
+    {
+      "id": "REF-A-07",
+      "type": "INTRODUCES",
+      "from": "EX-D-APP",
+      "to": "EX-R-FEATURES",
+      "parent": "EX-R-PLAN"
+    },
+    {
+      "id": "REF-A-08",
+      "type": "INTRODUCES",
+      "from": "EX-D-APP",
+      "to": "EX-R-WIDGETS",
+      "parent": "EX-R-PLAN"
+    },
+    {
+      "id": "REF-A-09",
+      "type": "INTRODUCES",
+      "from": "EX-D-APP",
+      "to": "EX-R-SCREENS",
+      "parent": "EX-R-PLAN"
+    },
+    {
+      "id": "REF-A-10",
+      "type": "DRIVES",
+      "from": "EX-R-SCENARIOS",
+      "to": "EX-D-SCENARIOS"
+    },
+    {
+      "id": "REF-A-11",
+      "type": "INTRODUCES",
+      "from": "EX-D-SCENARIOS",
+      "to": "EX-R-DESCRIBE-CREATE",
+      "parent": "EX-R-SCENARIOS"
+    },
+    {
+      "id": "REF-A-12",
+      "type": "INTRODUCES",
+      "from": "EX-D-SCENARIOS",
+      "to": "EX-R-DESCRIBE-CANCEL",
+      "parent": "EX-R-SCENARIOS"
+    },
+    {
+      "id": "REF-A-13",
+      "type": "INTRODUCES",
+      "from": "EX-D-SCENARIOS",
+      "to": "EX-R-DESCRIBE-LOOKUP",
+      "parent": "EX-R-SCENARIOS"
+    },
+    {
+      "id": "REF-A-14",
+      "type": "DRIVES",
+      "from": "EX-R-DESCRIBE-CREATE",
+      "to": "EX-D-SCREATE"
+    },
+    {
+      "id": "REF-A-15",
+      "type": "DRIVES",
+      "from": "EX-R-DESCRIBE-CANCEL",
+      "to": "EX-D-SCANCEL"
+    },
+    {
+      "id": "REF-A-16",
+      "type": "DRIVES",
+      "from": "EX-R-DESCRIBE-LOOKUP",
+      "to": "EX-D-SLOOKUP"
+    },
+    {
+      "id": "REF-A-17",
+      "type": "DRIVES",
+      "from": "EX-R-FEATURES",
+      "to": "EX-D-FEATURES"
+    },
+    {
+      "id": "REF-A-18",
+      "type": "DRIVES",
+      "from": "EX-R-RR",
+      "to": "EX-D-RR"
+    },
+    {
+      "id": "REF-A-19",
+      "type": "DRIVES",
+      "from": "EX-RR-INDEPENDENT",
+      "to": "EX-D-FEATURES"
+    },
+    {
+      "id": "REF-A-20",
+      "type": "DRIVES",
+      "from": "EX-RR-EVOLUTION",
+      "to": "EX-D-FEATURES"
+    },
+    {
+      "id": "REF-A-21",
+      "type": "DRIVES",
+      "from": "EX-RR-FEASIBILITY",
+      "to": "EX-D-FEATURES"
+    },
+    {
+      "id": "REF-A-22",
+      "type": "INFORMS",
+      "from": "EX-D-SCREATE",
+      "to": "EX-D-FEATURES",
+      "meaning": "Доступность, подтверждение, отказ",
+      "illustrative": true
+    },
+    {
+      "id": "REF-A-23",
+      "type": "INFORMS",
+      "from": "EX-D-SCANCEL",
+      "to": "EX-D-FEATURES",
+      "meaning": "Отмена и результат",
+      "illustrative": true
+    },
+    {
+      "id": "REF-A-24",
+      "type": "INFORMS",
+      "from": "EX-D-SLOOKUP",
+      "to": "EX-D-FEATURES",
+      "meaning": "Свободные интервалы",
+      "illustrative": true
+    },
+    {
+      "id": "REF-A-25",
+      "type": "IDENTIFIES",
+      "from": "EX-D-RR",
+      "to": "EX-RR-INDEPENDENT",
+      "illustrative": true,
+      "meaning": "Выявлено из актуального контекста, не подцель App Definition"
+    },
+    {
+      "id": "REF-A-26",
+      "type": "IDENTIFIES",
+      "from": "EX-D-RR",
+      "to": "EX-RR-EVOLUTION",
+      "illustrative": true,
+      "meaning": "Выявлено из актуального контекста, не подцель App Definition"
+    },
+    {
+      "id": "REF-A-27",
+      "type": "IDENTIFIES",
+      "from": "EX-D-RR",
+      "to": "EX-RR-FEASIBILITY",
+      "illustrative": true,
+      "meaning": "Выявлено из актуального контекста, не подцель App Definition"
+    },
+    {
+      "id": "REF-A-28",
+      "type": "CONTEXT_FOR",
+      "from": "EX-C-APP",
+      "to": "EX-D-FEATURES"
+    },
+    {
+      "id": "REF-A-29",
+      "type": "QRPE_FOR",
+      "from": "EX-Q-R-INDEPENDENT",
+      "to": "EX-RR-INDEPENDENT",
+      "illustrative": true,
+      "meaning": "Вопрос необходимости R, не достаточности D"
+    }
+  ],
+  "events": [],
+  "coverage": "Семь соседних Units, потребности сценариев, 3 Realization Requirements и общий выбор границ Feature. QRPE необходимости Realization Requirement ведётся отдельно от вопросов обоснованности D.",
+  "illustrativeTypes": [
+    "INFORMS",
+    "IDENTIFIES",
+    "QRPE_FOR"
+  ]
+}

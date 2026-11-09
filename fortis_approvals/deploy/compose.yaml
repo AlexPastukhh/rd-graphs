@@ -1,0 +1,35 @@
+# Operator-controlled G2 synthetic owner UI. Review code before building.
+# Docker Desktop must be configured to start on login for automatic restart.
+services:
+  owner:
+    build:
+      context: ../..
+      dockerfile: fortis_approvals/deploy/Dockerfile
+    image: fortis-approvals-g2:local
+    restart: unless-stopped
+    init: true
+    read_only: true
+    user: "10001:10001"
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    pids_limit: 100
+    ports:
+      - "127.0.0.1:18990:18990"
+    environment:
+      FORTIS_STATE_DIR: /state
+      FORTIS_OWNER_ORIGIN: http://localhost:18990
+      FORTIS_PORT: "18990"
+      FORTIS_OWNER_SESSION_SECONDS: "43200"
+    volumes:
+      - g2_state:/state
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+    healthcheck:
+      test: ["CMD","python","-c","import urllib.request;urllib.request.urlopen(urllib.request.Request('http://localhost:18990/',headers={'Host':'localhost:18990'}),timeout=3).close()"]
+      interval: 20s
+      timeout: 4s
+      retries: 3
+      start_period: 20s
+
+volumes:
+  g2_state:

@@ -1,0 +1,256 @@
+{
+  "schemaVersion": 1,
+  "id": "reference-complete-scenario-create",
+  "revision": 4,
+  "title": "R · Описать сценарий создания бронирования",
+  "identitySpace": "showcase:booking-example-v1",
+  "rootRequirementId": "SH-R-SCREATE",
+  "readOnly": true,
+  "exampleOnly": true,
+  "hypothetical": true,
+  "selectedInProject": false,
+  "catalogHidden": true,
+  "canonicality": "ILLUSTRATION_ONLY",
+  "demonstrationGroup": "complete-booking-showcase",
+  "origin": "New complete hypothetical illustration, NOT original EX-* and NOT a real project.",
+  "sourceDocument": "docs/examples/COMPLETE-REFERENCE-GUIDE.md",
+  "coverage": "Scenario TM применим, R сохраняет identity; INFORMS часть D, REVEALS_NEED обнаруживает функциональный R, DERIVES уточняет R, одно локальное D отвечает двум R; QRPE достаточности.",
+  "nodes": [
+    {
+      "id": "SH-R-SCREATE",
+      "kind": "requirement",
+      "title": "Описать сценарий создания бронирования",
+      "delegations": [
+        {
+          "targetModuleInstance": "SH-TM-SCREATE",
+          "modelRef": "TM-SCENARIO-PLANNING",
+          "requirementId": "SH-R-SCREATE",
+          "answerRef": "SH-D-DESCRIBE",
+          "answerGraph": "reference-complete-scenario-create",
+          "status": "delegated-in-example-only",
+          "fulfillment": "unverified"
+        }
+      ],
+      "targetModule": "SH-TM-SCREATE · Scenario S-CREATE",
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "reference-complete-scenarios",
+        "nodeId": "SH-R-SCREATE"
+      },
+      "description": "Ссылка на ту же смысловую запись. Полный ответ и основания находятся в указанном источнике."
+    },
+    {
+      "id": "SH-V-TM-SCENARIO",
+      "kind": "variant",
+      "title": "Готовая модель Scenario Target Module",
+      "status": "reusable-unselected",
+      "selected": false,
+      "templateOnly": true,
+      "description": "Ссылка на реальную SDS-модель TM-SCENARIO-PLANNING для одного coherent real-life Scenario. Модель не является другим R и здесь не копируется.",
+      "preparedModelRef": "TM-SCENARIO-PLANNING",
+      "source": "obs-planning-docs/planning/documentation/idtspe-methodology/active/profiles/sds/target-modules/TM-SCENARIO-PLANNING.md"
+    },
+    {
+      "id": "SH-D-DESCRIBE",
+      "kind": "decision",
+      "title": "Условное описание создания бронирования",
+      "status": "selected-in-example-only",
+      "selectedInExample": true,
+      "selectedInProject": false,
+      "scope": "Scenario создания бронирования",
+      "description": "Условный пользователь выбирает комнату и время, получает свободные интервалы, выбирает слот и отправляет подтверждение. При занятом слоте видит отказ и может выбрать другой. При потере ответа видит неизвестность; результат устанавливается для того же подтверждения. Описание не доказывает реализацию.",
+      "targetModule": "SH-TM-SCREATE · Scenario S-CREATE",
+      "answerParts": [
+        {
+          "id": "SH-CREATE-SLOT",
+          "text": "Выбрать комнату, время и доступный слот."
+        },
+        {
+          "id": "SH-CREATE-CONFIRM",
+          "text": "Подтвердить бронирование и различить подтверждение, занятый слот и неизвестный результат."
+        },
+        {
+          "id": "SH-CREATE-LOSS",
+          "text": "После потери ответа установить результат того же подтверждения без повторного создания."
+        }
+      ]
+    },
+    {
+      "id": "SH-R-RESULT",
+      "kind": "requirement",
+      "title": "Пользователь должен узнать итог подтверждения без дублирования",
+      "description": "Выявленная функциональная потребность, НЕ дочернее R на написание описания Scenario."
+    },
+    {
+      "id": "SH-R-FEEDBACK",
+      "kind": "requirement",
+      "title": "Уточнить обратную связь при неопределённом результате",
+      "description": "Содержательное уточнение R-RESULT через DERIVES, не INTRODUCES."
+    },
+    {
+      "id": "SH-C-STATUS",
+      "kind": "context",
+      "title": "В условной системе есть средство проверки статуса",
+      "description": "Доступное средство может оказаться недостаточным — нужен QRPE."
+    },
+    {
+      "id": "SH-D-STATUS",
+      "kind": "decision",
+      "title": "Условный локальный ответ: проверить статус и показать итог",
+      "status": "selected-in-example-only",
+      "selectedInExample": true,
+      "selectedInProject": false,
+      "scope": "Локальная обработка потери ответа подтверждения в Reservation",
+      "description": "Показать понятную неизвестность, проверить статус того же подтверждения и показать подтверждение или отказ только после окончательного результата. Промежуточный ответ не превращать в отказ. Не создавать повторное бронирование автоматически. Достаточность условна; контракт средства не проверен.",
+      "evidenceStatus": "unverified",
+      "openQuestion": "SH-Q-STATUS",
+      "answerParts": [
+        {
+          "id": "SH-STATUS-UNKNOWN",
+          "text": "При потере или промежуточном ответе сохранить неизвестность; это не отказ."
+        },
+        {
+          "id": "SH-STATUS-CORRELATE",
+          "text": "Проверять статус именно того же подтверждения; возможность корреляции пока не подтверждена."
+        },
+        {
+          "id": "SH-STATUS-FINAL",
+          "text": "Показывать подтверждение или отказ только при установленном окончательном результате."
+        },
+        {
+          "id": "SH-STATUS-NO-DUP",
+          "text": "Повторное создание не является автоматическим способом получить ответ."
+        }
+      ],
+      "answerBindings": [
+        {
+          "requirementId": "SH-R-RESULT",
+          "parts": [
+            "SH-STATUS-CORRELATE",
+            "SH-STATUS-FINAL",
+            "SH-STATUS-NO-DUP"
+          ],
+          "sufficiency": "conditional"
+        },
+        {
+          "requirementId": "SH-R-FEEDBACK",
+          "parts": [
+            "SH-STATUS-UNKNOWN",
+            "SH-STATUS-FINAL"
+          ],
+          "sufficiency": "conditional"
+        },
+        {
+          "requirementId": "SH-R-ERRORS",
+          "parts": [
+            "SH-STATUS-UNKNOWN",
+            "SH-STATUS-CORRELATE",
+            "SH-STATUS-FINAL"
+          ],
+          "sufficiency": "partial; только потеря ответа"
+        }
+      ]
+    },
+    {
+      "id": "SH-Q-STATUS",
+      "kind": "question",
+      "title": "Может ли статус достоверно установить результат?",
+      "status": "open",
+      "description": "QRPE достаточности, не событие принятия и не доказанный дефект.",
+      "blocking": "partially-blocking",
+      "blocks": "заключение о достаточности и реализация статусного способа",
+      "closesWith": "контракт и проверка корреляции с нужным подтверждением, окончательности и достижимости результата после потери ответа"
+    }
+  ],
+  "edges": [
+    {
+      "id": "SH-E-CR-01",
+      "type": "OPTION_FOR",
+      "from": "SH-R-SCREATE",
+      "to": "SH-V-TM-SCENARIO",
+      "meaning": "Готовая модель доступна для конкретного сценария."
+    },
+    {
+      "id": "SH-E-CR-02",
+      "type": "DRIVES",
+      "from": "SH-R-SCREATE",
+      "to": "SH-D-DESCRIBE",
+      "meaning": "Тот же R остаётся драйвером после условной делегации."
+    },
+    {
+      "id": "SH-E-CR-03",
+      "type": "USES_VARIANT",
+      "from": "SH-D-DESCRIBE",
+      "to": "SH-V-TM-SCENARIO",
+      "meaning": "D отвечает в рамках готовой модели, модель не второе R."
+    },
+    {
+      "id": "SH-E-CR-04",
+      "type": "REVEALS_NEED",
+      "from": "SH-D-DESCRIBE",
+      "to": "SH-R-RESULT",
+      "meaning": "При раскрытии Scenario обнаружена отдельная функциональная потребность."
+    },
+    {
+      "id": "SH-E-CR-05",
+      "type": "DERIVES",
+      "from": "SH-R-RESULT",
+      "to": "SH-R-FEEDBACK",
+      "meaning": "Содержательно уточнено требование, не декомпозиция описания."
+    },
+    {
+      "id": "SH-E-CR-06",
+      "type": "DRIVES",
+      "from": "SH-R-RESULT",
+      "to": "SH-D-STATUS",
+      "meaning": "Первый R-драйвер общего локального ответа."
+    },
+    {
+      "id": "SH-E-CR-07",
+      "type": "DRIVES",
+      "from": "SH-R-FEEDBACK",
+      "to": "SH-D-STATUS",
+      "meaning": "Второй R-драйвер того же D, без дублирования."
+    },
+    {
+      "id": "SH-E-CR-08",
+      "type": "INFORMS",
+      "from": "SH-D-DESCRIBE",
+      "to": "SH-D-STATUS",
+      "meaning": "Используется только содержание о потере ответа и подтверждении; НЕ весь сценарий."
+    },
+    {
+      "id": "SH-E-CR-09",
+      "type": "CONTEXT_FOR",
+      "from": "SH-C-STATUS",
+      "to": "SH-D-STATUS",
+      "meaning": "Имеющееся средство учитывается при выборе, не гарантирует достаточность."
+    },
+    {
+      "id": "SH-E-CR-10",
+      "type": "QRPE_FOR",
+      "from": "SH-Q-STATUS",
+      "to": "SH-D-STATUS",
+      "meaning": "Проверить достаточность D-STATUS для точного результата."
+    }
+  ],
+  "events": [
+    {
+      "id": "SH-EVENT-SELECT-D-DESCRIBE",
+      "type": "decision_selected",
+      "decisionId": "SH-D-DESCRIBE",
+      "by": "example-only",
+      "note": "Выбор только в вымышленном сюжете; не решение реального пользователя.",
+      "exampleOnly": true
+    },
+    {
+      "id": "SH-EVENT-SELECT-D-STATUS",
+      "type": "decision_selected",
+      "decisionId": "SH-D-STATUS",
+      "by": "example-only",
+      "note": "Выбор только в вымышленном сюжете; не решение реального пользователя.",
+      "exampleOnly": true
+    }
+  ],
+  "planningScale": "module"
+}

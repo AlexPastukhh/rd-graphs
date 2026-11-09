@@ -1,0 +1,61 @@
+{
+  "generated_at": "2026-10-21T02:04:46.489962Z",
+  "state_revision": 10,
+  "state_schema_version": "1.0.0",
+  "targets": {
+    "file://review/06de591a45780247a7c732fa.md": {
+      "changed_dependencies": [
+        "resource://rdg/graph.workflow-v1.74b90cb9d1b181ddf0eaf80a#/nodesById/R-CANON"
+      ],
+      "last_receipt_id": "receipt-1a63e5a6ad41ee06f88a314335f997dfc95b1422bb22159425d82d835e684891",
+      "reason_codes": [
+        "dependency_changed"
+      ],
+      "status": "review_required"
+    },
+    "file://review/2be970574257466f1c077138.md": {
+      "changed_dependencies": [],
+      "last_receipt_id": "receipt-fc6854011492ad624f50bc560ca04d1a5dc62e9eca6164f583513615b655b331",
+      "reason_codes": [],
+      "status": "valid"
+    },
+    "file://review/31f358024fde3d2e55842d8c.md": {
+      "changed_dependencies": [],
+      "last_receipt_id": "receipt-e474a04f6ae414e32901fcfcf6e0823d19b9c9dafe8edcfff4452ca6c918fdc2",
+      "reason_codes": [],
+      "status": "valid"
+    },
+    "file://review/515d993fbe59e3641889848b.md": {
+      "changed_dependencies": [
+        "resource://rdg/graph.workflow-v1.74b90cb9d1b181ddf0eaf80a#/nodesById/R-CANON"
+      ],
+      "last_receipt_id": "receipt-ac4836746d807c9f9f19fbae9b2edb45dc25a23e2453c5f390b9eeb1aac5acd1",
+      "reason_codes": [
+        "dependency_changed"
+      ],
+      "status": "review_required"
+    },
+    "file://review/c8b0a63710a3857673cc875e.md": {
+      "changed_dependencies": [],
+      "last_receipt_id": "receipt-7c0f0e1acb635983125e4f87da6d57781d2874fe584e25806dcd7be436094322",
+      "reason_codes": [],
+      "status": "valid"
+    },
+    "file://review/ea3807b99ed93331cde568c8.md": {
+      "changed_dependencies": [
+        "resource://rdg/graph.workflow-v1.74b90cb9d1b181ddf0eaf80a#/nodesById/R-CANON"
+      ],
+      "last_receipt_id": "receipt-52bc8d43b624daee2450c3c34ad23bda2bc85d6a2f1857199880a182c12e1b51",
+      "reason_codes": [
+        "dependency_changed"
+      ],
+      "status": "review_required"
+    },
+    "file://review/ff0d12e12b785980022422d9.md": {
+      "changed_dependencies": [],
+      "last_receipt_id": "receipt-0d4704beccbe65d31e212bb9889e38b9d933e1aa9c4ab9100009e58461465fe7",
+      "reason_codes": [],
+      "status": "valid"
+    }
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "id": "template-tm-2d-31-vector-construction-unit-ru-vec-02",
+  "title": "Unit · Major Geometry And Silhouettes",
+  "revision": 1,
+  "planningScale": "unit",
+  "identitySpace": "prepared:TM-2D-31-VECTOR-CONSTRUCTION",
+  "rootRequirementId": "RU-VEC-02",
+  "readOnly": true,
+  "templateOnly": true,
+  "selected": false,
+  "catalogHidden": true,
+  "preparedModule": {
+    "id": "TEMPLATE-D-RU-VEC-02",
+    "version": "574bfe1d7b2e35c760ee72b651a2c0f339a982c76e319929aa194329332b84d4",
+    "goalRequirementId": "RU-VEC-02",
+    "methodDecisionId": "TEMPLATE-D-RU-VEC-02",
+    "childRequirementIds": [],
+    "applicability": "primary path/primitives geometry, silhouettes and large proportions",
+    "successCriteria": "Достаточно выполнить применимую Unit-specific Guidance и её checkpoints; инструкция не доказывает результат."
+  },
+  "sourceDocument": "/workspace/repos/obs-planning-docs/planning/documentation/idtspe-methodology/active/profiles/visual-production-2d/target-modules/TM-2D-31-VECTOR-CONSTRUCTION.md#ru-vec-02",
+  "sourceContentSHA256": "574bfe1d7b2e35c760ee72b651a2c0f339a982c76e319929aa194329332b84d4",
+  "sourceOwnerGraphSlug": "template-tm-2d-31-vector-construction",
+  "sourceAnchor": "ru-vec-02",
+  "coverage": "Готовый способ одного узкого R; без выдуманных под-R и без выбора проекта.",
+  "nodes": [
+    {
+      "id": "RU-VEC-02",
+      "kind": "requirement",
+      "title": "Major Geometry And Silhouettes",
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "template-tm-2d-31-vector-construction",
+        "nodeId": "RU-VEC-02"
+      }
+    },
+    {
+      "id": "TEMPLATE-D-RU-VEC-02",
+      "kind": "decision",
+      "status": "reusable-unselected",
+      "templateRole": "unit-prepared-guidance",
+      "selected": false,
+      "title": "Готовый способ проработки: Major Geometry And Silhouettes",
+      "description": "<a id=\"ru-vec-02\"></a>\n### Major Geometry And Silhouettes\n\n`RU-VEC-02`\n\nPrefer simple geometry that faithfully owns the accepted silhouette/form. Avoid topology complexity with no editability or fidelity value.",
+      "source": "/workspace/repos/obs-planning-docs/planning/documentation/idtspe-methodology/active/profiles/visual-production-2d/target-modules/TM-2D-31-VECTOR-CONSTRUCTION.md#ru-vec-02",
+      "sourceUnitId": "RU-VEC-02",
+      "explicitSubrequirements": false,
+      "note": "Source defines Unit guidance; no explicit nested R inventory is declared here."
+    }
+  ],
+  "edges": [
+    {
+      "id": "UNIT-E-DRIVE",
+      "type": "DRIVES",
+      "from": "RU-VEC-02",
+      "to": "TEMPLATE-D-RU-VEC-02",
+      "templateOnly": true,
+      "meaning": "Готовый ответ на узкую задачу; пока не выбран."
+    }
+  ],
+  "events": []
+}

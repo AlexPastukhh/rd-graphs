@@ -1,0 +1,114 @@
+{
+  "schemaVersion": 1,
+  "id": "example-booking",
+  "title": "Пример: бронирование переговорных",
+  "revision": 1,
+  "nodes": [
+    {
+      "id": "R-001",
+      "kind": "requirement",
+      "title": "Спланировать приложение бронирования",
+      "description": "Исходная цель примера"
+    },
+    {
+      "id": "D-001",
+      "kind": "decision",
+      "title": "Разбить по сценариям и функциям",
+      "status": "example",
+      "description": "Иллюстративный вариант разбиения"
+    },
+    {
+      "id": "R-002",
+      "kind": "requirement",
+      "title": "Определить сценарии"
+    },
+    {
+      "id": "R-003",
+      "kind": "requirement",
+      "title": "Определить функции"
+    },
+    {
+      "id": "D-002",
+      "kind": "decision",
+      "title": "Выбрать сценарии первой версии",
+      "status": "example"
+    },
+    {
+      "id": "R-004",
+      "kind": "requirement",
+      "title": "Описать создание бронирования"
+    },
+    {
+      "id": "R-005",
+      "kind": "requirement",
+      "title": "Определить обработку потери ответа"
+    },
+    {
+      "id": "D-003",
+      "kind": "decision",
+      "title": "Проверять статус подтверждения",
+      "status": "example",
+      "description": "Достаточность средства пока не проверена"
+    },
+    {
+      "id": "C-001",
+      "kind": "context",
+      "title": "Средство проверки статуса доступно",
+      "description": "Предположение условного примера"
+    }
+  ],
+  "edges": [
+    {
+      "id": "E-001",
+      "type": "DRIVES",
+      "from": "R-001",
+      "to": "D-001"
+    },
+    {
+      "id": "E-002",
+      "type": "INTRODUCES",
+      "from": "D-001",
+      "to": "R-002",
+      "parent": "R-001"
+    },
+    {
+      "id": "E-003",
+      "type": "INTRODUCES",
+      "from": "D-001",
+      "to": "R-003",
+      "parent": "R-001"
+    },
+    {
+      "id": "E-004",
+      "type": "DRIVES",
+      "from": "R-002",
+      "to": "D-002"
+    },
+    {
+      "id": "E-005",
+      "type": "INTRODUCES",
+      "from": "D-002",
+      "to": "R-004",
+      "parent": "R-002"
+    },
+    {
+      "id": "E-006",
+      "type": "DERIVES",
+      "from": "R-004",
+      "to": "R-005"
+    },
+    {
+      "id": "E-007",
+      "type": "DRIVES",
+      "from": "R-005",
+      "to": "D-003"
+    },
+    {
+      "id": "E-008",
+      "type": "CONTEXT_FOR",
+      "from": "C-001",
+      "to": "D-003"
+    }
+  ],
+  "events": []
+}

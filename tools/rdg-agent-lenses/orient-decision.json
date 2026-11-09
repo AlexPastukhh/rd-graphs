@@ -1,0 +1,275 @@
+{
+  "schemaVersion": 1,
+  "actionModel": "candidate-v6",
+  "coreModel": "rdg-decision-v1",
+  "id": "rdg-agent-orient-decision-lens",
+  "title": "Войти в работу через RDG — Decision v1",
+  "identitySpace": "c14bdd82-c900-553a-9bcd-e0dad0599501",
+  "revision": 1,
+  "rootRequirementId": "R-LENS-ORIENT",
+  "rootCauses": [
+    {
+      "id": "RC-orient",
+      "requirementId": "R-LENS-ORIENT",
+      "reason": "Fundamental orient instruction entry",
+      "enabled": true
+    }
+  ],
+  "nodes": [
+    {
+      "id": "R-LENS-ORIENT",
+      "kind": "requirement",
+      "title": "Получить проверенный контекст и выбрать подходящие инструкции",
+      "description": "Read catalog/open/read/schema through the portable Application. Check profile, package identity, permissions and receipts. Choose a fundamental lens for the actual task. WorkGraph/focus are views of one process; lens opening does not execute anything.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "scope": "Fundamental RDG orient instructions"
+    },
+    {
+      "id": "A-ORIENT-BUILD",
+      "kind": "decision",
+      "title": "Войти в работу через RDG",
+      "description": "Read catalog/open/read/schema through the portable Application. Check profile, package identity, permissions and receipts. Choose a fundamental lens for the actual task. WorkGraph/focus are views of one process; lens opening does not execute anything.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "selectionState": "discovered"
+    },
+    {
+      "id": "R-ORIENT-OWNERS",
+      "kind": "requirement",
+      "title": "Известны реальные владельцы и доступ",
+      "description": "Read catalog/open/read/schema through the portable Application. Check profile, package identity, permissions and receipts. Choose a fundamental lens for the actual task. WorkGraph/focus are views of one process; lens opening does not execute anything.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "scope": "Fundamental RDG orient instructions"
+    },
+    {
+      "id": "A-ORIENT-READ",
+      "kind": "decision",
+      "title": "Прочитать подготовленный контекст",
+      "description": "Read catalog/open/read/schema through the portable Application. Check profile, package identity, permissions and receipts. Choose a fundamental lens for the actual task. WorkGraph/focus are views of one process; lens opening does not execute anything.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "selectionState": "discovered"
+    },
+    {
+      "id": "R-ORIENT-GUIDANCE",
+      "kind": "requirement",
+      "title": "Выбраны применимые графы линз",
+      "description": "Read catalog/open/read/schema through the portable Application. Check profile, package identity, permissions and receipts. Choose a fundamental lens for the actual task. WorkGraph/focus are views of one process; lens opening does not execute anything.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "scope": "Fundamental RDG orient instructions"
+    },
+    {
+      "id": "A-ORIENT-CATALOG",
+      "kind": "decision",
+      "title": "Просмотреть каталог линз",
+      "description": "Read catalog/open/read/schema through the portable Application. Check profile, package identity, permissions and receipts. Choose a fundamental lens for the actual task. WorkGraph/focus are views of one process; lens opening does not execute anything.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "selectionState": "discovered"
+    },
+    {
+      "id": "R-ORIENT-AUTHORITY",
+      "kind": "requirement",
+      "title": "Известно, чему доверять",
+      "description": "Read catalog/open/read/schema through the portable Application. Check profile, package identity, permissions and receipts. Choose a fundamental lens for the actual task. WorkGraph/focus are views of one process; lens opening does not execute anything.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "scope": "Fundamental RDG orient instructions"
+    },
+    {
+      "id": "A-ORIENT-SOURCE",
+      "kind": "decision",
+      "title": "Различить правила, справку и снимки",
+      "description": "Read catalog/open/read/schema through the portable Application. Check profile, package identity, permissions and receipts. Choose a fundamental lens for the actual task. WorkGraph/focus are views of one process; lens opening does not execute anything.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "selectionState": "discovered"
+    }
+  ],
+  "objects": [
+    {
+      "id": "K-A-ORIENT-BUILD",
+      "kind": "canon",
+      "title": "Применимость: Войти в работу через RDG",
+      "description": "",
+      "revision": 1,
+      "guidance": "Read catalog/open/read/schema through the portable Application. Check profile, package identity, permissions and receipts. Choose a fundamental lens for the actual task. WorkGraph/focus are views of one process; lens opening does not execute anything.  Ситуация оправдывает этот способ в пределах его вклада Лишнее действие при уже достаточном состоянии"
+    },
+    {
+      "id": "K-A-ORIENT-READ",
+      "kind": "canon",
+      "title": "Применимость: Прочитать подготовленный контекст",
+      "description": "",
+      "revision": 1,
+      "guidance": "Read catalog/open/read/schema through the portable Application. Check profile, package identity, permissions and receipts. Choose a fundamental lens for the actual task. WorkGraph/focus are views of one process; lens opening does not execute anything.  Ситуация оправдывает этот способ в пределах его вклада Лишнее действие при уже достаточном состоянии"
+    },
+    {
+      "id": "K-A-ORIENT-CATALOG",
+      "kind": "canon",
+      "title": "Применимость: Просмотреть каталог линз",
+      "description": "",
+      "revision": 1,
+      "guidance": "Read catalog/open/read/schema through the portable Application. Check profile, package identity, permissions and receipts. Choose a fundamental lens for the actual task. WorkGraph/focus are views of one process; lens opening does not execute anything.  Ситуация оправдывает этот способ в пределах его вклада Лишнее действие при уже достаточном состоянии"
+    },
+    {
+      "id": "K-A-ORIENT-SOURCE",
+      "kind": "canon",
+      "title": "Применимость: Различить правила, справку и снимки",
+      "description": "",
+      "revision": 1,
+      "guidance": "Read catalog/open/read/schema through the portable Application. Check profile, package identity, permissions and receipts. Choose a fundamental lens for the actual task. WorkGraph/focus are views of one process; lens opening does not execute anything.  Ситуация оправдывает этот способ в пределах его вклада Лишнее действие при уже достаточном состоянии"
+    },
+    {
+      "id": "I-LENS-ORIENT",
+      "kind": "info",
+      "title": "Применение и границы линзы",
+      "description": "Определение линзы — бумага для исследования. Чтение, выбор линзы, применение к конкретной версии, выбор предметного A, Plan, исполнение и результат различаются. Рассматривать только применимые части. Условия канона показательны; реальные факты находятся в R/Context рабочей ситуации. Порядок в JSON не задаёт расписание. Точные команды и права остаются у технических владельцев.",
+      "revision": 1,
+      "value": "Определение линзы — бумага для исследования. Чтение, выбор линзы, применение к конкретной версии, выбор предметного A, Plan, исполнение и результат различаются. Рассматривать только применимые части. Условия канона показательны; реальные факты находятся в R/Context рабочей ситуации. Порядок в JSON не задаёт расписание. Точные команды и права остаются у технических владельцев."
+    },
+    {
+      "id": "INFO-DECISION-API-ORIENT",
+      "kind": "info",
+      "title": "Проверенный маршрут API · orient",
+      "description": "Контракт поддержанного Decision runtime; читать вместе с актуальной schema",
+      "revision": 1,
+      "value": "Общий протокол: catalog → read → schema → preflight(request) → apply(request, expectedInputBinding=preview.inputBinding) → receipt/readback. Новый логический запрос получает новый UUID transactionId; точный retry сохраняет его и весь request. Не подменяйте entity ID ключом occurrence. Версии и права проверяются общим Application. Прочитайте catalog и read(packageId, includePlan=true). coreModel должен быть rdg-decision-v1. read.view содержит Graph entities, реальные edges/memberships, support, groupVisibility и visual; read.recommendations содержит дедуплицированные линзы с reasons. У линзы отдельные packageId/identitySpace. Открывать её можно только по полному lensRef; сохраняйте рабочий context и trail. Открытие и возврат не создают событий исполнения."
+    }
+  ],
+  "externalActions": [],
+  "edges": [
+    {
+      "id": "D-A-ORIENT-BUILD",
+      "type": "DRIVES",
+      "from": "R-LENS-ORIENT",
+      "to": "A-ORIENT-BUILD"
+    },
+    {
+      "id": "O-R-ORIENT-OWNERS",
+      "type": "INTRODUCES",
+      "from": "A-ORIENT-BUILD",
+      "to": "R-ORIENT-OWNERS"
+    },
+    {
+      "id": "D-A-ORIENT-READ",
+      "type": "DRIVES",
+      "from": "R-ORIENT-OWNERS",
+      "to": "A-ORIENT-READ"
+    },
+    {
+      "id": "O-R-ORIENT-GUIDANCE",
+      "type": "INTRODUCES",
+      "from": "A-ORIENT-BUILD",
+      "to": "R-ORIENT-GUIDANCE"
+    },
+    {
+      "id": "D-A-ORIENT-CATALOG",
+      "type": "DRIVES",
+      "from": "R-ORIENT-GUIDANCE",
+      "to": "A-ORIENT-CATALOG"
+    },
+    {
+      "id": "O-R-ORIENT-AUTHORITY",
+      "type": "INTRODUCES",
+      "from": "A-ORIENT-BUILD",
+      "to": "R-ORIENT-AUTHORITY"
+    },
+    {
+      "id": "D-A-ORIENT-SOURCE",
+      "type": "DRIVES",
+      "from": "R-ORIENT-AUTHORITY",
+      "to": "A-ORIENT-SOURCE"
+    },
+    {
+      "id": "CANON-A-ORIENT-BUILD",
+      "type": "CANON_FOR",
+      "from": "K-A-ORIENT-BUILD",
+      "to": "A-ORIENT-BUILD"
+    },
+    {
+      "id": "CANON-A-ORIENT-READ",
+      "type": "CANON_FOR",
+      "from": "K-A-ORIENT-READ",
+      "to": "A-ORIENT-READ"
+    },
+    {
+      "id": "CANON-A-ORIENT-CATALOG",
+      "type": "CANON_FOR",
+      "from": "K-A-ORIENT-CATALOG",
+      "to": "A-ORIENT-CATALOG"
+    },
+    {
+      "id": "CANON-A-ORIENT-SOURCE",
+      "type": "CANON_FOR",
+      "from": "K-A-ORIENT-SOURCE",
+      "to": "A-ORIENT-SOURCE"
+    },
+    {
+      "id": "INFO-orient",
+      "type": "INFO_FOR",
+      "from": "I-LENS-ORIENT",
+      "to": "R-LENS-ORIENT"
+    },
+    {
+      "id": "INFO-DECISION-API-TO-ROOT-ORIENT",
+      "type": "INFO_FOR",
+      "from": "INFO-DECISION-API-ORIENT",
+      "to": "R-LENS-ORIENT"
+    }
+  ],
+  "decisionGroups": [],
+  "workGraphs": [
+    {
+      "id": "WG-orient",
+      "title": "Войти в работу через RDG",
+      "rootIds": [
+        "R-LENS-ORIENT"
+      ],
+      "memberIds": [
+        "R-LENS-ORIENT",
+        "A-ORIENT-BUILD",
+        "R-ORIENT-OWNERS",
+        "A-ORIENT-READ",
+        "R-ORIENT-GUIDANCE",
+        "A-ORIENT-CATALOG",
+        "R-ORIENT-AUTHORITY",
+        "A-ORIENT-SOURCE",
+        "K-A-ORIENT-BUILD",
+        "K-A-ORIENT-READ",
+        "K-A-ORIENT-CATALOG",
+        "K-A-ORIENT-SOURCE",
+        "I-LENS-ORIENT",
+        "INFO-DECISION-API-ORIENT"
+      ]
+    }
+  ],
+  "events": [],
+  "recommendationPackageIds": []
+}

@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "id": "context-prepared-current",
+  "identitySpace": "rdg-context-prepared",
+  "planningScale": "module",
+  "rootRequirementId": "R-CTX-CURRENT",
+  "revision": 1,
+  "title": "Контекст: реализовать выбранный способ",
+  "readOnly": true,
+  "exampleOnly": true,
+  "templateOnly": true,
+  "nodes": [
+    {
+      "id": "R-CTX-CURRENT",
+      "kind": "requirement",
+      "title": "Контекст: реализовать выбранный способ",
+      "projectionOf": {
+        "graphSlug": "context-prepared-root",
+        "nodeId": "R-CTX-CURRENT"
+      }
+    }
+  ],
+  "edges": [],
+  "events": [],
+  "contextFieldsComplete": true,
+  "presentation": {
+    "usage": "ready",
+    "exampleOnly": true
+  },
+  "contextUses": [
+    {
+      "fieldRef": {
+        "graphSlug": "context-prepared-root",
+        "fieldId": "accessibility"
+      },
+      "purpose": "Переиспользовать общий ответ для дальнейшей работы"
+    }
+  ],
+  "view": {
+    "requirementDepth": 1
+  },
+  "expansionOf": {
+    "graphSlug": "context-prepared-root",
+    "nodeId": "R-CTX-CURRENT"
+  }
+}

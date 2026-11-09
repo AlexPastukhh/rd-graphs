@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "id": "context-working-alternative",
+  "identitySpace": "rdg-context-working",
+  "planningScale": "module",
+  "rootRequirementId": "R-CTX-ALT",
+  "revision": 1,
+  "title": "Контекст: альтернативный способ",
+  "readOnly": true,
+  "exampleOnly": true,
+  "nodes": [
+    {
+      "id": "R-CTX-ALT",
+      "kind": "requirement",
+      "title": "Контекст: альтернативный способ",
+      "projectionOf": {
+        "graphSlug": "context-working-root",
+        "nodeId": "R-CTX-ALT"
+      }
+    }
+  ],
+  "edges": [],
+  "events": [],
+  "contextFieldsComplete": true,
+  "presentation": {
+    "usage": "working",
+    "exampleOnly": true
+  },
+  "contextUses": [
+    {
+      "fieldRef": {
+        "graphSlug": "context-prepared-root",
+        "fieldId": "accessibility"
+      },
+      "purpose": "Переиспользовать общий ответ для дальнейшей работы"
+    },
+    {
+      "fieldRef": {
+        "graphSlug": "context-prepared-root",
+        "fieldId": "alternative-details"
+      },
+      "purpose": "Уточнить исполнение альтернативного способа",
+      "when": {
+        "allSelected": [
+          {
+            "graphSlug": "context-working-root",
+            "optionId": "O-CTX-B"
+          }
+        ]
+      }
+    }
+  ],
+  "view": {
+    "requirementDepth": 1
+  },
+  "hypothetical": true,
+  "selectedInProject": false,
+  "expansionOf": {
+    "graphSlug": "context-working-root",
+    "nodeId": "R-CTX-ALT"
+  }
+}

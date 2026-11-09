@@ -1,0 +1,148 @@
+{
+  "schemaVersion": 1,
+  "id": "reference-delegation-status",
+  "title": "Эталон §3 · Делегация и неизвестный результат",
+  "revision": 1,
+  "exampleOnly": true,
+  "readOnly": true,
+  "origin": "requirements-decisions-graph-examples-v0.1(2).md — версия содержимого 0.2 (2026-10-10); EX-* только иллюстративные ID",
+  "sourceDocument": "docs/examples/requirements-decisions-graph-examples-v0.2.source.md",
+  "sourceSections": [
+    "§3",
+    "§4 (QRPE)"
+  ],
+  "note": "Учебная проекция исходного примера, а не реальное решение пользователя. Часть отношений описательная, формат записи graph-apply.py поддерживает не все их типы.",
+  "nodes": [
+    {
+      "id": "EX-R-SCENARIOS",
+      "kind": "requirement",
+      "title": "Определить состав сценариев приложения",
+      "source": "§1, §3"
+    },
+    {
+      "id": "EX-D-SCENARIOS",
+      "kind": "decision",
+      "title": "Состав первой версии: создание, отмена, просмотр",
+      "status": "example",
+      "source": "§1"
+    },
+    {
+      "id": "EX-R-DESCRIBE-CREATE",
+      "kind": "requirement",
+      "title": "Описать сценарий создания бронирования",
+      "source": "§3",
+      "targetModule": "EX-TM-SCREATE · Scenario S-CREATE",
+      "description": "Одна R со стабильным ID в App Definition и Scenario S-CREATE. Делегация — ссылка на место подробного ответа, не новый R и не выполнение."
+    },
+    {
+      "id": "EX-D-SCREATE",
+      "kind": "decision",
+      "title": "Конкретное описание создания бронирования",
+      "status": "example",
+      "scope": "Scenario S-CREATE",
+      "source": "§3",
+      "description": "Выбор слота, подтверждение, определённый результат, обработка занятого слота и потери ответа. Тот же D представлен как внутренний ответ Scenario."
+    },
+    {
+      "id": "EX-R-RESULT",
+      "kind": "requirement",
+      "title": "Узнать результат подтверждения после потери ответа без дубля",
+      "source": "§3",
+      "description": "Функциональная потребность из содержимого сценария, не то же самое, что требование «написать описание»."
+    },
+    {
+      "id": "EX-D-STATUS",
+      "kind": "decision",
+      "title": "Проверить статус подтверждения и показать результат",
+      "status": "example",
+      "scope": "Локальный ответ F-RESERVATION",
+      "source": "§3–4",
+      "description": "Если окончательный результат действительно установлен, показать подтверждение или отказ; при промежуточном/неизвестном ответе сохранить неизвестность. Способ доступен условно; полная достаточность не подтверждена.",
+      "evidenceStatus": "unverified",
+      "openQuestion": "EX-Q-D-STATUS"
+    },
+    {
+      "id": "EX-C-STATUS",
+      "kind": "context",
+      "title": "Средство проверки статуса уже доступно",
+      "source": "§3",
+      "description": "Условная предпосылка: ресурса на новую подсистему нет. Не доказаны корреляция статуса с тем же подтверждением и окончательность ответов."
+    },
+    {
+      "id": "EX-RR-STATUS-FEAS",
+      "kind": "requirement",
+      "title": "Обработка с использованием доступных средств",
+      "source": "§3",
+      "description": "Локальное Realization Requirement, отличное от функционального EX-R-RESULT."
+    },
+    {
+      "id": "EX-Q-D-STATUS",
+      "kind": "question",
+      "title": "Может ли статус установить результат нужного подтверждения?",
+      "source": "§3–4",
+      "status": "partially-blocking",
+      "description": "QRPE обоснованности EX-D-STATUS. Проверить корреляцию, окончательность и установление результата после потери ответа. Не отменяет D автоматически."
+    }
+  ],
+  "edges": [
+    {
+      "id": "REF-D-01",
+      "type": "DRIVES",
+      "from": "EX-R-SCENARIOS",
+      "to": "EX-D-SCENARIOS"
+    },
+    {
+      "id": "REF-D-02",
+      "type": "INTRODUCES",
+      "from": "EX-D-SCENARIOS",
+      "to": "EX-R-DESCRIBE-CREATE",
+      "parent": "EX-R-SCENARIOS"
+    },
+    {
+      "id": "REF-D-03",
+      "type": "DRIVES",
+      "from": "EX-R-DESCRIBE-CREATE",
+      "to": "EX-D-SCREATE"
+    },
+    {
+      "id": "REF-D-04",
+      "type": "REVEALS_NEED",
+      "from": "EX-D-SCREATE",
+      "to": "EX-R-RESULT",
+      "illustrative": true,
+      "meaning": "Подробный ответ на описание позволяет установить функциональную потребность"
+    },
+    {
+      "id": "REF-D-05",
+      "type": "DRIVES",
+      "from": "EX-R-RESULT",
+      "to": "EX-D-STATUS"
+    },
+    {
+      "id": "REF-D-06",
+      "type": "DRIVES",
+      "from": "EX-RR-STATUS-FEAS",
+      "to": "EX-D-STATUS"
+    },
+    {
+      "id": "REF-D-07",
+      "type": "CONTEXT_FOR",
+      "from": "EX-C-STATUS",
+      "to": "EX-D-STATUS"
+    },
+    {
+      "id": "REF-D-08",
+      "type": "QRPE_FOR",
+      "from": "EX-Q-D-STATUS",
+      "to": "EX-D-STATUS",
+      "illustrative": true,
+      "meaning": "QRPE обоснованности выбранного D"
+    }
+  ],
+  "events": [],
+  "coverage": "Один идентификатор R в двух Target Modules, внутренняя D, функциональная потребность, локальное средство, неизвестность/достаточность.",
+  "illustrativeTypes": [
+    "REVEALS_NEED",
+    "QRPE_FOR"
+  ]
+}

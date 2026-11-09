@@ -1,0 +1,500 @@
+{
+  "schemaVersion": 1,
+  "id": "reference-prepared-planning-tree",
+  "title": "Длинный подготовленный граф — только варианты",
+  "revision": 3,
+  "readOnly": true,
+  "exampleOnly": true,
+  "templateOnly": true,
+  "planningScale": "module",
+  "identitySpace": "rdg-example-prepared-v7",
+  "rootRequirementId": "R-PLAN",
+  "description": "Read-only подготовленные варианты; ни один не выбран. Листовой способ RF-1-O1 достаточен без новых дочерних R, если его канон применим. Роли child R остаются потенциальными, QRPE=[] не доказывает отсутствие риска.",
+  "nodes": [
+    {
+      "id": "R-PLAN",
+      "kind": "requirement",
+      "title": "Разбить функциональность приложения",
+      "qrpe": []
+    },
+    {
+      "id": "O-FEATURE",
+      "kind": "option",
+      "title": "По Features",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "O-FEATURE-plus-1",
+            "text": "Нужна независимая проработка частей",
+            "checkCategories": [
+              "согласованность"
+            ]
+          },
+          {
+            "id": "O-FEATURE-plus-2",
+            "text": "Есть команды для отдельных функциональных областей",
+            "checkCategories": [
+              "согласованность"
+            ]
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "O-FEATURE-minus-1",
+            "text": "Критичны сквозные зависимости",
+            "checkCategories": [
+              "согласованность"
+            ]
+          },
+          {
+            "id": "O-FEATURE-minus-2",
+            "text": "Трудно поддерживать единые правила",
+            "checkCategories": [
+              "согласованность"
+            ]
+          }
+        ]
+      },
+      "qrpe": []
+    },
+    {
+      "id": "O-SCENARIO",
+      "kind": "option",
+      "title": "По пользовательским сценариям",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "O-SCENARIO-plus-1",
+            "text": "Ценность состоит в сквозных пользовательских путях",
+            "checkCategories": [
+              "сквозные процессы"
+            ]
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "O-SCENARIO-minus-1",
+            "text": "Нужно переиспользовать общие единицы функциональности",
+            "checkCategories": [
+              "сквозные процессы"
+            ]
+          }
+        ]
+      },
+      "qrpe": []
+    },
+    {
+      "id": "RF-1",
+      "kind": "requirement",
+      "status": "candidate",
+      "title": "Проработать выбранную Feature",
+      "qrpe": []
+    },
+    {
+      "id": "RF-1-O1",
+      "kind": "option",
+      "title": "Непосредственное уточнение результата",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RF-1-O1-plus-1",
+            "text": "Описание цели позволяет сразу проверить достаточность",
+            "checkCategories": []
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RF-1-O1-minus-1",
+            "text": "Слишком много скрытых зависимостей",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": [],
+      "directAnswer": true,
+      "description": "Прямой готовый ответ на потенциальный RF-1: не создаёт child R и Unit; не означает принятие."
+    },
+    {
+      "id": "RF-1-O2",
+      "kind": "option",
+      "title": "Через отдельные состояния и проверки",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RF-1-O2-plus-1",
+            "text": "Нужно явно контролировать переходы и качество",
+            "checkCategories": []
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RF-1-O2-minus-1",
+            "text": "Слишком большой накладной расход",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": []
+    },
+    {
+      "id": "RF-2",
+      "kind": "requirement",
+      "status": "candidate",
+      "title": "Обеспечить согласованность Features",
+      "qrpe": []
+    },
+    {
+      "id": "RF-2-O1",
+      "kind": "option",
+      "title": "Непосредственное уточнение результата",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RF-2-O1-plus-1",
+            "text": "Описание цели позволяет сразу проверить достаточность",
+            "checkCategories": []
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RF-2-O1-minus-1",
+            "text": "Слишком много скрытых зависимостей",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": []
+    },
+    {
+      "id": "RF-2-O2",
+      "kind": "option",
+      "title": "Через отдельные состояния и проверки",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RF-2-O2-plus-1",
+            "text": "Нужно явно контролировать переходы и качество",
+            "checkCategories": []
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RF-2-O2-minus-1",
+            "text": "Слишком большой накладной расход",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": []
+    },
+    {
+      "id": "RS-1",
+      "kind": "requirement",
+      "status": "candidate",
+      "title": "Проработать пользовательский сценарий",
+      "qrpe": []
+    },
+    {
+      "id": "RS-1-O1",
+      "kind": "option",
+      "title": "Непосредственное уточнение результата",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RS-1-O1-plus-1",
+            "text": "Описание цели позволяет сразу проверить достаточность",
+            "checkCategories": []
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RS-1-O1-minus-1",
+            "text": "Слишком много скрытых зависимостей",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": []
+    },
+    {
+      "id": "RS-1-O2",
+      "kind": "option",
+      "title": "Через отдельные состояния и проверки",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RS-1-O2-plus-1",
+            "text": "Нужно явно контролировать переходы и качество",
+            "checkCategories": []
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RS-1-O2-minus-1",
+            "text": "Слишком большой накладной расход",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": []
+    },
+    {
+      "id": "RS-2",
+      "kind": "requirement",
+      "status": "candidate",
+      "title": "Согласовать пересекающиеся сценарии",
+      "qrpe": []
+    },
+    {
+      "id": "RS-2-O1",
+      "kind": "option",
+      "title": "Непосредственное уточнение результата",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RS-2-O1-plus-1",
+            "text": "Описание цели позволяет сразу проверить достаточность",
+            "checkCategories": []
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RS-2-O1-minus-1",
+            "text": "Слишком много скрытых зависимостей",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": []
+    },
+    {
+      "id": "RS-2-O2",
+      "kind": "option",
+      "title": "Через отдельные состояния и проверки",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RS-2-O2-plus-1",
+            "text": "Нужно явно контролировать переходы и качество",
+            "checkCategories": []
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RS-2-O2-minus-1",
+            "text": "Слишком большой накладной расход",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": []
+    },
+    {
+      "id": "RF-DEEP",
+      "kind": "requirement",
+      "status": "candidate",
+      "title": "Проверить переходы внутри Feature",
+      "qrpe": []
+    },
+    {
+      "id": "RF-DEEP-O1",
+      "kind": "option",
+      "title": "По состояниям",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RF-DEEP-O1-plus-1",
+            "text": "Есть перечислимые состояния",
+            "checkCategories": []
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RF-DEEP-O1-minus-1",
+            "text": "Состояния недостаточно стабильны",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": []
+    },
+    {
+      "id": "RF-DEEP-O2",
+      "kind": "option",
+      "title": "По инвариантам",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RF-DEEP-O2-plus-1",
+            "text": "Важны неизменные условия",
+            "checkCategories": []
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RF-DEEP-O2-minus-1",
+            "text": "Состояния критичны для пользователя",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": []
+    }
+  ],
+  "edges": [
+    {
+      "id": "OPT-O-FEATURE",
+      "type": "OPTION_FOR",
+      "from": "R-PLAN",
+      "to": "O-FEATURE"
+    },
+    {
+      "id": "OPT-O-SCENARIO",
+      "type": "OPTION_FOR",
+      "from": "R-PLAN",
+      "to": "O-SCENARIO"
+    },
+    {
+      "id": "POT-RF-1",
+      "type": "OUTCOME_OF",
+      "from": "O-FEATURE",
+      "to": "RF-1",
+      "candidateChildRole": "subgoal"
+    },
+    {
+      "id": "OPT-RF-1-O1",
+      "type": "OPTION_FOR",
+      "from": "RF-1",
+      "to": "RF-1-O1"
+    },
+    {
+      "id": "OPT-RF-1-O2",
+      "type": "OPTION_FOR",
+      "from": "RF-1",
+      "to": "RF-1-O2"
+    },
+    {
+      "id": "POT-RF-2",
+      "type": "OUTCOME_OF",
+      "from": "O-FEATURE",
+      "to": "RF-2",
+      "candidateChildRole": "method_correctness"
+    },
+    {
+      "id": "OPT-RF-2-O1",
+      "type": "OPTION_FOR",
+      "from": "RF-2",
+      "to": "RF-2-O1"
+    },
+    {
+      "id": "OPT-RF-2-O2",
+      "type": "OPTION_FOR",
+      "from": "RF-2",
+      "to": "RF-2-O2"
+    },
+    {
+      "id": "POT-RS-1",
+      "type": "OUTCOME_OF",
+      "from": "O-SCENARIO",
+      "to": "RS-1",
+      "candidateChildRole": "subgoal"
+    },
+    {
+      "id": "OPT-RS-1-O1",
+      "type": "OPTION_FOR",
+      "from": "RS-1",
+      "to": "RS-1-O1"
+    },
+    {
+      "id": "OPT-RS-1-O2",
+      "type": "OPTION_FOR",
+      "from": "RS-1",
+      "to": "RS-1-O2"
+    },
+    {
+      "id": "POT-RS-2",
+      "type": "OUTCOME_OF",
+      "from": "O-SCENARIO",
+      "to": "RS-2",
+      "candidateChildRole": "method_correctness"
+    },
+    {
+      "id": "OPT-RS-2-O1",
+      "type": "OPTION_FOR",
+      "from": "RS-2",
+      "to": "RS-2-O1"
+    },
+    {
+      "id": "OPT-RS-2-O2",
+      "type": "OPTION_FOR",
+      "from": "RS-2",
+      "to": "RS-2-O2"
+    },
+    {
+      "id": "POT-RF-DEEP",
+      "type": "OUTCOME_OF",
+      "from": "RF-1-O2",
+      "to": "RF-DEEP",
+      "candidateChildRole": "subgoal"
+    },
+    {
+      "id": "OPT-RF-DEEP-O1",
+      "type": "OPTION_FOR",
+      "from": "RF-DEEP",
+      "to": "RF-DEEP-O1"
+    },
+    {
+      "id": "OPT-RF-DEEP-O2",
+      "type": "OPTION_FOR",
+      "from": "RF-DEEP",
+      "to": "RF-DEEP-O2"
+    }
+  ],
+  "events": [],
+  "collections": [
+    {
+      "id": "FEATURE-POTENTIAL",
+      "title": "Потенциальные Requirements разбиения по Features",
+      "anchor": "O-FEATURE",
+      "memberRefs": [
+        "RF-1",
+        "RF-2"
+      ]
+    },
+    {
+      "id": "SCENARIO-POTENTIAL",
+      "title": "Потенциальные Requirements сценариев",
+      "anchor": "O-SCENARIO",
+      "memberRefs": [
+        "RS-1",
+        "RS-2"
+      ]
+    }
+  ],
+  "hypothetical": true,
+  "selectedInProject": false
+}

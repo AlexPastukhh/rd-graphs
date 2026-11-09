@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "id": "template-tm-2d-15-prepared-visual-material-set-unit-ru-mat-03",
+  "title": "Unit · Prepared Material Variants",
+  "revision": 1,
+  "planningScale": "unit",
+  "identitySpace": "prepared:TM-2D-15-PREPARED-VISUAL-MATERIAL-SET",
+  "rootRequirementId": "RU-MAT-03",
+  "readOnly": true,
+  "templateOnly": true,
+  "selected": false,
+  "catalogHidden": true,
+  "preparedModule": {
+    "id": "TEMPLATE-D-RU-MAT-03",
+    "version": "a25e6999b1d7efa5641c89f4225a9553f18316e303f0cb48b67d4bf65e785032",
+    "goalRequirementId": "RU-MAT-03",
+    "methodDecisionId": "TEMPLATE-D-RU-MAT-03",
+    "childRequirementIds": [],
+    "applicability": "retained prepared derivatives/helpers with traceable lineage and practical usability for the set's declared purpose",
+    "successCriteria": "Достаточно выполнить применимую Unit-specific Guidance и её checkpoints; инструкция не доказывает результат."
+  },
+  "sourceDocument": "/workspace/repos/obs-planning-docs/planning/documentation/idtspe-methodology/active/profiles/visual-production-2d/target-modules/TM-2D-15-PREPARED-VISUAL-MATERIAL-SET.md#ru-mat-03",
+  "sourceContentSHA256": "a25e6999b1d7efa5641c89f4225a9553f18316e303f0cb48b67d4bf65e785032",
+  "sourceOwnerGraphSlug": "template-tm-2d-15-prepared-visual-material-set",
+  "sourceAnchor": "ru-mat-03",
+  "coverage": "Готовый способ одного узкого R; без выдуманных под-R и без выбора проекта.",
+  "nodes": [
+    {
+      "id": "RU-MAT-03",
+      "kind": "requirement",
+      "title": "Prepared Material Variants",
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "template-tm-2d-15-prepared-visual-material-set",
+        "nodeId": "RU-MAT-03"
+      }
+    },
+    {
+      "id": "TEMPLATE-D-RU-MAT-03",
+      "kind": "decision",
+      "status": "reusable-unselected",
+      "templateRole": "unit-prepared-guidance",
+      "selected": false,
+      "title": "Готовый способ проработки: Prepared Material Variants",
+      "description": "<a id=\"ru-mat-03\"></a>\n### Prepared Material Variants\n\n`RU-MAT-03`\n\nRetain only prepared derivatives/helpers that belong to this independently useful set. Bounded transformation mechanics are supplied by the [Visual Material Preparation Operation](../operations/VISUAL-MATERIAL-PREPARATION.operation.md#visual-material-preparation-operation); this Unit owns the accepted retained set result, not the mechanics themselves.",
+      "source": "/workspace/repos/obs-planning-docs/planning/documentation/idtspe-methodology/active/profiles/visual-production-2d/target-modules/TM-2D-15-PREPARED-VISUAL-MATERIAL-SET.md#ru-mat-03",
+      "sourceUnitId": "RU-MAT-03",
+      "explicitSubrequirements": false,
+      "note": "Source defines Unit guidance; no explicit nested R inventory is declared here."
+    }
+  ],
+  "edges": [
+    {
+      "id": "UNIT-E-DRIVE",
+      "type": "DRIVES",
+      "from": "RU-MAT-03",
+      "to": "TEMPLATE-D-RU-MAT-03",
+      "templateOnly": true,
+      "meaning": "Готовый ответ на узкую задачу; пока не выбран."
+    }
+  ],
+  "events": []
+}

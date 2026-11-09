@@ -1,0 +1,253 @@
+{
+  "schemaVersion": 1,
+  "actionModel": "candidate-v6",
+  "coreModel": "rdg-decision-v1",
+  "id": "rdg-agent-work-decision-lens",
+  "title": "Work — Decision v1",
+  "identitySpace": "333766e0-5080-5bc1-b82e-c5c3ea6f3c3c",
+  "revision": 1,
+  "rootRequirementId": "R-LENS-WORK",
+  "rootCauses": [
+    {
+      "id": "RC-WORK",
+      "requirementId": "R-LENS-WORK",
+      "reason": "Fundamental work instruction entry",
+      "enabled": true
+    }
+  ],
+  "nodes": [
+    {
+      "id": "R-LENS-WORK",
+      "title": "Перейти от рассмотренного способа к проверенному результату с настоящей историей",
+      "description": "Перейти от рассмотренного способа к проверенному результату с настоящей историей",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "kind": "requirement",
+      "scope": "Fundamental RDG work instructions"
+    },
+    {
+      "id": "A-WORK-BUILD",
+      "title": "Выбрать и выполнить разрешённую работу",
+      "description": "Рассмотреть состав подцелей и доступные способы. Порядок массива не задаёт время; присутствие ветви не означает выбор или исполнение.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "kind": "decision",
+      "selectionState": "discovered"
+    },
+    {
+      "id": "R-WORK-CHOICE",
+      "title": "Способ выбран осмысленно и авторизованно",
+      "description": "Способ выбран осмысленно и авторизованно",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "kind": "requirement",
+      "scope": "Fundamental RDG work instructions"
+    },
+    {
+      "id": "A-WORK-SELECT",
+      "title": "Проверить основания и выбрать способ",
+      "description": "Read the Decision focus, review current pins, inspect Canon guidance and groups. Select or withdraw the Decision through core/schema/preflight/apply. Selection, completion and Action execution are separate facts.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "kind": "decision",
+      "selectionState": "discovered"
+    },
+    {
+      "id": "R-WORK-TIME",
+      "title": "Временное размещение задаётся отдельно",
+      "description": "Временное размещение задаётся отдельно",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "kind": "requirement",
+      "scope": "Fundamental RDG work instructions"
+    },
+    {
+      "id": "A-WORK-PLAN",
+      "title": "Разместить существующий элемент при необходимости",
+      "description": "Read schema and current Plan. Place an existing R, Decision or Graph/external Action with package/Plan CAS through preflight/apply. The first step needs no date; order is mainStepIds. Planning does not require selected and creates no execution fact. Read receipt and restart/readback.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "kind": "decision",
+      "selectionState": "discovered"
+    },
+    {
+      "id": "R-WORK-EXECUTION",
+      "title": "Выполнена настоящая предметная работа",
+      "description": "Выполнена настоящая предметная работа",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "kind": "requirement",
+      "scope": "Fundamental RDG work instructions"
+    },
+    {
+      "id": "A-WORK-DO",
+      "title": "Исполнить разрешённый способ",
+      "description": "Выполнить реальное действие над нужными источниками, проверить результат и затронутые ограничения. Разделить факт исполнения Action и достаточность достижения R.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "kind": "decision",
+      "selectionState": "discovered"
+    },
+    {
+      "id": "R-WORK-RECORD",
+      "title": "Результат и принятие записи проверены",
+      "description": "Результат и принятие записи проверены",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "kind": "requirement",
+      "scope": "Fundamental RDG work instructions"
+    },
+    {
+      "id": "A-WORK-EVIDENCE",
+      "title": "Записать результат и прочитать receipt",
+      "description": "Read receipt and the actual events. Complete Action, Decision and R separately with basis and genuine Evidence. Opening this lens and Plan placement do not create achievement. After uncertainty use the same transactionId.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "kind": "decision",
+      "selectionState": "discovered"
+    }
+  ],
+  "objects": [
+    {
+      "id": "CANON-WORK-DECISION",
+      "kind": "canon",
+      "title": "Separate planning, choice and facts",
+      "description": "Fundamental work guidance",
+      "revision": 1,
+      "guidance": "Use the common Application and current schema. Preserve namespace and IDs. Do not invent execution, Evidence or completion. Plan order is independent from Decision selection. Read back authoritative artifacts."
+    },
+    {
+      "id": "INFO-DECISION-API-WORK",
+      "kind": "info",
+      "title": "Проверенный маршрут API · work",
+      "description": "Контракт поддержанного Decision runtime; читать вместе с актуальной schema",
+      "revision": 1,
+      "value": "Общий протокол: catalog → read → schema → preflight(request) → apply(request, expectedInputBinding=preview.inputBinding) → receipt/readback. Новый логический запрос получает новый UUID transactionId; точный retry сохраняет его и весь request. Не подменяйте entity ID ключом occurrence. Версии и права проверяются общим Application. Получите текущую schema core/select и затем отдельно выполните реальную работу. attach_evidence записывает проверенные байты и возвращает evidenceRef; core/add Evidence содержит реальное claim/scope/version/source и artifact pin. core/complete требует basis и evidenceIds, верхний evidenceRefs подтверждает фактические файлы. Graph Action, Decision и Requirement завершаются отдельно с проверкой обязательств. schema(plan_create/place/plan_edit) даёт общий Plan v3: mainStepIds, forks/cases и optional timeConstraints. Сначала возможен один шаг без даты и без selected; переключение shownCases меняет только view."
+    }
+  ],
+  "externalActions": [],
+  "edges": [
+    {
+      "id": "D-A-WORK-BUILD",
+      "type": "DRIVES",
+      "from": "R-LENS-WORK",
+      "to": "A-WORK-BUILD"
+    },
+    {
+      "id": "O-R-WORK-CHOICE",
+      "type": "INTRODUCES",
+      "from": "A-WORK-BUILD",
+      "to": "R-WORK-CHOICE"
+    },
+    {
+      "id": "D-A-WORK-SELECT",
+      "type": "DRIVES",
+      "from": "R-WORK-CHOICE",
+      "to": "A-WORK-SELECT"
+    },
+    {
+      "id": "O-R-WORK-TIME",
+      "type": "INTRODUCES",
+      "from": "A-WORK-BUILD",
+      "to": "R-WORK-TIME"
+    },
+    {
+      "id": "D-A-WORK-PLAN",
+      "type": "DRIVES",
+      "from": "R-WORK-TIME",
+      "to": "A-WORK-PLAN"
+    },
+    {
+      "id": "O-R-WORK-EXECUTION",
+      "type": "INTRODUCES",
+      "from": "A-WORK-BUILD",
+      "to": "R-WORK-EXECUTION"
+    },
+    {
+      "id": "D-A-WORK-DO",
+      "type": "DRIVES",
+      "from": "R-WORK-EXECUTION",
+      "to": "A-WORK-DO"
+    },
+    {
+      "id": "O-R-WORK-RECORD",
+      "type": "INTRODUCES",
+      "from": "A-WORK-BUILD",
+      "to": "R-WORK-RECORD"
+    },
+    {
+      "id": "D-A-WORK-EVIDENCE",
+      "type": "DRIVES",
+      "from": "R-WORK-RECORD",
+      "to": "A-WORK-EVIDENCE"
+    },
+    {
+      "id": "GUIDANCE-WORK",
+      "type": "CANON_FOR",
+      "from": "CANON-WORK-DECISION",
+      "to": "A-WORK-BUILD"
+    },
+    {
+      "id": "INFO-DECISION-API-TO-ROOT-WORK",
+      "type": "INFO_FOR",
+      "from": "INFO-DECISION-API-WORK",
+      "to": "R-LENS-WORK"
+    }
+  ],
+  "decisionGroups": [],
+  "workGraphs": [
+    {
+      "id": "WG-WORK",
+      "title": "Work instructions",
+      "rootIds": [
+        "R-LENS-WORK"
+      ],
+      "memberIds": [
+        "R-LENS-WORK",
+        "A-WORK-BUILD",
+        "R-WORK-CHOICE",
+        "A-WORK-SELECT",
+        "R-WORK-TIME",
+        "A-WORK-PLAN",
+        "R-WORK-EXECUTION",
+        "A-WORK-DO",
+        "R-WORK-RECORD",
+        "A-WORK-EVIDENCE",
+        "CANON-WORK-DECISION",
+        "INFO-DECISION-API-WORK"
+      ]
+    }
+  ],
+  "events": [],
+  "recommendationPackageIds": []
+}

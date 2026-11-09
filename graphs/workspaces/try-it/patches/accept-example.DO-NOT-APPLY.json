@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "expectedRevision": 1,
+  "operations": [
+    {
+      "op": "add_node",
+      "node": {
+        "id": "D-001",
+        "kind": "decision",
+        "title": "Разложить первую версию на сценарии и функции",
+        "status": "committed",
+        "answer": "Сначала определить пользовательские сценарии и состав функций; затем уточнять реализацию."
+      }
+    },
+    {
+      "op": "add_node",
+      "node": {
+        "id": "R-002",
+        "kind": "requirement",
+        "title": "Определить сценарии первой версии"
+      }
+    },
+    {
+      "op": "add_node",
+      "node": {
+        "id": "R-003",
+        "kind": "requirement",
+        "title": "Определить функции первой версии"
+      }
+    },
+    {
+      "op": "add_edge",
+      "edge": {
+        "id": "E-001",
+        "type": "DRIVES",
+        "from": "R-001",
+        "to": "D-001"
+      }
+    },
+    {
+      "op": "add_edge",
+      "edge": {
+        "id": "E-002",
+        "type": "INTRODUCES",
+        "from": "D-001",
+        "to": "R-002",
+        "parent": "R-001"
+      }
+    },
+    {
+      "op": "add_edge",
+      "edge": {
+        "id": "E-003",
+        "type": "INTRODUCES",
+        "from": "D-001",
+        "to": "R-003",
+        "parent": "R-001"
+      }
+    },
+    {
+      "op": "append_event",
+      "event": {
+        "id": "EV-001",
+        "type": "decision_selected",
+        "decisionId": "D-001",
+        "by": "user",
+        "note": "Пример: пользователь явно выбрал разбиение по сценариям и функциям. Это шаблон, а не состоявшийся выбор."
+      }
+    }
+  ]
+}
