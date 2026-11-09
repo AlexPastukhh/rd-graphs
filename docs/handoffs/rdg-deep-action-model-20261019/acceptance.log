@@ -1,0 +1,418 @@
+test_activity_shows_edits_results_actor_and_idempotency_without_schedule (__main__.DeepAction.test_activity_shows_edits_results_actor_and_idempotency_without_schedule) ... ok
+test_composite_definition_change_needs_result_review_instead_of_auto_success (__main__.DeepAction.test_composite_definition_change_needs_result_review_instead_of_auto_success) ... FAIL
+test_decomposition_execution_does_not_mean_its_subgoals_are_achieved (__main__.DeepAction.test_decomposition_execution_does_not_mean_its_subgoals_are_achieved) ... FAIL
+test_deep_unselected_branch_retains_canons_qrpe_and_distinct_roles (__main__.DeepAction.test_deep_unselected_branch_retains_canons_qrpe_and_distinct_roles) ... FAIL
+test_denied_result_candidate_and_separate_grants_cannot_forge_completion (__main__.DeepAction.test_denied_result_candidate_and_separate_grants_cannot_forge_completion) ... ok
+test_leaf_no_extra_result_goal_and_later_definition_edit_preserves_history (__main__.DeepAction.test_leaf_no_extra_result_goal_and_later_definition_edit_preserves_history) ... FAIL
+test_mixed_action_uses_correctness_for_itself_and_subgoals_for_parent (__main__.DeepAction.test_mixed_action_uses_correctness_for_itself_and_subgoals_for_parent) ... FAIL
+test_potential_composition_can_be_revised_without_accepting_it (__main__.DeepAction.test_potential_composition_can_be_revised_without_accepting_it) ... FAIL
+test_potential_cycle_unknown_type_and_empty_decomposition_fail_atomically (__main__.DeepAction.test_potential_cycle_unknown_type_and_empty_decomposition_fail_atomically) ... FAIL
+test_prospective_action_continuation_across_explicit_identity_owner (__main__.DeepAction.test_prospective_action_continuation_across_explicit_identity_owner) ... FAIL
+test_select_promotes_same_ids_without_accepting_descendants_or_other_group (__main__.DeepAction.test_select_promotes_same_ids_without_accepting_descendants_or_other_group) ... FAIL
+test_unavailable_projection_blocks_composite_without_erasing_result_history (__main__.DeepAction.test_unavailable_projection_blocks_composite_without_erasing_result_history) ... FAIL
+test_unknown_child_role_is_incomplete_and_annotation_does_not_erase_results (__main__.DeepAction.test_unknown_child_role_is_incomplete_and_annotation_does_not_erase_results) ... FAIL
+
+======================================================================
+FAIL: test_composite_definition_change_needs_result_review_instead_of_auto_success (__main__.DeepAction.test_composite_definition_change_needs_result_review_instead_of_auto_success)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/repos/rd-graphs/tests/rdg-deep-action.acceptance.test.py", line 239, in test_composite_definition_change_needs_result_review_instead_of_auto_success
+    self.apply([self.add("A"), self.prepare("A", "RC", "method_correctness"), self.choose("A")])
+  File "/workspace/repos/rd-graphs/tests/rdg-deep-action.acceptance.test.py", line 64, in apply
+    self.assert_ok(self.write(package, token or self.token))
+  File "/workspace/repos/rd-graphs/tests/rdg-bearer-package.integration.test.py", line 66, in assert_ok
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : Traceback (most recent call last):
+  File "/tmp/rdg-authority-writer-qkk1znz4/tools/graph-apply.py", line 560, in <module>
+    main()
+  File "/tmp/rdg-authority-writer-qkk1znz4/tools/graph-apply.py", line 555, in main
+    package.execute(patch, dry_run=args.dry_run)
+  File "/tmp/rdg-authority-writer-qkk1znz4/tools/graph-package.py", line 370, in execute
+    records = prepare(package)
+              ^^^^^^^^^^^^^^^^
+  File "/tmp/rdg-authority-writer-qkk1znz4/tools/graph-package.py", line 192, in prepare
+    after, changed = apply_module.apply(before, authoritatively_scoped_patch,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/rdg-authority-writer-qkk1znz4/tools/graph-apply.py", line 287, in apply
+    editor = SourceFileLoader("rdg_graph_api", str(ROOT / "tools" / "rdg-graph-api.py")).load_module()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 605, in _check_name_wrapper
+  File "<frozen importlib._bootstrap_external>", line 1120, in load_module
+  File "<frozen importlib._bootstrap_external>", line 945, in load_module
+  File "<frozen importlib._bootstrap>", line 290, in _load_module_shim
+  File "<frozen importlib._bootstrap>", line 721, in _load
+  File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 936, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1074, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1004, in source_to_code
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/tmp/rdg-authority-writer-qkk1znz4/tools/rdg-graph-api.py", line 225
+    'CANNOT_ARCHIVE_HISTORIC_DRIVER')
+IndentationError: unexpected indent
+
+
+======================================================================
+FAIL: test_decomposition_execution_does_not_mean_its_subgoals_are_achieved (__main__.DeepAction.test_decomposition_execution_does_not_mean_its_subgoals_are_achieved)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/repos/rd-graphs/tests/rdg-deep-action.acceptance.test.py", line 139, in test_decomposition_execution_does_not_mean_its_subgoals_are_achieved
+    self.apply([self.add("D", action_type="decomposition"), self.prepare("D", "R1"),
+  File "/workspace/repos/rd-graphs/tests/rdg-deep-action.acceptance.test.py", line 64, in apply
+    self.assert_ok(self.write(package, token or self.token))
+  File "/workspace/repos/rd-graphs/tests/rdg-bearer-package.integration.test.py", line 66, in assert_ok
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : Traceback (most recent call last):
+  File "/tmp/rdg-authority-writer-kymn0bnb/tools/graph-apply.py", line 560, in <module>
+    main()
+  File "/tmp/rdg-authority-writer-kymn0bnb/tools/graph-apply.py", line 555, in main
+    package.execute(patch, dry_run=args.dry_run)
+  File "/tmp/rdg-authority-writer-kymn0bnb/tools/graph-package.py", line 370, in execute
+    records = prepare(package)
+              ^^^^^^^^^^^^^^^^
+  File "/tmp/rdg-authority-writer-kymn0bnb/tools/graph-package.py", line 192, in prepare
+    after, changed = apply_module.apply(before, authoritatively_scoped_patch,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/rdg-authority-writer-kymn0bnb/tools/graph-apply.py", line 287, in apply
+    editor = SourceFileLoader("rdg_graph_api", str(ROOT / "tools" / "rdg-graph-api.py")).load_module()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 605, in _check_name_wrapper
+  File "<frozen importlib._bootstrap_external>", line 1120, in load_module
+  File "<frozen importlib._bootstrap_external>", line 945, in load_module
+  File "<frozen importlib._bootstrap>", line 290, in _load_module_shim
+  File "<frozen importlib._bootstrap>", line 721, in _load
+  File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 936, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1074, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1004, in source_to_code
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/tmp/rdg-authority-writer-kymn0bnb/tools/rdg-graph-api.py", line 225
+    'CANNOT_ARCHIVE_HISTORIC_DRIVER')
+IndentationError: unexpected indent
+
+
+======================================================================
+FAIL: test_deep_unselected_branch_retains_canons_qrpe_and_distinct_roles (__main__.DeepAction.test_deep_unselected_branch_retains_canons_qrpe_and_distinct_roles)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/repos/rd-graphs/tests/rdg-deep-action.acceptance.test.py", line 90, in test_deep_unselected_branch_retains_canons_qrpe_and_distinct_roles
+    self.apply([self.add("A0", action_type="decomposition"), self.prepare("A0", "R1"),
+  File "/workspace/repos/rd-graphs/tests/rdg-deep-action.acceptance.test.py", line 64, in apply
+    self.assert_ok(self.write(package, token or self.token))
+  File "/workspace/repos/rd-graphs/tests/rdg-bearer-package.integration.test.py", line 66, in assert_ok
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : Traceback (most recent call last):
+  File "/tmp/rdg-authority-writer-49166z2u/tools/graph-apply.py", line 560, in <module>
+    main()
+  File "/tmp/rdg-authority-writer-49166z2u/tools/graph-apply.py", line 555, in main
+    package.execute(patch, dry_run=args.dry_run)
+  File "/tmp/rdg-authority-writer-49166z2u/tools/graph-package.py", line 370, in execute
+    records = prepare(package)
+              ^^^^^^^^^^^^^^^^
+  File "/tmp/rdg-authority-writer-49166z2u/tools/graph-package.py", line 192, in prepare
+    after, changed = apply_module.apply(before, authoritatively_scoped_patch,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/rdg-authority-writer-49166z2u/tools/graph-apply.py", line 287, in apply
+    editor = SourceFileLoader("rdg_graph_api", str(ROOT / "tools" / "rdg-graph-api.py")).load_module()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 605, in _check_name_wrapper
+  File "<frozen importlib._bootstrap_external>", line 1120, in load_module
+  File "<frozen importlib._bootstrap_external>", line 945, in load_module
+  File "<frozen importlib._bootstrap>", line 290, in _load_module_shim
+  File "<frozen importlib._bootstrap>", line 721, in _load
+  File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 936, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1074, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1004, in source_to_code
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/tmp/rdg-authority-writer-49166z2u/tools/rdg-graph-api.py", line 225
+    'CANNOT_ARCHIVE_HISTORIC_DRIVER')
+IndentationError: unexpected indent
+
+
+======================================================================
+FAIL: test_leaf_no_extra_result_goal_and_later_definition_edit_preserves_history (__main__.DeepAction.test_leaf_no_extra_result_goal_and_later_definition_edit_preserves_history)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/repos/rd-graphs/tests/rdg-deep-action.acceptance.test.py", line 178, in test_leaf_no_extra_result_goal_and_later_definition_edit_preserves_history
+    self.apply([self.edit("edit_node", nodeId="LEAF", changes={"title": "Changed definition"})])
+  File "/workspace/repos/rd-graphs/tests/rdg-deep-action.acceptance.test.py", line 64, in apply
+    self.assert_ok(self.write(package, token or self.token))
+  File "/workspace/repos/rd-graphs/tests/rdg-bearer-package.integration.test.py", line 66, in assert_ok
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : Traceback (most recent call last):
+  File "/tmp/rdg-authority-writer-xs4e28fv/tools/graph-apply.py", line 560, in <module>
+    main()
+  File "/tmp/rdg-authority-writer-xs4e28fv/tools/graph-apply.py", line 555, in main
+    package.execute(patch, dry_run=args.dry_run)
+  File "/tmp/rdg-authority-writer-xs4e28fv/tools/graph-package.py", line 370, in execute
+    records = prepare(package)
+              ^^^^^^^^^^^^^^^^
+  File "/tmp/rdg-authority-writer-xs4e28fv/tools/graph-package.py", line 192, in prepare
+    after, changed = apply_module.apply(before, authoritatively_scoped_patch,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/rdg-authority-writer-xs4e28fv/tools/graph-apply.py", line 287, in apply
+    editor = SourceFileLoader("rdg_graph_api", str(ROOT / "tools" / "rdg-graph-api.py")).load_module()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 605, in _check_name_wrapper
+  File "<frozen importlib._bootstrap_external>", line 1120, in load_module
+  File "<frozen importlib._bootstrap_external>", line 945, in load_module
+  File "<frozen importlib._bootstrap>", line 290, in _load_module_shim
+  File "<frozen importlib._bootstrap>", line 721, in _load
+  File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 936, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1074, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1004, in source_to_code
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/tmp/rdg-authority-writer-xs4e28fv/tools/rdg-graph-api.py", line 225
+    'CANNOT_ARCHIVE_HISTORIC_DRIVER')
+IndentationError: unexpected indent
+
+
+======================================================================
+FAIL: test_mixed_action_uses_correctness_for_itself_and_subgoals_for_parent (__main__.DeepAction.test_mixed_action_uses_correctness_for_itself_and_subgoals_for_parent)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/repos/rd-graphs/tests/rdg-deep-action.acceptance.test.py", line 156, in test_mixed_action_uses_correctness_for_itself_and_subgoals_for_parent
+    self.apply([self.add("A"), self.prepare("A", "RS"),
+  File "/workspace/repos/rd-graphs/tests/rdg-deep-action.acceptance.test.py", line 64, in apply
+    self.assert_ok(self.write(package, token or self.token))
+  File "/workspace/repos/rd-graphs/tests/rdg-bearer-package.integration.test.py", line 66, in assert_ok
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : Traceback (most recent call last):
+  File "/tmp/rdg-authority-writer-4xg2rop2/tools/graph-apply.py", line 560, in <module>
+    main()
+  File "/tmp/rdg-authority-writer-4xg2rop2/tools/graph-apply.py", line 555, in main
+    package.execute(patch, dry_run=args.dry_run)
+  File "/tmp/rdg-authority-writer-4xg2rop2/tools/graph-package.py", line 370, in execute
+    records = prepare(package)
+              ^^^^^^^^^^^^^^^^
+  File "/tmp/rdg-authority-writer-4xg2rop2/tools/graph-package.py", line 192, in prepare
+    after, changed = apply_module.apply(before, authoritatively_scoped_patch,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/rdg-authority-writer-4xg2rop2/tools/graph-apply.py", line 287, in apply
+    editor = SourceFileLoader("rdg_graph_api", str(ROOT / "tools" / "rdg-graph-api.py")).load_module()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 605, in _check_name_wrapper
+  File "<frozen importlib._bootstrap_external>", line 1120, in load_module
+  File "<frozen importlib._bootstrap_external>", line 945, in load_module
+  File "<frozen importlib._bootstrap>", line 290, in _load_module_shim
+  File "<frozen importlib._bootstrap>", line 721, in _load
+  File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 936, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1074, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1004, in source_to_code
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/tmp/rdg-authority-writer-4xg2rop2/tools/rdg-graph-api.py", line 225
+    'CANNOT_ARCHIVE_HISTORIC_DRIVER')
+IndentationError: unexpected indent
+
+
+======================================================================
+FAIL: test_potential_composition_can_be_revised_without_accepting_it (__main__.DeepAction.test_potential_composition_can_be_revised_without_accepting_it)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/repos/rd-graphs/tests/rdg-deep-action.acceptance.test.py", line 266, in test_potential_composition_can_be_revised_without_accepting_it
+    self.apply([self.add("D", action_type="decomposition"), self.prepare("D", "R1"),
+  File "/workspace/repos/rd-graphs/tests/rdg-deep-action.acceptance.test.py", line 64, in apply
+    self.assert_ok(self.write(package, token or self.token))
+  File "/workspace/repos/rd-graphs/tests/rdg-bearer-package.integration.test.py", line 66, in assert_ok
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : Traceback (most recent call last):
+  File "/tmp/rdg-authority-writer-8k9yg3t5/tools/graph-apply.py", line 560, in <module>
+    main()
+  File "/tmp/rdg-authority-writer-8k9yg3t5/tools/graph-apply.py", line 555, in main
+    package.execute(patch, dry_run=args.dry_run)
+  File "/tmp/rdg-authority-writer-8k9yg3t5/tools/graph-package.py", line 370, in execute
+    records = prepare(package)
+              ^^^^^^^^^^^^^^^^
+  File "/tmp/rdg-authority-writer-8k9yg3t5/tools/graph-package.py", line 192, in prepare
+    after, changed = apply_module.apply(before, authoritatively_scoped_patch,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/rdg-authority-writer-8k9yg3t5/tools/graph-apply.py", line 287, in apply
+    editor = SourceFileLoader("rdg_graph_api", str(ROOT / "tools" / "rdg-graph-api.py")).load_module()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 605, in _check_name_wrapper
+  File "<frozen importlib._bootstrap_external>", line 1120, in load_module
+  File "<frozen importlib._bootstrap_external>", line 945, in load_module
+  File "<frozen importlib._bootstrap>", line 290, in _load_module_shim
+  File "<frozen importlib._bootstrap>", line 721, in _load
+  File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 936, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1074, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1004, in source_to_code
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/tmp/rdg-authority-writer-8k9yg3t5/tools/rdg-graph-api.py", line 225
+    'CANNOT_ARCHIVE_HISTORIC_DRIVER')
+IndentationError: unexpected indent
+
+
+======================================================================
+FAIL: test_potential_cycle_unknown_type_and_empty_decomposition_fail_atomically (__main__.DeepAction.test_potential_cycle_unknown_type_and_empty_decomposition_fail_atomically)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/repos/rd-graphs/tests/rdg-deep-action.acceptance.test.py", line 135, in test_potential_cycle_unknown_type_and_empty_decomposition_fail_atomically
+    self.assert_denied(self.write(self.patch(ops, self.read()["revision"], "bad-"+str(self.seq)), self.token), reason)
+  File "/workspace/repos/rd-graphs/tests/rdg-bearer-package.integration.test.py", line 69, in assert_denied
+    self.assertIn(reason, result.stderr)
+AssertionError: 'cycle' not found in 'Traceback (most recent call last):\n  File "/tmp/rdg-authority-writer-33y4_q3f/tools/graph-apply.py", line 560, in <module>\n    main()\n  File "/tmp/rdg-authority-writer-33y4_q3f/tools/graph-apply.py", line 555, in main\n    package.execute(patch, dry_run=args.dry_run)\n  File "/tmp/rdg-authority-writer-33y4_q3f/tools/graph-package.py", line 370, in execute\n    records = prepare(package)\n              ^^^^^^^^^^^^^^^^\n  File "/tmp/rdg-authority-writer-33y4_q3f/tools/graph-package.py", line 192, in prepare\n    after, changed = apply_module.apply(before, authoritatively_scoped_patch,\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "/tmp/rdg-authority-writer-33y4_q3f/tools/graph-apply.py", line 287, in apply\n    editor = SourceFileLoader("rdg_graph_api", str(ROOT / "tools" / "rdg-graph-api.py")).load_module()\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File "<frozen importlib._bootstrap_external>", line 605, in _check_name_wrapper\n  File "<frozen importlib._bootstrap_external>", line 1120, in load_module\n  File "<frozen importlib._bootstrap_external>", line 945, in load_module\n  File "<frozen importlib._bootstrap>", line 290, in _load_module_shim\n  File "<frozen importlib._bootstrap>", line 721, in _load\n  File "<frozen importlib._bootstrap>", line 690, in _load_unlocked\n  File "<frozen importlib._bootstrap_external>", line 936, in exec_module\n  File "<frozen importlib._bootstrap_external>", line 1074, in get_code\n  File "<frozen importlib._bootstrap_external>", line 1004, in source_to_code\n  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed\n  File "/tmp/rdg-authority-writer-33y4_q3f/tools/rdg-graph-api.py", line 225\n    \'CANNOT_ARCHIVE_HISTORIC_DRIVER\')\nIndentationError: unexpected indent\n'
+
+======================================================================
+FAIL: test_prospective_action_continuation_across_explicit_identity_owner (__main__.DeepAction.test_prospective_action_continuation_across_explicit_identity_owner)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/repos/rd-graphs/tests/rdg-deep-action.acceptance.test.py", line 278, in test_prospective_action_continuation_across_explicit_identity_owner
+    self.apply([self.add("A"), self.prepare("A", "R1")])
+  File "/workspace/repos/rd-graphs/tests/rdg-deep-action.acceptance.test.py", line 64, in apply
+    self.assert_ok(self.write(package, token or self.token))
+  File "/workspace/repos/rd-graphs/tests/rdg-bearer-package.integration.test.py", line 66, in assert_ok
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : Traceback (most recent call last):
+  File "/tmp/rdg-authority-writer-u7e9rqs4/tools/graph-apply.py", line 560, in <module>
+    main()
+  File "/tmp/rdg-authority-writer-u7e9rqs4/tools/graph-apply.py", line 555, in main
+    package.execute(patch, dry_run=args.dry_run)
+  File "/tmp/rdg-authority-writer-u7e9rqs4/tools/graph-package.py", line 370, in execute
+    records = prepare(package)
+              ^^^^^^^^^^^^^^^^
+  File "/tmp/rdg-authority-writer-u7e9rqs4/tools/graph-package.py", line 192, in prepare
+    after, changed = apply_module.apply(before, authoritatively_scoped_patch,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/rdg-authority-writer-u7e9rqs4/tools/graph-apply.py", line 287, in apply
+    editor = SourceFileLoader("rdg_graph_api", str(ROOT / "tools" / "rdg-graph-api.py")).load_module()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 605, in _check_name_wrapper
+  File "<frozen importlib._bootstrap_external>", line 1120, in load_module
+  File "<frozen importlib._bootstrap_external>", line 945, in load_module
+  File "<frozen importlib._bootstrap>", line 290, in _load_module_shim
+  File "<frozen importlib._bootstrap>", line 721, in _load
+  File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 936, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1074, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1004, in source_to_code
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/tmp/rdg-authority-writer-u7e9rqs4/tools/rdg-graph-api.py", line 225
+    'CANNOT_ARCHIVE_HISTORIC_DRIVER')
+IndentationError: unexpected indent
+
+
+======================================================================
+FAIL: test_select_promotes_same_ids_without_accepting_descendants_or_other_group (__main__.DeepAction.test_select_promotes_same_ids_without_accepting_descendants_or_other_group)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/repos/rd-graphs/tests/rdg-deep-action.acceptance.test.py", line 112, in test_select_promotes_same_ids_without_accepting_descendants_or_other_group
+    self.apply([self.add("D1", action_type="decomposition"), self.prepare("D1", "R1"),
+  File "/workspace/repos/rd-graphs/tests/rdg-deep-action.acceptance.test.py", line 64, in apply
+    self.assert_ok(self.write(package, token or self.token))
+  File "/workspace/repos/rd-graphs/tests/rdg-bearer-package.integration.test.py", line 66, in assert_ok
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : Traceback (most recent call last):
+  File "/tmp/rdg-authority-writer-688oy9rb/tools/graph-apply.py", line 560, in <module>
+    main()
+  File "/tmp/rdg-authority-writer-688oy9rb/tools/graph-apply.py", line 555, in main
+    package.execute(patch, dry_run=args.dry_run)
+  File "/tmp/rdg-authority-writer-688oy9rb/tools/graph-package.py", line 370, in execute
+    records = prepare(package)
+              ^^^^^^^^^^^^^^^^
+  File "/tmp/rdg-authority-writer-688oy9rb/tools/graph-package.py", line 192, in prepare
+    after, changed = apply_module.apply(before, authoritatively_scoped_patch,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/rdg-authority-writer-688oy9rb/tools/graph-apply.py", line 287, in apply
+    editor = SourceFileLoader("rdg_graph_api", str(ROOT / "tools" / "rdg-graph-api.py")).load_module()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 605, in _check_name_wrapper
+  File "<frozen importlib._bootstrap_external>", line 1120, in load_module
+  File "<frozen importlib._bootstrap_external>", line 945, in load_module
+  File "<frozen importlib._bootstrap>", line 290, in _load_module_shim
+  File "<frozen importlib._bootstrap>", line 721, in _load
+  File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 936, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1074, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1004, in source_to_code
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/tmp/rdg-authority-writer-688oy9rb/tools/rdg-graph-api.py", line 225
+    'CANNOT_ARCHIVE_HISTORIC_DRIVER')
+IndentationError: unexpected indent
+
+
+======================================================================
+FAIL: test_unavailable_projection_blocks_composite_without_erasing_result_history (__main__.DeepAction.test_unavailable_projection_blocks_composite_without_erasing_result_history)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/repos/rd-graphs/tests/rdg-deep-action.acceptance.test.py", line 229, in test_unavailable_projection_blocks_composite_without_erasing_result_history
+    self.apply([self.add("A"), self.prepare("A", "RC", "method_correctness"), self.choose("A")])
+  File "/workspace/repos/rd-graphs/tests/rdg-deep-action.acceptance.test.py", line 64, in apply
+    self.assert_ok(self.write(package, token or self.token))
+  File "/workspace/repos/rd-graphs/tests/rdg-bearer-package.integration.test.py", line 66, in assert_ok
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : Traceback (most recent call last):
+  File "/tmp/rdg-authority-writer-c_6w1qaq/tools/graph-apply.py", line 560, in <module>
+    main()
+  File "/tmp/rdg-authority-writer-c_6w1qaq/tools/graph-apply.py", line 555, in main
+    package.execute(patch, dry_run=args.dry_run)
+  File "/tmp/rdg-authority-writer-c_6w1qaq/tools/graph-package.py", line 370, in execute
+    records = prepare(package)
+              ^^^^^^^^^^^^^^^^
+  File "/tmp/rdg-authority-writer-c_6w1qaq/tools/graph-package.py", line 192, in prepare
+    after, changed = apply_module.apply(before, authoritatively_scoped_patch,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/rdg-authority-writer-c_6w1qaq/tools/graph-apply.py", line 287, in apply
+    editor = SourceFileLoader("rdg_graph_api", str(ROOT / "tools" / "rdg-graph-api.py")).load_module()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 605, in _check_name_wrapper
+  File "<frozen importlib._bootstrap_external>", line 1120, in load_module
+  File "<frozen importlib._bootstrap_external>", line 945, in load_module
+  File "<frozen importlib._bootstrap>", line 290, in _load_module_shim
+  File "<frozen importlib._bootstrap>", line 721, in _load
+  File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 936, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1074, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1004, in source_to_code
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/tmp/rdg-authority-writer-c_6w1qaq/tools/rdg-graph-api.py", line 225
+    'CANNOT_ARCHIVE_HISTORIC_DRIVER')
+IndentationError: unexpected indent
+
+
+======================================================================
+FAIL: test_unknown_child_role_is_incomplete_and_annotation_does_not_erase_results (__main__.DeepAction.test_unknown_child_role_is_incomplete_and_annotation_does_not_erase_results)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/repos/rd-graphs/tests/rdg-deep-action.acceptance.test.py", line 252, in test_unknown_child_role_is_incomplete_and_annotation_does_not_erase_results
+    self.apply([self.add("A"), self.prepare("A", "RC", "method_correctness"), self.choose("A")])
+  File "/workspace/repos/rd-graphs/tests/rdg-deep-action.acceptance.test.py", line 64, in apply
+    self.assert_ok(self.write(package, token or self.token))
+  File "/workspace/repos/rd-graphs/tests/rdg-bearer-package.integration.test.py", line 66, in assert_ok
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : Traceback (most recent call last):
+  File "/tmp/rdg-authority-writer-3rcqupyp/tools/graph-apply.py", line 560, in <module>
+    main()
+  File "/tmp/rdg-authority-writer-3rcqupyp/tools/graph-apply.py", line 555, in main
+    package.execute(patch, dry_run=args.dry_run)
+  File "/tmp/rdg-authority-writer-3rcqupyp/tools/graph-package.py", line 370, in execute
+    records = prepare(package)
+              ^^^^^^^^^^^^^^^^
+  File "/tmp/rdg-authority-writer-3rcqupyp/tools/graph-package.py", line 192, in prepare
+    after, changed = apply_module.apply(before, authoritatively_scoped_patch,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/rdg-authority-writer-3rcqupyp/tools/graph-apply.py", line 287, in apply
+    editor = SourceFileLoader("rdg_graph_api", str(ROOT / "tools" / "rdg-graph-api.py")).load_module()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 605, in _check_name_wrapper
+  File "<frozen importlib._bootstrap_external>", line 1120, in load_module
+  File "<frozen importlib._bootstrap_external>", line 945, in load_module
+  File "<frozen importlib._bootstrap>", line 290, in _load_module_shim
+  File "<frozen importlib._bootstrap>", line 721, in _load
+  File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 936, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1074, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1004, in source_to_code
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/tmp/rdg-authority-writer-3rcqupyp/tools/rdg-graph-api.py", line 225
+    'CANNOT_ARCHIVE_HISTORIC_DRIVER')
+IndentationError: unexpected indent
+
+
+----------------------------------------------------------------------
+Ran 13 tests in 16.101s
+
+FAILED (failures=11)

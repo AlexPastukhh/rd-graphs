@@ -1,0 +1,8 @@
+{
+  "createdAtUTC": "2026-10-18T22:16:55.773743+00:00",
+  "previousCheckpoint": "../rdg-applicability-owner-20261019/CHECKPOINT.json",
+  "files": {
+    "README.md": "74c22856833be7b74a3100beb604e43d2ebf4fa8c90618da0ec8928b529bc8e7",
+    "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md": "95c5909ba603dc88cfd2aa593b2eb25ec673e192da5571d400c94fee78fd73e2"
+  }
+}

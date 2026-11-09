@@ -1,0 +1,116 @@
+TAP version 13
+# Subtest: future, scope mismatch and as-of history are distinct; no silently reused obsolete revision
+ok 1 - future, scope mismatch and as-of history are distinct; no silently reused obsolete revision
+  ---
+  duration_ms: 4.978995
+  type: 'test'
+  ...
+# Subtest: invalid calendar date and unscoped answer owner are rejected; unavailable condition remains unknown
+ok 2 - invalid calendar date and unscoped answer owner are rejected; unavailable condition remains unknown
+  ---
+  duration_ms: 2.819528
+  type: 'test'
+  ...
+# Subtest: unsupported root-level canon usages fail instead of silently disappearing from the field list
+ok 3 - unsupported root-level canon usages fail instead of silently disappearing from the field list
+  ---
+  duration_ms: 3.283602
+  type: 'test'
+  ...
+# Subtest: multiple conditions retain all consumers; one current usage wins without merging definitions by name
+ok 4 - multiple conditions retain all consumers; one current usage wins without merging definitions by name
+  ---
+  duration_ms: 0.757784
+  type: 'test'
+  ...
+# Subtest: set aggregation includes hidden branch, reuses prepared definitions and earlier project answer
+ok 5 - set aggregation includes hidden branch, reuses prepared definitions and earlier project answer
+  ---
+  duration_ms: 21.90029
+  type: 'test'
+  ...
+# Subtest: CLI and embedded Viewer consume the same core and report equivalent fields
+not ok 6 - CLI and embedded Viewer consume the same core and report equivalent fields
+  ---
+  duration_ms: 5247.39545
+  type: 'test'
+  location: '/workspace/repos/rd-graphs/tests/rdg-state-viewer.test.cjs:17:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      assert(code.includes('// BEGIN GENERATED RDG STATE\n'+shared+'// END GENERATED RDG STATE'))
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (/workspace/repos/rd-graphs/tests/rdg-state-viewer.test.cjs:23:2)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: context mode inspects without navigation, aggregate stays clickable, off restores navigation
+ok 7 - context mode inspects without navigation, aggregate stays clickable, off restores navigation
+  ---
+  duration_ms: 51.102468
+  type: 'test'
+  ...
+# Subtest: theory links and link-only canon are inspectable; no extra R or saved layout keys
+ok 8 - theory links and link-only canon are inspectable; no extra R or saved layout keys
+  ---
+  duration_ms: 67.625269
+  type: 'test'
+  ...
+# Subtest: empty/unavailable metadata stays incomplete rather than a false success
+ok 9 - empty/unavailable metadata stays incomplete rather than a false success
+  ---
+  duration_ms: 0.742258
+  type: 'test'
+  ...
+# Subtest: shared owner fixture: earlier answer, theory, several consumers and conditional questions
+ok 10 - shared owner fixture: earlier answer, theory, several consumers and conditional questions
+  ---
+  duration_ms: 28.432062
+  type: 'test'
+  ...
+# Subtest: definitions/sources update once; same names do not merge; histories stay separate
+ok 11 - definitions/sources update once; same names do not merge; histories stay separate
+  ---
+  duration_ms: 2.436398
+  type: 'test'
+  ...
+# Subtest: negative contract rejects source execution, duplicate answer owners and invalid refs
+ok 12 - negative contract rejects source execution, duplicate answer owners and invalid refs
+  ---
+  duration_ms: 2.788743
+  type: 'test'
+  ...
+# Subtest: unknown completeness, more than forty fields, project boundary, stale/scope and freeform candidates
+ok 13 - unknown completeness, more than forty fields, project boundary, stale/scope and freeform candidates
+  ---
+  duration_ms: 2.261613
+  type: 'test'
+  ...
+# Subtest: real writer package keeps a single Context owner, readback, revision replay and immutable answer history
+ok 14 - real writer package keeps a single Context owner, readback, revision replay and immutable answer history
+  ---
+  duration_ms: 1526.20884
+  type: 'test'
+  ...
+# Subtest: freeform mapping needs an explicit note; selected D snapshots survive later shared definition changes
+ok 15 - freeform mapping needs an explicit note; selected D snapshots survive later shared definition changes
+  ---
+  duration_ms: 2255.803782
+  type: 'test'
+  ...
+1..15
+# tests 15
+# suites 0
+# pass 14
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 10034.508219

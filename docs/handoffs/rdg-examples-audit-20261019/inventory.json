@@ -1,0 +1,1989 @@
+[
+  {
+    "slug": "template-tm-2d-10-visual-requirements",
+    "file": "2d/template-tm-2d-10-visual-requirements/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready",
+      "title": "Заготовка 2D · Visual Requirements"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-10-VISUAL-REQUIREMENTS",
+    "root": "TEMPLATE-R-TARGET-RESULT",
+    "readOnly": true,
+    "exampleOnly": false,
+    "templateOnly": true,
+    "types": {
+      "requirement": 4,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-10-visual-requirements-unit-ru-req-01",
+    "file": "2d/template-tm-2d-10-visual-requirements-unit-ru-req-01/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-10-VISUAL-REQUIREMENTS",
+    "root": "RU-REQ-01",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-10-visual-requirements-unit-ru-req-02",
+    "file": "2d/template-tm-2d-10-visual-requirements-unit-ru-req-02/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-10-VISUAL-REQUIREMENTS",
+    "root": "RU-REQ-02",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-10-visual-requirements-unit-ru-req-03",
+    "file": "2d/template-tm-2d-10-visual-requirements-unit-ru-req-03/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-10-VISUAL-REQUIREMENTS",
+    "root": "RU-REQ-03",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-15-prepared-visual-material-set",
+    "file": "2d/template-tm-2d-15-prepared-visual-material-set/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready",
+      "title": "Заготовка 2D · Prepared Visual Material Set"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-15-PREPARED-VISUAL-MATERIAL-SET",
+    "root": "TEMPLATE-R-TARGET-RESULT",
+    "readOnly": true,
+    "exampleOnly": false,
+    "templateOnly": true,
+    "types": {
+      "requirement": 4,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-15-prepared-visual-material-set-unit-ru-mat-01",
+    "file": "2d/template-tm-2d-15-prepared-visual-material-set-unit-ru-mat-01/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-15-PREPARED-VISUAL-MATERIAL-SET",
+    "root": "RU-MAT-01",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-15-prepared-visual-material-set-unit-ru-mat-02",
+    "file": "2d/template-tm-2d-15-prepared-visual-material-set-unit-ru-mat-02/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-15-PREPARED-VISUAL-MATERIAL-SET",
+    "root": "RU-MAT-02",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-15-prepared-visual-material-set-unit-ru-mat-03",
+    "file": "2d/template-tm-2d-15-prepared-visual-material-set-unit-ru-mat-03/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-15-PREPARED-VISUAL-MATERIAL-SET",
+    "root": "RU-MAT-03",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-20-whole-visual-design",
+    "file": "2d/template-tm-2d-20-whole-visual-design/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready",
+      "title": "Заготовка 2D · Whole Visual Design"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-20-WHOLE-VISUAL-DESIGN",
+    "root": "TEMPLATE-R-TARGET-RESULT",
+    "readOnly": true,
+    "exampleOnly": false,
+    "templateOnly": true,
+    "types": {
+      "requirement": 4,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-20-whole-visual-design-unit-ru-wvd-01",
+    "file": "2d/template-tm-2d-20-whole-visual-design-unit-ru-wvd-01/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-20-WHOLE-VISUAL-DESIGN",
+    "root": "RU-WVD-01",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-20-whole-visual-design-unit-ru-wvd-02",
+    "file": "2d/template-tm-2d-20-whole-visual-design-unit-ru-wvd-02/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-20-WHOLE-VISUAL-DESIGN",
+    "root": "RU-WVD-02",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-20-whole-visual-design-unit-ru-wvd-03",
+    "file": "2d/template-tm-2d-20-whole-visual-design-unit-ru-wvd-03/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-20-WHOLE-VISUAL-DESIGN",
+    "root": "RU-WVD-03",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-30-visual-construction",
+    "file": "2d/template-tm-2d-30-visual-construction/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready",
+      "title": "Заготовка 2D · Multi-route Visual Construction"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-30-VISUAL-CONSTRUCTION",
+    "root": "TEMPLATE-R-TARGET-RESULT",
+    "readOnly": true,
+    "exampleOnly": false,
+    "templateOnly": true,
+    "types": {
+      "requirement": 3,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-30-visual-construction-unit-ru-vc-01",
+    "file": "2d/template-tm-2d-30-visual-construction-unit-ru-vc-01/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-30-VISUAL-CONSTRUCTION",
+    "root": "RU-VC-01",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-30-visual-construction-unit-ru-vc-02",
+    "file": "2d/template-tm-2d-30-visual-construction-unit-ru-vc-02/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-30-VISUAL-CONSTRUCTION",
+    "root": "RU-VC-02",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-31-editable-raster-construction",
+    "file": "2d/template-tm-2d-31-editable-raster-construction/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready",
+      "title": "Заготовка 2D · Editable Raster Construction"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-31-EDITABLE-RASTER-CONSTRUCTION",
+    "root": "TEMPLATE-R-TARGET-RESULT",
+    "readOnly": true,
+    "exampleOnly": false,
+    "templateOnly": true,
+    "types": {
+      "requirement": 6,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-31-editable-raster-construction-unit-ru-ras-01",
+    "file": "2d/template-tm-2d-31-editable-raster-construction-unit-ru-ras-01/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-31-EDITABLE-RASTER-CONSTRUCTION",
+    "root": "RU-RAS-01",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-31-editable-raster-construction-unit-ru-ras-02",
+    "file": "2d/template-tm-2d-31-editable-raster-construction-unit-ru-ras-02/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-31-EDITABLE-RASTER-CONSTRUCTION",
+    "root": "RU-RAS-02",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-31-editable-raster-construction-unit-ru-ras-03",
+    "file": "2d/template-tm-2d-31-editable-raster-construction-unit-ru-ras-03/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-31-EDITABLE-RASTER-CONSTRUCTION",
+    "root": "RU-RAS-03",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-31-editable-raster-construction-unit-ru-ras-04",
+    "file": "2d/template-tm-2d-31-editable-raster-construction-unit-ru-ras-04/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-31-EDITABLE-RASTER-CONSTRUCTION",
+    "root": "RU-RAS-04",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-31-editable-raster-construction-unit-ru-ras-05",
+    "file": "2d/template-tm-2d-31-editable-raster-construction-unit-ru-ras-05/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-31-EDITABLE-RASTER-CONSTRUCTION",
+    "root": "RU-RAS-05",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-31-painterly-raster-construction",
+    "file": "2d/template-tm-2d-31-painterly-raster-construction/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready",
+      "title": "Заготовка 2D · Painterly Raster Construction"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-31-PAINTERLY-RASTER-CONSTRUCTION",
+    "root": "TEMPLATE-R-TARGET-RESULT",
+    "readOnly": true,
+    "exampleOnly": false,
+    "templateOnly": true,
+    "types": {
+      "requirement": 5,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-31-painterly-raster-construction-unit-ru-paint-01",
+    "file": "2d/template-tm-2d-31-painterly-raster-construction-unit-ru-paint-01/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-31-PAINTERLY-RASTER-CONSTRUCTION",
+    "root": "RU-PAINT-01",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-31-painterly-raster-construction-unit-ru-paint-02",
+    "file": "2d/template-tm-2d-31-painterly-raster-construction-unit-ru-paint-02/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-31-PAINTERLY-RASTER-CONSTRUCTION",
+    "root": "RU-PAINT-02",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-31-painterly-raster-construction-unit-ru-paint-03",
+    "file": "2d/template-tm-2d-31-painterly-raster-construction-unit-ru-paint-03/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-31-PAINTERLY-RASTER-CONSTRUCTION",
+    "root": "RU-PAINT-03",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-31-painterly-raster-construction-unit-ru-paint-04",
+    "file": "2d/template-tm-2d-31-painterly-raster-construction-unit-ru-paint-04/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-31-PAINTERLY-RASTER-CONSTRUCTION",
+    "root": "RU-PAINT-04",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-31-pixel-art-construction",
+    "file": "2d/template-tm-2d-31-pixel-art-construction/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready",
+      "title": "Заготовка 2D · Pixel Art Construction"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-31-PIXEL-ART-CONSTRUCTION",
+    "root": "TEMPLATE-R-TARGET-RESULT",
+    "readOnly": true,
+    "exampleOnly": false,
+    "templateOnly": true,
+    "types": {
+      "requirement": 6,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-31-pixel-art-construction-unit-ru-px-01",
+    "file": "2d/template-tm-2d-31-pixel-art-construction-unit-ru-px-01/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-31-PIXEL-ART-CONSTRUCTION",
+    "root": "RU-PX-01",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-31-pixel-art-construction-unit-ru-px-02",
+    "file": "2d/template-tm-2d-31-pixel-art-construction-unit-ru-px-02/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-31-PIXEL-ART-CONSTRUCTION",
+    "root": "RU-PX-02",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-31-pixel-art-construction-unit-ru-px-03",
+    "file": "2d/template-tm-2d-31-pixel-art-construction-unit-ru-px-03/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-31-PIXEL-ART-CONSTRUCTION",
+    "root": "RU-PX-03",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-31-pixel-art-construction-unit-ru-px-04",
+    "file": "2d/template-tm-2d-31-pixel-art-construction-unit-ru-px-04/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-31-PIXEL-ART-CONSTRUCTION",
+    "root": "RU-PX-04",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-31-pixel-art-construction-unit-ru-px-05",
+    "file": "2d/template-tm-2d-31-pixel-art-construction-unit-ru-px-05/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-31-PIXEL-ART-CONSTRUCTION",
+    "root": "RU-PX-05",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-31-procedural-construction",
+    "file": "2d/template-tm-2d-31-procedural-construction/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready",
+      "title": "Заготовка 2D · Procedural Construction"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-31-PROCEDURAL-CONSTRUCTION",
+    "root": "TEMPLATE-R-TARGET-RESULT",
+    "readOnly": true,
+    "exampleOnly": false,
+    "templateOnly": true,
+    "types": {
+      "requirement": 6,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-31-procedural-construction-unit-ru-proc-01",
+    "file": "2d/template-tm-2d-31-procedural-construction-unit-ru-proc-01/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-31-PROCEDURAL-CONSTRUCTION",
+    "root": "RU-PROC-01",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-31-procedural-construction-unit-ru-proc-02",
+    "file": "2d/template-tm-2d-31-procedural-construction-unit-ru-proc-02/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-31-PROCEDURAL-CONSTRUCTION",
+    "root": "RU-PROC-02",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-31-procedural-construction-unit-ru-proc-03",
+    "file": "2d/template-tm-2d-31-procedural-construction-unit-ru-proc-03/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-31-PROCEDURAL-CONSTRUCTION",
+    "root": "RU-PROC-03",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-31-procedural-construction-unit-ru-proc-04",
+    "file": "2d/template-tm-2d-31-procedural-construction-unit-ru-proc-04/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-31-PROCEDURAL-CONSTRUCTION",
+    "root": "RU-PROC-04",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-31-procedural-construction-unit-ru-proc-05",
+    "file": "2d/template-tm-2d-31-procedural-construction-unit-ru-proc-05/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-31-PROCEDURAL-CONSTRUCTION",
+    "root": "RU-PROC-05",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-31-vector-construction",
+    "file": "2d/template-tm-2d-31-vector-construction/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready",
+      "title": "Заготовка 2D · Vector Construction"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-31-VECTOR-CONSTRUCTION",
+    "root": "TEMPLATE-R-TARGET-RESULT",
+    "readOnly": true,
+    "exampleOnly": false,
+    "templateOnly": true,
+    "types": {
+      "requirement": 6,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-31-vector-construction-unit-ru-vec-01",
+    "file": "2d/template-tm-2d-31-vector-construction-unit-ru-vec-01/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-31-VECTOR-CONSTRUCTION",
+    "root": "RU-VEC-01",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-31-vector-construction-unit-ru-vec-02",
+    "file": "2d/template-tm-2d-31-vector-construction-unit-ru-vec-02/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-31-VECTOR-CONSTRUCTION",
+    "root": "RU-VEC-02",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-31-vector-construction-unit-ru-vec-03",
+    "file": "2d/template-tm-2d-31-vector-construction-unit-ru-vec-03/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-31-VECTOR-CONSTRUCTION",
+    "root": "RU-VEC-03",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-31-vector-construction-unit-ru-vec-04",
+    "file": "2d/template-tm-2d-31-vector-construction-unit-ru-vec-04/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-31-VECTOR-CONSTRUCTION",
+    "root": "RU-VEC-04",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-31-vector-construction-unit-ru-vec-05",
+    "file": "2d/template-tm-2d-31-vector-construction-unit-ru-vec-05/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-31-VECTOR-CONSTRUCTION",
+    "root": "RU-VEC-05",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-50-delivery-adaptation",
+    "file": "2d/template-tm-2d-50-delivery-adaptation/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready",
+      "title": "Заготовка 2D · Delivery Adaptation"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-50-DELIVERY-ADAPTATION",
+    "root": "TEMPLATE-R-TARGET-RESULT",
+    "readOnly": true,
+    "exampleOnly": false,
+    "templateOnly": true,
+    "types": {
+      "requirement": 4,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-50-delivery-adaptation-unit-ru-del-01",
+    "file": "2d/template-tm-2d-50-delivery-adaptation-unit-ru-del-01/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-50-DELIVERY-ADAPTATION",
+    "root": "RU-DEL-01",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-50-delivery-adaptation-unit-ru-del-02",
+    "file": "2d/template-tm-2d-50-delivery-adaptation-unit-ru-del-02/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-50-DELIVERY-ADAPTATION",
+    "root": "RU-DEL-02",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "template-tm-2d-50-delivery-adaptation-unit-ru-del-03",
+    "file": "2d/template-tm-2d-50-delivery-adaptation-unit-ru-del-03/graph.json",
+    "group": "2d",
+    "presentation": {
+      "archived": false,
+      "usage": "ready"
+    },
+    "actionModel": null,
+    "identitySpace": "prepared:TM-2D-50-DELIVERY-ADAPTATION",
+    "root": "RU-DEL-03",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "context-prepared-alternative",
+    "file": "examples/archive/context-prepared-alternative/graph.json",
+    "group": "examples",
+    "presentation": {
+      "usage": "ready",
+      "exampleOnly": true,
+      "archived": true
+    },
+    "actionModel": null,
+    "identitySpace": "rdg-context-prepared",
+    "root": "R-CTX-ALT",
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1
+    }
+  },
+  {
+    "slug": "context-prepared-current",
+    "file": "examples/archive/context-prepared-current/graph.json",
+    "group": "examples",
+    "presentation": {
+      "usage": "ready",
+      "exampleOnly": true,
+      "archived": true
+    },
+    "actionModel": null,
+    "identitySpace": "rdg-context-prepared",
+    "root": "R-CTX-CURRENT",
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1
+    }
+  },
+  {
+    "slug": "context-prepared-root",
+    "file": "examples/archive/context-prepared-root/graph.json",
+    "group": "examples",
+    "presentation": {
+      "usage": "ready",
+      "exampleOnly": true,
+      "title": "Контекст: готовый пример",
+      "description": "Объяснения с источниками, общий ранний ответ и вопросы после выбора ветки.",
+      "archived": true
+    },
+    "actionModel": null,
+    "identitySpace": "rdg-context-prepared",
+    "root": "R-CTX",
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": true,
+    "types": {
+      "requirement": 3,
+      "option": 2
+    }
+  },
+  {
+    "slug": "context-working-alternative",
+    "file": "examples/archive/context-working-alternative/graph.json",
+    "group": "examples",
+    "presentation": {
+      "usage": "working",
+      "exampleOnly": true,
+      "archived": true
+    },
+    "actionModel": null,
+    "identitySpace": "rdg-context-working",
+    "root": "R-CTX-ALT",
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": null,
+    "types": {
+      "requirement": 1
+    }
+  },
+  {
+    "slug": "context-working-current",
+    "file": "examples/archive/context-working-current/graph.json",
+    "group": "examples",
+    "presentation": {
+      "usage": "working",
+      "exampleOnly": true,
+      "archived": true
+    },
+    "actionModel": null,
+    "identitySpace": "rdg-context-working",
+    "root": "R-CTX-CURRENT",
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": null,
+    "types": {
+      "requirement": 1
+    }
+  },
+  {
+    "slug": "context-working-root",
+    "file": "examples/archive/context-working-root/graph.json",
+    "group": "examples",
+    "presentation": {
+      "usage": "working",
+      "exampleOnly": true,
+      "title": "Контекст: рабочий пример",
+      "description": "Объяснения с источниками, общий ранний ответ и вопросы после выбора ветки.",
+      "archived": true
+    },
+    "actionModel": null,
+    "identitySpace": "rdg-context-working",
+    "root": "R-CTX",
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": null,
+    "types": {
+      "requirement": 3,
+      "option": 2,
+      "decision": 1,
+      "context": 2
+    }
+  },
+  {
+    "slug": "example",
+    "file": "examples/example/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": true
+    },
+    "actionModel": null,
+    "identitySpace": null,
+    "root": null,
+    "readOnly": null,
+    "exampleOnly": null,
+    "templateOnly": null,
+    "types": {
+      "requirement": 5,
+      "decision": 3,
+      "context": 1
+    }
+  },
+  {
+    "slug": "reference-app-definition",
+    "file": "examples/reference-app-definition/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": true,
+      "exampleOnly": true
+    },
+    "actionModel": null,
+    "identitySpace": null,
+    "root": null,
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": null,
+    "types": {
+      "requirement": 14,
+      "context": 1,
+      "decision": 7,
+      "question": 1
+    }
+  },
+  {
+    "slug": "reference-behavior-review",
+    "file": "examples/reference-behavior-review/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": true,
+      "exampleOnly": true
+    },
+    "actionModel": null,
+    "identitySpace": null,
+    "root": null,
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": null,
+    "types": {
+      "requirement": 6,
+      "context": 3,
+      "decision": 4,
+      "variant": 2,
+      "proposal": 2,
+      "question": 2
+    }
+  },
+  {
+    "slug": "reference-complete-app",
+    "file": "examples/reference-complete-app/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": true,
+      "usage": "working",
+      "exampleOnly": true,
+      "title": "Пример бронирования — все отношения"
+    },
+    "actionModel": null,
+    "identitySpace": "showcase:booking-example-v1",
+    "root": "SH-R-APP",
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": null,
+    "types": {
+      "requirement": 4,
+      "context": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "reference-complete-availability",
+    "file": "examples/reference-complete-availability/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": true,
+      "usage": "working",
+      "exampleOnly": true
+    },
+    "actionModel": null,
+    "identitySpace": "showcase:booking-example-v1",
+    "root": "SH-R-FEAT-AVAIL",
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": null,
+    "types": {
+      "requirement": 3,
+      "decision": 4,
+      "context": 1
+    }
+  },
+  {
+    "slug": "reference-complete-functionality",
+    "file": "examples/reference-complete-functionality/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": true,
+      "usage": "working",
+      "exampleOnly": true
+    },
+    "actionModel": null,
+    "identitySpace": "showcase:booking-example-v1",
+    "root": "SH-R-FUNC",
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": null,
+    "types": {
+      "requirement": 5,
+      "variant": 5,
+      "context": 2,
+      "decision": 4,
+      "application": 2,
+      "question": 1
+    }
+  },
+  {
+    "slug": "reference-complete-realization",
+    "file": "examples/reference-complete-realization/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": true,
+      "usage": "working",
+      "exampleOnly": true
+    },
+    "actionModel": null,
+    "identitySpace": "showcase:booking-example-v1",
+    "root": "SH-R-REALIZATION",
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": null,
+    "types": {
+      "requirement": 5,
+      "context": 1,
+      "decision": 1,
+      "question": 1
+    }
+  },
+  {
+    "slug": "reference-complete-reservation",
+    "file": "examples/reference-complete-reservation/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": true,
+      "usage": "working",
+      "exampleOnly": true
+    },
+    "actionModel": null,
+    "identitySpace": "showcase:booking-example-v1",
+    "root": "SH-R-FEAT-RES",
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": null,
+    "types": {
+      "requirement": 6,
+      "variant": 2,
+      "context": 3,
+      "decision": 5,
+      "question": 2,
+      "proposal": 1
+    }
+  },
+  {
+    "slug": "reference-complete-scenario-create",
+    "file": "examples/reference-complete-scenario-create/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": true,
+      "usage": "working",
+      "exampleOnly": true
+    },
+    "actionModel": null,
+    "identitySpace": "showcase:booking-example-v1",
+    "root": "SH-R-SCREATE",
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": null,
+    "types": {
+      "requirement": 3,
+      "variant": 1,
+      "decision": 2,
+      "context": 1,
+      "question": 1
+    }
+  },
+  {
+    "slug": "reference-complete-scenarios",
+    "file": "examples/reference-complete-scenarios/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": true,
+      "usage": "working",
+      "exampleOnly": true
+    },
+    "actionModel": null,
+    "identitySpace": "showcase:booking-example-v1",
+    "root": "SH-R-SCENARIOS",
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": null,
+    "types": {
+      "requirement": 3,
+      "decision": 2
+    }
+  },
+  {
+    "slug": "reference-complete-unit-r-boundary",
+    "file": "examples/reference-complete-unit-r-boundary/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": true,
+      "usage": "working",
+      "exampleOnly": true
+    },
+    "actionModel": null,
+    "identitySpace": "showcase:booking-example-v1",
+    "root": "SH-R-BOUNDARY",
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": null,
+    "types": {
+      "requirement": 1
+    }
+  },
+  {
+    "slug": "reference-complete-unit-r-errors",
+    "file": "examples/reference-complete-unit-r-errors/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": true,
+      "usage": "working",
+      "exampleOnly": true
+    },
+    "actionModel": null,
+    "identitySpace": "showcase:booking-example-v1",
+    "root": "SH-R-ERRORS",
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": null,
+    "types": {
+      "requirement": 1,
+      "context": 1,
+      "decision": 2,
+      "question": 1
+    }
+  },
+  {
+    "slug": "reference-complete-unit-r-feedback",
+    "file": "examples/reference-complete-unit-r-feedback/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": true,
+      "usage": "working",
+      "exampleOnly": true
+    },
+    "actionModel": null,
+    "identitySpace": "showcase:booking-example-v1",
+    "root": "SH-R-FEEDBACK",
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": null,
+    "types": {
+      "requirement": 1,
+      "context": 1,
+      "decision": 1,
+      "question": 1
+    }
+  },
+  {
+    "slug": "reference-complete-unit-r-result",
+    "file": "examples/reference-complete-unit-r-result/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": true,
+      "usage": "working",
+      "exampleOnly": true
+    },
+    "actionModel": null,
+    "identitySpace": "showcase:booking-example-v1",
+    "root": "SH-R-RESULT",
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": null,
+    "types": {
+      "requirement": 1,
+      "context": 1,
+      "decision": 1,
+      "question": 1
+    }
+  },
+  {
+    "slug": "reference-complete-unit-r-scancel",
+    "file": "examples/reference-complete-unit-r-scancel/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": true,
+      "usage": "working",
+      "exampleOnly": true
+    },
+    "actionModel": null,
+    "identitySpace": "showcase:booking-example-v1",
+    "root": "SH-R-SCANCEL",
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": null,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "reference-complete-unit-r-state-reservation",
+    "file": "examples/reference-complete-unit-r-state-reservation/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": true,
+      "usage": "working",
+      "exampleOnly": true
+    },
+    "actionModel": null,
+    "identitySpace": "showcase:booking-example-v1",
+    "root": "SH-R-STATE-RESERVATION",
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": null,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "reference-complete-unit-r-state-selection",
+    "file": "examples/reference-complete-unit-r-state-selection/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": true,
+      "usage": "working",
+      "exampleOnly": true
+    },
+    "actionModel": null,
+    "identitySpace": "showcase:booking-example-v1",
+    "root": "SH-R-STATE-SELECTION",
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": null,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "reference-delegation-status",
+    "file": "examples/reference-delegation-status/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": true,
+      "exampleOnly": true
+    },
+    "actionModel": null,
+    "identitySpace": null,
+    "root": null,
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": null,
+    "types": {
+      "requirement": 4,
+      "decision": 3,
+      "context": 1,
+      "question": 1
+    }
+  },
+  {
+    "slug": "reference-feature-auth",
+    "file": "examples/reference-feature-auth/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": true,
+      "usage": "working",
+      "exampleOnly": true
+    },
+    "actionModel": null,
+    "identitySpace": "demo:feature-functional",
+    "root": "DEMO-R-FEATURE-AUTH",
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": null,
+    "types": {
+      "requirement": 1,
+      "variant": 2
+    }
+  },
+  {
+    "slug": "reference-feature-cart",
+    "file": "examples/reference-feature-cart/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": true,
+      "usage": "working",
+      "exampleOnly": true
+    },
+    "actionModel": null,
+    "identitySpace": "demo:feature-functional",
+    "root": "DEMO-R-FEATURE-CART",
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": null,
+    "types": {
+      "requirement": 1,
+      "variant": 2
+    }
+  },
+  {
+    "slug": "reference-feature-catalog",
+    "file": "examples/reference-feature-catalog/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": true,
+      "usage": "working",
+      "exampleOnly": true
+    },
+    "actionModel": null,
+    "identitySpace": "demo:feature-functional",
+    "root": "DEMO-R-FEATURE-CATALOG",
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": null,
+    "types": {
+      "requirement": 1,
+      "variant": 2
+    }
+  },
+  {
+    "slug": "reference-feature-payment",
+    "file": "examples/reference-feature-payment/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": true,
+      "usage": "working",
+      "exampleOnly": true
+    },
+    "actionModel": null,
+    "identitySpace": "demo:feature-functional",
+    "root": "DEMO-R-FEATURE-PAYMENT",
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": null,
+    "types": {
+      "requirement": 1,
+      "variant": 2
+    }
+  },
+  {
+    "slug": "reference-feature-root",
+    "file": "examples/reference-feature-root/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": true,
+      "usage": "working",
+      "exampleOnly": true,
+      "title": "Пример разбиения на Features"
+    },
+    "actionModel": null,
+    "identitySpace": "demo:feature-functional",
+    "root": "DEMO-R-APP",
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": null,
+    "types": {
+      "requirement": 3,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "reference-mixed-active-work",
+    "file": "examples/reference-mixed-active-work/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": false,
+      "usage": "working",
+      "exampleOnly": true,
+      "title": "Рабочий пример разбиения функциональности",
+      "description": "Учебный набор; не является текущим проектом пользователя."
+    },
+    "actionModel": null,
+    "identitySpace": "rdg-example-mixed-v7",
+    "root": "R0",
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": null,
+    "types": {
+      "requirement": 46,
+      "context": 3,
+      "option": 13,
+      "decision": 2
+    }
+  },
+  {
+    "slug": "reference-mixed-change-log",
+    "file": "examples/reference-mixed-change-log/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": false,
+      "usage": "working",
+      "exampleOnly": true
+    },
+    "actionModel": null,
+    "identitySpace": "rdg-example-mixed-v7",
+    "root": "R-OTHER",
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": null,
+    "types": {
+      "requirement": 4,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "reference-mixed-contextual-split",
+    "file": "examples/reference-mixed-contextual-split/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": false,
+      "usage": "working",
+      "exampleOnly": true
+    },
+    "actionModel": null,
+    "identitySpace": "rdg-example-mixed-v7",
+    "root": "R-COMP",
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": null,
+    "types": {
+      "requirement": 4,
+      "decision": 1,
+      "option": 1
+    }
+  },
+  {
+    "slug": "reference-mixed-feature-availability",
+    "file": "examples/reference-mixed-feature-availability/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": false,
+      "usage": "working",
+      "exampleOnly": true
+    },
+    "actionModel": null,
+    "identitySpace": "rdg-example-mixed-v7",
+    "root": "R-ACT-1",
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": null,
+    "types": {
+      "requirement": 1,
+      "option": 2
+    }
+  },
+  {
+    "slug": "reference-mixed-feature-consistency",
+    "file": "examples/reference-mixed-feature-consistency/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": false,
+      "usage": "working",
+      "exampleOnly": true
+    },
+    "actionModel": null,
+    "identitySpace": "rdg-example-mixed-v7",
+    "root": "R-ACT-2",
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": null,
+    "types": {
+      "requirement": 1,
+      "decision": 1,
+      "option": 2
+    }
+  },
+  {
+    "slug": "reference-mixed-planned-feature",
+    "file": "examples/reference-mixed-planned-feature/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": false,
+      "usage": "working",
+      "exampleOnly": true
+    },
+    "actionModel": null,
+    "identitySpace": "rdg-example-mixed-v7",
+    "root": "P-RF-1",
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": null,
+    "types": {
+      "requirement": 2,
+      "option": 2
+    }
+  },
+  {
+    "slug": "reference-mixed-planned-feature-consistency",
+    "file": "examples/reference-mixed-planned-feature-consistency/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": false,
+      "usage": "working",
+      "exampleOnly": true
+    },
+    "actionModel": null,
+    "identitySpace": "rdg-example-mixed-v7",
+    "root": "P-RF-2",
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": null,
+    "types": {
+      "requirement": 1,
+      "option": 2
+    }
+  },
+  {
+    "slug": "reference-mixed-planned-feature-depth",
+    "file": "examples/reference-mixed-planned-feature-depth/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": false,
+      "usage": "working",
+      "exampleOnly": true
+    },
+    "actionModel": null,
+    "identitySpace": "rdg-example-mixed-v7",
+    "root": "P-RF-DEEP",
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": null,
+    "types": {
+      "requirement": 1,
+      "option": 2
+    }
+  },
+  {
+    "slug": "reference-mixed-planned-scenario",
+    "file": "examples/reference-mixed-planned-scenario/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": false,
+      "usage": "working",
+      "exampleOnly": true
+    },
+    "actionModel": null,
+    "identitySpace": "rdg-example-mixed-v7",
+    "root": "P-RS-1",
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": null,
+    "types": {
+      "requirement": 1,
+      "option": 2
+    }
+  },
+  {
+    "slug": "reference-mixed-planned-scenario-consistency",
+    "file": "examples/reference-mixed-planned-scenario-consistency/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": false,
+      "usage": "working",
+      "exampleOnly": true
+    },
+    "actionModel": null,
+    "identitySpace": "rdg-example-mixed-v7",
+    "root": "P-RS-2",
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": null,
+    "types": {
+      "requirement": 1,
+      "option": 2
+    }
+  },
+  {
+    "slug": "reference-module-units",
+    "file": "examples/reference-module-units/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": true
+    },
+    "actionModel": null,
+    "identitySpace": "example:module-unit-v1",
+    "root": "UD-R-FEATURE",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 3,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "reference-prepared-feature-consistency",
+    "file": "examples/reference-prepared-feature-consistency/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": false,
+      "usage": "ready",
+      "exampleOnly": true
+    },
+    "actionModel": null,
+    "identitySpace": "rdg-example-prepared-v7",
+    "root": "RF-2",
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "option": 4
+    }
+  },
+  {
+    "slug": "reference-prepared-feature-depth",
+    "file": "examples/reference-prepared-feature-depth/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": false,
+      "usage": "ready",
+      "exampleOnly": true
+    },
+    "actionModel": null,
+    "identitySpace": "rdg-example-prepared-v7",
+    "root": "RF-DEEP",
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "option": 2
+    }
+  },
+  {
+    "slug": "reference-prepared-feature-path",
+    "file": "examples/reference-prepared-feature-path/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": false,
+      "usage": "ready",
+      "exampleOnly": true
+    },
+    "actionModel": null,
+    "identitySpace": "rdg-example-prepared-v7",
+    "root": "RF-1",
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": true,
+    "types": {
+      "requirement": 2,
+      "option": 2
+    }
+  },
+  {
+    "slug": "reference-prepared-planning-tree",
+    "file": "examples/reference-prepared-planning-tree/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": false,
+      "usage": "ready",
+      "exampleOnly": true,
+      "title": "Готовый пример разбиения функциональности",
+      "description": "Учебный набор; не является текущим проектом пользователя."
+    },
+    "actionModel": null,
+    "identitySpace": "rdg-example-prepared-v7",
+    "root": "R-PLAN",
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": true,
+    "types": {
+      "requirement": 6,
+      "option": 12
+    }
+  },
+  {
+    "slug": "reference-prepared-scenario-consistency",
+    "file": "examples/reference-prepared-scenario-consistency/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": false,
+      "usage": "ready",
+      "exampleOnly": true
+    },
+    "actionModel": null,
+    "identitySpace": "rdg-example-prepared-v7",
+    "root": "RS-2",
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "option": 2
+    }
+  },
+  {
+    "slug": "reference-prepared-scenario-path",
+    "file": "examples/reference-prepared-scenario-path/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": false,
+      "usage": "ready",
+      "exampleOnly": true
+    },
+    "actionModel": null,
+    "identitySpace": "rdg-example-prepared-v7",
+    "root": "RS-1",
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "option": 2
+    }
+  },
+  {
+    "slug": "reference-reusable-vs-concrete",
+    "file": "examples/reference-reusable-vs-concrete/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": true,
+      "usage": "working",
+      "exampleOnly": true
+    },
+    "actionModel": null,
+    "identitySpace": "demo:feature-functional",
+    "root": "DEMO-R-FUNCTIONALITY",
+    "readOnly": true,
+    "exampleOnly": true,
+    "templateOnly": null,
+    "types": {
+      "requirement": 5,
+      "variant": 2,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "reference-unit-direct",
+    "file": "examples/reference-unit-direct/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": true
+    },
+    "actionModel": null,
+    "identitySpace": "example:module-unit-v1",
+    "root": "UD-R-RESULT",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "reference-unit-split",
+    "file": "examples/reference-unit-split/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": true
+    },
+    "actionModel": null,
+    "identitySpace": "example:module-unit-v1",
+    "root": "UD-R-STATE-PATH",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 3,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "reference-unit-states",
+    "file": "examples/reference-unit-states/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": true
+    },
+    "actionModel": null,
+    "identitySpace": "example:module-unit-v1",
+    "root": "UD-R-STATES",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "reference-unit-transitions",
+    "file": "examples/reference-unit-transitions/graph.json",
+    "group": "examples",
+    "presentation": {
+      "archived": true
+    },
+    "actionModel": null,
+    "identitySpace": "example:module-unit-v1",
+    "root": "UD-R-TRANSITIONS",
+    "readOnly": true,
+    "exampleOnly": null,
+    "templateOnly": true,
+    "types": {
+      "requirement": 1,
+      "decision": 1
+    }
+  },
+  {
+    "slug": "try-it",
+    "file": "workspaces/try-it/graph.json",
+    "group": "workspaces",
+    "presentation": {
+      "archived": false,
+      "usage": "working"
+    },
+    "actionModel": null,
+    "identitySpace": null,
+    "root": null,
+    "readOnly": null,
+    "exampleOnly": null,
+    "templateOnly": null,
+    "types": {
+      "requirement": 1
+    }
+  }
+]

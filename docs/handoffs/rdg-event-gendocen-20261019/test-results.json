@@ -1,0 +1,20 @@
+{
+  "event-projection": {
+    "command": "python3 tests/rdg-event-gendocen.test.py -v",
+    "exitCode": 0,
+    "tests": 6,
+    "log": "event-projection.log"
+  },
+  "event-owner": {
+    "command": "python3 tests/rdg-event-owner.test.py -v",
+    "exitCode": 0,
+    "tests": 13,
+    "log": "event-owner.log"
+  },
+  "old-consumer-guard": {
+    "command": "python3 tests/rdg-event-consumer-guard.test.py -v",
+    "exitCode": 0,
+    "tests": 3,
+    "log": "old-consumer-guard.log"
+  }
+}

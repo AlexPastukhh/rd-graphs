@@ -1,0 +1,23 @@
+[
+  {
+    "test": "rdg-action-example",
+    "exitCode": 0
+  },
+  {
+    "test": "rdg-full-detail-201",
+    "exitCode": 0
+  },
+  {
+    "test": "rdg-canon-above-action",
+    "exitCode": 0
+  },
+  {
+    "test": "rdg-workflow-tabs",
+    "exitCode": 0
+  },
+  {
+    "test": "rdg-session-remember",
+    "exitCode": 0,
+    "initialCombinedRun": "timeout at 15000ms; isolated repeat passed; diagnostic state capture added"
+  }
+]

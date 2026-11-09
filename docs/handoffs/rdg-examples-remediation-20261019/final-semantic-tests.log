@@ -1,0 +1,82 @@
+TAP version 13
+# Subtest: current Action example covers both roles, real history, explicit planning and no accepted project choice
+ok 1 - current Action example covers both roles, real history, explicit planning and no accepted project choice
+  ---
+  duration_ms: 5.794099
+  type: 'test'
+  ...
+# Subtest: legacy lower methods have specific results and WAI preparation does not fabricate a study alternative
+ok 2 - legacy lower methods have specific results and WAI preparation does not fabricate a study alternative
+  ---
+  duration_ms: 22.823568
+  type: 'test'
+  ...
+# Subtest: prepared and work preserve mapped data while goal applicability remains an educational assumption
+ok 3 - prepared and work preserve mapped data while goal applicability remains an educational assumption
+  ---
+  duration_ms: 50.832954
+  type: 'test'
+  ...
+# Subtest: ten potential relations are typed, exact-option sourced, and do not invent chosen Decisions
+ok 4 - ten potential relations are typed, exact-option sourced, and do not invent chosen Decisions
+  ---
+  duration_ms: 119.876031
+  type: 'test'
+  ...
+# Subtest: prepared viewer opens all branches through Collections without a work-only all-variants button
+ok 5 - prepared viewer opens all branches through Collections without a work-only all-variants button
+  ---
+  duration_ms: 139.806953
+  type: 'test'
+  ...
+# Subtest: working viewer keeps selected root path and shows unchosen prospective R by explicit toggle
+ok 6 - working viewer keeps selected root path and shows unchosen prospective R by explicit toggle
+  ---
+  duration_ms: 195.798993
+  type: 'test'
+  ...
+# Subtest: multi-file potential navigation restores parent collection, variant mode and focused Requirement on return
+ok 7 - multi-file potential navigation restores parent collection, variant mode and focused Requirement on return
+  ---
+  duration_ms: 643.209009
+  type: 'test'
+  ...
+# Subtest: a second prospective level returns through both previous graphs without losing options
+ok 8 - a second prospective level returns through both previous graphs without losing options
+  ---
+  duration_ms: 191.014255
+  type: 'test'
+  ...
+# Subtest: canon research advice belongs to a real method; no third pseudo-option or executed experiment
+ok 9 - canon research advice belongs to a real method; no third pseudo-option or executed experiment
+  ---
+  duration_ms: 24.867958
+  type: 'test'
+  ...
+# Subtest: catalog warns on changed prepared canon/revision without rewriting a T1 snapshot
+ok 10 - catalog warns on changed prepared canon/revision without rewriting a T1 snapshot
+  ---
+  duration_ms: 8256.636316
+  type: 'test'
+  ...
+# Subtest: a forged candidate graph root cannot masquerade as an existing Requirement projection
+ok 11 - a forged candidate graph root cannot masquerade as an existing Requirement projection
+  ---
+  duration_ms: 8300.408898
+  type: 'test'
+  ...
+# Subtest: potential graph links remain read-only index projections, never writable workspace operations
+ok 12 - potential graph links remain read-only index projections, never writable workspace operations
+  ---
+  duration_ms: 8221.825336
+  type: 'test'
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 26552.695713

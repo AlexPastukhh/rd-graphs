@@ -1,0 +1,3565 @@
+{
+  "viewerVersion": "2.2.9",
+  "views": 43,
+  "errors": [],
+  "renderErrors": [],
+  "overlapViews": [],
+  "textOverflowViews": [
+    {
+      "slug": "reference-mixed-active-work",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [
+        {
+          "nodeId": "C-PLATFORM",
+          "text": "Текущая архитектура требует",
+          "bounds": {
+            "x": 8.780488014221191,
+            "y": 27.80487823486328,
+            "w": 224.39024353027344,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "R-COMP",
+          "text": "учитывая новые требования …",
+          "bounds": {
+            "x": 10,
+            "y": 43.80487823486328,
+            "w": 223.1707305908203,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "R-INACTIVE",
+          "text": "Создать отдельный служебный",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 228.0487823486328,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "C-ACCESS-RECORDED",
+          "text": "доступности, полученное до…",
+          "bounds": {
+            "x": 10,
+            "y": 43.80487823486328,
+            "w": 221.9512176513672,
+            "h": 15.853658676147461
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 13,
+      "kinds": {
+        "requirement": 7,
+        "context": 3,
+        "collection": 3
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 7"
+    },
+    {
+      "slug": "reference-mixed-change-log",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [
+        {
+          "nodeId": "R-INACTIVE",
+          "text": "Создать отдельный служебный",
+          "bounds": {
+            "x": 10,
+            "y": 28.18181800842285,
+            "w": 214.54544067382812,
+            "h": 14.545454025268555
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 4,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 2,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-mixed-contextual-split",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [
+        {
+          "nodeId": "R-COMP",
+          "text": "учитывая новые требования …",
+          "bounds": {
+            "x": 10,
+            "y": 43.80487823486328,
+            "w": 223.1707305908203,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "D-A",
+          "text": "В примере принято разбиение",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 219.51220703125,
+            "h": 15.853658676147461
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 7,
+      "kinds": {
+        "requirement": 4,
+        "decision": 1,
+        "option": 1,
+        "canon": 1
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 1,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-mixed-feature-availability",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [
+        {
+          "nodeId": "__canon__O-ACT-2",
+          "text": "+ Критична последовательно…",
+          "bounds": {
+            "x": 10,
+            "y": 28.18181800842285,
+            "w": 215.4545440673828,
+            "h": 14.545454025268555
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-mixed-feature-availability",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [
+        {
+          "nodeId": "__canon__O-ACT-2",
+          "text": "+ Критична последовательно…",
+          "bounds": {
+            "x": 10,
+            "y": 28.18181800842285,
+            "w": 215.4545440673828,
+            "h": 14.545454025268555
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-mixed-feature-consistency",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [
+        {
+          "nodeId": "__canon__O-A11Y-INTERPRETED-WORK",
+          "text": "− Нет подтверждённых крите…",
+          "bounds": {
+            "x": 10,
+            "y": 44.068965911865234,
+            "w": 220.26522827148438,
+            "h": 14.68435287475586
+          }
+        },
+        {
+          "nodeId": "__canon__O-A11Y-LINK-ONLY-WORK",
+          "text": "− Нет подтверждённых крите…",
+          "bounds": {
+            "x": 10,
+            "y": 44.068965911865234,
+            "w": 220.26522827148438,
+            "h": 14.68435287475586
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-mixed-feature-consistency",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [
+        {
+          "nodeId": "__canon__O-A11Y-INTERPRETED-WORK",
+          "text": "− Нет подтверждённых крите…",
+          "bounds": {
+            "x": 10,
+            "y": 44.068965911865234,
+            "w": 220.26522827148438,
+            "h": 14.68435287475586
+          }
+        },
+        {
+          "nodeId": "__canon__O-A11Y-LINK-ONLY-WORK",
+          "text": "− Нет подтверждённых крите…",
+          "bounds": {
+            "x": 10,
+            "y": 44.068965911865234,
+            "w": 220.26522827148438,
+            "h": 14.68435287475586
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-mixed-planned-feature",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [
+        {
+          "nodeId": "__canon__P-RF-1-O1",
+          "text": "− Слишком много скрытых за…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 213.6363525390625,
+            "h": 14.54545783996582
+          }
+        },
+        {
+          "nodeId": "__canon__P-RF-1-O2",
+          "text": "− Слишком большой накладно…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 222.72726440429688,
+            "h": 14.54545783996582
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 2,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 3"
+    },
+    {
+      "slug": "reference-mixed-planned-feature",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [
+        {
+          "nodeId": "__canon__P-RF-1-O1",
+          "text": "− Слишком много скрытых за…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 213.6363525390625,
+            "h": 14.54545783996582
+          }
+        },
+        {
+          "nodeId": "__canon__P-RF-1-O2",
+          "text": "− Слишком большой накладно…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 222.72726440429688,
+            "h": 14.54545783996582
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 2,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 3"
+    },
+    {
+      "slug": "reference-mixed-planned-feature-consistency",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [
+        {
+          "nodeId": "__canon__P-RF-2-O1",
+          "text": "− Слишком много скрытых за…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 213.6363525390625,
+            "h": 14.54545783996582
+          }
+        },
+        {
+          "nodeId": "__canon__P-RF-2-O2",
+          "text": "+ Нужно явно контролироват…",
+          "bounds": {
+            "x": 10,
+            "y": 28.18181800842285,
+            "w": 213.6363525390625,
+            "h": 14.545454025268555
+          }
+        },
+        {
+          "nodeId": "__canon__P-RF-2-O2",
+          "text": "− Слишком большой накладно…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 222.72726440429688,
+            "h": 14.54545783996582
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-mixed-planned-feature-consistency",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [
+        {
+          "nodeId": "__canon__P-RF-2-O1",
+          "text": "− Слишком много скрытых за…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 213.6363525390625,
+            "h": 14.54545783996582
+          }
+        },
+        {
+          "nodeId": "__canon__P-RF-2-O2",
+          "text": "+ Нужно явно контролироват…",
+          "bounds": {
+            "x": 10,
+            "y": 28.18181800842285,
+            "w": 213.6363525390625,
+            "h": 14.545454025268555
+          }
+        },
+        {
+          "nodeId": "__canon__P-RF-2-O2",
+          "text": "− Слишком большой накладно…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 222.72726440429688,
+            "h": 14.54545783996582
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-mixed-planned-scenario",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [
+        {
+          "nodeId": "__canon__P-RS-1-O1",
+          "text": "− Слишком много скрытых за…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 213.6363525390625,
+            "h": 14.54545783996582
+          }
+        },
+        {
+          "nodeId": "__canon__P-RS-1-O2",
+          "text": "− Слишком большой накладно…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 222.72726440429688,
+            "h": 14.54545783996582
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 4"
+    },
+    {
+      "slug": "reference-mixed-planned-scenario",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [
+        {
+          "nodeId": "__canon__P-RS-1-O1",
+          "text": "− Слишком много скрытых за…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 213.6363525390625,
+            "h": 14.54545783996582
+          }
+        },
+        {
+          "nodeId": "__canon__P-RS-1-O2",
+          "text": "− Слишком большой накладно…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 222.72726440429688,
+            "h": 14.54545783996582
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 4"
+    },
+    {
+      "slug": "reference-mixed-planned-scenario-consistency",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [
+        {
+          "nodeId": "__canon__P-RS-2-O1",
+          "text": "− Слишком много скрытых за…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 213.6363525390625,
+            "h": 14.54545783996582
+          }
+        },
+        {
+          "nodeId": "__canon__P-RS-2-O2",
+          "text": "+ Нужно явно контролироват…",
+          "bounds": {
+            "x": 10,
+            "y": 28.18181800842285,
+            "w": 213.6363525390625,
+            "h": 14.545454025268555
+          }
+        },
+        {
+          "nodeId": "__canon__P-RS-2-O2",
+          "text": "− Слишком большой накладно…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 222.72726440429688,
+            "h": 14.54545783996582
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-mixed-planned-scenario-consistency",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [
+        {
+          "nodeId": "__canon__P-RS-2-O1",
+          "text": "− Слишком много скрытых за…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 213.6363525390625,
+            "h": 14.54545783996582
+          }
+        },
+        {
+          "nodeId": "__canon__P-RS-2-O2",
+          "text": "+ Нужно явно контролироват…",
+          "bounds": {
+            "x": 10,
+            "y": 28.18181800842285,
+            "w": 213.6363525390625,
+            "h": 14.545454025268555
+          }
+        },
+        {
+          "nodeId": "__canon__P-RS-2-O2",
+          "text": "− Слишком большой накладно…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 222.72726440429688,
+            "h": 14.54545783996582
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-prepared-feature-consistency",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [
+        {
+          "nodeId": "RF-2-O1",
+          "text": "Непосредственное уточнение",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 214.6341552734375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "RF-2-O2",
+          "text": "Через отдельные состояния и",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 217.07318115234375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "O-A11Y-INTERPRETED",
+          "text": "интеграционных контрактов…",
+          "bounds": {
+            "x": 10,
+            "y": 43.80487823486328,
+            "w": 219.51220703125,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__canon__RF-2-O1",
+          "text": "+ Описание цели позволяет …",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 220.73171997070312,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__canon__RF-2-O1",
+          "text": "− Слишком много скрытых за…",
+          "bounds": {
+            "x": 10,
+            "y": 43.80487823486328,
+            "w": 230.48780822753906,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__canon__RF-2-O2",
+          "text": "+ Нужно явно контролироват…",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 226.8292694091797,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__canon__RF-2-O2",
+          "text": "− Слишком большой накладно…",
+          "bounds": {
+            "x": 10,
+            "y": 43.80487823486328,
+            "w": 236.5853729248047,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__canon__O-A11Y-INTERPRETED",
+          "text": "+ Проверить доступность вз…",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 217.07318115234375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__canon__O-A11Y-INTERPRETED",
+          "text": "− Нет подтверждённых крите…",
+          "bounds": {
+            "x": 10,
+            "y": 43.80487823486328,
+            "w": 231.7073211669922,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__canon__O-A11Y-LINK-ONLY",
+          "text": "+ Проверить доступность вз…",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 217.07318115234375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__canon__O-A11Y-LINK-ONLY",
+          "text": "− Нет подтверждённых крите…",
+          "bounds": {
+            "x": 10,
+            "y": 43.80487823486328,
+            "w": 231.7073211669922,
+            "h": 15.853658676147461
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 9,
+      "kinds": {
+        "requirement": 1,
+        "option": 4,
+        "canon": 4
+      },
+      "overlaps": [],
+      "edges": 8,
+      "annotations": 4,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-prepared-feature-consistency",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [
+        {
+          "nodeId": "RF-2-O1",
+          "text": "Непосредственное уточнение",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 214.6341552734375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "RF-2-O2",
+          "text": "Через отдельные состояния и",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 217.07318115234375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "O-A11Y-INTERPRETED",
+          "text": "интеграционных контрактов…",
+          "bounds": {
+            "x": 10,
+            "y": 43.80487823486328,
+            "w": 219.51220703125,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__canon__RF-2-O1",
+          "text": "+ Описание цели позволяет …",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 220.73171997070312,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__canon__RF-2-O1",
+          "text": "− Слишком много скрытых за…",
+          "bounds": {
+            "x": 10,
+            "y": 43.80487823486328,
+            "w": 230.48780822753906,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__canon__RF-2-O2",
+          "text": "+ Нужно явно контролироват…",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 226.8292694091797,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__canon__RF-2-O2",
+          "text": "− Слишком большой накладно…",
+          "bounds": {
+            "x": 10,
+            "y": 43.80487823486328,
+            "w": 236.5853729248047,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__canon__O-A11Y-INTERPRETED",
+          "text": "+ Проверить доступность вз…",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 217.07318115234375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__canon__O-A11Y-INTERPRETED",
+          "text": "− Нет подтверждённых крите…",
+          "bounds": {
+            "x": 10,
+            "y": 43.80487823486328,
+            "w": 231.7073211669922,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__canon__O-A11Y-LINK-ONLY",
+          "text": "+ Проверить доступность вз…",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 217.07318115234375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__canon__O-A11Y-LINK-ONLY",
+          "text": "− Нет подтверждённых крите…",
+          "bounds": {
+            "x": 10,
+            "y": 43.80487823486328,
+            "w": 231.7073211669922,
+            "h": 15.853658676147461
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 9,
+      "kinds": {
+        "requirement": 1,
+        "option": 4,
+        "canon": 4
+      },
+      "overlaps": [],
+      "edges": 8,
+      "annotations": 4,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-prepared-feature-path",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [
+        {
+          "nodeId": "__canon__RF-1-O1",
+          "text": "− Слишком много скрытых за…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 213.6363525390625,
+            "h": 14.54545783996582
+          }
+        },
+        {
+          "nodeId": "__canon__RF-1-O2",
+          "text": "− Слишком большой накладно…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 222.72726440429688,
+            "h": 14.54545783996582
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 2,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 3"
+    },
+    {
+      "slug": "reference-prepared-feature-path",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [
+        {
+          "nodeId": "__canon__RF-1-O1",
+          "text": "− Слишком много скрытых за…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 213.6363525390625,
+            "h": 14.54545783996582
+          }
+        },
+        {
+          "nodeId": "__canon__RF-1-O2",
+          "text": "− Слишком большой накладно…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 222.72726440429688,
+            "h": 14.54545783996582
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 2,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 3"
+    },
+    {
+      "slug": "reference-prepared-planning-tree",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [
+        {
+          "nodeId": "__canon__O-SCENARIO",
+          "text": "− Нужно переиспользовать о…",
+          "bounds": {
+            "x": 10,
+            "y": 43.965518951416016,
+            "w": 216.6206817626953,
+            "h": 14.811670303344727
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 9,
+      "kinds": {
+        "requirement": 5,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 8,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 5"
+    },
+    {
+      "slug": "reference-prepared-planning-tree",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [
+        {
+          "nodeId": "__canon__O-SCENARIO",
+          "text": "− Нужно переиспользовать о…",
+          "bounds": {
+            "x": 10,
+            "y": 43.965518951416016,
+            "w": 216.6206817626953,
+            "h": 14.811670303344727
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 9,
+      "kinds": {
+        "requirement": 5,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 8,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 5"
+    },
+    {
+      "slug": "reference-prepared-scenario-consistency",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [
+        {
+          "nodeId": "__canon__RS-2-O1",
+          "text": "− Слишком много скрытых за…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 213.6363525390625,
+            "h": 14.54545783996582
+          }
+        },
+        {
+          "nodeId": "__canon__RS-2-O2",
+          "text": "+ Нужно явно контролироват…",
+          "bounds": {
+            "x": 10,
+            "y": 28.18181800842285,
+            "w": 213.6363525390625,
+            "h": 14.545454025268555
+          }
+        },
+        {
+          "nodeId": "__canon__RS-2-O2",
+          "text": "− Слишком большой накладно…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 222.72726440429688,
+            "h": 14.54545783996582
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-prepared-scenario-consistency",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [
+        {
+          "nodeId": "__canon__RS-2-O1",
+          "text": "− Слишком много скрытых за…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 213.6363525390625,
+            "h": 14.54545783996582
+          }
+        },
+        {
+          "nodeId": "__canon__RS-2-O2",
+          "text": "+ Нужно явно контролироват…",
+          "bounds": {
+            "x": 10,
+            "y": 28.18181800842285,
+            "w": 213.6363525390625,
+            "h": 14.545454025268555
+          }
+        },
+        {
+          "nodeId": "__canon__RS-2-O2",
+          "text": "− Слишком большой накладно…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 222.72726440429688,
+            "h": 14.54545783996582
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-prepared-scenario-path",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [
+        {
+          "nodeId": "__canon__RS-1-O1",
+          "text": "− Слишком много скрытых за…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 213.6363525390625,
+            "h": 14.54545783996582
+          }
+        },
+        {
+          "nodeId": "__canon__RS-1-O2",
+          "text": "− Слишком большой накладно…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 222.72726440429688,
+            "h": 14.54545783996582
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 3"
+    },
+    {
+      "slug": "reference-prepared-scenario-path",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [
+        {
+          "nodeId": "__canon__RS-1-O1",
+          "text": "− Слишком много скрытых за…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 213.6363525390625,
+            "h": 14.54545783996582
+          }
+        },
+        {
+          "nodeId": "__canon__RS-1-O2",
+          "text": "− Слишком большой накладно…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 222.72726440429688,
+            "h": 14.54545783996582
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 3"
+    },
+    {
+      "slug": "reference-mixed-active-work",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-all",
+      "textOverflows": [
+        {
+          "nodeId": "R-COMP",
+          "text": "учитывая новые требования …",
+          "bounds": {
+            "x": 10,
+            "y": 44.025936126708984,
+            "w": 219.12535095214844,
+            "h": 15.566282272338867
+          }
+        },
+        {
+          "nodeId": "__cause__reference-mixed-active-work::D-A",
+          "text": "В примере принято разбиение",
+          "bounds": {
+            "x": 10,
+            "y": 28.025936126708984,
+            "w": 215.5331268310547,
+            "h": 15.566282272338867
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 7,
+      "kinds": {
+        "requirement": 5,
+        "decision": 2
+      },
+      "overlaps": [],
+      "edges": 6,
+      "annotations": 0,
+      "message": "Полный граф R · Рабочий пример разбиения функциональности · 40 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-mixed-active-work",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-core",
+      "textOverflows": [
+        {
+          "nodeId": "R-COMP",
+          "text": "учитывая новые требования …",
+          "bounds": {
+            "x": 10,
+            "y": 43.80487823486328,
+            "w": 223.1707305908203,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "P-RS-2",
+          "text": "Согласовать пересекающиеся",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 217.07318115234375,
+            "h": 15.853658676147461
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 40,
+      "kinds": {
+        "requirement": 40
+      },
+      "overlaps": [],
+      "edges": 39,
+      "annotations": 0,
+      "message": "Полный граф R · Рабочий пример разбиения функциональности · 40 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-mixed-active-work",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-all",
+      "textOverflows": [
+        {
+          "nodeId": "R-COMP",
+          "text": "учитывая новые требования …",
+          "bounds": {
+            "x": 10,
+            "y": 43.80487823486328,
+            "w": 223.1707305908203,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "P-RS-2",
+          "text": "Согласовать пересекающиеся",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 217.07318115234375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__cause__reference-mixed-active-work::D-A",
+          "text": "В примере принято разбиение",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 219.51220703125,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__cause__reference-mixed-active-work::P-RF-1-O2",
+          "text": "Через отдельные состояния и",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 217.07318115234375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__cause__reference-mixed-active-work::P-RF-1-O1",
+          "text": "Непосредственное уточнение",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 214.6341552734375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__cause__reference-mixed-active-work::P-RF-2-O1",
+          "text": "Непосредственное уточнение",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 214.6341552734375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__cause__reference-mixed-active-work::P-RF-2-O2",
+          "text": "Через отдельные состояния и",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 217.07318115234375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__cause__reference-mixed-active-work::P-RS-1-O1",
+          "text": "Непосредственное уточнение",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 214.6341552734375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__cause__reference-mixed-active-work::P-RS-1-O2",
+          "text": "Через отдельные состояния и",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 217.07318115234375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__cause__reference-mixed-active-work::P-RS-2-O1",
+          "text": "Непосредственное уточнение",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 214.6341552734375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__cause__reference-mixed-active-work::P-RS-2-O2",
+          "text": "Через отдельные состояния и",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 217.07318115234375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__cause__reference-mixed-feature-consistency::O-A11Y-INTERPRETED-WORK",
+          "text": "интеграционных контрактов…",
+          "bounds": {
+            "x": 10,
+            "y": 43.80487823486328,
+            "w": 219.51220703125,
+            "h": 15.853658676147461
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 59,
+      "kinds": {
+        "requirement": 40,
+        "decision": 2,
+        "option": 17
+      },
+      "overlaps": [],
+      "edges": 58,
+      "annotations": 0,
+      "message": "Полный граф R · Рабочий пример разбиения функциональности · 40 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-prepared-planning-tree",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-all",
+      "textOverflows": [
+        {
+          "nodeId": "RS-2",
+          "text": "Согласовать пересекающиеся",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 217.07318115234375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__cause__reference-prepared-planning-tree::RF-1-O2",
+          "text": "Через отдельные состояния и",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 217.07318115234375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__cause__reference-prepared-planning-tree::RF-2-O1",
+          "text": "Непосредственное уточнение",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 214.6341552734375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__cause__reference-prepared-planning-tree::RF-2-O2",
+          "text": "Через отдельные состояния и",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 217.07318115234375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__cause__reference-prepared-feature-consistency::O-A11Y-INTERPRETED",
+          "text": "интеграционных контрактов…",
+          "bounds": {
+            "x": 10,
+            "y": 43.80487823486328,
+            "w": 219.51220703125,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__cause__reference-prepared-planning-tree::RF-1-O1",
+          "text": "Непосредственное уточнение",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 214.6341552734375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__cause__reference-prepared-planning-tree::RS-1-O1",
+          "text": "Непосредственное уточнение",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 214.6341552734375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__cause__reference-prepared-planning-tree::RS-1-O2",
+          "text": "Через отдельные состояния и",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 217.07318115234375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__cause__reference-prepared-planning-tree::RS-2-O1",
+          "text": "Непосредственное уточнение",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 214.6341552734375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__cause__reference-prepared-planning-tree::RS-2-O2",
+          "text": "Через отдельные состояния и",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 217.07318115234375,
+            "h": 15.853658676147461
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 20,
+      "kinds": {
+        "requirement": 6,
+        "option": 14
+      },
+      "overlaps": [],
+      "edges": 19,
+      "annotations": 0,
+      "message": "Полный граф R · Готовый пример разбиения функциональности · 6 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-prepared-feature-consistency",
+      "scope": "active-local-navigation",
+      "textOverflows": [
+        {
+          "nodeId": "RF-2-O1",
+          "text": "Непосредственное уточнение",
+          "bounds": {
+            "x": 10,
+            "y": 27.968168258666992,
+            "w": 216.57293701171875,
+            "h": 14.70556926727295
+          }
+        },
+        {
+          "nodeId": "RF-2-O2",
+          "text": "Через отдельные состояния и",
+          "bounds": {
+            "x": 10,
+            "y": 27.968168258666992,
+            "w": 213.89920043945312,
+            "h": 14.70556926727295
+          }
+        },
+        {
+          "nodeId": "O-A11Y-INTERPRETED",
+          "text": "интеграционных контрактов…",
+          "bounds": {
+            "x": 10,
+            "y": 43.96816635131836,
+            "w": 220.5835418701172,
+            "h": 14.70556926727295
+          }
+        },
+        {
+          "nodeId": "__canon__RF-2-O1",
+          "text": "+ Описание цели позволяет …",
+          "bounds": {
+            "x": 10,
+            "y": 27.968168258666992,
+            "w": 219.24667358398438,
+            "h": 14.70556926727295
+          }
+        },
+        {
+          "nodeId": "__canon__RF-2-O1",
+          "text": "− Слишком много скрытых за…",
+          "bounds": {
+            "x": 10,
+            "y": 43.96816635131836,
+            "w": 224.59414672851562,
+            "h": 14.70556926727295
+          }
+        },
+        {
+          "nodeId": "__canon__RF-2-O2",
+          "text": "+ Нужно явно контролироват…",
+          "bounds": {
+            "x": 10,
+            "y": 27.968168258666992,
+            "w": 224.59414672851562,
+            "h": 14.70556926727295
+          }
+        },
+        {
+          "nodeId": "__canon__RF-2-O2",
+          "text": "− Слишком большой накладно…",
+          "bounds": {
+            "x": 10,
+            "y": 43.96816635131836,
+            "w": 231.27850341796875,
+            "h": 14.70556926727295
+          }
+        },
+        {
+          "nodeId": "__canon__O-A11Y-INTERPRETED",
+          "text": "+ Проверить доступность вз…",
+          "bounds": {
+            "x": 10,
+            "y": 27.968168258666992,
+            "w": 219.24667358398438,
+            "h": 14.70556926727295
+          }
+        },
+        {
+          "nodeId": "__canon__O-A11Y-INTERPRETED",
+          "text": "− Нет подтверждённых крите…",
+          "bounds": {
+            "x": 10,
+            "y": 43.96816635131836,
+            "w": 229.94163513183594,
+            "h": 14.70556926727295
+          }
+        },
+        {
+          "nodeId": "__canon__O-A11Y-LINK-ONLY",
+          "text": "+ Проверить доступность вз…",
+          "bounds": {
+            "x": 10,
+            "y": 27.968168258666992,
+            "w": 219.24667358398438,
+            "h": 14.70556926727295
+          }
+        },
+        {
+          "nodeId": "__canon__O-A11Y-LINK-ONLY",
+          "text": "− Нет подтверждённых крите…",
+          "bounds": {
+            "x": 10,
+            "y": 43.96816635131836,
+            "w": 229.94163513183594,
+            "h": 14.70556926727295
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 9,
+      "kinds": {
+        "requirement": 1,
+        "option": 4,
+        "canon": 4
+      },
+      "overlaps": [],
+      "edges": 8,
+      "annotations": 4,
+      "message": "Встроенный локальный граф: examples/reference-prepared-feature-consistency/graph.json · revision 2"
+    },
+    {
+      "slug": "reference-mixed-feature-consistency",
+      "scope": "active-local-navigation",
+      "textOverflows": [
+        {
+          "nodeId": "__canon__O-A11Y-INTERPRETED-WORK",
+          "text": "− Нет подтверждённых крите…",
+          "bounds": {
+            "x": 10,
+            "y": 44.068965911865234,
+            "w": 220.26522827148438,
+            "h": 14.68435287475586
+          }
+        },
+        {
+          "nodeId": "__canon__O-A11Y-LINK-ONLY-WORK",
+          "text": "− Нет подтверждённых крите…",
+          "bounds": {
+            "x": 10,
+            "y": 44.068965911865234,
+            "w": 220.26522827148438,
+            "h": 14.68435287475586
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 2,
+      "message": "Встроенный локальный граф: examples/reference-mixed-feature-consistency/graph.json · revision 2"
+    },
+    {
+      "slug": "reference-mixed-contextual-split",
+      "scope": "active-local-navigation",
+      "textOverflows": [
+        {
+          "nodeId": "R-COMP",
+          "text": "учитывая новые требования …",
+          "bounds": {
+            "x": 10,
+            "y": 44.30238723754883,
+            "w": 214.4562530517578,
+            "h": 14.297082901000977
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 7,
+      "kinds": {
+        "requirement": 4,
+        "decision": 1,
+        "option": 1,
+        "canon": 1
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 1,
+      "message": "Встроенный локальный граф: examples/reference-mixed-contextual-split/graph.json · revision 2"
+    }
+  ],
+  "rows": [
+    {
+      "slug": "reference-mixed-active-work",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [],
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 5
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 7"
+    },
+    {
+      "slug": "reference-mixed-active-work",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [
+        {
+          "nodeId": "C-PLATFORM",
+          "text": "Текущая архитектура требует",
+          "bounds": {
+            "x": 8.780488014221191,
+            "y": 27.80487823486328,
+            "w": 224.39024353027344,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "R-COMP",
+          "text": "учитывая новые требования …",
+          "bounds": {
+            "x": 10,
+            "y": 43.80487823486328,
+            "w": 223.1707305908203,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "R-INACTIVE",
+          "text": "Создать отдельный служебный",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 228.0487823486328,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "C-ACCESS-RECORDED",
+          "text": "доступности, полученное до…",
+          "bounds": {
+            "x": 10,
+            "y": 43.80487823486328,
+            "w": 221.9512176513672,
+            "h": 15.853658676147461
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 13,
+      "kinds": {
+        "requirement": 7,
+        "context": 3,
+        "collection": 3
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 7"
+    },
+    {
+      "slug": "reference-mixed-change-log",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [],
+      "version": "2.2.9",
+      "nodes": 3,
+      "kinds": {
+        "requirement": 2,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 2,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-mixed-change-log",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [
+        {
+          "nodeId": "R-INACTIVE",
+          "text": "Создать отдельный служебный",
+          "bounds": {
+            "x": 10,
+            "y": 28.18181800842285,
+            "w": 214.54544067382812,
+            "h": 14.545454025268555
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 4,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 2,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-mixed-contextual-split",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [],
+      "version": "2.2.9",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 4,
+        "decision": 1,
+        "canon": 1
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 1,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-mixed-contextual-split",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [
+        {
+          "nodeId": "R-COMP",
+          "text": "учитывая новые требования …",
+          "bounds": {
+            "x": 10,
+            "y": 43.80487823486328,
+            "w": 223.1707305908203,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "D-A",
+          "text": "В примере принято разбиение",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 219.51220703125,
+            "h": 15.853658676147461
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 7,
+      "kinds": {
+        "requirement": 4,
+        "decision": 1,
+        "option": 1,
+        "canon": 1
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 1,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-mixed-feature-availability",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [
+        {
+          "nodeId": "__canon__O-ACT-2",
+          "text": "+ Критична последовательно…",
+          "bounds": {
+            "x": 10,
+            "y": 28.18181800842285,
+            "w": 215.4545440673828,
+            "h": 14.545454025268555
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-mixed-feature-availability",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [
+        {
+          "nodeId": "__canon__O-ACT-2",
+          "text": "+ Критична последовательно…",
+          "bounds": {
+            "x": 10,
+            "y": 28.18181800842285,
+            "w": 215.4545440673828,
+            "h": 14.545454025268555
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-mixed-feature-consistency",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [
+        {
+          "nodeId": "__canon__O-A11Y-INTERPRETED-WORK",
+          "text": "− Нет подтверждённых крите…",
+          "bounds": {
+            "x": 10,
+            "y": 44.068965911865234,
+            "w": 220.26522827148438,
+            "h": 14.68435287475586
+          }
+        },
+        {
+          "nodeId": "__canon__O-A11Y-LINK-ONLY-WORK",
+          "text": "− Нет подтверждённых крите…",
+          "bounds": {
+            "x": 10,
+            "y": 44.068965911865234,
+            "w": 220.26522827148438,
+            "h": 14.68435287475586
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-mixed-feature-consistency",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [
+        {
+          "nodeId": "__canon__O-A11Y-INTERPRETED-WORK",
+          "text": "− Нет подтверждённых крите…",
+          "bounds": {
+            "x": 10,
+            "y": 44.068965911865234,
+            "w": 220.26522827148438,
+            "h": 14.68435287475586
+          }
+        },
+        {
+          "nodeId": "__canon__O-A11Y-LINK-ONLY-WORK",
+          "text": "− Нет подтверждённых крите…",
+          "bounds": {
+            "x": 10,
+            "y": 44.068965911865234,
+            "w": 220.26522827148438,
+            "h": 14.68435287475586
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-mixed-planned-feature",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [
+        {
+          "nodeId": "__canon__P-RF-1-O1",
+          "text": "− Слишком много скрытых за…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 213.6363525390625,
+            "h": 14.54545783996582
+          }
+        },
+        {
+          "nodeId": "__canon__P-RF-1-O2",
+          "text": "− Слишком большой накладно…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 222.72726440429688,
+            "h": 14.54545783996582
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 2,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 3"
+    },
+    {
+      "slug": "reference-mixed-planned-feature",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [
+        {
+          "nodeId": "__canon__P-RF-1-O1",
+          "text": "− Слишком много скрытых за…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 213.6363525390625,
+            "h": 14.54545783996582
+          }
+        },
+        {
+          "nodeId": "__canon__P-RF-1-O2",
+          "text": "− Слишком большой накладно…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 222.72726440429688,
+            "h": 14.54545783996582
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 2,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 3"
+    },
+    {
+      "slug": "reference-mixed-planned-feature-consistency",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [
+        {
+          "nodeId": "__canon__P-RF-2-O1",
+          "text": "− Слишком много скрытых за…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 213.6363525390625,
+            "h": 14.54545783996582
+          }
+        },
+        {
+          "nodeId": "__canon__P-RF-2-O2",
+          "text": "+ Нужно явно контролироват…",
+          "bounds": {
+            "x": 10,
+            "y": 28.18181800842285,
+            "w": 213.6363525390625,
+            "h": 14.545454025268555
+          }
+        },
+        {
+          "nodeId": "__canon__P-RF-2-O2",
+          "text": "− Слишком большой накладно…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 222.72726440429688,
+            "h": 14.54545783996582
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-mixed-planned-feature-consistency",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [
+        {
+          "nodeId": "__canon__P-RF-2-O1",
+          "text": "− Слишком много скрытых за…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 213.6363525390625,
+            "h": 14.54545783996582
+          }
+        },
+        {
+          "nodeId": "__canon__P-RF-2-O2",
+          "text": "+ Нужно явно контролироват…",
+          "bounds": {
+            "x": 10,
+            "y": 28.18181800842285,
+            "w": 213.6363525390625,
+            "h": 14.545454025268555
+          }
+        },
+        {
+          "nodeId": "__canon__P-RF-2-O2",
+          "text": "− Слишком большой накладно…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 222.72726440429688,
+            "h": 14.54545783996582
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-mixed-planned-feature-depth",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [],
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-mixed-planned-feature-depth",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [],
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-mixed-planned-scenario",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [
+        {
+          "nodeId": "__canon__P-RS-1-O1",
+          "text": "− Слишком много скрытых за…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 213.6363525390625,
+            "h": 14.54545783996582
+          }
+        },
+        {
+          "nodeId": "__canon__P-RS-1-O2",
+          "text": "− Слишком большой накладно…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 222.72726440429688,
+            "h": 14.54545783996582
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 4"
+    },
+    {
+      "slug": "reference-mixed-planned-scenario",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [
+        {
+          "nodeId": "__canon__P-RS-1-O1",
+          "text": "− Слишком много скрытых за…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 213.6363525390625,
+            "h": 14.54545783996582
+          }
+        },
+        {
+          "nodeId": "__canon__P-RS-1-O2",
+          "text": "− Слишком большой накладно…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 222.72726440429688,
+            "h": 14.54545783996582
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 4"
+    },
+    {
+      "slug": "reference-mixed-planned-scenario-consistency",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [
+        {
+          "nodeId": "__canon__P-RS-2-O1",
+          "text": "− Слишком много скрытых за…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 213.6363525390625,
+            "h": 14.54545783996582
+          }
+        },
+        {
+          "nodeId": "__canon__P-RS-2-O2",
+          "text": "+ Нужно явно контролироват…",
+          "bounds": {
+            "x": 10,
+            "y": 28.18181800842285,
+            "w": 213.6363525390625,
+            "h": 14.545454025268555
+          }
+        },
+        {
+          "nodeId": "__canon__P-RS-2-O2",
+          "text": "− Слишком большой накладно…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 222.72726440429688,
+            "h": 14.54545783996582
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-mixed-planned-scenario-consistency",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [
+        {
+          "nodeId": "__canon__P-RS-2-O1",
+          "text": "− Слишком много скрытых за…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 213.6363525390625,
+            "h": 14.54545783996582
+          }
+        },
+        {
+          "nodeId": "__canon__P-RS-2-O2",
+          "text": "+ Нужно явно контролироват…",
+          "bounds": {
+            "x": 10,
+            "y": 28.18181800842285,
+            "w": 213.6363525390625,
+            "h": 14.545454025268555
+          }
+        },
+        {
+          "nodeId": "__canon__P-RS-2-O2",
+          "text": "− Слишком большой накладно…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 222.72726440429688,
+            "h": 14.54545783996582
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-prepared-feature-consistency",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [
+        {
+          "nodeId": "RF-2-O1",
+          "text": "Непосредственное уточнение",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 214.6341552734375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "RF-2-O2",
+          "text": "Через отдельные состояния и",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 217.07318115234375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "O-A11Y-INTERPRETED",
+          "text": "интеграционных контрактов…",
+          "bounds": {
+            "x": 10,
+            "y": 43.80487823486328,
+            "w": 219.51220703125,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__canon__RF-2-O1",
+          "text": "+ Описание цели позволяет …",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 220.73171997070312,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__canon__RF-2-O1",
+          "text": "− Слишком много скрытых за…",
+          "bounds": {
+            "x": 10,
+            "y": 43.80487823486328,
+            "w": 230.48780822753906,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__canon__RF-2-O2",
+          "text": "+ Нужно явно контролироват…",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 226.8292694091797,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__canon__RF-2-O2",
+          "text": "− Слишком большой накладно…",
+          "bounds": {
+            "x": 10,
+            "y": 43.80487823486328,
+            "w": 236.5853729248047,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__canon__O-A11Y-INTERPRETED",
+          "text": "+ Проверить доступность вз…",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 217.07318115234375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__canon__O-A11Y-INTERPRETED",
+          "text": "− Нет подтверждённых крите…",
+          "bounds": {
+            "x": 10,
+            "y": 43.80487823486328,
+            "w": 231.7073211669922,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__canon__O-A11Y-LINK-ONLY",
+          "text": "+ Проверить доступность вз…",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 217.07318115234375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__canon__O-A11Y-LINK-ONLY",
+          "text": "− Нет подтверждённых крите…",
+          "bounds": {
+            "x": 10,
+            "y": 43.80487823486328,
+            "w": 231.7073211669922,
+            "h": 15.853658676147461
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 9,
+      "kinds": {
+        "requirement": 1,
+        "option": 4,
+        "canon": 4
+      },
+      "overlaps": [],
+      "edges": 8,
+      "annotations": 4,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-prepared-feature-consistency",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [
+        {
+          "nodeId": "RF-2-O1",
+          "text": "Непосредственное уточнение",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 214.6341552734375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "RF-2-O2",
+          "text": "Через отдельные состояния и",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 217.07318115234375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "O-A11Y-INTERPRETED",
+          "text": "интеграционных контрактов…",
+          "bounds": {
+            "x": 10,
+            "y": 43.80487823486328,
+            "w": 219.51220703125,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__canon__RF-2-O1",
+          "text": "+ Описание цели позволяет …",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 220.73171997070312,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__canon__RF-2-O1",
+          "text": "− Слишком много скрытых за…",
+          "bounds": {
+            "x": 10,
+            "y": 43.80487823486328,
+            "w": 230.48780822753906,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__canon__RF-2-O2",
+          "text": "+ Нужно явно контролироват…",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 226.8292694091797,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__canon__RF-2-O2",
+          "text": "− Слишком большой накладно…",
+          "bounds": {
+            "x": 10,
+            "y": 43.80487823486328,
+            "w": 236.5853729248047,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__canon__O-A11Y-INTERPRETED",
+          "text": "+ Проверить доступность вз…",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 217.07318115234375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__canon__O-A11Y-INTERPRETED",
+          "text": "− Нет подтверждённых крите…",
+          "bounds": {
+            "x": 10,
+            "y": 43.80487823486328,
+            "w": 231.7073211669922,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__canon__O-A11Y-LINK-ONLY",
+          "text": "+ Проверить доступность вз…",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 217.07318115234375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__canon__O-A11Y-LINK-ONLY",
+          "text": "− Нет подтверждённых крите…",
+          "bounds": {
+            "x": 10,
+            "y": 43.80487823486328,
+            "w": 231.7073211669922,
+            "h": 15.853658676147461
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 9,
+      "kinds": {
+        "requirement": 1,
+        "option": 4,
+        "canon": 4
+      },
+      "overlaps": [],
+      "edges": 8,
+      "annotations": 4,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-prepared-feature-depth",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [],
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-prepared-feature-depth",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [],
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-prepared-feature-path",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [
+        {
+          "nodeId": "__canon__RF-1-O1",
+          "text": "− Слишком много скрытых за…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 213.6363525390625,
+            "h": 14.54545783996582
+          }
+        },
+        {
+          "nodeId": "__canon__RF-1-O2",
+          "text": "− Слишком большой накладно…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 222.72726440429688,
+            "h": 14.54545783996582
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 2,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 3"
+    },
+    {
+      "slug": "reference-prepared-feature-path",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [
+        {
+          "nodeId": "__canon__RF-1-O1",
+          "text": "− Слишком много скрытых за…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 213.6363525390625,
+            "h": 14.54545783996582
+          }
+        },
+        {
+          "nodeId": "__canon__RF-1-O2",
+          "text": "− Слишком большой накладно…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 222.72726440429688,
+            "h": 14.54545783996582
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 2,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 3"
+    },
+    {
+      "slug": "reference-prepared-planning-tree",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [
+        {
+          "nodeId": "__canon__O-SCENARIO",
+          "text": "− Нужно переиспользовать о…",
+          "bounds": {
+            "x": 10,
+            "y": 43.965518951416016,
+            "w": 216.6206817626953,
+            "h": 14.811670303344727
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 9,
+      "kinds": {
+        "requirement": 5,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 8,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 5"
+    },
+    {
+      "slug": "reference-prepared-planning-tree",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [
+        {
+          "nodeId": "__canon__O-SCENARIO",
+          "text": "− Нужно переиспользовать о…",
+          "bounds": {
+            "x": 10,
+            "y": 43.965518951416016,
+            "w": 216.6206817626953,
+            "h": 14.811670303344727
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 9,
+      "kinds": {
+        "requirement": 5,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 8,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 5"
+    },
+    {
+      "slug": "reference-prepared-scenario-consistency",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [
+        {
+          "nodeId": "__canon__RS-2-O1",
+          "text": "− Слишком много скрытых за…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 213.6363525390625,
+            "h": 14.54545783996582
+          }
+        },
+        {
+          "nodeId": "__canon__RS-2-O2",
+          "text": "+ Нужно явно контролироват…",
+          "bounds": {
+            "x": 10,
+            "y": 28.18181800842285,
+            "w": 213.6363525390625,
+            "h": 14.545454025268555
+          }
+        },
+        {
+          "nodeId": "__canon__RS-2-O2",
+          "text": "− Слишком большой накладно…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 222.72726440429688,
+            "h": 14.54545783996582
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-prepared-scenario-consistency",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [
+        {
+          "nodeId": "__canon__RS-2-O1",
+          "text": "− Слишком много скрытых за…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 213.6363525390625,
+            "h": 14.54545783996582
+          }
+        },
+        {
+          "nodeId": "__canon__RS-2-O2",
+          "text": "+ Нужно явно контролироват…",
+          "bounds": {
+            "x": 10,
+            "y": 28.18181800842285,
+            "w": 213.6363525390625,
+            "h": 14.545454025268555
+          }
+        },
+        {
+          "nodeId": "__canon__RS-2-O2",
+          "text": "− Слишком большой накладно…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 222.72726440429688,
+            "h": 14.54545783996582
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-prepared-scenario-path",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [
+        {
+          "nodeId": "__canon__RS-1-O1",
+          "text": "− Слишком много скрытых за…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 213.6363525390625,
+            "h": 14.54545783996582
+          }
+        },
+        {
+          "nodeId": "__canon__RS-1-O2",
+          "text": "− Слишком большой накладно…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 222.72726440429688,
+            "h": 14.54545783996582
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 3"
+    },
+    {
+      "slug": "reference-prepared-scenario-path",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [
+        {
+          "nodeId": "__canon__RS-1-O1",
+          "text": "− Слишком много скрытых за…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 213.6363525390625,
+            "h": 14.54545783996582
+          }
+        },
+        {
+          "nodeId": "__canon__RS-1-O2",
+          "text": "− Слишком большой накладно…",
+          "bounds": {
+            "x": 10,
+            "y": 44.181819915771484,
+            "w": 222.72726440429688,
+            "h": 14.54545783996582
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 3"
+    },
+    {
+      "slug": "reference-mixed-active-work",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-core",
+      "textOverflows": [],
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 5
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 0,
+      "message": "Полный граф R · Рабочий пример разбиения функциональности · 40 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-mixed-active-work",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-all",
+      "textOverflows": [
+        {
+          "nodeId": "R-COMP",
+          "text": "учитывая новые требования …",
+          "bounds": {
+            "x": 10,
+            "y": 44.025936126708984,
+            "w": 219.12535095214844,
+            "h": 15.566282272338867
+          }
+        },
+        {
+          "nodeId": "__cause__reference-mixed-active-work::D-A",
+          "text": "В примере принято разбиение",
+          "bounds": {
+            "x": 10,
+            "y": 28.025936126708984,
+            "w": 215.5331268310547,
+            "h": 15.566282272338867
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 7,
+      "kinds": {
+        "requirement": 5,
+        "decision": 2
+      },
+      "overlaps": [],
+      "edges": 6,
+      "annotations": 0,
+      "message": "Полный граф R · Рабочий пример разбиения функциональности · 40 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-mixed-active-work",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-core",
+      "textOverflows": [
+        {
+          "nodeId": "R-COMP",
+          "text": "учитывая новые требования …",
+          "bounds": {
+            "x": 10,
+            "y": 43.80487823486328,
+            "w": 223.1707305908203,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "P-RS-2",
+          "text": "Согласовать пересекающиеся",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 217.07318115234375,
+            "h": 15.853658676147461
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 40,
+      "kinds": {
+        "requirement": 40
+      },
+      "overlaps": [],
+      "edges": 39,
+      "annotations": 0,
+      "message": "Полный граф R · Рабочий пример разбиения функциональности · 40 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-mixed-active-work",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-all",
+      "textOverflows": [
+        {
+          "nodeId": "R-COMP",
+          "text": "учитывая новые требования …",
+          "bounds": {
+            "x": 10,
+            "y": 43.80487823486328,
+            "w": 223.1707305908203,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "P-RS-2",
+          "text": "Согласовать пересекающиеся",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 217.07318115234375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__cause__reference-mixed-active-work::D-A",
+          "text": "В примере принято разбиение",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 219.51220703125,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__cause__reference-mixed-active-work::P-RF-1-O2",
+          "text": "Через отдельные состояния и",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 217.07318115234375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__cause__reference-mixed-active-work::P-RF-1-O1",
+          "text": "Непосредственное уточнение",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 214.6341552734375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__cause__reference-mixed-active-work::P-RF-2-O1",
+          "text": "Непосредственное уточнение",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 214.6341552734375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__cause__reference-mixed-active-work::P-RF-2-O2",
+          "text": "Через отдельные состояния и",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 217.07318115234375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__cause__reference-mixed-active-work::P-RS-1-O1",
+          "text": "Непосредственное уточнение",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 214.6341552734375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__cause__reference-mixed-active-work::P-RS-1-O2",
+          "text": "Через отдельные состояния и",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 217.07318115234375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__cause__reference-mixed-active-work::P-RS-2-O1",
+          "text": "Непосредственное уточнение",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 214.6341552734375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__cause__reference-mixed-active-work::P-RS-2-O2",
+          "text": "Через отдельные состояния и",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 217.07318115234375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__cause__reference-mixed-feature-consistency::O-A11Y-INTERPRETED-WORK",
+          "text": "интеграционных контрактов…",
+          "bounds": {
+            "x": 10,
+            "y": 43.80487823486328,
+            "w": 219.51220703125,
+            "h": 15.853658676147461
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 59,
+      "kinds": {
+        "requirement": 40,
+        "decision": 2,
+        "option": 17
+      },
+      "overlaps": [],
+      "edges": 58,
+      "annotations": 0,
+      "message": "Полный граф R · Рабочий пример разбиения функциональности · 40 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-prepared-planning-tree",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-core",
+      "textOverflows": [],
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Полный граф R · Готовый пример разбиения функциональности · 6 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-prepared-planning-tree",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-all",
+      "textOverflows": [],
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Полный граф R · Готовый пример разбиения функциональности · 6 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-prepared-planning-tree",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-core",
+      "textOverflows": [],
+      "version": "2.2.9",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 6
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 0,
+      "message": "Полный граф R · Готовый пример разбиения функциональности · 6 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-prepared-planning-tree",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-all",
+      "textOverflows": [
+        {
+          "nodeId": "RS-2",
+          "text": "Согласовать пересекающиеся",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 217.07318115234375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__cause__reference-prepared-planning-tree::RF-1-O2",
+          "text": "Через отдельные состояния и",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 217.07318115234375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__cause__reference-prepared-planning-tree::RF-2-O1",
+          "text": "Непосредственное уточнение",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 214.6341552734375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__cause__reference-prepared-planning-tree::RF-2-O2",
+          "text": "Через отдельные состояния и",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 217.07318115234375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__cause__reference-prepared-feature-consistency::O-A11Y-INTERPRETED",
+          "text": "интеграционных контрактов…",
+          "bounds": {
+            "x": 10,
+            "y": 43.80487823486328,
+            "w": 219.51220703125,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__cause__reference-prepared-planning-tree::RF-1-O1",
+          "text": "Непосредственное уточнение",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 214.6341552734375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__cause__reference-prepared-planning-tree::RS-1-O1",
+          "text": "Непосредственное уточнение",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 214.6341552734375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__cause__reference-prepared-planning-tree::RS-1-O2",
+          "text": "Через отдельные состояния и",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 217.07318115234375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__cause__reference-prepared-planning-tree::RS-2-O1",
+          "text": "Непосредственное уточнение",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 214.6341552734375,
+            "h": 15.853658676147461
+          }
+        },
+        {
+          "nodeId": "__cause__reference-prepared-planning-tree::RS-2-O2",
+          "text": "Через отдельные состояния и",
+          "bounds": {
+            "x": 10,
+            "y": 27.80487823486328,
+            "w": 217.07318115234375,
+            "h": 15.853658676147461
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 20,
+      "kinds": {
+        "requirement": 6,
+        "option": 14
+      },
+      "overlaps": [],
+      "edges": 19,
+      "annotations": 0,
+      "message": "Полный граф R · Готовый пример разбиения функциональности · 6 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-prepared-feature-consistency",
+      "scope": "active-local-navigation",
+      "textOverflows": [
+        {
+          "nodeId": "RF-2-O1",
+          "text": "Непосредственное уточнение",
+          "bounds": {
+            "x": 10,
+            "y": 27.968168258666992,
+            "w": 216.57293701171875,
+            "h": 14.70556926727295
+          }
+        },
+        {
+          "nodeId": "RF-2-O2",
+          "text": "Через отдельные состояния и",
+          "bounds": {
+            "x": 10,
+            "y": 27.968168258666992,
+            "w": 213.89920043945312,
+            "h": 14.70556926727295
+          }
+        },
+        {
+          "nodeId": "O-A11Y-INTERPRETED",
+          "text": "интеграционных контрактов…",
+          "bounds": {
+            "x": 10,
+            "y": 43.96816635131836,
+            "w": 220.5835418701172,
+            "h": 14.70556926727295
+          }
+        },
+        {
+          "nodeId": "__canon__RF-2-O1",
+          "text": "+ Описание цели позволяет …",
+          "bounds": {
+            "x": 10,
+            "y": 27.968168258666992,
+            "w": 219.24667358398438,
+            "h": 14.70556926727295
+          }
+        },
+        {
+          "nodeId": "__canon__RF-2-O1",
+          "text": "− Слишком много скрытых за…",
+          "bounds": {
+            "x": 10,
+            "y": 43.96816635131836,
+            "w": 224.59414672851562,
+            "h": 14.70556926727295
+          }
+        },
+        {
+          "nodeId": "__canon__RF-2-O2",
+          "text": "+ Нужно явно контролироват…",
+          "bounds": {
+            "x": 10,
+            "y": 27.968168258666992,
+            "w": 224.59414672851562,
+            "h": 14.70556926727295
+          }
+        },
+        {
+          "nodeId": "__canon__RF-2-O2",
+          "text": "− Слишком большой накладно…",
+          "bounds": {
+            "x": 10,
+            "y": 43.96816635131836,
+            "w": 231.27850341796875,
+            "h": 14.70556926727295
+          }
+        },
+        {
+          "nodeId": "__canon__O-A11Y-INTERPRETED",
+          "text": "+ Проверить доступность вз…",
+          "bounds": {
+            "x": 10,
+            "y": 27.968168258666992,
+            "w": 219.24667358398438,
+            "h": 14.70556926727295
+          }
+        },
+        {
+          "nodeId": "__canon__O-A11Y-INTERPRETED",
+          "text": "− Нет подтверждённых крите…",
+          "bounds": {
+            "x": 10,
+            "y": 43.96816635131836,
+            "w": 229.94163513183594,
+            "h": 14.70556926727295
+          }
+        },
+        {
+          "nodeId": "__canon__O-A11Y-LINK-ONLY",
+          "text": "+ Проверить доступность вз…",
+          "bounds": {
+            "x": 10,
+            "y": 27.968168258666992,
+            "w": 219.24667358398438,
+            "h": 14.70556926727295
+          }
+        },
+        {
+          "nodeId": "__canon__O-A11Y-LINK-ONLY",
+          "text": "− Нет подтверждённых крите…",
+          "bounds": {
+            "x": 10,
+            "y": 43.96816635131836,
+            "w": 229.94163513183594,
+            "h": 14.70556926727295
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 9,
+      "kinds": {
+        "requirement": 1,
+        "option": 4,
+        "canon": 4
+      },
+      "overlaps": [],
+      "edges": 8,
+      "annotations": 4,
+      "message": "Встроенный локальный граф: examples/reference-prepared-feature-consistency/graph.json · revision 2"
+    },
+    {
+      "slug": "reference-mixed-feature-consistency",
+      "scope": "active-local-navigation",
+      "textOverflows": [
+        {
+          "nodeId": "__canon__O-A11Y-INTERPRETED-WORK",
+          "text": "− Нет подтверждённых крите…",
+          "bounds": {
+            "x": 10,
+            "y": 44.068965911865234,
+            "w": 220.26522827148438,
+            "h": 14.68435287475586
+          }
+        },
+        {
+          "nodeId": "__canon__O-A11Y-LINK-ONLY-WORK",
+          "text": "− Нет подтверждённых крите…",
+          "bounds": {
+            "x": 10,
+            "y": 44.068965911865234,
+            "w": 220.26522827148438,
+            "h": 14.68435287475586
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 2,
+      "message": "Встроенный локальный граф: examples/reference-mixed-feature-consistency/graph.json · revision 2"
+    },
+    {
+      "slug": "reference-mixed-contextual-split",
+      "scope": "active-local-navigation",
+      "textOverflows": [
+        {
+          "nodeId": "R-COMP",
+          "text": "учитывая новые требования …",
+          "bounds": {
+            "x": 10,
+            "y": 44.30238723754883,
+            "w": 214.4562530517578,
+            "h": 14.297082901000977
+          }
+        }
+      ],
+      "version": "2.2.9",
+      "nodes": 7,
+      "kinds": {
+        "requirement": 4,
+        "decision": 1,
+        "option": 1,
+        "canon": 1
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 1,
+      "message": "Встроенный локальный граф: examples/reference-mixed-contextual-split/graph.json · revision 2"
+    }
+  ]
+}

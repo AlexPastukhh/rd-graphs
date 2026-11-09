@@ -1,0 +1,13 @@
+{
+  "README.md": "e087de92835bee61b19f33bc63aefbbb51bf252d2a9503efc0c4adcf651bdcc2",
+  "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md": "9e1190db455ab19f9562aade81d40fd4d8d171c0002944a14f68e3fd37f18752",
+  "tools/rdg-authority.py": "f2cb0fa8ca1d2b4c57ce8626bcbb90d29e359743c2d608b662c97a75ee5dde42",
+  "tests/rdg-temporal-plan-owner.test.py": "737d6b9c7dbe5c91de2f0a2ca2714aa41c3c214e90683a554b9509155deb46e1",
+  "tools/rdg-gendocen-adapter.py": "8233ea7d50e7931706dc6157cdca8ec9cf89fa122c518243d969ab463a489be2",
+  "tools/rdg-event-owner.py": "8f855fc7f1c885d1c92bc643c7e5908b0a2ad8e18d181b009827a68ec6eae24c",
+  "tests/rdg-event-owner.test.py": "005beb121ca5a422c937e93a5274dbae86680bf2bf3e8ddb42e834dcbeb11cc7",
+  "tests/rdg-event-consumer-guard.test.py": "49f93b66886d677ae1fc2c7372cedb2327d7e7a2d63cf8e22dd5774b8f71610a",
+  "docs/guides/RDG-EVENT-LIFECYCLE-PILOT.md": "6b89bf875c766aa6b40855f144a0d801fb171f8d1f147eac5cb958cad1ba7f64",
+  "docs/handoffs/rdg-event-lifecycle-20261019/CHECKPOINT.md": "32299f142db0354079f8522cd52a5b82943eb00c014f3b50f1b270259d5252a0",
+  "docs/handoffs/rdg-event-lifecycle-20261019/WR-DELTA.md": "cdfbadcc800f3392a411d0e7864d02b9000f989365e3c3e8f12609c9f9dc0914"
+}

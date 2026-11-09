@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "revision": 4,
+  "layouts": {
+    "[\"browser-layout-fixes\",\"browser-layout-fixes\"]": {
+      "positions": {
+        "__collection__list": {
+          "x": 942.55,
+          "y": 112.91
+        },
+        "R": {
+          "x": 101,
+          "y": 102
+        },
+        "O": {
+          "x": 468,
+          "y": 72
+        }
+      }
+    }
+  }
+}

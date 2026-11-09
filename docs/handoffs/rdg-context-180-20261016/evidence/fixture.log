@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: shared owner fixture: earlier answer, theory, several consumers and conditional questions
+ok 1 - shared owner fixture: earlier answer, theory, several consumers and conditional questions
+  ---
+  duration_ms: 1212.22363
+  type: 'test'
+  ...
+# Subtest: definitions/sources update once; same names do not merge; histories stay separate
+ok 2 - definitions/sources update once; same names do not merge; histories stay separate
+  ---
+  duration_ms: 1.980618
+  type: 'test'
+  ...
+# Subtest: negative contract rejects source execution, duplicate answer owners and invalid refs
+ok 3 - negative contract rejects source execution, duplicate answer owners and invalid refs
+  ---
+  duration_ms: 202.339071
+  type: 'test'
+  ...
+# Subtest: unknown completeness, more than forty fields, project boundary, stale/scope and freeform candidates
+ok 4 - unknown completeness, more than forty fields, project boundary, stale/scope and freeform candidates
+  ---
+  duration_ms: 2.890254
+  type: 'test'
+  ...
+# Subtest: real writer package keeps a single Context owner, readback, revision replay and immutable answer history
+ok 5 - real writer package keeps a single Context owner, readback, revision replay and immutable answer history
+  ---
+  duration_ms: 9584.882829
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 17900.603172

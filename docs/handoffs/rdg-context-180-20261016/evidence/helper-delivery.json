@@ -1,0 +1,14 @@
+{
+  "changed": [
+    {
+      "id": "rdg.work.planning",
+      "file": "/workspace/repos/obs-planning-docs/planning/helper-library/modules/rdg.work.planning.module.md"
+    },
+    {
+      "id": "rdg.work.storage",
+      "file": "/workspace/repos/obs-planning-docs/planning/helper-library/modules/rdg.work.storage.module.md"
+    }
+  ],
+  "readBack": true,
+  "total": 13
+}

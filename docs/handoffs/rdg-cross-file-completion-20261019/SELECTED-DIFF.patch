@@ -1,0 +1,1790 @@
+--- /dev/null
++++ b/tools/rdg-completion-context.py
+@@ -0,0 +1,191 @@
++#!/usr/bin/env python3
++"""Read/evaluate one published workspace composition; never writes source graphs.
++
++projectionOf identifies the semantic owner. expansionOf permits an exact local
++continuation of that R. The temporary union is a calculation, not another owner.
++Callers hold the common writer lock and authorize every loaded graph.
++"""
++import copy
++import hashlib
++from importlib.machinery import SourceFileLoader
++import json
++from pathlib import Path
++import re
++
++TOOLS=Path(__file__).resolve().parent
++MODEL=SourceFileLoader('cross_completion_model',str(TOOLS/'rdg-v7-model.py')).load_module()
++PATH=re.compile(r'workspaces/(?:[a-z0-9][a-z0-9_-]*/)+graph\.json\Z')
++
++
++def require(ok,code):
++    if not ok:raise ValueError('COMPLETION_'+code)
++
++
++def safe(root,relative):
++    require(isinstance(relative,str) and PATH.fullmatch(relative),'WORKSPACE_PATH_INVALID')
++    path=root/relative
++    require(path.resolve().is_relative_to(root) and not any(p.is_symlink()
++        for p in [path,*path.parents] if p!=root.parent),'UNSAFE_SOURCE')
++    return path
++
++
++def load(root,seeds,authorize=None,overrides=None):
++    root=Path(root).resolve();overrides=overrides or {}
++    index=root/'index.json'
++    require(not index.is_symlink(),'UNSAFE_CATALOG')
++    raw=index.read_bytes() if index.exists() else None
++    manifest=json.loads(raw) if raw else {'schemaVersion':1,'graphs':[]}
++    require(manifest.get('schemaVersion')==1 and isinstance(manifest.get('graphs'),list),'CATALOG_INVALID')
++    metadata={};slugs={}
++    for row in manifest['graphs']:
++        file=row.get('file');slug=row.get('slug')
++        require(isinstance(file,str) and file not in metadata and
++                isinstance(slug,str) and slug not in slugs,'AMBIGUOUS_CATALOG')
++        metadata[file]={k:row.get(k) for k in ('file','slug','identitySpace','rootRequirementId')}
++        slugs[slug]=file
++    supplied={**seeds,**overrides}
++    for file,g in supplied.items():
++        safe(root,file)
++        if file not in metadata:
++            slug=g.get('catalogSlug') or Path(file).parent.name
++            require(slug not in slugs,'AMBIGUOUS_CATALOG')
++            metadata[file]={'file':file,'slug':slug,'identitySpace':g.get('identitySpace'),
++                            'rootRequirementId':g.get('rootRequirementId')}
++            slugs[slug]=file
++        else:
++            require(all(metadata[file][k]==g.get(k) for k in ('identitySpace','rootRequirementId')),
++                    'CATALOG_STALE')
++    spaces={g.get('identitySpace') for g in supplied.values() if g.get('actionModel')=='candidate-v6'}
++    for relation in manifest.get('relations',[]):
++        if relation.get('identitySpace') not in spaces:continue
++        for key in ('from','to'):
++            file=slugs.get(relation.get(key))
++            require(file in metadata and metadata[file]['identitySpace']==relation['identitySpace'],
++                    'CATALOG_STALE')
++    files=sorted(set(supplied)|{f for f,m in metadata.items()
++        if m['identitySpace'] in spaces and isinstance(f,str) and f.startswith('workspaces/')})
++    cross=any(sum(metadata[f]['identitySpace']==space for f in files)>1 for space in spaces) or any(
++        n.get('projectionOf') for g in supplied.values() for n in g['nodes'])
++    if cross:require(raw is not None,'CATALOG_REQUIRED')
++    if authorize and cross:authorize(files)
++    graphs={};pins={}
++    for file in files:
++        path=safe(root,file)
++        data=path.read_bytes() if path.exists() else None
++        require(data is not None or file in supplied,'SOURCE_MISSING')
++        pins[file]=hashlib.sha256(data).hexdigest() if data is not None else None
++        g=supplied[file] if file in supplied else json.loads(data)
++        require(all(metadata[file][k]==g.get(k) for k in ('identitySpace','rootRequirementId')),
++                'CATALOG_STALE')
++        graphs[file]=g
++    require((index.read_bytes() if index.exists() else None)==raw,'CATALOG_CHANGED')
++    return Context(graphs,{f:metadata[f]['slug'] for f in files},pins,
++                   hashlib.sha256(raw).hexdigest() if raw else None)
++
++
++class Context:
++    def __init__(self,graphs,slugs,pins=None,index_hash=None):
++        self.graphs=graphs;self.slugs=slugs;self.pins=pins or {};self.index_hash=index_hash
++        self.cross=any(sum(g.get('identitySpace')==s for g in graphs.values())>1
++            for s in {g.get('identitySpace') for g in graphs.values()}) or any(
++                n.get('projectionOf') for g in graphs.values() for n in g['nodes'])
++
++    def updated(self,overrides):
++        require(set(overrides)<=set(self.graphs),'UNDECLARED_SOURCE')
++        return Context({**self.graphs,**overrides},self.slugs,self.pins,self.index_hash)
++
++    def evaluate(self):
++        result={f:{} for f in self.graphs};self.owner_refs={};self.evaluation_order=[]
++        for space in sorted({g.get('identitySpace') for g in self.graphs.values()
++                      if g.get('actionModel')=='candidate-v6'},key=str):
++            files=[f for f,g in self.graphs.items() if g.get('identitySpace')==space]
++            require(space and all(self.graphs[f].get('actionModel')=='candidate-v6' and
++                not any(self.graphs[f].get(k) for k in ('readOnly','exampleOnly','templateOnly'))
++                for f in files),'UNSUPPORTED_OWNER_MODEL')
++            by_slug={self.slugs[f]:f for f in files}
++            records={(f,n['id']):n for f in files for n in self.graphs[f]['nodes']}
++            owners={}
++            for (file,nid),node in records.items():
++                if not node.get('projectionOf'):
++                    require(nid not in owners,'AMBIGUOUS_IDENTITY_OWNER')
++                    owners[nid]=file
++            resolved={}
++            def resolve(file,nid,trail=()):
++                key=(file,nid)
++                if key in resolved:return resolved[key]
++                require(key not in trail,'PROJECTION_CYCLE')
++                node=records.get(key);require(node is not None,'OWNER_NODE_MISSING')
++                ref=node.get('projectionOf')
++                if ref:
++                    require(isinstance(ref,dict) and set(ref)=={'graphSlug','nodeId'} and
++                            ref['nodeId']==nid,'OWNER_REFERENCE_INVALID')
++                    target=by_slug.get(ref['graphSlug'])
++                    require(target is not None,'OWNER_MISSING_OR_CROSS_PROJECT')
++                    owner=resolve(target,nid,(*trail,key))
++                    canonical=records[(owner,nid)]
++                    require(node['kind']==canonical['kind'] and all(
++                        k not in node or node[k]==canonical.get(k) for k in ('requirementText','scope')),
++                        'OWNER_KIND_OR_SCOPE_MISMATCH')
++                else:owner=file
++                require(owners.get(nid)==owner,'AMBIGUOUS_IDENTITY_OWNER')
++                resolved[key]=owner;return owner
++            for file,nid in records:resolve(file,nid)
++            roots=set()
++            for file in files:
++                graph=self.graphs[file];rid=graph['rootRequirementId'];root=records[(file,rid)]
++                expansion=graph.get('expansionOf')
++                if expansion:
++                    require(root.get('projectionOf')==expansion and isinstance(expansion,dict) and
++                            expansion.get('nodeId')==rid,'EXPANSION_BINDING_INVALID')
++                    resolve(file,rid)
++                elif not root.get('projectionOf'):
++                    roots.add(rid)
++            nodes=[copy.deepcopy(records[(owners[nid],nid)]) for nid in sorted(owners)]
++            edges=[];events=[]
++            for file in sorted(files):
++                graph=self.graphs[file]
++                for event in graph['events']:
++                    nid=event.get('targetId') if event.get('type') in MODEL.COMPLETION_EVENTS else event.get('actionId')
++                    if nid is None:continue
++                    if event.get('type') in MODEL.COMPLETION_EVENTS:
++                        require(owners.get(nid)==file,'HISTORY_MUST_BELONG_TO_OWNER')
++                    if owners.get(nid)==file:events.append(copy.deepcopy(event))
++                for edge in graph['edges']:
++                    if edge.get('archived') is True:continue
++                    source,target=edge['from'],edge['to']
++                    require((file,source) in records and (file,target) in records,'EDGE_TARGET_MISSING')
++                    # Repeated display edges never contribute a second causal action.
++                    cause=target if edge['type']=='DRIVES' else source
++                    if edge['type'] in ('DRIVES','INTRODUCES','OUTCOME_OF') and owners[cause]!=file:
++                        continue
++                    if edge['type']=='DRIVES' and owners[source]!=file:
++                        require(graph.get('rootRequirementId')==source and
++                            graph.get('expansionOf')==records[(file,source)].get('projectionOf') and
++                            graph.get('expansionOf') is not None,'EXPANSION_BINDING_REQUIRED')
++                    if edge['type']=='DERIVES' and owners[target]!=file:continue
++                    material=copy.deepcopy(edge)
++                    if owners[source]!=file:material['compositionGraphFile']=file
++                    if owners[target]!=file:material['targetOwnerGraphFile']=owners[target]
++                    edges.append(material)
++            virtual={'actionModel':'candidate-v6','rootRequirementId':next(iter(roots),None),
++                     'nodes':nodes,'edges':edges,'events':events}
++            states=MODEL.completion_state(virtual,actual_roots=roots)
++            self.evaluation_order.extend((owners[nid],nid) for nid in states)
++            for nid in states:
++                for file in files:
++                    node=records.get((file,nid))
++                    if not node or node['kind'] not in ('requirement','action'):continue
++                    owner=owners[nid];ref={'graphFile':owner,'identitySpace':space,'nodeId':nid}
++                    row=copy.deepcopy(states[nid])
++                    row.update(ownerRef=ref,projection=owner!=file,
++                               dependencyIds=list(dict.fromkeys(row['dependencyIds'])))
++                    row['dependencyRefs']=[{'graphFile':owners[d],'identitySpace':space,'nodeId':d}
++                                           for d in row['dependencyIds']]
++                    row['historyPending']=row['complete'] and not row['eventId']
++                    result[file][nid]=row
++                    self.owner_refs[(file,nid)]=ref
++
++        return result
++
++    def pins_for_journal(self):
++        return [{'file':file,'sha256':digest} for file,digest in sorted(self.pins.items())]
+--- a/tools/rdg-v7-model.py
++++ b/tools/rdg-v7-model.py
+@@ -259,7 +259,7 @@
+                        "selected decomposition requires at least one active subgoal")
+ 
+ 
+-def completion_state(g):
++def completion_state(g, actual_roots=None):
+     """Current local composition. Potential paths and unavailable owners fail closed.
+ 
+     subgoal contributes to the parent R; method_correctness to the Action.
+@@ -272,6 +272,9 @@
+         "inactive", "superseded", "rejected"}
+     root = nodes.get(g.get("rootRequirementId"), {})
+     actual = {root.get("id")} if root and not inactive(root) and not root.get("projectionOf") and root.get("status") not in {"candidate", "potential"} else set()
++    if actual_roots is not None:
++        actual = {nid for nid in actual_roots if nid in nodes and not inactive(nodes[nid]) and
++                  not nodes[nid].get("projectionOf") and nodes[nid].get("status") not in {"candidate", "potential"}}
+     for _ in range(len(nodes)):
+         old = set(actual)
+         for e in edges:
+@@ -353,7 +356,8 @@
+             definition_changed = normative(n) != normative(old_definition)
+         elif n["kind"] == "requirement" and children:
+             definition_changed = any(normative(n) != normative(
+-                nodes[aid].get("selectionBasis", {}).get("driverSnapshot", {})) for aid in cause_ids)
++                nodes[aid].get("selectionBasis", {}).get("driverOwnerSnapshot", {}).get("node",
++                    nodes[aid].get("selectionBasis", {}).get("driverSnapshot", {}))) for aid in cause_ids)
+         available = (nid in actual and not inactive(n) and not n.get("projectionOf") and
+                      n.get("status") not in {"candidate", "potential"})
+         if not available:
+@@ -410,11 +414,11 @@
+            "invalid completion history event")
+ 
+ 
+-def append_derived_completion(g, trigger):
++def append_derived_completion(g, trigger, states=None):
+     """Record newly satisfied composites once, retaining past scope snapshots."""
+     if g.get("actionModel") != "candidate-v6":
+         return
+-    for row in completion_state(g).values():
++    for row in (completion_state(g) if states is None else states).values():
+         if not row["complete"] or row["eventId"]:
+             continue
+         event = {"id": "completion-" + completion_digest({
+@@ -431,7 +435,7 @@
+         g["events"].append(event)
+ 
+ 
+-def record_completion(g, operation):
++def record_completion(g, operation, states=None):
+     from datetime import datetime, timezone
+     expected = "action" if operation["op"] == "record_action_execution" else "requirement"
+     nid = operation.get("targetId")
+@@ -439,7 +443,8 @@
+     ensure(n and n["kind"] == expected, "completion target kind mismatch")
+     ensure(expected != "action" or not any(e.get("type") == "action_executed" and
+            e.get("targetId") == nid for e in g["events"]), "Action instance already executed")
+-    row = completion_state(g)[nid]
++    ensure(not n.get("projectionOf"), "completion must be recorded in the owning graph")
++    row = (completion_state(g) if states is None else states)[nid]
+     ensure(row["reason"] != "potential-inactive-or-unavailable-owner", "completion requires actual selected scope")
+     ensure(not row["complete"], "completion already recorded or derived")
+     ensure(row["reason"] in {"result-not-recorded", "definition-changed-result-review"},
+--- a/tools/graph-apply.py
++++ b/tools/graph-apply.py
+@@ -260,7 +260,7 @@
+     return graph
+ 
+ 
+-def apply(original, patch, *, trusted_verified=False):
++def apply(original, patch, *, trusted_verified=False, completion_provider=None, defer_completion=False):
+     check(isinstance(patch, dict) and patch.get("schemaVersion") == 1,
+           "patch schemaVersion must be 1")
+     check(type(patch.get("expectedRevision")) is int, "expectedRevision must be integer")
+@@ -269,6 +269,10 @@
+     check(isinstance(patch.get("operations"), list), "patch operations must be array")
+     current = copy.deepcopy(original)
+     before_ids = {n["id"]: copy.deepcopy(n) for n in current["nodes"]}
++    def policy_guard(node,event):
++        if completion_provider and node and node.get("projectionOf") and node.get("kind")=="requirement":
++            node=completion_provider(current)[node["id"]]["basis"]["node"]
++        guard_policy(node,event)
+     completion_trigger = None
+     for operation in patch["operations"]:
+         check(isinstance(operation, dict), "invalid operation")
+@@ -293,7 +297,7 @@
+             check(current.get("actionModel") == ACTION_MODEL,
+                   "GRAPH_API_REQUIRES_CANDIDATE_V6")
+             editor = SourceFileLoader("rdg_graph_api", str(ROOT / "tools" / "rdg-graph-api.py")).load_module()
+-            editor.apply(current, operation)
++            editor.apply(current, operation,policy_guard=policy_guard)
+         elif op == "add_node":
+             n = operation.get("node")
+             check(not (current.get("actionModel") == ACTION_MODEL and
+@@ -398,6 +402,7 @@
+             action = next((n for n in current["nodes"] if n.get("kind") == "action"
+                            and n["id"] == operation.get("actionId")), None)
+             check(action and action["status"] == "candidate", "Action must be a current candidate")
++            check(not action.get("projectionOf"),"select Action in its owning graph")
+             driving = [e for e in current["edges"] if e["type"] == "DRIVES" and
+                        e["to"] == action["id"] and e.get("archived") is not True]
+             check(len(driving) == 1, "Action driver must be unambiguous")
+@@ -414,7 +419,7 @@
+             prepared = [e for e in current["edges"] if e.get("type") == "OUTCOME_OF" and
+                         e.get("from") == action["id"] and e.get("archived") is not True]
+             if operation.get('children') or prepared:
+-                guard_policy(driver,event)
++                policy_guard(driver,event)
+             if action.get("actionType") == "decomposition":
+                 check(any(e.get("childRole") == "subgoal" for e in prepared) or
+                       any(c.get("role") == "subgoal" for c in operation.get("children", [])),
+@@ -424,12 +429,16 @@
+                 "actionSnapshot": copy.deepcopy(action),
+                 "note": event["note"]
+             }
++            if completion_provider and driver.get("projectionOf"):
++                owner=completion_provider(current)[driver["id"]]
++                action["selectionBasis"]["driverOwnerSnapshot"]={
++                    "ownerRef":copy.deepcopy(owner["ownerRef"]),"node":copy.deepcopy(owner["basis"]["node"])}
+             action["status"] = "selected"
+             if prepared:
+                 event["preparedChildrenSnapshot"] = [copy.deepcopy(e) for e in prepared]
+             for edge in prepared:
+                 requirement = next(n for n in current["nodes"] if n["id"] == edge["to"])
+-                guard_policy(requirement, event)
++                policy_guard(requirement, event)
+                 check(requirement.get("active") is not False and
+                       requirement.get("status", "active") in {"candidate", "potential", "active"},
+                       "prepared child is no longer available")
+@@ -491,8 +500,8 @@
+                   isinstance(event.get("id"), str) and event["id"] and
+                   event["id"] not in {e["id"] for e in current["events"]},
+                   "ACTION_LINK_REQUIRES_ATTRIBUTED_EVENT")
+-            guard_policy(target,event)
+-            guard_policy(ns.get(drivers[0]['from']),event)
++            policy_guard(target,event)
++            policy_guard(ns.get(drivers[0]['from']),event)
+             current["edges"].append({"id": edge_id, "type": "INTRODUCES",
+                 "from": aid, "to": rid, "parent": drivers[0]["from"],
+                 "childRole": role})
+@@ -504,8 +513,8 @@
+                 if edge.get("archived") is not True and (
+                     edge["type"] == "DRIVES" and edge["to"] == aid or
+                     edge["type"] == "INTRODUCES" and edge["from"] == aid):
+-                    guard_policy(ns.get(edge["from"]), operation.get("event") or {})
+-                    guard_policy(ns.get(edge["to"]), operation.get("event") or {})
++                    policy_guard(ns.get(edge["from"]), operation.get("event") or {})
++                    policy_guard(ns.get(edge["to"]), operation.get("event") or {})
+             reconsider_lib().withdraw(current, operation)
+         elif op == "reconsider_action":
+             check(trusted_verified is True,
+@@ -515,13 +524,14 @@
+             driver_ids=[e['from'] for e in current['edges'] if e.get('type')=='DRIVES' and
+                         e.get('to')==old_id and e.get('archived') is not True]
+             for rid in driver_ids:
+-                guard_policy(ns.get(rid),operation.get('event') or {})
++                policy_guard(ns.get(rid),operation.get('event') or {})
+             for edge in current['edges']:
+                 if edge.get('type')=='INTRODUCES' and edge.get('from')==old_id and edge.get('archived') is not True:
+-                    guard_policy(ns.get(edge['to']),operation.get('event') or {})
++                    policy_guard(ns.get(edge['to']),operation.get('event') or {})
+             reconsider_lib().apply(current, operation)
+         elif op in {"record_action_execution", "record_requirement_achievement"}:
+-            V7.record_completion(current, operation)
++            V7.record_completion(current, operation,
++                states=completion_provider(current) if completion_provider else None)
+         elif op == "append_event":
+             e = operation.get("event")
+             check(isinstance(e, dict) and e.get("id") not in
+@@ -545,7 +555,7 @@
+     check(new_committed <= selected, "new committed Decision requires decision_selected event")
+     validate(current)
+     V7.validate_completion_write(current)
+-    if completion_trigger:
++    if completion_trigger and not defer_completion:
+         V7.append_derived_completion(current, completion_trigger)
+         validate(current)
+     if current == original:
+--- a/tools/graph-package.py
++++ b/tools/graph-package.py
+@@ -80,6 +80,121 @@
+         os.environ.get("RDG_AUTH_TOKEN"), package)
+ 
+ 
++def completion_context(package):
++    seeds={}
++    for change in package['changes']:
++        path=target_path(change.get('file'))
++        graph=change.get('create') if 'create' in change else read_if_exists(path)
++        if isinstance(graph,dict) and graph.get('actionModel')=='candidate-v6':
++            seeds[change['file']]=graph
++    if not seeds:return None
++    source=BASE/'tools/rdg-completion-context.py'
++    if not source.exists():
++        # Older isolated single-file installations remain compatible, but never
++        # silently pretend a missing cross-file engine is a local result.
++        index=load_json(GRAPHS/'index.json') if (GRAPHS/'index.json').exists() else {'graphs':[]}
++        for graph in seeds.values():
++            check(not graph.get('expansionOf') and not any(n.get('projectionOf') for n in graph['nodes']) and
++                sum(r.get('identitySpace')==graph.get('identitySpace') for r in index['graphs'])<=1,
++                'COMPLETION_RESOLVER_UNAVAILABLE')
++        return None
++    engine=SourceFileLoader('rdg_package_completion',str(source)).load_module()
++    context=engine.load(GRAPHS,seeds,authorize=authorize_completion_reads)
++    return context if context.cross else None
++
++
++def authorize_completion_reads(refs):
++    store=os.environ.get('RDG_AUTH_STORE')
++    if store:
++        authority=SourceFileLoader('rdg_completion_read_auth',str(BASE/'tools/rdg-authority.py')).load_module()
++        authority.Authority(store).authorize_graph_read(os.environ.get('RDG_AUTH_TOKEN'),refs)
++
++
++def completion_authority_package(package,records):
++    result=copy.deepcopy(package)
++    requested={change['file'] for change in package['changes']}
++    if not any(r.get('completionReadSet') for r in records):return result
++    for record in records:
++        if not record['changed']:continue
++        old={e['id'] for e in (record['before'] or {}).get('events',[])}
++        added=[e for e in record['after']['events'] if e['id'] not in old]
++        derived=[e for e in added if e.get('type') in apply_module.V7.COMPLETION_EVENTS and
++                 e.get('completionMode')=='derived']
++        if record['file'] not in requested:
++            check(added and len(derived)==len(added),'COMPLETION_EXTERNAL_WRITE_NOT_DERIVED')
++        if not derived:continue
++        # Explicitly listing an owner with an ordinary edit never authorizes its
++        # derived results. Check every new result, including requested owners.
++        result['changes'].append({'file':record['file'],'patch':{
++            'operations':[{'op':'record_action_execution' if e['type']=='action_executed' else
++                           'record_requirement_achievement','event':e,'targetId':e['targetId']} for e in derived]}})
++    return result
++
++
++def check_completion_reads(records,replay=False):
++    for record in records:
++        read_set=record.get('completionReadSet')
++        if not read_set:continue
++        authorize_completion_reads([p['file'] for p in read_set['sources']])
++        after={r['file']:r['after'] for r in records if r['changed']} if replay else {}
++        for pin in read_set['sources']:
++            path=target_path(pin['file'])
++            current=hashlib.sha256(path.read_bytes()).hexdigest() if path.exists() else None
++            expected=(hashlib.sha256(encoded(after[pin['file']]).encode()).hexdigest()
++                      if pin['file'] in after else pin['sha256'])
++            check(current==expected,'COMPLETION_DEPENDENCY_CHANGED: '+pin['file'])
++        if not replay:
++            path=GRAPHS/'index.json'
++            actual=hashlib.sha256(path.read_bytes()).hexdigest() if path.exists() else None
++            check(actual==read_set['catalogSHA256'],'COMPLETION_CATALOG_CHANGED')
++
++
++def derive_completion_records(context,records):
++    if context is None:return
++    overrides={r['file']:r['after'] for r in records if r['file'] in context.graphs}
++    current=context.updated(overrides)
++    states=current.evaluate()
++    trigger=None
++    for record in records:
++        previous={e['id'] for e in (record['before'] or {}).get('events',[])}
++        for event in record['after'].get('events',[]):
++            if (event['id'] not in previous and event.get('authorityPrincipal') and
++                event.get('recordedAt') and event.get('verifiedTrustReceipt') and
++                event.get('type') in {'graph_changed','action_selected','action_withdrawn',
++                    'action_reconsidered','action_executed','requirement_achieved'}):
++                trigger=event
++    if trigger:
++        by_file={r['file']:r for r in records}
++        for file,rows in states.items():
++            own={nid:row for nid,row in rows.items() if not row['projection']}
++            ready=[row for row in own.values() if row['complete'] and not row['eventId']]
++            if not ready:continue
++            graph=current.graphs[file]
++            for row in ready:
++                node=next(n for n in graph['nodes'] if n['id']==row['nodeId'])
++                apply_module.guard_policy(node,trigger)
++            record=by_file.get(file)
++            if record is None:
++                record={'file':file,'before':copy.deepcopy(graph),
++                        'after':copy.deepcopy(graph),'changed':False}
++                records.append(record);by_file[file]=record
++            apply_module.V7.append_derived_completion(record['after'],trigger,states=own)
++            if not record['changed']:
++                record['after']['revision']+=1;record['changed']=True
++            apply_module.validate(record['after'])
++    # Preserve causal fact order across physical owners in one publication.
++    explicit=[];derived=[]
++    for record in records:
++        previous={e['id'] for e in (record['before'] or {}).get('events',[])}
++        for event in record['after'].get('events',[]):
++            if event['id'] in previous:continue
++            if event.get('completionMode')=='derived':derived.append((record['file'],event))
++            else:explicit.append(event)
++    rank={key:i for i,key in enumerate(current.evaluation_order)}
++    derived.sort(key=lambda row:rank[(row[0],row[1]['targetId'])])
++    for order,event in enumerate(explicit+[e for _,e in derived]):event['compositionOrder']=order
++    records[0]['completionReadSet']={'sources':context.pins_for_journal(),
++                                     'catalogSHA256':context.index_hash}
+ def prepare(package):
+     check(isinstance(package, dict) and package.get("schemaVersion") == 1, "package schemaVersion must be 1")
+     bearer = require_package_authority(package)
+@@ -108,6 +223,7 @@
+                 check(package['trustedApproval']['principal'] == 'bearer:' + bearer['grantId'],
+                       'MANUAL_SESSION_GRANT_MISMATCH')
+                 local_manual = True
++    context=completion_context(package)
+     seen, records, overrides = set(), [], {}
+     for change in changes:
+         check(isinstance(change, dict), "invalid package change")
+@@ -195,8 +311,15 @@
+                         'changesSHA256': trust.fingerprint(package['changes']) if trust_required else
+                             hashlib.sha256(json.dumps(package['changes'],
+                                 sort_keys=True, separators=(',', ':'), ensure_ascii=False).encode()).hexdigest()}
++            provider=None
++            if context is not None:
++                def provider(graph, file=relative):
++                    staged={f:g for f,g in overrides.items() if f in context.graphs}
++                    staged[file]=graph
++                    return context.updated(staged).evaluate()[file]
+             after, changed = apply_module.apply(before, authoritatively_scoped_patch,
+-                                                trusted_verified=trust_required)
++                trusted_verified=trust_required,completion_provider=provider,
++                defer_completion=context is not None)
+             metadata = change.get("metadata")
+             if metadata is not None:
+                 check(before.get('actionModel') != 'candidate-v6',
+@@ -213,6 +336,9 @@
+         records.append({"file": relative, "before": before, "after": after, "changed": changed})
+     # The same catalog builder checks owners, identities, prepared versions and
+     # cross-file lineage both before publication and on read-back.
++    derive_completion_records(context,records)
++    overrides.update({r["file"]:r["after"] for r in records})
++    require_package_authority(completion_authority_package(package,records))
+     manifest,payload=index_module.build_catalog(overrides)
+     # Reconsideration can retire an introduced R only if no separate graph
+     # currently owns/projects/depends on that R. Do not trust a caller's
+@@ -351,6 +477,7 @@
+         check(not any(load_json(p).get("state") == "prepared" for p in pending),
+               "RECOVERY_REQUIRED: apply a transaction to recover pending writes first")
+         records = prepare(package)
++        check_completion_reads(records)
+         if explicit is None:
+             r = records[0]
+             print(f"DRY_RUN changed={r['changed']} revision={r['before']['revision']} -> {r['after']['revision']}")
+@@ -365,8 +492,9 @@
+         path = journal_dir() / (tid + ".json")
+         if path.exists():
+             # A revoked bearer may not replay a previously accepted transaction.
+-            require_package_authority(package)
+             journal = load_json(path)
++            require_package_authority(completion_authority_package(package,journal["records"]))
++            check_completion_reads(journal["records"],replay=True)
+             check(journal.get("requestSHA256") == digest, "TRANSACTION_ID_CONFLICT")
+             check(journal.get("state") == "completed", "transaction did not complete")
+             for record in journal["records"]:
+@@ -381,7 +509,8 @@
+         # Grant changes serialize with this final check AND durable acceptance.
+         # The prepared journal is the commit point: recovery finishes accepted
+         # transactions even if the token is revoked after journal persistence.
+-        with checked_package_authority(package) as accepted_actor:
++        with checked_package_authority(completion_authority_package(package,records)) as accepted_actor:
++            check_completion_reads(records)
+             for record in records:
+                 check(read_if_exists(target_path(record["file"])) == record["before"],
+                       "GRAPH_CHANGED_EXTERNALLY")
+--- a/tools/rdg-activity.py
++++ b/tools/rdg-activity.py
+@@ -45,12 +45,17 @@
+         auth = SourceFileLoader("rdg_activity_auth", str(TOOLS/"rdg-authority.py")).load_module()
+         auth.Authority(store).authorize_graph_read(token or os.environ.get("RDG_AUTH_TOKEN"), refs)
+     graphs = {ref: json.loads(path.read_text(encoding="utf-8")) for ref, path in paths.items()}
++    engine=SourceFileLoader("rdg_activity_completion",str(TOOLS/"rdg-completion-context.py")).load_module()
++    authorize=(lambda files: auth.Authority(store).authorize_graph_read(token or os.environ.get("RDG_AUTH_TOKEN"),files)) if store else None
++    context=engine.load(root,graphs,authorize=authorize)
++    if context.cross:
++        graphs=context.graphs;refs=list(graphs)
+     validator = SourceFileLoader("rdg_activity_validate", str(TOOLS/"graph-apply.py")).load_module()
+     for graph in graphs.values():
+         validator.validate(graph)
+     rows, seen = [], set()
+ 
+-    def events(ref, entries, recorded_at, transaction_id):
++    def events(ref, entries, recorded_at, transaction_id, ordered=False):
+         for event in entries:
+             key = (ref, event["id"])
+             if key in seen:
+@@ -65,6 +70,7 @@
+                          "targetId": event["actionId"] if withdrawal else event["targetId"],
+                          "title": (event.get("priorActionSnapshot", {}) if withdrawal else event.get("basis", {}).get("node", {})).get("title"),
+                          "eventOrder": next(i for i,e in enumerate(graphs[ref]["events"]) if e["id"] == event["id"]),
++                         "compositionOrder": event.get("compositionOrder") if ordered else None,
+                          "recordedAt": recorded_at, "occurredAt": event.get("occurredAt"),
+                          "by": event.get("by"), "authorityPrincipal": event.get("authorityPrincipal"),
+                          "completionMode": event.get("completionMode"),
+@@ -106,22 +112,27 @@
+                                     "Изменены: " + ", ".join(next((n["title"] for n in after.get("nodes", []) if n["id"] == nid), nid) for nid in changed["nodes"]),
+                          "operations": [e.get("operation", e.get("type")) for e in added
+                                         if e.get("type") not in MODEL.COMPLETION_EVENTS]})
+-            events(ref, added, journal.get("recordedAt"), journal["transactionId"])
++            events(ref, added, journal.get("recordedAt"), journal["transactionId"],
++                   ordered=any(r.get("completionReadSet") for r in journal["records"]))
+     for ref, graph in graphs.items():
+         # Historical events without a completed journal retain unknown save time.
+         events(ref, graph.get("events", []), None, None)
+     rows.sort(key=lambda r: (r.get("recordedAt") is None, r.get("recordedAt") or "",
++                             r.get("transactionId") or r.get("graphFile"),
++                             r.get("compositionOrder") if r.get("compositionOrder") is not None else -1,
+                              r.get("graphFile"), r.get("eventOrder", -1), r["id"]))
+-    states = {ref: {nid: {k: v for k, v in row.items() if k != "basis"}
+-                    for nid, row in MODEL.completion_state(graph).items()}
+-              for ref, graph in graphs.items() if graph.get("actionModel") == "candidate-v6"}
++    evaluated=context.evaluate() if context.cross else {ref:MODEL.completion_state(graph)
++        for ref,graph in graphs.items() if graph.get("actionModel")=="candidate-v6"}
++    states={ref:{nid:{k:v for k,v in row.items() if k!="basis"} for nid,row in rows.items()}
++            for ref,rows in evaluated.items()}
+     owners = {ref: {"identitySpace": graph.get("identitySpace"), "revision": graph["revision"],
+                     "nodes": {n["id"]: {k:n[k] for k in ("id", "kind", "title", "status", "active", "projectionOf") if k in n}
+                               for n in graph["nodes"] if n["kind"] in {"requirement", "action"}}}
+               for ref,graph in graphs.items()}
+     return {"schemaVersion": 1, "activities": rows, "currentCompletion": states, "graphOwners": owners,
+             **({"sourceGraphs": graphs} if include_sources else {}),
+-            "coverage": "requested-graph-owners; cross-file completion requires owner resolution",
++            "completionProvenance": {"sources": context.pins_for_journal(), "catalogSHA256": context.index_hash},
++            "coverage": "published workspace composition with authorized identity owners",
+             "sourcesChanged": False}
+ 
+ 
+--- a/tools/rdg-workflow.py
++++ b/tools/rdg-workflow.py
+@@ -58,15 +58,18 @@
+         row = {'stepId': step['id'], 'kind': step['kind'], 'graphRef': dict(ref),
+                'nodeId': ref['nodeId'], 'title': node['title'], 'plannedTitle': step['title'],
+                'state': step['state'], 'graphRevision': owner['revision'],
++               'ownerRef': state.get('ownerRef',dict(ref)) if state else dict(ref),
+                'timeConstraints': [r for r in rules if r['stepId'] == step['id']],
+                'sequence': [e for e in links if step['id'] in (e['before'], e['after'])]}
+         if step['id'] not in placed:
+             excluded.append({**row, 'reason': 'not-placed'})
++        elif state and state.get('historyPending'):
++            unresolved.append({**row,'reason':'result-needs-authorized-writer-record'})
+         elif state and state['complete']:
+             excluded.append({**row, 'reason': 'completed', 'eventId': state['eventId']})
+         elif node.get('active') is False or node.get('status') in ('superseded', 'rejected', 'inactive'):
+             excluded.append({**row, 'reason': 'withdrawn-or-inactive'})
+-        elif node.get('projectionOf') or not state:
++        elif not state:
+             unresolved.append({**row, 'reason': 'unresolved-owner-or-unsupported-model'})
+         else:
+             future.append(row)
+@@ -76,7 +79,8 @@
+             **({'sources': {'plan': plan, 'graphs': report['sourceGraphs'], 'completion': report['currentCompletion']}} if include_sources else {}),
+             'future': future, 'history': report['activities'], 'unresolved': unresolved,
+             'excludedPlacements': excluded, 'sourcesChanged': False,
+-            'coverage': 'current explicit Plan and requested graph owners; external completion unresolved'}
++            'completionProvenance': report['completionProvenance'],
++            'coverage': 'current explicit Plan and authorized published owning composition'}
+ 
+ 
+ def markdown(view):
+--- a/tools/rdg-workflow-helper.py
++++ b/tools/rdg-workflow-helper.py
+@@ -58,8 +58,9 @@
+         require(not view['sources']['plan'].get('branches') and all(
+             s['kind'] in ('action','requirement') for s in view['sources']['plan']['steps']),
+             'HELPER_PLAN_BRANCH_OR_EVENT_EDITOR_NOT_IMPLEMENTED')
+-        # This first editor is deliberately one owning graph, not a partial multi-owner UI.
+-        require(set(view['sources']['graphs']) == {self.graph_file}, 'HELPER_SINGLE_OWNER_ONLY')
++        # The configured write file stays fixed; dependencies are authorized read snapshots.
++        root=next(n for n in graph['nodes'] if n['id']==graph['rootRequirementId'])
++        view['continuationRootId']=root['id'] if graph.get('expansionOf') and root.get('projectionOf')==graph['expansionOf'] else None
+         data = AUTH.Authority(self.store)._read()
+         _, grant = AUTH.Authority(self.store)._actor(data, self.token)
+         view['permissions'] = [p for p in grant['permissions'] if p.startswith(('graph.', 'plan.'))]
+@@ -83,7 +84,9 @@
+             require(node and not node.get('projectionOf') and
+                     (not kind or node['kind'] == kind), 'HELPER_TARGET_NOT_OWNED')
+         if action == 'add_action':
+-            target('requirement')
++            require(node and node['kind']=='requirement' and (not node.get('projectionOf') or
++                nid==graph.get('rootRequirementId') and graph.get('expansionOf')==node['projectionOf']),
++                'HELPER_TARGET_NOT_OWNED_OR_CONTINUATION_ROOT')
+             title = req.get('title', '').strip()
+             cases = req.get('recommended', '').splitlines()
+             negative = req.get('contraindicated', '').splitlines()
+@@ -177,7 +180,7 @@
+                     ops=[{'op':'unplace','stepId':req.get('stepId')}]
+                 else:
+                     node=next((n for n in graph['nodes'] if n['id']==req.get('nodeId')),None)
+-                    require(node and node['kind'] in ('action','requirement') and not node.get('projectionOf'),
++                    require(node and node['kind'] in ('action','requirement'),
+                             'HELPER_TARGET_NOT_OWNED')
+                     ref={'graphFile':self.graph_file,'identitySpace':graph['identitySpace'],'nodeId':node['id']}
+                     field='actionRef' if node['kind']=='action' else 'requirementRef'
+@@ -201,6 +204,9 @@
+                 record={'kind':'plan','request':request,'digest':digest}
+             else:
+                 require(req.get('expectedGraphRevision')==graph['revision'],'HELPER_GRAPH_CAS_MISMATCH')
++                require(not any(n.get('reconsiderationPolicy',{}).get('mode')=='protected'
++                    for g in view['sources']['graphs'].values() for n in g['nodes']),
++                    'HELPER_PROTECTED_OWNER_APPROVAL_UNAVAILABLE')
+                 op=self.operation(req,graph)
+                 package={'schemaVersion':1,'transactionId':tid,'changes':[{'file':self.graph_file,
+                     'patch':{'schemaVersion':1,'expectedRevision':req['expectedGraphRevision'],'operations':[op]}}]}
+--- a/tools/rdg-workflow-ui.js
++++ b/tools/rdg-workflow-ui.js
+@@ -106,10 +106,11 @@
+     function selected(){return graph()?.nodes.find(n=>n.id===target.value);}
+     function updateControls(){
+       const n=selected(),perms=view?.permissions||[],graphWrite=p=>perms.includes('graph.write')||perms.includes('graph.'+p);
+-      const protectedGraph=graph()?.nodes.some(n=>n.reconsiderationPolicy?.mode==='protected');
++      const protectedGraph=view&&Object.values(view.sources.graphs).some(g=>g.nodes.some(n=>n.reconsiderationPolicy?.mode==='protected'));
+       const locked=busy||!!pending||!view,own=n&&!n.projectionOf,executed=graph()?.events.some(e=>e.type==='action_executed'&&e.targetId===n?.id);
+       const policy=protectedGraph||!own;
+-      buttons.add.disabled=locked||policy||n?.kind!=='requirement'||!graphWrite('add_action');
++      const canDrive=own||n?.id===view?.continuationRootId;
++      buttons.add.disabled=locked||protectedGraph||!canDrive||n?.kind!=='requirement'||!graphWrite('add_action');
+       buttons.title.disabled=locked||policy||!graphWrite('graph_edit.edit_node');
+       buttons.canon.disabled=locked||policy||n?.kind!=='action'||!graphWrite('graph_edit.edit_node');
+       buttons.requirement.disabled=locked||policy||n?.kind!=='action'||!graphWrite('graph_edit.prepare_action_requirement');
+@@ -118,7 +119,7 @@
+       buttons.complete.disabled=locked||policy||executed||n?.status==='superseded'||
+         !graphWrite(n?.kind==='action'?'record_action_execution':'record_requirement_achievement');
+       buttons.withdraw.disabled=locked||policy||n?.kind!=='action'||n.status!=='selected'||!executed||!graphWrite('withdraw_action');
+-      buttons.place.disabled=locked||!own||!perms.includes('plan.edit');
++      buttons.place.disabled=locked||!n||!perms.includes('plan.edit');
+       buttons.unplace.disabled=locked||!fields.placement.value||!perms.includes('plan.edit');
+       buttons.retry.disabled=busy||!pending;buttons.refresh.disabled=busy;
+     }
+@@ -129,7 +130,8 @@
+       fields.contraindicated.value=(n.canonBlock?.contraindicated||[]).map(c=>c.text).join('\n');
+       const completion=view.sources.completion?.[view.graphFile]?.[n.id];
+       details.textContent=n.id+' · '+n.kind+' · '+(n.status||'active')+
+-        (completion?.complete?' · выполнено':' · не завершено')+
++        (completion?.complete&&!completion.historyPending?' · выполнено':completion?.historyPending?' · результат ожидает записи writer':' · не завершено')+
++        (n.projectionOf&&completion?.ownerRef?' · владелец: '+completion.ownerRef.graphFile:'')+
+         (n.qrpe?.length?'\nQRPE: '+n.qrpe.map(q=>'['+q.status+'] '+q.text).join('; '):'')+
+         (n.reconsiderationPolicy?.mode==='protected'?' · защищено: ручная запись недоступна':'');
+       const placements=view.sources.plan.steps.filter(s=>(s.actionRef||s.requirementRef)?.nodeId===n.id);
+--- a/tools/rd-graph-viewer.user.js
++++ b/tools/rd-graph-viewer.user.js
+@@ -1,7 +1,7 @@
+ // ==UserScript==
+ // @name         R-D Graph Viewer
+ // @namespace    rdg.local
+-// @version      2.1.0
++// @version      2.2.0
+ // @description  Local Requirements-Decisions JSON graph viewer
+ // @match        https://chatgpt.com/*
+ // @match        https://chat.openai.com/*
+@@ -117,10 +117,11 @@
+     function selected(){return graph()?.nodes.find(n=>n.id===target.value);}
+     function updateControls(){
+       const n=selected(),perms=view?.permissions||[],graphWrite=p=>perms.includes('graph.write')||perms.includes('graph.'+p);
+-      const protectedGraph=graph()?.nodes.some(n=>n.reconsiderationPolicy?.mode==='protected');
++      const protectedGraph=view&&Object.values(view.sources.graphs).some(g=>g.nodes.some(n=>n.reconsiderationPolicy?.mode==='protected'));
+       const locked=busy||!!pending||!view,own=n&&!n.projectionOf,executed=graph()?.events.some(e=>e.type==='action_executed'&&e.targetId===n?.id);
+       const policy=protectedGraph||!own;
+-      buttons.add.disabled=locked||policy||n?.kind!=='requirement'||!graphWrite('add_action');
++      const canDrive=own||n?.id===view?.continuationRootId;
++      buttons.add.disabled=locked||protectedGraph||!canDrive||n?.kind!=='requirement'||!graphWrite('add_action');
+       buttons.title.disabled=locked||policy||!graphWrite('graph_edit.edit_node');
+       buttons.canon.disabled=locked||policy||n?.kind!=='action'||!graphWrite('graph_edit.edit_node');
+       buttons.requirement.disabled=locked||policy||n?.kind!=='action'||!graphWrite('graph_edit.prepare_action_requirement');
+@@ -129,7 +130,7 @@
+       buttons.complete.disabled=locked||policy||executed||n?.status==='superseded'||
+         !graphWrite(n?.kind==='action'?'record_action_execution':'record_requirement_achievement');
+       buttons.withdraw.disabled=locked||policy||n?.kind!=='action'||n.status!=='selected'||!executed||!graphWrite('withdraw_action');
+-      buttons.place.disabled=locked||!own||!perms.includes('plan.edit');
++      buttons.place.disabled=locked||!n||!perms.includes('plan.edit');
+       buttons.unplace.disabled=locked||!fields.placement.value||!perms.includes('plan.edit');
+       buttons.retry.disabled=busy||!pending;buttons.refresh.disabled=busy;
+     }
+@@ -140,7 +141,8 @@
+       fields.contraindicated.value=(n.canonBlock?.contraindicated||[]).map(c=>c.text).join('\n');
+       const completion=view.sources.completion?.[view.graphFile]?.[n.id];
+       details.textContent=n.id+' · '+n.kind+' · '+(n.status||'active')+
+-        (completion?.complete?' · выполнено':' · не завершено')+
++        (completion?.complete&&!completion.historyPending?' · выполнено':completion?.historyPending?' · результат ожидает записи writer':' · не завершено')+
++        (n.projectionOf&&completion?.ownerRef?' · владелец: '+completion.ownerRef.graphFile:'')+
+         (n.qrpe?.length?'\nQRPE: '+n.qrpe.map(q=>'['+q.status+'] '+q.text).join('; '):'')+
+         (n.reconsiderationPolicy?.mode==='protected'?' · защищено: ручная запись недоступна':'');
+       const placements=view.sources.plan.steps.filter(s=>(s.actionRef||s.requirementRef)?.nodeId===n.id);
+@@ -794,7 +796,7 @@
+   document.documentElement.appendChild(host);
+   Object.assign(host.style, {position:'fixed',right:'14px',bottom:'94px',
+     zIndex:'2147483600',display:'block'});
+-  host.dataset.rdgVersion = '2.1.0';
++  host.dataset.rdgVersion = '2.2.0';
+   const root = host.attachShadow({ mode: 'open' });
+   const ns = 'http://www.w3.org/2000/svg';
+   // Local Windows directory belonging to this viewer. No filesystem picker on startup.
+@@ -1188,7 +1190,7 @@
+   const message = text => { el('message').textContent = text; };
+   const launcher = el('launch');
+   if (!launcher) throw new Error('[RDG] Launcher was not created');
+-  console.info('[RDG Viewer] loaded v2.1.0');
++  console.info('[RDG Viewer] loaded v2.2.0');
+   const launcherPositionKey = 'rdg-viewer-launcher-position-v1';
+   let launcherDrag = null;
+   let suppressLauncherClickUntil = 0;
+--- a/tests/rdg-bearer-package.integration.test.py
++++ b/tests/rdg-bearer-package.integration.test.py
+@@ -11,7 +11,7 @@
+ 
+ ROOT = pathlib.Path(__file__).resolve().parents[1]
+ NAMES = ("rdg-authority.py graph-package.py graph-apply.py graph-index.py "
+-         "rdg-v7-model.py rdg-v6-action-reconsider.py rdg-v6-action-trust.py "
++         "rdg-v7-model.py rdg-completion-context.py rdg-v6-action-reconsider.py rdg-v6-action-trust.py "
+          "rdg-state.py rdg-state.js rdg-state-cli.cjs rdg-catalog.py "
+          "rdg-catalog.js rdg-graph-api.py").split()
+ 
+--- /dev/null
++++ b/tests/rdg-cross-file-completion.test.py
+@@ -0,0 +1,428 @@
++#!/usr/bin/env python3
++"""Cross-owner calculation and publication through actual guarded writers."""
++import copy
++from importlib.machinery import SourceFileLoader
++import json
++import os
++from pathlib import Path
++import subprocess
++import threading
++import unittest
++
++ROOT=Path(__file__).resolve().parents[1]
++FIX=SourceFileLoader('cross_fixture',str(ROOT/'tests/rdg-workflow.acceptance.test.py')).load_module()
++ENGINE=SourceFileLoader('cross_engine_test',str(ROOT/'tools/rdg-completion-context.py')).load_module()
++HELPER=SourceFileLoader('cross_helper_test',str(ROOT/'tools/rdg-workflow-helper.py')).load_module()
++
++
++class CrossFile(unittest.TestCase):
++    def setUp(self):
++        self.f=FIX.Workflow('test_whole_future_execution_withdrawal_new_variant_and_history')
++        self.f.setUp();self.addCleanup(self.f.doCleanups)
++        self.w=self.f.w;self.parent=self.w.rel;self.child='workspaces/child/graph.json'
++        self.seq=0
++
++    def graph(self,file):
++        return json.loads((self.w.home/'graphs'/file).read_text())
++
++    def package(self,file,operations,tid=None):
++        self.seq+=1
++        return {'schemaVersion':1,'transactionId':tid or 'cross-'+str(self.seq),
++            'changes':[{'file':file,'patch':{'schemaVersion':1,
++                'expectedRevision':self.graph(file)['revision'],'operations':operations}}]}
++
++    def apply(self,file,ops,token=None):
++        package=self.package(file,ops);self.w.assert_ok(self.w.write(package,token or self.w.token));return package
++
++    def setup_child(self,role='subgoal',selected=True,done=True,alias='Local display of R1'):
++        self.w.apply([self.w.add('D',action_type='decomposition' if role=='subgoal' else 'general'),
++                      self.w.prepare('D','R1',role)])
++        if selected:self.w.apply([self.w.choose('D')])
++        if selected and done and role=='subgoal':self.w.apply([self.w.result('D',action=True)])
++        graph={'schemaVersion':1,'revision':1,'id':'child','title':'Child continuation',
++            'planningScale':'module','actionModel':'candidate-v6','identitySpace':'demo',
++            'rootRequirementId':'R1','expansionOf':{'graphSlug':'demo','nodeId':'R1'},
++            'nodes':[{'id':'R1','kind':'requirement','title':alias,'status':'potential',
++                      'projectionOf':{'graphSlug':'demo','nodeId':'R1'}}],'edges':[],'events':[]}
++        self.w.assert_ok(self.w.write({'schemaVersion':1,'transactionId':'create-child',
++            'changes':[{'file':self.child,'create':graph}]},self.w.token))
++
++    def add_child_action(self,selected=True):
++        self.apply(self.child,[self.w.add('C','R1')])
++        if selected:self.apply(self.child,[self.w.choose('C','R1')])
++
++    def view(self,token=None):
++        return FIX.WF.read_workflow(self.f.root,self.f.rel,self.w.home/'graphs',self.w.store,
++            token or self.w.token,[self.parent],include_sources=True)
++
++    def context(self):
++        return ENGINE.load(self.w.home/'graphs',{self.parent:self.graph(self.parent)})
++
++    def place(self):
++        self.f.owner(self.f.placement_request([self.f.place('ROOT','R0','requirement')]))
++
++    def test_subgoal_continuation_execution_writes_parent_history_and_future_once(self):
++        self.setup_child();self.add_child_action();self.place()
++        self.assertEqual([r['nodeId'] for r in self.view()['future']],['R0'])
++        old_d=copy.deepcopy(next(e for e in self.graph(self.parent)['events'] if e['type']=='action_executed'))
++        plan=self.f.plan_sources()
++        request=self.apply(self.child,[self.w.result('C',action=True)])
++        view=self.view();self.assertEqual(view['future'],[]);self.assertEqual(plan,self.f.plan_sources())
++        self.assertIn(old_d,self.graph(self.parent)['events'])
++        self.assertEqual(len([e for e in self.graph(self.parent)['events'] if e['type']=='action_executed']),1)
++        rows=[r for r in view['history'] if r.get('transactionId')==request['transactionId'] and r['kind']!='graph_saved']
++        self.assertEqual([(r['kind'],r['targetId']) for r in rows],
++            [('action_executed','C'),('requirement_achieved','R1'),('requirement_achieved','R0')])
++        self.assertTrue(all(r['graphFile']==self.parent for r in rows[1:]))
++        source=self.w.sources();self.view();self.assertEqual(source,self.w.sources())
++        self.w.assert_ok(self.w.write(request,self.w.token));self.assertEqual(source,self.w.sources())
++
++    def test_method_correctness_automatically_executes_composite_action_and_goal(self):
++        self.setup_child(role='method_correctness');self.add_child_action()
++        before=self.w.sources()
++        self.w.assert_denied(self.w.write(self.package(self.parent,[self.w.result('D',action=True)]),self.w.token),'required work')
++        self.assertEqual(before,self.w.sources())
++        request=self.apply(self.child,[self.w.result('C',action=True)])
++        rows=[r for r in self.view()['history'] if r.get('transactionId')==request['transactionId'] and r['kind']!='graph_saved']
++        self.assertEqual([(r['kind'],r['targetId']) for r in rows],[
++            ('action_executed','C'),('requirement_achieved','R1'),('action_executed','D'),('requirement_achieved','R0')])
++        state=self.context().evaluate()
++        self.assertTrue(state[self.parent]['D']['complete'])
++        self.assertTrue(state[self.parent]['R0']['complete'])
++
++    def test_deep_choice_does_not_activate_unselected_ancestor(self):
++        self.setup_child(selected=False,done=False);self.add_child_action()
++        before=self.w.sources();request=self.package(self.child,[self.w.result('C',action=True)])
++        self.w.assert_denied(self.w.write(request,self.w.token),'actual selected scope')
++        self.assertEqual(before,self.w.sources())
++        self.w.apply([self.w.choose('D')])
++        self.apply(self.child,[self.w.result('C',action=True)])
++        state=self.context().evaluate();self.assertTrue(state[self.parent]['R1']['complete'])
++        self.assertFalse(state[self.parent]['R0']['complete'])
++        self.w.apply([self.w.result('D',action=True)])
++        self.assertTrue(self.context().evaluate()[self.parent]['R0']['complete'])
++
++    def test_driver_alias_preserves_local_display_and_pins_canonical_definition(self):
++        self.setup_child(alias='Different local display');self.add_child_action()
++        action=next(n for n in self.graph(self.child)['nodes'] if n['id']=='C')
++        self.assertEqual(action['selectionBasis']['driverSnapshot']['title'],'Different local display')
++        self.assertEqual(action['selectionBasis']['driverOwnerSnapshot']['node']['title'],'R1')
++        self.assertEqual(action['selectionBasis']['driverOwnerSnapshot']['ownerRef']['graphFile'],self.parent)
++        self.apply(self.child,[self.w.result('C',action=True)])
++        self.assertTrue(self.context().evaluate()[self.parent]['R0']['complete'])
++
++    def test_denied_dependency_read_fails_before_any_write_or_success(self):
++        self.setup_child();self.add_child_action()
++        token=self.w.grant(['graph.read','graph.record_action_execution'],[self.child])['token']
++        before=self.w.sources()
++        self.w.assert_denied(self.w.write(self.package(self.child,[self.w.result('C',action=True)]),token),'GRAPH_READ_SCOPE_DENIED')
++        self.assertEqual(before,self.w.sources())
++        token=self.w.grant(['graph.read','plan.read'],[self.parent,'plans/'])['token']
++        with self.assertRaisesRegex(ValueError,'GRAPH_READ_SCOPE_DENIED'):self.view(token)
++        self.assertEqual(before,self.w.sources())
++
++    def test_missing_parent_result_permission_rejects_entire_child_execution(self):
++        self.setup_child();self.add_child_action()
++        token=self.w.grant(['graph.read','graph.record_action_execution'],[self.parent,self.child])['token']
++        before=self.w.sources();req=self.package(self.child,[self.w.result('C',action=True)])
++        self.w.assert_denied(self.w.write(req,token),'graph.record_requirement_achievement')
++        self.assertEqual(before,self.w.sources())
++        token=self.w.grant(['graph.read','graph.record_action_execution','graph.record_requirement_achievement'],
++                           [self.parent,self.child])['token']
++        self.w.assert_ok(self.w.write(req,token))
++        self.assertTrue(self.context().evaluate()[self.parent]['R0']['complete'])
++
++    def test_requested_parent_edit_does_not_bypass_derived_result_permission(self):
++        self.setup_child();self.add_child_action()
++        token=self.w.grant(['graph.read','graph.record_action_execution','graph.graph_edit.edit_node'],
++                           [self.parent,self.child])['token']
++        req=self.package(self.child,[self.w.result('C',action=True)])
++        req['changes'].extend(self.package(self.parent,[
++            self.w.edit('edit_node',nodeId='R1',changes={'title':'R1'})])['changes'])
++        before=self.w.sources()
++        self.w.assert_denied(self.w.write(req,token),'graph.record_requirement_achievement')
++        self.assertEqual(before,self.w.sources())
++        allowed=self.w.grant(['graph.read','graph.record_action_execution',
++            'graph.record_requirement_achievement','graph.graph_edit.edit_node'],
++            [self.parent,self.child])['token']
++        self.w.assert_ok(self.w.write(req,allowed))
++        self.assertTrue(self.context().evaluate()[self.parent]['R0']['complete'])
++        snapshot=self.w.sources()
++        self.w.assert_denied(self.w.write(req,token),'graph.record_requirement_achievement')
++        self.assertEqual(snapshot,self.w.sources())
++        self.w.assert_ok(self.w.write(req,allowed))
++        self.assertEqual(snapshot,self.w.sources())
++
++    def test_result_must_be_recorded_at_its_owner_not_projection(self):
++        self.setup_child();self.add_child_action()
++        before=self.w.sources()
++        self.w.assert_denied(self.w.write(self.package(self.child,[self.w.result('R1')]),self.w.token),'owning graph')
++        self.assertEqual(before,self.w.sources())
++
++    def test_missing_source_ambiguity_projection_cycle_scope_and_dependency_cycle(self):
++        self.setup_child();self.add_child_action()
++        context=self.context();original=self.w.sources()
++        child=copy.deepcopy(context.graphs[self.child]);child['nodes'][0].pop('projectionOf');child.pop('expansionOf')
++        with self.assertRaisesRegex(ValueError,'AMBIGUOUS_IDENTITY_OWNER'):context.updated({self.child:child}).evaluate()
++        parent=copy.deepcopy(context.graphs[self.parent])
++        next(n for n in parent['nodes'] if n['id']=='R1')['projectionOf']={'graphSlug':'child','nodeId':'R1'}
++        with self.assertRaisesRegex(ValueError,'PROJECTION_CYCLE'):context.updated({self.parent:parent}).evaluate()
++        child=copy.deepcopy(context.graphs[self.child]);child['nodes'][0]['scope']='other'
++        with self.assertRaisesRegex(ValueError,'SCOPE_MISMATCH'):context.updated({self.child:child}).evaluate()
++        child=copy.deepcopy(context.graphs[self.child]);child['nodes'].append({'id':'R0','kind':'requirement','title':'Root alias',
++            'projectionOf':{'graphSlug':'demo','nodeId':'R0'}})
++        child['edges'].append({'id':'cycle','type':'INTRODUCES','from':'C','to':'R0','parent':'R1','childRole':'method_correctness'})
++        with self.assertRaisesRegex(ValueError,'completion dependency cycle'):context.updated({self.child:child}).evaluate()
++        self.assertEqual(original,self.w.sources())
++        path=self.w.home/'graphs'/self.child;raw=path.read_bytes();path.unlink()
++        try:
++            with self.assertRaisesRegex(ValueError,'SOURCE_MISSING'):self.view()
++        finally:path.write_bytes(raw)
++
++    def test_catalog_metadata_and_exact_expansion_binding_are_checked(self):
++        self.setup_child();self.add_child_action()
++        context=self.context();child=copy.deepcopy(context.graphs[self.child]);child['expansionOf']['nodeId']='other'
++        with self.assertRaisesRegex(ValueError,'EXPANSION_BINDING_INVALID'):context.updated({self.child:child}).evaluate()
++        child=copy.deepcopy(context.graphs[self.child]);child.pop('expansionOf')
++        with self.assertRaisesRegex(ValueError,'EXPANSION_BINDING_REQUIRED'):context.updated({self.child:child}).evaluate()
++        child=copy.deepcopy(context.graphs[self.child]);child['actionModel']='legacy'
++        with self.assertRaisesRegex(ValueError,'UNSUPPORTED_OWNER_MODEL'):context.updated({self.child:child}).evaluate()
++        path=self.w.home/'graphs/index.json';saved=path.read_bytes();data=json.loads(saved)
++        next(x for x in data['graphs'] if x['file']==self.child)['identitySpace']='different'
++        path.write_text(json.dumps(data))
++        try:
++            with self.assertRaisesRegex(ValueError,'OWNER_MISSING|CATALOG_STALE'):self.view()
++        finally:path.write_bytes(saved)
++
++    def test_executed_instance_never_reexecutes_or_returns_to_future_after_owner_edit(self):
++        self.setup_child();self.add_child_action()
++        self.f.owner(self.f.placement_request([{'op':'place','step':{'id':'C','kind':'action','state':'planned','title':'C',
++            'actionRef':{'graphFile':self.child,'identitySpace':'demo','nodeId':'C'}},
++            'timeConstraints':[{'type':'notBefore','at':'2026-10-21','strength':'soft','basis':'Synthetic'}]}]))
++        self.apply(self.child,[self.w.result('C',action=True)])
++        original=next(e for e in self.graph(self.child)['events'] if e['type']=='action_executed')
++        self.apply(self.child,[self.w.edit('edit_node',nodeId='C',changes={'title':'Changed after execution'})])
++        states=self.context().evaluate();self.assertTrue(states[self.child]['C']['complete'])
++        self.assertFalse(states[self.child]['C']['currentScopeComplete'])
++        self.assertFalse(states[self.parent]['R0']['complete'])
++        self.assertNotIn('C',[r['nodeId'] for r in self.view()['future']])
++        self.assertIn(original,self.graph(self.child)['events'])
++        before=self.w.sources()
++        self.w.assert_denied(self.w.write(self.package(self.child,[self.w.result('C',action=True)]),self.w.token),'already executed')
++        self.assertEqual(before,self.w.sources())
++
++    def test_partial_multifile_publication_blocks_read_and_recovers_once(self):
++        self.setup_child();self.add_child_action();self.place()
++        req=self.package(self.child,[self.w.result('C',action=True)],'cross-crash')
++        (self.w.home/'cross-request.json').write_text(json.dumps(req))
++        script=self.w.home/'cross-crash.py'
++        script.write_text("""
++from importlib.machinery import SourceFileLoader
++from pathlib import Path
++import json,os
++m=SourceFileLoader('cross_crash_package',str(Path(__file__).parent/'tools/graph-package.py')).load_module()
++def crash(path,journal):
++ first=journal['records'][0]
++ m.write_json(m.target_path(first['file']),first['after'])
++ os._exit(77)
++m.finish=crash
++m.execute(json.loads((Path(__file__).parent/'cross-request.json').read_text()))
++""")
++        run=subprocess.run(['python3','-B',str(script)],capture_output=True,text=True,
++                           env={**self.w.env,'RDG_AUTH_TOKEN':self.w.token})
++        self.assertEqual(run.returncode,77,run.stderr)
++        with self.assertRaisesRegex(ValueError,'RECOVERY_REQUIRED'):self.view()
++        self.w.assert_ok(self.w.write(req,self.w.token));self.assertEqual(self.view()['future'],[])
++        self.assertEqual(len([e for e in self.graph(self.parent)['events']
++            if e['type']=='requirement_achieved' and e['targetId']=='R0']),1)
++        snapshot=self.w.sources();self.w.assert_ok(self.w.write(req,self.w.token));self.assertEqual(snapshot,self.w.sources())
++
++    def test_changed_dependency_between_read_and_acceptance_is_not_published(self):
++        self.setup_child();self.add_child_action()
++        req=self.package(self.child,[self.w.result('C',action=True)],'cross-race')
++        (self.w.home/'cross-request.json').write_text(json.dumps(req))
++        script=self.w.home/'cross-race.py'
++        script.write_text("""
++from importlib.machinery import SourceFileLoader
++from contextlib import contextmanager
++from pathlib import Path
++import json
++m=SourceFileLoader('cross_race_package',str(Path(__file__).parent/'tools/graph-package.py')).load_module()
++real=m.checked_package_authority
++@contextmanager
++def race(package):
++ with real(package) as actor:
++  path=m.target_path('workspaces/demo/graph.json')
++  graph=json.loads(path.read_text());graph['revision']+=100
++  path.write_text(json.dumps(graph))
++  yield actor
++m.checked_package_authority=race
++try:m.execute(json.loads((Path(__file__).parent/'cross-request.json').read_text()))
++except ValueError as exc:print(str(exc));raise SystemExit(2)
++""")
++        child=(self.w.home/'graphs'/self.child).read_bytes()
++        run=subprocess.run(['python3','-B',str(script)],text=True,capture_output=True,
++                           env={**self.w.env,'RDG_AUTH_TOKEN':self.w.token})
++        self.assertNotEqual(run.returncode,0);self.assertIn('COMPLETION_DEPENDENCY_CHANGED',run.stdout+run.stderr)
++        self.assertEqual(child,(self.w.home/'graphs'/self.child).read_bytes())
++        self.assertFalse((self.w.home/'graphs/workspaces/.transactions/cross-race.json').exists())
++
++    def test_repeated_projections_do_not_duplicate_action_work_or_its_history(self):
++        self.setup_child();self.add_child_action()
++        action=copy.deepcopy(next(n for n in self.graph(self.child)['nodes'] if n['id']=='C'))
++        action.update(status='candidate',projectionOf={'graphSlug':'child','nodeId':'C'})
++        action.pop('selectionBasis',None)
++        third='workspaces/display/graph.json'
++        graph={'schemaVersion':1,'revision':1,'id':'display','title':'Repeated display',
++            'planningScale':'module','actionModel':'candidate-v6','identitySpace':'demo','rootRequirementId':'R-OTHER',
++            'nodes':[{'id':'R-OTHER','kind':'requirement','title':'Independent display root','status':'active'},
++                {'id':'R1','kind':'requirement','title':'Display alias','status':'active',
++                 'projectionOf':{'graphSlug':'demo','nodeId':'R1'}},action],
++            'edges':[{'id':'repeated-drive','type':'DRIVES','from':'R1','to':'C'}],'events':[]}
++        self.w.assert_ok(self.w.write({'schemaVersion':1,'transactionId':'display-create',
++            'changes':[{'file':third,'create':graph}]},self.w.token))
++        before=self.w.sources()
++        self.w.assert_denied(self.w.write(self.package(third,[self.w.choose('C','R1')]),self.w.token),'owning graph')
++        self.assertEqual(before,self.w.sources())
++        self.apply(self.child,[self.w.result('C',action=True)])
++        states=self.context().evaluate()
++        self.assertEqual(states[self.parent]['R1']['dependencyIds'],['C'])
++        self.assertEqual(states[third]['C']['ownerRef']['graphFile'],self.child)
++        rows=[r for r in self.view()['history'] if r['kind']=='action_executed' and r['targetId']=='C']
++        self.assertEqual(len(rows),1);self.assertEqual(rows[0]['graphFile'],self.child)
++        place=self.f.place('ALIAS','R1','requirement');place['step']['requirementRef']['graphFile']=third
++        self.f.owner(self.f.placement_request([place]))
++        row=next(r for r in self.view()['excludedPlacements'] if r['stepId']=='ALIAS')
++        self.assertEqual(row['reason'],'completed');self.assertEqual(row['ownerRef']['graphFile'],self.parent)
++
++    def test_cross_owner_withdrawal_and_new_variant_preserve_both_executions(self):
++        self.setup_child();self.add_child_action();self.apply(self.child,[self.w.result('C',action=True)])
++        first=copy.deepcopy(next(e for e in self.graph(self.child)['events'] if e['type']=='action_executed'))
++        withdrawal={'op':'withdraw_action','actionId':'C','dispositions':[],
++            'event':self.w.event('action_withdrawn',actionId='C',driverRequirementId='R1')}
++        self.apply(self.child,[withdrawal])
++        self.assertFalse(self.context().evaluate()[self.parent]['R0']['complete'])
++        self.apply(self.child,[self.w.add('C2','R1'),self.w.choose('C2','R1')])
++        self.assertFalse(self.context().evaluate()[self.parent]['R0']['complete'])
++        self.apply(self.child,[self.w.result('C2',action=True)])
++        self.assertTrue(self.context().evaluate()[self.parent]['R0']['complete'])
++        self.assertIn(first,self.graph(self.child)['events'])
++        facts=[(r['kind'],r['targetId']) for r in self.view()['history']
++               if r['kind'] in ('action_executed','action_withdrawn') and r['targetId'] in ('C','C2')]
++        self.assertEqual(facts,[('action_executed','C'),('action_withdrawn','C'),('action_executed','C2')])
++
++    def test_projection_cannot_bypass_canonical_requirement_policy(self):
++        self.setup_child();self.add_child_action();self.apply(self.child,[self.w.result('C',action=True)])
++        # Isolated fixture injection sets the canonical policy; projection has no local copy.
++        path=self.w.home/'graphs'/self.parent;graph=self.graph(self.parent)
++        next(n for n in graph['nodes'] if n['id']=='R1')['reconsiderationPolicy']={
++            'mode':'protected','authorityPrincipal':'protected-owner'}
++        path.write_text(json.dumps(graph))
++        before=self.w.sources()
++        operation={'op':'withdraw_action','actionId':'C','dispositions':[],
++            'event':self.w.event('action_withdrawn',actionId='C',driverRequirementId='R1')}
++        self.w.assert_denied(self.w.write(self.package(self.child,[operation]),self.w.token),'PROTECTED_OWNER_GRANT_REQUIRED')
++        self.assertEqual(before,self.w.sources())
++        graph=self.graph(self.parent)
++        next(n for n in graph['nodes'] if n['id']=='R1')['reconsiderationPolicy']={'mode':'stable'}
++        path.write_text(json.dumps(graph))
++        before=self.w.sources()
++        self.w.assert_denied(self.w.write(self.package(self.child,[operation]),self.w.token),'STABLE_RECONSIDERATION_REASON_REQUIRED')
++        self.assertEqual(before,self.w.sources())
++
++    def test_durable_cross_owner_acceptance_recovers_after_grant_revocation(self):
++        self.setup_child();self.add_child_action();self.place()
++        request=self.package(self.child,[self.w.result('C',action=True)],'revoked-cross-crash')
++        (self.w.home/'cross-request.json').write_text(json.dumps(request))
++        script=self.w.home/'revoke-crash.py'
++        script.write_text("""
++from importlib.machinery import SourceFileLoader
++from pathlib import Path
++import json,os
++m=SourceFileLoader('cross_revoke',str(Path(__file__).parent/'tools/graph-package.py')).load_module()
++m.finish=lambda path,journal:os._exit(77)
++m.execute(json.loads((Path(__file__).parent/'cross-request.json').read_text()))
++""")
++        run=subprocess.run(['python3','-B',str(script)],capture_output=True,text=True,
++                           env={**self.w.env,'RDG_AUTH_TOKEN':self.w.token})
++        self.assertEqual(run.returncode,77,run.stderr)
++        auth=HELPER.AUTH.Authority(self.w.store);ident=auth._actor(auth._read(),self.w.token)[0]
++        self.w.admin('revoke',{'id':ident},self.w.owner)
++        observer=self.w.grant(['graph.read','plan.read'],['workspaces/','plans/'])['token']
++        with self.assertRaisesRegex(ValueError,'RECOVERY_REQUIRED'):self.view(observer)
++        self.w.assert_denied(self.w.write(request,self.w.token),'TOKEN_REVOKED')
++        self.assertEqual(self.view(observer)['future'],[])
++        self.assertEqual(len([e for e in self.graph(self.parent)['events']
++            if e['type']=='requirement_achieved' and e['targetId']=='R0']),1)
++
++    def test_reader_waits_for_whole_publication_instead_of_mixing_owner_revisions(self):
++        import time
++        self.setup_child();self.add_child_action()
++        req=self.package(self.child,[self.w.result('C',action=True)],'locked-cross-publication')
++        (self.w.home/'cross-request.json').write_text(json.dumps(req))
++        script=self.w.home/'slow-cross.py'
++        script.write_text("""
++from importlib.machinery import SourceFileLoader
++from pathlib import Path
++import json,time
++m=SourceFileLoader('slow_cross_package',str(Path(__file__).parent/'tools/graph-package.py')).load_module()
++real=m.finish
++def slow(path,journal):
++ first=journal['records'][0]
++ m.write_json(m.target_path(first['file']),first['after'])
++ print('HALF',flush=True)
++ gate=Path(__file__).parent/'release-cross'
++ for _ in range(1000):
++  if gate.exists():break
++  time.sleep(.01)
++ else:raise ValueError('TEST_GATE_TIMEOUT')
++ real(path,journal)
++m.finish=slow
++m.execute(json.loads((Path(__file__).parent/'cross-request.json').read_text()))
++""")
++        reader_script=self.w.home/'cross-reader.py'
++        reader_script.write_text("""
++from importlib.machinery import SourceFileLoader
++from pathlib import Path
++import json,os
++home=Path(__file__).parent
++m=SourceFileLoader('waiting_cross_reader',str(home/'tools/rdg-activity.py')).load_module()
++print('ATTEMPT',flush=True)
++view=m.read_activity(home/'graphs',['workspaces/demo/graph.json'],os.environ['RDG_AUTH_TOKEN'],home/'grants.json')
++print(json.dumps(view),flush=True)
++""")
++        env={**self.w.env,'RDG_AUTH_TOKEN':self.w.token}
++        writer=subprocess.Popen(['python3','-B',str(script)],text=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE,env=env)
++        reader=None
++        try:
++            self.assertEqual(writer.stdout.readline().strip(),'HALF')
++            reader=subprocess.Popen(['python3','-B',str(reader_script)],text=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE,env=env)
++            self.assertEqual(reader.stdout.readline().strip(),'ATTEMPT')
++            time.sleep(.15);self.assertIsNone(reader.poll(),'reader must not publish a mixed revision')
++            (self.w.home/'release-cross').write_text('go')
++            out,err=reader.communicate(timeout=20);self.assertEqual(reader.returncode,0,err)
++            report=json.loads(out)
++            self.assertTrue(report['currentCompletion'][self.parent]['R0']['complete'])
++            self.assertTrue(report['currentCompletion'][self.child]['C']['complete'])
++            self.assertEqual(report['graphOwners'][self.parent]['revision'],self.graph(self.parent)['revision'])
++            self.assertEqual(report['graphOwners'][self.child]['revision'],self.graph(self.child)['revision'])
++        finally:
++            (self.w.home/'release-cross').write_text('go')
++            out,err=writer.communicate(timeout=20)
++            if reader and reader.poll() is None:reader.terminate();reader.communicate(timeout=5)
++        self.assertEqual(writer.returncode,0,err)
++
++    def test_cross_owner_gui_uses_same_writers_and_can_build_on_projection_root(self):
++        self.setup_child()
++        editor=HELPER.Editor(self.f.root,self.f.rel,self.w.home/'graphs',self.child,self.w.store,self.w.token,tools=self.w.home/'tools')
++        server=HELPER.make_server(editor);thread=threading.Thread(target=server.serve_forever,daemon=True);thread.start()
++        try:
++            run=subprocess.run(['node','--test','tests/rdg-workflow-ui.test.cjs'],cwd=ROOT,text=True,capture_output=True,
++                timeout=90,env={**os.environ,'RDG_CROSS_TEST_URL':server.session_url})
++            (ROOT/'docs/handoffs/rdg-cross-file-completion-20261019/gui-cross.log').write_text(run.stdout+run.stderr)
++            self.assertEqual(run.returncode,0,run.stdout+run.stderr)
++            self.assertTrue(self.context().evaluate()[self.parent]['R0']['complete'])
++        finally:server.shutdown();server.server_close();thread.join(2)
++
++
++if __name__=='__main__':unittest.main()
+--- a/docs/guides/RDG-CURRENT-EXECUTION-PLAN.md
++++ b/docs/guides/RDG-CURRENT-EXECUTION-PLAN.md
+@@ -1,6 +1,7 @@
+ # RDG + Temporal Plan — актуальный порядок исполнения
+ 
+-**Последний проверенный срез кода:** [ручной Viewer/Helper и общая лента](../handoffs/rdg-manual-workflow-20261019/CHECKPOINT.md).
++**Последний проверенный срез кода:** [межфайловое выполнение и история владельцев](../handoffs/rdg-cross-file-completion-20261019/CHECKPOINT.md).
++**Предыдущий ручной срез:** [Viewer/Helper и общая лента](../handoffs/rdg-manual-workflow-20261019/CHECKPOINT.md).
+ **Предыдущий сквозной API-пакет:** [Action-instance / Plan API / будущее и история](../handoffs/rdg-instance-temporal-workflow-20261019/CHECKPOINT.md).
+ **Предыдущая сверка:** [контрольная точка](../handoffs/rdg-plan-completion-review-20261019/CHECKPOINT.md).
+ **Предшествующий ремонт:** [исправление завершённости и истории](../handoffs/rdg-completion-repair-20261019/CHECKPOINT.md).
+@@ -31,7 +32,9 @@
+ и проверены сквозным API-сценарием внутри одного владельца графа. Контроллер ручного
+ редактора теперь также проходит этот путь с настоящими writers через файловый
+ и loopback-транспорты. DOM имитируется; установленный браузер Windows/G2 и native
+-picker ещё не проверены. Межфайловой расчёт открыт; общего PASS им не назначено.
++picker ещё не проверены. Межфайловой расчёт candidate-v6 теперь также реализован
++и проверен внутри одного Graph root; это локальный API/controller proof, не
++установка Windows или acceptance Stage 4.
+ 
+ Основные определения принадлежат [руководству граф-модели](RDG-V7-WORKING-GRAPHS.md),
+ разделу «Уточнение модели: граф, план во времени и выполнение — 2026-10-19».
+@@ -79,19 +82,20 @@
+ 
+ ## Следующий результат и зависимости
+ 
+-Текущий рабочий выбор — раньше проверить полезный сквозной путь на одном
+-владельце графа, сохранив остальной scope. Это уточнение Candidate-порядка,
+-а не принятие нового Desired Scenario или сокращение обещанной версии.
+-Межфайловой расчёт не является условием разработки размещения/API.
++Ранний сквозной путь на одном владельце уже проверен; межфайловой пакет
++также завершён в локальном Candidate scope ниже. Следующий пользовательский
++результат — настоящий ручной путь в установленном браузере Windows/G2.
++Проверка нового Gendocen context остаётся отдельной задачей. Этот порядок
++не меняет Desired Scenario, принятие версии или остальной согласованный scope.
+ 
+ | Этап | Проверяемый результат | Условие перехода |
+ |---|---|---|
+ | Локальный PASS, Candidate: экземпляр Action и история | Выполнен A1 → отозван A1 → выполнен A2 для той же R. Старое выполнение и отдельный отзыв сохранены; повторное выполнение A1 после правки отклоняется. | Проверены отдельное право отзыва, политики защищённых R, судьба дочерних R, snapshots, retry/recovery и финальный состав одного пакета. Новый прямой отзыв относится к уже выполненному Action; прежний reconsider_action сохраняет свои review-условия. |
+ | Локальный PASS, Candidate: размещение R и API | В существующем Plan owner доступны R/Action refs и place/unplace по времени или порядку, в том числе для предварительной ветви. | Проверены CAS, права, replay/recovery и снятие incident sequence/timeConstraints без правки графа. Нет скрытого выбора Action. Старые snapshots остаются читаемыми. |
+ | Локальный PASS, Candidate: однофайловое будущее и история | Новый read-only workflow-reader объединяет будущие размещения и историю графа в JSON, Markdown и HTML. Выполненное исключается из будущего, Plan не переписывается. | Проверены оба пути — с размещением и без него, исходные ID и owner refs, отказ при неверной ссылке/недостатке прав и отсутствие ложного успеха предварительной ветви. HTML — снимок, не живой редактор. |
+-| Локальная интеграция, Candidate: ручной Viewer/Helper 2.1.0 | Кнопки создания/правки, глубоких предварительных R/Actions с каноном/QRPE, размещения, выбора, результата и отзыва; общее будущее и история из действующих owners. | Сквозной controller → файловый/HTTP transport → настоящие writers проходит на временных источниках. DOM имитируется; это не native browser proof. CAS, отказ, retry и recovery сохранены. |
++| Локальная интеграция, Candidate: ручной Viewer/Helper 2.2.0 | Кнопки создания/правки, глубоких предварительных R/Actions с каноном/QRPE, размещения, выбора, результата и отзыва; общее будущее и история из действующих owners. | Сквозной controller → файловый/HTTP transport → настоящие writers проходит на временных источниках. DOM имитируется; это не native browser proof. CAS, отказ, retry и recovery сохранены. |
+ | Следующий пользовательский gate: установленный Windows/G2 путь | В обновлённом Viewer выбрать доступную папку явно запущенной локальной сессии и повторить тот же сценарий в настоящем браузере. | Проверить эффективный доступ к той же папке, native picker, читаемость и фактическую запись. Без новых mounts/ACL/туннелей и предположения о Docker-loopback. Установку и реальную пользовательскую запись этим срезом не объявлять. |
+-| Расширение на несколько владельцев | Вычислить обязательную композицию через явные owning/projectionOf refs без копирования смысла. | Нет успеха при missing/ambiguous owner или denied read; нет циклов; согласованное чтение и запрет двойного учёта. До этого межфайловое выполнение остаётся unresolved. |
++| Локальный PASS, Candidate: несколько владельцев в одном Graph root | Общий resolver projectionOf/expansionOf, две роли R, единый расчёт writer/reader, производные результаты и история в настоящих owners. | Прошли 19 новых межфайловых проверок: нет успеха при missing/ambiguous/cyclic/denied owner; проекции не дублируют исполнение; частичный journal блокирует read; read lock и source pins защищают состав. Нужны read scopes всех workspace-файлов identitySpace и права внешних производных записей. |
+ 
+ Уточнение пользователя 2026-10-19: будущее и история выполнения основаны на
+ **тех же R и Actions графа**. В будущем показаны размещённые невыполненные
+@@ -155,7 +159,7 @@
+ 
+ ### Новый ручной пакет — фактический scope
+ 
+-Viewer 2.1.0 подключает общий `rdg-workflow-ui.js`, встроенный штатным builder.
++Viewer 2.2.0 подключает общий `rdg-workflow-ui.js`, встроенный штатным builder.
+ Без явной сессии предметные факты Viewer остаются read-only. Для Docker/Windows
+ основной путь — **папка сессии на уже разрешённом mount**, которую пользователь
+ явно выбирает picker. Helper запускается отдельной явной командой, использует
+@@ -172,15 +176,56 @@
+ human identity. Обычный bearer не получает это право по одному полю события;
+ нужен точный process-local MAC с тем же principal, а прежние grants проверяются
+ writer. Protected R через этот Helper не меняются; admin UI/выдачи grants нет.
+-Первый редактор ограничен одним owning graph, Plan без старых event/gate steps
+-и branches; предварительные ветви **графа** разрешены. Сложный canon metadata
++Прямой write-файл редактора фиксирован при запуске, но зависимости и история
++читаются через авторизованную композицию owners. Явный projection-root continuation
++может владеть новыми Actions для этой R; результат самой R сохраняется в её owner.
++Plan без старых event/gate steps и branches; предварительные ветви **графа** разрешены. Сложный canon metadata
+ не теряется: его GUI-правка отказывается и остаётся в полном API.
+ 
+ Дальше не нужен ещё один общий перепланировочный цикл. Готовы два независимых
+-направления: (1) установленный browser/G2 proof при реальном доступе к выбранной
+-папке и обновлённому Viewer; (2) реализация межфайлового resolver по owning refs.
+-Ни одно не выдаётся за уже сделанное. Полный новый Gendocen context остаётся
++направления: установленный browser/G2 proof при реальном доступе к выбранной
++папке и обновлённому Viewer. Межфайловой resolver уже реализован в указанном scope.
++Native browser/G2 не выдаётся за проверенный. Полный новый Gendocen context остаётся
+ отдельным scope перед расширением claims; скрытие/приоритет истории второстепенны.
++
++### Межфайловой пакет — фактический scope
++
++Один `rdg-completion-context.py` обслуживает package writer и activity/workflow.
++Сущность имеет одного semantic owner; continuation раскрывает ту же R через
++точные expansionOf/projectionOf. Материал, ID и исходные события не копируются
++в нового владельца. При выборе в continuation writer закрепляет определение
++настоящей R в driverOwnerSnapshot, сохраняя прежний локальный driverSnapshot.
++
++После дочернего результата writer рассчитывает финальную композицию и добавляет
++готовые производные события в их owners в одном recoverable package. Новые файлы
++записи не обходят grants: нужны graph.read на каждый загруженный workspace-файл
++identitySpace и graph.record_action_execution / graph.record_requirement_achievement
++либо graph.write для каждого нового производного результата, в том числе у owner,
++который уже указан в запросе с обычной правкой. Нет права — нет новой частичной записи.
++Обычный bearer не становится user, а projected R не обходит политику своего owner.
++
++Shared read lock охватывает весь набор; exclusive writer lock, source/catalog pins
++и финальная проверка grants защищают acceptance. Prepared journal содержит всех
++изменённых owners и блокирует частичный read до recovery. Само физическое сохранение
++нескольких файлов не объявляется одним atomic rename. Порядок фактов в истории
++сохраняется через writer-owned compositionOrder одного завершённого журнала.
++
++19 новых tests проверили обе роли R, непринятых предков, локальное display title,
++недоступные права/owners, обход result permission через обычную правку owner,
++неоднозначность и циклы, корректность policy по проекции,
++повторные представления без второго исполнения, отзыв C → другой C2, неизменность
++Action-instance после правки, смену источника перед acceptance, реальный shared
++read lock, частичный crash/recovery и revoke после durable acceptance. Отдельно
++контроллер GUI записал дочерний результат и показал достижения родителей через
++настоящие writers; DOM по-прежнему имитируется.
++
++Ограничения: один Graph root и опубликованный writer/catalog protocol, candidate-v6
++workspace owners. Читается весь затронутый identitySpace, не минимальная dependency
++ветвь. Legacy/prepared/read-only/cross-project context не импортируется как реальная
++композиция. Новая запись старых снимков без нужного result event не выдумывается:
++reader показывает unresolved/historyPending; material writer может сохранить готовый
++производный результат. События и нормативная база прошлого не мигрируются.
++Прямая raw запись вне common lock не превращается в поддержанный distributed/OS sandbox.
+ 
+ ## Ранее выполненные технические срезы
+ 
+@@ -242,7 +287,8 @@
+    межфайлового продолжения. PASS относится к построению/чтению, а не ко всему
+    lifecycle Action. Выбранное разбиение сохраняет непустой активный выходной набор;
+    атомарная замена разрешена. Исходные legacy-файлы не мигрированы.
+-2. **PARTIAL:** запись/расчёт выполнения Action и достижения R с правами и историей.
++2. **Локальный PASS, Candidate:** запись/расчёт выполнения Action и достижения R
++   с правами и историей для опубликованной candidate-v6 композиции одного Graph root.
+    Листовые сущности оцениваются по определению; составные — по обязательным
+    зависимостям выбранной композиции. Не выбранные варианты не блокируют
+    выполнение, пустой список не означает автоматический успех. Создание
+@@ -256,20 +302,21 @@
+    scope. Дополнительная проверка ограничила actionType правилами узлов Action:
+    одноимённые данные Requirement не меняют его тип. По последним уточнениям
+    выполнена адаптация Action как экземпляра: правка не создаёт новое исполнение
+-   того же ID; отзыв сохранён отдельно. Локальный API-путь проверен. PARTIAL
+-   сохраняется для полного scope: межфайловой расчёт и живой ручной путь открыты.
++   того же ID; отзыв сохранён отдельно. Локальный API-путь проверен; общий resolver и история owners
++   реализованы и проверены. Native browser/G2 proof остаётся отдельным шагом.
+ 3. **PARTIAL; API — локальный PASS:** явное размещение R и Action во времени
+    или по порядку, включая предварительные сущности. Удобные place/unplace
+    работают через существующий Plan owner с CAS, правами, историей и recovery.
+    Пустое будущее разрешено; новые записи требуют места; старые snapshots и
+    принятые retries читаются. Ручной контроллер размещений реализован в Viewer;
+    native File System Access и установленный Windows/G2 путь ещё открыты.
+-4. **Локальный PASS, Candidate, один владелец графа:** предстоящее связано с
++4. **Локальный PASS, Candidate, композиция владельцев одного Graph root:** предстоящее связано с
+    результатами в графе через `rdg-workflow.py`. Выполненное исключается из
+    предстоящего, ссылки и история сохраняются. Выполнение без размещения видно
+    в истории без фиктивного future step. Проверены A1 → отзыв A1 → A2 и правка
+    после выполнения без возврата A1. Отдельного lifecycle закрытия шага нет.
+-   Межфайловой расчёт остаётся OPEN; внешний owner не даёт ложного успеха.
++   Межфайловой расчёт реализован через точные owning refs. Недоступный owner
++   даёт отказ; готовый расчёт без сохранённого результата не выдаётся за историю.
+ 5. **PARTIAL; общий reader — локальный PASS:** история изменений, достижений R,
+    выполнения и отзыва Actions доступна в JSON/Markdown/HTML. Простые описания
+    сохранений и порядок событий одного пакета проверены. Повтор запроса, отказ,
+@@ -321,6 +368,20 @@
+ ручного набора; его точный результат и финальные хеши — в
+ [новом checkpoint](../handoffs/rdg-manual-workflow-20261019/CHECKPOINT.md).
+ Наборы пересекаются; это не сумма уникальных проверок и не native browser proof.
++
++В межфайловом срезе после исправления проверки производных permissions заново
++прошли **259 Python tests** в 24 наборах и общий Node run: **415 cases,
++413 PASS, 0 FAIL, 2 SKIP**. Оба пропуска требуют живого Helper и отдельно
++выполнены Python acceptance: обычный ручной путь через оба транспорта и
++межфайловой controller-путь. DOM имитируется. В 259 входят **19 новых
++межфайловых tests**; эти числа не складываются. Проверены также Viewer smoke,
++синтаксис выбранных Python/JS и идемпотентная сборка встроенных модулей.
++Первый Node run выявил два неполных списка зависимостей изолированных fixtures;
++они исправлены. Дополнительный контрпример выявил обход result permission,
++если owner уже указан с обычной правкой; он воспроизведён и закрыт до финального
++полного прогона. Логи, точные хеши и diff находятся в
++[межфайловом checkpoint](../handoffs/rdg-cross-file-completion-20261019/CHECKPOINT.md).
++Установленный браузер/Windows и полное новое Gendocen coverage этим не подтверждены.
+ 
+ ## Сверка с P2-AC-01..20
+ 
+--- a/docs/guides/RDG-DEEP-ACTION-AND-HISTORY.md
++++ b/docs/guides/RDG-DEEP-ACTION-AND-HISTORY.md
+@@ -122,12 +122,98 @@
+ выполнения Action не стирается. Новая запись должна исправить
+ набор в том же пакете либо пересмотреть выбор Action. Миграция не выполняется.
+ 
+-Расчёт сейчас ограничен одним файлом-владельцем. Внешняя `projectionOf` не считается
+-достигнутой без разрешения владельца. Межфайловое завершение остаётся открытым.
++Межфайловой расчёт теперь реализован для опубликованной candidate-v6 композиции
++в одном Graph root. `projectionOf` разрешается до единственного владельца, а
++`expansionOf` связывает продолжение конкретной R. Расчёт и запись результатов
++используют общий resolver; отсутствие владельца/права не превращается в успех.
++Точный scope и ограничения описаны ниже.
+ Однофайловой сквозной путь будущего/истории реализован через `rdg-workflow.py`:
+ используются те же R/Actions графа с сохранением ID и ссылок. Выполненное
+ исключается из предстоящего при чтении, без записи новой версии Plan.
+ Размещение остаётся явным. Модель повторных физических исполнений не вводится.
++
++## Межфайловая обязательная композиция — 2026-10-19
++
++Статус: **Candidate, локальный API/controller proof**; установленный Windows/G2
++не проверен. Общий `rdg-completion-context.py` используется package writer и
++activity/workflow readers. Временное объединение источников нужно для расчёта;
++оно не сохраняется как второй owner и не копирует проект.
++
++| Связь/поле | Смысл |
++|---|---|
++| `projectionOf: {graphSlug,nodeId}` | Точный владелец той же сущности. Совпадают identitySpace, ID, kind и нормативный scope. Локальное название может отличаться. |
++| `expansionOf` и такая же projectionOf корневой R | Явное продолжение конкретной R в другом файле. Название папки, одинаковый title или root ID отдельно этого не доказывают. |
++| `ownerRef` результата | Настоящие graphFile/identitySpace/nodeId; размещение может ссылаться на проекцию, но факт результата принадлежит owner. |
++| `selectionBasis.driverOwnerSnapshot` | При новом выборе под projected R дополнительно закрепляются ownerRef и её настоящее определение. Старый driverSnapshot с локальным display title сохраняется. |
++
++Общий расчёт сохраняет прежний смысл: subgoal блокирует родительскую R до своего
++достижения; method_correctness блокирует выполнение соответствующего Action.
++Выбранная локальная работа под непринятым предком не делает всю ветвь актуальной.
++Повторные отображения Action/его причинных связей не создают новые обязательные
++исполнения. Выбор и явная запись выполнения Action должны идти в его собственный
++файл; запись достижения R через projection отклоняется.
++
++### Запись и права
++
++Существующий package writer рассчитывает **финальную** композицию пакета, затем
++добавляет недостающие производные события в настоящих владельцев. Например:
++запись выполнения C в continuation-файле → достижение R1 в родительском owner →
++выполнение составного D при method_correctness → достижение R0. При subgoal
++выполнение D по созданию R1 не ждёт достижения R1; достижения ждёт R0.
++Изначальная история экземпляра Action не переписывается и не выполняется вновь.
++
++Запрос не получает новых полномочий. Нужны права исходной операции, `graph.read`
++на все загружаемые источники и права каждой новой производной записи у owner:
++`graph.record_action_execution` / `graph.record_requirement_achievement` либо
++`graph.write`, в соответствующем scope. Отсутствие необходимого права отклоняет
++весь новый пакет до публикации; нет частичного «C записан, parent молча пропущен».
++Grants не выдаются и не расширяются автоматически. В прежних policy callsites
++для projected R проверяется политика её настоящего владельца; alias не обходит
++protected/stable. Новые самостоятельные policy правила этим не вводятся.
++
++Для первого межфайлового среза читаются **все опубликованные workspace-файлы
++затронутого identitySpace**, включая предварительные ветви. Поэтому узкий токен
++без одного из этих read scopes даст отказ всему межфайловому расчёту. Это граница
++текущей реализации; адресный dependency-only read не заявлен. Prepared/read-only
++источники, legacy-модели и чужой identitySpace не импортируются как актуальные
++candidate-v6 владельцы. Нужен проверенный опубликованный catalog; новый жизненный
++цикл принятия Plan или автоматический as-of baseline не вводится.
++
++### Согласованность, история и ошибки
++
++Reader держит общий shared writer lock на весь набор источников; workflow также
++держит Plan read lock. Writer под прежним exclusive lock фиксирует source hashes
++и catalog hash (`completionReadSet`) и проверяет их перед durable acceptance,
++вместе с повторной проверкой read/write grants. Смена входа между расчётом и
++acceptance даёт отказ, а не результат на смешанных revisions.
++
++Публикация нескольких файлов остаётся **recoverable**, не одним atomic rename.
++Один prepared journal содержит все изменённые owners. До завершения/recovery
++читатель не выдаёт частичный успех. Уже долговечно принятый пакет восстанавливается
++и после revoke; новая запись/replay отозванным bearer отклоняется. Повтор запроса
++проверяет также прежние зависимости, не создавая ещё одно исполнение.
++
++`compositionOrder` назначает writer для новых событий одного межфайлового пакета.
++Лента применяет его только при подтверждённом completionReadSet журнала: сначала
++исходные факты в порядке операций, затем производные результаты в порядке
++зависимостей. Факты остаются в своих файлах. В basis только реально пересекающие
++границу связи получают `compositionGraphFile` / `targetOwnerGraphFile`; локальные
++снимки без таких связей не переписываются. Старые receipts/events не мигрируют.
++
++Missing/ambiguous owner, несовместимые kind/scope, неверная expansion binding,
++циклическая projection или обязательная зависимость, неподдержанная модель,
++недостаток read/write прав и изменившийся источник не дают успешного результата.
++Для старого/imported состояния, где расчёт уже готов, но события результата ещё
++нет, reader показывает `historyPending` / unresolved вместо фиктивной истории и
++автоматического исчезновения из будущего. Обычная авторизованная material-запись
++пересчитывает компонент и сохраняет готовые производные результаты. Это не
++отдельный Plan closing lifecycle.
++
++Согласованность гарантируется для штатного writer/catalog/lock protocol одного
++Graph root. Прямая запись в JSON/индекс вне этого протокола не становится
++контролируемой ОС-песочницей. Проверяются используемые source pins и известные
++catalog refs; полнота произвольно подменённого raw catalog не доказывается.
++Полная Gendocen проверка канонов нового контекста из completion proof не следует.
+ 
+ ## Отзыв Action
+ 
+@@ -218,7 +304,7 @@
+ Выполненный Action и отозванный вариант не показываются как предстоящие. История
+ показывает выполнение A1, отзыв A1 и выполнение A2 в порядке событий, в том числе
+ внутри одного пакета. Неполная или неразрешённая R не получает успеха. Формат HTML
+-предназначен для чтения. Ручной редактор Viewer/Helper 2.1.0 описан ниже; его установленный Windows/G2 путь пока не проверен.
++предназначен для чтения. Ручной редактор Viewer/Helper 2.2.0 описан ниже; его установленный Windows/G2 путь пока не проверен.
+ 
+ Gendocen projection теперь учитывает actionType. Requirement steps пока явно
+ получают `REQUIREMENT_STEPS_NOT_COVERED`, а не ложное полное покрытие; произвольный
+@@ -247,16 +333,20 @@
+ В schema-v2 journal добавлен необязательный authorityPrincipal; старые schema-v1/v2
+ читаются, exact-history reader принимает это поле с проверкой типа.
+ 
+-Общий HTML-снимок будущего/истории уже доступен. Живая GUI-лента в Viewer,
+-пользовательские фильтры/понижение приоритета и новый ручной editor ещё не реализованы. В существующем Viewer добавлен просмотр истории результатов
+-конкретного узла. Публичный API не меняет границы аутентификации Helper.
++Общий HTML-снимок будущего/истории и ручной раздел Viewer/Helper уже доступны.
++Контроллер GUI-ленты и ручной записи проверен с настоящими writers при имитации DOM;
++установленный Windows/G2 путь ещё не проверен. Скрытие и понижение приоритета
++событий пока не реализованы. Просмотр истории результатов конкретного узла
++сохранён. Публичный API не меняет границы аутентификации Helper.
+ 
+ ## Локальная ручная сессия Viewer/Helper 2.1.0
+ 
+-Статус: **Candidate, локальная интеграция**, один owning graph и существующий Plan.
++Статус: **Candidate, локальная интеграция**. Viewer 2.2.0 использует один настроенный
++файл ручной записи и существующий Plan; зависимости и производные результаты
++разрешаются через остальных авторизованных владельцев композиции.
+ Контроллер Viewer проходит оба транспорта через настоящие writers в синтетическом
+ acceptance-прогоне. DOM в этом прогоне имитируется; это не установленный браузерный
+-или Windows/G2 proof. Исходник Viewer обновлён до 2.1.0; установленный Tampermonkey
++или Windows/G2 proof. Исходник Viewer обновлён до 2.2.0; установленный Tampermonkey
+ не обновлялся. Local Loader не получает новых grants или @require: общий UI-модуль
+ встраивается штатным `build-rdg-layout.py` из `rdg-workflow-ui.js`.
+ 
+@@ -318,14 +408,21 @@
+ 
+ ### Права, ручное авторство, отказ и восстановление
+ 
++В межфайловом пакете каждое новое производное выполнение/достижение требует
++соответствующего result permission либо graph.write у владельца. Обычная правка
++этого же файла в исходном запросе не заменяет право на производный результат.
++
+ Права совпадают с API: plan.read и graph.read для источников, plan.edit для
+ размещения, отдельные Graph permissions или graph.write для Graph операций.
+ Существующие branch grants, CAS, catalog, snapshots, журналы и recovery применяются
+ штатными владельцами. Helper не создаёт граф или Plan и не меняет grant-store.
+-Первый редактор работает только с одним владельцем, Plan без старых event/gate
+-steps и branches. Предварительные **ветви самого графа** поддержаны.
+-Межфайловые owning/projectionOf completion, Plan branch editor и удалённая запись
+-остаются вне этого GUI-среза.
++Файл прямой ручной записи фиксируется при запуске Helper. Он читает разрешённую
++композицию владельцев; производные результаты writer сохраняет в их настоящих
++файлах с отдельной проверкой прав. В объявленном continuation-root можно создать
++новый принадлежащий этому файлу Action, хотя сама R принадлежит другому владельцу.
++Plan без старых event/gate steps и branches; предварительные **ветви графа**
++поддержаны. Произвольного GUI-переключения write owner, Plan branch editor и
++удалённой записи пока нет.
+ 
+ Обычный bearer по-прежнему не может присвоить `by:user`. Явно запущенная локальная
+ manual-сессия создаёт временный process-local HMAC key; существующий verifier
+@@ -334,7 +431,7 @@
+ bearer остаётся запрещённым. Receipt помечается `local-manual-session`.
+ Это **локальное ручное авторство, не проверенная личность человека**, не remote
+ identity и не разрешение protected-owner операций. Этот Helper отклоняет Graph
+-запись, если в графе есть protected R; она не разблокируется локальным MAC.
++запись, если в загруженной композиции есть protected R; она не разблокируется локальным MAC.
+ Операции изменения политики и административные операции через GUI не предоставлены.
+ 
+ Writer-отказ не меняет локальный результат на «выполнено». При потере ответа
+--- a/docs/guides/RDG-V7-WORKING-GRAPHS.md
++++ b/docs/guides/RDG-V7-WORKING-GRAPHS.md
+@@ -52,8 +52,8 @@
+ и факт выполнения работы различаются по смыслу. Существующие writer journals
+ и события теперь читаются через `rdg-activity.py`: сохранения графа, выполнения
+ Actions, их отзыв и достижения R. Общая CLI-лента JSON/Markdown и HTML-снимок
+-будущего/истории доступны через rdg-workflow.py; живой editor/GUI-лента в Viewer
+-ещё не реализованы.
++будущего/истории доступны через rdg-workflow.py. Ручной раздел и общая лента
++реализованы в исходнике Viewer 2.2.0; установленный Windows/G2 ещё не проверен.
+ Фильтры/приоритет истории второстепенны.
+ 
+ Предмет RDG — цели, способы их достижения, Requirements и работа с этой моделью.
+@@ -110,7 +110,10 @@
+ не делает его выполненным автоматически. Это же ограничение действует для
+ цели без дальнейшего разбиения. В текущем API результат записывают отдельные
+ record_action_execution / record_requirement_achievement. Составная завершённость
+-рассчитывается внутри файла-владельца с сохранением событий результатов.
++рассчитывается по общей опубликованной композиции владельцев с сохранением
++событий результатов в их настоящих файлах. Для candidate-v6 продолжений действует
++общий resolver projectionOf/expansionOf, права на каждый источник и внешний
++производный результат, один writer lock/journal/recovery.
+ Неизвестная роль или внешний неразрешённый владелец не даёт успеха.
+ История сохраняет факт выполнения Action и его исходное определение. Пересчёт
+ изменённой композиции не возвращает выполненный экземпляр в будущий план.
+@@ -118,8 +121,10 @@
+ старого и выполнение нового сохраняются в истории. Writer отклоняет второе
+ выполнение того же Action ID. Исторический факт и подтверждение текущего состава
+ различаются в расчёте: неподтверждённый изменённый состав не даёт успеха родительской
+-R, а выполненный экземпляр остаётся в истории. Этот локальный сквозной путь
+-реализован; межфайловой расчёт и живой ручной editor остаются открытыми.
++R, а выполненный экземпляр остаётся в истории. API и контроллер ручного редактора
++теперь проверены и на межфайловой композиции одного Graph root. Нативный браузер,
++установленный Viewer/G2 и полный новый Gendocen контекст остаются открытыми.
++[Межфайловой API, права и границы](RDG-DEEP-ACTION-AND-HISTORY.md).
+ 
+ Принятие, выполнение Action и достижение R имеют разный смысл. Автоматическое
+ закрытие предстоящего в плане во времени опирается на факт/расчёт выполнения
+@@ -303,11 +308,11 @@
+ 
+ В Viewer «Показать все варианты» **независимо от** «Все связи»: если у данной R нет выбранного D, все её варианты видны по умолчанию; если выбран, в основном виде показывается принятый путь. При этом у дочерней R без выбора её варианты остаются видимы, даже если выбрано D её родителя. Для больших наборов раскрывай коллекции по запросу. Общая ситуация проекта доступна в инспекторе и определяется по реально проиндексированным R/D/C одного `identitySpace`. Если граф или внешняя категория не проиндексированы, полнота контекста неизвестна.
+ 
+-Viewer предназначен для чтения. Реальная запись происходит через writer/Helper; клики по SVG не заменяют commit.
++Основная SVG-проекция и инспектор Viewer читают граф. Подключаемый ручной раздел Viewer 2.2.0 записывает изменения через writer/Helper с проверкой прав и версии; native Windows/G2 путь пока не подтверждён.
+ 
+ ## 10. Что пока не следует обещать как уже реализованное
+ 
+-План v7 шире текущего начального внедрения. **Пока не реализованы как полноценный подтверждённый workflow**: полная семантическая переоценка после изменения происхождения/deactivation R (локальные и межфайловые сигналы проверки уже доступны); автоматическая переоценка композита при изменении соседних файлов; автоматическое доказательство непересечения scope (неизвестное пересечение теперь отклоняется); отслеживание всех последующих версий prepared-библиотеки (при самом выборе исходный source и canonHash проверяются, T1 сохраняется отдельным снимком); полноценный поиск доступных/недоступных категорий внешнего контекста; проверка browser-installed Helper в настоящем окружении и реальный пользовательский E2E. Они остаются в v7 Verification Plan, а не объявляются завершёнными. Старые исходники, 2D и реальные принятые D не должны изменяться для демонстрации.
++План v7 шире текущего начального внедрения. **Пока не реализованы как полноценный подтверждённый workflow**: полная семантическая переоценка после изменения происхождения/deactivation R (локальные и межфайловые сигналы проверки уже доступны); автоматическая семантическая переоценка композита/канонов при изменении соседних файлов (расчёт завершённости candidate-v6 по нескольким владельцам уже реализован); автоматическое доказательство непересечения scope (неизвестное пересечение теперь отклоняется); отслеживание всех последующих версий prepared-библиотеки (при самом выборе исходный source и canonHash проверяются, T1 сохраняется отдельным снимком); полноценный поиск доступных/недоступных категорий внешнего контекста; проверка browser-installed Helper в настоящем окружении и реальный пользовательский E2E. Они остаются в v7 Verification Plan, а не объявляются завершёнными. Старые исходники, 2D и реальные принятые D не должны изменяться для демонстрации.
+ 
+ ## 11. Санкционированный пересмотр R (частично реализован)
+ 
+--- a/README.md
++++ b/README.md
+@@ -1,6 +1,6 @@
+ # Requirements–Decisions Graphs — папки и полные Requirements-графы
+ 
+-Текущий исходный Viewer **2.1.0**, Local Loader **2.5.2**: папки → полные Requirements-графы от корневой R → локальный R-граф одной волны. Полный граф поддерживает независимые «Принятое/Все ветви» и «Только Requirements/Показать всё»; «Обновить» перечитывает текущие файлы и индекс, при недоступности оставляет явно помеченную встроенную копию. Расположение сохраняется отдельно и только с разрешённым доступом. [Актуальная инструкция](docs/guides/VIEWER-EXPLORER.md) · [граница R-графа и общий слой координат](docs/guides/VIEWER-LAYOUT.md) · [план и порядок реализации](docs/guides/VIEWER-EXPLORER-PLAN.md). Обновление исходника не подтверждает обновления установленного Tampermonkey.
++Текущий исходный Viewer **2.2.0**, Local Loader **2.5.2**: папки → полные Requirements-графы от корневой R → локальный R-граф одной волны. Полный граф поддерживает независимые «Принятое/Все ветви» и «Только Requirements/Показать всё»; «Обновить» перечитывает текущие файлы и индекс, при недоступности оставляет явно помеченную встроенную копию. Расположение сохраняется отдельно и только с разрешённым доступом. [Актуальная инструкция](docs/guides/VIEWER-EXPLORER.md) · [граница R-графа и общий слой координат](docs/guides/VIEWER-LAYOUT.md) · [план и порядок реализации](docs/guides/VIEWER-EXPLORER-PLAN.md). Обновление исходника не подтверждает обновления установленного Tampermonkey.
+ 
+ Отдельное экспериментальное хранилище графов. Не является канонической методологией OBS и не заменяет действующие документы.
+ 
+@@ -27,11 +27,16 @@
+ результатов узла. Однофайловой сквозной путь дополнен: один Action — один
+ экземпляр; доступны явный отзыв, place/unplace R и Actions, единые будущее/история
+ в JSON, Markdown и HTML. Выполненное исчезает из будущего при чтении без новой
+-записи Plan; исходные ID и история сохраняются. В исходнике Viewer 2.1.0 добавлен ручной редактор и общая лента через явно
++записи Plan; исходные ID и история сохраняются. В исходнике Viewer 2.2.0 доступен ручной редактор и общая лента через явно
+ подключаемый локальный Helper: выбранная папка сессии на существующем mount,
+ те же Graph/Plan writers, права и история. Контроллер прошёл сквозные тесты с
+ реальными writers; браузерный DOM имитируется. Установленный Windows/G2 путь,
+-native picker и межфайловой расчёт ещё не проверены/не завершены.
++native picker ещё не проверены. Межфайловой resolver candidate-v6 реализован:
++общая обязательная композиция по projectionOf/expansionOf, права каждого owner,
++история производных результатов в исходных файлах, общий lock/journal/recovery.
++Проверен дочерний результат → достижение родительских R, без нового исполнения
++через проекции. Scope — опубликованный identitySpace внутри одного Graph root;
++для него нужны read scopes всех источников и права внешних производных записей.
+ [API и границы](docs/guides/RDG-DEEP-ACTION-AND-HISTORY.md).
+ 
+ [Определения и границы реализации](docs/guides/RDG-V7-WORKING-GRAPHS.md) ·
+--- a/tests/rdg-workflow-ui.test.cjs
++++ b/tests/rdg-workflow-ui.test.cjs
+@@ -137,3 +137,32 @@
+  const begin='// BEGIN GENERATED RDG WORKFLOW UI\n',end='// END GENERATED RDG WORKFLOW UI\n';
+  assert.equal(text.slice(text.indexOf(begin)+begin.length,text.indexOf(end)),fs.readFileSync(path.join(__dirname,'../tools/rdg-workflow-ui.js'),'utf8'));
+ });
++
++test('cross-owner Helper: manual action under projection root completes the owning parent',
++ {skip:!process.env.RDG_CROSS_TEST_URL},async()=>{
++ const base=new URL(process.env.RDG_CROSS_TEST_URL),session=base.pathname.split('/').filter(Boolean).at(-1);
++ const request=async(path,body)=>{
++   const r=await fetch(new URL(path,base),{method:body?'POST':'GET',headers:{
++     'X-RDG-Session':session,...(body?{'Content-Type':'application/json','Origin':base.origin}:{})},
++     ...(body?{body:JSON.stringify(body)}:{})});
++   const x=await r.json();if(!r.ok){const e=Error(x.error);e.definite=x.definite!==false;throw e;}return x;
++ };
++ const d=doc(),viewer=simulate();await viewer.flush();
++ const ui=UI.mount(viewer.host.rdgWorkflow.attach(),{read:()=>request('state'),write:r=>request('command',r)},
++   {document:d,onGraph:g=>viewer.host.rdgWorkflow.loadGraph(g)});
++ await ui.refresh();assert(ui.view,ui.status);assert.equal(ui.view.continuationRootId,'R1');
++ assert.equal(ui.fields.target.value,'R1');assert.equal(ui.buttons.add.disabled,false);
++ ui.fields.title.value='Manual child action';ui.fields.recommended.value='Suitable method';ui.fields.note.value='Manual cross-owner proof';
++ await ui.buttons.add.onclick();assert.match(ui.status,/Запись сохранена/,ui.status);
++ const action=ui.fields.target.value;
++ ui.fields.target.value='R1';ui.fields.target.onchange();assert.equal(ui.buttons.place.disabled,false);
++ ui.fields.at.value='2026-10-21';await ui.buttons.place.onclick();assert.match(ui.status,/Запись сохранена/,ui.status);
++ const row=ui.view.future.find(r=>r.nodeId==='R1');assert(row);assert.notEqual(row.ownerRef.graphFile,row.graphRef.graphFile);
++ ui.fields.target.value=action;ui.fields.target.onchange();await ui.buttons.select.onclick();assert.match(ui.status,/Запись сохранена/,ui.status);
++ await ui.buttons.complete.onclick();assert.match(ui.status,/Запись сохранена/,ui.status);
++ assert.equal(ui.view.future.length,0);
++ const parent=ui.view.sources.graphs[row.ownerRef.graphFile];
++ assert(parent.events.some(e=>e.type==='requirement_achieved'&&e.targetId==='R0'));
++ assert(ui.view.history.some(r=>r.kind==='requirement_achieved'&&r.targetId==='R1'));
++ assert(viewer.root.querySelectorAll('.node').length>0);
++});
+--- a/tools/rdg-graph-api.py
++++ b/tools/rdg-graph-api.py
+@@ -41,7 +41,7 @@
+                'PROTECTED_OWNER_GRANT_REQUIRED')
+ 
+ 
+-def apply(graph, op):
++def apply(graph, op, policy_guard=None):
+     """Mutate only in-memory, under graph-apply's complete validation/atomicity."""
+     kind = op.get('action')
+     ensure(kind in OPERATIONS, 'UNKNOWN_ACTION')
+@@ -63,7 +63,7 @@
+     new_node = copy.deepcopy(op.get('node'))
+ 
+     def policy(node):
+-        guard_policy(node, event)
++        (policy_guard or guard_policy)(node, event)
+ 
+     if kind in ('create_requirement', 'create_context'):
+         wanted = 'requirement' if kind == 'create_requirement' else 'context'
+--- a/tools/rd-graph-viewer-smoke.test.cjs
++++ b/tools/rd-graph-viewer-smoke.test.cjs
+@@ -37,7 +37,7 @@
+     localStorage:{getItem:k=>storage.get(k)??null,setItem:(k,v)=>storage.set(k,v)},
+     console,Date,Math,JSON,Object,Number,Error};
+   vm.runInNewContext(script,context,{timeout:2000});
+-  assert.equal(host.dataset.rdgVersion,'2.1.0');
++  assert.equal(host.dataset.rdgVersion,'2.2.0');
+   assert(elements.launch,'launcher created');
+   return {host,elements};
+ }
+--- a/tests/visual/rdg-full-detail-201.cjs
++++ b/tests/visual/rdg-full-detail-201.cjs
+@@ -24,7 +24,7 @@
+   const countRefine=()=>page.evaluate(()=>[...document.getElementById('rdg-viewer-root').shadowRoot.querySelectorAll('#canvas path[data-relation-kind="refinement"]')].length);
+   const nodes=()=>page.evaluate(()=>[...document.getElementById('rdg-viewer-root').shadowRoot.querySelectorAll('#canvas .node')].map(n=>n.getAttribute('data-id')));
+   const screen=async(name)=>page.screenshot({path:path.join(output,name+'.png')});
+-  assert.equal(await page.evaluate(()=>document.getElementById('rdg-viewer-root').dataset.rdgVersion),'2.1.0');
++  assert.equal(await page.evaluate(()=>document.getElementById('rdg-viewer-root').dataset.rdgVersion),'2.2.0');
+   await open('reference-prepared-planning-tree');
+   assert((await nodes()).includes('RF-DEEP'),'complete prepared root covers grandchildren');
+   await button('edges-all');
+@@ -53,6 +53,6 @@
+   assert(!(await nodes()).some(n=>n.startsWith('__cause__')),'R-only hides D and O');
+   await screen('working-R-only-all-branches');
+   assert.deepEqual(errors,[],'no JavaScript page errors');
+-  console.log('BROWSER_FULL_DETAIL_202_PASS, screenshots: 4, version 2.1.0');
++  console.log('BROWSER_FULL_DETAIL_202_PASS, screenshots: 4, version 2.2.0');
+  } finally {await browser.close();}
+ })().catch(error=>{console.error(error);process.exitCode=1});
+--- a/docs/guides/VIEWER-EXPLORER.md
++++ b/docs/guides/VIEWER-EXPLORER.md
+@@ -1,4 +1,11 @@
+ # RDG Viewer 2.0.3 — папки и полный граф Requirements
++
++**Исходник Viewer 2.2.0 (2026-10-19):** ручной раздел читает общую авторизованную
++композицию владельцев. В явном continuation-root можно создать принадлежащий
++этому файлу Action; результаты и история родителей приходят из общего writer.
++Прямая запись остаётся привязана к настроенному Helper-файлу. Проверен
++контроллер с настоящими writers; native picker/визуальный Windows/G2 путь не
++подтверждён. [Контракт и границы](RDG-DEEP-ACTION-AND-HISTORY.md).
+ 
+ **Исходник Viewer 2.1.0 (2026-10-19):** добавлен подключаемый ручной раздел
+ «План и история». Основной Viewer остаётся read-only без явно подключённого
+--- a/tests/rdg-v6-action-reconsider-writer.test.cjs
++++ b/tests/rdg-v6-action-reconsider-writer.test.cjs
+@@ -6,7 +6,7 @@
+ const stable=x=>JSON.stringify(x,(_,v)=>v&&typeof v==='object'&&!Array.isArray(v)?Object.fromEntries(Object.entries(v).sort(([a],[b])=>a.localeCompare(b,'en'))):v);
+ const ROOT=path.resolve(__dirname,'..');
+ const REQUIRED=['rdg-state.py','rdg-state-cli.cjs','rdg-state.js','rdg-catalog.js',
+-  'graph-apply.py','graph-index.py','rdg-catalog.py','graph-package.py','rdg-v7-model.py',
++  'graph-apply.py','graph-index.py','rdg-catalog.py','graph-package.py','rdg-v7-model.py','rdg-completion-context.py',
+   'rdg-v6-action-reconsider.py','rdg-v6-action-trust.py'];
+ function setup(){
+  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'rdg-v6-reconsider-'));
+--- a/tests/rdg-v6-action-writer.test.cjs
++++ b/tests/rdg-v6-action-writer.test.cjs
+@@ -9,7 +9,7 @@
+ const ROOT=path.resolve(__dirname,'..');
+ const projection=require('../tools/rdg-root-projection.js');
+ const REQUIRED=['rdg-state.py','rdg-state-cli.cjs','rdg-state.js','rdg-catalog.js',
+-  'graph-apply.py','graph-index.py','rdg-catalog.py','graph-package.py','rdg-v7-model.py',
++  'graph-apply.py','graph-index.py','rdg-catalog.py','graph-package.py','rdg-v7-model.py','rdg-completion-context.py',
+   'rdg-v6-action-reconsider.py','rdg-v6-action-trust.py'];
+ function setup(){
+  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'rdg-v6-action-writer-'));

@@ -1,0 +1,9 @@
+test_baseline_and_applicability_sidecars_are_unsupported (__main__.EventConsumerGuardTest.test_baseline_and_applicability_sidecars_are_unsupported) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_prepared_sidecar_journal_and_symlink_fail_closed (__main__.EventConsumerGuardTest.test_prepared_sidecar_journal_and_symlink_fail_closed) ... ok
+test_real_event_owner_record_blocks_current_only_adapter (__main__.EventConsumerGuardTest.test_real_event_owner_record_blocks_current_only_adapter) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.560s
+
+OK

@@ -1,0 +1,12 @@
+test_deep_unselected_branch_retains_canons_qrpe_and_distinct_roles (audit_semantic_case_0.DeepAction.test_deep_unselected_branch_retains_canons_qrpe_and_distinct_roles) ... ok
+test_decomposition_execution_does_not_mean_its_subgoals_are_achieved (audit_semantic_case_0.DeepAction.test_decomposition_execution_does_not_mean_its_subgoals_are_achieved) ... ok
+test_mixed_action_uses_correctness_for_itself_and_subgoals_for_parent (audit_semantic_case_0.DeepAction.test_mixed_action_uses_correctness_for_itself_and_subgoals_for_parent) ... ok
+test_whole_future_execution_withdrawal_new_variant_and_history (audit_semantic_case_1.Workflow.test_whole_future_execution_withdrawal_new_variant_and_history) ... ok
+test_unscheduled_action_stays_in_history_after_edit_and_no_second_execution (audit_semantic_case_1.Workflow.test_unscheduled_action_stays_in_history_after_edit_and_no_second_execution) ... ok
+test_subgoal_continuation_execution_writes_parent_history_and_future_once (audit_semantic_case_2.CrossFile.test_subgoal_continuation_execution_writes_parent_history_and_future_once) ... ok
+test_method_correctness_automatically_executes_composite_action_and_goal (audit_semantic_case_2.CrossFile.test_method_correctness_automatically_executes_composite_action_and_goal) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 19.596s
+
+OK

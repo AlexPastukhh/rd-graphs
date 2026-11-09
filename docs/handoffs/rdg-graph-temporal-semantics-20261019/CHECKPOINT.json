@@ -1,0 +1,79 @@
+{
+  "id": "RDG-GRAPH-TEMPORAL-SEMANTICS-20261019/v1",
+  "recordedAtUTC": "2026-10-19T05:48:07.720012+00:00",
+  "status": "USER-SEMANTICS-RECORDED-SOURCE-GAPS-CONFIRMED",
+  "stage4": "NOT ACCEPTED",
+  "definitionOwner": "docs/guides/RDG-V7-WORKING-GRAPHS.md",
+  "changedFiles": [
+    "README.md",
+    "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md",
+    "docs/guides/RDG-V7-WORKING-GRAPHS.md",
+    "docs/handoffs/rdg-graph-temporal-semantics-20261019/REVIEW.md",
+    "docs/handoffs/rdg-graph-temporal-semantics-20261019/source-probes.py"
+  ],
+  "beforeSHA256": {
+    "README.md": "7578be359dcd190648cce1478af493afad2fc912eb0dd25afdd9fc52aeeb7c6c",
+    "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md": "84722dabf62f00a66806f54df0ba47a6e3dc116d5f3ae2e133fe07048f935602",
+    "docs/guides/RDG-V7-WORKING-GRAPHS.md": "7fc2a7dfd8432af6590a0a119dfe15c54365800b1e3fb84f63ec12cfe06d22bc"
+  },
+  "fileSHA256": {
+    "README.md": "6ed994f9e14a446aecb4190a245e49f8b0310bacb8c3a2ebe2d665487433e65b",
+    "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md": "cd52675d0b98ca3d9ec5935d492a7f59ee6986b30f265391008f9e9380b1ff0d",
+    "docs/guides/RDG-V7-WORKING-GRAPHS.md": "e97e68bb4f6e8b6e24cc8f90f5f960d26c124bd975054b58fa161d52a60cf3a7",
+    "docs/handoffs/rdg-graph-temporal-semantics-20261019/REVIEW.md": "90eee48666934b9c96d891530837be522c357f212daacd739e6ee67be35a626e",
+    "docs/handoffs/rdg-graph-temporal-semantics-20261019/source-probes.py": "0e05da15d31760233f383d187c7f802d38a2133a27bcbbeb2a8079bf8658057d"
+  },
+  "inspectedSourceSHA256": {
+    "tools/graph-apply.py": "dd5e3ea3b7f460363e97683b8c6494b853ddf31bf098b53ec04a449e647444c7",
+    "tools/rdg-graph-api.py": "e02350e2a385cca0e18020e955e3db31002c378bcf1f247f8b41c8f88a913039",
+    "tools/rdg-v7-model.py": "b80af6d28482d20fd47184c6785cd96154e8faffb3725d0970323d3f65541d47",
+    "tools/rdg-temporal-plan.py": "a72b037a21740eec5d7ece9af29aa91f3fdf9fd59eb8a4b1da65faf62a8e9179",
+    "tools/rdg-state.js": "6d77706b91d05ea914a340b51c7b3c3b44feba0572ad40b9e241d37dc5cb1f69",
+    "tools/rdg-root-projection.js": "f1967db7517b32cfbacb1393de28bc7f93595325be6422981698920625fa3ed3"
+  },
+  "inMemoryProbes": {
+    "scope": "in-memory source probes, not new behavior acceptance",
+    "results": [
+      {
+        "probe": "candidate Action under R",
+        "accepted": true
+      },
+      {
+        "probe": "candidate Action future child via INTRODUCES",
+        "accepted": false,
+        "reason": "INTRODUCES requires selected Action or committed D: child"
+      },
+      {
+        "probe": "candidate Action future child via OUTCOME_OF",
+        "accepted": false,
+        "reason": "incompatible edge kinds: child"
+      },
+      {
+        "probe": "performed Action status",
+        "accepted": false,
+        "reason": "invalid action status; performed requires separate outcome contract"
+      },
+      {
+        "probe": "Graph API create_requirement",
+        "accepted": true,
+        "createdEdgeType": "DERIVES"
+      }
+    ]
+  },
+  "runtimeChanged": false,
+  "testsRerun": false,
+  "p2EvidenceRowsUnchanged": true,
+  "localLinksChecked": 101,
+  "criteriaStatus": "three existing criteria preserved by reference; exact definitions not recovered; WR-22 persistence formula not assumed equivalent",
+  "personalContextSearch": "disabled",
+  "openDesign": [
+    "leaf outcome record format",
+    "physical relation for optional Requirement creation Action",
+    "repeated occurrences and derived completion record"
+  ],
+  "userGraphWrites": false,
+  "windowsG2Verified": false,
+  "gitAvailable": false,
+  "published": false,
+  "next": "guarded preliminary Action-to-Requirement topology, completion semantics, then explicit temporal placement and common history"
+}

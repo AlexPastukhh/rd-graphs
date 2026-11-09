@@ -1,0 +1,15 @@
+{
+  "id": "RDG-HANDOFF-ACTION-PROJECTION-GROUP-LABELS-20261026/v1",
+  "status": "prototype_corrected_backend_unchanged",
+  "prototype": "tests/visual/rdg-ui-prototype.html",
+  "previous_handoff": "docs/handoffs/rdg-decision-action-layer-20261026/HANDOFF.md",
+  "actions_in_graph": false,
+  "actions_in_history_plan": true,
+  "group_visual": "short G labels on parent-to-decision membership edges with clickable details",
+  "overlapping_groups": true,
+  "low_level_filter": true,
+  "backend_migrated": false,
+  "browser_manual_pass": false,
+  "syntax_check": "PASS",
+  "smoke": "RDG_ACTION_PROJECTION_SMOKE PASS"
+}

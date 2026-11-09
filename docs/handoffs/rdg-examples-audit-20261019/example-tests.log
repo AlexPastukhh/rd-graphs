@@ -1,0 +1,364 @@
+TAP version 13
+# Subtest: arbitrary nested and empty folders are discovered without adding code branches; ready/working are explicit
+ok 1 - arbitrary nested and empty folders are discovered without adding code branches; ready/working are explicit
+  ---
+  duration_ms: 190.665918
+  type: 'test'
+  ...
+# Subtest: old plain graph with no metadata remains readable with unknown usage
+ok 2 - old plain graph with no metadata remains readable with unknown usage
+  ---
+  duration_ms: 97.024457
+  type: 'test'
+  ...
+# Subtest: nested workspace writer accepts a guarded transaction and refuses outside/read-only destinations
+ok 3 - nested workspace writer accepts a guarded transaction and refuses outside/read-only destinations
+  ---
+  duration_ms: 567.337293
+  type: 'test'
+  ...
+# Subtest: Examples offers exactly one full ready and one full working graph, no blank set folders
+ok 4 - Examples offers exactly one full ready and one full working graph, no blank set folders
+  ---
+  duration_ms: 250.042122
+  type: 'test'
+  ...
+# Subtest: six historical tiny context graphs are archived exactly, not silently deleted or misrepresented as active
+ok 5 - six historical tiny context graphs are archived exactly, not silently deleted or misrepresented as active
+  ---
+  duration_ms: 66.851041
+  type: 'test'
+  ...
+# Subtest: each full example owns the same three field roles and local theory, with no cross-identity answers
+ok 6 - each full example owns the same three field roles and local theory, with no cross-identity answers
+  ---
+  duration_ms: 25.624195
+  type: 'test'
+  ...
+# Subtest: Context CLI reports reused working answer and scenario details deferred; no third tiny full view required
+ok 7 - Context CLI reports reused working answer and scenario details deferred; no third tiny full view required
+  ---
+  duration_ms: 10439.22212
+  type: 'test'
+  ...
+# Subtest: interpreted and link-only canon are real additional methods on a child R and do not rewrite pinned historical choices
+ok 8 - interpreted and link-only canon are real additional methods on a child R and do not rewrite pinned historical choices
+  ---
+  duration_ms: 153.56336
+  type: 'test'
+  ...
+# Subtest: full graph has unique links and visibly different selected, potential and refinement semantics
+ok 9 - full graph has unique links and visibly different selected, potential and refinement semantics
+  ---
+  duration_ms: 3986.779764
+  type: 'test'
+  ...
+# Subtest: DERIVES composite stays in the original requirement column in both view modes
+ok 10 - DERIVES composite stays in the original requirement column in both view modes
+  ---
+  duration_ms: 82.637132
+  type: 'test'
+  ...
+# Subtest: tests/rdg-example-navigation-ux.test.cjs
+ok 3 - tests/rdg-example-navigation-ux.test.cjs
+  ---
+  duration_ms: 244.439344
+  type: 'test'
+  ...
+# Subtest: folder catalog directly lists full-graph roots without graph-set intermediate cards
+ok 12 - folder catalog directly lists full-graph roots without graph-set intermediate cards
+  ---
+  duration_ms: 145.08447
+  type: 'test'
+  ...
+# Subtest: working view is accepted R-only by default and independent coverage/detail switches
+ok 13 - working view is accepted R-only by default and independent coverage/detail switches
+  ---
+  duration_ms: 2634.75052
+  type: 'test'
+  ...
+# Subtest: click R opens its own one-wave display, and back returns full root
+ok 14 - click R opens its own one-wave display, and back returns full root
+  ---
+  duration_ms: 132.884869
+  type: 'test'
+  ...
+# Subtest: refinement is not a duplicate synthetic Requirement; noncausal sources accessible
+ok 15 - refinement is not a duplicate synthetic Requirement; noncausal sources accessible
+  ---
+  duration_ms: 70.062533
+  type: 'test'
+  ...
+# Subtest: full scoped context fields available without a setId
+ok 16 - full scoped context fields available without a setId
+  ---
+  duration_ms: 52.731828
+  type: 'test'
+  ...
+# Subtest: detailed full graph de-duplicates projected Options from separate R files
+ok 17 - detailed full graph de-duplicates projected Options from separate R files
+  ---
+  duration_ms: 301.6595
+  type: 'test'
+  ...
+# Subtest: sixteen migrated historical entry roots remain discoverable without set membership
+ok 18 - sixteen migrated historical entry roots remain discoverable without set membership
+  ---
+  duration_ms: 2.840774
+  type: 'test'
+  ...
+# Subtest: prepared multiwave prospective R are visible without acceptance
+ok 19 - prepared multiwave prospective R are visible without acceptance
+  ---
+  duration_ms: 5.375305
+  type: 'test'
+  ...
+# Subtest: independent projects sharing a Requirement id do not mix due to identitySpace
+ok 20 - independent projects sharing a Requirement id do not mix due to identitySpace
+  ---
+  duration_ms: 1.165948
+  type: 'test'
+  ...
+# Subtest: source graphs are not mutated by read-only projections
+ok 21 - source graphs are not mutated by read-only projections
+  ---
+  duration_ms: 25.439257
+  type: 'test'
+  ...
+# Subtest: writable paper branches, deeper local choice and unrelated root stay in correct scope
+ok 22 - writable paper branches, deeper local choice and unrelated root stay in correct scope
+  ---
+  duration_ms: 2.20864
+  type: 'test'
+  ...
+# Subtest: non-causal source views remain navigable but are never invented R descendants
+ok 23 - non-causal source views remain navigable but are never invented R descendants
+  ---
+  duration_ms: 1.127758
+  type: 'test'
+  ...
+# Subtest: root closure works without graphSets metadata
+ok 24 - root closure works without graphSets metadata
+  ---
+  duration_ms: 0.638046
+  type: 'test'
+  ...
+# Subtest: all 100 graphs have unique nodes/edges and valid root refs without rewriting protected files
+ok 25 - all 100 graphs have unique nodes/edges and valid root refs without rewriting protected files
+  ---
+  duration_ms: 963.803341
+  type: 'test'
+  ...
+# Subtest: modern option badge, full canon text, selected D canon and QRPE are discoverable
+ok 26 - modern option badge, full canon text, selected D canon and QRPE are discoverable
+  ---
+  duration_ms: 186.043142
+  type: 'test'
+  ...
+# Subtest: two active v7 examples carry canonical cases and explicit QRPE slots on every R/D/option
+ok 27 - two active v7 examples carry canonical cases and explicit QRPE slots on every R/D/option
+  ---
+  duration_ms: 22.013094
+  type: 'test'
+  ...
+# Subtest: two child R own their alternatives; index links exact R without a fabricated project commit
+ok 28 - two child R own their alternatives; index links exact R without a fabricated project commit
+  ---
+  duration_ms: 45.470775
+  type: 'test'
+  ...
+# Subtest: prepared option pins source revision/hash and canon; T1 uses that same evidence
+ok 29 - prepared option pins source revision/hash and canon; T1 uses that same evidence
+  ---
+  duration_ms: 2.542836
+  type: 'test'
+  ...
+# Subtest: T1 immutable at source revision 3 while current options pin revision 5 (historical T1 still 3); T2/T3 preserved
+ok 30 - T1 immutable at source revision 3 while current options pin revision 5 (historical T1 still 3); T2/T3 preserved
+  ---
+  duration_ms: 9.892209
+  type: 'test'
+  ...
+# Subtest: reparent and inactive R retain archived relations and do not spawn another accepted D
+ok 31 - reparent and inactive R retain archived relations and do not spawn another accepted D
+  ---
+  duration_ms: 0.561305
+  type: 'test'
+  ...
+# Subtest: Viewer sees selected canon with actual newlines and navigates to undecided child options
+ok 32 - Viewer sees selected canon with actual newlines and navigates to undecided child options
+  ---
+  duration_ms: 146.074177
+  type: 'test'
+  ...
+# Subtest: prepared and work preserve mapped data while goal applicability remains an educational assumption
+ok 33 - prepared and work preserve mapped data while goal applicability remains an educational assumption
+  ---
+  duration_ms: 80.480041
+  type: 'test'
+  ...
+# Subtest: ten potential relations are typed, exact-option sourced, and do not invent chosen Decisions
+ok 34 - ten potential relations are typed, exact-option sourced, and do not invent chosen Decisions
+  ---
+  duration_ms: 222.67791
+  type: 'test'
+  ...
+# Subtest: prepared viewer opens all branches through Collections without a work-only all-variants button
+ok 35 - prepared viewer opens all branches through Collections without a work-only all-variants button
+  ---
+  duration_ms: 179.476519
+  type: 'test'
+  ...
+# Subtest: working viewer keeps selected root path and shows unchosen prospective R by explicit toggle
+ok 36 - working viewer keeps selected root path and shows unchosen prospective R by explicit toggle
+  ---
+  duration_ms: 194.847516
+  type: 'test'
+  ...
+# Subtest: multi-file potential navigation restores parent collection, variant mode and focused Requirement on return
+ok 37 - multi-file potential navigation restores parent collection, variant mode and focused Requirement on return
+  ---
+  duration_ms: 545.726709
+  type: 'test'
+  ...
+# Subtest: a second prospective level returns through both previous graphs without losing options
+ok 38 - a second prospective level returns through both previous graphs without losing options
+  ---
+  duration_ms: 197.587305
+  type: 'test'
+  ...
+# Subtest: canon research advice belongs to a real method; no third pseudo-option or executed experiment
+ok 39 - canon research advice belongs to a real method; no third pseudo-option or executed experiment
+  ---
+  duration_ms: 38.490837
+  type: 'test'
+  ...
+# Subtest: catalog warns on changed prepared canon/revision without rewriting a T1 snapshot
+ok 40 - catalog warns on changed prepared canon/revision without rewriting a T1 snapshot
+  ---
+  duration_ms: 14588.745581
+  type: 'test'
+  ...
+# Subtest: a forged candidate graph root cannot masquerade as an existing Requirement projection
+ok 41 - a forged candidate graph root cannot masquerade as an existing Requirement projection
+  ---
+  duration_ms: 14420.019778
+  type: 'test'
+  ...
+# Subtest: potential graph links remain read-only index projections, never writable workspace operations
+ok 42 - potential graph links remain read-only index projections, never writable workspace operations
+  ---
+  duration_ms: 13679.524381
+  type: 'test'
+  ...
+# Subtest: single-R context lists stay inline without a group header
+ok 43 - single-R context lists stay inline without a group header
+  ---
+  duration_ms: 161.734882
+  type: 'test'
+  ...
+# Subtest: canonical situations are visible blocks and inspectable for selected and unselected options
+ok 44 - canonical situations are visible blocks and inspectable for selected and unselected options
+  ---
+  duration_ms: 294.127976
+  type: 'test'
+  ...
+# Subtest: ten prospective candidate R preserve reversible collection and candidate status
+ok 45 - ten prospective candidate R preserve reversible collection and candidate status
+  ---
+  duration_ms: 422.958987
+  type: 'test'
+  ...
+# Subtest: verbatim 0.2 source from original user upload remains unchanged
+ok 46 - verbatim 0.2 source from original user upload remains unchanged
+  ---
+  duration_ms: 8.380439
+  type: 'test'
+  ...
+# Subtest: three read-only reference views have intact IDs, edges and source provenance
+ok 47 - three read-only reference views have intact IDs, edges and source provenance
+  ---
+  duration_ms: 32.352243
+  type: 'test'
+  ...
+# Subtest: App Definition contains seven sibling R and concrete scenario-to-feature information
+ok 48 - App Definition contains seven sibling R and concrete scenario-to-feature information
+  ---
+  duration_ms: 10.999175
+  type: 'test'
+  ...
+# Subtest: Scenario delegation is one stable R ID and status QRPE does not assert completion
+ok 49 - Scenario delegation is one stable R ID and status QRPE does not assert completion
+  ---
+  duration_ms: 9.832339
+  type: 'test'
+  ...
+# Subtest: Behavior distinguishes shared scope, local D, pending candidates and hypothetical events
+ok 50 - Behavior distinguishes shared scope, local D, pending candidates and hypothetical events
+  ---
+  duration_ms: 11.014363
+  type: 'test'
+  ...
+# Subtest: bootstrap uses reference-index module but pilot has no preselected decisions
+ok 51 - bootstrap uses reference-index module but pilot has no preselected decisions
+  ---
+  duration_ms: 38.994185
+  type: 'test'
+  ...
+# Subtest: reference-only graphs reject updater commands without creating write locks
+ok 52 - reference-only graphs reject updater commands without creating write locks
+  ---
+  duration_ms: 313.046558
+  type: 'test'
+  ...
+# Subtest: a crowded functionality graph opens on its actual root and answer, not auxiliary records
+ok 53 - a crowded functionality graph opens on its actual root and answer, not auxiliary records
+  ---
+  duration_ms: 78.195407
+  type: 'test'
+  ...
+# Subtest: all relations keeps one level, and every original record and relationship remains accessible through levels
+ok 54 - all relations keeps one level, and every original record and relationship remains accessible through levels
+  ---
+  duration_ms: 586.997919
+  type: 'test'
+  ...
+# Subtest: searching a hidden auxiliary record exposes that record instead of dropping its inspector
+ok 55 - searching a hidden auxiliary record exposes that record instead of dropping its inspector
+  ---
+  duration_ms: 121.720903
+  type: 'test'
+  ...
+# Subtest: routed arrows do not cut through unrelated node rectangles in any bundled graph or view
+ok 56 - routed arrows do not cut through unrelated node rectangles in any bundled graph or view
+  ---
+  duration_ms: 2365.653846
+  type: 'test'
+  ...
+# Subtest: missing root and a self reference do not collapse or crash the renderer
+ok 57 - missing root and a self reference do not collapse or crash the renderer
+  ---
+  duration_ms: 20.268939
+  type: 'test'
+  ...
+# Subtest: inspecting one full-view relation dims other arrows but preserves both endpoint records
+ok 58 - inspecting one full-view relation dims other arrows but preserves both endpoint records
+  ---
+  duration_ms: 341.609297
+  type: 'test'
+  ...
+# Subtest: a fitted full graph stays inside the real viewport even at a fractional scale
+ok 59 - a fitted full graph stays inside the real viewport even at a fractional scale
+  ---
+  duration_ms: 143.83939
+  type: 'test'
+  ...
+1..59
+# tests 59
+# suites 0
+# pass 59
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 73657.221469

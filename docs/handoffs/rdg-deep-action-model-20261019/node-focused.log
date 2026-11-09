@@ -1,0 +1,226 @@
+TAP version 13
+# Subtest: general graph API creates/updates/deletes via signed normal operations (not Lens)
+ok 1 - general graph API creates/updates/deletes via signed normal operations (not Lens)
+  ---
+  duration_ms: 1653.14585
+  type: 'test'
+  ...
+# Subtest: archived-only R can be removed with snapshot, but not if still attached
+ok 2 - archived-only R can be removed with snapshot, but not if still attached
+  ---
+  duration_ms: 1299.359072
+  type: 'test'
+  ...
+# Subtest: reconsideration policy is separate from truth and blocks unapproved user-R edits
+ok 3 - reconsideration policy is separate from truth and blocks unapproved user-R edits
+  ---
+  duration_ms: 922.88429
+  type: 'test'
+  ...
+# Subtest: hard delete never silently destroys selected history or shared support
+ok 4 - hard delete never silently destroys selected history or shared support
+  ---
+  duration_ms: 1129.596609
+  type: 'test'
+  ...
+# Subtest: protected parent blocks unapproved child, edge removal and reparent (authorized owner allowed)
+ok 5 - protected parent blocks unapproved child, edge removal and reparent (authorized owner allowed)
+  ---
+  duration_ms: 1543.460346
+  type: 'test'
+  ...
+# Subtest: general reparent is history-preserving and safe for active DAG requirements
+ok 6 - general reparent is history-preserving and safe for active DAG requirements
+  ---
+  duration_ms: 1136.135537
+  type: 'test'
+  ...
+# Subtest: protected parent also gates selected Action introductions and shared-R link
+ok 7 - protected parent also gates selected Action introductions and shared-R link
+  ---
+  duration_ms: 2397.725377
+  type: 'test'
+  ...
+# Subtest: sixteen migrated historical entry roots remain discoverable without set membership
+ok 8 - sixteen migrated historical entry roots remain discoverable without set membership
+  ---
+  duration_ms: 4.031694
+  type: 'test'
+  ...
+# Subtest: prepared multiwave prospective R are visible without acceptance
+ok 9 - prepared multiwave prospective R are visible without acceptance
+  ---
+  duration_ms: 4.068494
+  type: 'test'
+  ...
+# Subtest: independent projects sharing a Requirement id do not mix due to identitySpace
+ok 10 - independent projects sharing a Requirement id do not mix due to identitySpace
+  ---
+  duration_ms: 5.182208
+  type: 'test'
+  ...
+# Subtest: source graphs are not mutated by read-only projections
+ok 11 - source graphs are not mutated by read-only projections
+  ---
+  duration_ms: 34.493252
+  type: 'test'
+  ...
+# Subtest: writable paper branches, deeper local choice and unrelated root stay in correct scope
+ok 12 - writable paper branches, deeper local choice and unrelated root stay in correct scope
+  ---
+  duration_ms: 3.755489
+  type: 'test'
+  ...
+# Subtest: non-causal source views remain navigable but are never invented R descendants
+ok 13 - non-causal source views remain navigable but are never invented R descendants
+  ---
+  duration_ms: 1.398575
+  type: 'test'
+  ...
+# Subtest: root closure works without graphSets metadata
+ok 14 - root closure works without graphSets metadata
+  ---
+  duration_ms: 0.800383
+  type: 'test'
+  ...
+# Subtest: viewer embeds the same root projection as the source module
+ok 15 - viewer embeds the same root projection as the source module
+  ---
+  duration_ms: 31.741976
+  type: 'test'
+  ...
+# Subtest: R-only full mode includes selected Action child Rs, without turning A into R
+ok 16 - R-only full mode includes selected Action child Rs, without turning A into R
+  ---
+  duration_ms: 152.941079
+  type: 'test'
+  ...
+# Subtest: detailed Viewer reveals Action, canon, QRPE, T1 without a new Decision
+ok 17 - detailed Viewer reveals Action, canon, QRPE, T1 without a new Decision
+  ---
+  duration_ms: 63.502678
+  type: 'test'
+  ...
+# Subtest: legacy Decision presentation continues to work
+ok 18 - legacy Decision presentation continues to work
+  ---
+  duration_ms: 94.07332
+  type: 'test'
+  ...
+# Subtest: candidate Action can be explored without being represented as chosen
+ok 19 - candidate Action can be explored without being represented as chosen
+  ---
+  duration_ms: 37.574339
+  type: 'test'
+  ...
+# Subtest: tampered T1 cannot make an Action accepted in Viewer
+ok 20 - tampered T1 cannot make an Action accepted in Viewer
+  ---
+  duration_ms: 38.820462
+  type: 'test'
+  ...
+# Subtest: local file Viewer shows opt-in A and canon without producing a Decision
+ok 21 - local file Viewer shows opt-in A and canon without producing a Decision
+  ---
+  duration_ms: 34.898358
+  type: 'test'
+  ...
+# Subtest: Viewer shows reconsidered Action as historical while independently supported R survives
+ok 22 - Viewer shows reconsidered Action as historical while independently supported R survives
+  ---
+  duration_ms: 77.472792
+  type: 'test'
+  ...
+# Subtest: real package writer creates opt-in Action graph with legacy schemaVersion 1
+ok 23 - real package writer creates opt-in Action graph with legacy schemaVersion 1
+  ---
+  duration_ms: 299.592384
+  type: 'test'
+  ...
+# Subtest: writer selects same Action ID with T1 evidence and grouped child Requirements
+ok 24 - writer selects same Action ID with T1 evidence and grouped child Requirements
+  ---
+  duration_ms: 967.576108
+  type: 'test'
+  ...
+# Subtest: legacy writer graph remains Option/Decision only without opt-in
+ok 25 - legacy writer graph remains Option/Decision only without opt-in
+  ---
+  duration_ms: 467.591259
+  type: 'test'
+  ...
+# Subtest: plain add_node cannot smuggle an Action into a legacy graph
+ok 26 - plain add_node cannot smuggle an Action into a legacy graph
+  ---
+  duration_ms: 455.345175
+  type: 'test'
+  ...
+# Subtest: unattributed or fake-actor Action selection leaves graph and revision unchanged
+ok 27 - unattributed or fake-actor Action selection leaves graph and revision unchanged
+  ---
+  duration_ms: 1312.009267
+  type: 'test'
+  ...
+# Subtest: selection requires real existing Action and protects candidate versus selected identity
+ok 28 - selection requires real existing Action and protects candidate versus selected identity
+  ---
+  duration_ms: 1432.967543
+  type: 'test'
+  ...
+# Subtest: generic update_node cannot rewrite Action or normative Requirement in opt-in graph
+ok 29 - generic update_node cannot rewrite Action or normative Requirement in opt-in graph
+  ---
+  duration_ms: 1562.464623
+  type: 'test'
+  ...
+# Subtest: reader rejects fake selected state without matching event and avoids false prepared adoption
+ok 30 - reader rejects fake selected state without matching event and avoids false prepared adoption
+  ---
+  duration_ms: 653.845528
+  type: 'test'
+  ...
+# Subtest: failed revision or child transaction never commits a partial Action
+ok 31 - failed revision or child transaction never commits a partial Action
+  ---
+  duration_ms: 851.443819
+  type: 'test'
+  ...
+# Subtest: Action accepts append-only QRPE without splitting into Option and Decision
+ok 32 - Action accepts append-only QRPE without splitting into Option and Decision
+  ---
+  duration_ms: 959.280506
+  type: 'test'
+  ...
+# Subtest: invalid Action canon and unscoped action model fail before writing
+ok 33 - invalid Action canon and unscoped action model fail before writing
+  ---
+  duration_ms: 453.842984
+  type: 'test'
+  ...
+# Subtest: cross-file reader recognizes selected Action introducing a root Requirement
+ok 34 - cross-file reader recognizes selected Action introducing a root Requirement
+  ---
+  duration_ms: 1032.056967
+  type: 'test'
+  ...
+# Subtest: real application-format graph.json fixture validates and projects Action without Decision
+ok 35 - real application-format graph.json fixture validates and projects Action without Decision
+  ---
+  duration_ms: 8.979375
+  type: 'test'
+  ...
+# Subtest: generic Action or child edge mutation is rejected even after selected event
+ok 36 - generic Action or child edge mutation is rejected even after selected event
+  ---
+  duration_ms: 1046.977978
+  type: 'test'
+  ...
+1..36
+# tests 36
+# suites 0
+# pass 36
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 25145.003591

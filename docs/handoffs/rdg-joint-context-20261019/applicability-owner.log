@@ -1,0 +1,15 @@
+test_after_receipt_recovery_preserves_witness (__main__.ApplicabilityOwnerTest.test_after_receipt_recovery_preserves_witness) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_bad_pin_receipt_and_unknown_time_fail_closed (__main__.ApplicabilityOwnerTest.test_bad_pin_receipt_and_unknown_time_fail_closed) ... ok
+test_cas_replay_and_correction_chain_preserve_old_record (__main__.ApplicabilityOwnerTest.test_cas_replay_and_correction_chain_preserve_old_record) ... ok
+test_conflict_is_preserved_and_reported (__main__.ApplicabilityOwnerTest.test_conflict_is_preserved_and_reported) ... ok
+test_crash_after_store_write_requires_recovery (__main__.ApplicabilityOwnerTest.test_crash_after_store_write_requires_recovery) ... ok
+test_durable_late_correction_has_two_distinct_knowledge_results (__main__.ApplicabilityOwnerTest.test_durable_late_correction_has_two_distinct_knowledge_results) ... ok
+test_missing_prior_receipt_blocks_next_commit (__main__.ApplicabilityOwnerTest.test_missing_prior_receipt_blocks_next_commit) ... ok
+test_permissions_and_revoke_before_prepare_block_write (__main__.ApplicabilityOwnerTest.test_permissions_and_revoke_before_prepare_block_write) ... ok
+test_prepared_recovery_finishes_once (__main__.ApplicabilityOwnerTest.test_prepared_recovery_finishes_once) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 3.167s
+
+OK

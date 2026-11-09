@@ -1,0 +1,29 @@
+{
+  "scope": "in-memory source probes, not new behavior acceptance",
+  "results": [
+    {
+      "probe": "candidate Action under R",
+      "accepted": true
+    },
+    {
+      "probe": "candidate Action future child via INTRODUCES",
+      "accepted": false,
+      "reason": "INTRODUCES requires selected Action or committed D: child"
+    },
+    {
+      "probe": "candidate Action future child via OUTCOME_OF",
+      "accepted": false,
+      "reason": "incompatible edge kinds: child"
+    },
+    {
+      "probe": "performed Action status",
+      "accepted": false,
+      "reason": "invalid action status; performed requires separate outcome contract"
+    },
+    {
+      "probe": "Graph API create_requirement",
+      "accepted": true,
+      "createdEdgeType": "DERIVES"
+    }
+  ]
+}

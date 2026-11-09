@@ -1,0 +1,7 @@
+{
+  "physicalGraphFiles": 100,
+  "indexGraphs": 100,
+  "bundleGraphs": 100,
+  "indexMatchesRebuild": true,
+  "bundleMatchesRebuild": true
+}

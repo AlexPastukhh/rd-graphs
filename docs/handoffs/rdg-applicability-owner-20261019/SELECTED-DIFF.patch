@@ -1,0 +1,888 @@
+--- a/tools/rdg-authority.py
++++ b/tools/rdg-authority.py
+@@ -91,8 +91,9 @@
+                 return ident, grant
+         raise ValueError("AUTH_TOKEN_UNKNOWN")
+ 
+-    def init_local(self, plan_capable=False):
++    def init_local(self, plan_capable=False, applicability_capable=False):
+         """Local operator bootstrap only; not a browser/Helper user identity proof."""
++        require(not applicability_capable or plan_capable, "PLAN_CAPABILITY_REQUIRED")
+         require(not self.path.exists(), "ALREADY_INITIALIZED")
+         token = new_token()
+         root = {"digest":token_digest(token), "label":"local-owner",
+@@ -102,6 +103,8 @@
+             root["permissions"] += ["plan.create", "plan.edit", "plan.branch", "plan.read",
+                                     "plan.accept", "plan.event_attest"]
+             root["scopes"].append("plans/")
++        if applicability_capable:
++            root["permissions"].append("plan.applicability.write")
+         self._save({"version":1, "revision":1, "grants":{"root":root}})
+         return {"id":"root", "token":token, "bootstrap":"LOCAL_ONLY"}
+ 
+@@ -257,12 +260,13 @@
+     parser.add_argument("command",choices=["init","issue","amend","revoke","list"])
+     parser.add_argument("--store",default=os.environ.get("RDG_AUTH_STORE"))
+     parser.add_argument("--plan-capable", action="store_true", help="Opt-in local bootstrap only; does not upgrade existing stores")
++    parser.add_argument("--applicability-capable", action="store_true", help="Explicitly opt in a new local Plan store to applicability writes")
+     options = parser.parse_args()
+     require(options.store, "STORE_PATH_REQUIRED")
+     auth = Authority(options.store)
+     request = json.load(__import__("sys").stdin) if options.command in (
+         "issue","amend","revoke") else None
+-    result = auth.init_local(plan_capable=options.plan_capable) if options.command == "init" else auth.manage(
++    result = auth.init_local(plan_capable=options.plan_capable, applicability_capable=options.applicability_capable) if options.command == "init" else auth.manage(
+         options.command, os.environ.get("RDG_AUTH_TOKEN"), request)
+     print(json.dumps(result,ensure_ascii=False))
+ 
+--- a/tests/rdg-exact-history.test.py
++++ b/tests/rdg-exact-history.test.py
+@@ -27,7 +27,8 @@
+         (self.graphs / "workspaces/.writer.lock").touch()
+         self.authpath = self.base / "authority.json"
+         self.auth = OWNER.AUTH.Authority(self.authpath)
+-        self.admin = self.auth.init_local(plan_capable=True)["token"]
++        self.admin = self.auth.init_local(plan_capable=True,
++            applicability_capable=getattr(self, "applicability_capable", False))["token"]
+         self.writer = self.grant(["plan.create", "plan.edit", "plan.branch"], [PLANREL])
+         self.reader_id, self.reader = self.grant(["plan.read", "graph.read"], [PLANREL, REL], with_id=True)
+         self.plan = json.loads((ROOT / "docs/examples/temporal-plan-candidate-v1.json").read_text())
+--- a/README.md
++++ b/README.md
+@@ -9,9 +9,12 @@
+ [Актуальный порядок исполнения и статусы P2-AC](docs/guides/RDG-CURRENT-EXECUTION-PLAN.md).
+ Исходный v4.1 остаётся владельцем определений и WR-ledger; актуальный план
+ показывает проверенное локальное продвижение и следующие gates.
+-[Двухвременной candidate rule probe](docs/guides/RDG-TWO-TIME-SCENARIO-PILOT.md)
+-проверяет раннее исключение и позднюю реконструкцию на временных источниках;
+-`effectiveAt` пока заявлен в запросе и не аттестован owner.
++[Двухвременное правило](docs/guides/RDG-TWO-TIME-SCENARIO-PILOT.md)
++и [локальная история применимости](docs/guides/RDG-APPLICABILITY-OWNER-PILOT.md)
++проверены на временных источниках: отдельный candidate owner сохраняет
++утверждение об `effectiveAt`, его исправления и время доступности. Истинность
++утверждения и полнота всех применимых источников ещё не доказаны.
++[Контрольная точка](docs/handoffs/rdg-applicability-owner-20261019/CHECKPOINT.md).
+ 
+ Исправлены пропуск вычисляемой группы зависимостей из declaration и потеря
+ смысловых `title`: контракт `rdg-temporal-review/v2` отклоняет неполное покрытие.
+@@ -28,8 +31,8 @@
+ свидетельство следующей версии. Graph writer фиксирует время после сохранения
+ графа. [Текущая контрольная точка](docs/handoffs/rdg-plan-availability-20261019/CHECKPOINT.md) ·
+ [предыдущая](docs/handoffs/rdg-known-at-20261019/CHECKPOINT.md).
+-Проверка `effectiveAt`, полный historical Gendocen и фактический T1-as-of
+-не реализованы.
++Полный выбор контекста по `effectiveAt`, historical Gendocen и фактический
++T1-as-of не реализованы.
+ 
+ [Review P0/P1](docs/handoffs/rdg-progress-review-20261019-v1/REVIEW.md)
+ сохранён как основание исправлений. Его F-P-PROGRESS-01 закрыт в локальном пилоте;
+--- a/docs/guides/RDG-CURRENT-EXECUTION-PLAN.md
++++ b/docs/guides/RDG-CURRENT-EXECUTION-PLAN.md
+@@ -18,14 +18,14 @@
+ |---|---|---|
+ | P0/P0.1 | Исправлены branch membership, независимая проверка полноты declaration/subscriptions и смысловых title для текущих проекций; scoped acceptance PASS. | Несколько событий, новый lifecycle и исторический контекст ещё не входят в coverage. |
+ | P1 | [Контракт owner/version/as-of](RDG-TEMPORAL-PLAN-OWNER-CONTRACT-P1.md) подготовлен как Candidate. | PR-P1-01..05 не committed; production owner и доверенный источник событий не выбраны. |
+-| P2 | Candidate Plan owner: отдельные права, CAS, история, recovery; точные Plan/RDG snapshots и ограниченный `knownAt`, включая последнюю новую версию Plan. Read-only [правило двух времён](RDG-TWO-TIME-SCENARIO-PILOT.md) проверено на переданных candidate assertions. [Последнее evidence](../handoffs/rdg-two-time-scenario-20261019/CHECKPOINT.md). | Нет owner history применимости, accepted future baseline, event attestation и выбора полного контекста по `effectiveAt`. Старые Graph journals без времени и старый последний Plan без квитанции не проходят `knownAt`. |
++| P2 | Candidate Plan owner, точные Plan/RDG snapshots и ограниченный `knownAt`. Отдельная [локальная история применимости](RDG-APPLICABILITY-OWNER-PILOT.md) сохраняет candidate assertions, correction links и квитанции доступности; ранняя и поздняя реконструкции проходят на временных источниках. [Последнее evidence](../handoffs/rdg-applicability-owner-20261019/CHECKPOINT.md). | Утверждение `effectiveAt` не аттестовано, нет trusted event source, accepted future baseline и выбора полного контекста. Старые Graph journals без времени и старый последний Plan без квитанции не проходят `knownAt`. |
+ | P3 | Есть ограниченные F-R/F-U/F-O, F-P preflight, Canon context review и read-only Plan impact. | Полная семантика Finding/Proposal/Canon, независимое подтверждение F-P, несколько событий и различение позднего знания о T1 от изменения после T1. |
+ | P4 | Есть foundations рабочих/research-графов. | Сквозная передача между чатами, один смысловой owner при promotion/link, archive/retrieval и успешная проверка без искусственного Finding. |
+ | P5 | Есть исходники Viewer и синтетический Gendocen runtime proof. | Helper grants, Plan editor/timeline, читаемая Markdown-проекция, внешний consumer и отдельная проверка установки в Windows/G2. |
+ | P6–P7 | Удалённая запись и вывод legacy из эксплуатации не начинались. | Canonical GitHub owner/branch/writer, multi-file CAS/failure proof, проверка лицензии движка; затем доказанное замещение legacy. |
+ 
+-В последнем кодовом срезе проверено правило выбора на временных Plan/RDG;
+-адресные тесты и их scope указаны в checkpoint. Ранее прошли 32 Python-теста
++В последнем кодовом срезе проверены долговечная запись и правило выбора
++на временных Plan/RDG; адресные тесты и их scope указаны в checkpoint. Ранее прошли 32 Python-теста
+ и синтетический Gendocen smoke для Plan availability, а после изменения
+ Graph writer — 405 Node-тестов.
+ Gendocen проверял **текущие** проекции, а resolver отдельно разрешал точные
+@@ -34,19 +34,16 @@
+ 
+ ## Следующие локальные срезы
+ 
+-1. **Долговечная история применимости.** Модельное правило поздней
+-   поправки проверено на временных источниках, но сами assertions пока
+-   передаются клиентом. Записать под отдельным owner и правом записи
+-   версионированные записи применимости
+-   Plan/ветви/события: owner, scope, точный source revision, `recordedAt`,
+-   `effectiveAt` с исходной точностью, correction/supersedes и степень
+-   подтверждения. Не делать из условного outcome факт. Проверить пару r1
+-   10:00 / r2 14:00 с действием r2 с 10:30: `knownAt=11:00` исключает r2,
+-   `knownAt=15:00` допускает её только как позднюю реконструкцию. Конфликт
+-   outcomes, неизвестная дата и несовместимая точность уже дают явный
+-   отказ в модельном сценарии. **Следующий gate:** повторить P2-AC-13/15/16
+-   на долговечной owner history с recovery, без подстановки current и без
+-   переписывания T1. До trusted event source результат остаётся Candidate.
++1. **Применимость: локальная история готова, доказательство полноты открыто.**
++   Отдельный candidate owner сохраняет версии утверждений, точные Plan/RDG
++   pins, `recordedAt`, `effectiveAt` с исходной точностью и `supersedes`.
++   Отдельное право, CAS, квитанция после записи и recovery проверены на
++   tempfile. Ранний `knownAt` исключает позднюю поправку; поздний допускает
++   её только как кандидатную реконструкцию. Несвязанные outcomes дают
++   конфликт, а не автоматический выбор. **Следующий gate:** определить
++   полноту применимых owners/событий и независимое подтверждение времени
++   применимости; испытать P2-AC-13/15/16 на таком полном контексте вместе
++   с историческим Gendocen. До trusted event source результат Candidate.
+ 2. **Отдельный lifecycle и права.** Добавить принятие/замену будущего
+    baseline отдельно от candidate edit и от `graph.select_action`. Разделить
+    заявление о событии, attestation и verification; исправления сохраняют
+@@ -87,10 +84,10 @@
+ | 10 | PARTIAL | Date/instant/relative subset проверен; новые precision, units и выполнимость окна не доказаны. |
+ | 11 | PARTIAL | Клиентские actual fields отклоняются; доверенный event source отсутствует. |
+ | 12 | PARTIAL | Plan editor не получает graph.select_action; event-attest actor ещё отсутствует. |
+-| 13 | PARTIAL | Модельная correction chain сохраняет прежнюю ссылку, несвязанные outcomes дают конфликт; нет долговечной owner history и attestation. |
++| 13 | PARTIAL | Локальная owner history сохраняет исходную запись и correction link; конфликт outcomes отклоняется при чтении. Нет trusted attestation и полноты контекста. |
+ | 14 | Локальный PASS | Точные Plan/RDG revision+digest обязательны, missing/mismatch/current fallback отклоняются. |
+-| 15 | PARTIAL | В read-only candidate-модели ранний knownAt исключает позднюю r2; утверждение effectiveAt ещё клиентское. |
+-| 16 | PARTIAL | В модели поздний knownAt допускает r2 как реконструкцию без изменения T1; полный as-of не подтверждён. |
++| 15 | PARTIAL | По квитанциям Plan и отдельного журнала ранний knownAt исключает позднюю r2; само effectiveAt заявлено без независимой проверки. |
++| 16 | PARTIAL | После долговечной записи поздний knownAt допускает r2 как кандидатную реконструкцию; фактический T1 и полный as-of не подтверждены. |
+ | 17 | PARTIAL | Candidate journal/failpoints/recovery проверены; accepted baseline/events не существуют. |
+ | 18 | OPEN | Coverage для нового lifecycle/event и historical runtime ещё не проверен. |
+ | 19 | PARTIAL | Hash и технический bearer не принимаются за источник без snapshot; независимая human/event attestation отсутствует. |
+@@ -101,7 +98,8 @@
+ [точные snapshots](../handoffs/rdg-exact-history-20261019/CHECKPOINT.json),
+ [Graph knownAt](../handoffs/rdg-known-at-20261019/CHECKPOINT.json),
+ [Plan availableBy](../handoffs/rdg-plan-availability-20261019/CHECKPOINT.json),
+-[двухвременной rule probe](../handoffs/rdg-two-time-scenario-20261019/CHECKPOINT.json).
++[двухвременной rule probe](../handoffs/rdg-two-time-scenario-20261019/CHECKPOINT.json),
++[owner history применимости](../handoffs/rdg-applicability-owner-20261019/CHECKPOINT.json).
+ Полные статусы WR-01..53 сохраняются в [v4.1 ledger](../handoffs/rdg-prework-v4.1-final-20261018/WR-EVIDENCE-LEDGER.md);
+ новые checkpoints меняют только названный scope. При следующем срезе обновлять
+ эту таблицу вместе с доказательством, не повышая PARTIAL до общего PASS.
+--- /dev/null
++++ b/tools/rdg-applicability-owner.py
+@@ -0,0 +1,356 @@
++#!/usr/bin/env python3
++"""Candidate applicability owner on explicit synthetic roots.
++
++Stores unverified assertions and exact pins, never a factual event or accepted
++baseline. A prepared journal is durable acceptance; availability is witnessed
++only after the store write. This is not an OS security boundary.
++"""
++import argparse
++import copy
++import datetime as dt
++import hashlib
++from importlib.machinery import SourceFileLoader
++import json
++import os
++from pathlib import Path
++import re
++
++HERE = Path(__file__).resolve().parent
++MODEL = SourceFileLoader("applicability_rule", str(HERE / "rdg-two-time-scenario.py")).load_module()
++HISTORY = MODEL.HISTORY
++OWNER = MODEL.OWNER
++ID = MODEL.ID
++JOURNAL = "_rdg-applicability-journal.json"
++NAME = ".rdg-applicability.json"
++TX = re.compile(r"[A-Za-z0-9_-]{1,120}\Z")
++
++
++def require(ok, code):
++    if not ok:
++        raise ValueError("APPLICABILITY_OWNER_" + code)
++
++
++def target_path(root, plan_file):
++    OWNER.safe(root, plan_file)
++    path = OWNER.safe(root, plan_file).with_name(NAME)
++    require(not path.is_symlink() and path.resolve().is_relative_to(root), "PATH_INVALID")
++    return path
++
++
++def journal_path(root):
++    path = root / JOURNAL
++    require(not path.is_symlink() and path.resolve().is_relative_to(root), "JOURNAL_PATH_INVALID")
++    return path
++
++
++def receipt_path(root, plan_file, revision):
++    require(type(revision) is int and revision >= 1, "REVISION_INVALID")
++    path = OWNER.safe(root, plan_file).with_name(f".rdg-applicability-available-r{revision}.json")
++    require(not path.is_symlink() and path.resolve().is_relative_to(root), "RECEIPT_PATH_INVALID")
++    return path
++
++
++def validate_assertion(assertion):
++    require(isinstance(assertion, dict) and
++            set(assertion) == {"id", "effectiveAt", "supersedes", "source", "eventClaim"} and
++            isinstance(assertion["id"], str) and ID.fullmatch(assertion["id"]) and
++            (assertion["supersedes"] is None or
++             isinstance(assertion["supersedes"], str) and ID.fullmatch(assertion["supersedes"])),
++            "ASSERTION_SCHEMA")
++    MODEL.effective(assertion["effectiveAt"])
++    source = assertion["source"]
++    HISTORY.validate_query(source)
++    require("knownAt" not in source and
++            isinstance(source["scenario"]["branchId"], str) and
++            isinstance(source["scenario"]["outcome"], str), "EXACT_SOURCE_REQUIRED")
++    claim = assertion["eventClaim"]
++    if claim is not None:
++        require(isinstance(claim, dict) and
++                set(claim) == {"eventStepId", "outcome", "verification"} and
++                isinstance(claim["eventStepId"], str) and
++                claim["outcome"] == source["scenario"]["outcome"] and
++                claim["verification"] == "unverified", "EVENT_CLAIM_INVALID")
++    return assertion
++
++
++def validate_store(store, plan_file):
++    require(isinstance(store, dict) and set(store) == {"schemaVersion", "kind", "planFile",
++            "revision", "records", "transactions"} and store["schemaVersion"] == 1 and
++            store["kind"] == "candidateApplicabilityOwner" and store["planFile"] == plan_file and
++            type(store["revision"]) is int and store["revision"] >= 1 and
++            isinstance(store["records"], list) and len(store["records"]) == store["revision"] and
++            isinstance(store["transactions"], dict), "STORE_SCHEMA")
++    previous, clock, txs, ids, plan_key, branch, precision = None, None, {}, {}, None, None, None
++    for number, record in enumerate(store["records"], 1):
++        require(isinstance(record, dict) and
++                set(record) == {"revision", "assertion", "recordedAt", "previousDigest",
++                                "digest", "transactionId", "requestSHA256", "receipt"} and
++                type(record["revision"]) is int and record["revision"] == number and
++                record["previousDigest"] == previous and
++                record["digest"] == OWNER.digest({k:v for k,v in record.items() if k != "digest"}),
++                "RECORD_HASH")
++        assertion = validate_assertion(record["assertion"])
++        source = assertion["source"]
++        pin = source["plan"]
++        key = pin["file"], pin["identitySpace"], pin["planId"]
++        current_precision, current_effective = MODEL.effective(assertion["effectiveAt"])
++        require(pin["file"] == plan_file and
++                (plan_key is None or key == plan_key) and
++                (branch is None or source["scenario"]["branchId"] == branch) and
++                (precision is None or current_precision == precision) and
++                assertion["id"] not in ids and
++                all(pin["revision"] != r["assertion"]["source"]["plan"]["revision"]
++                    for r in store["records"][:number-1]), "SCOPE_OR_REVISION_CONFLICT")
++        prior = ids.get(assertion["supersedes"])
++        require(assertion["supersedes"] is None or
++                prior is not None and
++                prior["assertion"]["source"]["plan"]["revision"] < pin["revision"] and
++                MODEL.effective(prior["assertion"]["effectiveAt"])[1] <= current_effective and
++                (prior["assertion"]["eventClaim"] is None) == (assertion["eventClaim"] is None) and
++                (assertion["eventClaim"] is None or
++                 prior["assertion"]["eventClaim"]["eventStepId"] == assertion["eventClaim"]["eventStepId"]),
++                "CORRECTION_CHAIN_INVALID")
++        now = OWNER.instant(record["recordedAt"])
++        require(clock is None or now >= clock, "CLOCK_ORDER")
++        receipt = record["receipt"]
++        require(isinstance(receipt, dict) and
++                set(receipt) == {"mode", "grantId", "grantRevision", "principal"} and
++                receipt["mode"] == "bearer" and
++                receipt["principal"] == "bearer:" + receipt["grantId"] and
++                type(receipt["grantRevision"]) is int, "TECHNICAL_RECEIPT_INVALID")
++        tx = record["transactionId"]
++        require(isinstance(tx, str) and TX.fullmatch(tx) and tx not in txs and
++                isinstance(record["requestSHA256"], str), "TRANSACTION_INVALID")
++        txs[tx] = {"requestSHA256": record["requestSHA256"],
++                   "revision": number, "recordDigest": record["digest"]}
++        previous, clock, plan_key, branch, precision = record["digest"], now, key, source["scenario"]["branchId"], current_precision
++        ids[assertion["id"]] = record
++    require(store["transactions"] == txs, "TRANSACTION_INDEX_INVALID")
++    return store
++
++
++def read_receipt(root, plan_file, record):
++    path = receipt_path(root, plan_file, record["revision"])
++    if not path.exists():
++        return None
++    receipt = HISTORY.load_bytes(path.read_bytes())
++    require(isinstance(receipt, dict) and
++            set(receipt) == {"schemaVersion", "planFile", "revision", "recordDigest", "availableBy"} and
++            receipt["schemaVersion"] == 1 and receipt["planFile"] == plan_file and
++            receipt["revision"] == record["revision"] and
++            receipt["recordDigest"] == record["digest"], "AVAILABILITY_RECEIPT_INVALID")
++    raw = dt.datetime.fromisoformat(receipt["availableBy"].replace("Z", "+00:00"))
++    require(raw.utcoffset() == dt.timedelta(0) and
++            OWNER.instant(receipt["availableBy"]) >= OWNER.instant(record["recordedAt"]),
++            "AVAILABILITY_TIME_INVALID")
++    return receipt
++
++
++def failpoint(name):
++    if os.environ.get("RDG_APPLICABILITY_TEST_CRASH") == name:
++        os._exit(91)
++
++
++def replay(root, journal):
++    require(isinstance(journal, dict) and
++            set(journal) == {"schemaVersion", "state", "planFile", "transactionId",
++                             "beforeSHA256", "afterSHA256", "after"} and
++            journal["schemaVersion"] == 1 and journal["state"] == "prepared" and
++            isinstance(journal["planFile"], str) and OWNER.TARGET.fullmatch(journal["planFile"]),
++            "JOURNAL_INVALID")
++    plan_file = journal["planFile"]
++    path = target_path(root, plan_file)
++    store = validate_store(journal["after"], plan_file)
++    record = store["records"][-1]
++    require(record["transactionId"] == journal["transactionId"] and
++            OWNER.digest(store) == journal["afterSHA256"] and
++            OWNER.raw_hash(path) in (journal["beforeSHA256"], journal["afterSHA256"]),
++            "RECOVERY_CONFLICT")
++    if journal["beforeSHA256"] is None:
++        require(store["revision"] == 1, "JOURNAL_CHAIN_INVALID")
++    else:
++        require(store["revision"] > 1 and
++                OWNER.digest({**store, "revision": store["revision"] - 1,
++                    "records": store["records"][:-1],
++                    "transactions": {k:v for k,v in store["transactions"].items()
++                        if k != record["transactionId"]}}) == journal["beforeSHA256"],
++                "JOURNAL_CHAIN_INVALID")
++    existing = read_receipt(root, plan_file, record)
++    prior = read_receipt(root, plan_file, store["records"][-2]) if len(store["records"]) > 1 else None
++    require(len(store["records"]) == 1 or prior is not None,
++            "PREVIOUS_AVAILABILITY_BOUND_NOT_AVAILABLE")
++    if existing and prior:
++        require(OWNER.instant(existing["availableBy"]) >= OWNER.instant(prior["availableBy"]),
++                "AVAILABILITY_CLOCK_ORDER")
++    if OWNER.raw_hash(path) != journal["afterSHA256"]:
++        OWNER.atomic(path, store)
++    failpoint("after-store-write")
++    if existing is None:
++        now = dt.datetime.now(dt.timezone.utc)
++        require(now >= OWNER.instant(record["recordedAt"]) and
++                (prior is None or now >= OWNER.instant(prior["availableBy"])),
++                "AVAILABILITY_CLOCK_ORDER")
++        OWNER.atomic(receipt_path(root, plan_file, record["revision"]), {
++            "schemaVersion": 1, "planFile": plan_file, "revision": record["revision"],
++            "recordDigest": record["digest"], "availableBy": now.isoformat()})
++    failpoint("after-availability-write")
++    journal_path(root).unlink()
++    OWNER.sync_dir(root)
++
++
++def recover(root):
++    root = OWNER.root_path(root)
++    with OWNER.root_lock(root, True):
++        path = journal_path(root)
++        if not path.exists():
++            return {"recovered": False, "idempotent": True}
++        journal = HISTORY.load_bytes(path.read_bytes())
++        replay(root, journal)
++        return {"recovered": True, "transactionId": journal["transactionId"],
++                "policy": "finish-durably-prepared"}
++
++
++def apply(root, graphs_root, authority_store, token, request, before_prepare=None):
++    root = OWNER.root_path(root)
++    require(isinstance(request, dict) and
++            set(request) == {"transactionId", "file", "expectedRevision", "assertion"} and
++            isinstance(request["transactionId"], str) and TX.fullmatch(request["transactionId"]) and
++            type(request["expectedRevision"]) is int and request["expectedRevision"] >= 0,
++            "REQUEST_SCHEMA")
++    plan_file, assertion = request["file"], copy.deepcopy(request["assertion"])
++    target_path(root, plan_file)
++    validate_assertion(assertion)
++    require(assertion["source"]["plan"]["file"] == plan_file, "PLAN_SCOPE_MISMATCH")
++    auth_path = Path(authority_store).resolve()
++    require(not auth_path.is_relative_to(root), "AUTH_STORE_MUST_BE_OUTSIDE_PLAN_ROOT")
++    authority = OWNER.AUTH.Authority(auth_path)
++    authority.authorize_plan(token, ["plan.applicability.write"], plan_file)
++    targets = sorted({p["graphFile"] for p in assertion["source"]["graphs"]})
++    authority.authorize_snapshot_read(token, plan_file, targets)
++    exact = HISTORY.resolve(root, graphs_root, auth_path, token, assertion["source"])
++    branch = next(b for b in exact["plan"]["branches"]
++                  if b["id"] == assertion["source"]["scenario"]["branchId"])
++    if assertion["eventClaim"] is not None:
++        require(assertion["eventClaim"]["eventStepId"] == branch["eventStepId"],
++                "EVENT_STEP_MISMATCH")
++    request_hash = OWNER.digest(request)
++    with OWNER.root_lock(root, True):
++        require(not journal_path(root).exists() and
++                not OWNER.safe(root, OWNER.JOURNAL, True).exists(), "RECOVERY_REQUIRED")
++        path = target_path(root, plan_file)
++        old_hash = OWNER.raw_hash(path)
++        old = validate_store(HISTORY.load_bytes(path.read_bytes()), plan_file) if path.exists() else None
++        if old:
++            require(read_receipt(root, plan_file, old["records"][-1]) is not None,
++                    "PREVIOUS_AVAILABILITY_BOUND_NOT_AVAILABLE")
++        tx = request["transactionId"]
++        if old and tx in old["transactions"]:
++            item = old["transactions"][tx]
++            require(item["requestSHA256"] == request_hash, "TRANSACTION_REPLAY_CONFLICT")
++            authority.authorize_plan(token, ["plan.applicability.write"], plan_file)
++            authority.authorize_snapshot_read(token, plan_file, targets)
++            return {"idempotent": True, **item}
++        expected = old["revision"] if old else 0
++        require(request["expectedRevision"] == expected, "CAS_MISMATCH")
++        if before_prepare:
++            before_prepare()
++        with authority.checked_plan_transaction(token, ["plan.applicability.write"], plan_file) as verified:
++            authority.authorize_snapshot_read(token, plan_file, targets)
++            recorded = dt.datetime.now(dt.timezone.utc)
++            require(not old or recorded >= OWNER.instant(old["records"][-1]["recordedAt"]),
++                    "CLOCK_ORDER")
++            record = {"revision": expected + 1, "assertion": assertion,
++                      "recordedAt": recorded.isoformat(),
++                      "previousDigest": old["records"][-1]["digest"] if old else None,
++                      "transactionId": tx, "requestSHA256": request_hash,
++                      "receipt": {"mode": "bearer", **verified,
++                                  "principal": "bearer:" + verified["grantId"]}}
++            record["digest"] = OWNER.digest(record)
++            store = copy.deepcopy(old) if old else {"schemaVersion": 1,
++                    "kind": "candidateApplicabilityOwner", "planFile": plan_file,
++                    "revision": 0, "records": [], "transactions": {}}
++            store["revision"] += 1
++            store["records"].append(record)
++            store["transactions"][tx] = {"requestSHA256": request_hash,
++                    "revision": record["revision"], "recordDigest": record["digest"]}
++            validate_store(store, plan_file)
++            require(OWNER.raw_hash(path) == old_hash, "SOURCE_CHANGED_DURING_PREPARE")
++            journal = {"schemaVersion": 1, "state": "prepared", "planFile": plan_file,
++                       "transactionId": tx, "beforeSHA256": old_hash,
++                       "afterSHA256": OWNER.digest(store), "after": store}
++            OWNER.atomic(journal_path(root), journal)
++            failpoint("prepared")
++            replay(root, journal)
++            return {"idempotent": False, **store["transactions"][tx],
++                    "technicalReceipt": record["receipt"]}
++
++
++def resolve(root, graphs_root, authority_store, token, plan_file, known_at, effective_at):
++    root = OWNER.root_path(root)
++    cutoff = MODEL.known(known_at)
++    MODEL.effective(effective_at)
++    authority = OWNER.AUTH.Authority(authority_store)
++    authority.authorize_plan(token, ["plan.read"], plan_file)
++    with OWNER.root_lock(root, False):
++        require(not journal_path(root).exists() and
++                not OWNER.safe(root, OWNER.JOURNAL, True).exists(), "RECOVERY_REQUIRED")
++        path = target_path(root, plan_file)
++        require(path.is_file(), "HISTORY_NOT_FOUND")
++        store = validate_store(HISTORY.load_bytes(path.read_bytes()), plan_file)
++        present = []
++        for record in store["records"]:
++            receipt = read_receipt(root, plan_file, record)
++            require(receipt is not None, "AVAILABILITY_BOUND_NOT_AVAILABLE")
++            if OWNER.instant(receipt["availableBy"]) <= cutoff:
++                present.append((record, receipt))
++    require(present, "NO_KNOWN_APPLICABILITY_RECORD")
++    assertions = [copy.deepcopy(r["assertion"]) for r, _ in present]
++    candidate = MODEL.resolve(root, graphs_root, authority_store, token,
++                              {"schemaVersion": 1, "mode": "candidate-two-time-scenario",
++                               "knownAt": known_at, "effectiveAt": effective_at,
++                               "assertions": assertions})
++    authority.authorize_snapshot_read(token, plan_file,
++        sorted({pin["graphFile"] for assertion in assertions
++                for pin in assertion["source"]["graphs"]}))
++    candidate["ownerHistory"] = {"kind": "candidateApplicabilityOwner",
++            "planFile": plan_file, "revision": store["revision"],
++            "availableRecords": [{"id": r["assertion"]["id"],
++                                  "recordDigest": r["digest"],
++                                  "recordedAt": r["recordedAt"],
++                                  "availableBy": receipt["availableBy"]}
++                                 for r, receipt in present],
++            "assertionsDurablyRecorded": True,
++            "completeApplicableContextVerified": False}
++    candidate["provenance"]["applicabilityAttested"] = False
++    candidate["provenance"]["twoTimeAsOfResolved"] = False
++    return candidate
++
++
++def main():
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("command", choices=("apply", "read", "recover"))
++    parser.add_argument("--root", required=True, type=Path)
++    parser.add_argument("--graphs-root", type=Path)
++    parser.add_argument("--store", default=os.environ.get("RDG_AUTH_STORE"))
++    parser.add_argument("--request", type=Path)
++    parser.add_argument("--file")
++    parser.add_argument("--known-at")
++    parser.add_argument("--effective-at")
++    args = parser.parse_args()
++    token = os.environ.get("RDG_AUTH_TOKEN")
++    if args.command == "recover":
++        result = recover(args.root)
++    elif args.command == "apply":
++        require(args.graphs_root and args.store and args.request, "ARGUMENTS_REQUIRED")
++        result = apply(args.root, args.graphs_root, args.store, token,
++                       HISTORY.load_bytes(args.request.read_bytes()))
++    else:
++        require(args.graphs_root and args.store and args.file and args.known_at and
++                args.effective_at, "ARGUMENTS_REQUIRED")
++        result = resolve(args.root, args.graphs_root, args.store, token,
++                         args.file, args.known_at, args.effective_at)
++    print(json.dumps(result, ensure_ascii=False, sort_keys=True, indent=2))
++
++
++if __name__ == "__main__":
++    main()
+--- /dev/null
++++ b/tests/rdg-applicability-owner.test.py
+@@ -0,0 +1,241 @@
++#!/usr/bin/env python3
++"""Durable candidate applicability records, recovery and two-time reconstruction."""
++import copy
++import datetime as dt
++from importlib.machinery import SourceFileLoader
++import json
++import os
++from pathlib import Path
++import subprocess
++import sys
++import time
++import unittest
++
++ROOT = Path(__file__).resolve().parents[1]
++OWNER = SourceFileLoader("test_applicability_owner", str(ROOT / "tools/rdg-applicability-owner.py")).load_module()
++FIXTURE = SourceFileLoader("applicability_exact_fixture", str(ROOT / "tests/rdg-exact-history.test.py")).load_module()
++PLANREL = FIXTURE.PLANREL
++
++
++class ApplicabilityOwnerTest(unittest.TestCase):
++    def setUp(self):
++        self.fixture = FIXTURE.ExactHistoryTest("test_exact_source_is_stable_after_current_graph_changes")
++        self.fixture.applicability_capable = True
++        self.fixture.setUp()
++        self.addCleanup(self.fixture.doCleanups)
++        self.fixture.add_journal("graph-create", None, self.fixture.graph,
++            recorded_at=dt.datetime.now(dt.timezone.utc).isoformat())
++        self.auth = self.fixture.auth
++        self.admin = self.fixture.admin
++        self.writer = self.fixture.grant(["plan.applicability.write", "plan.read", "graph.read"],
++                                          [PLANREL, FIXTURE.REL])
++        self.reader = self.fixture.reader
++        self.source1 = copy.deepcopy(self.fixture.query)
++        self.first = self.assertion("C1", "2026-10-18T10:00:00+00:00", None, self.source1)
++        self.apply("app-r1", 0, self.first)
++        self.bound1 = self.receipt(1)["availableBy"]
++        time.sleep(0.02)
++        later = copy.deepcopy(self.fixture.plan)
++        later["revision"] = 2
++        later["title"] = "Later recorded correction"
++        OWNER.OWNER.apply_request(self.fixture.plans, self.fixture.authpath,
++                                  self.fixture.writer, {"transactionId": "plan-r2",
++            "op": "edit", "file": PLANREL, "expectedRevision": 1, "plan": later})
++        meta = OWNER.OWNER.read_snapshot(self.fixture.plans, PLANREL, 2)["provenance"]
++        self.source2 = copy.deepcopy(self.source1)
++        self.source2["plan"].update(revision=2, snapshotSHA256=meta["snapshotSHA256"],
++                                     recordDigest=meta["recordDigest"])
++        self.second = self.assertion("C2", "2026-10-18T10:30:00+00:00",
++                                      "C1", self.source2)
++
++    @staticmethod
++    def assertion(ident, when, supersedes, source, outcome="positive"):
++        source = copy.deepcopy(source)
++        source["scenario"]["outcome"] = outcome
++        return {"id": ident, "effectiveAt": when, "supersedes": supersedes,
++                "source": source, "eventClaim": {"eventStepId": "S-RESULT",
++                    "outcome": outcome, "verification": "unverified"}}
++
++    def request(self, tx, expected, assertion):
++        return {"transactionId": tx, "file": PLANREL, "expectedRevision": expected,
++                "assertion": copy.deepcopy(assertion)}
++
++    def apply(self, tx, expected, assertion, token=None, callback=None):
++        return OWNER.apply(self.fixture.plans, self.fixture.graphs, self.fixture.authpath,
++                           token or self.writer, self.request(tx, expected, assertion),
++                           before_prepare=callback)
++
++    def receipt(self, revision):
++        path = OWNER.receipt_path(self.fixture.plans, PLANREL, revision)
++        return json.loads(path.read_text())
++
++    def read(self, known, effective="2026-10-18T10:45:00+00:00", token=None):
++        return OWNER.resolve(self.fixture.plans, self.fixture.graphs, self.fixture.authpath,
++                             token or self.reader, PLANREL, known, effective)
++
++    def after(self, value):
++        return (OWNER.OWNER.instant(value) + dt.timedelta(seconds=1)).isoformat()
++
++    def test_durable_late_correction_has_two_distinct_knowledge_results(self):
++        early = (OWNER.OWNER.instant(self.bound1) + dt.timedelta(milliseconds=1)).isoformat()
++        self.apply("app-r2", 1, self.second)
++        self.assertLess(OWNER.OWNER.instant(early),
++                        OWNER.OWNER.instant(self.receipt(2)["availableBy"]))
++        late = self.after(self.receipt(2)["availableBy"])
++        old = self.read(early)
++        new = self.read(late)
++        self.assertEqual(old["selectedAssertionId"], "C1")
++        self.assertEqual(new["selectedAssertionId"], "C2")
++        self.assertEqual(new["exactSource"]["plan"]["revision"], 2)
++        self.assertEqual(len(new["ownerHistory"]["availableRecords"]), 2)
++        self.assertTrue(new["ownerHistory"]["assertionsDurablyRecorded"])
++        self.assertFalse(new["provenance"]["applicabilityAttested"])
++        self.assertFalse(new["provenance"]["twoTimeAsOfResolved"])
++        self.assertFalse(new["provenance"]["historicalT1KnowledgeVerified"])
++        self.assertEqual(self.read(late, "2026-10-18T10:15:00+00:00")["selectedAssertionId"], "C1")
++
++    def test_cas_replay_and_correction_chain_preserve_old_record(self):
++        before = OWNER.target_path(self.fixture.plans, PLANREL).read_bytes()
++        old_record = json.loads(before)["records"][0]
++        result = self.apply("app-r2", 1, self.second)
++        saved = OWNER.target_path(self.fixture.plans, PLANREL).read_bytes()
++        self.assertEqual(json.loads(saved)["records"][0], old_record)
++        self.assertTrue(self.apply("app-r2", 1, self.second)["idempotent"])
++        self.assertEqual(OWNER.target_path(self.fixture.plans, PLANREL).read_bytes(), saved)
++        with self.assertRaisesRegex(ValueError, "TRANSACTION_REPLAY_CONFLICT"):
++            self.apply("app-r2", 1, self.assertion("C3", "2026-10-18T10:30:00+00:00",
++                                                  "C1", self.source2))
++        with self.assertRaisesRegex(ValueError, "CAS_MISMATCH"):
++            self.apply("app-other", 1, self.second)
++        self.assertEqual(OWNER.target_path(self.fixture.plans, PLANREL).read_bytes(), saved)
++        self.assertNotEqual(before, saved)
++        later = copy.deepcopy(self.fixture.plan)
++        later["revision"] = 3
++        later["title"] = "Earlier effective boundary"
++        OWNER.OWNER.apply_request(self.fixture.plans, self.fixture.authpath,
++            self.fixture.writer, {"transactionId": "plan-r3", "op": "edit",
++            "file": PLANREL, "expectedRevision": 2, "plan": later})
++        meta = OWNER.OWNER.read_snapshot(self.fixture.plans, PLANREL, 3)["provenance"]
++        source3 = copy.deepcopy(self.source2)
++        source3["plan"].update(revision=3, snapshotSHA256=meta["snapshotSHA256"],
++                                recordDigest=meta["recordDigest"])
++        invalid = self.assertion("C3", "2026-10-18T09:00:00+00:00", "C2", source3)
++        with self.assertRaisesRegex(ValueError, "CORRECTION_CHAIN_INVALID"):
++            self.apply("app-r3", 2, invalid)
++
++    def test_permissions_and_revoke_before_prepare_block_write(self):
++        no_right = self.fixture.grant(["plan.edit", "plan.read", "graph.read"],
++                                      [PLANREL, FIXTURE.REL])
++        with self.assertRaisesRegex(ValueError, "MISSING_PERMISSION: plan.applicability.write"):
++            self.apply("not-allowed", 1, self.second, token=no_right)
++        ident, revocable = self.fixture.grant(
++            ["plan.applicability.write", "plan.read", "graph.read"],
++            [PLANREL, FIXTURE.REL], with_id=True)
++        before = OWNER.target_path(self.fixture.plans, PLANREL).read_bytes()
++        with self.assertRaisesRegex(ValueError, "AUTH_TOKEN_REVOKED"):
++            self.apply("revoked", 1, self.second, token=revocable,
++                callback=lambda: self.auth.manage("revoke", self.admin, {"id": ident}))
++        self.assertEqual(OWNER.target_path(self.fixture.plans, PLANREL).read_bytes(), before)
++        self.assertFalse(OWNER.journal_path(self.fixture.plans).exists())
++
++    def test_conflict_is_preserved_and_reported(self):
++        self.apply("app-r2", 1, self.second)
++        later = copy.deepcopy(self.fixture.plan)
++        later["revision"] = 3
++        later["title"] = "Independent claim"
++        OWNER.OWNER.apply_request(self.fixture.plans, self.fixture.authpath,
++            self.fixture.writer, {"transactionId": "plan-r3", "op": "edit",
++            "file": PLANREL, "expectedRevision": 2, "plan": later})
++        meta = OWNER.OWNER.read_snapshot(self.fixture.plans, PLANREL, 3)["provenance"]
++        source = copy.deepcopy(self.source2)
++        source["plan"].update(revision=3, snapshotSHA256=meta["snapshotSHA256"],
++                              recordDigest=meta["recordDigest"])
++        self.apply("app-r3", 2, self.assertion("C3", "2026-10-18T10:30:00+00:00",
++                                             None, source, "negative"))
++        with self.assertRaisesRegex(ValueError, "UNRESOLVED_APPLICABILITY_CONFLICT"):
++            self.read(self.after(self.receipt(3)["availableBy"]))
++
++    def test_crash_after_store_write_requires_recovery(self):
++        request_file = self.fixture.base / "app-request.json"
++        request_file.write_text(json.dumps(self.request("app-r2", 1, self.second)))
++        env = dict(os.environ, RDG_AUTH_TOKEN=self.writer,
++                   RDG_APPLICABILITY_TEST_CRASH="after-store-write",
++                   PYTHONDONTWRITEBYTECODE="1")
++        process = subprocess.run([sys.executable, str(ROOT / "tools/rdg-applicability-owner.py"),
++            "apply", "--root", str(self.fixture.plans), "--graphs-root", str(self.fixture.graphs),
++            "--store", str(self.fixture.authpath), "--request", str(request_file)],
++            env=env, capture_output=True, text=True)
++        self.assertEqual(process.returncode, 91, process.stderr)
++        with self.assertRaisesRegex(ValueError, "RECOVERY_REQUIRED"):
++            self.read(self.after(self.bound1))
++        self.assertTrue(OWNER.recover(self.fixture.plans)["recovered"])
++        receipt = self.receipt(2)
++        bytes_before = OWNER.receipt_path(self.fixture.plans, PLANREL, 2).read_bytes()
++        self.assertFalse(OWNER.recover(self.fixture.plans)["recovered"])
++        self.assertEqual(OWNER.receipt_path(self.fixture.plans, PLANREL, 2).read_bytes(), bytes_before)
++        self.assertEqual(self.read(self.after(receipt["availableBy"]))["selectedAssertionId"], "C2")
++
++    def crash_at(self, failpoint):
++        request_file = self.fixture.base / "app-request.json"
++        request_file.write_text(json.dumps(self.request("app-r2", 1, self.second)))
++        env = dict(os.environ, RDG_AUTH_TOKEN=self.writer,
++                   RDG_APPLICABILITY_TEST_CRASH=failpoint,
++                   PYTHONDONTWRITEBYTECODE="1")
++        return subprocess.run([sys.executable,
++            str(ROOT / "tools/rdg-applicability-owner.py"),
++            "apply", "--root", str(self.fixture.plans),
++            "--graphs-root", str(self.fixture.graphs),
++            "--store", str(self.fixture.authpath),
++            "--request", str(request_file)],
++            env=env, capture_output=True, text=True)
++
++    def test_prepared_recovery_finishes_once(self):
++        process = self.crash_at("prepared")
++        self.assertEqual(process.returncode, 91, process.stderr)
++        witness = OWNER.receipt_path(self.fixture.plans, PLANREL, 2)
++        self.assertFalse(witness.exists())
++        with self.assertRaisesRegex(ValueError, "RECOVERY_REQUIRED"):
++            self.read(self.after(self.bound1))
++        self.assertTrue(OWNER.recover(self.fixture.plans)["recovered"])
++        self.assertTrue(witness.exists())
++        self.assertFalse(OWNER.recover(self.fixture.plans)["recovered"])
++        self.assertTrue(self.apply("app-r2", 1, self.second)["idempotent"])
++
++    def test_after_receipt_recovery_preserves_witness(self):
++        process = self.crash_at("after-availability-write")
++        self.assertEqual(process.returncode, 91, process.stderr)
++        witness = OWNER.receipt_path(self.fixture.plans, PLANREL, 2)
++        old = witness.read_bytes()
++        self.assertTrue(OWNER.recover(self.fixture.plans)["recovered"])
++        self.assertEqual(witness.read_bytes(), old)
++        self.assertEqual(self.read(self.after(self.receipt(2)["availableBy"]))[
++            "selectedAssertionId"], "C2")
++
++    def test_missing_prior_receipt_blocks_next_commit(self):
++        OWNER.receipt_path(self.fixture.plans, PLANREL, 1).unlink()
++        with self.assertRaisesRegex(ValueError, "PREVIOUS_AVAILABILITY_BOUND_NOT_AVAILABLE"):
++            self.apply("app-r2", 1, self.second)
++        self.assertFalse(OWNER.journal_path(self.fixture.plans).exists())
++        self.assertEqual(json.loads(OWNER.target_path(self.fixture.plans, PLANREL).read_text())[
++            "revision"], 1)
++
++    def test_bad_pin_receipt_and_unknown_time_fail_closed(self):
++        bad = copy.deepcopy(self.second)
++        bad["source"]["plan"]["recordDigest"] = "0"*64
++        with self.assertRaisesRegex(ValueError, "PLAN_SNAPSHOT_HASH_MISMATCH"):
++            self.apply("bad-pin", 1, bad)
++        bad = copy.deepcopy(self.second)
++        bad["effectiveAt"] = None
++        with self.assertRaisesRegex(ValueError, "EFFECTIVE_AT_REQUIRED"):
++            self.apply("bad-time", 1, bad)
++        self.apply("app-r2", 1, self.second)
++        receipt_path = OWNER.receipt_path(self.fixture.plans, PLANREL, 2)
++        receipt = self.receipt(2)
++        receipt["recordDigest"] = "0"*64
++        receipt_path.write_text(json.dumps(receipt))
++        with self.assertRaisesRegex(ValueError, "AVAILABILITY_RECEIPT_INVALID"):
++            self.read(self.after(self.bound1))
++
++
++if __name__ == "__main__":
++    unittest.main()
+--- /dev/null
++++ b/docs/guides/RDG-APPLICABILITY-OWNER-PILOT.md
+@@ -0,0 +1,62 @@
++# Долговечная история применимости candidate Plan
++
++**Статус: CANDIDATE. Stage 4 NOT ACCEPTED.**
++Пилот `tools/rdg-applicability-owner.py` записывает утверждения о
++применимости Plan отдельно от версий Plan. Это локальный owner на явно
++заданном временном root. Он сохраняет точные ссылки на Plan/RDG snapshots,
++`effectiveAt`, `supersedes`, исходное `recordedAt` и квитанцию
++`availableBy` после записи. Старое утверждение остаётся в истории.
++
++Запись требует отдельного `plan.applicability.write` и чтения всех
++указанных Plan/RDG sources. Разрешение чтения требует `plan.read` и
++`graph.read`. Новый локальный bootstrap выдаёт возможность делегировать
++это право только с явными `--plan-capable --applicability-capable`;
++существующие grants не меняются. Bearer receipt подтверждает технический
++grant, но не личность автора и не истинность события.
++
++Запрос на запись содержит `transactionId`, `file` (путь
++`plans/.../plan.json`), `expectedRevision` и `assertion` из
++[модельного правила двух времён](RDG-TWO-TIME-SCENARIO-PILOT.md).
++`assertion.source` — полный exact-reference запрос с Plan/RDG pins и
++сценарием, без `knownAt`. `eventClaim` остаётся только
++`verification=unverified`. Каждый record проходит проверку pinned sources;
++CAS, повтор той же транзакции и correction chain проверяются до записи.
++Несвязанные применимые записи можно сохранить, но чтение вернёт явный
++конфликт. Цепь с более ранним `effectiveAt` пока отклоняется.
++
++Пилот хранит `.rdg-applicability.json` рядом с Plan, отдельный
++prepared journal на root и квитанцию каждой версии рядом с owner store.
++После сбоя чтение блокируется до `recover`. Recovery дописывает принятую
++prepared транзакцию и не меняет уже сохранённую квитанцию. Пока нет
++квитанции предыдущей версии, следующая запись отклоняется.
++
++CLI на **временном синтетическом root**:
++
++```bash
++RDG_AUTH_TOKEN=... python3 tools/rdg-applicability-owner.py apply \
++  --root PLAN_ROOT --graphs-root GRAPHS_ROOT --store AUTH_STORE --request REQUEST_JSON
++RDG_AUTH_TOKEN=... python3 tools/rdg-applicability-owner.py read \
++  --root PLAN_ROOT --graphs-root GRAPHS_ROOT --store AUTH_STORE \
++  --file plans/demo/plan.json --known-at 2026-10-18T11:00:00+00:00 \
++  --effective-at 2026-10-18T10:45:00+00:00
++python3 tools/rdg-applicability-owner.py recover --root PLAN_ROOT
++```
++
++Чтение сначала исключает records, которые ещё не были доказанно доступны
++к `knownAt`, затем применяет
++[read-only правило](RDG-TWO-TIME-SCENARIO-PILOT.md) к оставшимся.
++Оно отдельно проверяет Plan availability и RDG writer time. Поздняя
++поправка может дать **кандидатную ретроспективную реконструкцию** только
++после собственного `availableBy`; ранний результат не переписывается.
++`ownerHistory.assertionsDurablyRecorded=true` означает лишь сохранность
++этого локального журнала. `applicabilityAttested=false`,
++`completeApplicableContextVerified=false`,
++`twoTimeAsOfResolved=false`, `historicalT1KnowledgeVerified=false`.
++
++Журнал не доказывает, что доступны все другие owners/события и что
++`effectiveAt` верен. Принятие будущего baseline, trusted event source,
++фактический Action selection и историческая Gendocen subscription ещё
++открыты. Тесты используют только tempfile, без рабочих графов и
++установленного Windows-приложения.
++
++Проверка: `PYTHONDONTWRITEBYTECODE=1 python3 tests/rdg-applicability-owner.test.py -v`.
+--- /dev/null
++++ b/docs/handoffs/rdg-applicability-owner-20261019/CHECKPOINT.md
+@@ -0,0 +1,48 @@
++# Долговечная candidate history применимости — контрольная точка
++
++**ID:** CPW-RDG-APPLICABILITY-OWNER-20261019/v1. **Статус:** Candidate.
++**Stage 4 NOT ACCEPTED.** Изменения сделаны в Fortis Repo на RW-mount
++`/workspace/repos/rd-graphs`. Проверки использовали только временные
++синтетические roots. В G2, установленном Windows-приложении и на
++пользовательских графах этот срез не проверялся. В проекте нет `.git`;
++commit/push и публикация не выполнялись.
++
++## Что добавлено
++
++`tools/rdg-applicability-owner.py` хранит отдельную версионированную
++candidate history для одного Plan owner: точные Plan/RDG pins, ветвь,
++заявленный `effectiveAt`, `supersedes`, локальный `recordedAt` и
++квитанцию доступности после долговечной записи. Запись требует
++`plan.applicability.write`, отдельного opt-in при создании временного
++authority store, права чтения sources, CAS и подготовленного журнала.
++Recovery завершает prepared транзакцию; отсутствие прежней квитанции
++блокирует новую запись. Исходная запись сохраняется, повтор транзакции
++идемпотентен, изменение того же transaction ID отклоняется.
++
++При чтении ранний `knownAt` исключает позднюю поправку; после её
++`availableBy` запрос может выбрать её как **кандидатную позднюю
++реконструкцию**. Несвязанный конфликт outcomes даёт отказ. История
++сохраняет утверждения, но не подтверждает их: eventClaim остаётся
++`unverified`, полный контекст и фактический T1-as-of не установлены.
++[Формат и границы](../../guides/RDG-APPLICABILITY-OWNER-PILOT.md).
++
++## Проверка и следующий gate
++
++**49 адресных тестов PASS:** 9 новых owner, 17 Plan owner, 13 exact history,
++6 двухвременных правил, 2 Graph writer/recovery и 2 bearer authority.
++Команды и логи — в [CHECKPOINT.json](CHECKPOINT.json). Ранее проверенный
++Gendocen работает с текущими проекциями; в этом срезе он не запускался
++заново. Прежние 405 Node PASS не повторялись целиком.
++
++P2-AC-13/15/16 остаются **PARTIAL**. Есть долговечная локальная запись и
++recovery, но `effectiveAt` заявлен клиентом, trusted event source не
++выбран, и полный набор применимых owners/событий не доказан. Следующий
++gate: отдельный lifecycle принятого будущего baseline и attest/verify
++событий, затем полный исторический resolver и Gendocen на синтетической
++истории. [Актуальный план](../../guides/RDG-CURRENT-EXECUTION-PLAN.md) ·
++[WR delta](WR-DELTA.md).
++
++[SELECTED-DIFF.patch](SELECTED-DIFF.patch) — diff выбранных файлов от
++before-копий и `/dev/null` для новых файлов; это не Git diff всего проекта.
++SHA источников и evidence сохранены отдельно. Baseline v4.1 и старые
++контрольные точки не переписывались.
+--- /dev/null
++++ b/docs/handoffs/rdg-applicability-owner-20261019/WR-DELTA.md
+@@ -0,0 +1,14 @@
++# WR delta — локальная история применимости
++
++Полный владелец WR-01..53 — baseline v4.1. Ниже остаётся только
++проверенный локальный scope; PR-P1-01..05 — CANDIDATE.
++**Stage 4 NOT ACCEPTED.**
++
++| WR | Статус | Новое локальное доказательство | Открытая граница |
++|---|---|---|---|
++| WR-47 | PARTIAL | Утверждение о событии сохраняется только как `unverified`; отдельное право записи не выбирает Action | Trusted event actor/source, attestation и factual branch |
++| WR-48 | PARTIAL | Точные Plan/RDG pins проверяются перед append; квитанция доступности owner record отделяет запись от заявленного `effectiveAt` | Полнота других owners и независимое подтверждение времени применимости |
++| WR-52 | PARTIAL | История с CAS, сохранением старой записи и recovery; ранний/поздний `knownAt` дают разные candidate результаты | Полный as-of resolver и исторический Gendocen, неизменность фактического T1 |
++
++P2-AC-13/15/16 остались PARTIAL. Локальный journal не доказывает
++истинность клиентских утверждений и полный применимый контекст.

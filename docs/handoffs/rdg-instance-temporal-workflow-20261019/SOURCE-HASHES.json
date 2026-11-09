@@ -1,0 +1,19 @@
+{
+  "tools/rdg-v7-model.py": "699ebc3061312020d67fe8b034b52477ab791ae577712f52c0669df76b259908",
+  "tools/graph-apply.py": "c6171f60f1cb8d54e1a2f5d25c45923d70b3c26c523ce5114339ba4b091c9947",
+  "tools/graph-package.py": "8831da6f5f584fb3a15803a13b4def79c57de80395527e38389b35d4fd627421",
+  "tools/rdg-v6-action-trust.py": "3d208741751f640089d700a04cfc2f09f32af017b4b6cc48a6350e9fae0bb541",
+  "tools/rdg-authority.py": "6c4806913135c24d4472bf510dd06692e4ab20f46fdb84b89db77ffc0461efd8",
+  "tools/rdg-v6-action-reconsider.py": "f5880fc836a355bfe123a09e11bba4cbc2b7782ac82e2c198d8cb0a257a97f51",
+  "tools/rdg-activity.py": "ec1172dde50341ddac050a53d0c55d6d6157422d2237ae12eb73bb95e57555db",
+  "tools/rdg-temporal-plan.py": "bd5d0c4bbf41b20a07e9c49c10ab3f4ecc9faafbc27077c2c7638a4737109fe5",
+  "tools/rdg-temporal-plan-owner.py": "eb41c2ad9d72640818d0ab3443239af0c71eaca4cc895063d719554ce6c44d9c",
+  "tools/rdg-gendocen-dependencies.py": "109d1818183ade0d1716f1685ceb504d74f2ce4d32a510cee3577c78abe9c688",
+  "tools/rdg-workflow.py": "3a8be1eade0e4f96227ee36075ef4af40dbed6d16011c0e974051f726844aea0",
+  "tests/rdg-deep-action.acceptance.test.py": "5d619dc88c87a1d31fa33da33219a1822617b61bafd9bde1fcf7e9f9f8014937",
+  "tests/rdg-workflow.acceptance.test.py": "b3980cd2aa2962e54886fb9685d8b0c7bdbdad9739610e93fc797e5c50295d05",
+  "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md": "5feb6b78ce27259608bc76589e0f2b48e26c1c675cdb879870ed5a080376967f",
+  "docs/guides/RDG-DEEP-ACTION-AND-HISTORY.md": "9512edb9896e5ff8e28cef0068e08ce8e7a77a4ae544aa85cea7d998bb5f7914",
+  "docs/guides/RDG-V7-WORKING-GRAPHS.md": "4993fcfc6976954152f9873fbbd4869e91816eeab9ee7fbba30aa394b66d3625",
+  "README.md": "fcb0bbff9376958c79ab76c9513243fcde3cce836f34571d5c5d0508643dcab5"
+}

@@ -1,0 +1,13 @@
+{
+  "pythonSuites": 24,
+  "pythonTests": 259,
+  "nodeFiles": 58,
+  "node": {
+    "tests": 415,
+    "pass": 413,
+    "fail": 0,
+    "skipped": 2
+  },
+  "selectedFiles": 22,
+  "status": "local Candidate; Stage 4 NOT ACCEPTED"
+}

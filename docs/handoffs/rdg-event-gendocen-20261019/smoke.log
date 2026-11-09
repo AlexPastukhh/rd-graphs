@@ -1,0 +1,20 @@
+{
+  "attestationRequiresCurrentReview": true,
+  "cliProcesses": 25,
+  "conflictExplicit": true,
+  "contract": "rdg-event-review/v1",
+  "engine": "Gendocen 0.1.0.dev25",
+  "eventOwnerRecords": 6,
+  "factualEventVerified": false,
+  "fixedEarlyKnownAtProjectionPreserved": true,
+  "fixedEventContextReviewRemainsValid": true,
+  "historicalPlanRdgAsOfResolved": false,
+  "lateCorrectionRequiresCurrentReview": true,
+  "otherOccurrenceDoesNotInvalidate": true,
+  "planAndOwnerBytesUnchangedByConsumer": true,
+  "productionStage4Accepted": false,
+  "reviewRequiresCurrentReview": true,
+  "staleContextRejected": true,
+  "status": "PASS",
+  "temporarySourcesOnly": true
+}

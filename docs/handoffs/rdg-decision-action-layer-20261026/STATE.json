@@ -1,0 +1,16 @@
+{
+  "id": "RDG-HANDOFF-DECISION-ACTION-LAYER-20261026/v1",
+  "status": "prototype_updated_backend_unchanged",
+  "prototype": "tests/visual/rdg-ui-prototype.html",
+  "previous_handoff": "docs/handoffs/rdg-decision-model-transition-20261026/HANDOFF.md",
+  "action_layer": true,
+  "action_types": ["discover_decision", "discover_requirement", "decide_acceptance", "select_decision", "rename_block", "review_canon", "complete_requirement"],
+  "low_level_filter": true,
+  "group_visual": "overlap-safe rails plus membership lines",
+  "overlapping_groups": true,
+  "backend_migrated": false,
+  "live_owners_touched": false,
+  "browser_manual_pass": false,
+  "syntax_check": "PASS",
+  "smoke": "RDG_ACTION_LAYER_SMOKE PASS"
+}

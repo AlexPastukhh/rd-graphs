@@ -1,0 +1,8 @@
+{
+  "createdAtUTC": "2026-10-19T00:14:59.005665+00:00",
+  "previousCheckpoint": "../rdg-event-gendocen-20261019/CHECKPOINT.json",
+  "files": {
+    "README.md": "f70469ca6067daa3a4077f767fb2d0d7e48c04da230c1144fadcca4df6ad08d6",
+    "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md": "4cb8d0238d83d5f0b35ce6800ca7218459acb251a9a9872b18f2460461bf7efc"
+  }
+}

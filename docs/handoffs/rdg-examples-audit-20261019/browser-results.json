@@ -1,0 +1,4151 @@
+{
+  "viewerVersion": "2.2.9",
+  "views": 271,
+  "errors": [],
+  "renderErrors": [],
+  "overlapViews": [],
+  "rows": [
+    {
+      "slug": "template-tm-2d-10-visual-requirements",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 4,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "template-tm-2d-10-visual-requirements",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 4,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "template-tm-2d-10-visual-requirements-unit-ru-req-01",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-10-visual-requirements-unit-ru-req-01",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-10-visual-requirements-unit-ru-req-02",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-10-visual-requirements-unit-ru-req-02",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-10-visual-requirements-unit-ru-req-03",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-10-visual-requirements-unit-ru-req-03",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-15-prepared-visual-material-set",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 4,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "template-tm-2d-15-prepared-visual-material-set",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 4,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "template-tm-2d-15-prepared-visual-material-set-unit-ru-mat-01",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-15-prepared-visual-material-set-unit-ru-mat-01",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-15-prepared-visual-material-set-unit-ru-mat-02",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-15-prepared-visual-material-set-unit-ru-mat-02",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-15-prepared-visual-material-set-unit-ru-mat-03",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-15-prepared-visual-material-set-unit-ru-mat-03",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-20-whole-visual-design",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 4,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "template-tm-2d-20-whole-visual-design",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 4,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "template-tm-2d-20-whole-visual-design-unit-ru-wvd-01",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-20-whole-visual-design-unit-ru-wvd-01",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-20-whole-visual-design-unit-ru-wvd-02",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-20-whole-visual-design-unit-ru-wvd-02",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-20-whole-visual-design-unit-ru-wvd-03",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-20-whole-visual-design-unit-ru-wvd-03",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-30-visual-construction",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 4,
+      "kinds": {
+        "requirement": 3,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 3,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "template-tm-2d-30-visual-construction",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 4,
+      "kinds": {
+        "requirement": 3,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 3,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "template-tm-2d-30-visual-construction-unit-ru-vc-01",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-30-visual-construction-unit-ru-vc-01",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-30-visual-construction-unit-ru-vc-02",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-30-visual-construction-unit-ru-vc-02",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-editable-raster-construction",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 7,
+      "kinds": {
+        "requirement": 6,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 6,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "template-tm-2d-31-editable-raster-construction",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 7,
+      "kinds": {
+        "requirement": 6,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 6,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "template-tm-2d-31-editable-raster-construction-unit-ru-ras-01",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-editable-raster-construction-unit-ru-ras-01",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-editable-raster-construction-unit-ru-ras-02",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-editable-raster-construction-unit-ru-ras-02",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-editable-raster-construction-unit-ru-ras-03",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-editable-raster-construction-unit-ru-ras-03",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-editable-raster-construction-unit-ru-ras-04",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-editable-raster-construction-unit-ru-ras-04",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-editable-raster-construction-unit-ru-ras-05",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-editable-raster-construction-unit-ru-ras-05",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-painterly-raster-construction",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 5,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "template-tm-2d-31-painterly-raster-construction",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 5,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "template-tm-2d-31-painterly-raster-construction-unit-ru-paint-01",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-painterly-raster-construction-unit-ru-paint-01",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-painterly-raster-construction-unit-ru-paint-02",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-painterly-raster-construction-unit-ru-paint-02",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-painterly-raster-construction-unit-ru-paint-03",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-painterly-raster-construction-unit-ru-paint-03",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-painterly-raster-construction-unit-ru-paint-04",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-painterly-raster-construction-unit-ru-paint-04",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-pixel-art-construction",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 7,
+      "kinds": {
+        "requirement": 6,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 6,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "template-tm-2d-31-pixel-art-construction",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 7,
+      "kinds": {
+        "requirement": 6,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 6,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "template-tm-2d-31-pixel-art-construction-unit-ru-px-01",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-pixel-art-construction-unit-ru-px-01",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-pixel-art-construction-unit-ru-px-02",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-pixel-art-construction-unit-ru-px-02",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-pixel-art-construction-unit-ru-px-03",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-pixel-art-construction-unit-ru-px-03",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-pixel-art-construction-unit-ru-px-04",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-pixel-art-construction-unit-ru-px-04",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-pixel-art-construction-unit-ru-px-05",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-pixel-art-construction-unit-ru-px-05",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-procedural-construction",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 7,
+      "kinds": {
+        "requirement": 6,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 6,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "template-tm-2d-31-procedural-construction",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 7,
+      "kinds": {
+        "requirement": 6,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 6,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "template-tm-2d-31-procedural-construction-unit-ru-proc-01",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-procedural-construction-unit-ru-proc-01",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-procedural-construction-unit-ru-proc-02",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-procedural-construction-unit-ru-proc-02",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-procedural-construction-unit-ru-proc-03",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-procedural-construction-unit-ru-proc-03",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-procedural-construction-unit-ru-proc-04",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-procedural-construction-unit-ru-proc-04",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-procedural-construction-unit-ru-proc-05",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-procedural-construction-unit-ru-proc-05",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-vector-construction",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 7,
+      "kinds": {
+        "requirement": 6,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 6,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "template-tm-2d-31-vector-construction",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 7,
+      "kinds": {
+        "requirement": 6,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 6,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "template-tm-2d-31-vector-construction-unit-ru-vec-01",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-vector-construction-unit-ru-vec-01",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-vector-construction-unit-ru-vec-02",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-vector-construction-unit-ru-vec-02",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-vector-construction-unit-ru-vec-03",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-vector-construction-unit-ru-vec-03",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-vector-construction-unit-ru-vec-04",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-vector-construction-unit-ru-vec-04",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-vector-construction-unit-ru-vec-05",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-31-vector-construction-unit-ru-vec-05",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-50-delivery-adaptation",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 4,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "template-tm-2d-50-delivery-adaptation",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 4,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "template-tm-2d-50-delivery-adaptation-unit-ru-del-01",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-50-delivery-adaptation-unit-ru-del-01",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-50-delivery-adaptation-unit-ru-del-02",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-50-delivery-adaptation-unit-ru-del-02",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-50-delivery-adaptation-unit-ru-del-03",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-50-delivery-adaptation-unit-ru-del-03",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "context-prepared-alternative",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "context-prepared-alternative",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "context-prepared-current",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "context-prepared-current",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "context-prepared-root",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 7,
+      "kinds": {
+        "requirement": 3,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 6,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "context-prepared-root",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 7,
+      "kinds": {
+        "requirement": 3,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 6,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "context-working-alternative",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "context-working-alternative",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "context-working-current",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "context-working-current",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "context-working-root",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 4,
+      "kinds": {
+        "requirement": 2,
+        "decision": 1,
+        "canon": 1
+      },
+      "overlaps": [],
+      "edges": 3,
+      "annotations": 1,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "context-working-root",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 2,
+        "decision": 1,
+        "context": 2,
+        "canon": 1
+      },
+      "overlaps": [],
+      "edges": 3,
+      "annotations": 1,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "example",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 4,
+      "kinds": {
+        "requirement": 3,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 3,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "example",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 3,
+        "decision": 1,
+        "context": 1
+      },
+      "overlaps": [],
+      "edges": 3,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-app-definition",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 9,
+      "kinds": {
+        "requirement": 8,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 8,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-app-definition",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 14,
+      "kinds": {
+        "requirement": 11,
+        "context": 1,
+        "decision": 1,
+        "question": 1
+      },
+      "overlaps": [],
+      "edges": 10,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-behavior-review",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 3,
+      "kinds": {
+        "requirement": 2,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 2,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-behavior-review",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 16,
+      "kinds": {
+        "requirement": 6,
+        "context": 3,
+        "decision": 1,
+        "variant": 2,
+        "proposal": 2,
+        "question": 2
+      },
+      "overlaps": [],
+      "edges": 9,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-complete-app",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 4,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 4"
+    },
+    {
+      "slug": "reference-complete-app",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 4,
+        "context": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 4"
+    },
+    {
+      "slug": "reference-complete-availability",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 4,
+      "kinds": {
+        "requirement": 2,
+        "decision": 2
+      },
+      "overlaps": [],
+      "edges": 3,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 4"
+    },
+    {
+      "slug": "reference-complete-availability",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 3,
+        "decision": 2,
+        "context": 1
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 4"
+    },
+    {
+      "slug": "reference-complete-functionality",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 4,
+      "kinds": {
+        "requirement": 3,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 3,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 4"
+    },
+    {
+      "slug": "reference-complete-functionality",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 18,
+      "kinds": {
+        "requirement": 5,
+        "variant": 5,
+        "context": 2,
+        "decision": 3,
+        "application": 2,
+        "question": 1
+      },
+      "overlaps": [],
+      "edges": 18,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 4"
+    },
+    {
+      "slug": "reference-complete-realization",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 4"
+    },
+    {
+      "slug": "reference-complete-realization",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 7,
+      "kinds": {
+        "requirement": 4,
+        "context": 1,
+        "decision": 1,
+        "question": 1
+      },
+      "overlaps": [],
+      "edges": 6,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 4"
+    },
+    {
+      "slug": "reference-complete-reservation",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 3,
+      "kinds": {
+        "requirement": 2,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 2,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 4"
+    },
+    {
+      "slug": "reference-complete-reservation",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 14,
+      "kinds": {
+        "requirement": 5,
+        "variant": 2,
+        "context": 3,
+        "decision": 1,
+        "question": 2,
+        "proposal": 1
+      },
+      "overlaps": [],
+      "edges": 7,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 4"
+    },
+    {
+      "slug": "reference-complete-scenario-create",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 4"
+    },
+    {
+      "slug": "reference-complete-scenario-create",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 2,
+        "variant": 1,
+        "decision": 1,
+        "context": 1,
+        "question": 1
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 4"
+    },
+    {
+      "slug": "reference-complete-scenarios",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 4,
+      "kinds": {
+        "requirement": 3,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 3,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 4"
+    },
+    {
+      "slug": "reference-complete-scenarios",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 4,
+      "kinds": {
+        "requirement": 3,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 3,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 4"
+    },
+    {
+      "slug": "reference-complete-unit-r-boundary",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-complete-unit-r-boundary",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-complete-unit-r-errors",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 3,
+      "kinds": {
+        "requirement": 1,
+        "decision": 2
+      },
+      "overlaps": [],
+      "edges": 2,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-complete-unit-r-errors",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "context": 1,
+        "decision": 2,
+        "question": 1
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-complete-unit-r-feedback",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-complete-unit-r-feedback",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 4,
+      "kinds": {
+        "requirement": 1,
+        "context": 1,
+        "decision": 1,
+        "question": 1
+      },
+      "overlaps": [],
+      "edges": 3,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-complete-unit-r-result",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-complete-unit-r-result",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 4,
+      "kinds": {
+        "requirement": 1,
+        "context": 1,
+        "decision": 1,
+        "question": 1
+      },
+      "overlaps": [],
+      "edges": 3,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-complete-unit-r-scancel",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-complete-unit-r-scancel",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-complete-unit-r-state-reservation",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-complete-unit-r-state-reservation",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-complete-unit-r-state-selection",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-complete-unit-r-state-selection",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-delegation-status",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 3,
+      "kinds": {
+        "requirement": 2,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 2,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-delegation-status",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 7,
+      "kinds": {
+        "requirement": 4,
+        "decision": 1,
+        "context": 1,
+        "question": 1
+      },
+      "overlaps": [],
+      "edges": 2,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-feature-auth",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-feature-auth",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 3,
+      "kinds": {
+        "requirement": 1,
+        "variant": 2
+      },
+      "overlaps": [],
+      "edges": 2,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-feature-cart",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-feature-cart",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 3,
+      "kinds": {
+        "requirement": 1,
+        "variant": 2
+      },
+      "overlaps": [],
+      "edges": 2,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-feature-catalog",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-feature-catalog",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 3,
+      "kinds": {
+        "requirement": 1,
+        "variant": 2
+      },
+      "overlaps": [],
+      "edges": 2,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-feature-payment",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-feature-payment",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 3,
+      "kinds": {
+        "requirement": 1,
+        "variant": 2
+      },
+      "overlaps": [],
+      "edges": 2,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-feature-root",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 4,
+      "kinds": {
+        "requirement": 3,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 3,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-feature-root",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 4,
+      "kinds": {
+        "requirement": 3,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 3,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-mixed-active-work",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 5
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 7"
+    },
+    {
+      "slug": "reference-mixed-active-work",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 13,
+      "kinds": {
+        "requirement": 7,
+        "context": 3,
+        "collection": 3
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 7"
+    },
+    {
+      "slug": "reference-mixed-change-log",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 3,
+      "kinds": {
+        "requirement": 2,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 2,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-mixed-change-log",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 4,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 2,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-mixed-contextual-split",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 4,
+        "decision": 1,
+        "canon": 1
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 1,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-mixed-contextual-split",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 7,
+      "kinds": {
+        "requirement": 4,
+        "decision": 1,
+        "option": 1,
+        "canon": 1
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 1,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-mixed-feature-availability",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-mixed-feature-availability",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-mixed-feature-consistency",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-mixed-feature-consistency",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-mixed-planned-feature",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 2,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 3"
+    },
+    {
+      "slug": "reference-mixed-planned-feature",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 2,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 3"
+    },
+    {
+      "slug": "reference-mixed-planned-feature-consistency",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-mixed-planned-feature-consistency",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-mixed-planned-feature-depth",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-mixed-planned-feature-depth",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-mixed-planned-scenario",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 4"
+    },
+    {
+      "slug": "reference-mixed-planned-scenario",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 4"
+    },
+    {
+      "slug": "reference-mixed-planned-scenario-consistency",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-mixed-planned-scenario-consistency",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-module-units",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 4,
+      "kinds": {
+        "requirement": 3,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 3,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-module-units",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 4,
+      "kinds": {
+        "requirement": 3,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 3,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-prepared-feature-consistency",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 9,
+      "kinds": {
+        "requirement": 1,
+        "option": 4,
+        "canon": 4
+      },
+      "overlaps": [],
+      "edges": 8,
+      "annotations": 4,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-prepared-feature-consistency",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 9,
+      "kinds": {
+        "requirement": 1,
+        "option": 4,
+        "canon": 4
+      },
+      "overlaps": [],
+      "edges": 8,
+      "annotations": 4,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-prepared-feature-depth",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-prepared-feature-depth",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-prepared-feature-path",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 2,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 3"
+    },
+    {
+      "slug": "reference-prepared-feature-path",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 2,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 3"
+    },
+    {
+      "slug": "reference-prepared-planning-tree",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 9,
+      "kinds": {
+        "requirement": 5,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 8,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 5"
+    },
+    {
+      "slug": "reference-prepared-planning-tree",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 9,
+      "kinds": {
+        "requirement": 5,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 8,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 5"
+    },
+    {
+      "slug": "reference-prepared-scenario-consistency",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-prepared-scenario-consistency",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-prepared-scenario-path",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 3"
+    },
+    {
+      "slug": "reference-prepared-scenario-path",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 3"
+    },
+    {
+      "slug": "reference-reusable-vs-concrete",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 5,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-reusable-vs-concrete",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 8,
+      "kinds": {
+        "requirement": 5,
+        "variant": 2,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 8,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-unit-direct",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-unit-direct",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-unit-split",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 4,
+      "kinds": {
+        "requirement": 3,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 3,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-unit-split",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 4,
+      "kinds": {
+        "requirement": 3,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 3,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-unit-states",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-unit-states",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-unit-transitions",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-unit-transitions",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "try-it",
+      "scope": "local",
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "try-it",
+      "scope": "local",
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "template-tm-2d-10-visual-requirements",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Полный граф R · Заготовка 2D · Visual Requirements · 4 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "template-tm-2d-10-visual-requirements",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Полный граф R · Заготовка 2D · Visual Requirements · 4 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "template-tm-2d-10-visual-requirements",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 4,
+      "kinds": {
+        "requirement": 4
+      },
+      "overlaps": [],
+      "edges": 3,
+      "annotations": 0,
+      "message": "Полный граф R · Заготовка 2D · Visual Requirements · 4 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "template-tm-2d-10-visual-requirements",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 8,
+      "kinds": {
+        "requirement": 4,
+        "decision": 4
+      },
+      "overlaps": [],
+      "edges": 7,
+      "annotations": 0,
+      "message": "Полный граф R · Заготовка 2D · Visual Requirements · 4 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "template-tm-2d-15-prepared-visual-material-set",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Полный граф R · Заготовка 2D · Prepared Visual Material Set · 4 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "template-tm-2d-15-prepared-visual-material-set",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Полный граф R · Заготовка 2D · Prepared Visual Material Set · 4 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "template-tm-2d-15-prepared-visual-material-set",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 4,
+      "kinds": {
+        "requirement": 4
+      },
+      "overlaps": [],
+      "edges": 3,
+      "annotations": 0,
+      "message": "Полный граф R · Заготовка 2D · Prepared Visual Material Set · 4 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "template-tm-2d-15-prepared-visual-material-set",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 8,
+      "kinds": {
+        "requirement": 4,
+        "decision": 4
+      },
+      "overlaps": [],
+      "edges": 7,
+      "annotations": 0,
+      "message": "Полный граф R · Заготовка 2D · Prepared Visual Material Set · 4 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "template-tm-2d-20-whole-visual-design",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Полный граф R · Заготовка 2D · Whole Visual Design · 4 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "template-tm-2d-20-whole-visual-design",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Полный граф R · Заготовка 2D · Whole Visual Design · 4 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "template-tm-2d-20-whole-visual-design",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 4,
+      "kinds": {
+        "requirement": 4
+      },
+      "overlaps": [],
+      "edges": 3,
+      "annotations": 0,
+      "message": "Полный граф R · Заготовка 2D · Whole Visual Design · 4 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "template-tm-2d-20-whole-visual-design",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 8,
+      "kinds": {
+        "requirement": 4,
+        "decision": 4
+      },
+      "overlaps": [],
+      "edges": 7,
+      "annotations": 0,
+      "message": "Полный граф R · Заготовка 2D · Whole Visual Design · 4 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "template-tm-2d-30-visual-construction",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Полный граф R · Заготовка 2D · Multi-route Visual Construction · 3 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "template-tm-2d-30-visual-construction",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Полный граф R · Заготовка 2D · Multi-route Visual Construction · 3 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "template-tm-2d-30-visual-construction",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 3,
+      "kinds": {
+        "requirement": 3
+      },
+      "overlaps": [],
+      "edges": 2,
+      "annotations": 0,
+      "message": "Полный граф R · Заготовка 2D · Multi-route Visual Construction · 3 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "template-tm-2d-30-visual-construction",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 3,
+        "decision": 3
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 0,
+      "message": "Полный граф R · Заготовка 2D · Multi-route Visual Construction · 3 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "template-tm-2d-31-editable-raster-construction",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Полный граф R · Заготовка 2D · Editable Raster Construction · 6 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "template-tm-2d-31-editable-raster-construction",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Полный граф R · Заготовка 2D · Editable Raster Construction · 6 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "template-tm-2d-31-editable-raster-construction",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 6
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 0,
+      "message": "Полный граф R · Заготовка 2D · Editable Raster Construction · 6 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "template-tm-2d-31-editable-raster-construction",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 12,
+      "kinds": {
+        "requirement": 6,
+        "decision": 6
+      },
+      "overlaps": [],
+      "edges": 11,
+      "annotations": 0,
+      "message": "Полный граф R · Заготовка 2D · Editable Raster Construction · 6 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "template-tm-2d-31-painterly-raster-construction",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Полный граф R · Заготовка 2D · Painterly Raster Construction · 5 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "template-tm-2d-31-painterly-raster-construction",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Полный граф R · Заготовка 2D · Painterly Raster Construction · 5 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "template-tm-2d-31-painterly-raster-construction",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 5
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 0,
+      "message": "Полный граф R · Заготовка 2D · Painterly Raster Construction · 5 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "template-tm-2d-31-painterly-raster-construction",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 10,
+      "kinds": {
+        "requirement": 5,
+        "decision": 5
+      },
+      "overlaps": [],
+      "edges": 9,
+      "annotations": 0,
+      "message": "Полный граф R · Заготовка 2D · Painterly Raster Construction · 5 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "template-tm-2d-31-pixel-art-construction",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Полный граф R · Заготовка 2D · Pixel Art Construction · 6 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "template-tm-2d-31-pixel-art-construction",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Полный граф R · Заготовка 2D · Pixel Art Construction · 6 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "template-tm-2d-31-pixel-art-construction",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 6
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 0,
+      "message": "Полный граф R · Заготовка 2D · Pixel Art Construction · 6 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "template-tm-2d-31-pixel-art-construction",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 12,
+      "kinds": {
+        "requirement": 6,
+        "decision": 6
+      },
+      "overlaps": [],
+      "edges": 11,
+      "annotations": 0,
+      "message": "Полный граф R · Заготовка 2D · Pixel Art Construction · 6 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "template-tm-2d-31-procedural-construction",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Полный граф R · Заготовка 2D · Procedural Construction · 6 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "template-tm-2d-31-procedural-construction",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Полный граф R · Заготовка 2D · Procedural Construction · 6 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "template-tm-2d-31-procedural-construction",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 6
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 0,
+      "message": "Полный граф R · Заготовка 2D · Procedural Construction · 6 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "template-tm-2d-31-procedural-construction",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 12,
+      "kinds": {
+        "requirement": 6,
+        "decision": 6
+      },
+      "overlaps": [],
+      "edges": 11,
+      "annotations": 0,
+      "message": "Полный граф R · Заготовка 2D · Procedural Construction · 6 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "template-tm-2d-31-vector-construction",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Полный граф R · Заготовка 2D · Vector Construction · 6 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "template-tm-2d-31-vector-construction",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Полный граф R · Заготовка 2D · Vector Construction · 6 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "template-tm-2d-31-vector-construction",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 6
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 0,
+      "message": "Полный граф R · Заготовка 2D · Vector Construction · 6 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "template-tm-2d-31-vector-construction",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 12,
+      "kinds": {
+        "requirement": 6,
+        "decision": 6
+      },
+      "overlaps": [],
+      "edges": 11,
+      "annotations": 0,
+      "message": "Полный граф R · Заготовка 2D · Vector Construction · 6 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "template-tm-2d-50-delivery-adaptation",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Полный граф R · Заготовка 2D · Delivery Adaptation · 4 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "template-tm-2d-50-delivery-adaptation",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Полный граф R · Заготовка 2D · Delivery Adaptation · 4 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "template-tm-2d-50-delivery-adaptation",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 4,
+      "kinds": {
+        "requirement": 4
+      },
+      "overlaps": [],
+      "edges": 3,
+      "annotations": 0,
+      "message": "Полный граф R · Заготовка 2D · Delivery Adaptation · 4 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "template-tm-2d-50-delivery-adaptation",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 8,
+      "kinds": {
+        "requirement": 4,
+        "decision": 4
+      },
+      "overlaps": [],
+      "edges": 7,
+      "annotations": 0,
+      "message": "Полный граф R · Заготовка 2D · Delivery Adaptation · 4 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "context-prepared-root",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Полный граф R · Контекст: готовый пример · 3 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "context-prepared-root",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Полный граф R · Контекст: готовый пример · 3 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "context-prepared-root",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 3,
+      "kinds": {
+        "requirement": 3
+      },
+      "overlaps": [],
+      "edges": 2,
+      "annotations": 0,
+      "message": "Полный граф R · Контекст: готовый пример · 3 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "context-prepared-root",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 3,
+        "option": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 0,
+      "message": "Полный граф R · Контекст: готовый пример · 3 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "context-working-root",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 2,
+      "kinds": {
+        "requirement": 2
+      },
+      "overlaps": [],
+      "edges": 1,
+      "annotations": 0,
+      "message": "Полный граф R · Контекст: рабочий пример · 3 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "context-working-root",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 4,
+      "kinds": {
+        "requirement": 2,
+        "decision": 1,
+        "option": 1
+      },
+      "overlaps": [],
+      "edges": 3,
+      "annotations": 0,
+      "message": "Полный граф R · Контекст: рабочий пример · 3 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "context-working-root",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 3,
+      "kinds": {
+        "requirement": 3
+      },
+      "overlaps": [],
+      "edges": 2,
+      "annotations": 0,
+      "message": "Полный граф R · Контекст: рабочий пример · 3 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "context-working-root",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 3,
+        "option": 2,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 0,
+      "message": "Полный граф R · Контекст: рабочий пример · 3 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-complete-app",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 10,
+      "kinds": {
+        "requirement": 10
+      },
+      "overlaps": [],
+      "edges": 9,
+      "annotations": 0,
+      "message": "Полный граф R · Пример бронирования — все отношения · 10 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-complete-app",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 20,
+      "kinds": {
+        "requirement": 10,
+        "decision": 10
+      },
+      "overlaps": [],
+      "edges": 19,
+      "annotations": 0,
+      "message": "Полный граф R · Пример бронирования — все отношения · 10 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-complete-app",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 10,
+      "kinds": {
+        "requirement": 10
+      },
+      "overlaps": [],
+      "edges": 9,
+      "annotations": 0,
+      "message": "Полный граф R · Пример бронирования — все отношения · 10 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-complete-app",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 21,
+      "kinds": {
+        "requirement": 10,
+        "decision": 11
+      },
+      "overlaps": [],
+      "edges": 20,
+      "annotations": 0,
+      "message": "Полный граф R · Пример бронирования — все отношения · 10 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-feature-root",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 7,
+      "kinds": {
+        "requirement": 7
+      },
+      "overlaps": [],
+      "edges": 6,
+      "annotations": 0,
+      "message": "Полный граф R · Пример разбиения на Features · 7 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-feature-root",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 9,
+      "kinds": {
+        "requirement": 7,
+        "decision": 2
+      },
+      "overlaps": [],
+      "edges": 8,
+      "annotations": 0,
+      "message": "Полный граф R · Пример разбиения на Features · 7 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-feature-root",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 7,
+      "kinds": {
+        "requirement": 7
+      },
+      "overlaps": [],
+      "edges": 6,
+      "annotations": 0,
+      "message": "Полный граф R · Пример разбиения на Features · 7 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-feature-root",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 9,
+      "kinds": {
+        "requirement": 7,
+        "decision": 2
+      },
+      "overlaps": [],
+      "edges": 8,
+      "annotations": 0,
+      "message": "Полный граф R · Пример разбиения на Features · 7 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-mixed-active-work",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 5
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 0,
+      "message": "Полный граф R · Рабочий пример разбиения функциональности · 40 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-mixed-active-work",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 7,
+      "kinds": {
+        "requirement": 5,
+        "decision": 2
+      },
+      "overlaps": [],
+      "edges": 6,
+      "annotations": 0,
+      "message": "Полный граф R · Рабочий пример разбиения функциональности · 40 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-mixed-active-work",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 40,
+      "kinds": {
+        "requirement": 40
+      },
+      "overlaps": [],
+      "edges": 39,
+      "annotations": 0,
+      "message": "Полный граф R · Рабочий пример разбиения функциональности · 40 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-mixed-active-work",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 59,
+      "kinds": {
+        "requirement": 40,
+        "decision": 2,
+        "option": 17
+      },
+      "overlaps": [],
+      "edges": 58,
+      "annotations": 0,
+      "message": "Полный граф R · Рабочий пример разбиения функциональности · 40 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-module-units",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Полный граф R · TM · Проработать функцию · 5 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-module-units",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Полный граф R · TM · Проработать функцию · 5 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-module-units",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 5
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 0,
+      "message": "Полный граф R · TM · Проработать функцию · 5 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-module-units",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 10,
+      "kinds": {
+        "requirement": 5,
+        "decision": 5
+      },
+      "overlaps": [],
+      "edges": 9,
+      "annotations": 0,
+      "message": "Полный граф R · TM · Проработать функцию · 5 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-prepared-planning-tree",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Полный граф R · Готовый пример разбиения функциональности · 6 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-prepared-planning-tree",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Полный граф R · Готовый пример разбиения функциональности · 6 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-prepared-planning-tree",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-core",
+      "version": "2.2.9",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 6
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 0,
+      "message": "Полный граф R · Готовый пример разбиения функциональности · 6 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-prepared-planning-tree",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-all",
+      "version": "2.2.9",
+      "nodes": 20,
+      "kinds": {
+        "requirement": 6,
+        "option": 14
+      },
+      "overlaps": [],
+      "edges": 19,
+      "annotations": 0,
+      "message": "Полный граф R · Готовый пример разбиения функциональности · 6 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-prepared-feature-consistency",
+      "scope": "active-local-navigation",
+      "version": "2.2.9",
+      "nodes": 9,
+      "kinds": {
+        "requirement": 1,
+        "option": 4,
+        "canon": 4
+      },
+      "overlaps": [],
+      "edges": 8,
+      "annotations": 4,
+      "message": "Встроенный локальный граф: examples/reference-prepared-feature-consistency/graph.json · revision 2"
+    },
+    {
+      "slug": "reference-mixed-feature-consistency",
+      "scope": "active-local-navigation",
+      "version": "2.2.9",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 2,
+      "message": "Встроенный локальный граф: examples/reference-mixed-feature-consistency/graph.json · revision 2"
+    },
+    {
+      "slug": "reference-mixed-contextual-split",
+      "scope": "active-local-navigation",
+      "version": "2.2.9",
+      "nodes": 7,
+      "kinds": {
+        "requirement": 4,
+        "decision": 1,
+        "option": 1,
+        "canon": 1
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 1,
+      "message": "Встроенный локальный граф: examples/reference-mixed-contextual-split/graph.json · revision 2"
+    }
+  ]
+}

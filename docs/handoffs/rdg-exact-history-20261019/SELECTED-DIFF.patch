@@ -1,0 +1,644 @@
+--- before/README.md
++++ after/README.md
+@@ -12,7 +12,13 @@
+ CAS, неизменной историей версий и восстановлением подготовленной транзакции.
+ Сквозной синтетический прогон с реальным Gendocen проверяет Plan → review → T1/F-R.
+ [Реализация и границы P2](docs/guides/RDG-TEMPORAL-PLAN-OWNER-PILOT-P2.md) ·
+-[текущая контрольная точка](docs/handoffs/rdg-vertical-slice-20261019/CHECKPOINT.md).
++[P0.1/P2 контрольная точка](docs/handoffs/rdg-vertical-slice-20261019/CHECKPOINT.md).
++
++**Следующий локальный срез:** [точные исторические ссылки Plan + RDG](docs/guides/RDG-EXACT-HISTORY-PILOT-P2.md)
++по закреплённым SHA и завершённым журналам штатного writer.
++[Текущие результаты](docs/handoffs/rdg-exact-history-20261019/CHECKPOINT.md).
++Это read-only candidate-пилот: Graph `recordedAt` в журнале нет, полный
++`knownAt/effectiveAt`, исторический Gendocen и фактический T1-as-of не заявлены.
+ 
+ [Review P0/P1](docs/handoffs/rdg-progress-review-20261019-v1/REVIEW.md)
+ сохранён как основание исправлений. Его F-P-PROGRESS-01 закрыт в локальном пилоте;
+--- before/docs/guides/RDG-TEMPORAL-PLAN-OWNER-PILOT-P2.md
++++ after/docs/guides/RDG-TEMPORAL-PLAN-OWNER-PILOT-P2.md
+@@ -70,6 +70,10 @@
+ ревизия. Recovery — локальная операция доверенного оператора над принятым journal,
+ не опубликованный сетевой endpoint и не выдача новых прав.
+ 
++Следующий отдельный [read-only пилот точных Plan + RDG snapshots](RDG-EXACT-HISTORY-PILOT-P2.md)
++разрешает закреплённые образы из завершённых Graph writer journals для одного
++сценария. Это не закрывает полный as-of и не меняет candidate-only lifecycle.
++
+ ## Что остаётся открытым
+ 
+ Принятый будущий baseline, trusted human identity, утверждения/attestation/verification
+--- before/tools/rdg-authority.py
++++ after/tools/rdg-authority.py
+@@ -219,6 +219,18 @@
+                     "MISSING_PERMISSION: " + permission)
+         return {"grantId":ident, "grantRevision":data["revision"]}
+ 
++    def authorize_snapshot_read(self, token, plan_target, graph_targets):
++        data = self._read()
++        ident, grant = self._actor(data, token)
++        targets = [("plan.read", plan_target)] + [("graph.read", t) for t in graph_targets]
++        for permission, target in targets:
++            prefix = "plans/" if permission == "plan.read" else "workspaces/"
++            require(isinstance(target, str) and target.startswith(prefix) and
++                    valid_scope(target) and any(covers(s, target) for s in grant["scopes"]),
++                    "SNAPSHOT_READ_SCOPE_DENIED")
++            require(permission in grant["permissions"], "MISSING_PERMISSION: " + permission)
++        return {"grantId": ident, "grantRevision": data["revision"]}
++
+     @contextmanager
+     def checked_plan_transaction(self, token, permissions, target):
+         lockpath = self.path.with_suffix(self.path.suffix + ".lock")
+--- before/tools/rdg-temporal-impact.py
++++ after/tools/rdg-temporal-impact.py
+@@ -97,13 +97,20 @@
+     return lower
+ 
+ 
+-def scope_action(graphs_root, plan, step):
++def scope_action(graphs_root, plan, step, graph_resolver=None):
+     ref = step["actionRef"]
+-    root = Path(graphs_root).resolve()
+-    path = root / ref["graphFile"]
+-    ensure(path.resolve().is_relative_to(root), "REF_OUTSIDE_GRAPH_ROOT")
+-    ensure(path.is_file(), "ACTION_GRAPH_NOT_AVAILABLE")
+-    graph = json.loads(path.read_text(encoding="utf-8"))
++    if graph_resolver is None:
++        root = Path(graphs_root).resolve()
++        path = root / ref["graphFile"]
++        ensure(path.resolve().is_relative_to(root), "REF_OUTSIDE_GRAPH_ROOT")
++        ensure(path.is_file(), "ACTION_GRAPH_NOT_AVAILABLE")
++        graph = json.loads(path.read_text(encoding="utf-8"))
++    else:
++        # Exact-history callers supply only verified pinned snapshots. A missing
++        # callback result or revision never falls back to the current filesystem.
++        graph = graph_resolver(ref)
++        ensure(isinstance(graph, dict) and "observedGraphRevision" in ref and
++               graph.get("revision") == ref["observedGraphRevision"], "EXACT_REVISION_REQUIRED")
+     # Plan may reference another RDG identitySpace. The reference must name
+     # that owner explicitly; this read-only pilot grants no remote write rights.
+     ensure(graph.get("identitySpace") == ref["identitySpace"],
+@@ -133,10 +140,14 @@
+     }
+ 
+ 
+-def assess(plan, graphs_root):
++def assess(plan, graphs_root, *, graph_resolver=None, scenario=None):
+     temporal.validate(plan)
+-    ensure(graphs_root is not None, "GRAPH_ROOT_REQUIRED")
++    ensure(graphs_root is not None or graph_resolver is not None, "GRAPH_ROOT_REQUIRED")
+     cases = review_cases(plan)
++    if scenario is not None:
++        ensure(isinstance(scenario, dict) and set(scenario) == {"branchId", "outcome"}, "SCENARIO_SCHEMA")
++        cases = [c for c in cases if c["branchId"] == scenario["branchId"] and c["outcome"] == scenario["outcome"]]
++        ensure(len(cases) == 1, "SCENARIO_NOT_FOUND")
+     all_steps = {s["id"]: s for s in plan["steps"]}
+     result = {"planId": plan["id"], "planRevision": plan["revision"],
+               "planStatus": plan["status"], "readOnly": True,
+@@ -183,7 +194,7 @@
+             related_edges = [e for e in edges
+                              if e["before"] in affected and e["after"] in affected]
+             relevant_checks = [c for c in checks if c["stepId"] in downstream]
+-            action = scope_action(graphs_root, plan, step)
++            action = scope_action(graphs_root, plan, step, graph_resolver)
+             source = {
+                 "stepId": step_id, "branchId": case["branchId"],
+                 "outcome": case["outcome"], "planId": plan["id"],
+--- before/tools/rdg-gendocen-t1-history-smoke.py
++++ after/tools/rdg-gendocen-t1-history-smoke.py
+@@ -196,6 +196,26 @@
+                 "transactionId": "plan-create", "op": "create", "file": plan_relative,
+                 "expectedRevision": 0, "plan": plan})
+             initial_owned_snapshot = plan_owner.read_snapshot(plan_root, plan_relative, 1)
++            history_reader = SourceFileLoader(
++                "slice_exact_history", str(ROOT / "tools/rdg-exact-history.py")).load_module()
++            read_token = admin("issue", owner, {
++                "permissions": ["plan.read", "graph.read"],
++                "scopes": [plan_relative, REL]})["token"]
++            prior = initial_owned_snapshot["provenance"]
++            exact_query = {"schemaVersion": 1, "mode": "exact-reference", "lifecycle": "candidate",
++                "plan": {"file": plan_relative, "identitySpace": plan["identitySpace"],
++                         "planId": plan["id"], "revision": 1,
++                         "snapshotSHA256": prior["snapshotSHA256"],
++                         "recordDigest": prior["recordDigest"]},
++                "graphs": [{"graphFile": REL, "identitySpace": t1_graph["identitySpace"],
++                            "revision": 3, "snapshotSHA256": plan_owner.digest(t1_graph)}],
++                "scenario": {"branchId": "B-RESULT", "outcome": "positive"}}
++            exact_initial = history_reader.resolve(
++                plan_root, workspace / "graphs", auth_store, read_token, exact_query)
++            require(exact_initial["graphSnapshots"][0]["graph"] == t1_graph and
++                    exact_initial["plan"] == plan and
++                    exact_initial["provenance"]["twoTimeAsOfResolved"] is False,
++                    "EXACT_INITIAL_SOURCE_MISMATCH")
+         else:
+             save(plan_file, plan)
+         project = workspace / "gendocen"
+@@ -460,11 +480,23 @@
+             confirm_t1()
+             require(next(s for s in current_owned["plan"]["steps"] if s["id"] == "S-RESULT")["state"] == "expected",
+                     "OWNED_ASSUMPTION_ATTESTED_EVENT")
++            exact_later = history_reader.resolve(
++                plan_root, workspace / "graphs", auth_store, read_token, exact_query)
++            require(exact_later["graphSnapshots"][0]["graph"] == t1_graph and
++                    exact_later["plan"] == initial_owned_snapshot["plan"] and
++                    exact_later["impact"] == exact_initial["impact"] and
++                    exact_later["provenance"]["historicalT1KnowledgeVerified"] is False and
++                    exact_later["graphSnapshots"][0]["provenance"]["recordedAt"] is None and
++                    next(n for n in snapshot(graph_path)["nodes"] if n["id"] == "A1")["qrpe"] !=
++                    next(n for n in exact_later["graphSnapshots"][0]["graph"]["nodes"]
++                         if n["id"] == "A1")["qrpe"], "EXACT_HISTORY_CURRENT_FALLBACK")
+             owner_proof = {"currentRevision": current_owned["plan"]["revision"],
++                           "exactHistoricalPlanAndRdg": True,
++                           "twoTimeAsOfResolved": False,
+                            "exactRevision1Preserved": True, "branchSwapRequiresBothReviews": True,
+                            "candidateConflictDrafts": drafts["draftCount"], "draftTypes": ["F-R"],
+                            "noAutomaticFindingOrAction": True, "planEditorCannotSelectGraphAction": True,
+-                           "eventRemainsExpected": True, "historicalRdgSnapshotResolved": False}
++                           "eventRemainsExpected": True, "historicalGendocenAsOfResolved": False}
+ 
+         result = {
+             "status": "PASS", "engine": "Gendocen 0.1.0.dev25",
+--- /dev/null
++++ after/docs/guides/RDG-EXACT-HISTORY-PILOT-P2.md
+@@ -0,0 +1,71 @@
++# Точные Plan + RDG snapshots — read-only пилот
++
++**Статус: CANDIDATE. Stage 4 NOT ACCEPTED.** Это локальное разрешение точных
++ссылок для одного условного сценария, а не полный запрос `knownAt/effectiveAt`.
++Основание: [контракт P1](RDG-TEMPORAL-PLAN-OWNER-CONTRACT-P1.md) и
++[Plan owner P2](RDG-TEMPORAL-PLAN-OWNER-PILOT-P2.md).
++
++`tools/rdg-exact-history.py` получает сохранённую ревизию candidate Plan из
++owner store и сохранённые образы RDG из **завершённых** журналов штатного
++`graph-package.py`. У каждого источника должна быть явная identity, точная
++revision и закреплённый SHA-256 канонического JSON. Для Plan нужен также
++`recordDigest` его записи. Читатель проверяет owner/path, структурную
++целостность, соответствие actionRef по graphFile/identitySpace/revision и
++выбранный branch/outcome. Снимок берётся из before или after завершённой
++транзакции. Несколько разных образов одной ревизии, незавершённый/испорченный
++журнал, неверный хеш или отсутствующая ревизия останавливают разрешение.
++Текущий `graph.json` не читается и не заменяет отсутствующий снимок.
++
++Временный локальный bearer grant должен иметь `plan.read` и `graph.read`
++с соответствующими путями. `graph.write`, `plan.create`, `grant.admin` и
++права выбора Action не подменяют чтение. Права повторно проверяются перед
++выдачей результата. Файловый доступ Docker сам по себе не изолирует
++этот пилот от raw-правок и не служит production authorization.
++
++Пример формы запроса (`snapshotSHA256` и `recordDigest` берутся из реально
++сохранённых источников, не вычисляются по текущим файлам):
++
++```json
++{
++  "schemaVersion": 1,
++  "mode": "exact-reference",
++  "lifecycle": "candidate",
++  "plan": {
++    "file": "plans/demo/plan.json",
++    "identitySpace": "temporal-demo",
++    "planId": "P-DEMO",
++    "revision": 1,
++    "snapshotSHA256": "<64 hex>",
++    "recordDigest": "<64 hex>"
++  },
++  "graphs": [{
++    "graphFile": "workspaces/temporal-fixture/graph.json",
++    "identitySpace": "temporal-demo",
++    "revision": 3,
++    "snapshotSHA256": "<64 hex>"
++  }],
++  "scenario": {"branchId": "B-RESULT", "outcome": "positive"}
++}
++```
++
++CLI: `python3 tools/rdg-exact-history.py --plan-root ROOT --graphs-root GRAPHS_ROOT --store AUTH_STORE --request REQUEST_JSON`;
++токен в `RDG_AUTH_TOKEN`. Roots указываются явно. Это read-only операция:
++она не вызывает Graph writer, Plan writer, принятие или event attestation.
++Временной impact оценивает только выбранный сценарий по проверенным снимкам.
++Условный сценарий не становится фактически наступившей ветвью; оценка срока
++остаётся предположением кандидата. Она не создаёт Finding и не меняет T1.
++
++В Graph writer journal **нет доверенного `recordedAt` для RDG**. Поэтому
++результат отмечает `knowledgeTimeVerified=false`, `twoTimeAsOfResolved=false`,
++`historicalT1KnowledgeVerified=false`. Пилот не принимает `knownAt/effectiveAt`,
++не доказывает знание на T1 и не подключает исторический режим к Gendocen
++subscription/runtime. Даже совпадение SHA не доказывает человека или факт
++события. Полный as-of потребует собственных неизменяемых временных records RDG,
++проверки порядка lifecycle/branch и отдельного trust gate.
++
++Проверка: `python3 tests/rdg-exact-history.test.py -v` и
++`python3 tools/rdg-gendocen-t1-history-smoke.py --engine-source /workspace/repos/gendocen --plan-owner`.
++В последнем прогоне Graph writer создаёт реальный локальный журнал; после
++последующих QRPE/Plan изменений resolver вновь выдаёт тот же pinned T1 graph
++snapshot и ту же оценку выбранного сценария. Сам Gendocen остаётся на текущих
++проекциях и не подтверждает historical T1-as-of.
+--- /dev/null
++++ after/tools/rdg-exact-history.py
+@@ -0,0 +1,211 @@
++#!/usr/bin/env python3
++"""Read-only exact candidate Plan + RDG snapshots; not a two-time as-of resolver.
++
++Completed local Graph writer journals contain full images, not trusted recordedAt.
++Explicit canonical SHA pins are mandatory. No current-file or latest-version fallback.
++"""
++import argparse
++import copy
++import fcntl
++import hashlib
++from importlib.machinery import SourceFileLoader
++import json
++import os
++from pathlib import Path
++import re
++
++HERE = Path(__file__).resolve().parent
++OWNER = SourceFileLoader("exact_history_owner", str(HERE / "rdg-temporal-plan-owner.py")).load_module()
++IMPACT = SourceFileLoader("exact_history_impact", str(HERE / "rdg-temporal-impact.py")).load_module()
++GRAPH = SourceFileLoader("exact_history_graph_validator", str(HERE / "graph-apply.py")).load_module()
++SHA = re.compile(r"[a-f0-9]{64}\Z")
++TX = re.compile(r"[A-Za-z0-9][A-Za-z0-9_-]{0,99}\Z")
++
++
++def require(ok, code):
++    if not ok:
++        raise ValueError("EXACT_HISTORY_" + code)
++
++
++def unique_object(pairs):
++    result = {}
++    for key, value in pairs:
++        require(key not in result, "DUPLICATE_JSON_KEY")
++        result[key] = value
++    return result
++
++
++def load_bytes(raw):
++    return json.loads(raw, object_pairs_hook=unique_object)
++
++
++def safe(root, relative):
++    path = root
++    for part in relative.split("/"):
++        require(part not in ("", ".", ".."), "PATH_INVALID")
++        path = path / part
++        require(not path.is_symlink(), "SYMLINK_DENIED")
++    require(path.resolve().is_relative_to(root), "PATH_OUTSIDE_ROOT")
++    return path
++
++
++def graph_key(pin):
++    return pin["identitySpace"], pin["graphFile"], pin["revision"]
++
++
++def validate_query(query):
++    require(isinstance(query, dict), "REQUEST_SCHEMA")
++    require(not ({"knownAt", "effectiveAt"} & set(query)), "TWO_TIME_QUERY_NOT_SUPPORTED")
++    require(set(query) == {"schemaVersion", "mode", "lifecycle", "plan", "graphs", "scenario"} and
++            type(query["schemaVersion"]) is int and query["schemaVersion"] == 1 and
++            query["mode"] == "exact-reference" and query["lifecycle"] == "candidate", "REQUEST_SCHEMA")
++    plan = query["plan"]
++    require(isinstance(plan, dict) and set(plan) == {"file", "identitySpace", "planId", "revision", "snapshotSHA256", "recordDigest"}, "PLAN_PIN_SCHEMA")
++    require(isinstance(plan["file"], str) and OWNER.TARGET.fullmatch(plan["file"]) and
++            OWNER.PLAN.named(plan["identitySpace"]) and OWNER.PLAN.ident(plan["planId"]) and
++            type(plan["revision"]) is int and plan["revision"] >= 1 and
++            all(isinstance(plan[k], str) and SHA.fullmatch(plan[k]) for k in ("snapshotSHA256", "recordDigest")), "PLAN_PIN_INVALID")
++    pins = query["graphs"]
++    require(isinstance(pins, list) and pins, "GRAPH_PINS_REQUIRED")
++    keys = set()
++    for pin in pins:
++        require(isinstance(pin, dict) and set(pin) == {"graphFile", "identitySpace", "revision", "snapshotSHA256"}, "GRAPH_PIN_SCHEMA")
++        require(isinstance(pin["graphFile"], str) and OWNER.PLAN.GRAPH_REF.fullmatch(pin["graphFile"]) and
++                OWNER.PLAN.named(pin["identitySpace"]) and type(pin["revision"]) is int and pin["revision"] >= 1 and
++                isinstance(pin["snapshotSHA256"], str) and SHA.fullmatch(pin["snapshotSHA256"]), "GRAPH_PIN_INVALID")
++        key = graph_key(pin)
++        require(key not in keys, "DUPLICATE_GRAPH_PIN")
++        keys.add(key)
++    scenario = query["scenario"]
++    require(isinstance(scenario, dict) and set(scenario) == {"branchId", "outcome"} and
++            all(v is None or OWNER.PLAN.ident(v) for v in scenario.values()), "SCENARIO_SCHEMA")
++
++
++def journal_snapshots(graphs_root, pins):
++    """Shared writer lock, completed journals only, no current graph reads/writes."""
++    root = Path(graphs_root).resolve(strict=True)
++    require(root.is_dir(), "GRAPH_ROOT_REQUIRED")
++    lock_path = safe(root, "workspaces/.writer.lock")
++    require(lock_path.is_file(), "WRITER_HISTORY_NOT_AVAILABLE")
++    directory = safe(root, "workspaces/.transactions")
++    require(directory.is_dir(), "WRITER_HISTORY_NOT_AVAILABLE")
++    found = {graph_key(pin): {} for pin in pins}
++    sources = {key: [] for key in found}
++    files = {pin["graphFile"] for pin in pins}
++    owners = {pin["graphFile"]: pin["identitySpace"] for pin in pins}
++    require(len(owners) == len({(p["graphFile"], p["identitySpace"]) for p in pins}), "GRAPH_OWNER_CONFLICT")
++    with os.fdopen(os.open(lock_path, os.O_RDONLY | os.O_NOFOLLOW), "rb") as lock:
++        fcntl.flock(lock, fcntl.LOCK_SH)
++        for path in sorted(directory.glob("*.json")):
++            path = safe(root, path.relative_to(root).as_posix())
++            raw = path.read_bytes()
++            journal = load_bytes(raw)
++            require(isinstance(journal, dict) and set(journal) == {"schemaVersion", "transactionId", "requestSHA256", "state", "records"} and
++                    type(journal["schemaVersion"]) is int and journal["schemaVersion"] == 1 and
++                    isinstance(journal["transactionId"], str) and TX.fullmatch(journal["transactionId"]) and
++                    path.stem == journal["transactionId"] and isinstance(journal["requestSHA256"], str) and
++                    SHA.fullmatch(journal["requestSHA256"]), "JOURNAL_SCHEMA")
++            require(journal["state"] != "prepared", "GRAPH_RECOVERY_REQUIRED")
++            require(journal["state"] == "completed" and isinstance(journal["records"], list) and journal["records"], "JOURNAL_STATE")
++            seen = set()
++            for record in journal["records"]:
++                require(isinstance(record, dict) and set(record) == {"file", "before", "after", "changed"} and
++                        isinstance(record["file"], str) and OWNER.PLAN.GRAPH_REF.fullmatch(record["file"]) and
++                        record["file"] not in seen and type(record["changed"]) is bool, "JOURNAL_RECORD_SCHEMA")
++                seen.add(record["file"])
++                if record["file"] not in files:
++                    continue
++                before, after = record["before"], record["after"]
++                for image in (before, after):
++                    if image is None:
++                        continue
++                    require(isinstance(image, dict) and image.get("identitySpace") == owners[record["file"]], "GRAPH_IDENTITY_MISMATCH")
++                    GRAPH.validate(image)
++                require(isinstance(after, dict) and type(after.get("revision")) is int and
++                        after["revision"] == (before["revision"] + int(record["changed"]) if before else 1) and
++                        record["changed"] == (before != after), "JOURNAL_REVISION_CHAIN")
++                for side, image in (("before", before), ("after", after)):
++                    if image is None:
++                        continue
++                    key = image["identitySpace"], record["file"], image["revision"]
++                    if key not in found:
++                        continue
++                    sha = OWNER.digest(image)
++                    found[key][sha] = copy.deepcopy(image)
++                    sources[key].append({"journal": path.relative_to(root).as_posix(),
++                                         "journalSHA256": hashlib.sha256(raw).hexdigest(),
++                                         "transactionId": journal["transactionId"], "side": side})
++    results = {}
++    for pin in pins:
++        key = graph_key(pin)
++        require(found[key], "GRAPH_SNAPSHOT_NOT_FOUND")
++        require(len(found[key]) == 1, "AMBIGUOUS_GRAPH_REVISION")
++        sha, graph = next(iter(found[key].items()))
++        require(sha == pin["snapshotSHA256"], "GRAPH_SNAPSHOT_HASH_MISMATCH")
++        results[key] = {"graph": graph, "provenance": {
++            **pin, "sourceKind": "completed-writer-journal", "sources": sources[key],
++            "exactRdgSnapshotResolved": True, "recordedAt": None,
++            "knowledgeTimeVerified": False, "humanIdentityVerified": False}}
++    return results
++
++
++def resolve(plan_root, graphs_root, authority_store, token, query, before_return=None):
++    validate_query(query)
++    plan_pin, pins = query["plan"], query["graphs"]
++    authority = OWNER.AUTH.Authority(authority_store)
++    targets = sorted({p["graphFile"] for p in pins})
++    authority.authorize_snapshot_read(token, plan_pin["file"], targets)
++    snapshot = OWNER.read_snapshot(plan_root, plan_pin["file"], plan_pin["revision"])
++    plan, provenance = snapshot["plan"], snapshot["provenance"]
++    require(plan["identitySpace"] == plan_pin["identitySpace"] and plan["id"] == plan_pin["planId"], "PLAN_IDENTITY_MISMATCH")
++    require(provenance["snapshotSHA256"] == plan_pin["snapshotSHA256"] and provenance["recordDigest"] == plan_pin["recordDigest"], "PLAN_SNAPSHOT_HASH_MISMATCH")
++    cases = [c for c in IMPACT.review_cases(plan) if c["branchId"] == query["scenario"]["branchId"] and c["outcome"] == query["scenario"]["outcome"]]
++    require(len(cases) == 1, "SCENARIO_NOT_FOUND")
++    active = {s["id"] for s in plan["steps"] if s["state"] != "possible"} | cases[0]["possibleSteps"]
++    refs = [s["actionRef"] for s in plan["steps"] if s["kind"] == "action" and s["id"] in active]
++    require(refs and all(type(ref.get("observedGraphRevision")) is int for ref in refs), "EXACT_ACTION_REVISIONS_REQUIRED")
++    expected = {(ref["identitySpace"], ref["graphFile"], ref["observedGraphRevision"]) for ref in refs}
++    require(expected == {graph_key(pin) for pin in pins}, "SCENARIO_GRAPH_PINS_MISMATCH")
++    graphs = journal_snapshots(graphs_root, pins)
++    def graph_resolver(ref):
++        key = ref["identitySpace"], ref["graphFile"], ref["observedGraphRevision"]
++        require(key in graphs, "GRAPH_SNAPSHOT_NOT_FOUND")
++        return copy.deepcopy(graphs[key]["graph"])
++    impact = IMPACT.assess(plan, None, graph_resolver=graph_resolver, scenario=query["scenario"])
++    if before_return:
++        before_return()
++    # Recheck after both owner locks have been released; a read must not return
++    # its snapshot after a revocation that completed while resolution was running.
++    read_receipt = authority.authorize_snapshot_read(token, plan_pin["file"], targets)
++    return {"status": "resolved", "mode": "exact-reference", "lifecycle": "candidate",
++            "scenario": copy.deepcopy(query["scenario"]), "scenarioOnly": True, "readOnly": True,
++            "plan": plan, "planProvenance": provenance,
++            "graphSnapshots": [graphs[key] for key in sorted(graphs)], "impact": impact,
++            "readAuthorization": read_receipt,
++            "provenance": {"exactPlanSnapshotResolved": True, "exactRdgSnapshotsResolved": True,
++                           "knowledgeTimeVerified": False, "twoTimeAsOfResolved": False,
++                           "historicalT1KnowledgeVerified": False, "semanticTruthVerified": False,
++                           "eventsAttested": False, "productionAccepted": False},
++            "evidenceGaps": ["RDG writer journals have no trusted recordedAt; knownAt/effectiveAt are unsupported",
++                             "Exact local hashes do not prove human identity, factual truth, or complete historical context"]}
++
++
++def main():
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--plan-root", required=True, type=Path)
++    parser.add_argument("--graphs-root", required=True, type=Path)
++    parser.add_argument("--store", default=os.environ.get("RDG_AUTH_STORE"))
++    parser.add_argument("--request", required=True, type=Path)
++    args = parser.parse_args()
++    require(args.store is not None, "AUTH_STORE_REQUIRED")
++    result = resolve(args.plan_root, args.graphs_root, args.store, os.environ.get("RDG_AUTH_TOKEN"), load_bytes(args.request.read_bytes()))
++    print(json.dumps(result, ensure_ascii=False, sort_keys=True, indent=2))
++
++
++if __name__ == "__main__":
++    try:
++        main()
++    except (ValueError, OSError, KeyError, TypeError) as exc:
++        import sys
++        print("ERROR: " + str(exc), file=sys.stderr)
++        sys.exit(1)
+--- /dev/null
++++ after/tests/rdg-exact-history.test.py
+@@ -0,0 +1,193 @@
++#!/usr/bin/env python3
++"""Exact historical Plan/RDG resolution on synthetic roots; no live graph reads."""
++import copy
++from importlib.machinery import SourceFileLoader
++import json
++from pathlib import Path
++import tempfile
++import unittest
++
++ROOT = Path(__file__).resolve().parents[1]
++HISTORY = SourceFileLoader("test_exact_history", str(ROOT / "tools/rdg-exact-history.py")).load_module()
++OWNER = HISTORY.OWNER
++REL = "workspaces/temporal-fixture/graph.json"
++PLANREL = "plans/demo/plan.json"
++
++
++class ExactHistoryTest(unittest.TestCase):
++    def setUp(self):
++        self.tmp = tempfile.TemporaryDirectory(prefix="rdg-exact-history-")
++        self.addCleanup(self.tmp.cleanup)
++        self.base = Path(self.tmp.name)
++        self.plans = self.base / "owner"
++        self.plans.mkdir()
++        self.graphs = self.base / "graphs"
++        (self.graphs / "workspaces/.transactions").mkdir(parents=True)
++        (self.graphs / "workspaces/.writer.lock").touch()
++        self.authpath = self.base / "authority.json"
++        self.auth = OWNER.AUTH.Authority(self.authpath)
++        self.admin = self.auth.init_local(plan_capable=True)["token"]
++        self.writer = self.grant(["plan.create", "plan.edit", "plan.branch"], [PLANREL])
++        self.reader_id, self.reader = self.grant(["plan.read", "graph.read"], [PLANREL, REL], with_id=True)
++        self.plan = json.loads((ROOT / "docs/examples/temporal-plan-candidate-v1.json").read_text())
++        self.graph = {"schemaVersion": 1, "revision": 1, "id": "synthetic",
++            "title": "Temporary", "identitySpace": "temporal-demo",
++            "rootRequirementId": "R0", "actionModel": "candidate-v6", "planningScale": "module",
++            "nodes": [{"id": "R0", "kind": "requirement", "title": "Root", "status": "active"}] +
++            [{"id": aid, "kind": "action", "title": "Candidate " + aid,
++              "status": "candidate", "qrpe": []} for aid in ("A1", "A2")],
++            "edges": [{"id": "E-" + aid, "type": "DRIVES", "from": "R0", "to": aid}
++                      for aid in ("A1", "A2")], "events": []}
++        HISTORY.GRAPH.validate(self.graph)
++        OWNER.apply_request(self.plans, self.authpath, self.writer, {
++            "transactionId": "create", "op": "create", "file": PLANREL,
++            "expectedRevision": 0, "plan": self.plan})
++        self.provenance = OWNER.read_snapshot(self.plans, PLANREL, 1)["provenance"]
++        self.add_journal("graph-create", None, self.graph)
++        self.query = {"schemaVersion": 1, "mode": "exact-reference", "lifecycle": "candidate",
++            "plan": {"file": PLANREL, "identitySpace": "temporal-demo", "planId": self.plan["id"],
++                     "revision": 1, "snapshotSHA256": self.provenance["snapshotSHA256"],
++                     "recordDigest": self.provenance["recordDigest"]},
++            "graphs": [{"graphFile": REL, "identitySpace": "temporal-demo",
++                        "revision": 1, "snapshotSHA256": OWNER.digest(self.graph)}],
++            "scenario": {"branchId": "B-RESULT", "outcome": "positive"}}
++
++    def grant(self, permissions, scopes, with_id=False):
++        issued = self.auth.manage("issue", self.admin, {"permissions": permissions, "scopes": scopes})
++        return (issued["id"], issued["token"]) if with_id else issued["token"]
++
++    def add_journal(self, tx, before, after, state="completed", file=REL):
++        value = {"schemaVersion": 1, "transactionId": tx, "requestSHA256": "0"*64,
++                 "state": state, "records": [{"file": file, "before": before,
++                 "after": after, "changed": before != after}]}
++        path = self.graphs / "workspaces/.transactions" / (tx + ".json")
++        path.write_text(json.dumps(value))
++        return path
++
++    def resolve(self, query=None, token=None, callback=None):
++        return HISTORY.resolve(self.plans, self.graphs, self.authpath, token or self.reader,
++                               query or self.query, before_return=callback)
++
++    def assert_denied(self, code, query=None, token=None):
++        with self.assertRaisesRegex(ValueError, code):
++            self.resolve(query, token)
++
++    def test_exact_source_is_stable_after_current_graph_changes(self):
++        original = self.resolve()
++        newer = copy.deepcopy(self.graph)
++        newer["revision"] = 2
++        newer["nodes"][1]["title"] = "Later change to A1"
++        HISTORY.GRAPH.validate(newer)
++        self.add_journal("graph-edit", self.graph, newer)
++        # The current graph exists but is never used for the historical result.
++        path = self.graphs / REL
++        path.parent.mkdir(parents=True)
++        path.write_text(json.dumps(newer))
++        again = self.resolve()
++        self.assertEqual(original["impact"], again["impact"])
++        self.assertEqual(again["graphSnapshots"][0]["graph"], self.graph)
++        self.assertEqual(len(again["impact"]["branches"]), 1)
++        self.assertEqual(again["impact"]["branches"][0]["outcome"], "positive")
++        self.assertEqual(again["impact"]["branches"][0]["actionReviewLeads"][0]["action"]["graphRevision"], 1)
++        self.assertFalse(again["provenance"]["twoTimeAsOfResolved"])
++        self.assertFalse(again["provenance"]["historicalT1KnowledgeVerified"])
++        self.assertFalse(again["provenance"]["eventsAttested"])
++
++    def test_completed_before_image_resolves_without_create_journal(self):
++        newer = copy.deepcopy(self.graph)
++        newer["revision"] = 2
++        newer["nodes"][1]["title"] = "Later candidate"
++        self.add_journal("graph-edit", self.graph, newer)
++        (self.graphs / "workspaces/.transactions/graph-create.json").unlink()
++        resolved = self.resolve()
++        self.assertEqual(resolved["graphSnapshots"][0]["graph"], self.graph)
++        self.assertEqual([s["side"] for s in resolved["graphSnapshots"][0]["provenance"]["sources"]], ["before"])
++
++    def test_symlinked_journal_is_denied(self):
++        outside = self.base / "other-journal.json"
++        outside.write_text("{}")
++        (self.graphs / "workspaces/.transactions/linked.json").symlink_to(outside)
++        self.assert_denied("SYMLINK_DENIED")
++
++    def test_missing_exact_graph_and_no_current_fallback(self):
++        (self.graphs / "workspaces/.transactions/graph-create.json").unlink()
++        path = self.graphs / REL
++        path.parent.mkdir(parents=True)
++        path.write_text(json.dumps(self.graph))
++        self.assert_denied("GRAPH_SNAPSHOT_NOT_FOUND")
++
++    def test_plan_hash_and_graph_hash_are_mandatory(self):
++        q = copy.deepcopy(self.query)
++        q["plan"]["snapshotSHA256"] = "0"*64
++        self.assert_denied("PLAN_SNAPSHOT_HASH_MISMATCH", q)
++        q = copy.deepcopy(self.query)
++        q["graphs"][0]["snapshotSHA256"] = "0"*64
++        self.assert_denied("GRAPH_SNAPSHOT_HASH_MISMATCH", q)
++
++    def test_plan_or_graph_not_authorized_even_with_write_grants(self):
++        plan_only = self.grant(["plan.read"], [PLANREL, REL])
++        self.assert_denied("MISSING_PERMISSION: graph.read", token=plan_only)
++        graph_only = self.grant(["graph.read"], [PLANREL, REL])
++        self.assert_denied("MISSING_PERMISSION: plan.read", token=graph_only)
++        broad_writer = self.grant(["graph.write", "plan.create"], [PLANREL, REL])
++        self.assert_denied("MISSING_PERMISSION: plan.read", token=broad_writer)
++        wrong_scope = self.grant(["plan.read", "graph.read"], [PLANREL, "workspaces/other/graph.json"])
++        self.assert_denied("SNAPSHOT_READ_SCOPE_DENIED", token=wrong_scope)
++
++    def test_revocation_during_read_blocks_delivery(self):
++        def revoke():
++            self.auth.manage("revoke", self.admin, {"id": self.reader_id})
++        self.assert_denied("AUTH_TOKEN_REQUIRED", token="bad-token")
++        with self.assertRaisesRegex(ValueError, "AUTH_.*"):
++            self.resolve(callback=revoke)
++
++    def test_prepared_or_corrupt_journal_blocks_resolution(self):
++        path = self.add_journal("interrupted", self.graph, {**self.graph, "revision": 2}, "prepared")
++        self.assert_denied("GRAPH_RECOVERY_REQUIRED")
++        path.write_text("{this is not JSON")
++        with self.assertRaises(json.JSONDecodeError):
++            self.resolve()
++
++    def test_ambiguous_same_revision_and_wrong_owner_fail_closed(self):
++        other = copy.deepcopy(self.graph)
++        other["nodes"][1]["title"] = "Conflicting revision 1"
++        self.add_journal("conflict", None, other)
++        self.assert_denied("AMBIGUOUS_GRAPH_REVISION")
++        (self.graphs / "workspaces/.transactions/conflict.json").unlink()
++        other["identitySpace"] = "different"
++        self.add_journal("wrong-owner", None, other)
++        self.assert_denied("GRAPH_IDENTITY_MISMATCH")
++
++    def test_scenario_and_graph_pins_cannot_be_invented(self):
++        q = copy.deepcopy(self.query)
++        q["scenario"]["outcome"] = "unknown"
++        self.assert_denied("SCENARIO_NOT_FOUND", q)
++        q = copy.deepcopy(self.query)
++        q["graphs"][0]["revision"] = 2
++        self.assert_denied("SCENARIO_GRAPH_PINS_MISMATCH", q)
++        q = copy.deepcopy(self.query)
++        q["graphs"].append(copy.deepcopy(q["graphs"][0]))
++        self.assert_denied("DUPLICATE_GRAPH_PIN", q)
++
++    def test_no_two_time_or_lifecycle_claim_is_accepted(self):
++        q = copy.deepcopy(self.query)
++        q["knownAt"] = "2026-10-19T03:00:00+07:00"
++        self.assert_denied("TWO_TIME_QUERY_NOT_SUPPORTED", q)
++        q = copy.deepcopy(self.query)
++        q["lifecycle"] = "accepted"
++        self.assert_denied("REQUEST_SCHEMA", q)
++        later = copy.deepcopy(self.plan)
++        later["revision"] = 2
++        later["steps"][2]["actionRef"].pop("observedGraphRevision")
++        OWNER.apply_request(self.plans, self.authpath, self.writer, {
++            "transactionId": "missing-observed", "op": "edit", "file": PLANREL,
++            "expectedRevision": 1, "plan": later})
++        q = copy.deepcopy(self.query)
++        provenance = OWNER.read_snapshot(self.plans, PLANREL, 2)["provenance"]
++        q["plan"].update(revision=2, snapshotSHA256=provenance["snapshotSHA256"],
++                         recordDigest=provenance["recordDigest"])
++        self.assert_denied("EXACT_ACTION_REVISIONS_REQUIRED", q)
++
++
++if __name__ == "__main__":
++    unittest.main()

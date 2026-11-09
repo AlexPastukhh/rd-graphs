@@ -1,0 +1,18 @@
+{
+  "id": "RDG-HANDOFF-GROUP-CONTEXT-NAVIGATION-20261026/v1",
+  "status": "prototype_corrected_group_context_navigation",
+  "prototype": "tests/visual/rdg-ui-prototype.html",
+  "previous_handoff": "docs/handoffs/rdg-action-projection-and-group-labels-20261026/HANDOFF.md",
+  "actions_in_graph": false,
+  "actions_in_history_plan": true,
+  "groups_as_plan_entries": false,
+  "decision_to_decision_edges": false,
+  "membership_direction": "Requirement-to-Decision only",
+  "group_visual": "G labels with amber required and violet exclusive indicators",
+  "group_context_navigation": "opens parent usage focus plus expanded details",
+  "low_level_filter": true,
+  "backend_migrated": false,
+  "browser_manual_pass": false,
+  "syntax_check": "PASS",
+  "smoke": "RDG_GROUP_CONTEXT_SMOKE PASS"
+}

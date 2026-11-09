@@ -1,0 +1,11 @@
+{
+  "tools/rdg-authority.py": "c33711c3fd91009e64ad3ac11a5f0ebaaa84816349c2dc5002df66deba197fbb",
+  "tests/rdg-exact-history.test.py": "3427cc465686cc855a53c6b55df6ea89ca34165b21c84b2adcbe872fe41dee26",
+  "README.md": "74c22856833be7b74a3100beb604e43d2ebf4fa8c90618da0ec8928b529bc8e7",
+  "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md": "95c5909ba603dc88cfd2aa593b2eb25ec673e192da5571d400c94fee78fd73e2",
+  "tools/rdg-applicability-owner.py": "9b96576c79c190e7cf5a65aea1786e950b6b31c3e7c064100859b3e2d4d20f5e",
+  "tests/rdg-applicability-owner.test.py": "cb932b84a222427730c3306e9fc1fbdeb155a0e2d5289e2b4b6ac76542794797",
+  "docs/guides/RDG-APPLICABILITY-OWNER-PILOT.md": "87b2d720fe419d4cc197f05d65938785e50ade1ecac3a2e8cc15aa0cc12e0106",
+  "docs/handoffs/rdg-applicability-owner-20261019/CHECKPOINT.md": "9d158e25ea5f11547527b65ebbec478da9c3494cbe0740bcb7b03bab42931a5a",
+  "docs/handoffs/rdg-applicability-owner-20261019/WR-DELTA.md": "34eb5def08a16bba7e6b0e32a400278550a0670fc886ace8edc2e29806c58048"
+}

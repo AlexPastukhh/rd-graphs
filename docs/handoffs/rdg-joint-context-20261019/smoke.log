@@ -1,0 +1,19 @@
+{
+  "automaticBaselineEffectiveSelectionComplete": false,
+  "cliProcesses": 15,
+  "completeApplicableContextVerified": false,
+  "conflictedNewQueryRejected": true,
+  "contract": "rdg-joint-review/v1",
+  "earlyPlanRdgEventContextPreserved": true,
+  "engine": "Gendocen 0.1.0.dev25",
+  "exactBaselineContextPreserved": true,
+  "factualEventVerified": false,
+  "historicalT1KnowledgeVerified": false,
+  "lateReconstructionRequiresReview": true,
+  "productionStage4Accepted": false,
+  "realGraphWriter": true,
+  "sourceBytesUnchangedByConsumer": true,
+  "staleContextRejected": true,
+  "status": "PASS",
+  "temporarySourcesOnly": true
+}

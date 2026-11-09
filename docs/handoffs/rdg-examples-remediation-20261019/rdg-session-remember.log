@@ -1,0 +1,1 @@
+BROWSER_SESSION_MEMORY_PASS: native directory handle + real IndexedDB, reload, permissions, cancel, replacement, expiry, forget; pageerrors=0

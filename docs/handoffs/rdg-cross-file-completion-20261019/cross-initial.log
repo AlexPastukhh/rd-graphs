@@ -1,0 +1,32 @@
+test_catalog_metadata_and_exact_expansion_binding_are_checked (__main__.CrossFile.test_catalog_metadata_and_exact_expansion_binding_are_checked) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_changed_dependency_between_read_and_acceptance_is_not_published (__main__.CrossFile.test_changed_dependency_between_read_and_acceptance_is_not_published) ... ok
+test_cross_owner_gui_uses_same_writers_and_can_build_on_projection_root (__main__.CrossFile.test_cross_owner_gui_uses_same_writers_and_can_build_on_projection_root) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_deep_choice_does_not_activate_unselected_ancestor (__main__.CrossFile.test_deep_choice_does_not_activate_unselected_ancestor) ... ok
+test_denied_dependency_read_fails_before_any_write_or_success (__main__.CrossFile.test_denied_dependency_read_fails_before_any_write_or_success) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_driver_alias_preserves_local_display_and_pins_canonical_definition (__main__.CrossFile.test_driver_alias_preserves_local_display_and_pins_canonical_definition) ... ok
+test_executed_instance_never_reexecutes_or_returns_to_future_after_owner_edit (__main__.CrossFile.test_executed_instance_never_reexecutes_or_returns_to_future_after_owner_edit) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_method_correctness_automatically_executes_composite_action_and_goal (__main__.CrossFile.test_method_correctness_automatically_executes_composite_action_and_goal) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_missing_parent_result_permission_rejects_entire_child_execution (__main__.CrossFile.test_missing_parent_result_permission_rejects_entire_child_execution) ... ok
+test_missing_source_ambiguity_projection_cycle_scope_and_dependency_cycle (__main__.CrossFile.test_missing_source_ambiguity_projection_cycle_scope_and_dependency_cycle) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_partial_multifile_publication_blocks_read_and_recovers_once (__main__.CrossFile.test_partial_multifile_publication_blocks_read_and_recovers_once) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_result_must_be_recorded_at_its_owner_not_projection (__main__.CrossFile.test_result_must_be_recorded_at_its_owner_not_projection) ... ok
+test_subgoal_continuation_execution_writes_parent_history_and_future_once (__main__.CrossFile.test_subgoal_continuation_execution_writes_parent_history_and_future_once) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 40.029s
+
+OK

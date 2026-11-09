@@ -1,0 +1,10 @@
+{
+  "createdAtUTC": "2026-10-18T21:57:38.379106+00:00",
+  "previousCheckpoint": "../rdg-two-time-scenario-20261019/CHECKPOINT.json",
+  "files": {
+    "tools/rdg-authority.py": "8f9be105b842d93d122e7e57aa23ace3d34fdd16751b22c6c80c00c0ea77c445",
+    "README.md": "4270752b2b817bafbd854798353f17074a62e8f18ab694f925ef3fcc956364dd",
+    "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md": "cb1f9c59cce16f91a2fda4d387d3cac6e5b3485fd6cf41886000f778cadc06cc",
+    "tests/rdg-exact-history.test.py": "bb3603e055f33db58eccb5ee0e76d3ba483f0d6cc0d26936a9aaeeb2aa64f68c"
+  }
+}

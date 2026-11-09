@@ -1,0 +1,12 @@
+{
+  "createdAt": "2026-10-18T20:26:01.323674+00:00",
+  "previousCheckpoint": "../rdg-exact-history-20261019/CHECKPOINT.json",
+  "files": {
+    "tools/graph-package.py": "690218b9fc301dd4279b15f47f3a33f0ee5963b4e18c17c787a3ba54b3fe2d48",
+    "tools/rdg-exact-history.py": "7f68cf3f3c099ac772e9fbe47fbc1ba3cc755cbde3e139d8dc87084359a96a7a",
+    "tools/rdg-gendocen-t1-history-smoke.py": "e90e423deceb25095a0a397813db6fcdd1958c30e57f986786c127d75dfce50d",
+    "tests/rdg-exact-history.test.py": "9a2ccf4b4a3108bb5b4e7e1fb4bbc2e52bd6e7412d96e5955a0cf4306d11129d",
+    "README.md": "e6f7f101290661857cc7f22c3a13bf91bc6be0b3950a7b1c6f0c01dba5f8c646",
+    "docs/guides/RDG-EXACT-HISTORY-PILOT-P2.md": "68fa17a700fa5852b08e1c5b95cee8ac60dcbc06526b98e6f1f66dcce615e877"
+  }
+}

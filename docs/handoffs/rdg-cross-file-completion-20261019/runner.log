@@ -1,0 +1,11 @@
+{
+  "pythonSuites": 24,
+  "nodeFiles": 58,
+  "failed": [
+    {
+      "suite": "node-all",
+      "exitCode": 1,
+      "log": "node-all.log"
+    }
+  ]
+}

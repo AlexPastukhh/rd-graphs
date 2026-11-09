@@ -1,0 +1,85 @@
+{
+  "checkpoint": "CPW-RDG-APPLICABILITY-OWNER-20261019/v1",
+  "status": "CANDIDATE",
+  "stage4": "NOT ACCEPTED",
+  "environment": "Fortis Repo /workspace/repos/rd-graphs (Windows RW mount), synthetic temporary roots only",
+  "gitAvailable": false,
+  "changedFiles": [
+    "tools/rdg-authority.py",
+    "tests/rdg-exact-history.test.py",
+    "README.md",
+    "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md",
+    "tools/rdg-applicability-owner.py",
+    "tests/rdg-applicability-owner.test.py",
+    "docs/guides/RDG-APPLICABILITY-OWNER-PILOT.md",
+    "docs/handoffs/rdg-applicability-owner-20261019/CHECKPOINT.md",
+    "docs/handoffs/rdg-applicability-owner-20261019/WR-DELTA.md"
+  ],
+  "fileSHA256": {
+    "tools/rdg-authority.py": "c33711c3fd91009e64ad3ac11a5f0ebaaa84816349c2dc5002df66deba197fbb",
+    "tests/rdg-exact-history.test.py": "3427cc465686cc855a53c6b55df6ea89ca34165b21c84b2adcbe872fe41dee26",
+    "README.md": "74c22856833be7b74a3100beb604e43d2ebf4fa8c90618da0ec8928b529bc8e7",
+    "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md": "95c5909ba603dc88cfd2aa593b2eb25ec673e192da5571d400c94fee78fd73e2",
+    "tools/rdg-applicability-owner.py": "9b96576c79c190e7cf5a65aea1786e950b6b31c3e7c064100859b3e2d4d20f5e",
+    "tests/rdg-applicability-owner.test.py": "cb932b84a222427730c3306e9fc1fbdeb155a0e2d5289e2b4b6ac76542794797",
+    "docs/guides/RDG-APPLICABILITY-OWNER-PILOT.md": "87b2d720fe419d4cc197f05d65938785e50ade1ecac3a2e8cc15aa0cc12e0106",
+    "docs/handoffs/rdg-applicability-owner-20261019/CHECKPOINT.md": "9d158e25ea5f11547527b65ebbec478da9c3494cbe0740bcb7b03bab42931a5a",
+    "docs/handoffs/rdg-applicability-owner-20261019/WR-DELTA.md": "34eb5def08a16bba7e6b0e32a400278550a0670fc886ace8edc2e29806c58048"
+  },
+  "tests": {
+    "results": {
+      "applicability-owner": {
+        "command": "python3 tests/rdg-applicability-owner.test.py -v",
+        "exitCode": 0,
+        "tests": 9,
+        "log": "applicability-owner.log"
+      },
+      "plan-owner": {
+        "command": "python3 tests/rdg-temporal-plan-owner.test.py -v",
+        "exitCode": 0,
+        "tests": 17,
+        "log": "plan-owner.log"
+      },
+      "exact-history": {
+        "command": "python3 tests/rdg-exact-history.test.py -v",
+        "exitCode": 0,
+        "tests": 13,
+        "log": "exact-history.log"
+      },
+      "two-time-scenario": {
+        "command": "python3 tests/rdg-two-time-scenario.test.py -v",
+        "exitCode": 0,
+        "tests": 6,
+        "log": "two-time-scenario.log"
+      },
+      "writer-recording": {
+        "command": "python3 tests/rdg-writer-recording.test.py -v",
+        "exitCode": 0,
+        "tests": 2,
+        "log": "writer-recording.log"
+      },
+      "bearer-authority": {
+        "command": "node --test tests/rdg-bearer-authority.test.cjs",
+        "exitCode": 0,
+        "tests": 2,
+        "log": "bearer-authority.log"
+      }
+    },
+    "total": 49,
+    "priorGendocen": "current-projection synthetic smoke, not rerun",
+    "priorNode": "405 PASS before Plan changes, not rerun"
+  },
+  "p2AcCount": {
+    "Локальный PASS": 7,
+    "PARTIAL": 10,
+    "OPEN": 3
+  },
+  "localLinksChecked": 76,
+  "validation": "PASS: 20 P2-AC IDs once; 9 selected diff files, local links and SHA verified",
+  "v41ZipSHA256": "ab5ba0acf4a116eb24ac24340f151527786cf1e93c90aa7b38f52e50b92d5401",
+  "limitations": [
+    "caller-supplied unverified applicability assertion and event claim",
+    "no trusted event source, complete applicable context or accepted future baseline",
+    "no historical Gendocen as-of, Windows installed proof or publication"
+  ]
+}

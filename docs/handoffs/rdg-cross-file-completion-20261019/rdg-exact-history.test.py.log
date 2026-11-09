@@ -1,0 +1,19 @@
+test_ambiguous_same_revision_and_wrong_owner_fail_closed (__main__.ExactHistoryTest.test_ambiguous_same_revision_and_wrong_owner_fail_closed) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_completed_before_image_resolves_without_create_journal (__main__.ExactHistoryTest.test_completed_before_image_resolves_without_create_journal) ... ok
+test_exact_source_is_stable_after_current_graph_changes (__main__.ExactHistoryTest.test_exact_source_is_stable_after_current_graph_changes) ... ok
+test_invalid_v2_clock_and_effective_at_are_rejected (__main__.ExactHistoryTest.test_invalid_v2_clock_and_effective_at_are_rejected) ... ok
+test_known_at_uses_direct_plan_receipt_and_legacy_successor (__main__.ExactHistoryTest.test_known_at_uses_direct_plan_receipt_and_legacy_successor) ... ok
+test_missing_exact_graph_and_no_current_fallback (__main__.ExactHistoryTest.test_missing_exact_graph_and_no_current_fallback) ... ok
+test_no_two_time_or_lifecycle_claim_is_accepted (__main__.ExactHistoryTest.test_no_two_time_or_lifecycle_claim_is_accepted) ... ok
+test_plan_hash_and_graph_hash_are_mandatory (__main__.ExactHistoryTest.test_plan_hash_and_graph_hash_are_mandatory) ... ok
+test_plan_or_graph_not_authorized_even_with_write_grants (__main__.ExactHistoryTest.test_plan_or_graph_not_authorized_even_with_write_grants) ... ok
+test_prepared_or_corrupt_journal_blocks_resolution (__main__.ExactHistoryTest.test_prepared_or_corrupt_journal_blocks_resolution) ... ok
+test_revocation_during_read_blocks_delivery (__main__.ExactHistoryTest.test_revocation_during_read_blocks_delivery) ... ok
+test_scenario_and_graph_pins_cannot_be_invented (__main__.ExactHistoryTest.test_scenario_and_graph_pins_cannot_be_invented) ... ok
+test_symlinked_journal_is_denied (__main__.ExactHistoryTest.test_symlinked_journal_is_denied) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.967s
+
+OK

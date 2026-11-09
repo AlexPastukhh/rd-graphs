@@ -1,0 +1,124 @@
+{
+  "checkpoint": "CPW-RDG-JOINT-CONTEXT-20261019/v1",
+  "status": "CANDIDATE",
+  "stage4": "NOT ACCEPTED",
+  "environment": "Fortis Repo /workspace/repos/rd-graphs (Windows RW mount), synthetic temporary roots only",
+  "gitAvailable": false,
+  "changedFiles": [
+    "README.md",
+    "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md",
+    "tools/rdg-joint-context.py",
+    "tools/rdg-joint-context-smoke.py",
+    "tests/rdg-joint-context.test.py",
+    "docs/guides/RDG-JOINT-CONTEXT-PILOT.md",
+    "docs/handoffs/rdg-joint-context-20261019/CHECKPOINT.md",
+    "docs/handoffs/rdg-joint-context-20261019/WR-DELTA.md"
+  ],
+  "fileSHA256": {
+    "README.md": "8cf89d160981effd25457ea8a4e0176342e028b4ec84552ea9c4e3ca4b38b2c6",
+    "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md": "dcbc19b2bab1bf56689a88553059334a8a2c1b60cc48cd634b151f82a99df60c",
+    "tools/rdg-joint-context.py": "cb15740fc2f86ed445d916b1066f0cb6f49d682a12dc02a76307e57e0a185452",
+    "tools/rdg-joint-context-smoke.py": "6d263bca646a56752fd2d26f0fa2bc584e221a6812cd006f90684eaa5c430d73",
+    "tests/rdg-joint-context.test.py": "fe5ad4f67928d220c8425b5d029845b266bc47b17a27b9edc2a257303a0c1484",
+    "docs/guides/RDG-JOINT-CONTEXT-PILOT.md": "f47fbf26cee19bef388cfb45d8404201948d1e5682302d43414a4b6c7a8ecfaf",
+    "docs/handoffs/rdg-joint-context-20261019/CHECKPOINT.md": "4e6e8be5a4971e8f5deeaa2b9354ebd561c3b15caf58e88ccac45d345d604518",
+    "docs/handoffs/rdg-joint-context-20261019/WR-DELTA.md": "c46cc40ebef8b8d8712c2a39beb400f61414b34780dee4c08fd345fe254dd577"
+  },
+  "dependencySHA256": {
+    "tools/rdg-applicability-owner.py": "9b96576c79c190e7cf5a65aea1786e950b6b31c3e7c064100859b3e2d4d20f5e",
+    "tools/rdg-future-baseline-owner.py": "63a667a991720341ee496bcc6645595d6c1a49fcf88cfb57fa1ed08963cfb9c3",
+    "tools/rdg-exact-history.py": "59a0ae87f334d53e63c225ff12b2fe3028c8a609578011c7d3d64513119401d9",
+    "tools/rdg-two-time-scenario.py": "ae025071e585a19c0a5c911aac66dda8aba46e6ac7f4d5ef5654ff39f5e6126d",
+    "tools/rdg-event-owner.py": "8f855fc7f1c885d1c92bc643c7e5908b0a2ad8e18d181b009827a68ec6eae24c",
+    "tools/rdg-event-gendocen.py": "b6afea00e8d8ac5f8fb954348c4326fd40f96bb2ce60678b82c358af6ec3b326",
+    "tools/rdg-temporal-plan-owner.py": "6fc18feae35f80413e52bfb4fe67f8cbf5559cca89d86c223b6380c7e2c51c54",
+    "tools/rdg-temporal-plan.py": "a72b037a21740eec5d7ece9af29aa91f3fdf9fd59eb8a4b1da65faf62a8e9179",
+    "tools/rdg-temporal-impact.py": "0656f466bb4303fb7969ce1cb241ea84fc33b22595ceaffaf01679a5f26682c8",
+    "tools/rdg-authority.py": "f2cb0fa8ca1d2b4c57ce8626bcbb90d29e359743c2d608b662c97a75ee5dde42",
+    "tools/graph-package.py": "abfbfd334dca0ee39da1264d6d848284a7daa54510812d408d24f3384a60477b",
+    "tools/graph-apply.py": "dd5e3ea3b7f460363e97683b8c6494b853ddf31bf098b53ec04a449e647444c7",
+    "tools/graph-index.py": "8c4b233e6346db6b4f8d90800b3263e90112b9dc781ce27c8b649d9a2e6c0e09",
+    "tools/rdg-v7-model.py": "b80af6d28482d20fd47184c6785cd96154e8faffb3725d0970323d3f65541d47",
+    "tools/rdg-v6-action-reconsider.py": "521c8027cbc2dea86f1b6e495aa515d9c273195bc5da40f1d2ea75e92206df9f",
+    "tools/rdg-v6-action-trust.py": "e3ed745a3921a0757bb6cee0559711eb2089d70ad7cc40b9848a671c997ef829",
+    "tools/rdg-state.py": "7c503674e381080b8fdb55a8456c03c08c13d28ab7254e2fa8e4e60cf8ee7b2f",
+    "tools/rdg-state.js": "6d77706b91d05ea914a340b51c7b3c3b44feba0572ad40b9e241d37dc5cb1f69",
+    "tools/rdg-state-cli.cjs": "0eb4ccf2d918d783fbf440c936790e0ab1ad02e1d08bd0343f0d6473bd61688b",
+    "tools/rdg-catalog.py": "1df40b8736ea9c60a695925c52d86246edf30cae3fb556c3e52731b38444c461",
+    "tools/rdg-catalog.js": "ab074dde2cb33e20abd1ffe67254ec0976a9ef95d86bd3c27136ef271d554f8f",
+    "tools/rdg-graph-api.py": "e02350e2a385cca0e18020e955e3db31002c378bcf1f247f8b41c8f88a913039"
+  },
+  "tests": {
+    "results": {
+      "joint-context": {
+        "command": "python3 tests/rdg-joint-context.test.py -v",
+        "exitCode": 0,
+        "tests": 12,
+        "log": "joint-context.log"
+      },
+      "applicability-owner": {
+        "command": "python3 tests/rdg-applicability-owner.test.py -v",
+        "exitCode": 0,
+        "tests": 9,
+        "log": "applicability-owner.log"
+      },
+      "future-baseline": {
+        "command": "python3 tests/rdg-future-baseline.test.py -v",
+        "exitCode": 0,
+        "tests": 9,
+        "log": "future-baseline.log"
+      },
+      "exact-history": {
+        "command": "python3 tests/rdg-exact-history.test.py -v",
+        "exitCode": 0,
+        "tests": 13,
+        "log": "exact-history.log"
+      },
+      "event-projection": {
+        "command": "python3 tests/rdg-event-gendocen.test.py -v",
+        "exitCode": 0,
+        "tests": 6,
+        "log": "event-projection.log"
+      }
+    },
+    "total": 49,
+    "realSyntheticGendocen": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 tools/rdg-joint-context-smoke.py --engine-source /workspace/repos/gendocen",
+      "exitCode": 0,
+      "result": {
+        "automaticBaselineEffectiveSelectionComplete": false,
+        "cliProcesses": 15,
+        "completeApplicableContextVerified": false,
+        "conflictedNewQueryRejected": true,
+        "contract": "rdg-joint-review/v1",
+        "earlyPlanRdgEventContextPreserved": true,
+        "engine": "Gendocen 0.1.0.dev25",
+        "exactBaselineContextPreserved": true,
+        "factualEventVerified": false,
+        "historicalT1KnowledgeVerified": false,
+        "lateReconstructionRequiresReview": true,
+        "productionStage4Accepted": false,
+        "realGraphWriter": true,
+        "sourceBytesUnchangedByConsumer": true,
+        "staleContextRejected": true,
+        "status": "PASS",
+        "temporarySourcesOnly": true
+      },
+      "log": "smoke.log"
+    },
+    "priorRegression": "88 targeted, event smoke 25 CLI and 405 Node belong to earlier checkpoints; not repeated in full"
+  },
+  "p2AcCount": {
+    "Локальный PASS": 7,
+    "PARTIAL": 12,
+    "OPEN": 1
+  },
+  "localLinksChecked": 86,
+  "validation": "PASS: 20 P2-AC IDs once; 8 selected diff files, local links and SHA verified",
+  "v41ZipSHA256": "ab5ba0acf4a116eb24ac24340f151527786cf1e93c90aa7b38f52e50b92d5401",
+  "limitations": [
+    "one declared Plan/branch/occurrence scope only",
+    "accepted-future requires exact state revision; no automatic effective-time baseline selection",
+    "no trusted facts, complete owner inventory, factual T1, combined concurrency/recovery, Windows installed proof or publication"
+  ]
+}

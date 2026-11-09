@@ -1,0 +1,17 @@
+test_branch_coverage_overlap_and_possible_step_gate (__main__.TemporalPlanTest.test_branch_coverage_overlap_and_possible_step_gate) ... ok
+test_cli_read_only_and_explicit_derived_json (__main__.TemporalPlanTest.test_cli_read_only_and_explicit_derived_json) ... ok
+test_conditional_paths_require_event_order_and_do_not_force_both_cases (__main__.TemporalPlanTest.test_conditional_paths_require_event_order_and_do_not_force_both_cases) ... ok
+test_cycles_unknown_dependency_and_negative_delay_are_rejected (__main__.TemporalPlanTest.test_cycles_unknown_dependency_and_negative_delay_are_rejected) ... ok
+test_missing_or_wrong_graph_reference_is_explicit (__main__.TemporalPlanTest.test_missing_or_wrong_graph_reference_is_explicit) ... ok
+test_no_invented_accepted_action_or_observed_event (__main__.TemporalPlanTest.test_no_invented_accepted_action_or_observed_event) ... ok
+test_relative_time_and_deadline_do_not_create_dates_or_requirements (__main__.TemporalPlanTest.test_relative_time_and_deadline_do_not_create_dates_or_requirements) ... ok
+test_selected_action_can_be_referenced_without_new_selection (__main__.TemporalPlanTest.test_selected_action_can_be_referenced_without_new_selection) ... ok
+test_time_zone_date_validation_and_basis (__main__.TemporalPlanTest.test_time_zone_date_validation_and_basis) ... ok
+test_two_branches_keep_candidate_actions_and_graph_file_unchanged (__main__.TemporalPlanTest.test_two_branches_keep_candidate_actions_and_graph_file_unchanged) ... ok
+test_unrecognized_fields_cannot_smuggle_execution_claims (__main__.TemporalPlanTest.test_unrecognized_fields_cannot_smuggle_execution_claims) ... ok
+test_wrong_node_kind_and_changed_revision (__main__.TemporalPlanTest.test_wrong_node_kind_and_changed_revision) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.293s
+
+OK

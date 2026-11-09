@@ -1,0 +1,18 @@
+{
+  "BASELINE.json": "361322f8cc5add24e708a56d2f63ec6ab134bb7475caeadb92b6eff86787f42d",
+  "CHECKPOINT.json": "ba12844f06dd47445734d8500ec853ca19217207d730db930f4000a1fd70ed86",
+  "CHECKPOINT.md": "4e6e8be5a4971e8f5deeaa2b9354ebd561c3b15caf58e88ccac45d345d604518",
+  "SELECTED-DIFF.patch": "0b4bd35fbfd8a43a94316085231d4efda353523747f8dbfea0fd854579c90de0",
+  "SOURCE-HASHES.json": "0a038745c60bd77f2df39e69a7c7f5125e6ff7a12978e886c3ce923948a6088b",
+  "WR-DELTA.md": "c46cc40ebef8b8d8712c2a39beb400f61414b34780dee4c08fd345fe254dd577",
+  "applicability-owner.log": "c432e7e1fd96272072c80e476660b9fa2620a31e63184d872f373e662a9a655c",
+  "before-RDG-CURRENT-EXECUTION-PLAN.md": "4cb8d0238d83d5f0b35ce6800ca7218459acb251a9a9872b18f2460461bf7efc",
+  "before-README.md": "f70469ca6067daa3a4077f767fb2d0d7e48c04da230c1144fadcca4df6ad08d6",
+  "event-projection.log": "1402397238f58e371bc3ac9d76bee9a06e0514cca319a6daec13c7ec3d1ce127",
+  "exact-history.log": "fb67c9f0927706c8d2067251537c48fdb9c54870bdbb82f3a6543692152f84cc",
+  "future-baseline.log": "42f25c5fa4d4a97e69e4a008787a9b3b2ce0d7d5cd328dad414438db9ffba6a3",
+  "joint-context.log": "1c24665b908218cf9829169c1e5083eb82bc07e39cc9bdc114f7af883fa8ac6f",
+  "smoke-result.json": "873c6259b944e5358efcd2071f535cc3c3bbdd80c0a46891ac13a290318ba885",
+  "smoke.log": "8844fc7723eabe28b6547e81407475ee1d4aee46ed4f558c3b2b0bc8c1bd1bd6",
+  "test-results.json": "91a6c36eadcc17c2f49fc27744b710e0e0192aa818267d6af2331817174b4225"
+}

@@ -1,0 +1,15 @@
+{
+  "tools/graph-apply.py": "dd5e3ea3b7f460363e97683b8c6494b853ddf31bf098b53ec04a449e647444c7",
+  "tools/rdg-v7-model.py": "b80af6d28482d20fd47184c6785cd96154e8faffb3725d0970323d3f65541d47",
+  "tools/rdg-graph-api.py": "e02350e2a385cca0e18020e955e3db31002c378bcf1f247f8b41c8f88a913039",
+  "tools/graph-index.py": "8c4b233e6346db6b4f8d90800b3263e90112b9dc781ce27c8b649d9a2e6c0e09",
+  "tools/rdg-root-projection.js": "f1967db7517b32cfbacb1393de28bc7f93595325be6422981698920625fa3ed3",
+  "tools/rd-graph-viewer.user.js": "d08ae48e866253174bc11699ebed8a3076a81b9100a9db109f2ad9f601dca86c",
+  "tools/graph-package.py": "abfbfd334dca0ee39da1264d6d848284a7daa54510812d408d24f3384a60477b",
+  "tools/rdg-v6-action-trust.py": "e3ed745a3921a0757bb6cee0559711eb2089d70ad7cc40b9848a671c997ef829",
+  "tools/rdg-authority.py": "f2cb0fa8ca1d2b4c57ce8626bcbb90d29e359743c2d608b662c97a75ee5dde42",
+  "docs/guides/RDG-V7-WORKING-GRAPHS.md": "6ba84e72750621f7be92c6fa6be83776bd17f3eb769dae357f78cab0a0635b9f",
+  "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md": "b71661e13f361143724bc98e0b458e80e4739ee3d22c2182a381f38f1d4ed311",
+  "README.md": "340c4d527ab5091e706ba98a9ea389e69d99f14870ae8e93fdbc6cbcb41ae735",
+  "tools/rdg-exact-history.py": "59a0ae87f334d53e63c225ff12b2fe3028c8a609578011c7d3d64513119401d9"
+}

@@ -1,0 +1,10 @@
+{
+  "createdAt": "2026-10-18T20:05:44.701484+00:00",
+  "previousCheckpoint": "../rdg-vertical-slice-20261019/CHECKPOINT.json",
+  "files": {
+    "tools/rdg-authority.py": "942dc71082701a8e485c61f2c9632c702f67bb1a77f256b82e05ac58c16f319b",
+    "tools/rdg-temporal-impact.py": "70f3d85fe05090d3385ec2e03cca66c17b215d7b61f9b06b286ff4e1b71f6198",
+    "tools/rdg-gendocen-t1-history-smoke.py": "21e58fc39927864f81524b7157911ef2b77da9cb87ee5d25ac3cfac94aceaf4d",
+    "README.md": "1fab88448052411e7fda88763c040bc5737fdb27732f9a458394295fbb461f98"
+  }
+}

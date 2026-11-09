@@ -1,0 +1,15 @@
+test_branch_specific_constraint_does_not_change_other_refs (__main__.ResourceAdapterTest.test_branch_specific_constraint_does_not_change_other_refs) ... ok
+test_cli_uses_explicit_path_and_leaves_inputs_unchanged (__main__.ResourceAdapterTest.test_cli_uses_explicit_path_and_leaves_inputs_unchanged) ... ok
+test_declared_graph_reference_must_match_known_workspace_path (__main__.ResourceAdapterTest.test_declared_graph_reference_must_match_known_workspace_path) ... ok
+test_different_graphs_with_same_graph_id_have_distinct_resources (__main__.ResourceAdapterTest.test_different_graphs_with_same_graph_id_have_distinct_resources) ... ok
+test_invalid_graph_or_plan_fails (__main__.ResourceAdapterTest.test_invalid_graph_or_plan_fails) ... ok
+test_plan_steps_reordering_and_revision_are_not_semantic (__main__.ResourceAdapterTest.test_plan_steps_reordering_and_revision_are_not_semantic) ... ok
+test_reordering_conditional_outcomes_and_cases_does_not_change_semantics (__main__.ResourceAdapterTest.test_reordering_conditional_outcomes_and_cases_does_not_change_semantics) ... ok
+test_reordering_nodes_json_and_revision_only_does_not_touch_semantic_digest (__main__.ResourceAdapterTest.test_reordering_nodes_json_and_revision_only_does_not_touch_semantic_digest) ... ok
+test_semantic_node_changes_are_localized_by_id (__main__.ResourceAdapterTest.test_semantic_node_changes_are_localized_by_id) ... ok
+test_stable_plan_resource_has_branch_and_action_ref_paths (__main__.ResourceAdapterTest.test_stable_plan_resource_has_branch_and_action_ref_paths) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.595s
+
+OK

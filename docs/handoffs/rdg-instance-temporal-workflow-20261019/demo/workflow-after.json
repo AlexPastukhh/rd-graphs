@@ -1,0 +1,341 @@
+{
+  "schemaVersion": 1,
+  "planId": "demo",
+  "title": "План во времени",
+  "planProvenance": {
+    "identitySpace": "demo",
+    "planId": "demo",
+    "sourcePath": "plans/demo/plan.json",
+    "revision": 2,
+    "recordedAt": "2026-10-19T09:29:30.060832+00:00",
+    "recordDigest": "bfa39f9f9a43b65f32955fc2f0770270cbdb261b6217d8b6262215b5e63d8199",
+    "snapshotSHA256": "2520b539d515f509c7979679674f6582888d0dd3a2dc97308740fc257cae973e",
+    "exactPlanSnapshotResolved": true,
+    "historicalRdgSnapshotResolved": false,
+    "acceptanceVerified": false,
+    "eventsAttested": false
+  },
+  "graphOwners": {
+    "workspaces/demo/graph.json": {
+      "identitySpace": "demo",
+      "revision": 7
+    }
+  },
+  "future": [],
+  "history": [
+    {
+      "id": "create::workspaces/demo/graph.json::saved",
+      "graphFile": "workspaces/demo/graph.json",
+      "kind": "graph_saved",
+      "recordedAt": "2026-10-19T09:29:29.347762+00:00",
+      "transactionId": "create",
+      "revision": 1,
+      "previousRevision": null,
+      "changed": {
+        "nodes": [
+          "R0"
+        ],
+        "edges": []
+      },
+      "authorityPrincipals": [
+        "bearer:g_bee5d2aa8d3e8e5c4edd"
+      ],
+      "summary": "Изменены: Root",
+      "operations": []
+    },
+    {
+      "id": "tx-1::workspaces/demo/graph.json::saved",
+      "graphFile": "workspaces/demo/graph.json",
+      "kind": "graph_saved",
+      "recordedAt": "2026-10-19T09:29:29.936145+00:00",
+      "transactionId": "tx-1",
+      "revision": 2,
+      "previousRevision": 1,
+      "changed": {
+        "nodes": [
+          "A1",
+          "A2"
+        ],
+        "edges": [
+          "action-drive-A1",
+          "action-drive-A2"
+        ]
+      },
+      "authorityPrincipals": [
+        "bearer:g_7a94c6617d81466217fe"
+      ],
+      "summary": "Изменены: A1, A2",
+      "operations": []
+    },
+    {
+      "id": "tx-2::workspaces/demo/graph.json::saved",
+      "graphFile": "workspaces/demo/graph.json",
+      "kind": "graph_saved",
+      "recordedAt": "2026-10-19T09:29:30.455614+00:00",
+      "transactionId": "tx-2",
+      "revision": 3,
+      "previousRevision": 2,
+      "changed": {
+        "nodes": [
+          "A1"
+        ],
+        "edges": []
+      },
+      "authorityPrincipals": [
+        "bearer:g_7a94c6617d81466217fe"
+      ],
+      "summary": "Synthetic result or graph change",
+      "operations": [
+        "action_selected"
+      ]
+    },
+    {
+      "id": "tx-3::workspaces/demo/graph.json::saved",
+      "graphFile": "workspaces/demo/graph.json",
+      "kind": "graph_saved",
+      "recordedAt": "2026-10-19T09:29:30.722561+00:00",
+      "transactionId": "tx-3",
+      "revision": 4,
+      "previousRevision": 3,
+      "changed": {
+        "nodes": [],
+        "edges": []
+      },
+      "authorityPrincipals": [
+        "bearer:g_7a94c6617d81466217fe"
+      ],
+      "summary": "Изменены: ",
+      "operations": []
+    },
+    {
+      "id": "workspaces/demo/graph.json::EV-2",
+      "graphFile": "workspaces/demo/graph.json",
+      "kind": "action_executed",
+      "sourceEventType": "action_executed",
+      "targetId": "A1",
+      "title": "A1",
+      "eventOrder": 1,
+      "recordedAt": "2026-10-19T09:29:30.722561+00:00",
+      "occurredAt": null,
+      "by": "assistant",
+      "authorityPrincipal": "bearer:g_7a94c6617d81466217fe",
+      "completionMode": "explicit",
+      "basisSHA256": "8d828c0b5ba25b98ec0831f5251182ab444d584eba2d020f8921294627c290f4",
+      "note": "Synthetic result or graph change",
+      "transactionId": "tx-3"
+    },
+    {
+      "id": "workspaces/demo/graph.json::completion-7c6d55a21fbf3bb8f28d931bd32680f9",
+      "graphFile": "workspaces/demo/graph.json",
+      "kind": "requirement_achieved",
+      "sourceEventType": "requirement_achieved",
+      "targetId": "R0",
+      "title": "Root",
+      "eventOrder": 2,
+      "recordedAt": "2026-10-19T09:29:30.722561+00:00",
+      "occurredAt": null,
+      "by": "assistant",
+      "authorityPrincipal": "bearer:g_7a94c6617d81466217fe",
+      "completionMode": "derived",
+      "basisSHA256": "038b85d80645e900357d3054ac1e2d011c9d186b44281ff8a8194d6d45b42751",
+      "note": "Обязательная работа выбранной композиции выполнена",
+      "transactionId": "tx-3"
+    },
+    {
+      "id": "tx-4::workspaces/demo/graph.json::saved",
+      "graphFile": "workspaces/demo/graph.json",
+      "kind": "graph_saved",
+      "recordedAt": "2026-10-19T09:29:31.364393+00:00",
+      "transactionId": "tx-4",
+      "revision": 5,
+      "previousRevision": 4,
+      "changed": {
+        "nodes": [
+          "A1"
+        ],
+        "edges": []
+      },
+      "authorityPrincipals": [
+        "bearer:g_7a94c6617d81466217fe"
+      ],
+      "summary": "Synthetic result or graph change",
+      "operations": [
+        "action_withdrawn"
+      ]
+    },
+    {
+      "id": "workspaces/demo/graph.json::EV-3",
+      "graphFile": "workspaces/demo/graph.json",
+      "kind": "action_withdrawn",
+      "sourceEventType": "action_withdrawn",
+      "targetId": "A1",
+      "title": "A1",
+      "eventOrder": 3,
+      "recordedAt": "2026-10-19T09:29:31.364393+00:00",
+      "occurredAt": null,
+      "by": "assistant",
+      "authorityPrincipal": "bearer:g_7a94c6617d81466217fe",
+      "completionMode": null,
+      "basisSHA256": null,
+      "note": "Synthetic result or graph change",
+      "transactionId": "tx-4"
+    },
+    {
+      "id": "tx-5::workspaces/demo/graph.json::saved",
+      "graphFile": "workspaces/demo/graph.json",
+      "kind": "graph_saved",
+      "recordedAt": "2026-10-19T09:29:31.617387+00:00",
+      "transactionId": "tx-5",
+      "revision": 6,
+      "previousRevision": 5,
+      "changed": {
+        "nodes": [
+          "A2"
+        ],
+        "edges": []
+      },
+      "authorityPrincipals": [
+        "bearer:g_7a94c6617d81466217fe"
+      ],
+      "summary": "Synthetic result or graph change",
+      "operations": [
+        "action_selected"
+      ]
+    },
+    {
+      "id": "tx-6::workspaces/demo/graph.json::saved",
+      "graphFile": "workspaces/demo/graph.json",
+      "kind": "graph_saved",
+      "recordedAt": "2026-10-19T09:29:31.869316+00:00",
+      "transactionId": "tx-6",
+      "revision": 7,
+      "previousRevision": 6,
+      "changed": {
+        "nodes": [],
+        "edges": []
+      },
+      "authorityPrincipals": [
+        "bearer:g_7a94c6617d81466217fe"
+      ],
+      "summary": "Изменены: ",
+      "operations": []
+    },
+    {
+      "id": "workspaces/demo/graph.json::EV-5",
+      "graphFile": "workspaces/demo/graph.json",
+      "kind": "action_executed",
+      "sourceEventType": "action_executed",
+      "targetId": "A2",
+      "title": "A2",
+      "eventOrder": 5,
+      "recordedAt": "2026-10-19T09:29:31.869316+00:00",
+      "occurredAt": null,
+      "by": "assistant",
+      "authorityPrincipal": "bearer:g_7a94c6617d81466217fe",
+      "completionMode": "explicit",
+      "basisSHA256": "a415a1401b8d3ada7611cf5b138d842c4903fa0b3c33b3accdfa2acda0de81a8",
+      "note": "Synthetic result or graph change",
+      "transactionId": "tx-6"
+    },
+    {
+      "id": "workspaces/demo/graph.json::completion-ea110c29e284a6aa65591669bbda3370",
+      "graphFile": "workspaces/demo/graph.json",
+      "kind": "requirement_achieved",
+      "sourceEventType": "requirement_achieved",
+      "targetId": "R0",
+      "title": "Root",
+      "eventOrder": 6,
+      "recordedAt": "2026-10-19T09:29:31.869316+00:00",
+      "occurredAt": null,
+      "by": "assistant",
+      "authorityPrincipal": "bearer:g_7a94c6617d81466217fe",
+      "completionMode": "derived",
+      "basisSHA256": "5f503c35c2a1d80b715d6c61f0b22f91e42cd3447f299458fd8798786b60fc88",
+      "note": "Обязательная работа выбранной композиции выполнена",
+      "transactionId": "tx-6"
+    }
+  ],
+  "unresolved": [],
+  "excludedPlacements": [
+    {
+      "stepId": "S1",
+      "kind": "action",
+      "graphRef": {
+        "graphFile": "workspaces/demo/graph.json",
+        "identitySpace": "demo",
+        "nodeId": "A1"
+      },
+      "nodeId": "A1",
+      "title": "A1",
+      "plannedTitle": "Разместить A1",
+      "state": "planned",
+      "graphRevision": 7,
+      "timeConstraints": [
+        {
+          "at": "2026-10-20",
+          "basis": "Synthetic placement",
+          "stepId": "S1",
+          "strength": "soft",
+          "type": "notBefore"
+        }
+      ],
+      "sequence": [],
+      "reason": "completed",
+      "eventId": "EV-2"
+    },
+    {
+      "stepId": "S2",
+      "kind": "action",
+      "graphRef": {
+        "graphFile": "workspaces/demo/graph.json",
+        "identitySpace": "demo",
+        "nodeId": "A2"
+      },
+      "nodeId": "A2",
+      "title": "A2",
+      "plannedTitle": "Разместить A2",
+      "state": "planned",
+      "graphRevision": 7,
+      "timeConstraints": [
+        {
+          "at": "2026-10-20",
+          "basis": "Synthetic placement",
+          "stepId": "S2",
+          "strength": "soft",
+          "type": "notBefore"
+        }
+      ],
+      "sequence": [],
+      "reason": "completed",
+      "eventId": "EV-5"
+    },
+    {
+      "stepId": "SG",
+      "kind": "requirement",
+      "graphRef": {
+        "graphFile": "workspaces/demo/graph.json",
+        "identitySpace": "demo",
+        "nodeId": "R0"
+      },
+      "nodeId": "R0",
+      "title": "Root",
+      "plannedTitle": "Разместить R0",
+      "state": "planned",
+      "graphRevision": 7,
+      "timeConstraints": [
+        {
+          "at": "2026-10-20",
+          "basis": "Synthetic placement",
+          "stepId": "SG",
+          "strength": "soft",
+          "type": "notBefore"
+        }
+      ],
+      "sequence": [],
+      "reason": "completed",
+      "eventId": "completion-ea110c29e284a6aa65591669bbda3370"
+    }
+  ],
+  "sourcesChanged": false,
+  "coverage": "current explicit Plan and requested graph owners; external completion unresolved"
+}

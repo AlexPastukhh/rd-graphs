@@ -1,0 +1,46 @@
+TAP version 13
+# Subtest: two Action canons sit above their owners and remain outside the R-Action-R rank chain
+ok 1 - two Action canons sit above their owners and remain outside the R-Action-R rank chain
+  ---
+  duration_ms: 104.696527
+  type: 'test'
+  ...
+# Subtest: old saved canon coordinates do not detach it from a moved or restored Action
+ok 2 - old saved canon coordinates do not detach it from a moved or restored Action
+  ---
+  duration_ms: 77.827512
+  type: 'test'
+  ...
+# Subtest: selected legacy Decision retains its option canon above the Decision across variant toggles
+ok 3 - selected legacy Decision retains its option canon above the Decision across variant toggles
+  ---
+  duration_ms: 169.868417
+  type: 'test'
+  ...
+# Subtest: a placed legacy option gets its own attached canon when all options are shown
+ok 4 - a placed legacy option gets its own attached canon when all options are shown
+  ---
+  duration_ms: 16.418013
+  type: 'test'
+  ...
+# Subtest: dense saved Action coordinates automatically separate the complete canon/Action pairs
+ok 5 - dense saved Action coordinates automatically separate the complete canon/Action pairs
+  ---
+  duration_ms: 63.342592
+  type: 'test'
+  ...
+# Subtest: dragging and saving a repaired dense layout preserve every reflowed pair on reload
+ok 6 - dragging and saving a repaired dense layout preserve every reflowed pair on reload
+  ---
+  duration_ms: 56.860567
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 783.911752

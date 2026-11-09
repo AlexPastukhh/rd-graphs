@@ -1,0 +1,825 @@
+--- a/README.md
++++ b/README.md
+@@ -24,6 +24,11 @@
+ не устанавливает фактическую ветвь или выбор Action. Старый Gendocen
+ adapter явно отклоняет такие sidecars до их семантической интеграции.
+ [Контрольная точка событий](docs/handoffs/rdg-event-lifecycle-20261019/CHECKPOINT.md).
++[Явный event-контракт Gendocen v1](docs/guides/RDG-EVENT-GENDOCEN-PILOT.md)
++проверен реальным движком: поздние записи требуют review текущего контекста,
++а проекция с ранним `knownAt` сохраняется. Это scoped event review;
++полный исторический Plan/RDG resolver остаётся открытым.
++[Новая контрольная точка](docs/handoffs/rdg-event-gendocen-20261019/CHECKPOINT.md).
+ 
+ Исправлены пропуск вычисляемой группы зависимостей из declaration и потеря
+ смысловых `title`: контракт `rdg-temporal-review/v2` отклоняет неполное покрытие.
+--- a/docs/guides/RDG-CURRENT-EXECUTION-PLAN.md
++++ b/docs/guides/RDG-CURRENT-EXECUTION-PLAN.md
+@@ -1,6 +1,7 @@
+ # RDG + Temporal Plan — актуальный порядок исполнения
+ 
+-**Срез:** CPW-RDG-PLAN-RECONCILE-20261019/v1. **Статус:** рабочий план
++**Актуальная контрольная точка:** CPW-RDG-EVENT-GENDOCEN-20261019/v1.
++**Статус:** рабочий план
+ для Candidate-пилота. **Stage 4 NOT ACCEPTED.** Этот документ обновляет
+ порядок и фактические статусы после локальных проверок. Он не меняет
+ нормативные Need / FR / Desired Scenario / SRU, не принимает Proposals и не
+@@ -18,18 +19,19 @@
+ |---|---|---|
+ | P0/P0.1 | Исправлены branch membership, независимая проверка полноты declaration/subscriptions и смысловых title для текущих проекций; scoped acceptance PASS. | Несколько событий, новый lifecycle и исторический контекст ещё не входят в coverage. |
+ | P1 | [Контракт owner/version/as-of](RDG-TEMPORAL-PLAN-OWNER-CONTRACT-P1.md) подготовлен как Candidate. | PR-P1-01..05 не committed; production owner и доверенный источник событий не выбраны. |
+-| P2 | Candidate Plan owner, точные Plan/RDG snapshots, ограниченный `knownAt`, история применимости и технический будущий baseline. Отдельный [event owner](RDG-EVENT-LIFECYCLE-PILOT.md) сохраняет claim → attestation → review с разными grants, correction links и recovery. [Последнее evidence](../handoffs/rdg-event-lifecycle-20261019/CHECKPOINT.md). | Нет подтверждения пользователя, trusted event source, проверки содержания evidence и выбора полного контекста; `effectiveAt` в candidate history не аттестовано. Старые Graph journals без времени и старый последний Plan без квитанции не проходят `knownAt`. |
++| P2 | Candidate Plan owner, точные Plan/RDG snapshots, история применимости, технический baseline и event owner. Отдельный [event-контракт Gendocen v1](RDG-EVENT-GENDOCEN-PILOT.md) проверяет свежесть текущего и фиксированного раннего event context; correction/conflict требуют review. [Последнее evidence](../handoffs/rdg-event-gendocen-20261019/CHECKPOINT.md). | Нет подтверждения пользователя, trusted event source, проверки содержания evidence и выбора полного Plan/RDG/lifecycle контекста; `effectiveAt` не аттестовано. Старые journals без времени не проходят `knownAt`. |
+ | P3 | Есть ограниченные F-R/F-U/F-O, F-P preflight, Canon context review и read-only Plan impact. | Полная семантика Finding/Proposal/Canon, независимое подтверждение F-P, несколько событий и различение позднего знания о T1 от изменения после T1. |
+ | P4 | Есть foundations рабочих/research-графов. | Сквозная передача между чатами, один смысловой owner при promotion/link, archive/retrieval и успешная проверка без искусственного Finding. |
+ | P5 | Есть исходники Viewer и синтетический Gendocen runtime proof. | Helper grants, Plan editor/timeline, читаемая Markdown-проекция, внешний consumer и отдельная проверка установки в Windows/G2. |
+ | P6–P7 | Удалённая запись и вывод legacy из эксплуатации не начинались. | Canonical GitHub owner/branch/writer, multi-file CAS/failure proof, проверка лицензии движка; затем доказанное замещение legacy. |
+ 
+-В последнем кодовом срезе прошли 88 адресных тестов event owner,
+-adapter guard и связанных компонентов. После правки adapter повторён реальный
+-синтетический Gendocen smoke для **текущих** проекций и versioned candidate
+-Plan; он PASS. Ранее прошли 405 Node-тестов после изменения Graph writer,
+-их полный набор в этом срезе не повторялся. Ни один PASS не подтверждает
+-historical Gendocen для event records или фактический пользовательский T1.
++В последнем срезе прошли 22 адресных теста и новый реальный Gendocen smoke
++из 25 CLI-запусков: текущая event-проекция требует review после поздних
++записей, ранняя проекция с фиксированным `knownAt` сохраняется. Проверены
++stale context, адресность другого occurrence и сохранность source bytes.
++Прежние 88 тестов и 405 Node PASS относятся к предыдущим срезам и здесь
++полностью не повторялись. Новый proof ограничен event context; полный
++исторический Plan/RDG/lifecycle и фактический пользовательский T1 не подтверждены.
+ 
+ ## Следующие локальные срезы
+ 
+@@ -39,22 +41,26 @@
+    Отдельное право, CAS, квитанция после записи и recovery проверены на
+    tempfile. Ранний `knownAt` исключает позднюю поправку; поздний допускает
+    её только как кандидатную реконструкцию. Несвязанные outcomes дают
+-   конфликт, а не автоматический выбор. **Следующий gate:** определить
+-   полноту применимых owners/событий и независимое подтверждение времени
+-   применимости; испытать P2-AC-13/15/16 на таком полном контексте вместе
+-   с историческим Gendocen. До trusted event source результат Candidate.
++   конфликт, а не автоматический выбор. **Следующий технический gate:**
++   определить полноту применимых owners/событий и испытать P2-AC-13/15/16
++   на совместном синтетическом контексте вместе с Gendocen. Независимое
++   подтверждение времени и trusted event source — отдельный предметный
++   gate перед фактическим применением.
+ 2. **Lifecycle: локальные записи есть, доверие и интеграция открыты.**
+    Технический baseline сохраняет точную candidate-версию по `plan.accept`.
+    Отдельный event owner сохраняет claim, attestation и review с разными
+    grants, старой записью и конфликтом outcomes. Записи не подтверждают
+    личность, содержание evidence или факт события; Action не выбирается.
+-   Старый current-only adapter теперь явно отклоняет новые sidecars.
+-   **Следующий gate:** определить trusted actor/source и правила независимой
+-   проверки, затем подключить новый lifecycle к историческому Gendocen
+-   без silent valid. Проверить P2-AC-08/11/12/13/17/20 на этом контуре
+-   перед пользовательскими данными.
+-3. **Полный исторический resolver и Gendocen coverage.** Выбрать lifecycle и
+-   branch context, затем применимую версию Plan и все нужные RDG/event
++   Старый current-only adapter отклоняет sidecars. Новый явный event consumer
++   проверен реальным Gendocen для одного occurrence и фиксированного `knownAt`.
++   **Предметный gate:** определить trusted actor/source и правила независимой
++   проверки перед пользовательскими фактами. **Технический gate:** объединить
++   baseline/applicability/Plan/RDG/event context в версионном consumer;
++   синтетическую реализацию можно продолжать до выбора реального источника.
++   Проверить P2-AC-08/11/12/13/17/20 на совместном контуре.
++3. **Ближайший срез — совместный исторический resolver.** На синтетических
++   данных выбрать lifecycle и условный branch context, затем применимую
++   версию Plan и все нужные RDG/event
+    snapshots по двум временам. Если хотя бы одного источника нет, не выдавать
+    `valid` и не брать текущий graph. Расширить независимую матрицу semantic
+    reads → declaration → subscriptions на новые поля; испытать свежесть,
+@@ -88,12 +94,12 @@
+ | 12 | PARTIAL | Plan editor и отдельный event-attest bearer не получают graph.select_action; сквозной пользовательский путь не проверен. |
+ | 13 | PARTIAL | Candidate applicability и event history сохраняют исходный claim, correction link и конфликт outcomes; нет trusted attestation и полноты контекста. |
+ | 14 | Локальный PASS | Точные Plan/RDG revision+digest обязательны, missing/mismatch/current fallback отклоняются. |
+-| 15 | PARTIAL | По квитанциям Plan и отдельного журнала ранний knownAt исключает позднюю r2; само effectiveAt заявлено без независимой проверки. |
+-| 16 | PARTIAL | После долговечной записи поздний knownAt допускает r2 как кандидатную реконструкцию; фактический T1 и полный as-of не подтверждены. |
++| 15 | PARTIAL | Ранний knownAt исключает поздние records; фиксированная event-проекция и её Gendocen review сохраняются. Полный applicability/Plan/RDG контекст не разрешён. |
++| 16 | PARTIAL | Поздние event records меняют текущий review и не переписывают ранний event context; фактический T1 и полный as-of не подтверждены. |
+ | 17 | PARTIAL | Candidate, baseline и staged event journals/failpoints/recovery проверены; общий lifecycle и фактический T1 не испытаны. |
+-| 18 | PARTIAL | Current-only adapter отклоняет baseline/applicability/event sidecars и prepared journals; semantic coverage и historical Gendocen runtime не интегрированы. |
++| 18 | PARTIAL | Старый adapter отклоняет sidecars. Новый event-контракт проверяет producer/declaration/subscriptions и реальный Gendocen; совместный Plan/RDG/lifecycle runtime ещё открыт. |
+ | 19 | PARTIAL | Exact Plan pin проверяется; bearer grant IDs и opaque evidence refs не считаются доказательством человека, содержимого или факта. |
+-| 20 | PARTIAL | Schema v1 отклоняет accepted/actual внутри Plan; старый adapter отклоняет новые sidecars, но версионная интеграция consumer ещё отсутствует. |
++| 20 | PARTIAL | Schema v1 и старый adapter отклоняют неподдержанный lifecycle; явный event consumer v1 работает отдельно, полная версионная интеграция ещё открыта. |
+ 
+ Локальные основания: [P0/P0.1](../handoffs/rdg-p0-dependencies-20261018/CHECKPOINT.json),
+ [candidate owner и P2](../handoffs/rdg-vertical-slice-20261019/CHECKPOINT.json),
+@@ -103,7 +109,8 @@
+ [двухвременной rule probe](../handoffs/rdg-two-time-scenario-20261019/CHECKPOINT.json),
+ [owner history применимости](../handoffs/rdg-applicability-owner-20261019/CHECKPOINT.json),
+ [технический будущий baseline](../handoffs/rdg-future-baseline-20261019/CHECKPOINT.json),
+-[технические стадии события](../handoffs/rdg-event-lifecycle-20261019/CHECKPOINT.json).
++[технические стадии события](../handoffs/rdg-event-lifecycle-20261019/CHECKPOINT.json),
++[event context → Gendocen v1](../handoffs/rdg-event-gendocen-20261019/CHECKPOINT.json).
+ Полные статусы WR-01..53 сохраняются в [v4.1 ledger](../handoffs/rdg-prework-v4.1-final-20261018/WR-EVIDENCE-LEDGER.md);
+ новые checkpoints меняют только названный scope. При следующем срезе обновлять
+ эту таблицу вместе с доказательством, не повышая PARTIAL до общего PASS.
+--- /dev/null
++++ b/tools/rdg-event-gendocen.py
+@@ -0,0 +1,222 @@
++#!/usr/bin/env python3
++"""Explicit Gendocen projection for technical event history, contract v1.
++
++Dependency validity concerns the projected context only. It is not factual
++verification, a Plan/RDG as-of resolver or authority to select an Action.
++"""
++import argparse
++import copy
++import hashlib
++from importlib.machinery import SourceFileLoader
++import json
++import os
++from pathlib import Path
++
++HERE = Path(__file__).resolve().parent
++EVENT = SourceFileLoader("gendocen_event_owner", str(HERE / "rdg-event-owner.py")).load_module()
++VERSION = "rdg-event-review/v1"
++GROUPS = ("identity", "knowledge", "claims", "attestations", "reviews",
++          "resolution", "boundaries")
++READ_MATRIX = {
++    "identity": ["planFile", "occurrenceId", "claims/*/payload/planPin/{identitySpace,planId}"],
++    "knowledge": ["knownAt"],
++    "claims": ["claims/*/{payload,recordDigest,recordedAt,availableBy}"],
++    "attestations": ["attestations/*/{payload,recordDigest,availableBy}"],
++    "reviews": ["reviews/*/{payload,recordDigest,availableBy}"],
++    "resolution": ["unresolvedClaimIds", "claimConflict"],
++    "boundaries": ["status", "readOnly", "provenance/*"],
++}
++TRUE_FLAGS = {"exactPlanSnapshotsResolved", "stagedRecordsDurable",
++              "distinctBearerGrantsEnforced"}
++FALSE_FLAGS = {"humanIdentityVerified", "evidenceContentsVerified",
++               "factualEventVerified", "factualBranchResolved", "actionSelected",
++               "completeApplicableContextVerified", "productionAccepted"}
++
++
++def require(ok, code):
++    if not ok:
++        raise ValueError("EVENT_REVIEW_" + code)
++
++
++def digest(value):
++    return hashlib.sha256(json.dumps(value, sort_keys=True, ensure_ascii=False,
++        separators=(",", ":"), allow_nan=False).encode("utf8")).hexdigest()
++
++
++def validate_history(history):
++    require(isinstance(history, dict) and set(history) == {
++        "status", "planFile", "occurrenceId", "knownAt", "claims",
++        "attestations", "reviews", "unresolvedClaimIds", "claimConflict",
++        "readOnly", "provenance"} and
++        history["status"] == "technical-event-history" and history["readOnly"] is True and
++        isinstance(history["planFile"], str) and EVENT.OWNER.TARGET.fullmatch(history["planFile"]) and
++        isinstance(history["occurrenceId"], str) and EVENT.ID.fullmatch(history["occurrenceId"]),
++        "HISTORY_SCHEMA")
++    if history["knownAt"] is not None:
++        EVENT.MODEL.known(history["knownAt"])
++    provenance = history["provenance"]
++    require(isinstance(provenance, dict) and set(provenance) == TRUE_FLAGS | FALSE_FLAGS and
++            all(provenance[k] is True for k in TRUE_FLAGS) and
++            all(provenance[k] is False for k in FALSE_FLAGS), "UNSUPPORTED_TRUST_OR_SCOPE")
++    claims, attestations, ids, superseded, owner_scope, precision = {}, {}, set(), set(), None, None
++    reviewed = set()
++    require(isinstance(history["claims"], list) and history["claims"], "CLAIMS_REQUIRED")
++    for field, kind in (("claims", "claim"), ("attestations", "attest"), ("reviews", "verify")):
++        require(isinstance(history[field], list), "RECORD_LIST_SCHEMA")
++        for record in history[field]:
++            keys = {"payload", "recordDigest", "availableBy"} | (
++                {"recordedAt"} if kind == "claim" else set())
++            require(isinstance(record, dict) and set(record) == keys and
++                    isinstance(record["recordDigest"], str) and
++                    EVENT.HISTORY.SHA.fullmatch(record["recordDigest"]), "RECORD_SCHEMA")
++            payload = EVENT.validate_payload(kind, record["payload"], history["planFile"])
++            require(payload["id"] not in ids, "DUPLICATE_RECORD_ID")
++            ids.add(payload["id"])
++            available = EVENT.MODEL.known(record["availableBy"])
++            require(history["knownAt"] is None or
++                    available <= EVENT.MODEL.known(history["knownAt"]), "RECORD_AFTER_CUTOFF")
++            if kind == "claim":
++                require(EVENT.MODEL.known(record["recordedAt"]) <= available,
++                        "RECORD_AVAILABILITY_ORDER")
++                pin = payload["planPin"]
++                scope = pin["identitySpace"], pin["planId"], payload["eventStepId"]
++                current_precision, _ = EVENT.MODEL.effective(payload["occurredAt"])
++                require(payload["occurrenceId"] == history["occurrenceId"] and
++                        (owner_scope is None or owner_scope == scope) and
++                        (precision is None or precision == current_precision),
++                        "OCCURRENCE_SCOPE")
++                require(payload["supersedes"] is None or
++                        payload["supersedes"] in claims and
++                        pin["revision"] >= claims[payload["supersedes"]]["payload"]["planPin"]["revision"],
++                        "CORRECTION_CHAIN")
++                if payload["supersedes"] is not None:
++                    superseded.add(payload["supersedes"])
++                claims[payload["id"]] = record
++                owner_scope, precision = scope, current_precision
++            elif kind == "attest":
++                require(payload["claimId"] in claims and
++                        all(x["payload"]["claimId"] != payload["claimId"]
++                            for x in attestations.values()), "CLAIM_REFERENCE")
++                attestations[payload["id"]] = record
++            else:
++                require(payload["attestationId"] in attestations and
++                        payload["attestationId"] not in reviewed, "ATTESTATION_REFERENCE")
++                reviewed.add(payload["attestationId"])
++    leaves = sorted(set(claims) - superseded)
++    require(isinstance(history["unresolvedClaimIds"], list) and
++            sorted(history["unresolvedClaimIds"]) == leaves and
++            type(history["claimConflict"]) is bool and
++            history["claimConflict"] == (len(leaves) != 1), "RESOLUTION_MISMATCH")
++    return owner_scope
++
++
++def views(history):
++    scope = validate_history(history)
++    known = (EVENT.MODEL.known(history["knownAt"]).isoformat()
++             if history["knownAt"] is not None else None)
++    result = {
++        "identity": {"planFile": history["planFile"],
++                     "identitySpace": scope[0], "planId": scope[1],
++                     "eventStepId": scope[2], "occurrenceId": history["occurrenceId"]},
++        "knowledge": {"mode": "fixed-knownAt" if known else "current-known-records",
++                      "knownAt": known},
++        "claims": {r["payload"]["id"]: copy.deepcopy(r) for r in history["claims"]},
++        "attestations": {r["payload"]["id"]: copy.deepcopy(r) for r in history["attestations"]},
++        "reviews": {r["payload"]["id"]: copy.deepcopy(r) for r in history["reviews"]},
++        "resolution": {"unresolvedClaimIds": sorted(history["unresolvedClaimIds"]),
++                       "claimConflict": history["claimConflict"]},
++        "boundaries": {"status": history["status"], "readOnly": history["readOnly"],
++                       **copy.deepcopy(history["provenance"])},
++    }
++    # The producer groups are fixed independently of the mutable declaration.
++    require(set(result) == set(GROUPS) == set(READ_MATRIX),
++            "SOURCE_GROUPS_INCOMPLETE_OR_UNKNOWN")
++    return result
++
++
++def project(history):
++    require(isinstance(history, dict), "HISTORY_SCHEMA")
++    raw = copy.deepcopy(history)
++    if raw.get("knownAt") is not None:
++        raw["knownAt"] = EVENT.MODEL.known(raw["knownAt"]).isoformat()
++    inputs = views(raw)
++    coverage = {"contract": VERSION, "scope": "one-technical-event-occurrence",
++                "completeForDeclaredScope": True, "sourceReads": copy.deepcopy(READ_MATRIX),
++                "factualEventVerified": False, "completePlanRdgContext": False}
++    ident = "rdg.event." + digest({
++        "identity": inputs["identity"], "knowledge": inputs["knowledge"]})[:24]
++    return {"$docengine": {"resource_id": ident, "materialize": []},
++            "data": {"sourceHistory": raw, "reviewCoverage": coverage,
++                     "reviewInputs": inputs, "semanticSHA256": digest(inputs)}}
++
++
++def from_owner(root, authority_store, token, plan_file, occurrence_id, known_at=None):
++    return project(EVENT.read(root, authority_store, token, plan_file,
++                              occurrence_id, known_at))
++
++
++def resource_ref(resource):
++    return "resource://" + resource["$docengine"]["resource_id"].replace(".", "/", 1)
++
++
++def build_contract(resource):
++    require(isinstance(resource, dict) and set(resource) == {"$docengine", "data"} and
++            isinstance(resource["data"], dict) and set(resource["data"]) == {
++                "sourceHistory", "reviewCoverage", "reviewInputs", "semanticSHA256"},
++            "RESOURCE_SCHEMA")
++    expected = project(resource["data"]["sourceHistory"])
++    require(resource == expected, "PROJECTION_INCOMPLETE_OR_STALE")
++    ref = resource_ref(resource)
++    return {"contract": VERSION, "completeForDeclaredScope": True,
++            "subscriptions": [(ref + "#/reviewCoverage", "exact")] +
++                [(ref + "#/reviewInputs/" + key, "exact") for key in GROUPS],
++            "provenance": {"scope": "one-technical-event-occurrence",
++                           "factualEventVerified": False,
++                           "completePlanRdgContext": False}}
++
++
++def assert_coverage(contract, declared):
++    require(contract.get("contract") == VERSION and
++            contract.get("completeForDeclaredScope") is True, "UNKNOWN_CONTRACT")
++    expected = {tuple(x) for x in contract["subscriptions"]}
++    actual = {tuple(x) for x in declared}
++    require(expected == actual and len(declared) == len(expected),
++            "SUBSCRIPTIONS_INCOMPLETE")
++
++
++def project_config(targets):
++    """Register explicit event-review documents in a synthetic local project."""
++    return (
++        "import json\nfrom pathlib import Path\n"
++        "from importlib.machinery import SourceFileLoader\n"
++        f"event_dep = SourceFileLoader('event_review_contract', {str(Path(__file__).resolve())!r}).load_module()\n"
++        "def register_builders(registry):\n    pass\n\n"
++        "def register_semantic_dependencies(registry):\n"
++        "    docs = Path(__file__).resolve().parents[1] / 'docs'\n"
++        f"    for target, relative in {targets!r}:\n"
++        "        resource = json.loads((docs / relative).read_text(encoding='utf8'))\n"
++        "        contract = event_dep.build_contract(resource)\n"
++        "        sources = contract['subscriptions']\n"
++        "        event_dep.assert_coverage(contract, sources)\n"
++        "        registry.register('file://review/' + target + '.md', sources,\n"
++        f"                          rule_id={VERSION.replace('/', '.')!r} + '.' + target,\n"
++        "                          dependency_type='semantic_review')\n"
++    )
++
++
++def main():
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--root", required=True, type=Path)
++    parser.add_argument("--store", default=os.environ.get("RDG_AUTH_STORE"))
++    parser.add_argument("--file", required=True)
++    parser.add_argument("--occurrence-id", required=True)
++    parser.add_argument("--known-at")
++    args = parser.parse_args()
++    require(args.store, "AUTH_STORE_REQUIRED")
++    print(json.dumps(from_owner(args.root, args.store, os.environ.get("RDG_AUTH_TOKEN"),
++        args.file, args.occurrence_id, args.known_at), ensure_ascii=False,
++        sort_keys=True, indent=2))
++
++
++if __name__ == "__main__":
++    main()
+--- /dev/null
++++ b/tools/rdg-event-gendocen-smoke.py
+@@ -0,0 +1,212 @@
++#!/usr/bin/env python3
++"""Real Gendocen dev25 smoke for technical event projections on temporary roots."""
++import argparse
++import copy
++import datetime as dt
++from importlib.machinery import SourceFileLoader
++import json
++import os
++from pathlib import Path
++import subprocess
++import sys
++import tempfile
++import time
++
++ROOT = Path(__file__).resolve().parent.parent
++PROJECTION = SourceFileLoader("event_runtime_projection",
++    str(ROOT / "tools/rdg-event-gendocen.py")).load_module()
++EVENT, OWNER = PROJECTION.EVENT, PROJECTION.EVENT.OWNER
++PLANREL = "plans/demo/plan.json"
++
++
++def require(value, code):
++    if not value:
++        raise AssertionError(code)
++
++
++def save(path, value):
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(value, ensure_ascii=False, sort_keys=True, indent=2)+"\n")
++
++
++def smoke(engine_source):
++    engine = Path(engine_source).resolve() / "src"
++    require((engine / "docengine/cli.py").is_file(), "GENDOCEN_SOURCE_UNAVAILABLE")
++    env = {k:v for k,v in os.environ.items() if k not in ("RDG_AUTH_TOKEN", "RDG_AUTH_STORE")}
++    env.update(PYTHONPATH=str(engine), PYTHONDONTWRITEBYTECODE="1")
++    with tempfile.TemporaryDirectory(prefix="rdg-event-runtime-") as name:
++        base = Path(name)
++        owner_root, store = base/"owner", base/"grants.json"
++        owner_root.mkdir()
++        authority = OWNER.AUTH.Authority(store)
++        admin = authority.init_local(plan_capable=True, event_verify_capable=True)["token"]
++        def grant(permissions):
++            return authority.manage("issue", admin, {
++                "permissions":permissions, "scopes":[PLANREL]})["token"]
++        creator = grant(["plan.create","plan.branch"])
++        claimant = grant(["plan.edit","plan.read"])
++        attester = grant(["plan.event_attest","plan.read"])
++        verifier = grant(["plan.event_verify","plan.read"])
++        reader = grant(["plan.read"])
++        plan = json.loads((ROOT/"docs/examples/temporal-plan-candidate-v1.json").read_text())
++        OWNER.apply_request(owner_root, store, creator, {
++            "transactionId":"plan-create","op":"create","file":PLANREL,
++            "expectedRevision":0,"plan":plan})
++        plan_before = (owner_root/PLANREL).read_bytes()
++        meta = OWNER.read_snapshot(owner_root, PLANREL, 1)["provenance"]
++        pin = {"file":PLANREL,"identitySpace":meta["identitySpace"],"planId":meta["planId"],
++               "revision":1,"snapshotSHA256":meta["snapshotSHA256"],
++               "recordDigest":meta["recordDigest"]}
++        revision = 0
++        def append(kind, payload, token):
++            nonlocal revision
++            result = EVENT.apply(owner_root, store, token, {
++                "transactionId":kind+"-"+payload["id"],"kind":kind,
++                "file":PLANREL,"expectedRevision":revision,"payload":payload})
++            revision += 1
++            require(result["revision"]==revision, "EVENT_REVISION_MISMATCH")
++        def claim(ident, occurrence, outcome="positive", supersedes=None):
++            return {"id":ident,"occurrenceId":occurrence,"planPin":copy.deepcopy(pin),
++                    "eventStepId":"S-RESULT","outcome":outcome,
++                    "occurredAt":"2026-10-18T10:00:00+00:00",
++                    "evidenceRefs":["EV-"+ident],"supersedes":supersedes}
++        append("claim", claim("C1","O1"), claimant)
++        witness = json.loads(EVENT.receipt_path(owner_root,PLANREL,1).read_text())
++        cutoff = (OWNER.instant(witness["availableBy"])+dt.timedelta(milliseconds=1)).isoformat()
++        time.sleep(0.02)
++
++        project = base/"gendocen"
++        (project/"docengine_project").mkdir(parents=True)
++        (project/"docs/review").mkdir(parents=True)
++        (project/"docengine.toml").write_text(
++            '[docengine]\nconfig_version = 1\ndocumentation_root = "docs"\n'
++            'structured_dir = "_structured"\ndependency_dir = "_dependency"\n'
++            'project_package = "docengine_project"\n')
++        targets = [("Current","_structured/events/current.json"),
++                   ("Historic","_structured/events/historic.json")]
++        (project/"docengine_project/__init__.py").write_text(PROJECTION.project_config(targets))
++        docs = {target:project/("docs/review/"+target+".md") for target,_ in targets}
++        for target,path in docs.items():
++            path.write_text("# Synthetic "+target+" event context\n\nNo factual approval.\n")
++        prose = {target:path.read_bytes() for target,path in docs.items()}
++        def source_bytes():
++            return {str(p.relative_to(owner_root)):p.read_bytes()
++                    for p in owner_root.rglob("*.json")}
++        def reproject():
++            before = source_bytes()
++            current = PROJECTION.from_owner(owner_root,store,reader,PLANREL,"O1")
++            historical = PROJECTION.from_owner(owner_root,store,reader,PLANREL,"O1",cutoff)
++            save(project/"docs/_structured/events/current.json",current)
++            save(project/"docs/_structured/events/historic.json",historical)
++            require(source_bytes()==before,"PROJECTION_WROTE_OWNER")
++            return current,historical
++        current,historical = reproject()
++        historical_bytes = (project/"docs/_structured/events/historic.json").read_bytes()
++        event_ref = PROJECTION.resource_ref(current)
++        cli_count = 0
++        def cli(*parts):
++            nonlocal cli_count
++            before = source_bytes()
++            proc = subprocess.run([sys.executable,"-m","docengine.cli",*parts,
++                "--project-root",str(project),"--json"],env=env,capture_output=True,text=True)
++            cli_count += 1
++            require(proc.stdout.strip(),"GENDOCEN_NO_JSON "+proc.stderr)
++            body = json.loads(proc.stdout)
++            require(body["meta"]["engine_version"]=="0.1.0.dev25","ENGINE_VERSION")
++            require(source_bytes()==before,"ENGINE_WROTE_EVENT_OWNER")
++            return proc.returncode,body
++        def statuses():
++            _,body = cli("check")
++            return {x["target"].rsplit("/",1)[-1][:-3]:x["status"]
++                    for x in body["data"]["results"]}
++        def context(target):
++            _,body = cli("explain","file://review/"+target+".md")
++            return body["data"]["review_context_id"]
++        def validate(target):
++            code,body = cli("validate","file://review/"+target+".md",
++                "--result","still-valid","--reason","Synthetic event-context review only",
++                "--review-context",context(target))
++            require(code==0 and body["ok"],"SYNTHETIC_REVIEW_FAILED")
++        def expect(current_status):
++            actual = statuses()
++            require(actual=={"Current":current_status,"Historic":"valid"},
++                    "UNEXPECTED_STATUSES "+repr(actual))
++            require((project/"docs/_structured/events/historic.json").read_bytes()==historical_bytes,
++                    "HISTORICAL_PROJECTION_CHANGED")
++            require(all(path.read_bytes()==prose[target] for target,path in docs.items()),
++                    "REVIEW_PROSE_CHANGED")
++        def changed():
++            _,body = cli("explain","file://review/Current.md")
++            return sorted(body["data"]["changed_dependencies"])
++
++        initial_code,initial = cli("sync")
++        require(initial_code in (0, 2) and initial.get("ok") and
++                "attention_targets" in initial.get("data", {}),
++                "INITIAL_SYNC_FAILED " + json.dumps(initial, ensure_ascii=False))
++        require(set(initial["data"]["attention_targets"])==
++                {"file://review/Current.md","file://review/Historic.md"},"INITIAL_REVIEW")
++        validate("Current");validate("Historic")
++        expect("valid")
++        append("claim",claim("C-OTHER","O2"),claimant)
++        reproject()
++        expect("valid")
++
++        append("attest",{"id":"A1","claimId":"C1","evidenceRefs":["EV-A1"]},attester)
++        reproject();expect("review_required")
++        require(changed()==[event_ref+"#/reviewInputs/attestations"],"ATTESTATION_NOT_PRECISE")
++        validate("Current");expect("valid")
++        stale = context("Current")
++        append("verify",{"id":"V1","attestationId":"A1",
++               "decision":"reviewed-supported","evidenceRefs":["EV-V1"]},verifier)
++        reproject();expect("review_required")
++        require(changed()==[event_ref+"#/reviewInputs/reviews"],"REVIEW_NOT_PRECISE")
++        state = project/"docs/_dependency/state/dependency_state.json"
++        state_before = state.read_bytes()
++        receipt_dir = project/"docs/_dependency/receipts"
++        receipts_before = sorted(p.name for p in receipt_dir.glob("receipt-*.json"))
++        code,body = cli("validate","file://review/Current.md","--result","still-valid",
++            "--reason","Stale synthetic context","--review-context",stale)
++        require(code!=0 and "stale" in json.dumps(body).lower(),"STALE_CONTEXT_ACCEPTED")
++        require(state.read_bytes()==state_before and
++                sorted(p.name for p in receipt_dir.glob("receipt-*.json"))==receipts_before,
++                "STALE_REJECTION_MUTATED_RECEIPTS")
++        validate("Current");expect("valid")
++
++        append("claim",claim("C2","O1","negative","C1"),claimant)
++        current,_ = reproject();expect("review_required")
++        require(changed()==sorted([event_ref+"#/reviewInputs/claims",
++                                  event_ref+"#/reviewInputs/resolution"]),"CORRECTION_COVERAGE")
++        require(current["data"]["reviewInputs"]["resolution"]["unresolvedClaimIds"]==["C2"],
++                "CORRECTION_NOT_LINKED")
++        validate("Current");expect("valid")
++        append("claim",claim("C3","O1"),claimant)
++        current,_ = reproject();expect("review_required")
++        require(current["data"]["reviewInputs"]["resolution"]["claimConflict"],"CONFLICT_HIDDEN")
++        require(not current["data"]["reviewInputs"]["boundaries"]["factualEventVerified"] and
++                not current["data"]["reviewInputs"]["boundaries"]["actionSelected"],
++                "TECHNICAL_REVIEW_PROMOTED_TO_FACT")
++        require((owner_root/PLANREL).read_bytes()==plan_before,"PLAN_CHANGED")
++        require(revision==6,"EVENT_HISTORY_COUNT")
++        return {"status":"PASS","engine":"Gendocen 0.1.0.dev25",
++                "contract":PROJECTION.VERSION,"cliProcesses":cli_count,
++                "eventOwnerRecords":revision,"temporarySourcesOnly":True,
++                "attestationRequiresCurrentReview":True,
++                "reviewRequiresCurrentReview":True,"staleContextRejected":True,
++                "lateCorrectionRequiresCurrentReview":True,"conflictExplicit":True,
++                "otherOccurrenceDoesNotInvalidate":True,
++                "fixedEarlyKnownAtProjectionPreserved":True,
++                "fixedEventContextReviewRemainsValid":True,
++                "planAndOwnerBytesUnchangedByConsumer":True,
++                "factualEventVerified":False,"historicalPlanRdgAsOfResolved":False,
++                "productionStage4Accepted":False}
++
++
++def main():
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--engine-source",required=True,type=Path)
++    args = parser.parse_args()
++    print(json.dumps(smoke(args.engine_source),ensure_ascii=False,sort_keys=True,indent=2))
++
++
++if __name__=="__main__":
++    main()
+--- /dev/null
++++ b/tests/rdg-event-gendocen.test.py
+@@ -0,0 +1,119 @@
++#!/usr/bin/env python3
++"""Event projection coverage and stable historical cutoff on synthetic owners."""
++import copy
++import datetime as dt
++from importlib.machinery import SourceFileLoader
++from pathlib import Path
++import time
++import unittest
++
++ROOT = Path(__file__).resolve().parents[1]
++PROJECTION = SourceFileLoader("test_event_projection",
++    str(ROOT / "tools/rdg-event-gendocen.py")).load_module()
++FIXTURE = SourceFileLoader("event_projection_fixture",
++    str(ROOT / "tests/rdg-event-owner.test.py")).load_module()
++
++
++class EventProjectionTest(unittest.TestCase):
++    def setUp(self):
++        self.fixture = FIXTURE.EventOwnerTest("test_three_stages_are_durable_but_never_factual")
++        self.fixture.setUp()
++        self.addCleanup(self.fixture.doCleanups)
++        self.fixture.apply("claim", self.fixture.claim, 0)
++
++    def projection(self, known=None):
++        f = self.fixture
++        return PROJECTION.from_owner(f.root, f.store, f.reader, FIXTURE.PLANREL, "O1", known)
++
++    def sources(self):
++        return {str(p.relative_to(self.fixture.root)):p.read_bytes()
++                for p in self.fixture.root.rglob("*.json")}
++
++    def test_read_only_resource_has_complete_event_scope_and_false_factual_flags(self):
++        before = self.sources()
++        resource = self.projection()
++        contract = PROJECTION.build_contract(resource)
++        self.assertEqual(len(contract["subscriptions"]), 8)
++        PROJECTION.assert_coverage(contract, contract["subscriptions"])
++        self.assertFalse(resource["data"]["reviewInputs"]["boundaries"]["factualEventVerified"])
++        self.assertFalse(resource["data"]["reviewInputs"]["boundaries"]["actionSelected"])
++        self.assertFalse(resource["data"]["reviewCoverage"]["completePlanRdgContext"])
++        self.assertEqual(self.sources(), before)
++
++    def test_late_attestation_changes_current_only_and_preserves_fixed_cutoff(self):
++        f = self.fixture
++        early = f.after(f.receipt(1)["availableBy"])
++        time.sleep(0.02)
++        current = self.projection()
++        historical = self.projection(early)
++        f.apply("attest", f.attest(), 1)
++        later_current, later_historical = self.projection(), self.projection(early)
++        self.assertEqual(historical, later_historical)
++        self.assertEqual(current["$docengine"], later_current["$docengine"])
++        a, b = current["data"]["reviewInputs"], later_current["data"]["reviewInputs"]
++        changed = {key for key in a if a[key] != b[key]}
++        self.assertEqual(changed, {"attestations"})
++        self.assertNotEqual(current["$docengine"], historical["$docengine"])
++
++    def test_review_correction_and_conflict_are_semantic(self):
++        f = self.fixture
++        f.apply("attest", f.attest(), 1)
++        before = self.projection()["data"]["reviewInputs"]
++        f.apply("verify", f.verify(), 2)
++        after = self.projection()["data"]["reviewInputs"]
++        self.assertEqual({key for key in before if before[key] != after[key]}, {"reviews"})
++        correction = f.make_claim("C2", "negative", supersedes="C1",
++                                   when="2026-10-18T10:30:00+00:00")
++        f.apply("claim", correction, 3)
++        corrected = self.projection()
++        self.assertEqual(corrected["data"]["reviewInputs"]["resolution"],
++                         {"unresolvedClaimIds":["C2"], "claimConflict":False})
++        f.apply("claim", f.make_claim("C3", "positive"), 4)
++        conflict = self.projection()
++        self.assertTrue(conflict["data"]["reviewInputs"]["resolution"]["claimConflict"])
++        self.assertFalse(conflict["data"]["reviewInputs"]["boundaries"]["factualBranchResolved"])
++
++    def test_missing_subscription_and_mutable_declaration_cannot_hide_group(self):
++        resource = self.projection()
++        contract = PROJECTION.build_contract(resource)
++        with self.assertRaisesRegex(ValueError, "SUBSCRIPTIONS_INCOMPLETE"):
++            PROJECTION.assert_coverage(contract, contract["subscriptions"][:-1])
++        original = copy.deepcopy(PROJECTION.READ_MATRIX)
++        try:
++            PROJECTION.READ_MATRIX.pop("reviews")
++            with self.assertRaisesRegex(ValueError, "SOURCE_GROUPS_INCOMPLETE_OR_UNKNOWN"):
++                PROJECTION.build_contract(resource)
++        finally:
++            PROJECTION.READ_MATRIX.clear()
++            PROJECTION.READ_MATRIX.update(original)
++
++    def test_stale_projection_unknown_fields_and_factual_flag_rejected(self):
++        resource = self.projection()
++        wrong = copy.deepcopy(resource)
++        wrong["data"]["reviewInputs"]["claims"] = {}
++        with self.assertRaisesRegex(ValueError, "PROJECTION_INCOMPLETE_OR_STALE"):
++            PROJECTION.build_contract(wrong)
++        wrong = copy.deepcopy(resource["data"]["sourceHistory"])
++        wrong["provenance"]["factualEventVerified"] = True
++        with self.assertRaisesRegex(ValueError, "UNSUPPORTED_TRUST_OR_SCOPE"):
++            PROJECTION.project(wrong)
++        wrong = copy.deepcopy(resource["data"]["sourceHistory"])
++        wrong["provenance"]["newUnsubscribedField"] = False
++        with self.assertRaisesRegex(ValueError, "UNSUPPORTED_TRUST_OR_SCOPE"):
++            PROJECTION.project(wrong)
++        wrong = copy.deepcopy(resource["data"]["sourceHistory"])
++        wrong["claimConflict"] = True
++        with self.assertRaisesRegex(ValueError, "RESOLUTION_MISMATCH"):
++            PROJECTION.project(wrong)
++
++    def test_equivalent_cutoff_offsets_share_resource_identity(self):
++        value = self.fixture.after(self.fixture.receipt(1)["availableBy"])
++        cutoff = PROJECTION.EVENT.MODEL.known(value)
++        local = cutoff.astimezone(dt.timezone(dt.timedelta(hours=7))).isoformat()
++        self.assertEqual(self.projection(value), self.projection(local))
++        with self.assertRaisesRegex(ValueError, "KNOWN_AT_INSTANT_REQUIRED"):
++            self.projection("2026-10-18")
++
++
++if __name__ == "__main__":
++    unittest.main()
+--- /dev/null
++++ b/docs/guides/RDG-EVENT-GENDOCEN-PILOT.md
+@@ -0,0 +1,70 @@
++# Event history → Gendocen: явный контракт v1
++
++**Статус: CANDIDATE. Stage 4 NOT ACCEPTED.**
++`tools/rdg-event-gendocen.py` формирует отдельный read-only ресурс
++`rdg-event-review/v1` из аутентифицированного чтения
++[технической истории события](RDG-EVENT-LIFECYCLE-PILOT.md).
++Он предназначен для review документа, который использует этот контекст.
++Статус Gendocen `valid` означает свежую dependency receipt для контекста;
++он не подтверждает наступление события, личность источника или выбор Action.
++
++Ресурс имеет два режима. `current-known-records` включает известные сейчас
++записи выбранного occurrence. `fixed-knownAt` включает только записи,
++доступные к указанному cutoff; pinned Plan тоже должен быть доступен к нему.
++Режим и нормализованный `knownAt` входят в identity ресурса. Разные cutoff
++не подменяют друг друга. Поздняя запись по другому occurrence не меняет
++проекцию выбранного события. Поздняя attestation, review, correction или
++новый конфликт меняют текущую проекцию. Ранняя проекция сохраняется.
++
++Контракт содержит восемь точных subscriptions: coverage и семь групп
++`identity/knowledge/claims/attestations/reviews/resolution/boundaries`.
++Группы producer заданы независимо от изменяемой декларации. При удалении
++группы, пропуске subscription, изменении вычисленной проекции или новом
++неподдержанном поле регистрация отклоняется. Claims включают точные
++Plan pins, payload, record digest, записанное время и квитанцию доступности;
++attestations и reviews включают payload, digest и квитанцию.
++Технические границы доверия также входят в dependency.
++
++`completeForDeclaredScope=true` относится к покрытию прочитанных полей
++одного предъявленного event context. Поля
++`completePlanRdgContext=false`, `factualEventVerified=false`,
++`factualBranchResolved=false` и `actionSelected=false` сохраняются.
++Содержание opaque evidence IDs не читается. Полный исторический Plan/RDG
++resolver, принятый lifecycle и доверенный источник фактов этим ресурсом
++не объединены. Старый current-only Plan adapter продолжает отклонять
++новые sidecars; новый ресурс используется явно и отдельно.
++
++CLI на разрешённом временном root:
++
++```bash
++RDG_AUTH_TOKEN=... python3 tools/rdg-event-gendocen.py \
++  --root PLAN_ROOT --store AUTH_STORE --file plans/demo/plan.json \
++  --occurrence-id O1 --known-at 2026-10-18T11:00:00+00:00
++```
++
++Без `--known-at` получается текущая event-проекция. Токен требует
++`plan.read`. Результат следует пересоздать после изменения sources перед
++проверкой Gendocen. Для доверенного локального project config есть
++`project_config([(targetName, resourceRelativePath), ...])`; регистрация
++при каждом запуске повторно проверяет producer/declaration/subscriptions.
++
++Локальные проверки:
++
++```bash
++PYTHONDONTWRITEBYTECODE=1 python3 tests/rdg-event-gendocen.test.py -v
++PYTHONDONTWRITEBYTECODE=1 python3 tools/rdg-event-gendocen-smoke.py \
++  --engine-source /workspace/repos/gendocen
++```
++
++Smoke использует реальный локальный Gendocen 0.1.0.dev25 и только tempfile.
++Он проверяет review текущего и раннего event context, адресное изменение
++attestation/review/correction, явный конфликт, отказ при stale review context,
++сохранность ранней проекции, текста review и owner bytes при чтении.
++Двигатель не копируется и не устанавливается.
++
++Для дальнейшего исполнения есть два независимых gate. Предметный gate:
++выбрать доверенный actor/source и подтвердить evidence перед фактическим
++применением. Технический gate: объединить lifecycle, применимость, Plan/RDG
++snapshots и event context в историческом resolver и проверить его Gendocen
++coverage на синтетической истории. Технический gate можно выполнять до
++выбора реального источника; результат сохраняет Candidate и false factual flags.
+--- /dev/null
++++ b/docs/handoffs/rdg-event-gendocen-20261019/CHECKPOINT.md
+@@ -0,0 +1,54 @@
++# Event context → Gendocen v1 — контрольная точка
++
++**ID:** CPW-RDG-EVENT-GENDOCEN-20261019/v1. **Статус:** Candidate.
++**Stage 4 NOT ACCEPTED.** Исходники изменены в Fortis Repo
++`/workspace/repos/rd-graphs` на Windows RW-mount. Все runtime-записи
++проверки использовали временные синтетические roots. Пользовательские графы,
++установленное Windows-приложение и G2 не проверялись. В проекте нет
++`.git`; commit/push и публикация не выполнялись.
++
++## Результат
++
++`tools/rdg-event-gendocen.py` добавляет отдельный явный ресурс и
++контракт `rdg-event-review/v1`. Текущая проекция включает известные
++records одного occurrence; фиксированная проекция включает только
++records к `knownAt`. Режим/cutoff входят в resource identity.
++Producer, декларация и восемь subscriptions проверяются до регистрации.
++Пропуск группы, stale projection и неизвестные поля отклоняются.
++Технические границы доверия остаются отдельной semantic dependency.
++
++Новый runtime runner использует реальный Gendocen 0.1.0.dev25:
++attestation, review, позднее исправление и конфликт требуют review текущего
++event context. Другой occurrence не меняет его. Ранняя проекция и её receipt
++остаются valid; stale review context отклоняется без новой receipt.
++Consumer не меняет Plan, owner JSON или review Markdown.
++[Формат и границы](../../guides/RDG-EVENT-GENDOCEN-PILOT.md).
++
++`valid` здесь относится к dependency receipt документа event context.
++`factualEventVerified=false`, `factualBranchResolved=false`,
++`actionSelected=false`, `completePlanRdgContext=false`.
++Полный historical Plan/RDG/lifecycle resolver и фактический T1 не доказаны.
++Старый current-only Plan adapter сохраняет явный отказ для sidecars.
++
++## Проверки и следующий gate
++
++**22 адресных теста PASS:** 6 новых event projection/coverage,
++13 event owner и 3 старого consumer guard.
++**Новый реальный синтетический Gendocen smoke PASS:** 25 отдельных CLI
++processes, 6 owner records, текущий и ранний event-review документы.
++[CHECKPOINT.json](CHECKPOINT.json) содержит команды и ссылки на логи.
++Предыдущие 88 тестов и полный набор 405 Node в этом срезе не повторялись.
++
++P2-AC-15/16/18/20 остаются PARTIAL; текущие суммы — 7 локальных PASS,
++12 PARTIAL, 1 OPEN. План уточнён: предметное доверие к источнику и
++техническая реализация joint historical context — разные gates.
++Ближайший технический срез связывает lifecycle, применимость, точные Plan/RDG
++snapshots и event context на синтетической истории. Выбор реального источника
++и проверка evidence нужны перед фактическим применением.
++[Актуальный план](../../guides/RDG-CURRENT-EXECUTION-PLAN.md) ·
++[WR delta](WR-DELTA.md).
++
++[SELECTED-DIFF.patch](SELECTED-DIFF.patch) сравнивает выбранные файлы с
++before-копиями и `/dev/null` для новых; это не Git diff всего проекта.
++SHA источников и evidence сохранены отдельно. Старые checkpoints и архив v4.1
++не переписывались.
+--- /dev/null
++++ b/docs/handoffs/rdg-event-gendocen-20261019/WR-DELTA.md
+@@ -0,0 +1,13 @@
++# WR delta — event context и Gendocen v1
++
++Владелец WR-01..53 — baseline v4.1. PR-P1-01..05 остаются CANDIDATE.
++**Stage 4 NOT ACCEPTED.**
++
++| WR | Статус | Новое локальное доказательство | Открытая граница |
++|---|---|---|---|
++| WR-29 | PARTIAL | Стабильный event resource ID; отдельные current/fixed-knownAt identity и полный набор producer/declaration/subscriptions | Совместная coverage Plan/RDG/lifecycle/event |
++| WR-47 | PARTIAL | Технические attestation/review/correction меняют Gendocen review, конфликт остаётся явным | Trusted event source и независимая проверка содержания evidence |
++| WR-52 | PARTIAL | Поздние записи не меняют раннюю event-проекцию и её receipt; stale context отклоняется реальным движком | Полный historical Plan/RDG resolver и фактический пользовательский T1 |
++
++Новый runtime proof ограничен event context. Dependency `valid` не
++превращается в `factualEventVerified` и не выбирает RDG Action.

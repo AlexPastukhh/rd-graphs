@@ -1,0 +1,9 @@
+{
+  "exitCode": 0,
+  "seconds": 2.54,
+  "command": [
+    "node",
+    "--test",
+    "tests/rdg-bearer-authority.test.cjs"
+  ]
+}

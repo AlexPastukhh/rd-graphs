@@ -1,0 +1,28 @@
+TAP version 13
+# Subtest: future, scope mismatch and as-of history are distinct; no silently reused obsolete revision
+ok 1 - future, scope mismatch and as-of history are distinct; no silently reused obsolete revision
+  ---
+  duration_ms: 6.767506
+  type: 'test'
+  ...
+# Subtest: invalid calendar date and unscoped answer owner are rejected; unavailable condition remains unknown
+ok 2 - invalid calendar date and unscoped answer owner are rejected; unavailable condition remains unknown
+  ---
+  duration_ms: 2.871642
+  type: 'test'
+  ...
+# Subtest: multiple conditions retain all consumers; one current usage wins without merging definitions by name
+ok 3 - multiple conditions retain all consumers; one current usage wins without merging definitions by name
+  ---
+  duration_ms: 0.649031
+  type: 'test'
+  ...
+1..3
+# tests 3
+# suites 0
+# pass 3
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 220.190088

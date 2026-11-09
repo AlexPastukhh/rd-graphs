@@ -1,0 +1,7 @@
+{
+  "tools/rdg-v7-model.py": "e1f8e91ff52ce6c8f9a7306e32dab1f509bc1401e3a08f4b04d3044d0c85667d",
+  "tools/graph-apply.py": "608077186004df8ac484d20aaeac78104b641dd58ddfd0a2c3fa9fbe697b7f40",
+  "tests/rdg-deep-action.acceptance.test.py": "259b0d816b20cdd77b74767b75cb42fe01277db0c086f82ef83ab7f5a1d7cc8a",
+  "docs/guides/RDG-DEEP-ACTION-AND-HISTORY.md": "3d8b664c8446416ee4efa8457c929969a88b8bfc3df803d065e9fa0ec5848577",
+  "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md": "803d9330fc436c17d4ce82495de03f7f0596692953c9f3d912e726137615f9d4"
+}

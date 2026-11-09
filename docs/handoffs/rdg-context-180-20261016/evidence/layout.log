@@ -1,0 +1,13 @@
+SCREEN 01-group-saved
+SCREEN 02-group-restored
+PASS group roundtrip
+SCREEN 03-new-edit-remains-dirty
+PASS async save retains actual mouse movement
+PASS manual local levels
+PASS same native file selected twice
+SCREEN 04-negative-layout
+PASS negative geometry and label fit
+SCREEN 05-alternatives-camera
+PASS alternatives retain camera
+PASS native Web Locks serializes connected tabs
+LAYOUT_BROWSER_REGRESSIONS_PASS pageerrors=0

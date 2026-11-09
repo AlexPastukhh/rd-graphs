@@ -1,0 +1,10 @@
+{
+  "README.md": "f70469ca6067daa3a4077f767fb2d0d7e48c04da230c1144fadcca4df6ad08d6",
+  "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md": "4cb8d0238d83d5f0b35ce6800ca7218459acb251a9a9872b18f2460461bf7efc",
+  "tools/rdg-event-gendocen.py": "b6afea00e8d8ac5f8fb954348c4326fd40f96bb2ce60678b82c358af6ec3b326",
+  "tools/rdg-event-gendocen-smoke.py": "df32a88e97912e54ff53fed0c93d813da428d6c6155752a1ba33c6387015f2c8",
+  "tests/rdg-event-gendocen.test.py": "61746f75d032a71b6318d12cd62d51a1536bf15e90b8aa905442f8c3479cb15f",
+  "docs/guides/RDG-EVENT-GENDOCEN-PILOT.md": "aa56d798d57b08ed21788e1d038a8c8f28dd7864b0f55df71eed46ae35d9fd51",
+  "docs/handoffs/rdg-event-gendocen-20261019/CHECKPOINT.md": "3307af4ca37990464ea28fb6b578930b105e9215dcc2713e380ad6e605551767",
+  "docs/handoffs/rdg-event-gendocen-20261019/WR-DELTA.md": "0a373d5297739eb8ba82be37c80f78726a4011ee3986ac55ec93de40ae395ac0"
+}

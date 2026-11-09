@@ -1,0 +1,47 @@
+test_child_dispositions_are_required_and_shared_goal_remains_supported (__main__.Workflow.test_child_dispositions_are_required_and_shared_goal_remains_supported) ... FAIL
+test_cli_renders_the_same_future_and_history (__main__.Workflow.test_cli_renders_the_same_future_and_history) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_placement_edit_unplace_cas_replay_and_no_graph_writes (__main__.Workflow.test_placement_edit_unplace_cas_replay_and_no_graph_writes) ... ok
+test_plan_read_and_graph_read_remain_separate (__main__.Workflow.test_plan_read_and_graph_read_remain_separate) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_sequence_only_r_and_action_and_unsupported_dependency_context (__main__.Workflow.test_sequence_only_r_and_action_and_unsupported_dependency_context) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_unscheduled_action_stays_in_history_after_edit_and_no_second_execution (__main__.Workflow.test_unscheduled_action_stays_in_history_after_edit_and_no_second_execution) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_whole_future_execution_withdrawal_new_variant_and_history (__main__.Workflow.test_whole_future_execution_withdrawal_new_variant_and_history) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+FAIL
+test_withdrawal_is_separately_authorized_and_denial_does_not_write (__main__.Workflow.test_withdrawal_is_separately_authorized_and_denial_does_not_write) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_withdrawal_keeps_protected_policy_guard (__main__.Workflow.test_withdrawal_keeps_protected_policy_guard) ... ok
+
+======================================================================
+FAIL: test_child_dispositions_are_required_and_shared_goal_remains_supported (__main__.Workflow.test_child_dispositions_are_required_and_shared_goal_remains_supported)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/repos/rd-graphs/tests/rdg-workflow.acceptance.test.py", line 172, in test_child_dispositions_are_required_and_shared_goal_remains_supported
+    w.apply([self.withdraw('D1',dispositions),w.result('D2',action=True),w.result('RS')])
+  File "/workspace/repos/rd-graphs/tests/rdg-deep-action.acceptance.test.py", line 64, in apply
+    self.assert_ok(self.write(package, token or self.token))
+  File "/workspace/repos/rd-graphs/tests/rdg-bearer-package.integration.test.py", line 66, in assert_ok
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 2 != 0 : ERROR: REQUIREMENT_RETIREMENT_EVENT_REQUIRED
+
+
+======================================================================
+FAIL: test_whole_future_execution_withdrawal_new_variant_and_history (__main__.Workflow.test_whole_future_execution_withdrawal_new_variant_and_history)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/repos/rd-graphs/tests/rdg-workflow.acceptance.test.py", line 103, in test_whole_future_execution_withdrawal_new_variant_and_history
+    stable=w.sources();w.assert_ok(w.write(execution,w.token));self.assertEqual(w.sources(),stable)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/repos/rd-graphs/tests/rdg-bearer-package.integration.test.py", line 66, in assert_ok
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 2 != 0 : ERROR: REPLAY_STATE_CHANGED: the saved result was modified after this transaction
+
+
+----------------------------------------------------------------------
+Ran 9 tests in 16.790s
+
+FAILED (failures=2)

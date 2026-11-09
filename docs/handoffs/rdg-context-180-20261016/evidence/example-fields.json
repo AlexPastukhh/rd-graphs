@@ -1,0 +1,180 @@
+{
+  "identitySpace": "rdg-context-working",
+  "graphSlugs": [
+    "context-working-root",
+    "context-working-current",
+    "context-working-alternative"
+  ],
+  "asOf": "2026-10-16",
+  "scope": "project",
+  "fields": [
+    {
+      "fieldRef": {
+        "graphSlug": "context-prepared-root",
+        "fieldId": "accessibility"
+      },
+      "title": "Контекст доступности",
+      "explanation": "Кому предстоит пользоваться интерфейсом и какие потребности доступности нужно учесть. Ответ описывает людей и условия использования; ссылка помогает понять концепт.",
+      "sources": [
+        {
+          "id": "wai-planning",
+          "title": "W3C WAI: планирование доступности",
+          "url": "https://www.w3.org/WAI/planning/",
+          "graphSlug": "context-prepared-root"
+        }
+      ],
+      "definitionAvailable": true,
+      "usages": [
+        {
+          "fieldRef": {
+            "graphSlug": "context-prepared-root",
+            "fieldId": "accessibility"
+          },
+          "purpose": "Проверить потребности людей до выбора способа",
+          "location": "O-CTX-A/recommended/plus-O-CTX-A",
+          "graphSlug": "context-working-root",
+          "state": "now",
+          "reasons": []
+        },
+        {
+          "fieldRef": {
+            "graphSlug": "context-prepared-root",
+            "fieldId": "accessibility"
+          },
+          "purpose": "Проверить потребности людей до выбора способа",
+          "location": "O-CTX-B/recommended/plus-O-CTX-B",
+          "graphSlug": "context-working-root",
+          "state": "now",
+          "reasons": []
+        },
+        {
+          "fieldRef": {
+            "graphSlug": "context-prepared-root",
+            "fieldId": "accessibility"
+          },
+          "purpose": "Переиспользовать общий ответ для дальнейшей работы",
+          "location": "graph",
+          "graphSlug": "context-working-current",
+          "state": "unknown",
+          "reasons": [
+            "Актуальность пути не установлена"
+          ]
+        },
+        {
+          "fieldRef": {
+            "graphSlug": "context-prepared-root",
+            "fieldId": "accessibility"
+          },
+          "purpose": "Переиспользовать общий ответ для дальнейшей работы",
+          "location": "graph",
+          "graphSlug": "context-working-alternative",
+          "state": "unknown",
+          "reasons": [
+            "Актуальность пути не установлена"
+          ]
+        }
+      ],
+      "answers": [
+        {
+          "id": "T1",
+          "value": "Интерфейс должен поддерживать работу с клавиатуры; уточнения аудитории ещё возможны.",
+          "source": "Учебный ответ, полученный ранее",
+          "recordedAt": "2026-10-01",
+          "effectiveAt": "2026-10-01",
+          "scope": "project",
+          "status": "applicable",
+          "graphSlug": "context-working-root",
+          "nodeId": "C-CTX-ACCESS",
+          "exampleOnly": true
+        }
+      ],
+      "state": "now",
+      "answerStatus": "known",
+      "nextAction": "reuse",
+      "question": false
+    },
+    {
+      "fieldRef": {
+        "graphSlug": "context-prepared-root",
+        "fieldId": "alternative-details"
+      },
+      "title": "Детали альтернативного способа",
+      "explanation": "Уточнения исполнения, нужные только после выбора альтернативы.",
+      "sources": [],
+      "definitionAvailable": true,
+      "usages": [
+        {
+          "fieldRef": {
+            "graphSlug": "context-prepared-root",
+            "fieldId": "alternative-details"
+          },
+          "purpose": "Уточнить исполнение альтернативного способа",
+          "when": {
+            "allSelected": [
+              {
+                "graphSlug": "context-working-root",
+                "optionId": "O-CTX-B"
+              }
+            ]
+          },
+          "location": "graph",
+          "graphSlug": "context-working-alternative",
+          "state": "later",
+          "reasons": [
+            "Актуальность пути не установлена",
+            "После выбора context-working-root:O-CTX-B"
+          ]
+        }
+      ],
+      "answers": [],
+      "state": "later",
+      "answerStatus": "missing",
+      "nextAction": "defer",
+      "question": false
+    },
+    {
+      "fieldRef": {
+        "graphSlug": "context-prepared-root",
+        "fieldId": "delivery"
+      },
+      "title": "Срок готовности",
+      "explanation": "Когда результат должен быть доступен и какие ограничения срока действительно обязательны.",
+      "sources": [],
+      "definitionAvailable": true,
+      "usages": [
+        {
+          "fieldRef": {
+            "graphSlug": "context-prepared-root",
+            "fieldId": "delivery"
+          },
+          "purpose": "Оценить допустимость способов до выбора",
+          "location": "graph",
+          "graphSlug": "context-working-root",
+          "state": "now",
+          "reasons": []
+        }
+      ],
+      "answers": [],
+      "state": "now",
+      "answerStatus": "missing",
+      "nextAction": "assess-existing-records",
+      "question": false
+    }
+  ],
+  "incomplete": [
+    {
+      "graphSlug": "context-working-root",
+      "location": "O-CTX-B",
+      "reason": "canon-fields-incomplete"
+    }
+  ],
+  "freeformCandidates": [
+    {
+      "graphSlug": "context-working-root",
+      "nodeId": "C-CTX-FREE",
+      "text": "Результат нужен к концу ноября; статус жёсткости срока ещё уточнить.",
+      "status": "mapping-needs-assessment"
+    }
+  ],
+  "coverage": "declared uses in available catalog; external sources not inspected"
+}

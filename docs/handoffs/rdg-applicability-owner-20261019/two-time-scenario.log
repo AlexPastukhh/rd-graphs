@@ -1,0 +1,12 @@
+test_broken_chain_or_claim_and_bad_future_pin_fail_closed (__main__.TwoTimeScenarioTest.test_broken_chain_or_claim_and_bad_future_pin_fail_closed) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_conflicting_outcomes_fail_without_correction_link (__main__.TwoTimeScenarioTest.test_conflicting_outcomes_fail_without_correction_link) ... ok
+test_date_precision_is_preserved_and_mixed_precision_denied (__main__.TwoTimeScenarioTest.test_date_precision_is_preserved_and_mixed_precision_denied) ... ok
+test_effective_time_does_not_invent_future_applicability (__main__.TwoTimeScenarioTest.test_effective_time_does_not_invent_future_applicability) ... ok
+test_late_correction_excluded_before_knowledge_then_reconstructs (__main__.TwoTimeScenarioTest.test_late_correction_excluded_before_knowledge_then_reconstructs) ... ok
+test_old_graph_time_missing_and_revocation_prevent_delivery (__main__.TwoTimeScenarioTest.test_old_graph_time_missing_and_revocation_prevent_delivery) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.734s
+
+OK

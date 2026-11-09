@@ -1,0 +1,10 @@
+{
+  "README.md": "8cf89d160981effd25457ea8a4e0176342e028b4ec84552ea9c4e3ca4b38b2c6",
+  "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md": "dcbc19b2bab1bf56689a88553059334a8a2c1b60cc48cd634b151f82a99df60c",
+  "tools/rdg-joint-context.py": "cb15740fc2f86ed445d916b1066f0cb6f49d682a12dc02a76307e57e0a185452",
+  "tools/rdg-joint-context-smoke.py": "6d263bca646a56752fd2d26f0fa2bc584e221a6812cd006f90684eaa5c430d73",
+  "tests/rdg-joint-context.test.py": "fe5ad4f67928d220c8425b5d029845b266bc47b17a27b9edc2a257303a0c1484",
+  "docs/guides/RDG-JOINT-CONTEXT-PILOT.md": "f47fbf26cee19bef388cfb45d8404201948d1e5682302d43414a4b6c7a8ecfaf",
+  "docs/handoffs/rdg-joint-context-20261019/CHECKPOINT.md": "4e6e8be5a4971e8f5deeaa2b9354ebd561c3b15caf58e88ccac45d345d604518",
+  "docs/handoffs/rdg-joint-context-20261019/WR-DELTA.md": "c46cc40ebef8b8d8712c2a39beb400f61414b34780dee4c08fd345fe254dd577"
+}
