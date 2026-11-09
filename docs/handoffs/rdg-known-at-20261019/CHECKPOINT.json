@@ -1,0 +1,72 @@
+{
+  "checkpoint": "CPW-RDG-KNOWN-AT-20261019/v1",
+  "status": "CANDIDATE",
+  "stage4": "NOT ACCEPTED",
+  "environment": "Fortis Repo /workspace/repos/rd-graphs, synthetic temporary roots only",
+  "gitAvailable": false,
+  "tests": {
+    "python": {
+      "exact-history-final": {
+        "command": "python3 tests/rdg-exact-history.test.py -v",
+        "exitCode": 0,
+        "tests": 13,
+        "log": "exact-history-final.log"
+      },
+      "writer-recording-final": {
+        "command": "python3 tests/rdg-writer-recording.test.py -v",
+        "exitCode": 0,
+        "tests": 2,
+        "log": "writer-recording-final.log"
+      },
+      "bearer-writer-final": {
+        "command": "python3 tests/rdg-bearer-package.integration.test.py -v",
+        "exitCode": 0,
+        "tests": 13,
+        "log": "bearer-writer-final.log"
+      },
+      "plan-owner-final": {
+        "command": "python3 tests/rdg-temporal-plan-owner.test.py -v",
+        "exitCode": 0,
+        "tests": 14,
+        "log": "plan-owner-final.log"
+      }
+    },
+    "node": {
+      "command": "node --test tests/*.test.cjs",
+      "tests": 404,
+      "pass": 404,
+      "fail": 0,
+      "log": "node.log"
+    },
+    "nodeTool": {
+      "command": "node --test tools/rd-graph-viewer-smoke.test.cjs",
+      "tests": 1,
+      "pass": 1,
+      "fail": 0,
+      "log": "node-tool.log"
+    },
+    "gendocen": {
+      "command": "python3 tools/rdg-gendocen-t1-history-smoke.py --engine-source /workspace/repos/gendocen --plan-owner",
+      "status": "PASS",
+      "log": "smoke.log"
+    }
+  },
+  "v41ZipSHA256": "ab5ba0acf4a116eb24ac24340f151527786cf1e93c90aa7b38f52e50b92d5401",
+  "changedFiles": [
+    "tools/graph-package.py",
+    "tools/rdg-exact-history.py",
+    "tools/rdg-gendocen-t1-history-smoke.py",
+    "tests/rdg-exact-history.test.py",
+    "README.md",
+    "docs/guides/RDG-EXACT-HISTORY-PILOT-P2.md",
+    "tests/rdg-writer-recording.test.py",
+    "docs/handoffs/rdg-known-at-20261019/CHECKPOINT.md",
+    "docs/handoffs/rdg-known-at-20261019/WR-DELTA.md"
+  ],
+  "limitations": [
+    "knownAt proves only pinned source availability by cutoff; not applicability or latest context",
+    "latest Plan revision has no successor availability witness",
+    "effectiveAt and historical Gendocen as-of not implemented",
+    "local clock and hashes are not independent human/event attestation"
+  ]
+}

@@ -1,0 +1,112 @@
+[
+  {
+    "file": "tools/rdg-completion-context.py",
+    "added": 191,
+    "removed": 0
+  },
+  {
+    "file": "tools/rdg-v7-model.py",
+    "added": 11,
+    "removed": 6
+  },
+  {
+    "file": "tools/graph-apply.py",
+    "added": 22,
+    "removed": 12
+  },
+  {
+    "file": "tools/graph-package.py",
+    "added": 132,
+    "removed": 3
+  },
+  {
+    "file": "tools/rdg-activity.py",
+    "added": 17,
+    "removed": 6
+  },
+  {
+    "file": "tools/rdg-workflow.py",
+    "added": 6,
+    "removed": 2
+  },
+  {
+    "file": "tools/rdg-workflow-helper.py",
+    "added": 10,
+    "removed": 4
+  },
+  {
+    "file": "tools/rdg-workflow-ui.js",
+    "added": 6,
+    "removed": 4
+  },
+  {
+    "file": "tools/rd-graph-viewer.user.js",
+    "added": 9,
+    "removed": 7
+  },
+  {
+    "file": "tests/rdg-bearer-package.integration.test.py",
+    "added": 1,
+    "removed": 1
+  },
+  {
+    "file": "tests/rdg-cross-file-completion.test.py",
+    "added": 428,
+    "removed": 0
+  },
+  {
+    "file": "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md",
+    "added": 80,
+    "removed": 19
+  },
+  {
+    "file": "docs/guides/RDG-DEEP-ACTION-AND-HISTORY.md",
+    "added": 110,
+    "removed": 13
+  },
+  {
+    "file": "docs/guides/RDG-V7-WORKING-GRAPHS.md",
+    "added": 12,
+    "removed": 7
+  },
+  {
+    "file": "README.md",
+    "added": 8,
+    "removed": 3
+  },
+  {
+    "file": "tests/rdg-workflow-ui.test.cjs",
+    "added": 29,
+    "removed": 0
+  },
+  {
+    "file": "tools/rdg-graph-api.py",
+    "added": 2,
+    "removed": 2
+  },
+  {
+    "file": "tools/rd-graph-viewer-smoke.test.cjs",
+    "added": 1,
+    "removed": 1
+  },
+  {
+    "file": "tests/visual/rdg-full-detail-201.cjs",
+    "added": 2,
+    "removed": 2
+  },
+  {
+    "file": "docs/guides/VIEWER-EXPLORER.md",
+    "added": 7,
+    "removed": 0
+  },
+  {
+    "file": "tests/rdg-v6-action-reconsider-writer.test.cjs",
+    "added": 1,
+    "removed": 1
+  },
+  {
+    "file": "tests/rdg-v6-action-writer.test.cjs",
+    "added": 1,
+    "removed": 1
+  }
+]

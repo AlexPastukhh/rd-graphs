@@ -1,0 +1,87 @@
+{
+  "checkpoint": "CPW-RDG-FUTURE-BASELINE-20261019/v1",
+  "status": "CANDIDATE",
+  "stage4": "NOT ACCEPTED",
+  "environment": "Fortis Repo /workspace/repos/rd-graphs (Windows RW mount), synthetic temporary roots only",
+  "gitAvailable": false,
+  "changedFiles": [
+    "README.md",
+    "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md",
+    "tools/rdg-future-baseline-owner.py",
+    "tests/rdg-future-baseline.test.py",
+    "docs/guides/RDG-FUTURE-BASELINE-PILOT.md",
+    "docs/handoffs/rdg-future-baseline-20261019/CHECKPOINT.md",
+    "docs/handoffs/rdg-future-baseline-20261019/WR-DELTA.md"
+  ],
+  "fileSHA256": {
+    "README.md": "602db2fd6061ce1ab0c02c7724e770373c317a2fe1b7bfaf03d91d0f3f509049",
+    "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md": "509bc098fd5b9f2fba1d6f7e537b5c2907cb55e82107336eb08710a0d2450cdf",
+    "tools/rdg-future-baseline-owner.py": "63a667a991720341ee496bcc6645595d6c1a49fcf88cfb57fa1ed08963cfb9c3",
+    "tests/rdg-future-baseline.test.py": "8c90baa744f046d58e12080ea08b9ebdf36594e8647ac86988eb76235af638bb",
+    "docs/guides/RDG-FUTURE-BASELINE-PILOT.md": "cc98f724ffe15c85a5ce2424967bcb9b9bf08c588ef552d602330403ad93ea05",
+    "docs/handoffs/rdg-future-baseline-20261019/CHECKPOINT.md": "e8d5cef2729fde171db61ddf18804654f94b331cbcc87e7c90bff074a3404edb",
+    "docs/handoffs/rdg-future-baseline-20261019/WR-DELTA.md": "513c885187a1a6e12f1e7214796c5796af2ea663497406bd95d9a7d8e77780c6"
+  },
+  "tests": {
+    "results": {
+      "future-baseline": {
+        "command": "python3 tests/rdg-future-baseline.test.py -v",
+        "exitCode": 0,
+        "tests": 9,
+        "log": "future-baseline.log"
+      },
+      "plan-owner": {
+        "command": "python3 tests/rdg-temporal-plan-owner.test.py -v",
+        "exitCode": 0,
+        "tests": 17,
+        "log": "plan-owner.log"
+      },
+      "applicability-owner": {
+        "command": "python3 tests/rdg-applicability-owner.test.py -v",
+        "exitCode": 0,
+        "tests": 9,
+        "log": "applicability-owner.log"
+      },
+      "exact-history": {
+        "command": "python3 tests/rdg-exact-history.test.py -v",
+        "exitCode": 0,
+        "tests": 13,
+        "log": "exact-history.log"
+      },
+      "two-time-scenario": {
+        "command": "python3 tests/rdg-two-time-scenario.test.py -v",
+        "exitCode": 0,
+        "tests": 6,
+        "log": "two-time-scenario.log"
+      },
+      "writer-recording": {
+        "command": "python3 tests/rdg-writer-recording.test.py -v",
+        "exitCode": 0,
+        "tests": 2,
+        "log": "writer-recording.log"
+      },
+      "bearer-authority": {
+        "command": "node --test tests/rdg-bearer-authority.test.cjs",
+        "exitCode": 0,
+        "tests": 2,
+        "log": "bearer-authority.log"
+      }
+    },
+    "total": 58,
+    "priorGendocen": "current-projection synthetic smoke, not rerun",
+    "priorNode": "405 PASS before Plan changes, not rerun"
+  },
+  "p2AcCount": {
+    "Локальный PASS": 7,
+    "PARTIAL": 11,
+    "OPEN": 2
+  },
+  "localLinksChecked": 78,
+  "validation": "PASS: 20 P2-AC IDs once; 7 selected diff files, local links and SHA verified",
+  "v41ZipSHA256": "ab5ba0acf4a116eb24ac24340f151527786cf1e93c90aa7b38f52e50b92d5401",
+  "limitations": [
+    "technical bearer acceptance is not independently verified human decision",
+    "no factual event attestation or Action selection",
+    "no historical Gendocen integration, complete applicable context, Windows installed proof or publication"
+  ]
+}

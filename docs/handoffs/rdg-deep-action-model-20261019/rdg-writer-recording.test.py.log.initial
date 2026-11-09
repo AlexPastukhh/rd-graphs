@@ -1,0 +1,23 @@
+test_clock_regression_does_not_create_new_journal (__main__.WriterRecordingTest.test_clock_regression_does_not_create_new_journal) ... ok
+test_prepared_time_survives_crash_and_exact_cutoff (__main__.WriterRecordingTest.test_prepared_time_survives_crash_and_exact_cutoff) ... ERROR
+
+======================================================================
+ERROR: test_prepared_time_survives_crash_and_exact_cutoff (__main__.WriterRecordingTest.test_prepared_time_survives_crash_and_exact_cutoff)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/repos/rd-graphs/tests/rdg-writer-recording.test.py", line 99, in test_prepared_time_survives_crash_and_exact_cutoff
+    resolved = HISTORY.resolve(plan_root, self.writer.home / "graphs", store,
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/repos/rd-graphs/tools/rdg-exact-history.py", line 201, in resolve
+    graphs = journal_snapshots(graphs_root, pins)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/repos/rd-graphs/tools/rdg-exact-history.py", line 114, in journal_snapshots
+    require(isinstance(journal, dict) and type(journal.get("schemaVersion")) is int and
+  File "/workspace/repos/rd-graphs/tools/rdg-exact-history.py", line 28, in require
+    raise ValueError("EXACT_HISTORY_" + code)
+ValueError: EXACT_HISTORY_JOURNAL_SCHEMA
+
+----------------------------------------------------------------------
+Ran 2 tests in 2.299s
+
+FAILED (errors=1)

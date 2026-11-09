@@ -1,0 +1,22 @@
+TAP version 13
+# Subtest: grant creation, modification and revocation apply to next request
+ok 1 - grant creation, modification and revocation apply to next request
+  ---
+  duration_ms: 810.403469
+  type: 'test'
+  ...
+# Subtest: delegated administrator cannot enlarge scope or modify owner
+ok 2 - delegated administrator cannot enlarge scope or modify owner
+  ---
+  duration_ms: 534.124965
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1446.340465

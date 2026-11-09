@@ -1,0 +1,1572 @@
+--- a/tools/rdg-v7-model.py
++++ b/tools/rdg-v7-model.py
+@@ -363,17 +363,31 @@
+         elif unknown_roles:
+             complete, reason = False, "unknown-required-child-role"
+         elif children:
+-            complete = all(row["complete"] for _, row in children)
++            complete = all(row.get("currentScopeComplete", row["complete"]) for _, row in children)
+             reason = "dependencies-complete" if complete else "required-work-incomplete"
+             if complete and definition_changed and not (recorded and recorded.get("completionMode") == "explicit"):
+                 complete, reason = False, "definition-changed-result-review"
+         else:
+             complete = recorded is not None and recorded.get("completionMode") == "explicit"
+             reason = "recorded-result" if complete else "result-not-recorded"
+-        result = {"nodeId": nid, "kind": n["kind"], "complete": complete,
++        current_complete = complete
++        execution = next((e for e in g["events"] if e.get("type") == "action_executed"
++                          and e.get("targetId") == nid), None) if n["kind"] == "action" else None
++        if execution:
++            # An Action is an instance: its execution is immutable history.
++            # Current applicability remains separate for the parent R calculation.
++            current_complete = available and not unknown_roles and execution.get("basisSHA256") == signature
++            if children:
++                current_complete = current_complete and all(
++                    row.get("currentScopeComplete", row["complete"]) for _, row in children)
++            complete = True
++            reason = "executed-instance" if current_complete else "executed-historical-scope"
++        result = {"nodeId": nid, "kind": n["kind"], "title": n["title"],
++                  "status": n.get("status"), "complete": complete,
++                  "currentScopeComplete": bool(current_complete),
+                   "reason": reason, "basisSHA256": signature, "basis": basis,
+                   "dependencyIds": [e["to"] for e, _ in children],
+-                  "eventId": recorded["id"] if recorded and complete else None}
++                  "eventId": execution["id"] if execution else recorded["id"] if recorded and complete else None}
+         cache[nid] = result
+         visiting.remove(nid)
+         return result
+@@ -423,6 +437,8 @@
+     nid = operation.get("targetId")
+     n = next((n for n in g["nodes"] if n["id"] == nid), None)
+     ensure(n and n["kind"] == expected, "completion target kind mismatch")
++    ensure(expected != "action" or not any(e.get("type") == "action_executed" and
++           e.get("targetId") == nid for e in g["events"]), "Action instance already executed")
+     row = completion_state(g)[nid]
+     ensure(row["reason"] != "potential-inactive-or-unavailable-owner", "completion requires actual selected scope")
+     ensure(not row["complete"], "completion already recorded or derived")
+--- a/tools/graph-apply.py
++++ b/tools/graph-apply.py
+@@ -182,6 +182,13 @@
+                       e.get("from") == action["id"] and e.get("to") == rid and
+                       e.get("type") == "INTRODUCES" for e in graph["edges"]),
+                   "invalid shared Action Requirement link history")
++        elif action_mode and event.get("type") == "action_withdrawn":
++            action = nodes.get(event.get("actionId"))
++            check(action and action.get("kind") == "action" and action.get("status") == "superseded" and
++                  event.get("driverRequirementId") in nodes and
++                  isinstance(event.get("priorActionSnapshot"), dict) and
++                  event["priorActionSnapshot"].get("id") == action["id"],
++                  "invalid Action withdrawal history")
+         elif action_mode and event.get("type") == "action_reconsidered":
+             original = nodes.get(event.get("actionId"))
+             review = nodes.get(event.get("reviewActionId"))
+@@ -270,12 +277,12 @@
+             # No generic mutation is safe for R/Context/relations in the opt-in
+             # model. Require a future event-bearing owner-specific operation.
+             allowed = {"add_action", "select_action", "link_action_requirement",
+-                       "reconsider_action", "append_qrpe", "append_finding",
++                       "reconsider_action", "withdraw_action", "append_qrpe", "append_finding",
+                        "transition_qrpe", "graph_edit", "record_action_execution",
+                        "record_requirement_achievement"}
+             check(op in allowed,
+                   "ACTION_MODEL_GUARD: no untracked R/Context/edge/event mutation")
+-            if op in {"select_action", "link_action_requirement", "reconsider_action", "transition_qrpe", "graph_edit", "record_action_execution", "record_requirement_achievement"}:
++            if op in {"select_action", "link_action_requirement", "reconsider_action", "withdraw_action", "transition_qrpe", "graph_edit", "record_action_execution", "record_requirement_achievement"}:
+                 check(trusted_verified is True,
+                       "TRUST_REQUIRED: material Action operation requires verified package")
+             if op == "append_qrpe":
+@@ -490,6 +497,16 @@
+                 "from": aid, "to": rid, "parent": drivers[0]["from"],
+                 "childRole": role})
+             current["events"].append(event)
++        elif op == "withdraw_action":
++            ns = {n["id"]: n for n in current["nodes"]}
++            aid = operation.get("actionId")
++            for edge in current["edges"]:
++                if edge.get("archived") is not True and (
++                    edge["type"] == "DRIVES" and edge["to"] == aid or
++                    edge["type"] == "INTRODUCES" and edge["from"] == aid):
++                    guard_policy(ns.get(edge["from"]), operation.get("event") or {})
++                    guard_policy(ns.get(edge["to"]), operation.get("event") or {})
++            reconsider_lib().withdraw(current, operation)
+         elif op == "reconsider_action":
+             check(trusted_verified is True,
+                   "TRUST_REQUIRED: use writer package with verified approval and evidence")
+@@ -514,7 +531,7 @@
+             pass
+         else:
+             raise ValueError("unsupported operation: " + str(op))
+-        if current.get("actionModel") == ACTION_MODEL and op in {"select_action", "link_action_requirement", "graph_edit", "record_action_execution", "record_requirement_achievement"}:
++        if current.get("actionModel") == ACTION_MODEL and op in {"select_action", "link_action_requirement", "withdraw_action", "graph_edit", "record_action_execution", "record_requirement_achievement"}:
+             trigger = next((e for e in reversed(current["events"]) if e.get("id") == (operation.get("event") or {}).get("id")), None)
+             if trigger and trigger.get("authorityPrincipal"):
+                 from datetime import datetime, timezone
+--- a/tools/graph-package.py
++++ b/tools/graph-package.py
+@@ -88,7 +88,7 @@
+     # Load new gate only for opt-in material Action operations. Legacy writer
+     # remains unaffected and its isolated test harness needs no new helper.
+     trust_required = any(op.get('op') in
+-        {'select_action', 'link_action_requirement', 'reconsider_action', 'transition_qrpe', 'graph_edit', 'record_action_execution', 'record_requirement_achievement'}
++        {'select_action', 'link_action_requirement', 'reconsider_action', 'withdraw_action', 'transition_qrpe', 'graph_edit', 'record_action_execution', 'record_requirement_achievement'}
+         for change in changes for op in (change.get('patch') or {}).get('operations', [])) or any(
+         (c.get('create') or {}).get('actionModel') == 'candidate-v6' and
+         (bool((c.get('create') or {}).get('events')) or any(
+@@ -135,7 +135,7 @@
+             authoritatively_scoped_patch = copy.deepcopy(change.get("patch"))
+             if trust_required:
+                 for op in authoritatively_scoped_patch.get('operations', []):
+-                    if op.get('op') in {'select_action', 'link_action_requirement', 'reconsider_action', 'transition_qrpe', 'graph_edit', 'record_action_execution', 'record_requirement_achievement'}:
++                    if op.get('op') in {'select_action', 'link_action_requirement', 'reconsider_action', 'withdraw_action', 'transition_qrpe', 'graph_edit', 'record_action_execution', 'record_requirement_achievement'}:
+                         receipt_target = op.get('transition') if op.get('op') == 'transition_qrpe' else op.get('event')
+                         check(isinstance(receipt_target, dict), 'TRUST_RECEIPT_TARGET_MISSING')
+                         if bearer is None:
+@@ -230,7 +230,8 @@
+                           isinstance(e.get("verifiedTrustReceipt"), dict)
+                           for e in after["events"]), "REQUIREMENT_DELETION_EVENT_REQUIRED")
+             else:
+-                check(any((e.get("type") == "action_reconsidered" and
++                check(any((e.get("type") in {"action_reconsidered", "action_withdrawn"} and
++                       isinstance(e.get("verifiedTrustReceipt"), dict) and
+                        any(d.get("requirementId") == rid and d.get("effect") == "deactivate"
+                            for d in e.get("childDispositions", []))) or
+                       (e.get("type") == "graph_changed" and
+--- a/tools/rdg-v6-action-trust.py
++++ b/tools/rdg-v6-action-trust.py
+@@ -37,7 +37,7 @@
+             'purpose': claim.get('purpose')}
+ 
+ 
+-MATERIAL_OPS = {'select_action', 'link_action_requirement', 'reconsider_action', 'transition_qrpe', 'graph_edit', 'record_action_execution', 'record_requirement_achievement'}
++MATERIAL_OPS = {'select_action', 'link_action_requirement', 'reconsider_action', 'withdraw_action', 'transition_qrpe', 'graph_edit', 'record_action_execution', 'record_requirement_achievement'}
+ 
+ 
+ def need_trust(package):
+--- a/tools/rdg-authority.py
++++ b/tools/rdg-authority.py
+@@ -195,7 +195,7 @@
+                     event = item.get("event")
+                     require(isinstance(event, dict) and event.get("type") not in (
+                         "decision_selected", "decision_revised",
+-                        "action_selected", "action_reconsidered", "action_executed", "requirement_achieved"),
++                        "action_selected", "action_reconsidered", "action_withdrawn", "action_executed", "requirement_achieved"),
+                         "SELECTION_EVENT_REQUIRES_DEDICATED_OPERATION: file=" + file)
+                 elif name in ("select_option", "revise_decision"):
+                     event = item.get("event")
+--- a/tools/rdg-v6-action-reconsider.py
++++ b/tools/rdg-v6-action-reconsider.py
+@@ -71,6 +71,48 @@
+                    isinstance(history[-1].get('note'), str) and history[-1]['note'].strip()),
+                'RECONSIDER_QRPE_RESOLUTION_NOT_EVIDENCED')
+     # This verifies reference formats only. External evidence is NOT retrieved.
++
++
++def validate_dispositions(graph, old, dispositions):
++    nodes = {n['id']: n for n in graph['nodes']}
++    introduced = [e for e in graph['edges'] if e.get('type') == 'INTRODUCES' and
++                  e.get('from') == old['id'] and active(e)]
++    ensure(isinstance(dispositions, list) and len(dispositions) == len(introduced),
++           'RECONSIDER_EXACT_CHILD_DISPOSITIONS_REQUIRED')
++    child_map = {e['to']: e for e in introduced}
++    ensure(len(child_map) == len(introduced), 'RECONSIDER_DUPLICATE_CHILD_INTRODUCTION')
++    seen = set()
++    for d in dispositions:
++        ensure(isinstance(d, dict) and d.get('requirementId') in child_map and
++               d['requirementId'] not in seen and
++               d.get('effect') in ('retain_supported', 'deactivate') and
++               isinstance(d.get('reason'), str) and d['reason'].strip(),
++               'RECONSIDER_DISPOSITION_INVALID')
++        seen.add(d['requirementId'])
++        rid = d['requirementId']
++        child = nodes[rid]
++        ensure(child.get('kind') == 'requirement' and
++               child.get('status', 'active') == 'active' and
++               child.get('active') is not False and
++               not child.get('projectionOf') and rid != graph['rootRequirementId'],
++               'RECONSIDER_CHILD_SCOPE_NOT_OWNED_ACTIVE_R')
++        supporters = [e['from'] for e in graph['edges'] if e.get('type') == 'INTRODUCES'
++                      and e.get('to') == rid and e.get('from') != old['id'] and active(e)
++                      and nodes[e['from']].get('kind') == 'action' and
++                      nodes[e['from']].get('status') == 'selected']
++        if d['effect'] == 'retain_supported':
++            ensure(supporters, 'RECONSIDER_CHILD_HAS_NO_INDEPENDENT_SUPPORT')
++            ensure(set(d.get('supportingActionIds', [])) == set(supporters),
++                   'RECONSIDER_SUPPORTER_MISMATCH')
++        else:
++            ensure(not supporters, 'RECONSIDER_CANNOT_DEACTIVATE_SHARED_R')
++            dependencies = [e for e in graph['edges'] if active(e) and
++                            (e.get('from') == rid or (e.get('to') == rid and
++                             e.get('type') != 'INTRODUCES'))]
++            ensure(not dependencies, 'RECONSIDER_CHILD_HAS_DEPENDENCIES')
++            ensure(d.get('downstreamScope') == 'single_graph_verified',
++                   'RECONSIDER_DOWNSTREAM_SCOPE_UNVERIFIED')
++    return introduced
+ 
+ 
+ def apply(graph, operation):
+@@ -118,44 +160,8 @@
+                isinstance(effect.get('reason'), str) and effect['reason'].strip() and
+                isinstance(effect.get('evidenceRefs'), list) and effect['evidenceRefs'],
+                'RECONSIDER_LENS_EFFECT_QRPE_NOT_RESOLVED')
+-    introduced = [e for e in graph['edges'] if e.get('type') == 'INTRODUCES' and
+-                  e.get('from') == old['id'] and active(e)]
+     dispositions = operation.get('dispositions')
+-    ensure(isinstance(dispositions, list) and len(dispositions) == len(introduced),
+-           'RECONSIDER_EXACT_CHILD_DISPOSITIONS_REQUIRED')
+-    child_map = {e['to']: e for e in introduced}
+-    ensure(len(child_map) == len(introduced), 'RECONSIDER_DUPLICATE_CHILD_INTRODUCTION')
+-    seen = set()
+-    for d in dispositions:
+-        ensure(isinstance(d, dict) and d.get('requirementId') in child_map and
+-               d['requirementId'] not in seen and
+-               d.get('effect') in ('retain_supported', 'deactivate') and
+-               isinstance(d.get('reason'), str) and d['reason'].strip(),
+-               'RECONSIDER_DISPOSITION_INVALID')
+-        seen.add(d['requirementId'])
+-        rid = d['requirementId']
+-        child = nodes[rid]
+-        ensure(child.get('kind') == 'requirement' and
+-               child.get('status', 'active') == 'active' and
+-               child.get('active') is not False and
+-               not child.get('projectionOf') and rid != graph['rootRequirementId'],
+-               'RECONSIDER_CHILD_SCOPE_NOT_OWNED_ACTIVE_R')
+-        supporters = [e['from'] for e in graph['edges'] if e.get('type') == 'INTRODUCES'
+-                      and e.get('to') == rid and e.get('from') != old['id'] and active(e)
+-                      and nodes[e['from']].get('kind') == 'action' and
+-                      nodes[e['from']].get('status') == 'selected']
+-        if d['effect'] == 'retain_supported':
+-            ensure(supporters, 'RECONSIDER_CHILD_HAS_NO_INDEPENDENT_SUPPORT')
+-            ensure(set(d.get('supportingActionIds', [])) == set(supporters),
+-                   'RECONSIDER_SUPPORTER_MISMATCH')
+-        else:
+-            ensure(not supporters, 'RECONSIDER_CANNOT_DEACTIVATE_SHARED_R')
+-            dependencies = [e for e in graph['edges'] if active(e) and
+-                            (e.get('from') == rid or (e.get('to') == rid and
+-                             e.get('type') != 'INTRODUCES'))]
+-            ensure(not dependencies, 'RECONSIDER_CHILD_HAS_DEPENDENCIES')
+-            ensure(d.get('downstreamScope') == 'single_graph_verified',
+-                   'RECONSIDER_DOWNSTREAM_SCOPE_UNVERIFIED')
++    introduced = validate_dispositions(graph, old, dispositions)
+     # Everything validated before graph mutations. Package/index validation later
+     # detects cross-file references; cross-file deactivation requires a separate gate.
+     event['priorActionSnapshot'] = copy.deepcopy(old)
+@@ -197,7 +203,7 @@
+                    'ACTION_SELECTION_T1_LOST')
+         else:
+             ensure(not selected, 'ACTION_CANDIDATE_HAS_SELECTION_EVENT')
+-        reconsidered = [e for e in graph['events'] if e.get('type') == 'action_reconsidered' and
++        reconsidered = [e for e in graph['events'] if e.get('type') in ('action_reconsidered', 'action_withdrawn') and
+                         e.get('actionId') == action['id']]
+         if action.get('status') == 'superseded':
+             ensure(len(reconsidered) == 1 and
+@@ -214,12 +220,13 @@
+             historical.pop('qrpe', None)  # Later append-only QRPE changes are allowed.
+             ensure(historical == expected,
+                    'ACTION_RECONSIDERATION_PRIOR_SNAPSHOT_CHANGED')
+-            reviewer = nodes.get(event.get('reviewActionId'))
+-            ensure(reviewer and reviewer['kind'] == 'action' and
+-                   reviewer['status'] in ('selected', 'superseded') and
+-                   event.get('reviewActionSnapshot', {}).get('id') == reviewer['id'] and
+-                   event['reviewActionSnapshot'].get('status') == 'selected',
+-                   'ACTION_RECONSIDERATION_REVIEWER_HISTORY_MISSING')
++            if event['type'] == 'action_reconsidered':
++                reviewer = nodes.get(event.get('reviewActionId'))
++                ensure(reviewer and reviewer['kind'] == 'action' and
++                       reviewer['status'] in ('selected', 'superseded') and
++                       event.get('reviewActionSnapshot', {}).get('id') == reviewer['id'] and
++                       event['reviewActionSnapshot'].get('status') == 'selected',
++                       'ACTION_RECONSIDERATION_REVIEWER_HISTORY_MISSING')
+             for snapshot in event.get('priorIntroductionEdges', []):
+                 matches = [edge for edge in graph['edges'] if edge.get('id') == snapshot.get('id')]
+                 ensure(len(matches) == 1, 'ACTION_RECONSIDERATION_EDGE_LOST')
+@@ -232,3 +239,38 @@
+                    'ACTION_RECONSIDERATION_ACTIVE_CHILD_LEFT_BEHIND')
+         else:
+             ensure(not reconsidered, 'ACTION_RECONSIDERATION_EVENT_STATUS_MISMATCH')
++
++
++def withdraw(graph, operation):
++    """Explicit withdrawal under its own writer grant, without a synthetic reviewer.
++
++    Existing protected/stable R policies and all child/cross-file safety guards
++    still apply; the richer reconsider_action contract is unchanged.
++    """
++    nodes = {n['id']: n for n in graph['nodes']}
++    old = nodes.get(operation.get('actionId'))
++    ensure(old and old.get('kind') == 'action' and old.get('status') == 'selected',
++           'WITHDRAW_SELECTED_ACTION_REQUIRED')
++    ensure(any(e.get('type') == 'action_executed' and e.get('targetId') == old['id']
++               for e in graph['events']), 'WITHDRAW_EXECUTED_INSTANCE_REQUIRED')
++    driver = action_driver(graph, old['id'])
++    event = copy.deepcopy(operation.get('event'))
++    ensure(isinstance(event, dict) and event.get('type') == 'action_withdrawn' and
++           event.get('actionId') == old['id'] and event.get('driverRequirementId') == driver and
++           event.get('by') in ('user', 'assistant') and isinstance(event.get('note'), str) and
++           event['note'].strip() and isinstance(event.get('id'), str) and event['id'] and
++           all(e['id'] != event['id'] for e in graph['events']) and
++           isinstance(event.get('authorityPrincipal'), str) and event['authorityPrincipal'],
++           'WITHDRAW_ATTRIBUTED_EVENT_REQUIRED')
++    dispositions = operation.get('dispositions', [])
++    introduced = validate_dispositions(graph, old, dispositions)
++    event.update(priorActionSnapshot=copy.deepcopy(old), priorIntroductionEdges=copy.deepcopy(introduced),
++                 childDispositions=copy.deepcopy(dispositions))
++    old.update(status='superseded', reconsiderationEventId=event['id'])
++    for edge in introduced:
++        edge.update(archived=True, archivedByEventId=event['id'])
++    for d in dispositions:
++        if d['effect'] == 'deactivate':
++            nodes[d['requirementId']].update(status='inactive', deactivatedByEventId=event['id'])
++    graph['events'].append(event)
++    return event
+--- a/tools/rdg-activity.py
++++ b/tools/rdg-activity.py
+@@ -15,7 +15,7 @@
+ MODEL = SourceFileLoader("rdg_activity_model", str(TOOLS/"rdg-v7-model.py")).load_module()
+ 
+ 
+-def read_activity(graph_root, graph_refs, token=None):
++def read_activity(graph_root, graph_refs, token=None, authority_store=None):
+     root = Path(graph_root).resolve()
+     lock_path = root/"workspaces/.writer.lock"
+     if lock_path.exists():
+@@ -23,11 +23,11 @@
+             raise ValueError("ACTIVITY_UNSAFE_LOCK")
+         with os.fdopen(os.open(lock_path, os.O_RDONLY | os.O_NOFOLLOW), "rb") as lock:
+             fcntl.flock(lock, fcntl.LOCK_SH)
+-            return _read_activity_unlocked(root, graph_refs, token)
+-    return _read_activity_unlocked(root, graph_refs, token)
++            return _read_activity_unlocked(root, graph_refs, token, authority_store)
++    return _read_activity_unlocked(root, graph_refs, token, authority_store)
+ 
+ 
+-def _read_activity_unlocked(graph_root, graph_refs, token=None):
++def _read_activity_unlocked(graph_root, graph_refs, token=None, authority_store=None):
+     root = Path(graph_root).resolve()
+     refs = list(dict.fromkeys(graph_refs))
+     if not refs:
+@@ -40,7 +40,7 @@
+         if not path.resolve().is_relative_to(root) or any(p.is_symlink() for p in [path, *path.parents] if p != root.parent):
+             raise ValueError("ACTIVITY_UNSAFE_SOURCE")
+         paths[ref] = path
+-    store = os.environ.get("RDG_AUTH_STORE")
++    store = authority_store or os.environ.get("RDG_AUTH_STORE")
+     if store:
+         auth = SourceFileLoader("rdg_activity_auth", str(TOOLS/"rdg-authority.py")).load_module()
+         auth.Authority(store).authorize_graph_read(token or os.environ.get("RDG_AUTH_TOKEN"), refs)
+@@ -56,11 +56,15 @@
+             if key in seen:
+                 continue
+             seen.add(key)
+-            if event.get("type") not in MODEL.COMPLETION_EVENTS:
++            if event.get("type") not in MODEL.COMPLETION_EVENTS | {"action_withdrawn", "action_reconsidered"}:
+                 continue
++            withdrawal = event.get("type") in {"action_withdrawn", "action_reconsidered"}
+             rows.append({"id": ref+"::"+event["id"], "graphFile": ref,
+-                         "kind": event["type"], "targetId": event["targetId"],
+-                         "title": event.get("basis", {}).get("node", {}).get("title"),
++                         "kind": "action_withdrawn" if withdrawal else event["type"],
++                         "sourceEventType": event["type"],
++                         "targetId": event["actionId"] if withdrawal else event["targetId"],
++                         "title": (event.get("priorActionSnapshot", {}) if withdrawal else event.get("basis", {}).get("node", {})).get("title"),
++                         "eventOrder": next(i for i,e in enumerate(graphs[ref]["events"]) if e["id"] == event["id"]),
+                          "recordedAt": recorded_at, "occurredAt": event.get("occurredAt"),
+                          "by": event.get("by"), "authorityPrincipal": event.get("authorityPrincipal"),
+                          "completionMode": event.get("completionMode"),
+@@ -98,6 +102,8 @@
+                          "transactionId": journal["transactionId"], "revision": after["revision"],
+                          "previousRevision": before.get("revision"), "changed": changed,
+                          "authorityPrincipals": principal,
++                         "summary": "; ".join(dict.fromkeys(e.get("note", "") for e in added if e.get("note") and e.get("type") not in MODEL.COMPLETION_EVENTS)) or
++                                    "Изменены: " + ", ".join(next((n["title"] for n in after.get("nodes", []) if n["id"] == nid), nid) for nid in changed["nodes"]),
+                          "operations": [e.get("operation", e.get("type")) for e in added
+                                         if e.get("type") not in MODEL.COMPLETION_EVENTS]})
+             events(ref, added, journal.get("recordedAt"), journal["transactionId"])
+@@ -105,18 +111,22 @@
+         # Historical events without a completed journal retain unknown save time.
+         events(ref, graph.get("events", []), None, None)
+     rows.sort(key=lambda r: (r.get("recordedAt") is None, r.get("recordedAt") or "",
+-                             r.get("graphFile"), r["id"]))
++                             r.get("graphFile"), r.get("eventOrder", -1), r["id"]))
+     states = {ref: {nid: {k: v for k, v in row.items() if k != "basis"}
+                     for nid, row in MODEL.completion_state(graph).items()}
+               for ref, graph in graphs.items() if graph.get("actionModel") == "candidate-v6"}
+-    return {"schemaVersion": 1, "activities": rows, "currentCompletion": states,
++    owners = {ref: {"identitySpace": graph.get("identitySpace"), "revision": graph["revision"],
++                    "nodes": {n["id"]: {k:n[k] for k in ("id", "kind", "title", "status", "active", "projectionOf") if k in n}
++                              for n in graph["nodes"] if n["kind"] in {"requirement", "action"}}}
++              for ref,graph in graphs.items()}
++    return {"schemaVersion": 1, "activities": rows, "currentCompletion": states, "graphOwners": owners,
+             "coverage": "requested-graph-owners; cross-file completion requires owner resolution",
+             "sourcesChanged": False}
+ 
+ 
+ def markdown(report, outcomes_only=False):
+     labels = {"graph_saved": "Сохранён граф", "action_executed": "Выполнен Action",
+-              "requirement_achieved": "Достигнута цель / Requirement"}
++              "requirement_achieved": "Достигнута цель / Requirement", "action_withdrawn": "Отозван Action"}
+     lines = []
+     for row in report["activities"]:
+         if outcomes_only and row["kind"] == "graph_saved":
+@@ -124,7 +134,8 @@
+         target = row.get("targetId") or "revision="+str(row.get("revision"))
+         lines.append("- "+(row.get("recordedAt") or "Время записи неизвестно")+" · "+
+                      labels[row["kind"]]+" · "+target+" · "+row["graphFile"]+
+-                     (" · "+row["title"] if row.get("title") else ""))
++                     (" · "+row["title"] if row.get("title") else "") +
++                     (" · "+row["summary"] if row.get("summary") else ""))
+     return "\n".join(lines)+"\n"
+ 
+ 
+--- a/tools/rdg-temporal-plan.py
++++ b/tools/rdg-temporal-plan.py
+@@ -12,7 +12,7 @@
+ 
+ GRAPH_REF = re.compile(r"workspaces/(?:[a-z0-9][a-z0-9_-]*/)+graph\.json\Z")
+ IDENT = re.compile(r"[A-Za-z0-9][A-Za-z0-9_-]*\Z")
+-ALLOWED_STEPS = {"action", "event", "decision_gate", "milestone"}
++ALLOWED_STEPS = {"requirement", "action", "event", "decision_gate", "milestone"}
+ ALLOWED_STATES = {"planned", "possible", "expected"}
+ ALLOWED_STRENGTHS = {"hard", "soft", "hypothetical"}
+ 
+@@ -65,13 +65,15 @@
+         ensure(not any(k in step for k in
+                    ("selected", "preselected", "performed", "observedAt")),
+                "STEP_CANNOT_COMMIT_OR_ATTEST")
+-        ensure(set(step) <= {"id", "kind", "title", "state", "actionRef", "outcomes"} and
++        ensure(set(step) <= {"id", "kind", "title", "state", "actionRef", "requirementRef", "outcomes"} and
+                ident(step.get("id")) and
+                step["id"] not in by_id and named(step.get("title")) and
+                step.get("kind") in ALLOWED_STEPS and
+                step.get("state") in ALLOWED_STATES, "INVALID_STEP")
+-        if step["kind"] == "action":
+-            ref = step.get("actionRef")
++        if step["kind"] in {"action", "requirement"}:
++            field = "actionRef" if step["kind"] == "action" else "requirementRef"
++            ensure(("requirementRef" if field == "actionRef" else "actionRef") not in step, "REF_KIND_MISMATCH")
++            ref = step.get(field)
+             ensure(isinstance(ref, dict) and
+                    set(ref) <= {"graphFile", "identitySpace", "nodeId",
+                                 "observedGraphRevision"} and
+@@ -83,7 +85,7 @@
+                 ensure(type(ref["observedGraphRevision"]) is int and
+                        ref["observedGraphRevision"] >= 1, "REF_REVISION")
+         else:
+-            ensure("actionRef" not in step, "ACTION_REF_ON_NON_ACTION")
++            ensure("actionRef" not in step and "requirementRef" not in step, "ACTION_REF_ON_NON_ACTION")
+         if step["kind"] != "event":
+             ensure("outcomes" not in step, "OUTCOMES_ONLY_ON_EVENT")
+         if step["kind"] == "event":
+@@ -200,18 +202,63 @@
+     for edge in plan.get("sequence", []):
+         placed.update((edge["before"], edge["after"]))
+     for sid, step in by_id.items():
+-        if step["kind"] == "action":
+-            ensure(sid in placed, "ACTION_STEP_NOT_PLACED")
++        if step["kind"] in {"action", "requirement"}:
++            ensure(sid in placed, "ACTION_STEP_NOT_PLACED" if step["kind"] == "action" else "REQUIREMENT_STEP_NOT_PLACED")
+     return by_id, temporal
++
++
++def apply_placements(plan, operations):
++    """Convenient placement edits inside the existing owner CAS transaction."""
++    import copy
++    result = copy.deepcopy(plan)
++    ensure(isinstance(operations, list) and operations, "PLACEMENT_OPERATIONS_REQUIRED")
++    for op in operations:
++        ensure(isinstance(op, dict), "PLACEMENT_OPERATION_INVALID")
++        if op.get("op") == "place":
++            ensure(set(op) <= {"op", "step", "timeConstraints", "sequence"}, "PLACE_SCHEMA")
++            step = copy.deepcopy(op.get("step"))
++            ensure(isinstance(step, dict) and step.get("kind") in {"action", "requirement"}, "PLACE_GRAPH_ENTITY_REQUIRED")
++            sid = step.get("id")
++            old = next((s for s in result["steps"] if s["id"] == sid), None)
++            if old:
++                field = "actionRef" if old["kind"] == "action" else "requirementRef"
++                ensure(old["kind"] == step["kind"] and all(old.get(field, {}).get(k) ==
++                       step.get(field, {}).get(k) for k in ("graphFile", "identitySpace", "nodeId")),
++                       "PLACEMENT_IDENTITY_IMMUTABLE")
++                result["steps"].remove(old)
++            result["steps"].append(step)
++            if "timeConstraints" in op:
++                ensure(isinstance(op["timeConstraints"], list), "PLACE_TIME_CONSTRAINTS")
++                rules = []
++                for rule in op["timeConstraints"]:
++                    ensure(isinstance(rule, dict) and rule.get("stepId", sid) == sid, "PLACE_TIME_TARGET")
++                    rules.append({**copy.deepcopy(rule), "stepId": sid})
++                result["timeConstraints"] = [r for r in result.get("timeConstraints", []) if r["stepId"] != sid] + rules
++            if "sequence" in op:
++                links = copy.deepcopy(op["sequence"])
++                ensure(isinstance(links, list) and all(isinstance(e, dict) and sid in
++                       (e.get("before"), e.get("after")) for e in links), "PLACE_SEQUENCE_TARGET")
++                result["sequence"] = [e for e in result.get("sequence", []) if sid not in (e["before"], e["after"])] + links
++        elif op.get("op") == "unplace":
++            ensure(set(op) == {"op", "stepId"}, "UNPLACE_SCHEMA")
++            sid = op["stepId"]
++            ensure(any(s["id"] == sid for s in result["steps"]), "PLACEMENT_NOT_FOUND")
++            result["steps"] = [s for s in result["steps"] if s["id"] != sid]
++            result["sequence"] = [e for e in result.get("sequence", []) if sid not in (e["before"], e["after"])]
++            result["timeConstraints"] = [r for r in result.get("timeConstraints", []) if r["stepId"] != sid]
++        else:
++            raise ValueError("TEMPORAL_PLAN_UNKNOWN_PLACEMENT_OPERATION")
++    validate_future_write(result)
++    return result
+ 
+ 
+ def inspect(plan, graphs_root=None):
+     by_id, temporal = validate(plan)
+     refs = []
+     for step in plan["steps"]:
+-        if step["kind"] != "action":
++        if step["kind"] not in {"action", "requirement"}:
+             continue
+-        ref = step["actionRef"]
++        ref = step["actionRef" if step["kind"] == "action" else "requirementRef"]
+         result = {"stepId": step["id"], "graphFile": ref["graphFile"],
+                   "nodeId": ref["nodeId"], "verification": "not-checked"}
+         if graphs_root is not None:
+@@ -226,7 +273,7 @@
+                        "REF_IDENTITY_SPACE_MISMATCH")
+                 matches = [n for n in graph.get("nodes", [])
+                            if n.get("id") == ref["nodeId"]]
+-                ensure(len(matches) == 1 and matches[0].get("kind") == "action",
++                ensure(len(matches) == 1 and matches[0].get("kind") == step["kind"],
+                        "REF_ACTION_NOT_FOUND")
+                 result["verification"] = "resolved"
+                 result["actionStatus"] = matches[0].get("status")
+@@ -234,6 +281,7 @@
+                 if "observedGraphRevision" in ref:
+                     result["revisionChanged"] = (
+                         graph.get("revision") != ref["observedGraphRevision"])
++        result["targetKind"] = step["kind"]
+         refs.append(result)
+     return {
+         "planId": plan["id"], "planRevision": plan["revision"],
+@@ -244,7 +292,8 @@
+         "sequence": plan.get("sequence", []),
+         "branches": plan.get("branches", []),
+         "timeConstraints": temporal,
+-        "actionReferences": refs,
++        "actionReferences": [{k:v for k,v in r.items() if k != "targetKind"} for r in refs if r["targetKind"] == "action"],
++        "requirementReferences": [{k:v for k,v in r.items() if k != "targetKind"} for r in refs if r["targetKind"] == "requirement"],
+         "reviewLeads": [
+             {"kind": "time-context", "stepId": t["stepId"],
+              "strength": t["strength"], "planStatus": plan["status"],
+--- a/tools/rdg-temporal-plan-owner.py
++++ b/tools/rdg-temporal-plan-owner.py
+@@ -295,7 +295,10 @@
+ 
+ def apply_request(root, authority_store, token, request, before_prepare=None):
+     root = root_path(root)
+-    require(isinstance(request, dict) and set(request) == {"transactionId", "op", "file", "expectedRevision", "plan"}, "REQUEST_SCHEMA")
++    require(isinstance(request, dict) and set(request) in (
++        {"transactionId", "op", "file", "expectedRevision", "plan"},
++        {"transactionId", "op", "file", "expectedRevision", "operations"}), "REQUEST_SCHEMA")
++    require("operations" not in request or request["op"] == "edit", "PLACEMENTS_REQUIRE_EDIT")
+     op, relative, tx = request["op"], request["file"], request["transactionId"]
+     require(op in ("create", "edit", "branch"), "CANDIDATE_OPERATIONS_ONLY")
+     require(isinstance(tx, str) and bool(re.fullmatch(r"[A-Za-z0-9_-]{1,120}", tx)), "TRANSACTION_ID")
+@@ -308,8 +311,9 @@
+     if op == "branch":
+         permissions.append("plan.branch")
+     authority.authorize_plan(token, permissions, relative)
+-    plan = copy.deepcopy(request["plan"])
+-    PLAN.validate(plan)
++    plan = copy.deepcopy(request.get("plan"))
++    if "plan" in request:
++        PLAN.validate(plan)
+     request_hash = digest(request)
+     with root_lock(root, True):
+         require(not safe(root, JOURNAL, True).exists(), "RECOVERY_REQUIRED")
+@@ -328,6 +332,9 @@
+         expected = old["revision"] if old else 0
+         require(request["expectedRevision"] == expected, "CAS_MISMATCH")
+         require((op == "create") == (old is None), "CREATE_OR_EDIT_STATE")
++        if "operations" in request:
++            plan = PLAN.apply_placements(old["versions"][-1]["plan"], request["operations"])
++            plan["revision"] = expected + 1
+         require(plan["revision"] == expected + 1, "NEXT_REVISION_REQUIRED")
+         # Replays retain the acceptance rule of their saved transaction. New
+         # writes require explicit placement; historical snapshots remain readable.
+--- a/tools/rdg-gendocen-dependencies.py
++++ b/tools/rdg-gendocen-dependencies.py
+@@ -18,7 +18,7 @@
+     "timeConstraints": ["timeConstraintsByStep/*/{stepId,type,at,strength,basis}"],
+ }
+ GRAPH_READS = ["identitySpace", "graphFile", "rootRequirementId", "actionModel",
+-               "nodesById/{action}/{id,kind,title,status,canonBlock,qrpe,selectionBasis}"]
++               "nodesById/{action}/{id,kind,title,status,actionType,canonBlock,qrpe,selectionBasis}"]
+ 
+ 
+ def require(value, code):
+@@ -39,7 +39,7 @@
+                 ("identitySpace", "graphFile", "rootRequirementId", "actionModel")}
+     nodes = {
+         aid: {k: node.get(k) for k in
+-              ("id", "kind", "title", "status", "canonBlock", "qrpe", "selectionBasis")}
++              ("id", "kind", "title", "status", "actionType", "canonBlock", "qrpe", "selectionBasis")}
+         for aid, node in data["nodesById"].items() if node.get("kind") == "action"
+     }
+     return copy.deepcopy({"reviewIdentity": identity, "reviewNodesById": nodes})
+@@ -61,11 +61,11 @@
+ def plan_views(data):
+     branches = list(data["branchesById"].values())
+     coverage = {"contract": VERSION, "scope": "one-conditional-event/current-projection",
+-                "complete": len(branches) <= 1, "sourceReads": READ_MATRIX,
++                "complete": len(branches) <= 1 and not any(s.get("kind") == "requirement" for s in data["stepsById"].values()), "sourceReads": READ_MATRIX,
+                 "graphReads": GRAPH_READS,
+                 "historicalSnapshotAvailable": False}
+     if not coverage["complete"]:
+-        coverage["diagnostic"] = "MULTI_BRANCH_NOT_COVERED"
++        coverage["diagnostic"] = "REQUIREMENT_STEPS_NOT_COVERED" if any(s.get("kind") == "requirement" for s in data["stepsById"].values()) else "MULTI_BRANCH_NOT_COVERED"
+         return {"reviewCoverage": coverage, "reviewInputsByStep": {}}
+     steps = data["stepsById"]
+     possible = {sid for sid, step in steps.items() if step["state"] == "possible"}
+@@ -122,7 +122,7 @@
+ def build_contract(graph, plan, action_id, step_id):
+     gd, pd = graph["data"], plan["data"]
+     expected = plan_views(pd)
+-    require(expected["reviewCoverage"]["complete"], "MULTI_BRANCH_NOT_COVERED")
++    require(expected["reviewCoverage"]["complete"], expected["reviewCoverage"].get("diagnostic", "MULTI_BRANCH_NOT_COVERED"))
+     for key, value in expected.items():
+         require(pd.get(key) == value, "PLAN_PROJECTION_INCOMPLETE_OR_STALE_" + key)
+     for key, value in graph_views(gd).items():
+--- a/tools/rdg-workflow.py
++++ b/tools/rdg-workflow.py
+@@ -0,0 +1,134 @@
++#!/usr/bin/env python3
++"""Current future/history view over the existing Plan and Graph owners.
++
++Read-only: same graph entities, explicit placement, no duplicated execution
++owner, no recurrence engine. Plan and graph locks protect one coherent read.
++"""
++import argparse
++from html import escape
++from importlib.machinery import SourceFileLoader
++import json
++import os
++from pathlib import Path
++
++TOOLS = Path(__file__).resolve().parent
++OWNER = SourceFileLoader('workflow_plan_owner', str(TOOLS/'rdg-temporal-plan-owner.py')).load_module()
++ACTIVITY = SourceFileLoader('workflow_activity', str(TOOLS/'rdg-activity.py')).load_module()
++
++
++def read_workflow(plan_root, plan_file, graph_root, authority_store, token, graph_refs=()):
++    if not authority_store:
++        raise ValueError('WORKFLOW_AUTHORITY_STORE_REQUIRED')
++    OWNER.AUTH.Authority(authority_store).authorize_plan(token, ['plan.read'], plan_file)
++    root = OWNER.root_path(plan_root)
++    with OWNER.root_lock(root, False):
++        snapshot = OWNER.read_snapshot(root, plan_file)
++        plan = snapshot['plan']
++        refs = list(graph_refs)
++        for step in plan['steps']:
++            if step['kind'] in ('action', 'requirement'):
++                ref = step['actionRef' if step['kind'] == 'action' else 'requirementRef']
++                refs.append(ref['graphFile'])
++        report = ACTIVITY.read_activity(graph_root, refs, token, authority_store)
++    rules = plan.get('timeConstraints', [])
++    links = plan.get('sequence', [])
++    placed = {r['stepId'] for r in rules}
++    for e in links:
++        placed.update((e['before'], e['after']))
++    # Topological order of the original schedule, including completed predecessors.
++    remaining = {s['id'] for s in plan['steps']}
++    order = []
++    while remaining:
++        ready = [s['id'] for s in plan['steps'] if s['id'] in remaining and not any(
++            e['after'] == s['id'] and e['before'] in remaining for e in links)]
++        if not ready:
++            raise ValueError('WORKFLOW_SEQUENCE_CYCLE')
++        order.extend(ready)
++        remaining.difference_update(ready)
++    future, unresolved, excluded = [], [], []
++    for step in sorted(plan['steps'], key=lambda s: order.index(s['id'])):
++        if step['kind'] not in ('action', 'requirement'):
++            continue
++        ref = step['actionRef' if step['kind'] == 'action' else 'requirementRef']
++        owner = report['graphOwners'][ref['graphFile']]
++        node = owner['nodes'].get(ref['nodeId'])
++        if owner['identitySpace'] != ref['identitySpace'] or not node or node['kind'] != step['kind']:
++            raise ValueError('WORKFLOW_GRAPH_REFERENCE_MISMATCH')
++        state = report['currentCompletion'].get(ref['graphFile'], {}).get(ref['nodeId'])
++        row = {'stepId': step['id'], 'kind': step['kind'], 'graphRef': dict(ref),
++               'nodeId': ref['nodeId'], 'title': node['title'], 'plannedTitle': step['title'],
++               'state': step['state'], 'graphRevision': owner['revision'],
++               'timeConstraints': [r for r in rules if r['stepId'] == step['id']],
++               'sequence': [e for e in links if step['id'] in (e['before'], e['after'])]}
++        if step['id'] not in placed:
++            excluded.append({**row, 'reason': 'not-placed'})
++        elif state and state['complete']:
++            excluded.append({**row, 'reason': 'completed', 'eventId': state['eventId']})
++        elif node.get('active') is False or node.get('status') in ('superseded', 'rejected', 'inactive'):
++            excluded.append({**row, 'reason': 'withdrawn-or-inactive'})
++        elif node.get('projectionOf') or not state:
++            unresolved.append({**row, 'reason': 'unresolved-owner-or-unsupported-model'})
++        else:
++            future.append(row)
++    return {'schemaVersion': 1, 'planId': plan['id'], 'title': plan['title'],
++            'planProvenance': snapshot['provenance'], 'graphOwners': {
++                k: {f:v[f] for f in ('identitySpace', 'revision')} for k,v in report['graphOwners'].items()},
++            'future': future, 'history': report['activities'], 'unresolved': unresolved,
++            'excludedPlacements': excluded, 'sourcesChanged': False,
++            'coverage': 'current explicit Plan and requested graph owners; external completion unresolved'}
++
++
++def markdown(view):
++    lines = ['# '+view['title'], '', '## Предстоит', '']
++    for row in view['future']:
++        when = ', '.join(r['type']+': '+r['at'] for r in row['timeConstraints'])
++        after = ', '.join(e['before'] for e in row['sequence'] if e['after'] == row['stepId'])
++        lines.append('- '+row['nodeId']+' · '+row['title']+(' · '+when if when else '')+(' · после '+after if after else ''))
++    if not view['future']:
++        lines.append('Нет предстоящих действий или целей.')
++    if view['unresolved']:
++        lines += ['', '## Не разрешены ссылки', '']
++        lines += ['- '+r['nodeId']+' · '+r['reason'] for r in view['unresolved']]
++    lines += ['', '## История', '', ACTIVITY.markdown({'activities':view['history']})]
++    return '\n'.join(lines)+'\n'
++
++
++def html(view):
++    def e(value):
++        return escape(str(value), quote=True)
++    labels = {'graph_saved':'Сохранение графа', 'action_executed':'Выполнен Action',
++              'requirement_achieved':'Достигнута цель', 'action_withdrawn':'Отозван Action'}
++    future = ''.join('<tr><td>'+e(r['nodeId'])+'</td><td>'+e(r['title'])+'</td><td>'+e(', '.join(
++        x['type']+': '+x['at'] for x in r['timeConstraints']))+'</td><td>'+e(', '.join(
++        x['before']+' → '+x['after'] for x in r['sequence']))+'</td></tr>' for r in view['future'])
++    history = ''.join('<tr><td>'+e(r.get('recordedAt') or 'Время неизвестно')+'</td><td>'+e(labels[r['kind']])+
++        '</td><td>'+e(r.get('targetId') or '')+'</td><td>'+e(r.get('title') or r.get('summary') or r.get('note') or '')+
++        '</td></tr>' for r in view['history'])
++    unresolved = ''.join('<li>'+e(r['nodeId'])+': '+e(r['reason'])+'</li>' for r in view['unresolved'])
++    return '<!doctype html><html lang="ru"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'+ \
++        '<title>'+e(view['title'])+'</title><style>body{font:16px system-ui;max-width:1150px;margin:40px auto;padding:0 20px;color:#182436;background:#f5f7fa}h1{font-size:28px}section{background:white;padding:24px;margin:20px 0;border-radius:12px}table{border-collapse:collapse;width:100%}th,td{text-align:left;vertical-align:top;padding:10px;border-bottom:1px solid #e1e6ed}th{color:#496078}small{color:#526579}</style><h1>'+e(view['title'])+'</h1><small>Снимок для чтения · версия плана '+e(view['planProvenance']['revision'])+' · те же ID сущностей графа</small>'+ \
++        '<section><h2>Предстоит</h2>'+('<table><tr><th>ID</th><th>Цель / Action</th><th>Время</th><th>Порядок</th></tr>'+future+'</table>' if future else '<p>Нет предстоящих действий или целей.</p>')+'</section>'+ \
++        ('<section><h2>Не разрешены ссылки</h2><ul>'+unresolved+'</ul></section>' if unresolved else '')+ \
++        '<section><h2>История</h2><table><tr><th>Записано</th><th>Событие</th><th>ID</th><th>Содержание</th></tr>'+history+'</table></section></html>\n'
++
++
++def main():
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument('--root', required=True)
++    parser.add_argument('--file', required=True)
++    parser.add_argument('--graph-root', required=True)
++    parser.add_argument('--graph', action='append', default=[])
++    parser.add_argument('--store', default=os.environ.get('RDG_AUTH_STORE'))
++    parser.add_argument('--format', choices=('json','markdown','html'), default='json')
++    args = parser.parse_args()
++    result = read_workflow(args.root, args.file, args.graph_root, args.store,
++                           os.environ.get('RDG_AUTH_TOKEN'), args.graph)
++    print(markdown(result) if args.format == 'markdown' else html(result) if args.format == 'html' else
++          json.dumps(result, ensure_ascii=False, indent=2))
++
++
++if __name__ == '__main__':
++    try:
++        main()
++    except (ValueError, OSError, KeyError, TypeError) as exc:
++        raise SystemExit('ERROR: '+str(exc))
+--- a/tests/rdg-deep-action.acceptance.test.py
++++ b/tests/rdg-deep-action.acceptance.test.py
+@@ -176,12 +176,13 @@
+         old = [e for e in self.read()["events"] if e["type"] in MODEL.COMPLETION_EVENTS]
+         self.assertEqual(len(self.read()["nodes"]), 2)
+         self.apply([self.edit("edit_node", nodeId="LEAF", changes={"title": "Changed definition"})])
+-        self.assertFalse(self.states()["LEAF"]["complete"])
++        self.assertTrue(self.states()["LEAF"]["complete"])
++        self.assertFalse(self.states()["LEAF"]["currentScopeComplete"])
+         self.assertFalse(self.states()["R0"]["complete"])
+         self.assertEqual([e for e in self.read()["events"] if e["type"] in MODEL.COMPLETION_EVENTS], old)
+-        self.apply([self.result("LEAF", action=True)])
+-        self.assertTrue(self.states()["R0"]["complete"])
+-        self.assertEqual(len([e for e in self.read()["events"] if e["type"] in MODEL.COMPLETION_EVENTS]), 4)
++        before = self.sources()
++        self.assert_denied(self.write(self.patch([self.result("LEAF", action=True)], self.read()["revision"], "repeat-instance"), self.token), "already executed")
++        self.assertEqual(self.sources(), before)
+ 
+     def test_denied_result_candidate_and_separate_grants_cannot_forge_completion(self):
+         self.apply([self.add("A")])
+@@ -235,18 +236,17 @@
+         self.assertFalse(states["R0"]["complete"])
+ 
+ 
+-    def test_composite_definition_change_needs_result_review_instead_of_auto_success(self):
++    def test_composite_definition_change_keeps_execution_without_false_parent_success(self):
+         self.apply([self.add("A"), self.prepare("A", "RC", "method_correctness"), self.choose("A")])
+         self.apply([self.result("RC")])
+         self.assertTrue(self.states()["A"]["complete"])
+         old = [e for e in self.read()["events"] if e["type"] in MODEL.COMPLETION_EVENTS]
+         self.apply([self.edit("edit_node", nodeId="A", changes={"definition": "New execution definition"})])
+-        self.assertFalse(self.states()["A"]["complete"])
+-        self.assertEqual(self.states()["A"]["reason"], "definition-changed-result-review")
++        self.assertTrue(self.states()["A"]["complete"])
++        self.assertFalse(self.states()["A"]["currentScopeComplete"])
+         self.assertEqual([e for e in self.read()["events"] if e["type"] in MODEL.COMPLETION_EVENTS], old)
+-        self.apply([self.result("A", action=True)])
+-        self.assertTrue(self.states()["A"]["complete"])
+-        self.assertTrue(self.states()["R0"]["complete"])
++        self.assertFalse(self.states()["R0"]["complete"])
++        self.assert_denied(self.write(self.patch([self.result("A", action=True)], self.read()["revision"], "repeat-composite"), self.token), "already executed")
+ 
+     def test_unknown_child_role_is_incomplete_and_annotation_does_not_erase_results(self):
+         self.apply([self.add("A"), self.prepare("A", "RC", "method_correctness"), self.choose("A")])
+@@ -257,8 +257,10 @@
+         self.assertTrue(self.states()["A"]["complete"])
+         g = self.read()
+         next(e for e in g["edges"] if e["type"] == "INTRODUCES").pop("childRole")
+-        self.assertFalse(MODEL.completion_state(g)["A"]["complete"])
++        self.assertTrue(MODEL.completion_state(g)["A"]["complete"])
++        self.assertFalse(MODEL.completion_state(g)["A"]["currentScopeComplete"])
+         self.assertFalse(MODEL.completion_state(g)["R0"]["complete"])
++        g["events"] = [e for e in g["events"] if not (e.get("type") == "action_executed" and e.get("targetId") == "A")]
+         with self.assertRaisesRegex(ValueError, "unknown roles"):
+             MODEL.record_completion(g, self.result("A", action=True))
+ 
+@@ -367,19 +369,18 @@
+         self.apply([self.actual_requirement("R2"), self.link("D", "R2")])
+         now = self.states()["D"]
+         self.assertNotEqual(old["basisSHA256"], now["basisSHA256"])
+-        self.assertFalse(now["complete"])
++        self.assertTrue(now["complete"])
++        self.assertFalse(now["currentScopeComplete"])
+         self.assertEqual([e for e in self.read()["events"] if e["type"] in MODEL.COMPLETION_EVENTS], history)
+-        # Recording creation/selection of the new group does not achieve its goals.
+-        self.apply([self.result("D", action=True)])
+-        self.assertTrue(self.states()["D"]["complete"])
++        self.assert_denied(self.write(self.patch([self.result("D", action=True)], self.read()["revision"], "repeat-output-change"), self.token), "already executed")
+         self.assertFalse(self.states()["R2"]["complete"])
+         self.assertFalse(self.states()["R0"]["complete"])
+-        event = next(e for e in reversed(self.read()["events"]) if e.get("targetId") == "D")
+-        self.assertEqual({o["node"]["id"] for o in event["basis"]["outputs"]}, {"R1", "R2"})
++        event = next(e for e in self.read()["events"] if e["id"] == old["eventId"])
++        self.assertEqual([o["node"]["id"] for o in event["basis"]["outputs"]], ["R1"])
+         self.apply([self.result("R2")])
+-        self.assertTrue(self.states()["R0"]["complete"])
+-
+-    def test_mixed_general_action_gets_new_output_scope_from_completed_correctness(self):
++        self.assertFalse(self.states()["R0"]["complete"])
++
++    def test_mixed_general_output_change_retains_original_execution_scope(self):
+         self.apply([self.add("A"), self.prepare("A", "R1"),
+                     self.prepare("A", "RC", "method_correctness"), self.choose("A")])
+         self.apply([self.result("RC")])
+@@ -388,7 +389,8 @@
+         now = self.states()["A"]
+         self.assertTrue(now["complete"])
+         self.assertNotEqual(old["basisSHA256"], now["basisSHA256"])
+-        self.assertNotEqual(old["eventId"], now["eventId"])
++        self.assertEqual(old["eventId"], now["eventId"])
++        self.assertFalse(now["currentScopeComplete"])
+         self.assertFalse(self.states()["R2"]["complete"])
+         self.assertFalse(self.states()["R0"]["complete"])
+         old_event = next(e for e in self.read()["events"] if e["id"] == old["eventId"])
+@@ -410,7 +412,8 @@
+         old = self.read()
+         next(e for e in old["edges"] if e["id"] == "potential-D-RS")["archived"] = True
+         MODEL.validate_v7(old)
+-        self.assertFalse(MODEL.completion_state(old)["D"]["complete"])
++        self.assertTrue(MODEL.completion_state(old)["D"]["complete"])
++        self.assertFalse(MODEL.completion_state(old)["D"]["currentScopeComplete"])
+         self.assertFalse(MODEL.completion_state(old)["R0"]["complete"])
+ 
+     def test_atomic_output_replacement_and_incomplete_candidate_are_allowed(self):
+@@ -420,10 +423,10 @@
+                     self.edit("detach_requirement", edgeId="potential-D-OLD"), self.link("D", "NEW"),
+                     self.add("DRAFT", action_type="decomposition")])
+         self.assertEqual([e["to"] for e in self.read()["edges"] if e["type"] == "INTRODUCES" and not e.get("archived")], ["NEW"])
+-        self.assertFalse(self.states()["D"]["complete"])
++        self.assertTrue(self.states()["D"]["complete"])
++        self.assertFalse(self.states()["D"]["currentScopeComplete"])
+         self.assertFalse(self.states()["DRAFT"]["complete"])
+-        self.apply([self.result("D", action=True)])
+-        self.assertTrue(self.states()["D"]["complete"])
++        self.assert_denied(self.write(self.patch([self.result("D", action=True)], self.read()["revision"], "repeat-replacement"), self.token), "already executed")
+         self.assertFalse(self.states()["NEW"]["complete"])
+ 
+     def test_no_phantom_results_while_replacing_incomplete_correctness(self):
+@@ -459,7 +462,8 @@
+         self.assertEqual(len(results), 1)
+         self.assertEqual(results[0]["basis"]["node"]["title"], "A")
+         self.assertEqual(results[0]["completionMode"], "explicit")
+-        self.assertFalse(self.states()["A"]["complete"])
++        self.assertTrue(self.states()["A"]["complete"])
++        self.assertFalse(self.states()["A"]["currentScopeComplete"])
+         self.assertFalse(self.states()["R0"]["complete"])
+ 
+     def test_prospective_action_continuation_across_explicit_identity_owner(self):
+--- a/tests/rdg-workflow.acceptance.test.py
++++ b/tests/rdg-workflow.acceptance.test.py
+@@ -0,0 +1,240 @@
++#!/usr/bin/env python3
++"""Whole workflow through real graph/plan writers, isolated owners and grants."""
++import copy
++from importlib.machinery import SourceFileLoader
++import json
++import os
++from pathlib import Path
++import shutil
++import subprocess
++import unittest
++
++ROOT = Path(__file__).resolve().parents[1]
++DEEP = SourceFileLoader('workflow_deep_fixture', str(ROOT/'tests/rdg-deep-action.acceptance.test.py')).load_module()
++WF = SourceFileLoader('workflow_test_api', str(ROOT/'tools/rdg-workflow.py')).load_module()
++DEP = SourceFileLoader('workflow_dependency_api', str(ROOT/'tools/rdg-gendocen-dependencies.py')).load_module()
++
++
++class Workflow(unittest.TestCase):
++    def setUp(self):
++        self.w = w = DEEP.DeepAction('test_leaf_no_extra_result_goal_and_later_definition_edit_preserves_history')
++        original_admin = w.admin
++        def admin(command, payload=None, token=None):
++            if command == 'init':
++                return subprocess.run(['python3','-B',str(w.home/'tools/rdg-authority.py'),'init',
++                    '--store',str(w.store),'--plan-capable'],text=True,capture_output=True,env=w.env)
++            return original_admin(command,payload,token)
++        w.admin = admin
++        w.setUp()
++        self.addCleanup(w.tearDown)
++        self.permissions = ['graph.write','graph.read','plan.create','plan.edit','plan.read','plan.branch']
++        w.token = w.grant(self.permissions,['workspaces/','plans/'])['token']
++        self.root = w.home/'plan-owner';self.root.mkdir()
++        self.rel = 'plans/demo/plan.json'
++        for n in ['rdg-temporal-plan-owner.py','rdg-temporal-plan.py','rdg-workflow.py']:
++            shutil.copy2(ROOT/'tools'/n,w.home/'tools'/n)
++        self.seq = 0
++        plan = {'schemaVersion':1,'kind':'temporalPlan','id':'demo','title':'План во времени',
++                'identitySpace':'demo','revision':1,'status':'candidate',
++                'steps':[],'sequence':[],'branches':[],'timeConstraints':[]}
++        request = {'transactionId':'create-plan','op':'create','file':self.rel,'expectedRevision':0,'plan':plan}
++        self.owner(request)
++
++    def owner(self, request, token=None, ok=True, crash=None):
++        path=self.w.home/'plan-request.json';path.write_text(json.dumps(request))
++        r=subprocess.run(['python3','-B',str(self.w.home/'tools/rdg-temporal-plan-owner.py'),
++            'apply','--root',str(self.root),'--store',str(self.w.store),'--request',str(path)],
++            text=True,capture_output=True,env={**self.w.env,'RDG_AUTH_TOKEN':token or self.w.token, **({'RDG_PLAN_TEST_CRASH':crash} if crash else {})})
++        if ok:self.assertEqual(r.returncode,0,r.stderr)
++        else:self.assertNotEqual(r.returncode,0,r.stdout)
++        return r
++
++    def placement_request(self, operations):
++        self.seq+=1
++        rev=WF.OWNER.read_snapshot(self.root,self.rel)['plan']['revision']
++        return {'transactionId':'placement-'+str(self.seq),'op':'edit','file':self.rel,
++                'expectedRevision':rev,'operations':operations}
++
++    def place(self, sid, nid, kind='action', sequence=None):
++        step={'id':sid,'kind':kind,'title':'Разместить '+nid,'state':'planned',
++              'actionRef' if kind=='action' else 'requirementRef':{
++                  'graphFile':self.w.rel,'identitySpace':'demo','nodeId':nid}}
++        op={'op':'place','step':step}
++        if sequence is None:
++            op['timeConstraints']=[{'type':'notBefore','at':'2026-10-20','strength':'soft','basis':'Synthetic placement'}]
++        else:op['sequence']=sequence
++        return op
++
++    def withdraw(self, aid, dispositions=None):
++        return {'op':'withdraw_action','actionId':aid,'dispositions':dispositions or [],
++                'event':self.w.event('action_withdrawn',actionId=aid,driverRequirementId='R0')}
++
++    def view(self, token=None):
++        return WF.read_workflow(self.root,self.rel,self.w.home/'graphs',self.w.store,
++                               token or self.w.token,[self.w.rel])
++
++    def plan_sources(self):
++        return {str(p.relative_to(self.root)):p.read_bytes() for p in self.root.rglob('*.json')}
++
++    def test_whole_future_execution_withdrawal_new_variant_and_history(self):
++        w=self.w
++        w.apply([w.add('A1'),w.add('A2')])
++        graph_before=w.sources()
++        self.owner(self.placement_request([self.place('S1','A1'),self.place('S2','A2'),self.place('SG','R0','requirement')]))
++        self.assertEqual(w.sources(),graph_before)
++        before=self.view();self.assertEqual({r['nodeId'] for r in before['future']},{'A1','A2','R0'})
++        self.assertTrue(all(n['status']=='candidate' for n in w.read()['nodes'] if n['kind']=='action'))
++        w.apply([w.choose('A1')]);execution=w.apply([w.result('A1',action=True)])
++        immediate=w.sources();w.assert_ok(w.write(execution,w.token));self.assertEqual(w.sources(),immediate)
++        first=next(e for e in w.read()['events'] if e['type']=='action_executed')
++        plan_bytes=self.plan_sources()
++        middle=self.view();self.assertEqual([r['nodeId'] for r in middle['future']],['A2'])
++        w.apply([self.withdraw('A1')])
++        self.assertTrue(w.states()['A1']['complete'])
++        self.assertFalse(w.states()['R0']['complete'])
++        w.apply([w.choose('A2')])
++        self.assertFalse(w.states()['A2']['complete'])
++        w.apply([w.result('A2',action=True)])
++        after=self.view();self.assertEqual(after['future'],[])
++        self.assertEqual(self.plan_sources(),plan_bytes)
++        self.assertIn(first,w.read()['events'])
++        facts=[(r['kind'],r['targetId']) for r in after['history'] if r['kind']!='graph_saved' and r.get('targetId') in ('A1','A2')]
++        self.assertEqual(facts,[('action_executed','A1'),('action_withdrawn','A1'),('action_executed','A2')])
++        self.assertEqual(len([e for e in w.read()['events'] if e['type']=='action_executed' and e['targetId']=='A1']),1)
++        stable=w.sources();w.assert_denied(w.write(execution,w.token),'REPLAY_STATE_CHANGED');self.assertEqual(w.sources(),stable)
++        destination=os.environ.get('RDG_WORKFLOW_DEMO_DIR')
++        if destination:
++            out=Path(destination);out.mkdir(parents=True,exist_ok=True)
++            for name,value in [('before',before),('after',after)]:
++                (out/('workflow-'+name+'.html')).write_text(WF.html(value))
++                (out/('workflow-'+name+'.md')).write_text(WF.markdown(value))
++                (out/('workflow-'+name+'.json')).write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n')
++
++    def test_one_package_records_only_final_goal_and_keeps_fact_order(self):
++        w=self.w;w.seq=7
++        w.apply([w.add('A1'),w.choose('A1'),w.result('A1',action=True),
++                 self.withdraw('A1'),w.add('A2'),w.choose('A2'),w.result('A2',action=True)])
++        rows=[r for r in self.view()['history'] if r['kind'] in ('action_executed','action_withdrawn')]
++        self.assertEqual([(r['kind'],r['targetId']) for r in rows],
++            [('action_executed','A1'),('action_withdrawn','A1'),('action_executed','A2')])
++        goals=[e for e in w.read()['events'] if e['type']=='requirement_achieved' and e['targetId']=='R0']
++        self.assertEqual(len(goals),1)
++        self.assertEqual([d['edge']['to'] for d in goals[0]['basis']['dependencies']],['A2'])
++        self.assertTrue(w.states()['A1']['complete']);self.assertTrue(w.states()['R0']['complete'])
++
++    def test_unscheduled_action_stays_in_history_after_edit_and_no_second_execution(self):
++        w=self.w;w.apply([w.add('A'),w.choose('A'),w.result('A',action=True)])
++        original=next(e for e in w.read()['events'] if e['type']=='action_executed')
++        w.apply([w.edit('edit_node',nodeId='A',changes={'title':'<script>changed</script>'})])
++        self.assertTrue(w.states()['A']['complete']);self.assertFalse(w.states()['A']['currentScopeComplete'])
++        self.assertFalse(w.states()['R0']['complete'])
++        before=w.sources();r=w.write(w.patch([w.result('A',action=True)],w.read()['revision'],'forbidden-second'),w.token)
++        w.assert_denied(r,'already executed');self.assertEqual(w.sources(),before)
++        view=self.view();self.assertEqual(view['future'],[])
++        self.assertEqual([r['title'] for r in view['history'] if r['kind']=='action_executed'],[original['basis']['node']['title']])
++        self.assertNotIn('<script>',WF.html(view))
++        self.assertFalse((self.root/'plans/demo/plan.json').read_text().find('actionRef')>=0)
++
++    def test_placement_edit_unplace_cas_replay_and_no_graph_writes(self):
++        w=self.w;w.apply([w.add('A')]);graph=w.sources()
++        request=self.placement_request([self.place('S','A')]);self.owner(request)
++        saved=self.plan_sources();self.assertTrue(json.loads(self.owner(request).stdout)['idempotent'])
++        self.assertEqual(saved,self.plan_sources());self.assertEqual(w.sources(),graph)
++        stale=copy.deepcopy(request);stale['transactionId']='stale'
++        self.assertIn('CAS_MISMATCH',self.owner(stale,ok=False).stderr)
++        self.owner(self.placement_request([{'op':'unplace','stepId':'S'}]))
++        plan=WF.OWNER.read_snapshot(self.root,self.rel)['plan']
++        self.assertEqual(plan['steps'],[]);self.assertEqual(plan['timeConstraints'],[]);self.assertEqual(plan['sequence'],[])
++        self.assertEqual(w.sources(),graph)
++
++    def test_sequence_only_r_and_action_and_unsupported_dependency_context(self):
++        self.w.apply([self.w.add('A'),self.w.prepare('A','R1')])
++        self.owner(self.placement_request([self.place('SA','A',sequence=[]),self.place('SR','R1','requirement',sequence=[{'before':'SA','after':'SR'}])]))
++        self.assertEqual([r['nodeId'] for r in self.view()['future']],['A','R1'])
++        self.assertEqual(next(n for n in self.w.read()['nodes'] if n['id']=='R1')['status'],'potential')
++        plan=WF.OWNER.read_snapshot(self.root,self.rel)['plan']
++        inspected=WF.OWNER.PLAN.inspect(plan,self.w.home/'graphs')
++        self.assertEqual(inspected['requirementReferences'][0]['verification'],'resolved')
++        coverage=DEP.plan_views({'branchesById':{},'stepsById':{s['id']:s for s in plan['steps']}})['reviewCoverage']
++        self.assertFalse(coverage['complete']);self.assertEqual(coverage['diagnostic'],'REQUIREMENT_STEPS_NOT_COVERED')
++
++    def test_withdrawal_is_separately_authorized_and_denial_does_not_write(self):
++        w=self.w;w.apply([w.add('A'),w.choose('A'),w.result('A',action=True)])
++        only_results=w.grant(['graph.record_action_execution'])['token']
++        before=w.sources();request=w.patch([self.withdraw('A')],w.read()['revision'],'denied-withdrawal')
++        w.assert_denied(w.write(request,only_results),'MISSING_PERMISSION: graph.withdraw_action')
++        self.assertEqual(w.sources(),before)
++        withdrawal=w.grant(['graph.withdraw_action'])['token'];w.assert_ok(w.write(request,withdrawal))
++        self.assertTrue(w.states()['A']['complete'])
++        self.assertIn(('action_withdrawn','A'),[(r['kind'],r.get('targetId')) for r in self.view()['history']])
++
++    def test_withdrawal_keeps_protected_policy_guard(self):
++        w=self.w;w.apply([w.add('A'),w.choose('A')])
++        before=w.sources()
++        w.assert_denied(w.write(w.patch([self.withdraw('A')],w.read()['revision'],'not-executed-withdraw'),w.token),'EXECUTED_INSTANCE_REQUIRED')
++        self.assertEqual(w.sources(),before)
++        graph=w.read();graph['nodes'][0]['reconsiderationPolicy']={'mode':'protected','authorityPrincipal':'synthetic-owner'}
++        w.path.write_text(json.dumps(graph))
++        before=w.sources();r=w.write(w.patch([self.withdraw('A')],graph['revision'],'protected-withdraw'),w.token)
++        w.assert_denied(r,'PROTECTED_OWNER_GRANT_REQUIRED');self.assertEqual(w.sources(),before)
++
++    def test_child_dispositions_are_required_and_shared_goal_remains_supported(self):
++        w=self.w
++        w.apply([w.add('D1',action_type='decomposition'),w.prepare('D1','RS'),w.prepare('D1','RC','method_correctness'),w.choose('D1'),w.result('RC')])
++        before=w.sources();r=w.write(w.patch([self.withdraw('D1')],w.read()['revision'],'missing-dispositions'),w.token)
++        w.assert_denied(r,'EXACT_CHILD_DISPOSITIONS_REQUIRED');self.assertEqual(w.sources(),before)
++        w.apply([w.add('D2'),w.prepare('D2','RS',existing=True),w.choose('D2')])
++        dispositions=[{'requirementId':'RS','effect':'retain_supported','supportingActionIds':['D2'],'reason':'New variant keeps the same subgoal'},
++                      {'requirementId':'RC','effect':'deactivate','reason':'Old correctness is not required','downstreamScope':'single_graph_verified'}]
++        w.apply([self.withdraw('D1',dispositions),w.result('D2',action=True),w.result('RS')])
++        self.assertTrue(w.states()['R0']['complete']);self.assertTrue(w.states()['D1']['complete'])
++        self.assertEqual(next(n for n in w.read()['nodes'] if n['id']=='RS')['status'],'active')
++
++    def test_plan_read_and_graph_read_remain_separate(self):
++        token=self.w.grant(['plan.read'],['plans/'])['token']
++        with self.assertRaisesRegex(ValueError,'GRAPH_READ_SCOPE_DENIED|MISSING_PERMISSION: graph.read'):
++            self.view(token)
++        token=self.w.grant(['graph.read'],['workspaces/'])['token']
++        with self.assertRaisesRegex(ValueError,'PLAN_SCOPE_DENIED|MISSING_PERMISSION: plan.read'):
++            self.view(token)
++
++    def test_withdrawal_recovery_has_one_event_and_never_loses_execution(self):
++        w=self.w;w.apply([w.add('A'),w.choose('A'),w.result('A',action=True)])
++        request=w.patch([self.withdraw('A')],w.read()['revision'],'recover-withdraw')
++        path=w.home/'crash-withdraw.json';path.write_text(json.dumps(request))
++        script="from importlib.machinery import SourceFileLoader\nimport json,os,sys\nw=SourceFileLoader('crash',sys.argv[1]).load_module()\nreal=w.write_json\ndef crash(p,o):\n real(p,o)\n if p.name=='graph.json':os._exit(91)\nw.write_json=crash\nw.execute(json.load(open(sys.argv[2])))"
++        result=subprocess.run(['python3','-B','-c',script,str(w.home/'tools/graph-package.py'),str(path)],
++            text=True,capture_output=True,env={**w.env,'RDG_AUTH_TOKEN':w.token})
++        self.assertEqual(result.returncode,91,result.stderr)
++        with self.assertRaisesRegex(ValueError,'ACTIVITY_RECOVERY_REQUIRED'):self.view()
++        w.assert_ok(w.write(request,w.token))
++        history=self.view()['history']
++        self.assertEqual(len([r for r in history if r['kind']=='action_withdrawn']),1)
++        self.assertEqual(len([r for r in history if r['kind']=='action_executed']),1)
++        w.assert_ok(w.write(request,w.token));self.assertEqual(self.view()['history'],history)
++
++    def test_placement_recovery_and_read_permission_do_not_change_graph(self):
++        w=self.w;w.apply([w.add('A')]);before=w.sources()
++        request=self.placement_request([self.place('S','A')])
++        result=self.owner(request,ok=False,crash='prepared');self.assertEqual(result.returncode,91)
++        with self.assertRaisesRegex(ValueError,'RECOVERY_REQUIRED'):self.view()
++        self.assertTrue(WF.OWNER.recover(self.root)['recovered'])
++        self.assertTrue(json.loads(self.owner(request).stdout)['idempotent'])
++        self.assertEqual([r['nodeId'] for r in self.view()['future']],['A'])
++        self.assertEqual(w.sources(),before)
++
++    def test_wrong_owner_ref_fails_instead_of_hiding_future(self):
++        self.w.apply([self.w.add('A')]);op=self.place('S','A')
++        op['step']['actionRef']['identitySpace']='another-owner'
++        self.owner(self.placement_request([op]))
++        with self.assertRaisesRegex(ValueError,'GRAPH_REFERENCE_MISMATCH'):self.view()
++
++    def test_cli_renders_the_same_future_and_history(self):
++        w=self.w;w.apply([w.add('A')]);self.owner(self.placement_request([self.place('S','A')]))
++        r=subprocess.run(['python3','-B',str(w.home/'tools/rdg-workflow.py'),'--root',str(self.root),
++            '--file',self.rel,'--graph-root',str(w.home/'graphs'),'--graph',w.rel,'--store',str(w.store)],
++            text=True,capture_output=True,env={**w.env,'RDG_AUTH_TOKEN':w.token})
++        self.assertEqual(r.returncode,0,r.stderr);self.assertEqual(json.loads(r.stdout),self.view())
++
++
++if __name__=='__main__':unittest.main()
+--- a/docs/guides/RDG-CURRENT-EXECUTION-PLAN.md
++++ b/docs/guides/RDG-CURRENT-EXECUTION-PLAN.md
+@@ -1,6 +1,7 @@
+ # RDG + Temporal Plan — актуальный порядок исполнения
+ 
+-**Последний проверенный срез кода:** [контрольная точка](../handoffs/rdg-plan-completion-review-20261019/CHECKPOINT.md).
++**Последний проверенный срез кода:** [сквозной пакет Action-instance / Plan API / будущее и история](../handoffs/rdg-instance-temporal-workflow-20261019/CHECKPOINT.md).
++**Предыдущая сверка:** [контрольная точка](../handoffs/rdg-plan-completion-review-20261019/CHECKPOINT.md).
+ **Предшествующий ремонт:** [исправление завершённости и истории](../handoffs/rdg-completion-repair-20261019/CHECKPOINT.md).
+ **Предшествующий срез:** [CPW-RDG-DEEP-ACTION-20261019/v1](../handoffs/rdg-deep-action-model-20261019/CHECKPOINT.md).
+ **Независимое review этого среза:** [R-RDG-DEEP-ACTION-20261019-01/v1](https://github.com/AlexPastukhh/forfiles/blob/10eb118bcf894d425210c1a08fb248cbb3677e3f/artifacts/2026-10-19/final-review-rdg-deep-action-r-rdg-deep-action-20261019-01-v1.md).
+@@ -25,8 +26,9 @@
+ в истории. Для той же цели можно отозвать A1 и выполнить другой вариант A2;
+ прежнее выполнение, отзыв и новое выполнение сохраняются раздельно.
+ Повторные физические исполнения одного Action и отдельный жизненный цикл
+-закрытия шага расписания в текущую работу не входят. Реализация этих уточнений
+-ещё не завершена; прежние PASS подтверждают только названные прежние сценарии.
++закрытия шага расписания в текущую работу не входят. Эти уточнения реализованы
++и проверены сквозным API-сценарием внутри одного владельца графа. Живой ручной
++редактор и межфайловой расчёт ещё не завершены; общий PASS им не назначен.
+ 
+ Основные определения принадлежат [руководству граф-модели](RDG-V7-WORKING-GRAPHS.md),
+ разделу «Уточнение модели: граф, план во времени и выполнение — 2026-10-19».
+@@ -81,11 +83,11 @@
+ 
+ | Этап | Проверяемый результат | Условие перехода |
+ |---|---|---|
+-| Ближайшая адаптация графа и истории | Согласовать writer, расчёт и ленту с правилом «Action — экземпляр»: выполнен A1 → отозван A1 → выполнен A2 для той же R. | Прежнее выполнение сохраняется; правка не создаёт ещё одно исполнение того же A1 и не возвращает его в будущее; отзыв показан отдельно; выбор A2 отличается от выполнения. Права, snapshots и recovery сохранены. |
+-| Независимая ближайшая работа: размещение R и удобное API | Разместить предварительную R или Action по времени/порядку, изменить и снять размещение. Прочитать ту же версию через Plan owner. | Нет скрытого выбора Action; пустое будущее допустимо; CAS, права, история и старые snapshots/retries сохранены. При снятии размещения не остаются висячие sequence/timeConstraints. |
+-| Затем: связь будущего с результатами в одном владельце | На тех же данных пройти оба пути: без размещения и с ним; результат остаётся в истории, выполненная работа не показывается как предстоящая. | Сначала проверены адаптация Action-instance и размещение/API. Те же ID и owner refs сохраняются; неполная R и предварительная ветвь не выдают успех. Пересчёт текущего состава не стирает выполнение A1 и не возвращает выполненный экземпляр в будущее. |
+-| Первый ручной путь | Через существующий Viewer/Helper показать создание/правку, размещение, запись результата и общую историю. ИИ использует тот же API. | Источник и ручной интерфейс проходят один сценарий с одинаковыми статусами и правами. Проверка установленного Windows/G2 остаётся отдельным фактом. |
+-| Расширение на несколько владельцев | Вычислить обязательную композицию через явные owning/projectionOf refs без копирования смысла. | Нет успеха при missing/ambiguous owner или denied read; нет циклов; согласованное чтение и запрет двойного учёта. Это нужно до заявления о полном межфайловом workflow, но не до первого однофайлового proof. |
++| Локальный PASS, Candidate: экземпляр Action и история | Выполнен A1 → отозван A1 → выполнен A2 для той же R. Старое выполнение и отдельный отзыв сохранены; повторное выполнение A1 после правки отклоняется. | Проверены отдельное право отзыва, политики защищённых R, судьба дочерних R, snapshots, retry/recovery и финальный состав одного пакета. Новый прямой отзыв относится к уже выполненному Action; прежний reconsider_action сохраняет свои review-условия. |
++| Локальный PASS, Candidate: размещение R и API | В существующем Plan owner доступны R/Action refs и place/unplace по времени или порядку, в том числе для предварительной ветви. | Проверены CAS, права, replay/recovery и снятие incident sequence/timeConstraints без правки графа. Нет скрытого выбора Action. Старые snapshots остаются читаемыми. |
++| Локальный PASS, Candidate: однофайловое будущее и история | Новый read-only workflow-reader объединяет будущие размещения и историю графа в JSON, Markdown и HTML. Выполненное исключается из будущего, Plan не переписывается. | Проверены оба пути — с размещением и без него, исходные ID и owner refs, отказ при неверной ссылке/недостатке прав и отсутствие ложного успеха предварительной ветви. HTML — снимок, не живой редактор. |
++| Следующий связный пакет: первый ручной путь | Через существующий Viewer/Helper показать создание/правку, размещение, запись результата, отзыв и общую историю. ИИ использует тот же API. | Источник и ручной интерфейс должны пройти один сценарий с одинаковыми статусами и правами. Установленный Windows/G2 проверяется отдельно. |
++| Расширение на несколько владельцев | Вычислить обязательную композицию через явные owning/projectionOf refs без копирования смысла. | Нет успеха при missing/ambiguous owner или denied read; нет циклов; согласованное чтение и запрет двойного учёта. До этого межфайловое выполнение остаётся unresolved. |
+ 
+ Уточнение пользователя 2026-10-19: будущее и история выполнения основаны на
+ **тех же R и Actions графа**. В будущем показаны размещённые невыполненные
+@@ -108,36 +110,43 @@
+ ассистента и исключены из текущего scope и условий перехода. Новая модель
+ повторений не вводится.
+ 
+-### Что показала сверка с текущим кодом
+-
+-- В `rdg-v7-model.py` новая версия basis после правки позволяет снова записать
+-  `action_executed` для того же Action ID. Это подтверждено отдельным временным
+-  writer-прогоном: исходное выполнение сохранилось, вторая запись для A1 принята,
+-  получены два execution events для A1. Такой прежний маршрут нужно адаптировать
+-  к последнему уточнению, а не считать его доказательством готового Action-instance.
+-- Старые tests `test_leaf_no_extra_result_goal_and_later_definition_edit_preserves_history`
+-  и `test_composite_definition_change_needs_result_review_instead_of_auto_success`
+-  закрепляют переоценку через новую запись выполнения того же ID. Их нужно
+-  согласовать с новой моделью, сохранив проверки неизменности старой истории,
+-  состава результата и запрета ложных производных событий внутри пакета.
+-- `reconsider_action` уже сохраняет событие `action_reconsidered`, но его пригодность
+-  для нужного пути отзыва ещё должна быть проверена. `rdg-activity.py` выводит
+-  отдельными событиями только completion events: отзыв сейчас доступен лишь
+-  внутри технической записи сохранения. Читаемая лента отзыва не завершена.
+-
+-Это последствия нового уточнения scope, а не объявление прежнего ремонта
+-ошибочным задним числом. Следующий сквозной PASS допустим только после проверки
+-нового поведения. Размещение R/API можно делать независимо; связывать его с
+-будущим нужно после согласования Action-instance и истории отзыва.
+-
+-PR-DA-03 выполняется перед расширением claims Gendocen и при изменении поддержанного
+-Plan/Action context. Новый вид шага для R и Action-семантика должны либо входить в явное
+-покрытие, либо давать unsupported/incomplete. Старый узкий valid не подтверждает
+-весь новый контекст. Полный Canon evaluator из этого не следует.
+-
+-Читаемые описания сохранений PR-DA-04 объединить с общей GUI-лентой;
+-скрытие/приоритет истории остаются второстепенными. Старые knownAt/effectiveAt
+-эксперименты, новый сервер и production owner не являются условиями этих этапов.
++### Что реализовано и проверено в этом пакете
++
++- `rdg-v7-model.py` сохраняет факт выполнения экземпляра Action независимо от
++  поздних правок. Повторный `action_executed` для того же ID запрещён. Отдельный
++  `currentScopeComplete` не позволяет старому результату автоматически доказать
++  новый обязательный состав родительской R. Первоначальный basis/выходной набор
++  и старое событие остаются неизменными.
++- `withdraw_action` записывает отдельный отзыв уже выполненного выбранного Action
++  через действующий writer. Это не заявление о прохождении Canon review или
++  отмене внешнего физического результата. Старый `reconsider_action` сохраняет
++  прежние review-условия; политики, shared-child и catalog guards не обходятся.
++- `rdg-temporal-plan-owner.py` принимает place/unplace в существующей edit-транзакции;
++  поддерживает requirementRef, права Plan, CAS, историю и recovery. Время или
++  sequence задаются явно. Создание сущности графа ничего не размещает.
++- `rdg-workflow.py` читает Plan и разрешённые графы через их locks/права, проверяет
++  ссылки и строит общее будущее/историю. Не выбирает Actions, не переписывает Plan
++  и не создаёт отдельный owner выполнения. Выполненный A1 не возвращается в будущее.
++- `rdg-activity.py` показывает отдельные отзывы и исходные выполнения, сохраняет
++  порядок событий одного пакета и даёт простые описания сохранений. Есть JSON,
++  Markdown и читаемый HTML-снимок; живая общая GUI-лента ещё не сделана.
++
++Новые тесты проверяют полный путь и безопасность отказов. Старые deep-action tests
++согласованы с последним уточнением, сохранив проверки истории, двух ролей дочерних R,
++обязательного состава, непустого выбранного decomposition и отсутствия ложных
++промежуточных результатов. Это реализация нового уточнения, а не изменение
++исторического review задним числом.
++
++PR-DA-03 выполнен **частично**: actionType включён в проекцию зависимостей Gendocen;
++Plan с R steps явно даёт `REQUIREMENT_STEPS_NOT_COVERED` / incomplete вместо полного
++valid. Полный Canon-контекст ролей, дочерних R и нового workflow не доказан. Реальный
++engine smoke именно нового scope не выполнялся; старые engine-наборы прошли
++регрессию. До расширения claims требуется отдельное покрытие поддержанного контекста.
++
++PR-DA-04 частично выполнен простыми описаниями сохранений; дальнейшую детализацию
++объединить с общей GUI-лентой. Скрытие/приоритет истории остаются второстепенными.
++Старые knownAt/effectiveAt эксперименты, новый сервер и production owner не являются
++условиями следующего ручного пути.
+ 
+ ## Ранее выполненные технические срезы
+ 
+@@ -212,34 +221,25 @@
+    только на финальном составе пакета. Прежние явные результаты сохраняют свой
+    scope. Дополнительная проверка ограничила actionType правилами узлов Action:
+    одноимённые данные Requirement не меняют его тип. По последним уточнениям
+-   остаётся адаптация выполненного Action как экземпляра: правка не создаёт новое
+-   исполнение того же ID; отзыв сохраняется отдельно от прежнего выполнения.
+-   Межфайловой расчёт также открыт.
+-3. **PARTIAL:** довести явное размещение в плане во времени. Локальная граница уже
+-   исправлена: пустое будущее разрешено; новая запись Action-шага требует
+-   времени или sequence; старые snapshots и принятые retries читаются как
+-   прежде. Размещение R, пользовательский интерфейс и операция назначения/
+-   снятия размещения как отдельный удобный API ещё не завершены.
+-4. **OPEN:** связать предстоящую работу с выполнением в графе. Завершённое исключается
+-   из предстоящего, ссылки и история сохраняются. Выполнение без предварительного
+-   размещения создаёт запись истории на тех же основаниях, без фиктивного future step.
+-   Будущее и история используют те же сущности графа; отдельное закрытие шага
+-   расписания для этого не вводится. Сквозная проверка должна также показать:
+-   выполнен A1 → отозван A1 → выполнен другой вариант A2 для той же R. Все факты
+-   сохраняются; A1 не возвращается в будущее из-за последующей правки графа.
+-5. **PARTIAL:** общая история изменений и выполнения с понятными видами записей.
+-   Использовать существующие events/journals; повтор запроса, отказ, dry-run
+-   и recovery не создают дублирующих успешных действий. Отсутствующие старые
+-   даты/авторы остаются неизвестными. Общий CLI-reader JSON/Markdown уже
+-   объединяет completed journals и события результатов для явно указанных
+-   разрешённых владельцев. Viewer показывает результаты отдельного узла.
+-   Отдельное читаемое событие отзыва, общая GUI-лента и понятные описания
+-   сохранений (PR-DA-04) ещё открыты. Наличие события в JSON само по себе
+-   не подтверждает, что лента уже показывает требуемую последовательность.
+-   Ложные результаты промежуточного состава устранены в локальном writer.
+-   Dry-run, отказ, идемпотентный повтор и recovery
+-   после записи graph.json проверены: pending journal не выдаётся за успех,
+-   завершённое восстановление не дублирует результаты.
++   выполнена адаптация Action как экземпляра: правка не создаёт новое исполнение
++   того же ID; отзыв сохранён отдельно. Локальный API-путь проверен. PARTIAL
++   сохраняется для полного scope: межфайловой расчёт и живой ручной путь открыты.
++3. **PARTIAL; API — локальный PASS:** явное размещение R и Action во времени
++   или по порядку, включая предварительные сущности. Удобные place/unplace
++   работают через существующий Plan owner с CAS, правами, историей и recovery.
++   Пустое будущее разрешено; новые записи требуют места; старые snapshots и
++   принятые retries читаются. Живой редактор размещений ещё открыт.
++4. **Локальный PASS, Candidate, один владелец графа:** предстоящее связано с
++   результатами в графе через `rdg-workflow.py`. Выполненное исключается из
++   предстоящего, ссылки и история сохраняются. Выполнение без размещения видно
++   в истории без фиктивного future step. Проверены A1 → отзыв A1 → A2 и правка
++   после выполнения без возврата A1. Отдельного lifecycle закрытия шага нет.
++   Межфайловой расчёт остаётся OPEN; внешний owner не даёт ложного успеха.
++5. **PARTIAL; общий reader — локальный PASS:** история изменений, достижений R,
++   выполнения и отзыва Actions доступна в JSON/Markdown/HTML. Простые описания
++   сохранений и порядок событий одного пакета проверены. Повтор запроса, отказ,
++   dry-run и recovery не создают дублирующих результатов; неизвестные старые
++   даты/авторы остаются неизвестными. Общая живая GUI-лента ещё открыта.
+ 6. **Второстепенно, не начато:** скрытие и понижение приоритета записей как настройка показа
+    с возвратом полного списка; исходная история не удаляется.
+ 
+@@ -247,14 +247,14 @@
+ всех шагов. Пункт 3 не требует предварительно реализовать весь расчёт
+ пункта 2. Объединять изменения там, где у них общие семантические зависимости.
+ 
+-Первое сквозное доказательство должно включать: пустую будущую часть, непринятую будущую ветвь,
++Первое сквозное API-доказательство выполнено на временных владельцах; покрытие включает: пустую будущую часть, непринятую будущую ветвь,
+ Action без размещения, размещение только по порядку, выполнение без
+ предварительного размещения, незавершённую обязательную подцель, выполненную
+ выбранную композицию и листовой Action без искусственной декомпозиции.
+-Дополнительно: выполнить A1, отозвать A1 и выполнить A2 для той же цели;
+-увидеть все факты в истории с исходными ID. Служебная правка графа после
++Также проверены выполнение A1, отзыв A1 и выполнение A2 для той же цели;
++все факты видны в истории с исходными ID. Служебная правка графа после
+ выполнения не возвращает A1 в будущее и не создаёт новое выполнение A1.
+-Проверить явные и производные результаты, отказ, повтор запроса и recovery;
++Проверены явные и производные результаты, отказ, повтор запроса и recovery;
+ повтор запроса означает идемпотентность записи, а не новое исполнение действия.
+ 
+ Дальнейшие P3/P4 и остальные задачи RDG сохраняют свои предметные gates.
+@@ -268,8 +268,13 @@
+ включая 16 deep-action и 3 Viewer-сценария. Это предшествующая версия.
+ В CPW-RDG-COMPLETION-REPAIR-20261019/v1 заново прошли 213 Python и 407 Node,
+ включая 23 deep-action tests. Полный прогон относится к его точным исходникам.
+-Результаты текущей адресной перепроверки и её ограничение — в последней
+-[контрольной точке](../handoffs/rdg-plan-completion-review-20261019/CHECKPOINT.md).
++В новом пакете прошёл широкий прогон: **226 Python + 407 Node tests**. После
++добавления проверки порядка событий одного пакета и сужения прямого отзыва до
++выполненного экземпляра отдельно заново прошли **13 workflow tests**; перед
++последним сужением также прошли **24 deep-action tests**. Эти наборы пересекаются;
++их нельзя складывать или выдавать адресный повтор за повтор всего прогона.
++Точные исходники, логи, before/diff и границы — в новой
++[контрольной точке](../handoffs/rdg-instance-temporal-workflow-20261019/CHECKPOINT.md).
+ Наборы пересекаются и не суммируются. Это локальное proof в Repo, не установка
+ Windows и не принятие Stage 4.
+ 
+--- a/docs/guides/RDG-DEEP-ACTION-AND-HISTORY.md
++++ b/docs/guides/RDG-DEEP-ACTION-AND-HISTORY.md
+@@ -84,13 +84,17 @@
+ Клиент не подставляет `basis`, `basisSHA256`, `completionMode` или `recordedAt`.
+ Это запись результата в графе, а не независимая проверка реального мира или F-P.
+ 
+-Требуемая семантика: Action — экземпляр действия. После выполнения он остаётся
+-в истории. Смена варианта по той же цели представлена отзывом старого Action
+-и выполнением другого Action с отдельным ID; прежнее выполнение сохраняется.
+-Правка выполненного Action не является назначением его повторного выполнения.
+-При дальнейшей реализации будущей части плана это должно быть проверено отдельно:
+-текущая переоценка basis не задаёт автоматический возврат старого Action в будущее.
+-Показ отзыва отдельной записью общей ленты входит в незавершённый сквозной путь.
++Action — экземпляр действия. После выполнения он остаётся в истории;
++writer отклоняет вторую запись выполнения того же Action ID. Производный расчёт
++также не создаёт второго выполнения этого экземпляра. Чтение старых событий
++сохраняется без миграции. Смена варианта по той же цели представлена отзывом
++старого Action и выполнением другого Action с отдельным ID.
++
++`complete` у Action показывает сохранённый факт выполнения, включая отозванный
++Action. `currentScopeComplete` дополнительно показывает, подтверждает ли этот
++результат текущий состав и определение. Родительская R использует именно эту
++проверку состава: правка не стирает сделанное, но и не даёт ложного достижения
++изменённой цели. Цели рассчитываются по своей актуальной выбранной композиции.
+ 
+ Листовой Action не требует искусственной R результата. Сам факт выбора, пустой
+ список дочерних R и редактирование графа не означают выполнение. Action выделения
+@@ -106,32 +110,119 @@
+ зависимость нельзя обойти прямой записью успеха. Запись вне актуального выбранного
+ пути отклоняется. Каноны/QRPE не стирают уже сделанную работу.
+ 
+-Прежний технический маршрут после изменения определения допускает ещё одну
+-запись выполнения того же Action ID, а `currentCompletion` оценивает новый basis.
+-Этот маршрут ещё не согласован с уточнением «Action — экземпляр действия».
+-Он не должен превращаться в возврат выполненного Action в будущее. Нужный путь
+-смены варианта — сохранить выполнение A1, его отзыв и выполнение другого A2;
+-его сквозная реализация и показ отзыва в ленте пока открыты.
+-
+ Снимок результата Action с выходными подцелями содержит `basis.outputs`: связи
+-и определения R выбранного набора. Достижение этих R не становится условием
+-выполнения самого Action. Смена набора меняет основание результата, прежний снимок
+-остаётся в истории. Прежняя реализация для листового узла запрашивает запись
+-результата для нового состава, а составной узел рассчитывает по своим Requirements
+-корректности. Это описание прежнего calculator, а не разрешение повторно исполнять
+-тот же Action-instance; адаптация к последнему уточнению ещё открыта.
++и определения R выполненного набора. Достижение этих R не является условием
++выполнения самого Action. При поздней правке исходный снимок остаётся в истории;
++выполненный Action не возвращается в будущее. Для другого выполняемого варианта
++используется другой Action, а не повторный результат для прежнего ID.
+ 
+ Старые события и snapshots читаются без перезаписи. Прежний снимок без
+ `basis.outputs` не подтверждает текущий набор автоматически; для старого пустого
+-`decomposition` расчёт возвращает незавершённость. Новая запись должна исправить
++`decomposition` текущий состав остаётся неподтверждённым. Сам сохранённый факт
++выполнения Action не стирается. Новая запись должна исправить
+ набор в том же пакете либо пересмотреть выбор Action. Миграция не выполняется.
+ 
+ Расчёт сейчас ограничен одним файлом-владельцем. Внешняя `projectionOf` не считается
+-достигнутой без разрешения владельца. Межфайловое завершение и автоматическое
+-исключение выполненного из будущего ещё открыты. Будущая часть и история
+-выполнения используют те же R/Actions графа с сохранением ID и ссылок; выполнение
+-меняет их отображение с предстоящего на выполненное. Размещение остаётся явным.
+-Модель повторных физических исполнений в текущий scope не входит.
++достигнутой без разрешения владельца. Межфайловое завершение остаётся открытым.
++Однофайловой сквозной путь будущего/истории реализован через `rdg-workflow.py`:
++используются те же R/Actions графа с сохранением ID и ссылок. Выполненное
++исключается из предстоящего при чтении, без записи новой версии Plan.
++Размещение остаётся явным. Модель повторных физических исполнений не вводится.
++
++## Отзыв Action
++
++В том же Graph package writer доступна операция `withdraw_action` для уже выполненного
++Action с отдельным
++`graph.withdraw_action` либо `graph.write` в scope владельца:
++
++```json
++{
++  "op": "withdraw_action", "actionId": "A1", "dispositions": [],
++  "event": {
++    "id": "EV-WITHDRAW-A1", "type": "action_withdrawn", "actionId": "A1",
++    "driverRequirementId": "R0", "by": "assistant", "note": "Выбран другой вариант"
++  }
++}
++```
++
++Пример без дочерних R. При наличии INTRODUCES нужен полный `dispositions`:
++`retain_supported` с точными `supportingActionIds` выбранных независимых Actions
++либо `deactivate` с причиной и проверенным локальным scope. Используются те же
++проверки зависимостей и общего владения, что в существующем reconsider writer.
++Нельзя деактивировать общую R или R с зависимостями; внешние references проверяет
++catalog до записи. Политики stable/protected, verified receipt и recovery сохранены.
++Запись отзыва выполненного экземпляра сохраняет факт смены варианта и не
++выдаётся за пройденную оценку канонов. Она не отменяет внешние эффекты действия.
++Прежний богатый `reconsider_action`, включая пересмотр ещё не выполненного
++выбранного Action, остаётся отдельной операцией с прежними проверками.
++
++Отзыв переводит Action в `superseded`, сохраняет исходный snapshot, рёбра и судьбу
++каждой дочерней R. Историческое выполнение не меняется. Выбор нового A2 отдельный;
++сам выбор не создаёт факт его выполнения.
++
++## Размещение R и Actions через Plan owner
++
++Schema v1 дополнена видом шага `requirement` с `requirementRef` того же вида,
++что `actionRef`. Старые snapshots и принятые retries читаются как прежде.
++При новой записи обе сущности требуют времени либо порядка.
++
++Вместо полной замены `plan` можно отправить удобные операции внутри прежнего edit:
++
++```json
++{
++  "transactionId": "place-goal-1", "op": "edit", "file": "plans/example/plan.json",
++  "expectedRevision": 1,
++  "operations": [{
++    "op": "place",
++    "step": {"id": "S-R0", "kind": "requirement", "title": "Цель", "state": "planned",
++      "requirementRef": {"graphFile": "workspaces/example/graph.json", "identitySpace": "example", "nodeId": "R0"}},
++    "timeConstraints": [{"type": "notBefore", "at": "2026-10-20", "strength": "soft", "basis": "Ручное размещение"}]
++  }]
++}
++```
++
++`place` создаёт либо меняет размещение того же step/ref. `timeConstraints` и
++`sequence`, если переданы, заменяют относящиеся к этому шагу записи. Можно дать
++только порядок. `unplace` с `stepId` удаляет размещение, его сроки и incident links;
++сами сущности графа остаются. Все операции проверяются совместно на итоговом Plan.
++Если соседний шаг после снятия порядка остался без размещения, запрос отклоняется;
++можно исправить оба размещения одним пакетом. Ветви редактируются прежним полным
++Plan API с его branch grant. Права plan.edit/branch, CAS, журнал, повтор и recovery
++не менялись. Эти операции не выбирают и не выполняют Actions и не пишут в граф.
++
++```sh
++python3 -B tools/rdg-temporal-plan-owner.py apply --root /path/to/plan-owner \
++  --store /path/to/grants.json --request /path/to/request.json
++```
++
++Graph refs структурно проверяются owner; чтение workflow разрешает их по реальным
++владельцам и kind. Результат для неверного owner или недоступного источника не
++выдаётся за выполненную работу.
++
++## Единые будущее и история
++
++```sh
++python3 -B tools/rdg-workflow.py --root /path/to/plan-owner \
++  --file plans/example/plan.json --graph-root /path/to/graphs \
++  --graph workspaces/example/graph.json --store /path/to/grants.json --format html
++```
++
++Варианты формата: JSON, Markdown и самостоятельный HTML-снимок. В JSON — `future`,
++`history`, `unresolved`, provenance Plan и ревизии graph owners. Дополнительный
++`--graph` даёт историю выполненного без размещения; автоматического обхода всех
++графов нет. Нужны plan.read и graph.read каждого явно читаемого владельца.
++Чтение держит Plan и Graph read locks, отклоняет pending journals и сохраняет
++источники. Исторический Plan-as-of с текущими результатами за полный as-of не выдаётся.
++
++В будущем остаются размещённые невыполненные сущности, включая предварительные.
++Выполненный Action и отозванный вариант не показываются как предстоящие. История
++показывает выполнение A1, отзыв A1 и выполнение A2 в порядке событий, в том числе
++внутри одного пакета. Неполная или неразрешённая R не получает успеха. Формат HTML
++предназначен для чтения; живой редактор Viewer/Helper ещё не реализован.
++
++Gendocen projection теперь учитывает actionType. Requirement steps пока явно
++получают `REQUIREMENT_STEPS_NOT_COVERED`, а не ложное полное покрытие; произвольный
++новый Canon context этим пакетом не реализован.
+ 
+ ## Общая читаемая история
+ 
+@@ -156,6 +247,6 @@
+ В schema-v2 journal добавлен необязательный authorityPrincipal; старые schema-v1/v2
+ читаются, exact-history reader принимает это поле с проверкой типа.
+ 
+-Общая GUI-лента, пользовательские фильтры/понижение приоритета и новый ручной editor
+-ещё не реализованы. В существующем Viewer добавлен просмотр истории результатов
++Общий HTML-снимок будущего/истории уже доступен. Живая GUI-лента в Viewer,
++пользовательские фильтры/понижение приоритета и новый ручной editor ещё не реализованы. В существующем Viewer добавлен просмотр истории результатов
+ конкретного узла. Публичный API не меняет границы аутентификации Helper.
+--- a/docs/guides/RDG-V7-WORKING-GRAPHS.md
++++ b/docs/guides/RDG-V7-WORKING-GRAPHS.md
+@@ -33,7 +33,7 @@
+ не сохраняется как новый будущий шаг. Только порядок допустим без даты.
+ Старые schema-v1 snapshots остаются структурно читаемыми; старый принятый
+ transactionId можно повторить без новой записи. Это проверка новых записей,
+-а не переопределение прошлой истории. Размещение R ещё не реализовано.
++а не переопределение прошлой истории. Размещение R и удобные place/unplace теперь доступны через тот же Plan owner.
+ Назначение времени не является принятием Action. Это исправляет прежнее
+ предположение ассистента об автоматическом добавлении всех созданных Actions.
+ 
+@@ -51,8 +51,9 @@
+ История сохранённых изменений графа также должна быть доступна; запись правки
+ и факт выполнения работы различаются по смыслу. Существующие writer journals
+ и события теперь читаются через `rdg-activity.py`: сохранения графа, выполнения
+-Actions и достижения R. Это общая CLI-лента JSON/Markdown; отдельная GUI-лента
+-ещё не реализована.
++Actions, их отзыв и достижения R. Общая CLI-лента JSON/Markdown и HTML-снимок
++будущего/истории доступны через rdg-workflow.py; живой editor/GUI-лента в Viewer
++ещё не реализованы.
+ Фильтры/приоритет истории второстепенны.
+ 
+ Предмет RDG — цели, способы их достижения, Requirements и работа с этой моделью.
+@@ -114,9 +115,11 @@
+ История сохраняет факт выполнения Action и его исходное определение. Пересчёт
+ изменённой композиции не возвращает выполненный экземпляр в будущий план.
+ Другой выполняемый вариант для той же R представлен другим Action; отзыв
+-старого и выполнение нового сохраняются в истории. Текущий технический механизм
+-переоценки basis ещё нужно согласовать с этой семантикой; его наличие не означает
+-завершённую реализацию последнего уточнения.
++старого и выполнение нового сохраняются в истории. Writer отклоняет второе
++выполнение того же Action ID. Исторический факт и подтверждение текущего состава
++различаются в расчёте: неподтверждённый изменённый состав не даёт успеха родительской
++R, а выполненный экземпляр остаётся в истории. Этот локальный сквозной путь
++реализован; межфайловой расчёт и живой ручной editor остаются открытыми.
+ 
+ Принятие, выполнение Action и достижение R имеют разный смысл. Автоматическое
+ закрытие предстоящего в плане во времени опирается на факт/расчёт выполнения
+--- a/README.md
++++ b/README.md
+@@ -24,8 +24,11 @@
+ результатов и расчёт завершённости внутри файла-владельца. Action без подцелей
+ допустим, когда разбиение не оправдано действующими тремя критериями. Общая
+ история сохранений и результатов читается через CLI; Viewer показывает историю
+-результатов узла. Межфайловой расчёт, GUI-лента и автоматическое исключение
+-завершённого из будущей части плана во времени ещё не реализованы.
++результатов узла. Однофайловой сквозной путь дополнен: один Action — один
++экземпляр; доступны явный отзыв, place/unplace R и Actions, единые будущее/история
++в JSON, Markdown и HTML. Выполненное исчезает из будущего при чтении без новой
++записи Plan; исходные ID и история сохраняются. Межфайловой расчёт и живой ручной
++editor/GUI-лента в Viewer ещё не реализованы.
+ [API и границы](docs/guides/RDG-DEEP-ACTION-AND-HISTORY.md).
+ 
+ [Определения и границы реализации](docs/guides/RDG-V7-WORKING-GRAPHS.md) ·

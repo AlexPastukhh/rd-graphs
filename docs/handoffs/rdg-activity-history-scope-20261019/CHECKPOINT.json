@@ -1,0 +1,19 @@
+{
+  "id": "RDG-ACTIVITY-HISTORY-SCOPE-20261019/v1",
+  "recordedAtUTC": "2026-10-19T01:16:23.963496+00:00",
+  "status": "SCOPE-UPDATED",
+  "changedFiles": [
+    "README.md",
+    "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md"
+  ],
+  "fileSHA256": {
+    "README.md": "24d9d0cf5be97cf849d00fd5a1b255c438c2bd22095a387b308b96251fbb7e84",
+    "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md": "1e0b1bd7c9010b55341f5cb268102d19093de016492190366356c9fb4533ff23"
+  },
+  "runtimeChanged": false,
+  "testsRerun": false,
+  "p2EvidenceRowsUnchanged": true,
+  "stage4": "NOT ACCEPTED",
+  "localLinksChecked": 87,
+  "implementationState": "writer journals and operation events exist; unified user-facing history and display filters are not implemented"
+}

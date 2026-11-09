@@ -1,0 +1,90 @@
+{
+  "tools/rdg-completion-context.py": {
+    "exists": false,
+    "sha256": null
+  },
+  "tools/rdg-v7-model.py": {
+    "exists": true,
+    "sha256": "699ebc3061312020d67fe8b034b52477ab791ae577712f52c0669df76b259908"
+  },
+  "tools/graph-apply.py": {
+    "exists": true,
+    "sha256": "c6171f60f1cb8d54e1a2f5d25c45923d70b3c26c523ce5114339ba4b091c9947"
+  },
+  "tools/graph-package.py": {
+    "exists": true,
+    "sha256": "6c90871ee20c7b900c89a5289d2fdbd9cce03c5c6e5c50a64318487c1c230f61"
+  },
+  "tools/rdg-activity.py": {
+    "exists": true,
+    "sha256": "04df5a7b8c6ca47db59718ddc1f29b6bd49097b2d8c472b0a18b200aed7f6f7e"
+  },
+  "tools/rdg-workflow.py": {
+    "exists": true,
+    "sha256": "826473126930a504520321592274e940c50759b43d805f7ecc0875206d4dd9c6"
+  },
+  "tools/rdg-workflow-helper.py": {
+    "exists": true,
+    "sha256": "d5a3166373fb08b741ce0898956680f7e2e57008164200e834565bb5a4cfffb0"
+  },
+  "tools/rdg-workflow-ui.js": {
+    "exists": true,
+    "sha256": "fbfad6efef62b8d9a3f902bd786545e5adb4886c1f907992ba640620cb324381"
+  },
+  "tools/rd-graph-viewer.user.js": {
+    "exists": true,
+    "sha256": "42d6c93d1f89967e29825419b327a3653e9564992e87ee12fdc4d71633c95d8c"
+  },
+  "tests/rdg-bearer-package.integration.test.py": {
+    "exists": true,
+    "sha256": "387ec8bbc172c13f1daef923f27daf34c9f4f3eab75d2aac7c7b450d4db89c86"
+  },
+  "tests/rdg-cross-file-completion.test.py": {
+    "exists": false,
+    "sha256": null
+  },
+  "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md": {
+    "exists": true,
+    "sha256": "9718f0d7b45a6eed390130dcd311068eab9864580b53d5b7873166ffd4984489"
+  },
+  "docs/guides/RDG-DEEP-ACTION-AND-HISTORY.md": {
+    "exists": true,
+    "sha256": "2fb3489b90527b6af5a5fd66aae90c493517dc485b046a27132b32cec5512da0"
+  },
+  "docs/guides/RDG-V7-WORKING-GRAPHS.md": {
+    "exists": true,
+    "sha256": "4993fcfc6976954152f9873fbbd4869e91816eeab9ee7fbba30aa394b66d3625"
+  },
+  "README.md": {
+    "exists": true,
+    "sha256": "cba09997176667ff2510fa0f4c322e52f790f879384235419bfab09457ab1f30"
+  },
+  "tests/rdg-workflow-ui.test.cjs": {
+    "exists": true,
+    "sha256": "3008ab6a023dba9c3419e08b6a5b926ece68d3617941e83cd468e002ae542eb1"
+  },
+  "tools/rdg-graph-api.py": {
+    "exists": true,
+    "sha256": "5f7b105f6748aeee012caa4926eabd53aef9b48d01cd2f9df0f4658b0724f167"
+  },
+  "tools/rd-graph-viewer-smoke.test.cjs": {
+    "exists": true,
+    "sha256": "93eb71bc08632f99ae699ac33a0a1c82260e264f0e046b9c0fce6876f0a6ed78"
+  },
+  "tests/visual/rdg-full-detail-201.cjs": {
+    "exists": true,
+    "sha256": "d037a1af1f677b94804dbeabaaf54698407070d625bc7ddaa98c4a66aa78f17a"
+  },
+  "docs/guides/VIEWER-EXPLORER.md": {
+    "exists": true,
+    "sha256": "b89e68bc8fbca6179e12394efa3cf7c1087687d4ed91ec42bed5623e1e6ab713"
+  },
+  "tests/rdg-v6-action-reconsider-writer.test.cjs": {
+    "exists": true,
+    "sha256": "e6f86fc99567c696d8104874287eb3ce6b051a3b04bcce58eda7054393fa0d8d"
+  },
+  "tests/rdg-v6-action-writer.test.cjs": {
+    "exists": true,
+    "sha256": "b0e964943dedc835424a5a5f99d98e2bbcd38af8b899fc5af55e3a8f0a50494d"
+  }
+}

@@ -1,0 +1,79 @@
+TAP version 13
+# node:assert:150
+#   throw new AssertionError(obj);
+#   ^
+# AssertionError [ERR_ASSERTION]: Traceback (most recent call last):
+#   File "<string>", line 8, in <module>
+#   File "tests/rdg-deep-action.acceptance.test.py", line 64, in apply
+#     self.assert_ok(self.write(package, token or self.token))
+#   File "/workspace/repos/rd-graphs/tests/rdg-bearer-package.integration.test.py", line 66, in assert_ok
+#     self.assertEqual(result.returncode, 0, result.stderr)
+#   File "/usr/lib/python3.11/unittest/case.py", line 873, in assertEqual
+#     assertion_func(first, second, msg=msg)
+#   File "/usr/lib/python3.11/unittest/case.py", line 866, in _baseAssertEqual
+#     raise self.failureException(msg)
+# AssertionError: 1 != 0 : Traceback (most recent call last):
+#   File "/tmp/rdg-authority-writer-ivspnghe/tools/graph-apply.py", line 560, in <module>
+#     main()
+#   File "/tmp/rdg-authority-writer-ivspnghe/tools/graph-apply.py", line 555, in main
+#     package.execute(patch, dry_run=args.dry_run)
+#   File "/tmp/rdg-authority-writer-ivspnghe/tools/graph-package.py", line 370, in execute
+#     records = prepare(package)
+#               ^^^^^^^^^^^^^^^^
+#   File "/tmp/rdg-authority-writer-ivspnghe/tools/graph-package.py", line 192, in prepare
+#     after, changed = apply_module.apply(before, authoritatively_scoped_patch,
+#                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#   File "/tmp/rdg-authority-writer-ivspnghe/tools/graph-apply.py", line 287, in apply
+#     editor = SourceFileLoader("rdg_graph_api", str(ROOT / "tools" / "rdg-graph-api.py")).load_module()
+#              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#   File "<frozen importlib._bootstrap_external>", line 605, in _check_name_wrapper
+#   File "<frozen importlib._bootstrap_external>", line 1120, in load_module
+#   File "<frozen importlib._bootstrap_external>", line 945, in load_module
+#   File "<frozen importlib._bootstrap>", line 290, in _load_module_shim
+#   File "<frozen importlib._bootstrap>", line 721, in _load
+#   File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+#   File "<frozen importlib._bootstrap_external>", line 936, in exec_module
+#   File "<frozen importlib._bootstrap_external>", line 1074, in get_code
+#   File "<frozen importlib._bootstrap_external>", line 1004, in source_to_code
+#   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+#   File "/tmp/rdg-authority-writer-ivspnghe/tools/rdg-graph-api.py", line 225
+#     'CANNOT_ARCHIVE_HISTORIC_DRIVER')
+# IndentationError: unexpected indent
+# 1 !== 0
+#     at Object.<anonymous> (/workspace/repos/rd-graphs/tests/rdg-deep-action-viewer.test.cjs:25:8)
+#     at Module._compile (node:internal/modules/cjs/loader:1781:14)
+#     at Object..js (node:internal/modules/cjs/loader:1913:10)
+#     at Module.load (node:internal/modules/cjs/loader:1505:32)
+#     at Function._load (node:internal/modules/cjs/loader:1309:12)
+#     at wrapModuleLoad (node:internal/modules/cjs/loader:254:19)
+#     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)
+#     at node:internal/main/run_main_module:36:49 {
+#   generatedMessage: false,
+#   code: 'ERR_ASSERTION',
+#   actual: 1,
+#   expected: 0,
+#   operator: 'strictEqual',
+#   diff: 'simple'
+# }
+# Node.js v22.23.3
+# Subtest: tests/rdg-deep-action-viewer.test.cjs
+not ok 1 - tests/rdg-deep-action-viewer.test.cjs
+  ---
+  duration_ms: 1644.08918
+  type: 'test'
+  location: '/workspace/repos/rd-graphs/tests/rdg-deep-action-viewer.test.cjs:1:1'
+  failureType: 'testCodeFailure'
+  exitCode: 1
+  signal: ~
+  error: 'test failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1671.26497

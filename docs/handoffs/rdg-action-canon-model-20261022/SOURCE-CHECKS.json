@@ -1,0 +1,367 @@
+{
+  "date": "2026-10-22",
+  "scope": "F-P-201/F-P-202 fixes and F-O-201 removal per user clarification; current documentation, typed output origins, writer/client/UI/lenses. No live Graph/Plan/engine migration.",
+  "reviewAddressed": "R-RDG-DOCS-POSTFIX-20261022-c94e/v1",
+  "profile": "rdg-core-v1",
+  "sourceVersion": "Viewer 2.5.1",
+  "artifactChecks": {
+    "pages": 43,
+    "textParityPages": 43,
+    "stableExistingPageIds": 42,
+    "mapDestinations": 43,
+    "reproducedDrawioExactly": true,
+    "textOutsidePage": [],
+    "drawioPages": 43,
+    "acceptanceCases": 36,
+    "nativeDrawioEditorChecked": false,
+    "visualReview": "Fresh full-size inspection of edited PDF pages 1, 9, 43. Unchanged page bodies reuse prior 42-page visual evidence; navigation/text/geometry checked across all 43 pages."
+  },
+  "linkChecks": {
+    "matchedRegionsAndDestinations": 297,
+    "outlineEntries": 43,
+    "errors": []
+  },
+  "runtimeTestsReRun": true,
+  "initialTestRun": [
+    {
+      "name": "core-model",
+      "command": [
+        "python3",
+        "-B",
+        "tests/rdg-core-model.test.py",
+        "-q"
+      ],
+      "exitCode": 0,
+      "tests": 22,
+      "outputSHA256": "9e4b0bda69d2f9e12e47a2595b2a752257aecf8ce708e7bd27449652389d006f"
+    },
+    {
+      "name": "core-workflow",
+      "command": [
+        "python3",
+        "-B",
+        "tests/rdg-core-workflow.test.py",
+        "-q"
+      ],
+      "exitCode": 0,
+      "tests": 9,
+      "outputSHA256": "a9ac008c3ac320fc848014b8fd4c58a49a6366bda2cfacc948274e59d6e6a791"
+    },
+    {
+      "name": "core-gendocen",
+      "command": [
+        "python3",
+        "-B",
+        "tests/rdg-core-gendocen.test.py",
+        "-q"
+      ],
+      "exitCode": 0,
+      "tests": 3,
+      "outputSHA256": "7670608108af87041fff07070bf0589db82b7c6066481558094bb31541e51ad8"
+    },
+    {
+      "name": "lens-catalog",
+      "command": [
+        "python3",
+        "-B",
+        "tests/rdg-lens-catalog.test.py",
+        "-q"
+      ],
+      "exitCode": 0,
+      "tests": 5,
+      "outputSHA256": "b2ba07dfb399bcad3629fa1a1e3a9a40cbba46de523c8b3b7c451fd7a3657f3a"
+    },
+    {
+      "name": "agent-compatibility",
+      "command": [
+        "python3",
+        "-B",
+        "tests/rdg-agent.test.py",
+        "-q"
+      ],
+      "exitCode": 0,
+      "tests": 14,
+      "outputSHA256": "e42f7945f434a78cbdee04c3ef5d7b54ac322248ef847a46c03d338c4afed6d4"
+    },
+    {
+      "name": "core-ui-viewer-documentation",
+      "command": [
+        "node",
+        "--test",
+        "tests/rdg-core-ui.test.cjs",
+        "tests/rdg-core-viewer.test.cjs",
+        "tests/rdg-documentation.test.cjs"
+      ],
+      "exitCode": 0,
+      "tests": 13,
+      "outputSHA256": "fee12514ed4a1ae6932d1efa023896967cc8f5f297fdfc474a965e9233ed6b98"
+    },
+    {
+      "name": "lens-readers",
+      "command": [
+        "node",
+        "--test",
+        "tests/rdg-general-lens-research.test.cjs",
+        "tests/rdg-preserve-lens.test.cjs",
+        "tests/rdg-lens-cli.test.cjs"
+      ],
+      "exitCode": 1,
+      "tests": 13,
+      "outputSHA256": "b64d2f049531bd59f6383428c2b392b6ea4b6a64688d3fb0bed5f5bac54c9f45"
+    }
+  ],
+  "initialFailure": {
+    "suite": "lens-readers",
+    "result": "12 pass / 1 fail",
+    "cause": "Reader test still expected legacy OUTCOME_OF/childRole in an already-core Lens.",
+    "correction": "Assert actual core INTRODUCES origin, preserve it through parsing, and reject a nonexistent origin Requirement. No runtime validator relaxation.",
+    "finalResult": "13/13 reader tests pass in final 19-test UI/reader run."
+  },
+  "finalTargetedRun": [
+    {
+      "name": "core-model-final",
+      "command": [
+        "python3",
+        "-B",
+        "tests/rdg-core-model.test.py",
+        "-q"
+      ],
+      "exitCode": 0,
+      "tests": 22,
+      "outputSHA256": "f22616d2bdffbdfde97a68d557123520845103d7180adc85fed9d4635a7503e7"
+    },
+    {
+      "name": "core-ui-and-lens-readers-final",
+      "command": [
+        "node",
+        "--test",
+        "tests/rdg-core-ui.test.cjs",
+        "tests/rdg-general-lens-research.test.cjs",
+        "tests/rdg-preserve-lens.test.cjs",
+        "tests/rdg-lens-cli.test.cjs"
+      ],
+      "exitCode": 0,
+      "tests": 19,
+      "outputSHA256": "c7149b803a4b26f01dec1a1427510997feed67c6e360f0b6e6105694751f657d"
+    },
+    {
+      "name": "authenticated-origin-writer-final",
+      "command": [
+        "python3",
+        "-B",
+        "tests/rdg-core-workflow.test.py",
+        "-q",
+        "CoreWorkflow.test_explicit_output_origin_through_authenticated_writer_and_fresh_cli"
+      ],
+      "exitCode": 0,
+      "tests": 1,
+      "outputSHA256": "0c4784795d375dd1613ab0d813a05211ff140a2f4234976ae561fc1283e6ca88"
+    }
+  ],
+  "evidenceReuse": "Full workflow 9, real Gendocen engine 3, lens catalog 5, agent compatibility 14, Viewer 2 and documentation 5 passed in the initial run. After a behavior-preserving driver/origin cache optimization, core 22, UI 6, all reader 13 and the authenticated origin writer scenario were rerun. Repeats are not added as independent test coverage.",
+  "preservation": {
+    "protectedFiles": 49,
+    "hashesUnchangedAfterAllTests": true,
+    "includes": "Existing Graph, Plan and dependency-engine owners, WIP module source and registry."
+  },
+  "limits": [
+    "Native diagrams.net import/font reflow was not tested.",
+    "An additional Chromium visual run could not start: Chromium is not installed. Node DOM/UI projections and authenticated package/CLI paths passed; this is not installed-browser acceptance.",
+    "36 acceptance cases are semantic specification, not a claim of 36 executed runtime scenarios.",
+    "Live owners were not migrated; unspecified existing core origins remain readable without fabricated parent obligations.",
+    "User installation, Stage 4 acceptance and semantic truth of live work are not established.",
+    "No .git exists in the source workspace; source write/read-back is confirmed, source Git commit/push is not claimed."
+  ],
+  "sourceSHA256": {
+    "README.md": "48ec93c3fc57deae109cb3d1cbe4e8f05c9986ec1a40231982544ca5e5193bcf",
+    "docs/README.md": "8bcff7911686a7e7095246def797dfa796707dbdf822bf00f78e333a3a8b6a12",
+    "docs/guides/RDG-CURRENT-STATE.md": "6c56c9b8b800262559c740d344b3a2883eb616a274e2986f3dd30b678f9b128a",
+    "docs/guides/RDG-ACTIVE-CONTRACT.md": "5033e205d1a5deea09ad1a81300f27783223554bf729f7d8a02f7472c4ddb42e",
+    "docs/guides/RDG-DEVELOPMENT-PLAN.md": "e22e5556db244207c65bc9eadd612de38563f146be7f2e49e421a7f4056ae7ca",
+    "docs/guides/VIEWER-EXPLORER.md": "b752d0e65866760869d2c9a388af6700de0eb4908dee16a8ecb0832ea217331d",
+    "docs/guides/RDG-AGENT-BOOTSTRAP.md": "5048a4fbd1f77ad24533384ae1ba940ddea0b2ef49d9c67bdab1e1e562421827",
+    "docs/guides/RDG-LENSES.md": "9624fd3de1a1b18b26d79d25958a997f2f0db0d7cbf535079e1c009230a1115c",
+    "docs/guides/RDG-GENDOCEN-REQUIREMENT-DEPENDENCIES.md": "c46415b2a00940d19976ae88cd2a4ed6b103e1c35e8dbf279ba4494fcd0ec1d2",
+    "tools/rdg-core-model.py": "ee53d1c87fe5b634fe54cced7a2709962566fda32a3416ca641a5fb7dfd86c08",
+    "tools/rd-graph-viewer.user.js": "09ac37ad6276593a6c6615f3cdc665bee665fcd0bf36c4ce431fc5459f439f58",
+    "tools/rdg-agent.py": "3a35c69138202951529c78e34182ea187c8eb66cea881a42abf50a5087a34d0b",
+    "tests/rdg-core-model.test.py": "be0c196534de38ed09152bc789a23180c45069664cf59898e3977a1f3b2e8fd7",
+    "tests/rdg-core-workflow.test.py": "09ca43ce2e080df5713f32628a366ec75c04a098b7cb2c5956e8a7741bf425b3",
+    "tests/rdg-core-ui.test.cjs": "b3451cc47f2bcbf1241adda5f594783065b95c5f44eb02b181e2522014f71d19",
+    "tests/rdg-core-gendocen.test.py": "6359267a97d5ae7f11e02cd7be75c83b626338901bc588982d7f05c5946fdd63",
+    "tests/rdg-documentation.test.cjs": "5f712474f6b2cbf541eb2b45eba30786440cf081a8ed414338a70e6481714d5b",
+    "tools/rdg-agent-lenses/clarify.json": "74eaa4067a35378e9ec45be9a39db4187ddc79f5f4f921d432b192f27219849b",
+    "tools/rdg-agent-lenses/develop.json": "0f15d5dbbeb6743ffc817572d5c89ae7d808ef7e124536e9e69838c989932a49",
+    "tools/rdg-agent-lenses/explore.json": "ce64dcf00c4a821a148ed140a3a541bac1c8a581621551284a8d360c727d9377",
+    "tools/rdg-agent-lenses/handoff.json": "6232478cf3552f28eff4ce64054d434dbfb78fc44bfaa0c065dd8c940964c1db",
+    "tools/rdg-agent-lenses/operate.json": "db38bd303dc3b3a707e75e9eb062492cbbda5645d62a950bc59b8e8e229accda",
+    "tools/rdg-agent-lenses/orient.json": "0ebeb23bb9ebd504b5206a8964571d1519357ca0e96f9ffbfd78c630bf49ff14",
+    "tools/rdg-agent-lenses/review.json": "3506fdf00fd68401a5a4885890c8ecf7ab9af96bcaf1c0a0f6d09917bb314591",
+    "tools/rdg-agent-lenses/shape.json": "0f46c670040148b599d77d80634801123ce3a5f3be8e83cc5a8f8413d01713f2",
+    "tools/rdg-agent-lenses/work.json": "fb1ed9d42cf01f0cd9e2279cc001d14b8d028a786a2f0afa2bc2b498b56d04fc",
+    "docs/handoffs/rdg-action-canon-model-20261022/PROPOSAL.md": "7630e54c70ec30fac6c0a57d47af01d77f68d5311c1d020242ad2c3d657d5efd",
+    "docs/handoffs/rdg-action-canon-model-20261022/ACCEPTANCE-CASES.json": "5399ca0dd609befda7a7559d18d44b89b256b6639da3a5d94c84e980a242b9c4",
+    "docs/handoffs/rdg-action-canon-model-20261022/build-example.py": "d4bce4370157e214a4423fb476fc3e01267312ea5f753f5b89d58394db545962",
+    "tools/rdg-workflow-ui.js": "3714482a3c574567ddc89b1fc48ffd1984dba3428ae942575884b2f7d63827d2",
+    "docs/handoffs/rdg-action-canon-model-20261022/RDG-MODEL-EXAMPLE.pdf": "1e1290312715c7239319cfa2fb37f380421d8367e98036937e3a41221b39306f",
+    "docs/handoffs/rdg-action-canon-model-20261022/RDG-MODEL-EXAMPLE.drawio": "63df3d11aa90882ebb841ce8733b39c44c206c3259a683ce06ce6e5c7f2a1c54",
+    "tests/rdg-general-lens-research.test.cjs": "3c3c095142912494ced7f84621d7ac2d8f349c090dedeae49c9aa0bfb66042e2"
+  },
+  "priorSnapshot": {
+    "role": "Previous 42-page documentation-only QA; retained unchanged as historical evidence, not the result of this run.",
+    "record": {
+      "date": "2026-10-22",
+      "scope": "Documentation fixes and improvements after R-RDG-DOCS-20261022-d8c4/v1. No runtime/owner migration.",
+      "artifactChecks": {
+        "date": "2026-10-22",
+        "reviewAddressed": "R-RDG-DOCS-20261022-d8c4/v1",
+        "pdfPages": 42,
+        "drawioPages": 42,
+        "textParityPages": 42,
+        "exactDrawioReproduction": true,
+        "coverReachablePagesIncludingMap": 42,
+        "textOutsidePage": [],
+        "cases": 33,
+        "nativeDrawioEditorChecked": false
+      },
+      "linkChecks": {
+        "matchedRegionsAndDestinations": 289,
+        "errors": []
+      },
+      "runtimeTestsReRun": false,
+      "runtimeEvidence": "Prior snapshot below, not reasserted as this documentation-only run.",
+      "limits": [
+        "Native diagrams.net import/font reflow not verified.",
+        "33 acceptance cases remain a semantic specification, not 33 newly executed runtime tests."
+      ],
+      "priorSnapshot": {
+        "role": "Execution-stage source/runtime evidence retained as historical",
+        "record": {
+          "date": "2026-10-22",
+          "profile": "rdg-core-v1",
+          "sourceVersion": "Viewer 2.5.0",
+          "scope": "Clarified core, compatible candidate-v6 readers, writer/client/Helper/Plan/history/Gendocen and ten rebuilt lens definitions; no live migration.",
+          "evidence": [
+            {
+              "test": "tests/rdg-core-model.test.py",
+              "result": "PASS",
+              "cases": 15
+            },
+            {
+              "test": "tests/rdg-core-workflow.test.py",
+              "result": "PASS (7 full scenarios plus the added schema scenario verified separately)",
+              "cases": 8
+            },
+            {
+              "test": "tests/rdg-core-gendocen.test.py",
+              "result": "PASS",
+              "cases": 2
+            },
+            {
+              "test": "tests/rdg-core-ui.test.cjs",
+              "result": "PASS",
+              "cases": 4
+            },
+            {
+              "test": "tests/rdg-core-viewer.test.cjs",
+              "result": "PASS after scoped fixes",
+              "cases": 2
+            }
+          ],
+          "limits": [
+            "Semantic source matching and actual truth require evidence and an accountable reviewer.",
+            "Live owners were not migrated; cross-store import is a separate authorized migration.",
+            "Browser visual acceptance is not established: Chromium unavailable in this execution environment; DOM projection/request paths were tested.",
+            "Historical D/Option CLI tests describe an inactive writer contract, not current candidate-v6 behavior."
+          ],
+          "priorSnapshot": {
+            "role": "original baseline probes, not results of this core revision",
+            "record": {
+              "date": "2026-10-22",
+              "mode": "read-only-in-memory-probes-and-source-review",
+              "probes": [
+                {
+                  "probe": "one_action_two_requirement_drivers",
+                  "accepted": false,
+                  "reason": "Action requires exactly one active driver Requirement"
+                },
+                {
+                  "probe": "several_candidate_actions_one_requirement",
+                  "accepted": true
+                },
+                {
+                  "probe": "direct_requirement_subgoal",
+                  "accepted": true
+                },
+                {
+                  "probe": "action_as_physical_graph_root",
+                  "accepted": false,
+                  "reason": "action model root Requirement missing"
+                },
+                {
+                  "probe": "information_as_current_kind",
+                  "accepted": false,
+                  "reason": "INVALID_OR_UNAPPROVED_NODE_KIND"
+                },
+                {
+                  "probe": "evidence_as_current_kind",
+                  "accepted": false,
+                  "reason": "INVALID_OR_UNAPPROVED_NODE_KIND"
+                },
+                {
+                  "probe": "canon_as_current_kind",
+                  "accepted": false,
+                  "reason": "INVALID_OR_UNAPPROVED_NODE_KIND"
+                },
+                {
+                  "probe": "direct_child_completion_dependency",
+                  "childIncluded": false,
+                  "dependencyIds": []
+                }
+              ],
+              "sourceSHA256": {
+                "tools/graph-apply.py": "05c55580f0949ea5a0c1982ee496e66af1c347d62999c132e3de24eea3c51dfe",
+                "tools/rdg-graph-api.py": "ed88cf680512c7499a81b2a9357f09e751da13b574bf54bbe9f4391923c327a2",
+                "tools/rdg-v7-model.py": "fb97c97b5ec5f67e30b4dd0818606b7cfa96eeb8efbdabcb8c3ac751cbe2a687",
+                "tools/graph-package.py": "648b75e23041b344989cb8835bf213f3e6e2a8ffebc35f1d269c9fe970f57ff8",
+                "tools/rdg-completion-context.py": "e32d9f4928699fa57b29949f15ab0e8239094f40dd278b9cc25aa9d6a9d7f2fe",
+                "tools/rdg-context.py": "50ba8695ae0672c7769785de03cba14ed17d7513059e65fbf170e065a2bd2d1a",
+                "tools/rdg-canon-context-review.py": "be4d272ea58162d3c4ca504e8229cba95b0d2e36e3d744528d2f9de64bce624d",
+                "tools/rdg-workflow.py": "db16df0741266e1c2b7ae826670bf3508365d458ca9485ef23fdec85bef039e9",
+                "tools/rdg-temporal-plan.py": "6ae551ffa59f6926203b2daa37cfc81a29b955ee2f2ea24b95642b5e069e2d7a",
+                "tools/rdg-activity.py": "feee0228c2378c5a2c27a255de779c3fb2a7b5bc4e81a1954fac367415bf1a8a",
+                "tools/rdg-agent.py": "66142442919bb49b788eab32006ac3e3bbc806c13e2b7ad2c943affda9b4df9c",
+                "tools/rdg-requirement-gendocen.py": "af6ba2688f1c439ae924295d8f39761632cbc679551b9a1b845331ef776f53f1",
+                "tests/rdg-shared-action-occurrences.acceptance.test.py": "3aaf6e8b6441e7f5e902a73a112f6d4d51a06e4bb6d0e6ceee2cc73cc6c977b2",
+                "tests/rdg-cross-file-completion.test.py": "828ed84b8231682f56d997192913fc71aacefc6ae811f2fbdc65ee3d4f03234b",
+                "tests/rdg-canon-attachment.test.cjs": "3018ad8ed2a0d9aa6b46886521889dc0ccad0ef81627571256b4a7e743c59024"
+              },
+              "attachments": [
+                {
+                  "name": "image(20261021-212904).png",
+                  "sha256": "7af92c4084d08621347ac5312f3802687ab219a61640fb3a8d0bf6cc8bd6d2ea",
+                  "meaning": "Две входящие R, общий A и две выходящие R."
+                },
+                {
+                  "name": "image(20261021-212906).png",
+                  "sha256": "b14ec506d0d1f98a0545f6cb3575c97ef4fbe29fc3559b1c331e4520753e17e4",
+                  "meaning": "Граф R показывает происхождение и варианты A."
+                },
+                {
+                  "name": "image(20261021-213634).png",
+                  "sha256": "58312cec23d4a6974627240e5ad4b8e01166216a1d8935fe953652ebd56af148",
+                  "meaning": "В графе A соседствуют фактические R и ссылка на канон."
+                },
+                {
+                  "name": "image(20261021-213637).png",
+                  "sha256": "09669884b2995cfa67a9b0e10be8355a3f81f9ca377ec4c07b7f0bd06ae19a2e",
+                  "meaning": "Граф канона содержит положительные R и отрицательные R/Context."
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}

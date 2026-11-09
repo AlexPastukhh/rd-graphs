@@ -1,0 +1,10 @@
+REVIEW_PROBE={"changedFacets": ["steps"], "checkExitCode": 2, "checkOk": true, "computedFacets": ["branches", "identity", "sequence", "steps", "timeConstraints"], "coverageComplete": true, "declaredGroups": ["branches", "identity", "sequence", "steps", "timeConstraints"], "engine": "0.1.0.dev25", "guardAccepted": true, "mode": "event-title", "projectionSemanticHashChanged": true, "registeredSources": ["resource://rdg/graph.cad870d76f7aae7c360ed7e1#/reviewIdentity", "resource://rdg/graph.cad870d76f7aae7c360ed7e1#/reviewNodesById/A1", "resource://rdg/plan.05d4dd44bed09ec7d038ec1c#/reviewCoverage", "resource://rdg/plan.05d4dd44bed09ec7d038ec1c#/reviewInputsByStep/S-A1/identity", "resource://rdg/plan.05d4dd44bed09ec7d038ec1c#/reviewInputsByStep/S-A1/branches", "resource://rdg/plan.05d4dd44bed09ec7d038ec1c#/reviewInputsByStep/S-A1/steps", "resource://rdg/plan.05d4dd44bed09ec7d038ec1c#/reviewInputsByStep/S-A1/sequence", "resource://rdg/plan.05d4dd44bed09ec7d038ec1c#/reviewInputsByStep/S-A1/timeConstraints"], "statuses": {"A1": "review_required", "A2": "review_required"}}
+test_duplicate_declared_subscription_is_rejected (__main__.CoverageGuardAcceptance.test_duplicate_declared_subscription_is_rejected) ... ok
+test_event_title_is_semantic_until_separate_display_contract (__main__.CoverageGuardAcceptance.test_event_title_is_semantic_until_separate_display_contract) ... ok
+test_missing_group_cannot_hide_in_an_empty_action_set (__main__.CoverageGuardAcceptance.test_missing_group_cannot_hide_in_an_empty_action_set) ... ok
+test_omitted_producer_group_is_rejected_before_baseline (__main__.CoverageGuardAcceptance.test_omitted_producer_group_is_rejected_before_baseline) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 8.020s
+
+OK

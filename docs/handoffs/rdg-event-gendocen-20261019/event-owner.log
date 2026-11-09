@@ -1,0 +1,18 @@
+test_bad_pin_outcome_time_and_reference_fail_without_write (__main__.EventOwnerTest.test_bad_pin_outcome_time_and_reference_fail_without_write) ... ok
+test_concurrent_claim_one_cas_winner (__main__.EventOwnerTest.test_concurrent_claim_one_cas_winner) ... ok
+test_correction_preserves_old_claim_and_unlinked_conflict (__main__.EventOwnerTest.test_correction_preserves_old_claim_and_unlinked_conflict) ... ok
+test_late_claim_and_attestation_excluded_by_early_known_at (__main__.EventOwnerTest.test_late_claim_and_attestation_excluded_by_early_known_at) ... ok
+test_missing_prior_receipt_blocks_next_stage (__main__.EventOwnerTest.test_missing_prior_receipt_blocks_next_stage) ... ok
+test_mixed_time_precision_same_occurrence_is_rejected (__main__.EventOwnerTest.test_mixed_time_precision_same_occurrence_is_rejected) ... ok
+test_permissions_and_distinct_bearers_are_enforced (__main__.EventOwnerTest.test_permissions_and_distinct_bearers_are_enforced) ... ok
+test_recovery_after_receipt_preserves_time (__main__.EventOwnerTest.test_recovery_after_receipt_preserves_time) ... ok
+test_recovery_after_store (__main__.EventOwnerTest.test_recovery_after_store) ... ok
+test_recovery_prepared (__main__.EventOwnerTest.test_recovery_prepared) ... ok
+test_revocation_cas_and_idempotency (__main__.EventOwnerTest.test_revocation_cas_and_idempotency) ... ok
+test_three_stages_are_durable_but_never_factual (__main__.EventOwnerTest.test_three_stages_are_durable_but_never_factual) ... ok
+test_verifier_opt_in_does_not_upgrade_existing_store (__main__.EventOwnerTest.test_verifier_opt_in_does_not_upgrade_existing_store) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 3.644s
+
+OK

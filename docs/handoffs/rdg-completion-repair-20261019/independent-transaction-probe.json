@@ -1,0 +1,28 @@
+{
+  "activityAlsoShowsTransientResults": [],
+  "beforeActionComplete": false,
+  "afterActionComplete": false,
+  "afterRootComplete": false,
+  "newResultsInSuccessfulTransaction": [],
+  "resultDependencyIds": [],
+  "transientScopeEverCommitted": false,
+  "savedScopes": [
+    [
+      "RC-DONE",
+      "RC-NEW"
+    ],
+    [
+      "RC-DONE",
+      "RC-OLD"
+    ],
+    [
+      "RC-DONE",
+      "RC-OLD"
+    ],
+    [
+      "RC-DONE",
+      "RC-OLD"
+    ],
+    []
+  ]
+}

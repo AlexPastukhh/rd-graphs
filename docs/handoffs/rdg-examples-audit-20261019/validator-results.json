@@ -1,0 +1,502 @@
+[
+  {
+    "slug": "template-tm-2d-10-visual-requirements",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-10-visual-requirements-unit-ru-req-01",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-10-visual-requirements-unit-ru-req-02",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-10-visual-requirements-unit-ru-req-03",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-15-prepared-visual-material-set",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-15-prepared-visual-material-set-unit-ru-mat-01",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-15-prepared-visual-material-set-unit-ru-mat-02",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-15-prepared-visual-material-set-unit-ru-mat-03",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-20-whole-visual-design",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-20-whole-visual-design-unit-ru-wvd-01",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-20-whole-visual-design-unit-ru-wvd-02",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-20-whole-visual-design-unit-ru-wvd-03",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-30-visual-construction",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-30-visual-construction-unit-ru-vc-01",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-30-visual-construction-unit-ru-vc-02",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-31-editable-raster-construction",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-31-editable-raster-construction-unit-ru-ras-01",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-31-editable-raster-construction-unit-ru-ras-02",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-31-editable-raster-construction-unit-ru-ras-03",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-31-editable-raster-construction-unit-ru-ras-04",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-31-editable-raster-construction-unit-ru-ras-05",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-31-painterly-raster-construction",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-31-painterly-raster-construction-unit-ru-paint-01",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-31-painterly-raster-construction-unit-ru-paint-02",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-31-painterly-raster-construction-unit-ru-paint-03",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-31-painterly-raster-construction-unit-ru-paint-04",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-31-pixel-art-construction",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-31-pixel-art-construction-unit-ru-px-01",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-31-pixel-art-construction-unit-ru-px-02",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-31-pixel-art-construction-unit-ru-px-03",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-31-pixel-art-construction-unit-ru-px-04",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-31-pixel-art-construction-unit-ru-px-05",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-31-procedural-construction",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-31-procedural-construction-unit-ru-proc-01",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-31-procedural-construction-unit-ru-proc-02",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-31-procedural-construction-unit-ru-proc-03",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-31-procedural-construction-unit-ru-proc-04",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-31-procedural-construction-unit-ru-proc-05",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-31-vector-construction",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-31-vector-construction-unit-ru-vec-01",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-31-vector-construction-unit-ru-vec-02",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-31-vector-construction-unit-ru-vec-03",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-31-vector-construction-unit-ru-vec-04",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-31-vector-construction-unit-ru-vec-05",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-50-delivery-adaptation",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-50-delivery-adaptation-unit-ru-del-01",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-50-delivery-adaptation-unit-ru-del-02",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "template-tm-2d-50-delivery-adaptation-unit-ru-del-03",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "context-prepared-alternative",
+    "valid": true,
+    "error": null
+  },
+  {
+    "slug": "context-prepared-current",
+    "valid": true,
+    "error": null
+  },
+  {
+    "slug": "context-prepared-root",
+    "valid": true,
+    "error": null
+  },
+  {
+    "slug": "context-working-alternative",
+    "valid": true,
+    "error": null
+  },
+  {
+    "slug": "context-working-current",
+    "valid": true,
+    "error": null
+  },
+  {
+    "slug": "context-working-root",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "example",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "reference-app-definition",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "reference-behavior-review",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "reference-complete-app",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "reference-complete-availability",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "reference-complete-functionality",
+    "valid": false,
+    "error": "invalid node"
+  },
+  {
+    "slug": "reference-complete-realization",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "reference-complete-reservation",
+    "valid": false,
+    "error": "invalid node"
+  },
+  {
+    "slug": "reference-complete-scenario-create",
+    "valid": false,
+    "error": "invalid node"
+  },
+  {
+    "slug": "reference-complete-scenarios",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "reference-complete-unit-r-boundary",
+    "valid": true,
+    "error": null
+  },
+  {
+    "slug": "reference-complete-unit-r-errors",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "reference-complete-unit-r-feedback",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "reference-complete-unit-r-result",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "reference-complete-unit-r-scancel",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "reference-complete-unit-r-state-reservation",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "reference-complete-unit-r-state-selection",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "reference-delegation-status",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "reference-feature-auth",
+    "valid": false,
+    "error": "invalid node"
+  },
+  {
+    "slug": "reference-feature-cart",
+    "valid": false,
+    "error": "invalid node"
+  },
+  {
+    "slug": "reference-feature-catalog",
+    "valid": false,
+    "error": "invalid node"
+  },
+  {
+    "slug": "reference-feature-payment",
+    "valid": false,
+    "error": "invalid node"
+  },
+  {
+    "slug": "reference-feature-root",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "reference-mixed-active-work",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "reference-mixed-change-log",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "reference-mixed-contextual-split",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "reference-mixed-feature-availability",
+    "valid": true,
+    "error": null
+  },
+  {
+    "slug": "reference-mixed-feature-consistency",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "reference-mixed-planned-feature",
+    "valid": true,
+    "error": null
+  },
+  {
+    "slug": "reference-mixed-planned-feature-consistency",
+    "valid": true,
+    "error": null
+  },
+  {
+    "slug": "reference-mixed-planned-feature-depth",
+    "valid": true,
+    "error": null
+  },
+  {
+    "slug": "reference-mixed-planned-scenario",
+    "valid": true,
+    "error": null
+  },
+  {
+    "slug": "reference-mixed-planned-scenario-consistency",
+    "valid": true,
+    "error": null
+  },
+  {
+    "slug": "reference-module-units",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "reference-prepared-feature-consistency",
+    "valid": true,
+    "error": null
+  },
+  {
+    "slug": "reference-prepared-feature-depth",
+    "valid": true,
+    "error": null
+  },
+  {
+    "slug": "reference-prepared-feature-path",
+    "valid": true,
+    "error": null
+  },
+  {
+    "slug": "reference-prepared-planning-tree",
+    "valid": true,
+    "error": null
+  },
+  {
+    "slug": "reference-prepared-scenario-consistency",
+    "valid": true,
+    "error": null
+  },
+  {
+    "slug": "reference-prepared-scenario-path",
+    "valid": true,
+    "error": null
+  },
+  {
+    "slug": "reference-reusable-vs-concrete",
+    "valid": false,
+    "error": "invalid node"
+  },
+  {
+    "slug": "reference-unit-direct",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "reference-unit-split",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "reference-unit-states",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "reference-unit-transitions",
+    "valid": false,
+    "error": "D must have committed/superseded status; use proposal kind for candidates"
+  },
+  {
+    "slug": "try-it",
+    "valid": true,
+    "error": null
+  }
+]

@@ -1,0 +1,11 @@
+{
+  "createdAtUTC": "2026-10-18T22:26:56.088417+00:00",
+  "previousCheckpoint": "../rdg-future-baseline-20261019/CHECKPOINT.json",
+  "files": {
+    "README.md": "602db2fd6061ce1ab0c02c7724e770373c317a2fe1b7bfaf03d91d0f3f509049",
+    "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md": "509bc098fd5b9f2fba1d6f7e537b5c2907cb55e82107336eb08710a0d2450cdf",
+    "tools/rdg-authority.py": "c33711c3fd91009e64ad3ac11a5f0ebaaa84816349c2dc5002df66deba197fbb",
+    "tests/rdg-temporal-plan-owner.test.py": "6fb7be1a2c3327181e46e8e4e65923994090f4f0ea78ecdcf8dbf0798870569b",
+    "tools/rdg-gendocen-adapter.py": "82e5116bed2b3f99bcbebbd42f42b41137b3e4ea607291d870bc6ecacef07169"
+  }
+}

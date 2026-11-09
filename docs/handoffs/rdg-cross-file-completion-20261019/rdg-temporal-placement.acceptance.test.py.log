@@ -1,0 +1,11 @@
+test_date_only_places_action_and_cannot_be_removed_leaving_it_unplaced (__main__.TemporalPlacementAcceptance.test_date_only_places_action_and_cannot_be_removed_leaving_it_unplaced) ... ok
+test_empty_future_can_be_saved_placed_and_cleared_without_fake_steps (__main__.TemporalPlacementAcceptance.test_empty_future_can_be_saved_placed_and_cleared_without_fake_steps) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_legacy_snapshot_and_accepted_retry_remain_readable_after_new_rule (__main__.TemporalPlacementAcceptance.test_legacy_snapshot_and_accepted_retry_remain_readable_after_new_rule) ... ok
+test_order_only_places_candidate_actions_without_inventing_dates (__main__.TemporalPlacementAcceptance.test_order_only_places_candidate_actions_without_inventing_dates) ... ok
+test_unplaced_action_rejected_atomically_on_create_and_edit (__main__.TemporalPlacementAcceptance.test_unplaced_action_rejected_atomically_on_create_and_edit) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.226s
+
+OK

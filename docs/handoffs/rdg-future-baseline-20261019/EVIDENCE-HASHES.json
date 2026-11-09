@@ -1,0 +1,18 @@
+{
+  "BASELINE.json": "4364083604877ac2688f3a248332487ad25158af990ca47555cf0bf039d8f4ac",
+  "CHECKPOINT.json": "6dd063de49bd4f4b5b7a9372685d3598b76aba969a958183875f9950f77c7e52",
+  "CHECKPOINT.md": "e8d5cef2729fde171db61ddf18804654f94b331cbcc87e7c90bff074a3404edb",
+  "SELECTED-DIFF.patch": "b7f866cf0ba128233c5cd488b17e068d62ffd65dfecc9392ba16fb26eaa357fe",
+  "SOURCE-HASHES.json": "590230f085407d65e1552cccb7880187141a65f49ea6f23e4a641c71e0c6df6e",
+  "WR-DELTA.md": "513c885187a1a6e12f1e7214796c5796af2ea663497406bd95d9a7d8e77780c6",
+  "applicability-owner.log": "1212f1bbe5d0a3614b11d424a3e0010f685e2c54632157c1d20f97da1f683082",
+  "bearer-authority.log": "90df638789c5bcea9dfe8c771c8a0aa9232798ad773ccc0fafbe1111a305937c",
+  "before-RDG-CURRENT-EXECUTION-PLAN.md": "95c5909ba603dc88cfd2aa593b2eb25ec673e192da5571d400c94fee78fd73e2",
+  "before-README.md": "74c22856833be7b74a3100beb604e43d2ebf4fa8c90618da0ec8928b529bc8e7",
+  "exact-history.log": "76f9b2dd69b1baab326feeabe4d1a770fc68183ea214bdf0c25e372e7668a7f5",
+  "future-baseline.log": "fbd0a6b5e45d579fd50c3937775b1b8f7c6b50be6a0352d13ea22760fcb34b71",
+  "plan-owner.log": "8b08a47ad5d2f94688529ae123d83dd087edc0ee4a2698906c33c0f55d0dc1f1",
+  "test-results.json": "858e493c8435bf72b0ff7d65d5444a2580a633fcac665d0f73c7b4ec9efff5a9",
+  "two-time-scenario.log": "e66ef825c908056ea9c4fcfa109e01b657da8c34df878167256f37dbe9d9d757",
+  "writer-recording.log": "81992a7baa9d577b9ece57d61cd8c2bfbd6a902de324f42bd0cf8a15382cd001"
+}

@@ -1,0 +1,178 @@
+TAP version 13
+# Subtest: F-P-01: edits during save remain dirty, and a second save persists them
+ok 1 - F-P-01: edits during save remain dirty, and a second save persists them
+  ---
+  duration_ms: 197.115247
+  type: 'test'
+  ...
+# Subtest: F-P-01: an edit on graph B survives the completion of graph A save
+ok 2 - F-P-01: an edit on graph B survives the completion of graph A save
+  ---
+  duration_ms: 52.249813
+  type: 'test'
+  ...
+# Subtest: F-P-01/04: a reset during save remains pending and the next commit removes the override
+ok 3 - F-P-01/04: a reset during save remains pending and the next commit removes the override
+  ---
+  duration_ms: 37.696774
+  type: 'test'
+  ...
+# Subtest: F-P-01: failed buffered writes preserve the full newer draft for retry
+ok 4 - F-P-01: failed buffered writes preserve the full newer draft for retry
+  ---
+  duration_ms: 22.889603
+  type: 'test'
+  ...
+# Subtest: F-P-02: a group moved after collapse keeps its latest position after save and reload
+ok 5 - F-P-02: a group moved after collapse keeps its latest position after save and reload
+  ---
+  duration_ms: 49.352752
+  type: 'test'
+  ...
+# Subtest: F-P-02: a command targeting a hidden header overrides its remembered position
+ok 6 - F-P-02: a command targeting a hidden header overrides its remembered position
+  ---
+  duration_ms: 80.704282
+  type: 'test'
+  ...
+# Subtest: F-P-04: the API clear command and the reset button both commit deletion, not old or automatic coordinates
+ok 7 - F-P-04: the API clear command and the reset button both commit deletion, not old or automatic coordinates
+  ---
+  duration_ms: 172.567922
+  type: 'test'
+  ...
+# Subtest: F-P-03: a manual graph without opt-in opens local one-level continuations and returns without changing records
+ok 8 - F-P-03: a manual graph without opt-in opens local one-level continuations and returns without changing records
+  ---
+  duration_ms: 113.856144
+  type: 'test'
+  ...
+# Subtest: F-P-03: legacy inferred roots also stop at one level and allow local expansion
+ok 9 - F-P-03: legacy inferred roots also stop at one level and allow local expansion
+  ---
+  duration_ms: 26.829198
+  type: 'test'
+  ...
+# Subtest: local levels save separately in the common format and CLI accepts a rooted key
+ok 10 - local levels save separately in the common format and CLI accepts a rooted key
+  ---
+  duration_ms: 361.432004
+  type: 'test'
+  ...
+# Subtest: a method shared with another R remains visible when it directly answers the current root
+ok 11 - a method shared with another R remains visible when it directly answers the current root
+  ---
+  duration_ms: 19.400191
+  type: 'test'
+  ...
+# Subtest: F-P-05: routing and labels translate with nodes through all four quadrants and fit includes labels
+ok 12 - F-P-05: routing and labels translate with nodes through all four quadrants and fit includes labels
+  ---
+  duration_ms: 19.007927
+  type: 'test'
+  ...
+# Subtest: F-P-06: opening and closing alternatives preserves pan, zoom and surviving node positions
+ok 13 - F-P-06: opening and closing alternatives preserves pan, zoom and surviving node positions
+  ---
+  duration_ms: 261.143145
+  type: 'test'
+  ...
+# Subtest: F-P-07: file input survives event retargeting after await and is cleared on read failure too
+ok 14 - F-P-07: file input survives event retargeting after await and is cleared on read failure too
+  ---
+  duration_ms: 14.73831
+  type: 'test'
+  ...
+# Subtest: reading a file does not overwrite edits made while that read is pending
+ok 15 - reading a file does not overwrite edits made while that read is pending
+  ---
+  duration_ms: 14.630776
+  type: 'test'
+  ...
+# Subtest: same-origin Web Locks serializes connected browser clients and stale second save is rejected
+ok 16 - same-origin Web Locks serializes connected browser clients and stale second save is rejected
+  ---
+  duration_ms: 64.234496
+  type: 'test'
+  ...
+# Subtest: local continuations retain a Requirement used as a ground without opening its own answer
+ok 17 - local continuations retain a Requirement used as a ground without opening its own answer
+  ---
+  duration_ms: 100.08685
+  type: 'test'
+  ...
+# Subtest: reload keeps the current local root and a missing root in an updated file preserves the old view
+ok 18 - reload keeps the current local root and a missing root in an updated file preserves the old view
+  ---
+  duration_ms: 112.871752
+  type: 'test'
+  ...
+# Subtest: single-R context lists stay inline without a group header
+ok 19 - single-R context lists stay inline without a group header
+  ---
+  duration_ms: 167.005106
+  type: 'test'
+  ...
+# Subtest: canonical situations are visible blocks and inspectable for selected and unselected options
+ok 20 - canonical situations are visible blocks and inspectable for selected and unselected options
+  ---
+  duration_ms: 427.571216
+  type: 'test'
+  ...
+# Subtest: ten prospective candidate R preserve reversible collection and candidate status
+ok 21 - ten prospective candidate R preserve reversible collection and candidate status
+  ---
+  duration_ms: 488.977989
+  type: 'test'
+  ...
+# Subtest: a crowded functionality graph opens on its actual root and answer, not auxiliary records
+ok 22 - a crowded functionality graph opens on its actual root and answer, not auxiliary records
+  ---
+  duration_ms: 63.88758
+  type: 'test'
+  ...
+# Subtest: all relations keeps one level, and every original record and relationship remains accessible through levels
+ok 23 - all relations keeps one level, and every original record and relationship remains accessible through levels
+  ---
+  duration_ms: 669.596692
+  type: 'test'
+  ...
+# Subtest: searching a hidden auxiliary record exposes that record instead of dropping its inspector
+ok 24 - searching a hidden auxiliary record exposes that record instead of dropping its inspector
+  ---
+  duration_ms: 155.151382
+  type: 'test'
+  ...
+# Subtest: routed arrows do not cut through unrelated node rectangles in any bundled graph or view
+ok 25 - routed arrows do not cut through unrelated node rectangles in any bundled graph or view
+  ---
+  duration_ms: 2427.417248
+  type: 'test'
+  ...
+# Subtest: missing root and a self reference do not collapse or crash the renderer
+ok 26 - missing root and a self reference do not collapse or crash the renderer
+  ---
+  duration_ms: 8.689728
+  type: 'test'
+  ...
+# Subtest: inspecting one full-view relation dims other arrows but preserves both endpoint records
+ok 27 - inspecting one full-view relation dims other arrows but preserves both endpoint records
+  ---
+  duration_ms: 266.049427
+  type: 'test'
+  ...
+# Subtest: a fitted full graph stays inside the real viewport even at a fractional scale
+ok 28 - a fitted full graph stays inside the real viewport even at a fractional scale
+  ---
+  duration_ms: 127.712271
+  type: 'test'
+  ...
+1..28
+# tests 28
+# suites 0
+# pass 28
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 7519.561209

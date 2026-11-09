@@ -1,0 +1,8 @@
+{
+  "exitCode": 0,
+  "seconds": 14.6,
+  "command": [
+    "/usr/bin/python3",
+    "tests/rdg-bearer-package.integration.test.py"
+  ]
+}

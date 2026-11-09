@@ -1,0 +1,16 @@
+F
+======================================================================
+FAIL: test_requested_parent_edit_does_not_bypass_derived_result_permission (__main__.CrossFile.test_requested_parent_edit_does_not_bypass_derived_result_permission)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/repos/rd-graphs/tests/rdg-cross-file-completion.test.py", line 143, in test_requested_parent_edit_does_not_bypass_derived_result_permission
+    self.w.assert_denied(self.w.write(req,token),'graph.record_requirement_achievement')
+  File "/workspace/repos/rd-graphs/tests/rdg-bearer-package.integration.test.py", line 68, in assert_denied
+    self.assertNotEqual(result.returncode, 0, result.stdout)
+AssertionError: 0 == 0 : APPLIED transactionId=cross-3 workspaces/child/graph.json revision=3 -> 4 workspaces/demo/graph.json revision=4 -> 5
+
+
+----------------------------------------------------------------------
+Ran 1 test in 2.222s
+
+FAILED (failures=1)

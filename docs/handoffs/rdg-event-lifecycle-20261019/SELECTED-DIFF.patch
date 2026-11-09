@@ -1,0 +1,1136 @@
+--- a/README.md
++++ b/README.md
+@@ -17,8 +17,13 @@
+ [Контрольная точка](docs/handoffs/rdg-applicability-owner-20261019/CHECKPOINT.md).
+ [Отдельный технический будущий baseline](docs/guides/RDG-FUTURE-BASELINE-PILOT.md)
+ может закрепить точную candidate-версию без изменения Plan и выбора RDG Action;
+-самостоятельного подтверждения пользователя и событий здесь ещё нет.
++самостоятельного подтверждения пользователя ещё нет.
+ [Новый checkpoint](docs/handoffs/rdg-future-baseline-20261019/CHECKPOINT.md).
++[Три технические стадии события](docs/guides/RDG-EVENT-LIFECYCLE-PILOT.md)
++сохраняют claim, attestation и review раздельно. Даже review-supported
++не устанавливает фактическую ветвь или выбор Action. Старый Gendocen
++adapter явно отклоняет такие sidecars до их семантической интеграции.
++[Контрольная точка событий](docs/handoffs/rdg-event-lifecycle-20261019/CHECKPOINT.md).
+ 
+ Исправлены пропуск вычисляемой группы зависимостей из declaration и потеря
+ смысловых `title`: контракт `rdg-temporal-review/v2` отклоняет неполное покрытие.
+--- a/docs/guides/RDG-CURRENT-EXECUTION-PLAN.md
++++ b/docs/guides/RDG-CURRENT-EXECUTION-PLAN.md
+@@ -18,20 +18,18 @@
+ |---|---|---|
+ | P0/P0.1 | Исправлены branch membership, независимая проверка полноты declaration/subscriptions и смысловых title для текущих проекций; scoped acceptance PASS. | Несколько событий, новый lifecycle и исторический контекст ещё не входят в coverage. |
+ | P1 | [Контракт owner/version/as-of](RDG-TEMPORAL-PLAN-OWNER-CONTRACT-P1.md) подготовлен как Candidate. | PR-P1-01..05 не committed; production owner и доверенный источник событий не выбраны. |
+-| P2 | Candidate Plan owner, точные Plan/RDG snapshots, ограниченный `knownAt` и [история применимости](RDG-APPLICABILITY-OWNER-PILOT.md). Отдельный [технический будущий baseline](RDG-FUTURE-BASELINE-PILOT.md) закрепляет точную Plan revision, сохраняет прежнюю версию при новом candidate и проверяет CAS/recovery. [Последнее evidence](../handoffs/rdg-future-baseline-20261019/CHECKPOINT.md). | Нет подтверждения пользователя, trusted event source и выбора полного контекста; `effectiveAt` в candidate history не аттестовано. Старые Graph journals без времени и старый последний Plan без квитанции не проходят `knownAt`. |
++| P2 | Candidate Plan owner, точные Plan/RDG snapshots, ограниченный `knownAt`, история применимости и технический будущий baseline. Отдельный [event owner](RDG-EVENT-LIFECYCLE-PILOT.md) сохраняет claim → attestation → review с разными grants, correction links и recovery. [Последнее evidence](../handoffs/rdg-event-lifecycle-20261019/CHECKPOINT.md). | Нет подтверждения пользователя, trusted event source, проверки содержания evidence и выбора полного контекста; `effectiveAt` в candidate history не аттестовано. Старые Graph journals без времени и старый последний Plan без квитанции не проходят `knownAt`. |
+ | P3 | Есть ограниченные F-R/F-U/F-O, F-P preflight, Canon context review и read-only Plan impact. | Полная семантика Finding/Proposal/Canon, независимое подтверждение F-P, несколько событий и различение позднего знания о T1 от изменения после T1. |
+ | P4 | Есть foundations рабочих/research-графов. | Сквозная передача между чатами, один смысловой owner при promotion/link, archive/retrieval и успешная проверка без искусственного Finding. |
+ | P5 | Есть исходники Viewer и синтетический Gendocen runtime proof. | Helper grants, Plan editor/timeline, читаемая Markdown-проекция, внешний consumer и отдельная проверка установки в Windows/G2. |
+ | P6–P7 | Удалённая запись и вывод legacy из эксплуатации не начинались. | Canonical GitHub owner/branch/writer, multi-file CAS/failure proof, проверка лицензии движка; затем доказанное замещение legacy. |
+ 
+-В последнем кодовом срезе проверен отдельный технический будущий baseline
+-на временных Plan; адресные тесты и их scope указаны в checkpoint. Ранее прошли
+-49 адресных тестов для истории применимости и связанных компонентов, а перед ними 32 Python-теста
+-и синтетический Gendocen smoke для Plan availability, а после изменения
+-Graph writer — 405 Node-тестов.
+-Gendocen проверял **текущие** проекции, а resolver отдельно разрешал точные
+-старые снимки. Ни один из этих PASS не подтверждает полный historical as-of
+-или фактический пользовательский T1.
++В последнем кодовом срезе прошли 88 адресных тестов event owner,
++adapter guard и связанных компонентов. После правки adapter повторён реальный
++синтетический Gendocen smoke для **текущих** проекций и versioned candidate
++Plan; он PASS. Ранее прошли 405 Node-тестов после изменения Graph writer,
++их полный набор в этом срезе не повторялся. Ни один PASS не подтверждает
++historical Gendocen для event records или фактический пользовательский T1.
+ 
+ ## Следующие локальные срезы
+ 
+@@ -45,15 +43,16 @@
+    полноту применимых owners/событий и независимое подтверждение времени
+    применимости; испытать P2-AC-13/15/16 на таком полном контексте вместе
+    с историческим Gendocen. До trusted event source результат Candidate.
+-2. **Lifecycle и права: технический baseline есть, события открыты.**
+-   Отдельный owner принимает, заменяет и отзывает точную candidate-версию
+-   по `plan.accept`, сохраняя историю; новый candidate не заменяет baseline.
+-   CAS, revoke и три точки recovery проверены на tempfile. Запись bearer не
+-   доказывает решение человека. Следом разделить заявление о событии,
+-   attestation и verification; сохранить исправления и конфликты без
+-   выбора Action. Выбрать доверенный пользовательский actor/source перед
+-   применением к данным пользователя. **Gate:** P2-AC-08/11/12/13/17/20;
+-   старый current-only consumer отклоняет новый lifecycle или требует review.
++2. **Lifecycle: локальные записи есть, доверие и интеграция открыты.**
++   Технический baseline сохраняет точную candidate-версию по `plan.accept`.
++   Отдельный event owner сохраняет claim, attestation и review с разными
++   grants, старой записью и конфликтом outcomes. Записи не подтверждают
++   личность, содержание evidence или факт события; Action не выбирается.
++   Старый current-only adapter теперь явно отклоняет новые sidecars.
++   **Следующий gate:** определить trusted actor/source и правила независимой
++   проверки, затем подключить новый lifecycle к историческому Gendocen
++   без silent valid. Проверить P2-AC-08/11/12/13/17/20 на этом контуре
++   перед пользовательскими данными.
+ 3. **Полный исторический resolver и Gendocen coverage.** Выбрать lifecycle и
+    branch context, затем применимую версию Plan и все нужные RDG/event
+    snapshots по двум временам. Если хотя бы одного источника нет, не выдавать
+@@ -83,18 +82,18 @@
+ | 06 | Локальный PASS | Revoke до durable prepared journal отклоняет запись. |
+ | 07 | Локальный PASS | Подстановка `accepted` или вызов `accept` через edit отклоняется; само принятие относится к 08. |
+ | 08 | PARTIAL | Отдельный технический baseline доступен по точной ссылке после нового candidate; независимое подтверждение пользователя и T1 не проверены. |
+-| 09 | PARTIAL | Candidate hard не создаёт FR/F-P; accepted baseline отсутствует. |
++| 09 | PARTIAL | Candidate hard и технический будущий baseline не создают FR/F-P; независимый owner обязательства и applicability не доказаны. |
+ | 10 | PARTIAL | Date/instant/relative subset проверен; новые precision, units и выполнимость окна не доказаны. |
+-| 11 | PARTIAL | Клиентские actual fields отклоняются; доверенный event source отсутствует. |
+-| 12 | PARTIAL | Plan editor не получает graph.select_action; event-attest actor ещё отсутствует. |
+-| 13 | PARTIAL | Локальная owner history сохраняет исходную запись и correction link; конфликт outcomes отклоняется при чтении. Нет trusted attestation и полноты контекста. |
++| 11 | PARTIAL | Клиентские actual fields в Plan отклоняются; отдельный event owner сохраняет unverified claim/attestation/review, но trusted source отсутствует. |
++| 12 | PARTIAL | Plan editor и отдельный event-attest bearer не получают graph.select_action; сквозной пользовательский путь не проверен. |
++| 13 | PARTIAL | Candidate applicability и event history сохраняют исходный claim, correction link и конфликт outcomes; нет trusted attestation и полноты контекста. |
+ | 14 | Локальный PASS | Точные Plan/RDG revision+digest обязательны, missing/mismatch/current fallback отклоняются. |
+ | 15 | PARTIAL | По квитанциям Plan и отдельного журнала ранний knownAt исключает позднюю r2; само effectiveAt заявлено без независимой проверки. |
+ | 16 | PARTIAL | После долговечной записи поздний knownAt допускает r2 как кандидатную реконструкцию; фактический T1 и полный as-of не подтверждены. |
+-| 17 | PARTIAL | Candidate и отдельный baseline journal/failpoints/recovery проверены; factual events и общий lifecycle не реализованы. |
+-| 18 | OPEN | Coverage для нового lifecycle/event и historical runtime ещё не проверен. |
+-| 19 | PARTIAL | Hash и технический bearer не принимаются за источник без snapshot; независимая human/event attestation отсутствует. |
+-| 20 | PARTIAL | Schema v1 и owner отклоняют accepted/actual; поведение старого consumer при новых версионированных records ещё нужно проверить. |
++| 17 | PARTIAL | Candidate, baseline и staged event journals/failpoints/recovery проверены; общий lifecycle и фактический T1 не испытаны. |
++| 18 | PARTIAL | Current-only adapter отклоняет baseline/applicability/event sidecars и prepared journals; semantic coverage и historical Gendocen runtime не интегрированы. |
++| 19 | PARTIAL | Exact Plan pin проверяется; bearer grant IDs и opaque evidence refs не считаются доказательством человека, содержимого или факта. |
++| 20 | PARTIAL | Schema v1 отклоняет accepted/actual внутри Plan; старый adapter отклоняет новые sidecars, но версионная интеграция consumer ещё отсутствует. |
+ 
+ Локальные основания: [P0/P0.1](../handoffs/rdg-p0-dependencies-20261018/CHECKPOINT.json),
+ [candidate owner и P2](../handoffs/rdg-vertical-slice-20261019/CHECKPOINT.json),
+@@ -103,7 +102,8 @@
+ [Plan availableBy](../handoffs/rdg-plan-availability-20261019/CHECKPOINT.json),
+ [двухвременной rule probe](../handoffs/rdg-two-time-scenario-20261019/CHECKPOINT.json),
+ [owner history применимости](../handoffs/rdg-applicability-owner-20261019/CHECKPOINT.json),
+-[технический будущий baseline](../handoffs/rdg-future-baseline-20261019/CHECKPOINT.json).
++[технический будущий baseline](../handoffs/rdg-future-baseline-20261019/CHECKPOINT.json),
++[технические стадии события](../handoffs/rdg-event-lifecycle-20261019/CHECKPOINT.json).
+ Полные статусы WR-01..53 сохраняются в [v4.1 ledger](../handoffs/rdg-prework-v4.1-final-20261018/WR-EVIDENCE-LEDGER.md);
+ новые checkpoints меняют только названный scope. При следующем срезе обновлять
+ эту таблицу вместе с доказательством, не повышая PARTIAL до общего PASS.
+--- a/tools/rdg-authority.py
++++ b/tools/rdg-authority.py
+@@ -91,9 +91,11 @@
+                 return ident, grant
+         raise ValueError("AUTH_TOKEN_UNKNOWN")
+ 
+-    def init_local(self, plan_capable=False, applicability_capable=False):
++    def init_local(self, plan_capable=False, applicability_capable=False,
++                   event_verify_capable=False):
+         """Local operator bootstrap only; not a browser/Helper user identity proof."""
+-        require(not applicability_capable or plan_capable, "PLAN_CAPABILITY_REQUIRED")
++        require(not (applicability_capable or event_verify_capable) or plan_capable,
++                "PLAN_CAPABILITY_REQUIRED")
+         require(not self.path.exists(), "ALREADY_INITIALIZED")
+         token = new_token()
+         root = {"digest":token_digest(token), "label":"local-owner",
+@@ -105,6 +107,8 @@
+             root["scopes"].append("plans/")
+         if applicability_capable:
+             root["permissions"].append("plan.applicability.write")
++        if event_verify_capable:
++            root["permissions"].append("plan.event_verify")
+         self._save({"version":1, "revision":1, "grants":{"root":root}})
+         return {"id":"root", "token":token, "bootstrap":"LOCAL_ONLY"}
+ 
+@@ -261,12 +265,13 @@
+     parser.add_argument("--store",default=os.environ.get("RDG_AUTH_STORE"))
+     parser.add_argument("--plan-capable", action="store_true", help="Opt-in local bootstrap only; does not upgrade existing stores")
+     parser.add_argument("--applicability-capable", action="store_true", help="Explicitly opt in a new local Plan store to applicability writes")
++    parser.add_argument("--event-verify-capable", action="store_true", help="Explicitly opt in a new local Plan store to technical event review")
+     options = parser.parse_args()
+     require(options.store, "STORE_PATH_REQUIRED")
+     auth = Authority(options.store)
+     request = json.load(__import__("sys").stdin) if options.command in (
+         "issue","amend","revoke") else None
+-    result = auth.init_local(plan_capable=options.plan_capable, applicability_capable=options.applicability_capable) if options.command == "init" else auth.manage(
++    result = auth.init_local(plan_capable=options.plan_capable, applicability_capable=options.applicability_capable, event_verify_capable=options.event_verify_capable) if options.command == "init" else auth.manage(
+         options.command, os.environ.get("RDG_AUTH_TOKEN"), request)
+     print(json.dumps(result,ensure_ascii=False))
+ 
+--- a/tests/rdg-temporal-plan-owner.test.py
++++ b/tests/rdg-temporal-plan-owner.test.py
+@@ -39,7 +39,8 @@
+         self.root.mkdir()
+         self.store = self.base / "grants.json"
+         self.auth = OWNER.AUTH.Authority(self.store)
+-        self.admin = self.auth.init_local(plan_capable=True)["token"]
++        self.admin = self.auth.init_local(plan_capable=True,
++            event_verify_capable=getattr(self, "event_verify_capable", False))["token"]
+         self.author_id, self.author = self.grant(PERMS)
+         self.plan = json.loads((ROOT / "docs/examples/temporal-plan-candidate-v1.json").read_text())
+ 
+--- a/tools/rdg-gendocen-adapter.py
++++ b/tools/rdg-gendocen-adapter.py
+@@ -91,6 +91,16 @@
+         owner_reader = SourceFileLoader("gendocen_plan_owner", str(ROOT / "rdg-temporal-plan-owner.py")).load_module()
+         resolved = owner_reader.read_snapshot(plan_root, path)
+         plan, owner_version = resolved["plan"], resolved["provenance"]
++        root = owner_reader.root_path(plan_root)
++        target = owner_reader.safe(root, owner_version["sourcePath"])
++        sidecars = (".rdg-applicability.json", ".rdg-future-baseline.json",
++                    ".rdg-event-history.json")
++        journals = ("_rdg-applicability-journal.json",
++                    "_rdg-future-baseline-journal.json", "_rdg-event-journal.json")
++        require(not any(p.exists() or p.is_symlink() for p in
++                        [*(target.with_name(name) for name in sidecars),
++                         *(root / name for name in journals)]),
++                "UNSUPPORTED_OWNER_LIFECYCLE")
+     PLAN.validate(plan)
+     # Outcome/case ordering is presentation, not temporal meaning.
+     steps = {
+--- /dev/null
++++ b/tools/rdg-event-owner.py
+@@ -0,0 +1,445 @@
++#!/usr/bin/env python3
++"""Local staged event records: claim, technical attestation, technical review.
++
++No factual outcome, human identity, Action selection or production truth is
++established by bearer grants or client evidence references.
++"""
++import argparse
++import copy
++import datetime as dt
++from importlib.machinery import SourceFileLoader
++import json
++import os
++from pathlib import Path
++import re
++
++HERE = Path(__file__).resolve().parent
++OWNER = SourceFileLoader("event_plan_owner", str(HERE / "rdg-temporal-plan-owner.py")).load_module()
++HISTORY = SourceFileLoader("event_exact_history", str(HERE / "rdg-exact-history.py")).load_module()
++MODEL = SourceFileLoader("event_time_rule", str(HERE / "rdg-two-time-scenario.py")).load_module()
++ID = MODEL.ID
++TX = re.compile(r"[A-Za-z0-9_-]{1,120}\Z")
++NAME = ".rdg-event-history.json"
++JOURNAL = "_rdg-event-journal.json"
++PERMISSIONS = {"claim": ["plan.edit", "plan.read"],
++               "attest": ["plan.event_attest", "plan.read"],
++               "verify": ["plan.event_verify", "plan.read"]}
++
++
++def require(ok, code):
++    if not ok:
++        raise ValueError("EVENT_OWNER_" + code)
++
++
++def target_path(root, plan_file):
++    path = OWNER.safe(root, plan_file).with_name(NAME)
++    require(not path.is_symlink() and path.resolve().is_relative_to(root), "PATH_INVALID")
++    return path
++
++
++def receipt_path(root, plan_file, revision):
++    require(type(revision) is int and revision >= 1, "REVISION_INVALID")
++    path = OWNER.safe(root, plan_file).with_name(f".rdg-event-available-r{revision}.json")
++    require(not path.is_symlink() and path.resolve().is_relative_to(root), "RECEIPT_PATH_INVALID")
++    return path
++
++
++def journal_path(root):
++    path = root / JOURNAL
++    require(not path.is_symlink() and path.resolve().is_relative_to(root), "JOURNAL_PATH_INVALID")
++    return path
++
++
++def evidence(value):
++    require(isinstance(value, list) and value and len(value) == len(set(value)) and
++            all(isinstance(x, str) and ID.fullmatch(x) for x in value),
++            "EVIDENCE_REFS_REQUIRED")
++
++
++def validate_pin(pin, plan_file):
++    require(isinstance(pin, dict) and
++            set(pin) == {"file", "identitySpace", "planId", "revision",
++                         "snapshotSHA256", "recordDigest"} and
++            pin["file"] == plan_file and OWNER.PLAN.named(pin["identitySpace"]) and
++            OWNER.PLAN.ident(pin["planId"]) and
++            type(pin["revision"]) is int and pin["revision"] >= 1 and
++            all(isinstance(pin[k], str) and HISTORY.SHA.fullmatch(pin[k])
++                for k in ("snapshotSHA256", "recordDigest")), "PLAN_PIN_INVALID")
++    return pin
++
++
++def validate_payload(kind, payload, plan_file):
++    require(isinstance(payload, dict) and isinstance(payload.get("id"), str) and
++            ID.fullmatch(payload["id"]), "PAYLOAD_ID")
++    if kind == "claim":
++        require(set(payload) == {"id", "occurrenceId", "planPin", "eventStepId",
++                 "outcome", "occurredAt", "evidenceRefs", "supersedes"} and
++                isinstance(payload["occurrenceId"], str) and ID.fullmatch(payload["occurrenceId"]) and
++                isinstance(payload["eventStepId"], str) and ID.fullmatch(payload["eventStepId"]) and
++                isinstance(payload["outcome"], str) and ID.fullmatch(payload["outcome"]) and
++                (payload["supersedes"] is None or isinstance(payload["supersedes"], str) and
++                 ID.fullmatch(payload["supersedes"])), "CLAIM_SCHEMA")
++        validate_pin(payload["planPin"], plan_file)
++        MODEL.effective(payload["occurredAt"])
++        evidence(payload["evidenceRefs"])
++    elif kind == "attest":
++        require(set(payload) == {"id", "claimId", "evidenceRefs"} and
++                isinstance(payload["claimId"], str) and ID.fullmatch(payload["claimId"]),
++                "ATTEST_SCHEMA")
++        evidence(payload["evidenceRefs"])
++    elif kind == "verify":
++        require(set(payload) == {"id", "attestationId", "decision", "evidenceRefs"} and
++                isinstance(payload["attestationId"], str) and ID.fullmatch(payload["attestationId"]) and
++                payload["decision"] in ("reviewed-supported", "disputed"),
++                "VERIFY_SCHEMA")
++        evidence(payload["evidenceRefs"])
++    else:
++        raise ValueError("EVENT_OWNER_KIND_INVALID")
++    return payload
++
++
++def validate_store(store, plan_file):
++    require(isinstance(store, dict) and
++            set(store) == {"schemaVersion", "kind", "planFile", "revision",
++                           "records", "transactions"} and
++            store["schemaVersion"] == 1 and store["kind"] == "candidateEventHistory" and
++            store["planFile"] == plan_file and type(store["revision"]) is int and
++            store["revision"] >= 1 and isinstance(store["records"], list) and
++            len(store["records"]) == store["revision"] and
++            isinstance(store["transactions"], dict), "STORE_SCHEMA")
++    previous, clock, txs, ids, claims, attestations = None, None, {}, set(), {}, {}
++    occurrence_scope, attested, reviewed = {}, set(), set()
++    for number, record in enumerate(store["records"], 1):
++        require(isinstance(record, dict) and
++                set(record) == {"revision", "kind", "payload", "recordedAt",
++                                "previousDigest", "digest", "transactionId",
++                                "requestSHA256", "receipt"} and
++                type(record["revision"]) is int and record["revision"] == number and
++                record["previousDigest"] == previous and
++                record["digest"] == OWNER.digest({k:v for k,v in record.items() if k != "digest"}),
++                "RECORD_HASH")
++        kind, payload = record["kind"], record["payload"]
++        validate_payload(kind, payload, plan_file)
++        require(payload["id"] not in ids, "DUPLICATE_RECORD_ID")
++        ids.add(payload["id"])
++        if kind == "claim":
++            pin, occ = payload["planPin"], payload["occurrenceId"]
++            scope = pin["identitySpace"], pin["planId"], payload["eventStepId"]
++            precision, _ = MODEL.effective(payload["occurredAt"])
++            require(occ not in occurrence_scope or
++                    occurrence_scope[occ] == (scope, precision), "OCCURRENCE_SCOPE_CONFLICT")
++            prior = claims.get(payload["supersedes"])
++            require(payload["supersedes"] is None or
++                    prior is not None and prior["payload"]["occurrenceId"] == occ and
++                    pin["revision"] >= prior["payload"]["planPin"]["revision"],
++                    "CORRECTION_CHAIN_INVALID")
++            occurrence_scope[occ] = scope, precision
++            claims[payload["id"]] = record
++        elif kind == "attest":
++            claim = claims.get(payload["claimId"])
++            require(claim is not None and payload["claimId"] not in attested,
++                    "CLAIM_REFERENCE_INVALID")
++            attestations[payload["id"]] = record
++            attested.add(payload["claimId"])
++        else:
++            attestation = attestations.get(payload["attestationId"])
++            require(attestation is not None and
++                    payload["attestationId"] not in reviewed, "ATTESTATION_REFERENCE_INVALID")
++            reviewed.add(payload["attestationId"])
++        raw = dt.datetime.fromisoformat(record["recordedAt"].replace("Z", "+00:00"))
++        now = OWNER.instant(record["recordedAt"])
++        require(raw.utcoffset() == dt.timedelta(0) and
++                (clock is None or now >= clock), "CLOCK_ORDER")
++        receipt = record["receipt"]
++        require(isinstance(receipt, dict) and
++                set(receipt) == {"mode", "grantId", "grantRevision", "principal"} and
++                receipt["mode"] == "bearer" and
++                receipt["principal"] == "bearer:" + receipt["grantId"] and
++                type(receipt["grantRevision"]) is int, "TECHNICAL_RECEIPT_INVALID")
++        if kind == "attest":
++            require(receipt["grantId"] != claims[payload["claimId"]]["receipt"]["grantId"],
++                    "ACTOR_SEPARATION_REQUIRED")
++        if kind == "verify":
++            attestation = attestations[payload["attestationId"]]
++            claim = claims[attestation["payload"]["claimId"]]
++            require(receipt["grantId"] not in
++                    (attestation["receipt"]["grantId"], claim["receipt"]["grantId"]),
++                    "ACTOR_SEPARATION_REQUIRED")
++        tx = record["transactionId"]
++        require(isinstance(tx, str) and TX.fullmatch(tx) and tx not in txs and
++                isinstance(record["requestSHA256"], str) and
++                HISTORY.SHA.fullmatch(record["requestSHA256"]), "TRANSACTION_INVALID")
++        txs[tx] = {"requestSHA256": record["requestSHA256"],
++                   "revision": number, "recordDigest": record["digest"]}
++        previous, clock = record["digest"], now
++    require(store["transactions"] == txs, "TRANSACTION_INDEX_INVALID")
++    return store
++
++
++def read_receipt(root, plan_file, record):
++    path = receipt_path(root, plan_file, record["revision"])
++    if not path.exists():
++        return None
++    value = HISTORY.load_bytes(path.read_bytes())
++    require(isinstance(value, dict) and
++            set(value) == {"schemaVersion", "planFile", "revision",
++                           "recordDigest", "availableBy"} and
++            value["schemaVersion"] == 1 and value["planFile"] == plan_file and
++            value["revision"] == record["revision"] and
++            value["recordDigest"] == record["digest"], "AVAILABILITY_RECEIPT_INVALID")
++    raw = dt.datetime.fromisoformat(value["availableBy"].replace("Z", "+00:00"))
++    require(raw.utcoffset() == dt.timedelta(0) and
++            OWNER.instant(value["availableBy"]) >= OWNER.instant(record["recordedAt"]),
++            "AVAILABILITY_TIME_INVALID")
++    return value
++
++
++def failpoint(name):
++    if os.environ.get("RDG_EVENT_TEST_CRASH") == name:
++        os._exit(91)
++
++
++def replay(root, journal):
++    require(isinstance(journal, dict) and
++            set(journal) == {"schemaVersion", "state", "planFile", "transactionId",
++                             "beforeSHA256", "afterSHA256", "after"} and
++            journal["schemaVersion"] == 1 and journal["state"] == "prepared" and
++            isinstance(journal["planFile"], str) and OWNER.TARGET.fullmatch(journal["planFile"]),
++            "JOURNAL_INVALID")
++    plan_file = journal["planFile"]
++    path = target_path(root, plan_file)
++    store = validate_store(journal["after"], plan_file)
++    record = store["records"][-1]
++    require(record["transactionId"] == journal["transactionId"] and
++            OWNER.digest(store) == journal["afterSHA256"] and
++            OWNER.raw_hash(path) in (journal["beforeSHA256"], journal["afterSHA256"]),
++            "RECOVERY_CONFLICT")
++    if journal["beforeSHA256"] is None:
++        require(store["revision"] == 1, "JOURNAL_CHAIN_INVALID")
++    else:
++        before = copy.deepcopy(store)
++        before["revision"] -= 1
++        before["records"].pop()
++        before["transactions"].pop(record["transactionId"])
++        require(OWNER.digest(before) == journal["beforeSHA256"], "JOURNAL_CHAIN_INVALID")
++    existing = read_receipt(root, plan_file, record)
++    prior = read_receipt(root, plan_file, store["records"][-2]) if len(store["records"]) > 1 else None
++    require(len(store["records"]) == 1 or prior is not None,
++            "PREVIOUS_AVAILABILITY_BOUND_NOT_AVAILABLE")
++    if existing and prior:
++        require(OWNER.instant(existing["availableBy"]) >= OWNER.instant(prior["availableBy"]),
++                "AVAILABILITY_CLOCK_ORDER")
++    if OWNER.raw_hash(path) != journal["afterSHA256"]:
++        OWNER.atomic(path, store)
++    failpoint("after-store-write")
++    if existing is None:
++        now = dt.datetime.now(dt.timezone.utc)
++        require(now >= OWNER.instant(record["recordedAt"]) and
++                (prior is None or now >= OWNER.instant(prior["availableBy"])),
++                "AVAILABILITY_CLOCK_ORDER")
++        OWNER.atomic(receipt_path(root, plan_file, record["revision"]), {
++            "schemaVersion": 1, "planFile": plan_file, "revision": record["revision"],
++            "recordDigest": record["digest"], "availableBy": now.isoformat()})
++    failpoint("after-availability-write")
++    journal_path(root).unlink()
++    OWNER.sync_dir(root)
++
++
++def recover(root):
++    root = OWNER.root_path(root)
++    with OWNER.root_lock(root, True):
++        path = journal_path(root)
++        if not path.exists():
++            return {"recovered": False, "idempotent": True}
++        journal = HISTORY.load_bytes(path.read_bytes())
++        replay(root, journal)
++        return {"recovered": True, "transactionId": journal["transactionId"],
++                "policy": "finish-durably-prepared"}
++
++
++def verify_claim_pin(root, payload):
++    pin = payload["planPin"]
++    snap = OWNER.read_snapshot(root, pin["file"], pin["revision"])
++    plan, provenance = snap["plan"], snap["provenance"]
++    require(plan["identitySpace"] == pin["identitySpace"] and plan["id"] == pin["planId"] and
++            provenance["snapshotSHA256"] == pin["snapshotSHA256"] and
++            provenance["recordDigest"] == pin["recordDigest"], "PLAN_PIN_MISMATCH")
++    matches = [s for s in plan["steps"] if s["id"] == payload["eventStepId"]]
++    require(len(matches) == 1 and matches[0]["kind"] == "event" and
++            matches[0]["state"] == "expected" and
++            payload["outcome"] in matches[0]["outcomes"], "EVENT_OUTCOME_NOT_IN_PLAN")
++    return snap
++
++
++def apply(root, authority_store, token, request, before_prepare=None):
++    root = OWNER.root_path(root)
++    require(isinstance(request, dict) and
++            set(request) == {"transactionId", "kind", "file", "expectedRevision", "payload"} and
++            isinstance(request["transactionId"], str) and TX.fullmatch(request["transactionId"]) and
++            request["kind"] in PERMISSIONS and
++            type(request["expectedRevision"]) is int and
++            request["expectedRevision"] >= 0, "REQUEST_SCHEMA")
++    plan_file, kind = request["file"], request["kind"]
++    target_path(root, plan_file)
++    payload = copy.deepcopy(validate_payload(kind, request["payload"], plan_file))
++    auth_path = Path(authority_store).resolve()
++    require(not auth_path.is_relative_to(root), "AUTH_STORE_MUST_BE_OUTSIDE_PLAN_ROOT")
++    authority = OWNER.AUTH.Authority(auth_path)
++    permissions = PERMISSIONS[kind]
++    authority.authorize_plan(token, permissions, plan_file)
++    if kind == "claim":
++        verify_claim_pin(root, payload)
++    request_hash = OWNER.digest(request)
++    with OWNER.root_lock(root, True):
++        require(not journal_path(root).exists() and
++                not OWNER.safe(root, OWNER.JOURNAL, True).exists(), "RECOVERY_REQUIRED")
++        path = target_path(root, plan_file)
++        before_hash = OWNER.raw_hash(path)
++        old = validate_store(HISTORY.load_bytes(path.read_bytes()), plan_file) if path.exists() else None
++        if old:
++            require(read_receipt(root, plan_file, old["records"][-1]) is not None,
++                    "PREVIOUS_AVAILABILITY_BOUND_NOT_AVAILABLE")
++        tx = request["transactionId"]
++        if old and tx in old["transactions"]:
++            item = old["transactions"][tx]
++            require(item["requestSHA256"] == request_hash, "TRANSACTION_REPLAY_CONFLICT")
++            authority.authorize_plan(token, permissions, plan_file)
++            return {"idempotent": True, **item}
++        expected = old["revision"] if old else 0
++        require(request["expectedRevision"] == expected, "CAS_MISMATCH")
++        if kind == "claim":
++            pin = payload["planPin"]
++            plan_store = OWNER.validate_store(HISTORY.load_bytes(
++                OWNER.safe(root, plan_file).read_bytes()), plan_file)
++            require(pin["revision"] <= plan_store["revision"] and
++                    OWNER.digest(plan_store["versions"][pin["revision"]-1]["plan"]) ==
++                    pin["snapshotSHA256"] and
++                    plan_store["versions"][pin["revision"]-1]["digest"] ==
++                    pin["recordDigest"], "PLAN_PIN_CHANGED")
++        if before_prepare:
++            before_prepare()
++        with authority.checked_plan_transaction(token, permissions, plan_file) as verified:
++            recorded = dt.datetime.now(dt.timezone.utc)
++            require(not old or recorded >= OWNER.instant(old["records"][-1]["recordedAt"]),
++                    "CLOCK_ORDER")
++            record = {"revision": expected + 1, "kind": kind, "payload": payload,
++                      "recordedAt": recorded.isoformat(),
++                      "previousDigest": old["records"][-1]["digest"] if old else None,
++                      "transactionId": tx, "requestSHA256": request_hash,
++                      "receipt": {"mode": "bearer", **verified,
++                                  "principal": "bearer:" + verified["grantId"]}}
++            record["digest"] = OWNER.digest(record)
++            store = copy.deepcopy(old) if old else {"schemaVersion": 1,
++                    "kind": "candidateEventHistory", "planFile": plan_file,
++                    "revision": 0, "records": [], "transactions": {}}
++            store["revision"] += 1
++            store["records"].append(record)
++            store["transactions"][tx] = {"requestSHA256": request_hash,
++                    "revision": record["revision"], "recordDigest": record["digest"]}
++            validate_store(store, plan_file)
++            require(OWNER.raw_hash(path) == before_hash, "SOURCE_CHANGED_DURING_PREPARE")
++            journal = {"schemaVersion": 1, "state": "prepared", "planFile": plan_file,
++                       "transactionId": tx, "beforeSHA256": before_hash,
++                       "afterSHA256": OWNER.digest(store), "after": store}
++            OWNER.atomic(journal_path(root), journal)
++            failpoint("prepared")
++            replay(root, journal)
++            return {"idempotent": False, **store["transactions"][tx],
++                    "technicalReceipt": record["receipt"]}
++
++
++def read(root, authority_store, token, plan_file, occurrence_id, known_at=None,
++         before_return=None):
++    root = OWNER.root_path(root)
++    target_path(root, plan_file)
++    require(isinstance(occurrence_id, str) and ID.fullmatch(occurrence_id),
++            "OCCURRENCE_ID_INVALID")
++    cutoff = MODEL.known(known_at) if known_at is not None else None
++    authority = OWNER.AUTH.Authority(authority_store)
++    authority.authorize_plan(token, ["plan.read"], plan_file)
++    with OWNER.root_lock(root, False):
++        require(not journal_path(root).exists() and
++                not OWNER.safe(root, OWNER.JOURNAL, True).exists(), "RECOVERY_REQUIRED")
++        path = target_path(root, plan_file)
++        require(path.is_file(), "HISTORY_NOT_FOUND")
++        store = validate_store(HISTORY.load_bytes(path.read_bytes()), plan_file)
++        receipts = [read_receipt(root, plan_file, r) for r in store["records"]]
++        require(all(x is not None for x in receipts), "AVAILABILITY_BOUND_NOT_AVAILABLE")
++        present = [(r, x) for r, x in zip(store["records"], receipts)
++                   if cutoff is None or OWNER.instant(x["availableBy"]) <= cutoff]
++    available = {r["revision"]: receipt["availableBy"] for r, receipt in present}
++    claims = [r for r, _ in present if r["kind"] == "claim" and
++              r["payload"]["occurrenceId"] == occurrence_id]
++    require(claims, "NO_KNOWN_CLAIM")
++    claim_ids = {r["payload"]["id"] for r in claims}
++    attestations = [r for r, _ in present if r["kind"] == "attest" and
++                    r["payload"]["claimId"] in claim_ids]
++    attestation_ids = {r["payload"]["id"] for r in attestations}
++    reviews = [r for r, _ in present if r["kind"] == "verify" and
++               r["payload"]["attestationId"] in attestation_ids]
++    for record in claims:
++        verify_claim_pin(root, record["payload"])
++        if cutoff is not None:
++            bound, _ = MODEL.availability(root, record["payload"]["planPin"])
++            require(bound is not None and OWNER.instant(bound) <= cutoff,
++                    "PLAN_NOT_PROVEN_KNOWN")
++    superseded = {r["payload"]["supersedes"] for r in claims
++                  if r["payload"]["supersedes"] is not None}
++    leaves = [r["payload"]["id"] for r in claims
++              if r["payload"]["id"] not in superseded]
++    if before_return:
++        before_return()
++    authority.authorize_plan(token, ["plan.read"], plan_file)
++    return {"status": "technical-event-history", "planFile": plan_file,
++            "occurrenceId": occurrence_id, "knownAt": known_at,
++            "claims": [{"payload": copy.deepcopy(r["payload"]),
++                        "recordDigest": r["digest"], "recordedAt": r["recordedAt"],
++                        "availableBy": available[r["revision"]]} for r in claims],
++            "attestations": [{"payload": copy.deepcopy(r["payload"]),
++                              "recordDigest": r["digest"],
++                              "availableBy": available[r["revision"]]}
++                             for r in attestations],
++            "reviews": [{"payload": copy.deepcopy(r["payload"]),
++                         "recordDigest": r["digest"],
++                         "availableBy": available[r["revision"]]} for r in reviews],
++            "unresolvedClaimIds": leaves,
++            "claimConflict": len(leaves) != 1,
++            "readOnly": True,
++            "provenance": {"exactPlanSnapshotsResolved": True,
++                           "stagedRecordsDurable": True,
++                           "distinctBearerGrantsEnforced": True,
++                           "humanIdentityVerified": False,
++                           "evidenceContentsVerified": False,
++                           "factualEventVerified": False,
++                           "factualBranchResolved": False,
++                           "actionSelected": False,
++                           "completeApplicableContextVerified": False,
++                           "productionAccepted": False}}
++
++
++def main():
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("command", choices=("apply", "read", "recover"))
++    parser.add_argument("--root", required=True, type=Path)
++    parser.add_argument("--store", default=os.environ.get("RDG_AUTH_STORE"))
++    parser.add_argument("--request", type=Path)
++    parser.add_argument("--file")
++    parser.add_argument("--occurrence-id")
++    parser.add_argument("--known-at")
++    args = parser.parse_args()
++    token = os.environ.get("RDG_AUTH_TOKEN")
++    if args.command == "recover":
++        result = recover(args.root)
++    elif args.command == "apply":
++        require(args.store and args.request, "ARGUMENTS_REQUIRED")
++        result = apply(args.root, args.store, token,
++                       HISTORY.load_bytes(args.request.read_bytes()))
++    else:
++        require(args.store and args.file and args.occurrence_id, "ARGUMENTS_REQUIRED")
++        result = read(args.root, args.store, token, args.file,
++                      args.occurrence_id, args.known_at)
++    print(json.dumps(result, ensure_ascii=False, sort_keys=True, indent=2))
++
++
++if __name__ == "__main__":
++    main()
+--- /dev/null
++++ b/tests/rdg-event-owner.test.py
+@@ -0,0 +1,263 @@
++#!/usr/bin/env python3
++"""Synthetic staged event history without factual outcome or Action selection."""
++import copy
++import datetime as dt
++from importlib.machinery import SourceFileLoader
++import json
++import os
++from pathlib import Path
++import subprocess
++import sys
++import time
++import unittest
++
++ROOT = Path(__file__).resolve().parents[1]
++EVENT = SourceFileLoader("test_event_owner", str(ROOT / "tools/rdg-event-owner.py")).load_module()
++FIXTURE = SourceFileLoader("event_plan_fixture", str(ROOT / "tests/rdg-temporal-plan-owner.test.py")).load_module()
++PLANREL = FIXTURE.REL
++
++
++class EventOwnerTest(unittest.TestCase):
++    def setUp(self):
++        self.fixture = FIXTURE.PlanOwnerTest("test_create_edit_history_exact_snapshot_and_idempotency")
++        self.fixture.event_verify_capable = True
++        self.fixture.setUp()
++        self.addCleanup(self.fixture.doCleanups)
++        self.fixture.apply(self.fixture.request())
++        self.root, self.store = self.fixture.root, self.fixture.store
++        self.admin = self.fixture.admin
++        self.claimant = self.fixture.author
++        self.attester = self.fixture.grant(["plan.event_attest", "plan.read"])[1]
++        self.verifier = self.fixture.grant(["plan.event_verify", "plan.read"])[1]
++        self.reader = self.fixture.grant(["plan.read"])[1]
++        meta = EVENT.OWNER.read_snapshot(self.root, PLANREL, 1)["provenance"]
++        self.pin = {"file": PLANREL, "identitySpace": meta["identitySpace"],
++                    "planId": meta["planId"], "revision": 1,
++                    "snapshotSHA256": meta["snapshotSHA256"],
++                    "recordDigest": meta["recordDigest"]}
++        self.claim = self.make_claim("C1", "positive")
++
++    def make_claim(self, ident, outcome, supersedes=None, when="2026-10-18T10:00:00+00:00"):
++        return {"id": ident, "occurrenceId": "O1", "planPin": copy.deepcopy(self.pin),
++                "eventStepId": "S-RESULT", "outcome": outcome, "occurredAt": when,
++                "evidenceRefs": ["EV-"+ident], "supersedes": supersedes}
++
++    def request(self, kind, payload, expected, tx=None):
++        return {"transactionId": tx or kind+"-"+payload["id"], "kind": kind,
++                "file": PLANREL, "expectedRevision": expected,
++                "payload": copy.deepcopy(payload)}
++
++    def apply(self, kind, payload, expected, token=None, tx=None, callback=None):
++        actor = token or {"claim": self.claimant, "attest": self.attester,
++                          "verify": self.verifier}[kind]
++        return EVENT.apply(self.root, self.store, actor,
++                           self.request(kind, payload, expected, tx),
++                           before_prepare=callback)
++
++    def attest(self, ident="A1", claim="C1"):
++        return {"id": ident, "claimId": claim, "evidenceRefs": ["EV-"+ident]}
++
++    def verify(self, ident="V1", attestation="A1", decision="reviewed-supported"):
++        return {"id": ident, "attestationId": attestation,
++                "decision": decision, "evidenceRefs": ["EV-"+ident]}
++
++    def read(self, known=None, token=None, callback=None):
++        return EVENT.read(self.root, self.store, token or self.reader, PLANREL,
++                          "O1", known_at=known, before_return=callback)
++
++    def receipt(self, revision):
++        return json.loads(EVENT.receipt_path(self.root, PLANREL, revision).read_text())
++
++    @staticmethod
++    def after(value, millis=1):
++        return (EVENT.OWNER.instant(value) + dt.timedelta(milliseconds=millis)).isoformat()
++
++    def test_verifier_opt_in_does_not_upgrade_existing_store(self):
++        path = self.fixture.base / "legacy-grants.json"
++        auth = EVENT.OWNER.AUTH.Authority(path)
++        admin = auth.init_local(plan_capable=True)["token"]
++        before = path.read_bytes()
++        with self.assertRaisesRegex(ValueError, "DELEGATION_CEILING"):
++            auth.manage("issue", admin, {"permissions": ["plan.event_verify"],
++                "scopes": [PLANREL]})
++        self.assertEqual(path.read_bytes(), before)
++
++    def test_three_stages_are_durable_but_never_factual(self):
++        original = (self.root / PLANREL).read_bytes()
++        self.apply("claim", self.claim, 0)
++        self.apply("attest", self.attest(), 1)
++        self.apply("verify", self.verify(), 2)
++        result = self.read()
++        self.assertEqual([x["payload"]["id"] for x in result["claims"]], ["C1"])
++        self.assertEqual([x["payload"]["id"] for x in result["attestations"]], ["A1"])
++        self.assertEqual([x["payload"]["decision"] for x in result["reviews"]],
++                         ["reviewed-supported"])
++        self.assertEqual(result["unresolvedClaimIds"], ["C1"])
++        self.assertEqual(result["claims"][0]["availableBy"], self.receipt(1)["availableBy"])
++        self.assertEqual(result["attestations"][0]["availableBy"], self.receipt(2)["availableBy"])
++        self.assertFalse(result["claimConflict"])
++        self.assertFalse(result["provenance"]["humanIdentityVerified"])
++        self.assertFalse(result["provenance"]["evidenceContentsVerified"])
++        self.assertFalse(result["provenance"]["factualEventVerified"])
++        self.assertFalse(result["provenance"]["factualBranchResolved"])
++        self.assertFalse(result["provenance"]["actionSelected"])
++        self.assertEqual((self.root / PLANREL).read_bytes(), original)
++
++    def test_permissions_and_distinct_bearers_are_enforced(self):
++        before = (self.root / PLANREL).read_bytes()
++        with self.assertRaisesRegex(ValueError, "MISSING_PERMISSION: plan.event_attest"):
++            self.apply("attest", self.attest(), 0, token=self.claimant)
++        with self.assertRaisesRegex(ValueError, "MISSING_PERMISSION: plan.event_verify"):
++            self.apply("verify", self.verify(), 0, token=self.attester)
++        with self.assertRaisesRegex(ValueError, "MISSING_PERMISSION: plan.edit"):
++            self.apply("claim", self.claim, 0, token=self.verifier)
++        self.assertFalse(EVENT.target_path(self.root, PLANREL).exists())
++        self.apply("claim", self.claim, 0, token=self.admin)
++        with self.assertRaisesRegex(ValueError, "ACTOR_SEPARATION_REQUIRED"):
++            self.apply("attest", self.attest(), 1, token=self.admin)
++        self.apply("attest", self.attest(), 1)
++        with self.assertRaisesRegex(ValueError, "ACTOR_SEPARATION_REQUIRED"):
++            self.apply("verify", self.verify(), 2, token=self.admin)
++        self.assertEqual((self.root / PLANREL).read_bytes(), before)
++
++    def test_correction_preserves_old_claim_and_unlinked_conflict(self):
++        self.apply("claim", self.claim, 0)
++        original = EVENT.target_path(self.root, PLANREL).read_bytes()
++        corrected = self.make_claim("C2", "negative", supersedes="C1",
++                                     when="2026-10-18T10:30:00+00:00")
++        self.apply("claim", corrected, 1)
++        result = self.read()
++        self.assertEqual(result["unresolvedClaimIds"], ["C2"])
++        self.assertFalse(result["claimConflict"])
++        self.assertEqual(json.loads(EVENT.target_path(self.root, PLANREL).read_text())[
++            "records"][0], json.loads(original)["records"][0])
++        unrelated = self.make_claim("C3", "positive")
++        self.apply("claim", unrelated, 2)
++        result = self.read()
++        self.assertEqual(set(result["unresolvedClaimIds"]), {"C2", "C3"})
++        self.assertTrue(result["claimConflict"])
++        self.assertFalse(result["provenance"]["factualBranchResolved"])
++
++    def test_late_claim_and_attestation_excluded_by_early_known_at(self):
++        self.apply("claim", self.claim, 0)
++        early = self.after(self.receipt(1)["availableBy"])
++        time.sleep(0.02)
++        self.apply("attest", self.attest(), 1)
++        self.assertLess(EVENT.OWNER.instant(early),
++                        EVENT.OWNER.instant(self.receipt(2)["availableBy"]))
++        self.assertEqual(len(self.read(early)["attestations"]), 0)
++        self.assertEqual(len(self.read(self.after(self.receipt(2)["availableBy"]))[
++            "attestations"]), 1)
++        with self.assertRaisesRegex(ValueError, "KNOWN_AT_INSTANT_REQUIRED"):
++            self.read("2026-10-18")
++
++    def test_bad_pin_outcome_time_and_reference_fail_without_write(self):
++        bad = copy.deepcopy(self.claim)
++        bad["planPin"]["snapshotSHA256"] = "0"*64
++        with self.assertRaisesRegex(ValueError, "PLAN_PIN_MISMATCH"):
++            self.apply("claim", bad, 0)
++        bad = copy.deepcopy(self.claim)
++        bad["outcome"] = "unknown"
++        with self.assertRaisesRegex(ValueError, "EVENT_OUTCOME_NOT_IN_PLAN"):
++            self.apply("claim", bad, 0)
++        bad = copy.deepcopy(self.claim)
++        bad["occurredAt"] = None
++        with self.assertRaisesRegex(ValueError, "EFFECTIVE_AT_REQUIRED"):
++            self.apply("claim", bad, 0)
++        self.assertFalse(EVENT.target_path(self.root, PLANREL).exists())
++        self.apply("claim", self.claim, 0)
++        with self.assertRaisesRegex(ValueError, "CLAIM_REFERENCE_INVALID"):
++            self.apply("attest", self.attest(claim="Missing"), 1)
++        with self.assertRaisesRegex(ValueError, "ATTESTATION_REFERENCE_INVALID"):
++            self.apply("verify", self.verify(), 1)
++
++    def test_concurrent_claim_one_cas_winner(self):
++        before = (self.root / PLANREL).read_bytes()
++        paths = [self.fixture.base / ("event-"+n+".json") for n in ("a", "b")]
++        for path, ident in zip(paths, ("C1", "C2")):
++            path.write_text(json.dumps(self.request("claim",
++                self.make_claim(ident, "positive"), 0)))
++        env = dict(os.environ, RDG_AUTH_TOKEN=self.claimant,
++                   PYTHONDONTWRITEBYTECODE="1")
++        processes = [subprocess.Popen([sys.executable,
++            str(ROOT / "tools/rdg-event-owner.py"), "apply",
++            "--root", str(self.root), "--store", str(self.store),
++            "--request", str(path)], env=env, stdout=subprocess.PIPE,
++            stderr=subprocess.PIPE, text=True) for path in paths]
++        results = [(p.returncode, out, err) for p in processes
++                   for out, err in [p.communicate(timeout=15)]]
++        self.assertEqual(sorted(code for code, _, _ in results), [0, 1])
++        self.assertTrue(any("CAS_MISMATCH" in err for _, _, err in results))
++        self.assertEqual(len(self.read()["claims"]), 1)
++        self.assertEqual((self.root / PLANREL).read_bytes(), before)
++
++    def test_missing_prior_receipt_blocks_next_stage(self):
++        self.apply("claim", self.claim, 0)
++        EVENT.receipt_path(self.root, PLANREL, 1).unlink()
++        with self.assertRaisesRegex(ValueError, "PREVIOUS_AVAILABILITY_BOUND_NOT_AVAILABLE"):
++            self.apply("attest", self.attest(), 1)
++        self.assertFalse(EVENT.journal_path(self.root).exists())
++
++    def test_mixed_time_precision_same_occurrence_is_rejected(self):
++        self.apply("claim", self.claim, 0)
++        date_claim = self.make_claim("C2", "negative", when="2026-10-18")
++        with self.assertRaisesRegex(ValueError, "OCCURRENCE_SCOPE_CONFLICT"):
++            self.apply("claim", date_claim, 1)
++        self.assertEqual(self.read()["unresolvedClaimIds"], ["C1"])
++
++    def test_revocation_cas_and_idempotency(self):
++        ident, revocable = self.fixture.grant(["plan.event_attest", "plan.read"])
++        self.apply("claim", self.claim, 0)
++        saved = EVENT.target_path(self.root, PLANREL).read_bytes()
++        with self.assertRaisesRegex(ValueError, "AUTH_TOKEN_REVOKED"):
++            self.apply("attest", self.attest(), 1, token=revocable,
++                callback=lambda: self.fixture.auth.manage("revoke", self.admin, {"id": ident}))
++        self.assertEqual(EVENT.target_path(self.root, PLANREL).read_bytes(), saved)
++        self.apply("attest", self.attest(), 1)
++        self.assertTrue(self.apply("attest", self.attest(), 1)["idempotent"])
++        with self.assertRaisesRegex(ValueError, "CAS_MISMATCH"):
++            self.apply("verify", self.verify(), 1)
++        with self.assertRaisesRegex(ValueError, "TRANSACTION_REPLAY_CONFLICT"):
++            self.apply("attest", self.attest("A2"), 1, tx="attest-A1")
++        ident, reader = self.fixture.grant(["plan.read"])
++        with self.assertRaisesRegex(ValueError, "AUTH_TOKEN_REVOKED"):
++            self.read(token=reader,
++                callback=lambda: self.fixture.auth.manage("revoke", self.admin, {"id": ident}))
++
++    def crash(self, point):
++        request_file = self.fixture.base / "event-request.json"
++        request_file.write_text(json.dumps(self.request("claim", self.claim, 0)))
++        env = dict(os.environ, RDG_AUTH_TOKEN=self.claimant,
++                   RDG_EVENT_TEST_CRASH=point, PYTHONDONTWRITEBYTECODE="1")
++        return subprocess.run([sys.executable, str(ROOT / "tools/rdg-event-owner.py"),
++            "apply", "--root", str(self.root), "--store", str(self.store),
++            "--request", str(request_file)], env=env, capture_output=True, text=True)
++
++    def test_recovery_prepared(self):
++        p = self.crash("prepared")
++        self.assertEqual(p.returncode, 91, p.stderr)
++        with self.assertRaisesRegex(ValueError, "RECOVERY_REQUIRED"):
++            self.read()
++        self.assertTrue(EVENT.recover(self.root)["recovered"])
++        self.assertEqual(self.read()["claims"][0]["payload"]["id"], "C1")
++        self.assertFalse(EVENT.recover(self.root)["recovered"])
++
++    def test_recovery_after_store(self):
++        p = self.crash("after-store-write")
++        self.assertEqual(p.returncode, 91, p.stderr)
++        self.assertFalse(EVENT.receipt_path(self.root, PLANREL, 1).exists())
++        self.assertTrue(EVENT.recover(self.root)["recovered"])
++        self.assertTrue(self.apply("claim", self.claim, 0)["idempotent"])
++
++    def test_recovery_after_receipt_preserves_time(self):
++        p = self.crash("after-availability-write")
++        self.assertEqual(p.returncode, 91, p.stderr)
++        witness = EVENT.receipt_path(self.root, PLANREL, 1)
++        original = witness.read_bytes()
++        self.assertTrue(EVENT.recover(self.root)["recovered"])
++        self.assertEqual(witness.read_bytes(), original)
++        self.assertEqual(self.read()["unresolvedClaimIds"], ["C1"])
++
++
++if __name__ == "__main__":
++    unittest.main()
+--- /dev/null
++++ b/tests/rdg-event-consumer-guard.test.py
+@@ -0,0 +1,69 @@
++#!/usr/bin/env python3
++"""Old current-only Plan adapter refuses new owner lifecycle sidecars."""
++from importlib.machinery import SourceFileLoader
++from pathlib import Path
++import unittest
++
++ROOT = Path(__file__).resolve().parents[1]
++ADAPTER = SourceFileLoader("event_guard_adapter", str(ROOT / "tools/rdg-gendocen-adapter.py")).load_module()
++EVENT = SourceFileLoader("event_guard_owner", str(ROOT / "tools/rdg-event-owner.py")).load_module()
++FIXTURE = SourceFileLoader("event_guard_fixture", str(ROOT / "tests/rdg-temporal-plan-owner.test.py")).load_module()
++PLANREL = FIXTURE.REL
++
++
++class EventConsumerGuardTest(unittest.TestCase):
++    def setUp(self):
++        self.fixture = FIXTURE.PlanOwnerTest("test_create_edit_history_exact_snapshot_and_idempotency")
++        self.fixture.setUp()
++        self.addCleanup(self.fixture.doCleanups)
++        self.fixture.apply(self.fixture.request())
++        self.root, self.target = self.fixture.root, self.fixture.root / PLANREL
++        self.original = self.target.read_bytes()
++        self.assertEqual(ADAPTER.plan_resource(self.target, self.root)["data"]["planStatus"],
++                         "candidate")
++
++    def test_real_event_owner_record_blocks_current_only_adapter(self):
++        meta = EVENT.OWNER.read_snapshot(self.root, PLANREL, 1)["provenance"]
++        pin = {"file": PLANREL, "identitySpace": meta["identitySpace"],
++               "planId": meta["planId"], "revision": 1,
++               "snapshotSHA256": meta["snapshotSHA256"],
++               "recordDigest": meta["recordDigest"]}
++        claim = {"id": "C1", "occurrenceId": "O1", "planPin": pin,
++                 "eventStepId": "S-RESULT", "outcome": "positive",
++                 "occurredAt": "2026-10-18", "evidenceRefs": ["EV-C1"],
++                 "supersedes": None}
++        EVENT.apply(self.root, self.fixture.store, self.fixture.author,
++                    {"transactionId": "event-claim", "kind": "claim",
++                     "file": PLANREL, "expectedRevision": 0, "payload": claim})
++        with self.assertRaisesRegex(ValueError, "UNSUPPORTED_OWNER_LIFECYCLE"):
++            ADAPTER.plan_resource(self.target, self.root)
++        self.assertEqual(self.target.read_bytes(), self.original)
++
++    def test_baseline_and_applicability_sidecars_are_unsupported(self):
++        for name in (".rdg-future-baseline.json", ".rdg-applicability.json"):
++            with self.subTest(name=name):
++                sidecar = self.target.with_name(name)
++                sidecar.write_text("{}")
++                with self.assertRaisesRegex(ValueError, "UNSUPPORTED_OWNER_LIFECYCLE"):
++                    ADAPTER.plan_resource(self.target, self.root)
++                sidecar.unlink()
++        self.assertEqual(ADAPTER.plan_resource(self.target, self.root)["data"]["planStatus"],
++                         "candidate")
++
++    def test_prepared_sidecar_journal_and_symlink_fail_closed(self):
++        journal = self.root / "_rdg-event-journal.json"
++        journal.write_text("{}")
++        with self.assertRaisesRegex(ValueError, "UNSUPPORTED_OWNER_LIFECYCLE"):
++            ADAPTER.plan_resource(self.target, self.root)
++        journal.unlink()
++        outside = self.fixture.base / "outside.json"
++        outside.write_text("{}")
++        sidecar = self.target.with_name(".rdg-event-history.json")
++        sidecar.symlink_to(outside)
++        with self.assertRaisesRegex(ValueError, "UNSUPPORTED_OWNER_LIFECYCLE"):
++            ADAPTER.plan_resource(self.target, self.root)
++        self.assertEqual(self.target.read_bytes(), self.original)
++
++
++if __name__ == "__main__":
++    unittest.main()
+--- /dev/null
++++ b/docs/guides/RDG-EVENT-LIFECYCLE-PILOT.md
+@@ -0,0 +1,91 @@
++# Событие: заявление, attestation и техническая проверка
++
++**Статус: CANDIDATE. Stage 4 NOT ACCEPTED.**
++`tools/rdg-event-owner.py` хранит отдельную историю для ожидаемого
++события Temporal Plan. Это локальный пилот на явно заданном root. Plan
++schema v1, RDG Action и фактический T1 не меняются. В этой истории нет
++подтверждённого факта, даже если технический reviewer указал
++`reviewed-supported`.
++
++| Стадия | Запись | Право | Что остаётся непроверенным |
++|---|---|---|---|
++| claim | `occurrenceId`, точный Plan pin, ожидаемый event step, outcome, `occurredAt` с исходной точностью, opaque `evidenceRefs`, `supersedes` | `plan.edit` + `plan.read` | Содержание evidence и наступление события |
++| attest | Ссылка на точный claim и свои `evidenceRefs` | `plan.event_attest` + `plan.read` | Личность actor и достоверность источника |
++| verify | Ссылка на точную attestation, решение `reviewed-supported` или `disputed` и свои `evidenceRefs` | `plan.event_verify` + `plan.read` | Независимая предметная проверка результата |
++
++`plan.event_verify` появляется только при **явном** локальном
++`rdg-authority.py init --plan-capable --event-verify-capable` для нового
++синтетического authority store. Существующие grants не изменяются.
++Три записи должны иметь разные grant IDs; это лишь техническое разделение
++bearer-токенов, не доказательство разных людей. Клиентские
++`evidenceRefs` — идентификаторы, их содержимое пилот не читает.
++
++Операция `apply` принимает
++`transactionId/kind/file/expectedRevision/payload`. Например, payload
++для claim (хеши здесь сокращены, пример не исполняемый):
++
++```json
++{
++  "id": "C1",
++  "occurrenceId": "O1",
++  "planPin": {
++    "file": "plans/demo/plan.json",
++    "identitySpace": "temporal-demo",
++    "planId": "PLAN-ID",
++    "revision": 1,
++    "snapshotSHA256": "exact snapshot SHA256",
++    "recordDigest": "exact owner record digest"
++  },
++  "eventStepId": "S-RESULT",
++  "outcome": "positive",
++  "occurredAt": "2026-10-18T10:00:00+00:00",
++  "evidenceRefs": ["EV-C1"],
++  "supersedes": null
++}
++```
++
++Attest payload:
++`{"id":"A1","claimId":"C1","evidenceRefs":["EV-A1"]}`.
++Verify payload:
++`{"id":"V1","attestationId":"A1","decision":"reviewed-supported","evidenceRefs":["EV-V1"]}`.
++Каждая стадия требует следующую `expectedRevision` owner history.
++Plan pin должен разрешаться к настоящему сохранённому candidate snapshot,
++а event step и outcome — совпадать с его expected event. Claim может
++исправить предыдущий claim через `supersedes`; прежняя запись остаётся.
++Разная precision времени одного occurrence отклоняется. Несвязанные
++claims дают явный `claimConflict=true`, даже если их outcomes совпадают.
++Последний файл не назначается фактической ветвью.
++
++Owner хранит hash-цепочку, prepared journal и квитанцию `availableBy`
++после долговечной записи каждой стадии. После сбоя чтение блокируется до
++`recover`; прежняя квитанция не перезаписывается. Отзыв до prepared
++commit отклоняет запись. Повтор transaction ID идемпотентен, другое
++содержимое с тем же ID отклоняется. Отдельный `knownAt` исключает
++ещё недоступные записи; закреплённый Plan также должен быть доказанно
++доступен к cutoff.
++
++CLI на временном синтетическом root:
++
++```bash
++RDG_AUTH_TOKEN=... python3 tools/rdg-event-owner.py apply \
++  --root PLAN_ROOT --store AUTH_STORE --request REQUEST_JSON
++RDG_AUTH_TOKEN=... python3 tools/rdg-event-owner.py read \
++  --root PLAN_ROOT --store AUTH_STORE --file plans/demo/plan.json \
++  --occurrence-id O1 --known-at 2026-10-18T11:00:00+00:00
++python3 tools/rdg-event-owner.py recover --root PLAN_ROOT
++```
++
++Read возвращает все известные claims, attestation и reviews с точными
++record digests и `availableBy`. Поля `factualEventVerified`,
++`factualBranchResolved`, `humanIdentityVerified`,
++`evidenceContentsVerified`, `actionSelected` остаются `false`.
++Нет trusted source, разрешения полного контекста по `effectiveAt`,
++связи с установленным Helper/Viewer и историческим Gendocen. Старый
++current-only `rdg-gendocen-adapter.py` теперь явно отклоняет owned Plan,
++если рядом есть baseline/applicability/event sidecar или незавершённый
++журнал. Это локальная проверка входа adapter; реальный исторический
++Gendocen runtime с этими records ещё не интегрирован.
++
++Проверка:
++`PYTHONDONTWRITEBYTECODE=1 python3 tests/rdg-event-owner.test.py -v`.
++Тесты используют только tempfile, без пользовательских графов.
+--- /dev/null
++++ b/docs/handoffs/rdg-event-lifecycle-20261019/CHECKPOINT.md
+@@ -0,0 +1,56 @@
++# Технические стадии события — контрольная точка
++
++**ID:** CPW-RDG-EVENT-LIFECYCLE-20261019/v1. **Статус:** Candidate.
++**Stage 4 NOT ACCEPTED.** Изменены исходники в Fortis Repo
++`/workspace/repos/rd-graphs` на Windows RW-mount. Новые записи и тесты
++работали только на временных синтетических roots; пользовательские графы,
++установленное Windows-приложение и G2 не проверялись. В проекте нет
++`.git`; commit/push и публикация не выполнялись.
++
++## Результат
++
++`tools/rdg-event-owner.py` хранит отдельно claim, техническую attestation
++и технический review. Claim закрепляет точную candidate Plan revision,
++ожидаемый event step/outcome, заявленное `occurredAt`, occurrence ID и
++opaque evidence IDs. Две следующие стадии ссылаются на прежние записи и
++требуют отдельных прав и разных bearer grant IDs. Право
++`plan.event_verify` доступно только при явном bootstrap **нового**
++синтетического authority store; существующие grants не менялись.
++Исправление сохраняет прежний claim; несвязанные claims дают конфликт.
++Время `availableBy` после долговечной записи отделено от заявленного
++времени события. CAS, revoke, одновременная запись и recovery проверены.
++
++Даже `reviewed-supported` оставляет
++`humanIdentityVerified=false`, `evidenceContentsVerified=false`,
++`factualEventVerified=false`, `factualBranchResolved=false` и
++`actionSelected=false`. Ни событие, ни RDG Action не выбираются.
++[Формат и ограничения](../../guides/RDG-EVENT-LIFECYCLE-PILOT.md).
++
++Старый current-only `rdg-gendocen-adapter.py` теперь возвращает
++`UNSUPPORTED_OWNER_LIFECYCLE` для baseline/applicability/event sidecar,
++prepared sidecar journal и symlink. Его текущая Plan-проекция без sidecars
++сохранила прежнее поведение. Это локальный guard входа adapter, а не
++поддержка исторической event history в Gendocen.
++
++## Проверки и gate
++
++**88 адресных тестов PASS:** 13 event owner, 3 adapter guard, 17 Plan owner,
++9 baseline, 9 applicability, 13 exact history, 6 two-time, 2 Graph writer,
++10 Gendocen resources, 4 coverage guard, 2 bearer authority.
++Команды и логи — в [CHECKPOINT.json](CHECKPOINT.json).
++**Реальный синтетический Gendocen smoke PASS** для прежних текущих
++проекций и versioned candidate Plan после изменения adapter.
++Он не использовал новые event sidecars и не подтверждает historical
++Gendocen as-of; весь набор Node-тестов не повторялся.
++
++P2-AC-18 переведён только из OPEN в **PARTIAL**. Текущая исполнительная
++таблица P2: 7 локальных PASS, 12 PARTIAL, 1 OPEN. Следующий gate —
++доверенный actor/source и независимая предметная проверка события,
++затем версионная semantic coverage и исторический Gendocen без silent valid.
++[План](../../guides/RDG-CURRENT-EXECUTION-PLAN.md) ·
++[WR delta](WR-DELTA.md).
++
++[SELECTED-DIFF.patch](SELECTED-DIFF.patch) охватывает только выбранные
++источники от before-копий и `/dev/null`; это не Git diff всего проекта.
++SHA источников и evidence сохранены отдельно. Архив v4.1 и прежние
++контрольные точки не переписывались.
+--- /dev/null
++++ b/docs/handoffs/rdg-event-lifecycle-20261019/WR-DELTA.md
+@@ -0,0 +1,13 @@
++# WR delta — стадии события и guard старого consumer
++
++Полный владелец WR-01..53 — baseline v4.1. PR-P1-01..05 остаются
++CANDIDATE. **Stage 4 NOT ACCEPTED.**
++
++| WR | Статус | Новое локальное доказательство | Открытая граница |
++|---|---|---|---|
++| WR-47 | PARTIAL | Claim/attestation/review хранятся раздельно; коррекция сохраняет историю, конфликт outcomes не выбирает ветвь | Trusted event source и фактическая независимая проверка |
++| WR-51 | PARTIAL | `plan.edit`, `plan.event_attest` и opt-in `plan.event_verify` разделены; разные bearer grant IDs обязательны | Человеческая личность и доверенный путь ввода |
++| WR-52 | PARTIAL | Квитанции `availableBy` исключают поздние claims/attestations на раннем `knownAt`; старый adapter даёт явный отказ на sidecars | Полный T1-as-of и исторический Gendocen на новом lifecycle |
++
++P2-AC-18 только PARTIAL: adapter guard проверен, исторический runtime
++для новых records пока не реализован.

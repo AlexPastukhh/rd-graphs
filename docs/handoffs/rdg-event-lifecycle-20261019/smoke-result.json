@@ -1,0 +1,8 @@
+{
+  "command": "PYTHONDONTWRITEBYTECODE=1 python3 tools/rdg-gendocen-t1-history-smoke.py --engine-source /workspace/repos/gendocen --plan-owner",
+  "exitCode": 0,
+  "status": "PASS",
+  "temporarySourcesOnly": true,
+  "historicalGendocenAsOfResolved": false,
+  "log": "gendocen-smoke.log"
+}

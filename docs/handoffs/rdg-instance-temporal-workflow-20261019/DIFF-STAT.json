@@ -1,0 +1,87 @@
+[
+  {
+    "path": "tools/rdg-v7-model.py",
+    "added": 19,
+    "removed": 3
+  },
+  {
+    "path": "tools/graph-apply.py",
+    "added": 20,
+    "removed": 3
+  },
+  {
+    "path": "tools/graph-package.py",
+    "added": 4,
+    "removed": 3
+  },
+  {
+    "path": "tools/rdg-v6-action-trust.py",
+    "added": 1,
+    "removed": 1
+  },
+  {
+    "path": "tools/rdg-authority.py",
+    "added": 1,
+    "removed": 1
+  },
+  {
+    "path": "tools/rdg-v6-action-reconsider.py",
+    "added": 86,
+    "removed": 44
+  },
+  {
+    "path": "tools/rdg-activity.py",
+    "added": 23,
+    "removed": 12
+  },
+  {
+    "path": "tools/rdg-temporal-plan.py",
+    "added": 60,
+    "removed": 11
+  },
+  {
+    "path": "tools/rdg-temporal-plan-owner.py",
+    "added": 10,
+    "removed": 3
+  },
+  {
+    "path": "tools/rdg-gendocen-dependencies.py",
+    "added": 5,
+    "removed": 5
+  },
+  {
+    "path": "tools/rdg-workflow.py",
+    "added": 134,
+    "removed": 0
+  },
+  {
+    "path": "tests/rdg-deep-action.acceptance.test.py",
+    "added": 30,
+    "removed": 26
+  },
+  {
+    "path": "tests/rdg-workflow.acceptance.test.py",
+    "added": 240,
+    "removed": 0
+  },
+  {
+    "path": "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md",
+    "added": 77,
+    "removed": 72
+  },
+  {
+    "path": "docs/guides/RDG-DEEP-ACTION-AND-HISTORY.md",
+    "added": 119,
+    "removed": 28
+  },
+  {
+    "path": "docs/guides/RDG-V7-WORKING-GRAPHS.md",
+    "added": 9,
+    "removed": 6
+  },
+  {
+    "path": "README.md",
+    "added": 5,
+    "removed": 2
+  }
+]

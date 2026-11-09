@@ -1,0 +1,21 @@
+test_activity_shows_edits_results_actor_and_idempotency_without_schedule (__main__.DeepAction.test_activity_shows_edits_results_actor_and_idempotency_without_schedule) ... ok
+test_composite_definition_change_needs_result_review_instead_of_auto_success (__main__.DeepAction.test_composite_definition_change_needs_result_review_instead_of_auto_success) ... ok
+test_create_select_execute_in_one_transaction_needs_no_temporal_step (__main__.DeepAction.test_create_select_execute_in_one_transaction_needs_no_temporal_step) ... ok
+test_decomposition_execution_does_not_mean_its_subgoals_are_achieved (__main__.DeepAction.test_decomposition_execution_does_not_mean_its_subgoals_are_achieved) ... ok
+test_deep_unselected_branch_retains_canons_qrpe_and_distinct_roles (__main__.DeepAction.test_deep_unselected_branch_retains_canons_qrpe_and_distinct_roles) ... ok
+test_denied_result_candidate_and_separate_grants_cannot_forge_completion (__main__.DeepAction.test_denied_result_candidate_and_separate_grants_cannot_forge_completion) ... ok
+test_dry_run_and_recovered_result_have_no_duplicate_success_in_activity (__main__.DeepAction.test_dry_run_and_recovered_result_have_no_duplicate_success_in_activity) ... ok
+test_leaf_no_extra_result_goal_and_later_definition_edit_preserves_history (__main__.DeepAction.test_leaf_no_extra_result_goal_and_later_definition_edit_preserves_history) ... ok
+test_mixed_action_uses_correctness_for_itself_and_subgoals_for_parent (__main__.DeepAction.test_mixed_action_uses_correctness_for_itself_and_subgoals_for_parent) ... ok
+test_potential_composition_can_be_revised_without_accepting_it (__main__.DeepAction.test_potential_composition_can_be_revised_without_accepting_it) ... ok
+test_potential_cycle_unknown_type_and_empty_decomposition_fail_atomically (__main__.DeepAction.test_potential_cycle_unknown_type_and_empty_decomposition_fail_atomically) ... ok
+test_prospective_action_continuation_across_explicit_identity_owner (__main__.DeepAction.test_prospective_action_continuation_across_explicit_identity_owner) ... ok
+test_select_promotes_same_ids_without_accepting_descendants_or_other_group (__main__.DeepAction.test_select_promotes_same_ids_without_accepting_descendants_or_other_group) ... ok
+test_unavailable_projection_blocks_composite_without_erasing_result_history (__main__.DeepAction.test_unavailable_projection_blocks_composite_without_erasing_result_history) ... ok
+test_unchanged_graph_in_multifile_transaction_is_not_a_saved_edit (__main__.DeepAction.test_unchanged_graph_in_multifile_transaction_is_not_a_saved_edit) ... ok
+test_unknown_child_role_is_incomplete_and_annotation_does_not_erase_results (__main__.DeepAction.test_unknown_child_role_is_incomplete_and_annotation_does_not_erase_results) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 25.574s
+
+OK

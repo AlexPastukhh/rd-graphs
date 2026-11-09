@@ -1,0 +1,840 @@
+{
+  "viewerVersion": "2.3.0",
+  "views": 49,
+  "errors": [],
+  "renderErrors": [],
+  "overlapViews": [],
+  "textOverflowViews": [],
+  "rows": [
+    {
+      "slug": "reference-action-time-plan",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 8,
+      "kinds": {
+        "requirement": 4,
+        "action": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 7,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 10"
+    },
+    {
+      "slug": "reference-action-time-plan",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 8,
+      "kinds": {
+        "requirement": 4,
+        "action": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 7,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 10"
+    },
+    {
+      "slug": "reference-mixed-active-work",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 5
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 8"
+    },
+    {
+      "slug": "reference-mixed-active-work",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 13,
+      "kinds": {
+        "requirement": 7,
+        "context": 3,
+        "collection": 3
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 8"
+    },
+    {
+      "slug": "reference-mixed-change-log",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 3,
+      "kinds": {
+        "requirement": 2,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 2,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-mixed-change-log",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 4,
+        "decision": 1
+      },
+      "overlaps": [],
+      "edges": 2,
+      "annotations": 0,
+      "message": "Локальный Helper · revision 1"
+    },
+    {
+      "slug": "reference-mixed-contextual-split",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 4,
+        "decision": 1,
+        "canon": 1
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 1,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-mixed-contextual-split",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 7,
+      "kinds": {
+        "requirement": 4,
+        "decision": 1,
+        "option": 1,
+        "canon": 1
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 1,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-mixed-feature-availability",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-mixed-feature-availability",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-mixed-feature-consistency",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 3"
+    },
+    {
+      "slug": "reference-mixed-feature-consistency",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 3"
+    },
+    {
+      "slug": "reference-mixed-planned-feature",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 2,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 4"
+    },
+    {
+      "slug": "reference-mixed-planned-feature",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 2,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 4"
+    },
+    {
+      "slug": "reference-mixed-planned-feature-consistency",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 3"
+    },
+    {
+      "slug": "reference-mixed-planned-feature-consistency",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 3"
+    },
+    {
+      "slug": "reference-mixed-planned-feature-depth",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 3"
+    },
+    {
+      "slug": "reference-mixed-planned-feature-depth",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 3"
+    },
+    {
+      "slug": "reference-mixed-planned-scenario",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 5"
+    },
+    {
+      "slug": "reference-mixed-planned-scenario",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 5"
+    },
+    {
+      "slug": "reference-mixed-planned-scenario-consistency",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 3"
+    },
+    {
+      "slug": "reference-mixed-planned-scenario-consistency",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 3"
+    },
+    {
+      "slug": "reference-prepared-feature-consistency",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 9,
+      "kinds": {
+        "requirement": 1,
+        "option": 4,
+        "canon": 4
+      },
+      "overlaps": [],
+      "edges": 8,
+      "annotations": 4,
+      "message": "Локальный Helper · revision 3"
+    },
+    {
+      "slug": "reference-prepared-feature-consistency",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 9,
+      "kinds": {
+        "requirement": 1,
+        "option": 4,
+        "canon": 4
+      },
+      "overlaps": [],
+      "edges": 8,
+      "annotations": 4,
+      "message": "Локальный Helper · revision 3"
+    },
+    {
+      "slug": "reference-prepared-feature-depth",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-prepared-feature-depth",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-prepared-feature-path",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 2,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 4"
+    },
+    {
+      "slug": "reference-prepared-feature-path",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 2,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 4"
+    },
+    {
+      "slug": "reference-prepared-planning-tree",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 9,
+      "kinds": {
+        "requirement": 5,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 8,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 6"
+    },
+    {
+      "slug": "reference-prepared-planning-tree",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 9,
+      "kinds": {
+        "requirement": 5,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 8,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 6"
+    },
+    {
+      "slug": "reference-prepared-scenario-consistency",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-prepared-scenario-consistency",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 2"
+    },
+    {
+      "slug": "reference-prepared-scenario-path",
+      "scope": "local",
+      "mode": "edges-core",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 4"
+    },
+    {
+      "slug": "reference-prepared-scenario-path",
+      "scope": "local",
+      "mode": "edges-all",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 2,
+      "message": "Локальный Helper · revision 4"
+    },
+    {
+      "slug": "reference-action-time-plan",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-core",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 5
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 0,
+      "message": "Полный граф R · Actions · история и план во времени · 5 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-action-time-plan",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-all",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 11,
+      "kinds": {
+        "requirement": 5,
+        "action": 3,
+        "canon": 3
+      },
+      "overlaps": [],
+      "edges": 10,
+      "annotations": 3,
+      "message": "Полный граф R · Actions · история и план во времени · 5 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-action-time-plan",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-core",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 5
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 0,
+      "message": "Полный граф R · Actions · история и план во времени · 5 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-action-time-plan",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-all",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 19,
+      "kinds": {
+        "requirement": 5,
+        "action": 7,
+        "canon": 7
+      },
+      "overlaps": [],
+      "edges": 18,
+      "annotations": 7,
+      "message": "Полный граф R · Actions · история и план во времени · 5 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-mixed-active-work",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-core",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 5,
+      "kinds": {
+        "requirement": 5
+      },
+      "overlaps": [],
+      "edges": 4,
+      "annotations": 0,
+      "message": "Полный граф R · Рабочий пример разбиения функциональности · 40 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-mixed-active-work",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-all",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 8,
+      "kinds": {
+        "requirement": 5,
+        "decision": 2,
+        "canon": 1
+      },
+      "overlaps": [],
+      "edges": 7,
+      "annotations": 1,
+      "message": "Полный граф R · Рабочий пример разбиения функциональности · 40 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-mixed-active-work",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-core",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 40,
+      "kinds": {
+        "requirement": 40
+      },
+      "overlaps": [],
+      "edges": 39,
+      "annotations": 0,
+      "message": "Полный граф R · Рабочий пример разбиения функциональности · 40 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-mixed-active-work",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-all",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 76,
+      "kinds": {
+        "requirement": 40,
+        "decision": 2,
+        "option": 17,
+        "canon": 17
+      },
+      "overlaps": [],
+      "edges": 75,
+      "annotations": 17,
+      "message": "Полный граф R · Рабочий пример разбиения функциональности · 40 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-prepared-planning-tree",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-core",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Полный граф R · Готовый пример разбиения функциональности · 6 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-prepared-planning-tree",
+      "scope": "full",
+      "allBranches": false,
+      "mode": "edges-all",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 1,
+      "kinds": {
+        "requirement": 1
+      },
+      "overlaps": [],
+      "edges": 0,
+      "annotations": 0,
+      "message": "Полный граф R · Готовый пример разбиения функциональности · 6 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-prepared-planning-tree",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-core",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 6
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 0,
+      "message": "Полный граф R · Готовый пример разбиения функциональности · 6 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-prepared-planning-tree",
+      "scope": "full",
+      "allBranches": true,
+      "mode": "edges-all",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 34,
+      "kinds": {
+        "requirement": 6,
+        "option": 14,
+        "canon": 14
+      },
+      "overlaps": [],
+      "edges": 33,
+      "annotations": 14,
+      "message": "Полный граф R · Готовый пример разбиения функциональности · 6 R · встроенная копия; для изменений нажмите «Обновить»"
+    },
+    {
+      "slug": "reference-prepared-feature-consistency",
+      "scope": "active-local-navigation",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 9,
+      "kinds": {
+        "requirement": 1,
+        "option": 4,
+        "canon": 4
+      },
+      "overlaps": [],
+      "edges": 8,
+      "annotations": 4,
+      "message": "Встроенный локальный граф: examples/reference-prepared-feature-consistency/graph.json · revision 3"
+    },
+    {
+      "slug": "reference-mixed-feature-consistency",
+      "scope": "active-local-navigation",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 6,
+      "kinds": {
+        "requirement": 1,
+        "decision": 1,
+        "option": 2,
+        "canon": 2
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 2,
+      "message": "Встроенный локальный граф: examples/reference-mixed-feature-consistency/graph.json · revision 3"
+    },
+    {
+      "slug": "reference-mixed-contextual-split",
+      "scope": "active-local-navigation",
+      "textOverflows": [],
+      "version": "2.3.0",
+      "nodes": 7,
+      "kinds": {
+        "requirement": 4,
+        "decision": 1,
+        "option": 1,
+        "canon": 1
+      },
+      "overlaps": [],
+      "edges": 5,
+      "annotations": 1,
+      "message": "Встроенный локальный граф: examples/reference-mixed-contextual-split/graph.json · revision 2"
+    }
+  ]
+}

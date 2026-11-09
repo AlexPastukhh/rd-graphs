@@ -1,0 +1,26 @@
+{
+  "id": "CPW-RDG-COMPLETION-REPAIR-20261019/v1",
+  "status": "PASS-SCOPED-CANDIDATE",
+  "pythonSuites": 21,
+  "pythonTests": 213,
+  "nodeFiles": 57,
+  "nodeTests": 407,
+  "newRegressionCases": 7,
+  "stage4": "NOT ACCEPTED",
+  "sourceFiles": {
+    "tools/rdg-v7-model.py": "00d2950edeb5227da7dc0876370e0514e6f8806b64cf2fb307a7c40026469b73",
+    "tools/graph-apply.py": "fb15d2061d70e6ae7617ddd71bd0bd87f12121bc4e4103f8e853a6f9e7f41a7e",
+    "tests/rdg-deep-action.acceptance.test.py": "668dadcbfef3f075ebcf6b1281cebd6d0f7c72a6e6b166880cbd1f0168700781",
+    "docs/guides/RDG-DEEP-ACTION-AND-HISTORY.md": "8d3a91432377b6153b18c4ddcc3f9c31f9e85a92bb2b93626e615ecbcc9d2ac6",
+    "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md": "93a95221af6902025125059d2a877d769f2134ed9a015ff68ddf49dc1e690138"
+  },
+  "implementedProposals": [
+    "PR-DA-01",
+    "PR-DA-05"
+  ],
+  "localResolvedFindings": [
+    "F-P-DA-01",
+    "F-P-DA-02",
+    "F-P-DA-03"
+  ]
+}

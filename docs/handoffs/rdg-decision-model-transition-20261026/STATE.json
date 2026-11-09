@@ -1,0 +1,17 @@
+{
+  "id": "RDG-HANDOFF-DECISION-MODEL-20261026/v1",
+  "status": "prototype_updated_backend_unchanged",
+  "date": "2026-10-26",
+  "timezone": "Asia/Bangkok",
+  "prototype": "tests/visual/rdg-ui-prototype.html",
+  "handoff": "docs/handoffs/rdg-decision-model-transition-20261026/HANDOFF.md",
+  "model": "Decision + overlapping DecisionGroups",
+  "group_properties": ["selectionRequired", "mutuallyExclusive"],
+  "decision_states": ["discovered", "unselected", "selected", "completed"],
+  "backend_migrated": false,
+  "live_owners_touched": false,
+  "browser_manual_pass": false,
+  "syntax_check": "PASS",
+  "smoke": "RDG_DECISION_MODEL_SMOKE PASS",
+  "next_chat": "read handoff, inspect prototype, agree target contract before backend migration"
+}

@@ -1,0 +1,83 @@
+{
+  "version": "1.8.0",
+  "realWheelModes": true,
+  "workingLabels": {
+    "labels": 9,
+    "overlaps": [],
+    "distances": [
+      12,
+      12,
+      12,
+      12,
+      12,
+      12,
+      12,
+      12,
+      12
+    ],
+    "leaders": 9
+  },
+  "tones": {
+    "selected": {
+      "fill": "rgb(33, 60, 82)",
+      "text": "Выбранная веткаПроработать Feature Availability\nID: reference-mixed-feature-availabilityПроработать FeatureAvailability"
+    },
+    "alternative": {
+      "fill": "rgb(27, 45, 60)",
+      "text": "Альтернатива · не выбраноПроработать выбранную Feature\nID: reference-mixed-planned-featureПроработать выбраннуюFeature"
+    }
+  },
+  "nativeAutosaveAndReload": true,
+  "reversedLabels": {
+    "labels": 9,
+    "overlaps": [],
+    "distances": [
+      12,
+      12,
+      12,
+      12,
+      12,
+      12,
+      12,
+      12,
+      12
+    ],
+    "leaders": 9
+  },
+  "preparedLabels": {
+    "labels": 5,
+    "overlaps": [],
+    "distances": [
+      12,
+      12,
+      12,
+      12,
+      12
+    ],
+    "leaders": 5
+  },
+  "denseLabels": {
+    "labels": 16,
+    "overlaps": [],
+    "distances": [
+      12,
+      12,
+      12,
+      12,
+      12,
+      12,
+      12,
+      12,
+      12,
+      12,
+      12,
+      57.27128425310541,
+      12,
+      31.69297153067927,
+      12,
+      99.39371766420201
+    ],
+    "leaders": 16
+  },
+  "pageErrors": []
+}

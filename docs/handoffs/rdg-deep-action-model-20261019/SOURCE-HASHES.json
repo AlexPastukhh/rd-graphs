@@ -1,0 +1,19 @@
+{
+  "tools/graph-apply.py": "608077186004df8ac484d20aaeac78104b641dd58ddfd0a2c3fa9fbe697b7f40",
+  "tools/rdg-v7-model.py": "e1f8e91ff52ce6c8f9a7306e32dab1f509bc1401e3a08f4b04d3044d0c85667d",
+  "tools/rdg-graph-api.py": "5f7b105f6748aeee012caa4926eabd53aef9b48d01cd2f9df0f4658b0724f167",
+  "tools/graph-index.py": "43785401987540572d7913026e077834bd6133e8a97e5c1fa914e504685bf365",
+  "tools/rdg-root-projection.js": "332817af6a228e45435272d3e1a651b8247a97621c998a6913e48f0c48f6791b",
+  "tools/rd-graph-viewer.user.js": "44c86a37e128632961e075dd5c916a771a0158dc7d6b340fd594d2d2e61339fd",
+  "tools/graph-package.py": "3e349a7560ff84918350b47eac584062b76b3a39716050d1e811436ac90dc18f",
+  "tools/rdg-v6-action-trust.py": "e3185c525924360345d518d96ba677cd48d07411dfd6c3cf7e018666eba5f12f",
+  "tools/rdg-authority.py": "f1bb2e1f58f172fe035c7249d243b40ba9697903ff232b3841d6f6ca01acc638",
+  "docs/guides/RDG-V7-WORKING-GRAPHS.md": "1fff1518303b9b4ad6ba2fb7385086695726602f930cbf7a175609d6686bd9d0",
+  "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md": "803d9330fc436c17d4ce82495de03f7f0596692953c9f3d912e726137615f9d4",
+  "README.md": "61c6d69cc71c087074e951d12115175ba144052e4c14a4fa9b3037c2d28b9772",
+  "tools/rdg-exact-history.py": "577d4edfdb0e717669552b0af82f5936d6325969c9928bcd3d54ea9373ffa846",
+  "tools/rdg-activity.py": "3931c8a22e4f86bd8177cc6830abc361f97cc6738e172b151f5810683e50a18b",
+  "tests/rdg-deep-action.acceptance.test.py": "259b0d816b20cdd77b74767b75cb42fe01277db0c086f82ef83ab7f5a1d7cc8a",
+  "tests/rdg-deep-action-viewer.test.cjs": "3dbdab65819d56ca5e8902a8b2f5c0fdaaee1f38a0b785e5b499e2280480b946",
+  "docs/guides/RDG-DEEP-ACTION-AND-HISTORY.md": "3d8b664c8446416ee4efa8457c929969a88b8bfc3df803d065e9fa0ec5848577"
+}

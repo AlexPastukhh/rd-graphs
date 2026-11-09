@@ -1,0 +1,8 @@
+{
+  "createdAtUTC": "2026-10-18T23:56:23.582266+00:00",
+  "previousCheckpoint": "../rdg-event-lifecycle-20261019/CHECKPOINT.json",
+  "files": {
+    "README.md": "e087de92835bee61b19f33bc63aefbbb51bf252d2a9503efc0c4adcf651bdcc2",
+    "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md": "9e1190db455ab19f9562aade81d40fd4d8d171c0002944a14f68e3fd37f18752"
+  }
+}

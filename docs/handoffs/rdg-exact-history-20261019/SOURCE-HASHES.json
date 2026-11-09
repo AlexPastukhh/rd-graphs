@@ -1,0 +1,50 @@
+[
+  {
+    "path": "README.md",
+    "status": "modified",
+    "sha256": "e6f7f101290661857cc7f22c3a13bf91bc6be0b3950a7b1c6f0c01dba5f8c646",
+    "beforeSHA256": "1fab88448052411e7fda88763c040bc5737fdb27732f9a458394295fbb461f98"
+  },
+  {
+    "path": "docs/guides/RDG-TEMPORAL-PLAN-OWNER-PILOT-P2.md",
+    "status": "modified",
+    "sha256": "e958fca8b8154dadd2ce4f682ebaf88d49767ea599a082b0757f38ad84db00b7",
+    "beforeSHA256": "167ef5ead30beaff4978902dad588fb7134387d0ebe6076d3a46304057a50769"
+  },
+  {
+    "path": "tools/rdg-authority.py",
+    "status": "modified",
+    "sha256": "8f9be105b842d93d122e7e57aa23ace3d34fdd16751b22c6c80c00c0ea77c445",
+    "beforeSHA256": "942dc71082701a8e485c61f2c9632c702f67bb1a77f256b82e05ac58c16f319b"
+  },
+  {
+    "path": "tools/rdg-temporal-impact.py",
+    "status": "modified",
+    "sha256": "0656f466bb4303fb7969ce1cb241ea84fc33b22595ceaffaf01679a5f26682c8",
+    "beforeSHA256": "70f3d85fe05090d3385ec2e03cca66c17b215d7b61f9b06b286ff4e1b71f6198"
+  },
+  {
+    "path": "tools/rdg-gendocen-t1-history-smoke.py",
+    "status": "modified",
+    "sha256": "e90e423deceb25095a0a397813db6fcdd1958c30e57f986786c127d75dfce50d",
+    "beforeSHA256": "21e58fc39927864f81524b7157911ef2b77da9cb87ee5d25ac3cfac94aceaf4d"
+  },
+  {
+    "path": "docs/guides/RDG-EXACT-HISTORY-PILOT-P2.md",
+    "status": "new",
+    "sha256": "68fa17a700fa5852b08e1c5b95cee8ac60dcbc06526b98e6f1f66dcce615e877",
+    "beforeSHA256": null
+  },
+  {
+    "path": "tools/rdg-exact-history.py",
+    "status": "new",
+    "sha256": "7f68cf3f3c099ac772e9fbe47fbc1ba3cc755cbde3e139d8dc87084359a96a7a",
+    "beforeSHA256": null
+  },
+  {
+    "path": "tests/rdg-exact-history.test.py",
+    "status": "new",
+    "sha256": "9a2ccf4b4a3108bb5b4e7e1fb4bbc2e52bd6e7412d96e5955a0cf4306d11129d",
+    "beforeSHA256": null
+  }
+]

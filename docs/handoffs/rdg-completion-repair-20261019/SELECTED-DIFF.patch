@@ -1,0 +1,342 @@
+--- before/tools/rdg-v7-model.py
++++ tools/rdg-v7-model.py
+@@ -232,6 +232,33 @@
+                                      separators=(",", ":")).encode("utf-8")).hexdigest()
+ 
+ 
++def action_outputs(nid, edges):
++    """Structural outputs, never achievement dependencies of the Action itself."""
++    return [e for e in edges if e["type"] == "INTRODUCES" and e["from"] == nid
++            and e.get("childRole") == "subgoal" and e.get("archived") is not True]
++
++
++def has_current_outputs(nid, nodes, edges):
++    return any(nodes[e["to"]].get("active") is not False and
++               nodes[e["to"]].get("status", "active") == "active"
++               for e in action_outputs(nid, edges))
++
++
++def validate_completion_write(g):
++    """New accepted states keep selected decompositions nonempty.
++
++    Read validation stays compatible with older snapshots; their invalid empty
++    decomposition is reported incomplete by completion_state, never repaired.
++    Check only at the final boundary so atomic output replacement remains legal.
++    """
++    if g.get("actionModel") == "candidate-v6":
++        nodes = {n["id"]: n for n in g["nodes"]}
++        for n in g["nodes"]:
++            if n.get("kind") == "action" and n.get("status") == "selected" and n.get("actionType") == "decomposition":
++                ensure(has_current_outputs(n["id"], nodes, g["edges"]),
++                       "selected decomposition requires at least one active subgoal")
++
++
+ def completion_state(g):
+     """Current local composition. Potential paths and unavailable owners fail closed.
+ 
+@@ -305,6 +332,15 @@
+         basis = {"node": material, "dependencies": [
+             {"edge": copy.deepcopy(e), "basisSHA256": row["basisSHA256"]}
+             for e, row in sorted(children, key=lambda pair: pair[0]["id"])]}
++        if n["kind"] == "action":
++            outputs = action_outputs(nid, edges)
++            if outputs:
++                # Pin the selected output set and definitions without recursively
++                # requiring achievement of those outputs to execute their creator.
++                basis["outputs"] = [{"edge": copy.deepcopy(e), "node": {
++                    k: copy.deepcopy(v) for k, v in nodes[e["to"]].items()
++                    if k not in annotation}}
++                    for e in sorted(outputs, key=lambda edge: edge["id"])]
+         signature = completion_digest(basis)
+         recorded = next((e for e in reversed(g["events"]) if
+                         e.get("type") in COMPLETION_EVENTS and e.get("targetId") == nid and
+@@ -322,6 +358,8 @@
+                      n.get("status") not in {"candidate", "potential"})
+         if not available:
+             complete, reason = False, "potential-inactive-or-unavailable-owner"
++        elif n.get("actionType") == "decomposition" and not has_current_outputs(nid, nodes, edges):
++            complete, reason = False, "decomposition-without-subgoals"
+         elif unknown_roles:
+             complete, reason = False, "unknown-required-child-role"
+         elif children:
+@@ -408,8 +446,9 @@
+     event.update({"basis": row["basis"], "basisSHA256": row["basisSHA256"],
+                   "completionMode": "explicit",
+                   "recordedAt": datetime.now(timezone.utc).isoformat()})
++    # Explicitly asserted results retain the scope at this operation. Automatic
++    # consequences belong to the final accepted state of the enclosing patch.
+     g["events"].append(event)
+-    append_derived_completion(g, event)
+ 
+ 
+ def apply_v7_operation(g, operation):
+--- before/tools/graph-apply.py
++++ tools/graph-apply.py
+@@ -262,6 +262,7 @@
+     check(isinstance(patch.get("operations"), list), "patch operations must be array")
+     current = copy.deepcopy(original)
+     before_ids = {n["id"]: copy.deepcopy(n) for n in current["nodes"]}
++    completion_trigger = None
+     for operation in patch["operations"]:
+         check(isinstance(operation, dict), "invalid operation")
+         op = operation.get("op")
+@@ -513,12 +514,12 @@
+             pass
+         else:
+             raise ValueError("unsupported operation: " + str(op))
+-        if current.get("actionModel") == ACTION_MODEL and op in {"select_action", "link_action_requirement", "graph_edit"}:
++        if current.get("actionModel") == ACTION_MODEL and op in {"select_action", "link_action_requirement", "graph_edit", "record_action_execution", "record_requirement_achievement"}:
+             trigger = next((e for e in reversed(current["events"]) if e.get("id") == (operation.get("event") or {}).get("id")), None)
+             if trigger and trigger.get("authorityPrincipal"):
+                 from datetime import datetime, timezone
+                 trigger.setdefault("recordedAt", datetime.now(timezone.utc).isoformat())
+-                V7.append_derived_completion(current, trigger)
++                completion_trigger = trigger
+     new_committed = {n["id"] for n in current["nodes"] if n["kind"] == "decision"
+                      and n.get("status") == "committed" and
+                      (n["id"] not in before_ids or before_ids[n["id"]].get("status") != "committed")}
+@@ -526,6 +527,10 @@
+                 e.get("type") in {"decision_selected", "decision_revised"}}
+     check(new_committed <= selected, "new committed Decision requires decision_selected event")
+     validate(current)
++    V7.validate_completion_write(current)
++    if completion_trigger:
++        V7.append_derived_completion(current, completion_trigger)
++        validate(current)
+     if current == original:
+         return current, False
+     current["revision"] += 1
+--- before/tests/rdg-deep-action.acceptance.test.py
++++ tests/rdg-deep-action.acceptance.test.py
+@@ -335,6 +335,120 @@
+         self.assertEqual(other_rows[0]["transactionId"], "other-create")
+         self.assertEqual(len(report["activities"]), 3)
+ 
++    def link(self, aid, rid, role="subgoal"):
++        edge_id = "linked-"+aid+"-"+rid
++        return {"op": "link_action_requirement", "actionId": aid,
++                "requirementId": rid, "edgeId": edge_id, "childRole": role,
++                "event": self.event("action_requirement_linked", actionId=aid,
++                    requirementId=rid, edgeId=edge_id, driverRequirementId="R0")}
++
++    def actual_requirement(self, rid):
++        return self.edit("create_requirement", node={"id": rid, "kind": "requirement", "title": rid},
++                         parentRequirementId="R0", edgeId="refinement-"+rid)
++
++    def test_output_set_changes_result_scope_without_requiring_subgoal_achievement(self):
++        self.apply([self.add("D", action_type="decomposition"), self.prepare("D", "R1"), self.choose("D")])
++        self.apply([self.result("D", action=True), self.result("R1")])
++        old = self.states()["D"]
++        history = [e for e in self.read()["events"] if e["type"] in MODEL.COMPLETION_EVENTS]
++        self.apply([self.actual_requirement("R2"), self.link("D", "R2")])
++        now = self.states()["D"]
++        self.assertNotEqual(old["basisSHA256"], now["basisSHA256"])
++        self.assertFalse(now["complete"])
++        self.assertEqual([e for e in self.read()["events"] if e["type"] in MODEL.COMPLETION_EVENTS], history)
++        # Recording creation/selection of the new group does not achieve its goals.
++        self.apply([self.result("D", action=True)])
++        self.assertTrue(self.states()["D"]["complete"])
++        self.assertFalse(self.states()["R2"]["complete"])
++        self.assertFalse(self.states()["R0"]["complete"])
++        event = next(e for e in reversed(self.read()["events"]) if e.get("targetId") == "D")
++        self.assertEqual({o["node"]["id"] for o in event["basis"]["outputs"]}, {"R1", "R2"})
++        self.apply([self.result("R2")])
++        self.assertTrue(self.states()["R0"]["complete"])
++
++    def test_mixed_general_action_gets_new_output_scope_from_completed_correctness(self):
++        self.apply([self.add("A"), self.prepare("A", "R1"),
++                    self.prepare("A", "RC", "method_correctness"), self.choose("A")])
++        self.apply([self.result("RC")])
++        old = self.states()["A"]
++        self.apply([self.actual_requirement("R2"), self.link("A", "R2")])
++        now = self.states()["A"]
++        self.assertTrue(now["complete"])
++        self.assertNotEqual(old["basisSHA256"], now["basisSHA256"])
++        self.assertNotEqual(old["eventId"], now["eventId"])
++        self.assertFalse(self.states()["R2"]["complete"])
++        self.assertFalse(self.states()["R0"]["complete"])
++        old_event = next(e for e in self.read()["events"] if e["id"] == old["eventId"])
++        self.assertEqual([o["node"]["id"] for o in old_event["basis"]["outputs"]], ["R1"])
++
++    def test_selected_decomposition_cannot_lose_its_last_active_output(self):
++        self.apply([self.add("D", action_type="decomposition"), self.prepare("D", "RS"),
++                    self.prepare("D", "RC", "method_correctness"), self.choose("D")])
++        for operation in (self.edit("detach_requirement", edgeId="potential-D-RS"),
++                          self.edit("edit_node", nodeId="RS", changes={"active": False})):
++            before = self.sources()
++            request = self.patch([operation], self.read()["revision"], "invalid-empty-"+operation["action"])
++            self.assert_denied(self.write(request, self.token), "selected decomposition requires")
++            self.assertEqual(self.sources(), before)
++        self.apply([self.result("RC")])
++        self.assertTrue(self.states()["D"]["complete"])
++        self.assertFalse(self.states()["RS"]["complete"])
++        # A historical empty snapshot remains readable but cannot claim success.
++        old = self.read()
++        next(e for e in old["edges"] if e["id"] == "potential-D-RS")["archived"] = True
++        MODEL.validate_v7(old)
++        self.assertFalse(MODEL.completion_state(old)["D"]["complete"])
++        self.assertFalse(MODEL.completion_state(old)["R0"]["complete"])
++
++    def test_atomic_output_replacement_and_incomplete_candidate_are_allowed(self):
++        self.apply([self.add("D", action_type="decomposition"), self.prepare("D", "OLD"), self.choose("D")])
++        self.apply([self.result("D", action=True)])
++        self.apply([self.actual_requirement("NEW"),
++                    self.edit("detach_requirement", edgeId="potential-D-OLD"), self.link("D", "NEW"),
++                    self.add("DRAFT", action_type="decomposition")])
++        self.assertEqual([e["to"] for e in self.read()["edges"] if e["type"] == "INTRODUCES" and not e.get("archived")], ["NEW"])
++        self.assertFalse(self.states()["D"]["complete"])
++        self.assertFalse(self.states()["DRAFT"]["complete"])
++        self.apply([self.result("D", action=True)])
++        self.assertTrue(self.states()["D"]["complete"])
++        self.assertFalse(self.states()["NEW"]["complete"])
++
++    def test_no_phantom_results_while_replacing_incomplete_correctness(self):
++        self.apply([self.add("A"), self.prepare("A", "DONE", "method_correctness"),
++                    self.prepare("A", "OLD", "method_correctness"), self.choose("A")])
++        self.apply([self.result("DONE"), self.actual_requirement("NEW")])
++        before = self.activity()
++        self.apply([self.edit("detach_requirement", edgeId="potential-A-OLD"),
++                    self.link("A", "NEW", "method_correctness")])
++        self.assertFalse(self.states()["A"]["complete"])
++        self.assertFalse(self.states()["R0"]["complete"])
++        self.assertEqual([r for r in self.activity()["activities"] if r["kind"] in MODEL.COMPLETION_EVENTS],
++                         [r for r in before["activities"] if r["kind"] in MODEL.COMPLETION_EVENTS])
++        request = self.apply([self.result("NEW")])
++        self.assertTrue(self.states()["R0"]["complete"])
++        stable = self.activity()
++        self.assert_ok(self.write(request, self.token))
++        self.assertEqual(self.activity(), stable)
++
++    def test_explicit_result_does_not_derive_from_intermediate_composition(self):
++        self.apply([self.add("A"), self.prepare("A", "DONE", "method_correctness"), self.choose("A")])
++        self.apply([self.actual_requirement("NEW")])
++        self.apply([self.result("DONE"), self.link("A", "NEW", "method_correctness")])
++        results = [e for e in self.read()["events"] if e["type"] in MODEL.COMPLETION_EVENTS]
++        self.assertEqual([(e["targetId"], e["completionMode"]) for e in results], [("DONE", "explicit")])
++        self.assertFalse(self.states()["A"]["complete"])
++        self.assertFalse(self.states()["R0"]["complete"])
++
++    def test_explicit_result_keeps_its_scope_when_definition_changes_later_in_package(self):
++        self.apply([self.add("A"), self.choose("A")])
++        self.apply([self.result("A", action=True), self.edit("edit_node", nodeId="A", changes={"title": "Later definition"})])
++        results = [e for e in self.read()["events"] if e["type"] in MODEL.COMPLETION_EVENTS]
++        self.assertEqual(len(results), 1)
++        self.assertEqual(results[0]["basis"]["node"]["title"], "A")
++        self.assertEqual(results[0]["completionMode"], "explicit")
++        self.assertFalse(self.states()["A"]["complete"])
++        self.assertFalse(self.states()["R0"]["complete"])
++
+     def test_prospective_action_continuation_across_explicit_identity_owner(self):
+         token = self.grant(["graph.write", "graph.read"], ["workspaces/"])["token"]
+         self.apply([self.add("A"), self.prepare("A", "R1")])
+--- before/docs/guides/RDG-DEEP-ACTION-AND-HISTORY.md
++++ docs/guides/RDG-DEEP-ACTION-AND-HISTORY.md
+@@ -60,7 +60,10 @@
+ с сохранением ID. Потенциальные локальные R становятся активными. Каноны, QRPE
+ и дальнейшие непринятые Actions сохраняются; потомки не выбираются автоматически.
+ Другой предварительный вариант может ссылаться на ту же R, не становясь принятым.
+-Для принятого `decomposition` требуется минимум одна R с ролью `subgoal`.
++Для принятого `decomposition` требуется минимум одна активная R с ролью `subgoal`.
++Это условие проверяется после всех операций нового пакета: удалить последнюю
++подцель без замены нельзя. Атомарная замена набора разрешена. Предварительный
++Action может оставаться без подцелей во время проработки.
+ 
+ Viewer в исходнике показывает глубокую предварительную ветвь через «Все ветви»;
+ каноны, QRPE, тип Action и роли R доступны в существующем подробном просмотре.
+@@ -87,12 +90,27 @@
+ 
+ Составной Action рассчитывается по своим `method_correctness`. Родительская R —
+ по выбранным Actions и их `subgoal`. Когда все обязательные зависимости выполнены,
+-writer добавляет отдельные производные события выполнения/достижения. Невыбранная
+-альтернатива не блокирует результат. Обязательную невыполненную или неизвестную
++writer добавляет отдельные производные события выполнения/достижения на итоговом
++состоянии пакета. Промежуточное отсутствие заменяемой зависимости не создаёт
++достижения. Явно записанный результат сохраняет состав на момент своей операции;
++последующая правка в том же пакете не переносит его на новое определение.
++Невыбранная альтернатива не блокирует результат. Обязательную невыполненную или неизвестную
+ зависимость нельзя обойти прямой записью успеха. Запись вне актуального выбранного
+ пути отклоняется. После изменения определения прежняя история сохраняется;
+ новое определение составного узла требует явной переоценки результата при
+ выполненных зависимостях. Каноны/QRPE не стирают уже сделанную работу.
++
++Снимок результата Action с выходными подцелями содержит `basis.outputs`: связи
++и определения R выбранного набора. Достижение этих R не становится условием
++выполнения самого Action. Смена набора меняет основание результата, прежний снимок
++остаётся в истории. Для листового Action новый состав требует записи результата
++или его явной переоценки; составной Action рассчитывается по своим Requirements
++корректности. Переоценка записи не означает повтор физической работы.
++
++Старые события и snapshots читаются без перезаписи. Прежний снимок без
++`basis.outputs` не подтверждает текущий набор автоматически; для старого пустого
++`decomposition` расчёт возвращает незавершённость. Новая запись должна исправить
++набор в том же пакете либо пересмотреть выбор Action. Миграция не выполняется.
+ 
+ Расчёт сейчас ограничен одним файлом-владельцем. Внешняя `projectionOf` не считается
+ достигнутой без разрешения владельца. Межфайловое завершение, повторные исполнения
+--- before/docs/guides/RDG-CURRENT-EXECUTION-PLAN.md
++++ docs/guides/RDG-CURRENT-EXECUTION-PLAN.md
+@@ -1,6 +1,8 @@
+ # RDG + Temporal Plan — актуальный порядок исполнения
+ 
+-**Последняя реализация:** [CPW-RDG-DEEP-ACTION-20261019/v1](../handoffs/rdg-deep-action-model-20261019/CHECKPOINT.md).
++**Последняя реализация:** [исправление завершённости и истории](../handoffs/rdg-completion-repair-20261019/CHECKPOINT.md).
++**Предшествующий срез:** [CPW-RDG-DEEP-ACTION-20261019/v1](../handoffs/rdg-deep-action-model-20261019/CHECKPOINT.md).
++**Независимое review этого среза:** [R-RDG-DEEP-ACTION-20261019-01/v1](https://github.com/AlexPastukhh/forfiles/blob/10eb118bcf894d425210c1a08fb248cbb3677e3f/artifacts/2026-10-19/final-review-rdg-deep-action-r-rdg-deep-action-20261019-01-v1.md).
+ **Предыдущая проверка сообщения и плана:** [REVIEW](../handoffs/rdg-temporal-review-fix-20261019/REVIEW.md).
+ **Статус:** рабочий план
+ для Candidate-пилота. **Stage 4 NOT ACCEPTED.** Этот документ обновляет
+@@ -60,6 +62,19 @@
+ План во времени не является планом функциональности приложения: приложение
+ или любой иной артефакт может быть результатом работы по графу.
+ 
++## Следующие зависимости
++
++После исправлений PR-DA-01/05 продолжить межфайловой расчёт через явных владельцев
++и различение повторных исполнений. Затем завершить размещение R и удобные API
++назначения/снятия времени или порядка; на этом основании связать конкретную
++предстоящую работу с результатом и проверить оба сквозных пути.
++
++До расширения доверия Gendocen требуется PR-DA-03: включить новую Action-семантику
++в явно поддерживаемый context и проверить адресную инвалидацию. Старый узкий valid
++не подтверждает весь новый контекст. Полный Canon evaluator из этого не следует.
++Общую GUI-ленту и читаемые описания сохранений объединить на этапе интерфейса;
++скрытие/приоритет истории остаются второстепенными.
++
+ ## Ранее выполненные технические срезы
+ 
+ Таблица ниже — inventory прежней работы. Незавершённый экспериментальный
+@@ -117,7 +132,9 @@
+    Явный путь теперь реализован: prepare_action_requirement / OUTCOME_OF,
+    сохранение канонов/QRPE в глубоких ветвях, групповое принятие тех же ID,
+    пересмотр предварительного набора, поддержка проекции Viewer и явного
+-   межфайлового продолжения. Исходные legacy-файлы не мигрированы.
++   межфайлового продолжения. PASS относится к построению/чтению, а не ко всему
++   lifecycle Action. Выбранное разбиение сохраняет непустой активный выходной набор;
++   атомарная замена разрешена. Исходные legacy-файлы не мигрированы.
+ 2. **PARTIAL:** запись/расчёт выполнения Action и достижения R с правами и историей.
+    Листовые сущности оцениваются по определению; составные — по обязательным
+    зависимостям выбранной композиции. Не выбранные варианты не блокируют
+@@ -125,7 +142,11 @@
+    подцели и достижение созданной подцели проверяются раздельно.
+    Реализованы обе записи результата и расчёт по двум ролям внутри одного
+    файла-владельца. Производные события сохраняются в истории; неизвестные
+-   зависимости не дают успеха. Межфайловой расчёт ещё открыт.
++   зависимости не дают успеха. По PR-DA-01/05 исправлены три Problems review:
++   снимок результата различает выходные наборы подцелей; выбранный decomposition
++   не теряет последнюю активную подцель; автоматические результаты рассчитываются
++   только на финальном составе пакета. Прежние явные результаты сохраняют свой
++   scope. Межфайловой расчёт и scope повторных исполнений ещё открыты.
+ 3. **PARTIAL:** довести явное размещение в плане во времени. Локальная граница уже
+    исправлена: пустое будущее разрешено; новая запись Action-шага требует
+    времени или sequence; старые snapshots и принятые retries читаются как
+@@ -141,7 +162,9 @@
+    даты/авторы остаются неизвестными. Общий CLI-reader JSON/Markdown уже
+    объединяет completed journals и события результатов для явно указанных
+    разрешённых владельцев. Viewer показывает результаты отдельного узла.
+-   Общая GUI-лента ещё открыта. Dry-run, отказ, идемпотентный повтор и recovery
++   Общая GUI-лента и понятные описания сохранений (PR-DA-04) ещё открыты.
++   Ложные результаты промежуточного состава устранены в локальном writer.
++   Dry-run, отказ, идемпотентный повтор и recovery
+    после записи graph.json проверены: pending journal не выдаётся за успех,
+    завершённое восстановление не дублирует результаты.
+ 6. **Второстепенно, не начато:** скрытие и понижение приоритета записей как настройка показа

@@ -1,0 +1,2879 @@
+TAP version 13
+# Subtest: one Requirement remains same between successive graph files, 1..N differs from precisely two branches
+ok 1 - one Requirement remains same between successive graph files, 1..N differs from precisely two branches
+  ---
+  duration_ms: 1227.988609
+  type: 'test'
+  ...
+# Subtest: one coherent seven-level suite, stable distinct root Requirements, complete set of 17 relations
+ok 2 - one coherent seven-level suite, stable distinct root Requirements, complete set of 17 relations
+  ---
+  duration_ms: 5.970813
+  type: 'test'
+  ...
+# Subtest: six separate Requirement-rooted graph levels derived from actual INTRODUCES, without manual arrows
+ok 3 - six separate Requirement-rooted graph levels derived from actual INTRODUCES, without manual arrows
+  ---
+  duration_ms: 103.543647
+  type: 'test'
+  ...
+# Subtest: one prepared PER_ITEM 1..N proposal leads to exactly two actual branches; one TM model with two applications
+ok 4 - one prepared PER_ITEM 1..N proposal leads to exactly two actual branches; one TM model with two applications
+  ---
+  duration_ms: 22.414499
+  type: 'test'
+  ...
+# Subtest: origins are NOT children; crosscutting has one ID, distinct scope edges; shared decision serves two Rs
+ok 5 - origins are NOT children; crosscutting has one ID, distinct scope edges; shared decision serves two Rs
+  ---
+  duration_ms: 35.711839
+  type: 'test'
+  ...
+# Subtest: open candidate is distinct from actual historical revision in another level
+ok 6 - open candidate is distinct from actual historical revision in another level
+  ---
+  duration_ms: 16.666463
+  type: 'test'
+  ...
+# Subtest: generator idempotence, writer strict restrictions and preserved original/real graphs
+ok 7 - generator idempotence, writer strict restrictions and preserved original/real graphs
+  ---
+  duration_ms: 598.184479
+  type: 'test'
+  ...
+# Subtest: all 10 registered 2D Target Modules are present, exactly once
+ok 8 - all 10 registered 2D Target Modules are present, exactly once
+  ---
+  duration_ms: 145.018531
+  type: 'test'
+  ...
+# Subtest: source content is bit-preserved; inventory, Unit IDs and guidance roundtrip
+ok 9 - source content is bit-preserved; inventory, Unit IDs and guidance roundtrip
+  ---
+  duration_ms: 1020.195116
+  type: 'test'
+  ...
+# Subtest: original module whole guidance preserved: gates, workflow, validators, sources, file contracts
+ok 10 - original module whole guidance preserved: gates, workflow, validators, sources, file contracts
+  ---
+  duration_ms: 190.776059
+  type: 'test'
+  ...
+# Subtest: source files are not copied into graph as accepted project state
+ok 11 - source files are not copied into graph as accepted project state
+  ---
+  duration_ms: 264.735323
+  type: 'test'
+  ...
+# Subtest: template protection refuses writer without creating lock
+ok 12 - template protection refuses writer without creating lock
+  ---
+  duration_ms: 593.677791
+  type: 'test'
+  ...
+# Subtest: browser index and bundled Javascript expose all ten reusable template graphs
+ok 13 - browser index and bundled Javascript expose all ten reusable template graphs
+  ---
+  duration_ms: 179.098684
+  type: 'test'
+  ...
+# Subtest: CLI dry-run validates without changing graph or revision
+ok 14 - CLI dry-run validates without changing graph or revision
+  ---
+  duration_ms: 649.685765
+  type: 'test'
+  ...
+# Subtest: CLI acceptance atomically updates nodes edges events
+ok 15 - CLI acceptance atomically updates nodes edges events
+  ---
+  duration_ms: 415.42022
+  type: 'test'
+  ...
+# Subtest: CLI stale expectedRevision rejects without modifying graph
+ok 16 - CLI stale expectedRevision rejects without modifying graph
+  ---
+  duration_ms: 874.147556
+  type: 'test'
+  ...
+# Subtest: CLI no-op does not increase revision
+ok 17 - CLI no-op does not increase revision
+  ---
+  duration_ms: 299.739537
+  type: 'test'
+  ...
+# Subtest: CLI rejects D without decision_selected event
+ok 18 - CLI rejects D without decision_selected event
+  ---
+  duration_ms: 350.401177
+  type: 'test'
+  ...
+# Subtest: CLI rejects wrong parent semantics and keeps file
+ok 19 - CLI rejects wrong parent semantics and keeps file
+  ---
+  duration_ms: 348.61944
+  type: 'test'
+  ...
+# Subtest: CLI rejects cyclical decomposition
+ok 20 - CLI rejects cyclical decomposition
+  ---
+  duration_ms: 416.510576
+  type: 'test'
+  ...
+# Subtest: CLI rejects unsupported operations
+ok 21 - CLI rejects unsupported operations
+  ---
+  duration_ms: 346.507558
+  type: 'test'
+  ...
+# Subtest: pilot try-it file remains initial until user selects D
+ok 22 - pilot try-it file remains initial until user selects D
+  ---
+  duration_ms: 10.20165
+  type: 'test'
+  ...
+# Subtest: full two-level workflow: selected D introduces next R and stays traceable
+ok 23 - full two-level workflow: selected D introduces next R and stays traceable
+  ---
+  duration_ms: 679.423675
+  type: 'test'
+  ...
+# Subtest: crosscutting R applies to two R without cloning or decision event
+ok 24 - crosscutting R applies to two R without cloning or decision event
+  ---
+  duration_ms: 997.458978
+  type: 'test'
+  ...
+# Subtest: crosscutting APPLIES_TO refuses unmarked source and self-link
+ok 25 - crosscutting APPLIES_TO refuses unmarked source and self-link
+  ---
+  duration_ms: 1721.563794
+  type: 'test'
+  ...
+# Subtest: writer rejects non-workspace graph even without readOnly flag
+ok 26 - writer rejects non-workspace graph even without readOnly flag
+  ---
+  duration_ms: 877.822701
+  type: 'test'
+  ...
+# Subtest: history guard rejects rewriting, broadening or superseding an accepted D without losing original
+ok 27 - history guard rejects rewriting, broadening or superseding an accepted D without losing original
+  ---
+  duration_ms: 3349.39977
+  type: 'test'
+  ...
+# Subtest: verification metadata may advance without overwriting the accepted answer or adding fictitious choice
+ok 28 - verification metadata may advance without overwriting the accepted answer or adding fictitious choice
+  ---
+  duration_ms: 1259.589737
+  type: 'test'
+  ...
+# Subtest: unchanged accepted D fields remain no-op under history guard
+ok 29 - unchanged accepted D fields remain no-op under history guard
+  ---
+  duration_ms: 1328.105972
+  type: 'test'
+  ...
+# Subtest: G01 example: 9 nodes / 8 edges, contiguous IDs, meaningful chain
+ok 30 - G01 example: 9 nodes / 8 edges, contiguous IDs, meaningful chain
+  ---
+  duration_ms: 4.271243
+  type: 'test'
+  ...
+# Subtest: G02 duplicate node ID is rejected
+ok 31 - G02 duplicate node ID is rejected
+  ---
+  duration_ms: 1.158946
+  type: 'test'
+  ...
+# Subtest: G03 duplicate edge ID is rejected
+ok 32 - G03 duplicate edge ID is rejected
+  ---
+  duration_ms: 0.757184
+  type: 'test'
+  ...
+# Subtest: G04 dangling edge is rejected
+ok 33 - G04 dangling edge is rejected
+  ---
+  duration_ms: 2.607521
+  type: 'test'
+  ...
+# Subtest: G05 INTRODUCES without parent is rejected
+ok 34 - G05 INTRODUCES without parent is rejected
+  ---
+  duration_ms: 1.255789
+  type: 'test'
+  ...
+# Subtest: G12 incompatible schemaVersion is rejected
+ok 35 - G12 incompatible schemaVersion is rejected
+  ---
+  duration_ms: 0.672805
+  type: 'test'
+  ...
+# Subtest: G13 empty graph can be validated
+ok 36 - G13 empty graph can be validated
+  ---
+  duration_ms: 0.763096
+  type: 'test'
+  ...
+# Subtest: G13 isolated requirement without a decision is allowed
+ok 37 - G13 isolated requirement without a decision is allowed
+  ---
+  duration_ms: 0.532719
+  type: 'test'
+  ...
+# Subtest: G14 Unicode / literal HTML-like content are valid data
+ok 38 - G14 Unicode / literal HTML-like content are valid data
+  ---
+  duration_ms: 1.277951
+  type: 'test'
+  ...
+# Subtest: G15 valid 500-node limit
+ok 39 - G15 valid 500-node limit
+  ---
+  duration_ms: 2.819162
+  type: 'test'
+  ...
+# Subtest: G15 501 nodes are rejected
+ok 40 - G15 501 nodes are rejected
+  ---
+  duration_ms: 2.945711
+  type: 'test'
+  ...
+# Subtest: relation index records five exact R identities, not links between similarly named files
+ok 41 - relation index records five exact R identities, not links between similarly named files
+  ---
+  duration_ms: 105.914034
+  type: 'test'
+  ...
+# Subtest: examples map has six connected graphs and four isolated; 2D template map has no invented arrows
+ok 42 - examples map has six connected graphs and four isolated; 2D template map has no invented arrows
+  ---
+  duration_ms: 193.04022
+  type: 'test'
+  ...
+# Subtest: identity is scoped, not assumed by equal title or same folder; no hard-coded graph arrows
+ok 43 - identity is scoped, not assumed by equal title or same folder; no hard-coded graph arrows
+  ---
+  duration_ms: 2817.838255
+  type: 'test'
+  ...
+# Subtest: legacy DEMO levels project roots to exactly one existing R owner
+ok 44 - legacy DEMO levels project roots to exactly one existing R owner
+  ---
+  duration_ms: 80.458795
+  type: 'test'
+  ...
+# Subtest: folder catalog maps all 100 unique stable slugs to actual grouped files
+ok 45 - folder catalog maps all 100 unique stable slugs to actual grouped files
+  ---
+  duration_ms: 1785.528914
+  type: 'test'
+  ...
+# Subtest: three category groups have exact counts and nested level visibility
+ok 46 - three category groups have exact counts and nested level visibility
+  ---
+  duration_ms: 0.958416
+  type: 'test'
+  ...
+# Subtest: working graph only writable type; all examples and 2d graphs are readOnly
+ok 47 - working graph only writable type; all examples and 2d graphs are readOnly
+  ---
+  duration_ms: 789.928413
+  type: 'test'
+  ...
+# Subtest: original user example preserved at relocated path with expected exact hash
+ok 48 - original user example preserved at relocated path with expected exact hash
+  ---
+  duration_ms: 64.801346
+  type: 'test'
+  ...
+# Subtest: index links chosen decomposition with its parent driver, including explicitly hypothetical selection
+ok 49 - index links chosen decomposition with its parent driver, including explicitly hypothetical selection
+  ---
+  duration_ms: 524.136602
+  type: 'test'
+  ...
+# Subtest: pending, superseded and template introductions never become proven child levels
+ok 50 - pending, superseded and template introductions never become proven child levels
+  ---
+  duration_ms: 2811.956336
+  type: 'test'
+  ...
+# Subtest: index rejects a chosen introduction whose parent does not drive D
+ok 51 - index rejects a chosen introduction whose parent does not drive D
+  ---
+  duration_ms: 263.602009
+  type: 'test'
+  ...
+# Subtest: same R identity requires one owner; projected titles may differ but normative text may not
+ok 52 - same R identity requires one owner; projected titles may differ but normative text may not
+  ---
+  duration_ms: 1595.882234
+  type: 'test'
+  ...
+# Subtest: duplicate auxiliary ID is rejected even when neither occurrence is a graph root
+ok 53 - duplicate auxiliary ID is rejected even when neither occurrence is a graph root
+  ---
+  duration_ms: 625.36365
+  type: 'test'
+  ...
+# Subtest: unresolved, wrong-scope and cyclic record owner links are rejected
+ok 54 - unresolved, wrong-scope and cyclic record owner links are rejected
+  ---
+  duration_ms: 1300.415191
+  type: 'test'
+  ...
+# Subtest: invalid graph schema and changed source Markdown fail closed before catalog publication
+ok 55 - invalid graph schema and changed source Markdown fail closed before catalog publication
+  ---
+  duration_ms: 794.645729
+  type: 'test'
+  ...
+# Subtest: Unit source owner and anchor resolve to existing source text
+ok 56 - Unit source owner and anchor resolve to existing source text
+  ---
+  duration_ms: 1006.105391
+  type: 'test'
+  ...
+# Subtest: S03 fixture supports multi-level origin trace of requirement
+ok 57 - S03 fixture supports multi-level origin trace of requirement
+  ---
+  duration_ms: 5.946489
+  type: 'test'
+  ...
+# Subtest: S04 requirement may have a direct decision without decomposition
+ok 58 - S04 requirement may have a direct decision without decomposition
+  ---
+  duration_ms: 1.087307
+  type: 'test'
+  ...
+# Subtest: S10 fixture has context attached to a decision without extra Requirement
+ok 59 - S10 fixture has context attached to a decision without extra Requirement
+  ---
+  duration_ms: 0.683323
+  type: 'test'
+  ...
+# Subtest: S16 storage round-trip with separate test copy and manual change
+ok 60 - S16 storage round-trip with separate test copy and manual change
+  ---
+  duration_ms: 3.389813
+  type: 'test'
+  ...
+# Subtest: V01 graph file: title, number and revision
+ok 61 - V01 graph file: title, number and revision
+  ---
+  duration_ms: 363.53758
+  type: 'test'
+  ...
+# Subtest: V02 inspect decision and requirement, show type and end points
+ok 62 - V02 inspect decision and requirement, show type and end points
+  ---
+  duration_ms: 32.984758
+  type: 'test'
+  ...
+# Subtest: V03 search by ID and title, clearing restores overview
+ok 63 - V03 search by ID and title, clearing restores overview
+  ---
+  duration_ms: 92.663573
+  type: 'test'
+  ...
+# Subtest: V04 zoom and Fit restore viewport
+ok 64 - V04 zoom and Fit restore viewport
+  ---
+  duration_ms: 72.931675
+  type: 'test'
+  ...
+# Subtest: V05 loads local catalog and refreshes changed revision
+ok 65 - V05 loads local catalog and refreshes changed revision
+  ---
+  duration_ms: 97.499311
+  type: 'test'
+  ...
+# Subtest: V06 file refresh requires explicitly selecting file again
+ok 66 - V06 file refresh requires explicitly selecting file again
+  ---
+  duration_ms: 15.981122
+  type: 'test'
+  ...
+# Subtest: V07 invalid JSON preserves prior rendering
+ok 67 - V07 invalid JSON preserves prior rendering
+  ---
+  duration_ms: 15.263755
+  type: 'test'
+  ...
+# Subtest: V08 switching graphs removes previous nodes
+ok 68 - V08 switching graphs removes previous nodes
+  ---
+  duration_ms: 71.066878
+  type: 'test'
+  ...
+# Subtest: V09 empty graph gets finite transform
+ok 69 - V09 empty graph gets finite transform
+  ---
+  duration_ms: 8.063228
+  type: 'test'
+  ...
+# Subtest: V10 built-in bundle defaults to folders and workspace is available
+ok 70 - V10 built-in bundle defaults to folders and workspace is available
+  ---
+  duration_ms: 185.099901
+  type: 'test'
+  ...
+# Subtest: V11 rejects graph with duplicate node ID
+ok 71 - V11 rejects graph with duplicate node ID
+  ---
+  duration_ms: 4.502817
+  type: 'test'
+  ...
+# Subtest: V12 rejects graph with dangling edge
+ok 72 - V12 rejects graph with dangling edge
+  ---
+  duration_ms: 3.383751
+  type: 'test'
+  ...
+# Subtest: V13 rejects graph with missing INTRODUCES parent
+ok 73 - V13 rejects graph with missing INTRODUCES parent
+  ---
+  duration_ms: 3.531421
+  type: 'test'
+  ...
+# Subtest: V14 HTML injection is inert plain text in inspector
+ok 74 - V14 HTML injection is inert plain text in inspector
+  ---
+  duration_ms: 17.610569
+  type: 'test'
+  ...
+# Subtest: V15 rejects unsupported schemaVersion
+ok 75 - V15 rejects unsupported schemaVersion
+  ---
+  duration_ms: 5.366326
+  type: 'test'
+  ...
+# Subtest: V16 accepts optional events without inventing state
+ok 76 - V16 accepts optional events without inventing state
+  ---
+  duration_ms: 66.636037
+  type: 'test'
+  ...
+# Subtest: V17 selects a node and records selection only in DOM
+ok 77 - V17 selects a node and records selection only in DOM
+  ---
+  duration_ms: 17.238185
+  type: 'test'
+  ...
+# Subtest: V18 opens local bundled graph without file XHR
+ok 78 - V18 opens local bundled graph without file XHR
+  ---
+  duration_ms: 96.448428
+  type: 'test'
+  ...
+# Subtest: V19 folder card goes back to correct group
+ok 79 - V19 folder card goes back to correct group
+  ---
+  duration_ms: 192.761288
+  type: 'test'
+  ...
+# Subtest: V20 graph card safely exposes read-only status
+ok 80 - V20 graph card safely exposes read-only status
+  ---
+  duration_ms: 25.097308
+  type: 'test'
+  ...
+# Subtest: V21 2D Target Module has complete source display
+ok 81 - V21 2D Target Module has complete source display
+  ---
+  duration_ms: 170.314006
+  type: 'test'
+  ...
+# Subtest: V22 go from neutral parent R to functionality R with choices
+ok 82 - V22 go from neutral parent R to functionality R with choices
+  ---
+  duration_ms: 298.505857
+  type: 'test'
+  ...
+# Subtest: V23 go to specific Feature and back preserving Requirement ID
+ok 83 - V23 go to specific Feature and back preserving Requirement ID
+  ---
+  duration_ms: 208.033209
+  type: 'test'
+  ...
+# Subtest: V24 2D folder lists ten graph sets
+ok 84 - V24 2D folder lists ten graph sets
+  ---
+  duration_ms: 22.128562
+  type: 'test'
+  ...
+# Subtest: V28 malicious nested path is rejected
+ok 85 - V28 malicious nested path is rejected
+  ---
+  duration_ms: 70.438024
+  type: 'test'
+  ...
+# Subtest: V28b cross-file root inspector reports exact introducing Decision
+ok 86 - V28b cross-file root inspector reports exact introducing Decision
+  ---
+  duration_ms: 128.273892
+  type: 'test'
+  ...
+# Subtest: V29 relationship types are labeled in Russian directly on arrows and explained on click
+ok 87 - V29 relationship types are labeled in Russian directly on arrows and explained on click
+  ---
+  duration_ms: 5584.12064
+  type: 'test'
+  ...
+# Subtest: V30 filter keeps plan/decomposition only; all view restores all labeled relations
+ok 88 - V30 filter keeps plan/decomposition only; all view restores all labeled relations
+  ---
+  duration_ms: 601.317514
+  type: 'test'
+  ...
+# Subtest: V31 proposed reconsideration and QRPE are visually distinguished from ready variants
+ok 89 - V31 proposed reconsideration and QRPE are visually distinguished from ready variants
+  ---
+  duration_ms: 1497.874435
+  type: 'test'
+  ...
+# Subtest: 38 source Units have distinct R graphs, shared identity, direct methods and no duplicated full source
+ok 90 - 38 source Units have distinct R graphs, shared identity, direct methods and no duplicated full source
+  ---
+  duration_ms: 6877.267355
+  type: 'test'
+  ...
+# Subtest: prepared broad → split Unit → leaf Unit keeps R IDs and back; direct Unit has no forced split
+ok 91 - prepared broad → split Unit → leaf Unit keeps R IDs and back; direct Unit has no forced split
+  ---
+  duration_ms: 222.218985
+  type: 'test'
+  ...
+# Subtest: package dry-run creates nothing; apply/readback/replay preserve files and reject changed transaction IDs
+ok 92 - package dry-run creates nothing; apply/readback/replay preserve files and reject changed transaction IDs
+  ---
+  duration_ms: 987.619077
+  type: 'test'
+  ...
+# Subtest: invalid owner or prepared version fails before either workspace file is written
+ok 93 - invalid owner or prepared version fails before either workspace file is written
+  ---
+  duration_ms: 693.360631
+  type: 'test'
+  ...
+# Subtest: D revision archives former answer, scope, drivers and edges, preserving child IDs and history
+ok 94 - D revision archives former answer, scope, drivers and edges, preserving child IDs and history
+  ---
+  duration_ms: 731.550026
+  type: 'test'
+  ...
+# Subtest: interrupted journal completes on retry
+ok 95 - interrupted journal completes on retry
+  ---
+  duration_ms: 565.118333
+  type: 'test'
+  ...
+# Subtest: typed prepared application pins source version, driver and the whole declared composition
+ok 96 - typed prepared application pins source version, driver and the whole declared composition
+  ---
+  duration_ms: 1966.299497
+  type: 'test'
+  ...
+# Subtest: cycles split across files are rejected before committing a package
+ok 97 - cycles split across files are rejected before committing a package
+  ---
+  duration_ms: 381.796531
+  type: 'test'
+  ...
+# Subtest: recovery refuses an external change and does not publish the remaining file
+ok 98 - recovery refuses an external change and does not publish the remaining file
+  ---
+  duration_ms: 542.723933
+  type: 'test'
+  ...
+# Subtest: candidate fixture remains deliberately outside the accepted graph.json schema and catalog
+ok 99 - candidate fixture remains deliberately outside the accepted graph.json schema and catalog
+  ---
+  duration_ms: 4.94064
+  type: 'test'
+  ...
+# Subtest: each lens has a real own root R, scoped A, canon cases, QRPE and conditional child R
+ok 100 - each lens has a real own root R, scoped A, canon cases, QRPE and conditional child R
+  ---
+  duration_ms: 48.184273
+  type: 'test'
+  ...
+# Subtest: DRY applies the same graph to different contexts, achieves goal each time, no graph writes
+ok 101 - DRY applies the same graph to different contexts, achieves goal each time, no graph writes
+  ---
+  duration_ms: 44.062824
+  type: 'test'
+  ...
+# Subtest: similar requirements may have justified different behavior, not blindly marked duplicative
+ok 102 - similar requirements may have justified different behavior, not blindly marked duplicative
+  ---
+  duration_ms: 1.537692
+  type: 'test'
+  ...
+# Subtest: maintenance lens discovers new action, leaves accepted choice unchanged and can only suggest revoke
+ok 103 - maintenance lens discovers new action, leaves accepted choice unchanged and can only suggest revoke
+  ---
+  duration_ms: 1.83453
+  type: 'test'
+  ...
+# Subtest: different meanings of removing R: selection revoke does not remove independently supported R or undo effects
+ok 104 - different meanings of removing R: selection revoke does not remove independently supported R or undo effects
+  ---
+  duration_ms: 7.593833
+  type: 'test'
+  ...
+# Subtest: dependencies already live in action canon references, no mandatory external block or derived view
+ok 105 - dependencies already live in action canon references, no mandatory external block or derived view
+  ---
+  duration_ms: 40.62912
+  type: 'test'
+  ...
+# Subtest: legacy writer/schema is not silently changed by the candidate semantic fixture
+ok 106 - legacy writer/schema is not silently changed by the candidate semantic fixture
+  ---
+  duration_ms: 26.162437
+  type: 'test'
+  ...
+# Subtest: DRY does not claim success on an empty or unverified requirement scope
+ok 107 - DRY does not claim success on an empty or unverified requirement scope
+  ---
+  duration_ms: 2.848914
+  type: 'test'
+  ...
+# Subtest: DRY unknown concept never becomes positive evidence of duplication
+ok 108 - DRY unknown concept never becomes positive evidence of duplication
+  ---
+  duration_ms: 2.134294
+  type: 'test'
+  ...
+# Subtest: Maintenance returns an unresolved QRPE when alternative evidence is unavailable or stale
+ok 109 - Maintenance returns an unresolved QRPE when alternative evidence is unavailable or stale
+  ---
+  duration_ms: 2.974988
+  type: 'test'
+  ...
+# Subtest: Maintenance can retain existing selection when evaluated alternative is worse
+ok 110 - Maintenance can retain existing selection when evaluated alternative is worse
+  ---
+  duration_ms: 1.097899
+  type: 'test'
+  ...
+# Subtest: a simple Lens Action without canon/QRPE is valid; malformed supplied fields are not
+ok 111 - a simple Lens Action without canon/QRPE is valid; malformed supplied fields are not
+  ---
+  duration_ms: 1.334006
+  type: 'test'
+  ...
+# Subtest: an unintended cycle in the candidate Lens topology is rejected
+ok 112 - an unintended cycle in the candidate Lens topology is rejected
+  ---
+  duration_ms: 0.85493
+  type: 'test'
+  ...
+# Subtest: pilot is not mistaken for a real self-initiating runner or canon evaluator
+ok 113 - pilot is not mistaken for a real self-initiating runner or canon evaluator
+  ---
+  duration_ms: 12.297716
+  type: 'test'
+  ...
+# Subtest: illustrative change refuses favorable flag when target/evidence disagrees
+ok 114 - illustrative change refuses favorable flag when target/evidence disagrees
+  ---
+  duration_ms: 1.760673
+  type: 'test'
+  ...
+# Subtest: autosave coalesces changes after drag and confirms only a read-back of the latest edit
+ok 115 - autosave coalesces changes after drag and confirms only a read-back of the latest edit
+  ---
+  duration_ms: 221.500913
+  type: 'test'
+  ...
+# Subtest: autosave records a real pointer drag without moving the camera
+ok 116 - autosave records a real pointer drag without moving the camera
+  ---
+  duration_ms: 12.658472
+  type: 'test'
+  ...
+# Subtest: new edits during a buffered write automatically receive their own next save, including another graph
+ok 117 - new edits during a buffered write automatically receive their own next save, including another graph
+  ---
+  duration_ms: 24.979752
+  type: 'test'
+  ...
+# Subtest: external changes stop the automatic queue without overwriting the other writer
+ok 118 - external changes stop the automatic queue without overwriting the other writer
+  ---
+  duration_ms: 10.187996
+  type: 'test'
+  ...
+# Subtest: revoked permissions do not open prompts from autosave; draft remains available
+ok 119 - revoked permissions do not open prompts from autosave; draft remains available
+  ---
+  duration_ms: 22.440745
+  type: 'test'
+  ...
+# Subtest: write errors remain dirty and are not retried endlessly
+ok 120 - write errors remain dirty and are not retried endlessly
+  ---
+  duration_ms: 10.499858
+  type: 'test'
+  ...
+# Subtest: pause provides a visible sequential handoff to CLI; resume schedules pending work
+ok 121 - pause provides a visible sequential handoff to CLI; resume schedules pending work
+  ---
+  duration_ms: 15.404136
+  type: 'test'
+  ...
+# Subtest: without a connected file changes remain a draft and no picker opens automatically
+ok 122 - without a connected file changes remain a draft and no picker opens automatically
+  ---
+  duration_ms: 8.545481
+  type: 'test'
+  ...
+# Subtest: a crash draft restores without silently replacing a newer external base
+ok 123 - a crash draft restores without silently replacing a newer external base
+  ---
+  duration_ms: 30.139757
+  type: 'test'
+  ...
+# Subtest: catalog generated helper in the userscript is byte-identical to the CLI source
+ok 124 - catalog generated helper in the userscript is byte-identical to the CLI source
+  ---
+  duration_ms: 7.769107
+  type: 'test'
+  ...
+# Subtest: pausing after an edit cancels the already scheduled automatic write
+ok 125 - pausing after an edit cancels the already scheduled automatic write
+  ---
+  duration_ms: 23.579964
+  type: 'test'
+  ...
+# Subtest: saving or discarding one tab cannot delete another tab recovery journal, even for the same graph
+ok 126 - saving or discarding one tab cannot delete another tab recovery journal, even for the same graph
+  ---
+  duration_ms: 25.023502
+  type: 'test'
+  ...
+# Subtest: the legacy draft is copied without deleting the migration source
+ok 127 - the legacy draft is copied without deleting the migration source
+  ---
+  duration_ms: 98.286168
+  type: 'test'
+  ...
+# Subtest: the first real drag without a file visibly changes the status and never says saved
+ok 128 - the first real drag without a file visibly changes the status and never says saved
+  ---
+  duration_ms: 9.652321
+  type: 'test'
+  ...
+# Subtest: Viewer reads hash and percent paths through encoded local file URLs
+ok 129 - Viewer reads hash and percent paths through encoded local file URLs
+  ---
+  duration_ms: 10.837993
+  type: 'test'
+  ...
+# Subtest: draft recovery refuses an edit made while the source is being read
+ok 130 - draft recovery refuses an edit made while the source is being read
+  ---
+  duration_ms: 13.245477
+  type: 'test'
+  ...
+# Subtest: grant creation, modification and revocation apply to next request
+ok 131 - grant creation, modification and revocation apply to next request
+  ---
+  duration_ms: 1417.19638
+  type: 'test'
+  ...
+# Subtest: delegated administrator cannot enlarge scope or modify owner
+ok 132 - delegated administrator cannot enlarge scope or modify owner
+  ---
+  duration_ms: 829.876704
+  type: 'test'
+  ...
+# Subtest: arbitrary nested and empty folders are discovered without adding code branches; ready/working are explicit
+ok 133 - arbitrary nested and empty folders are discovered without adding code branches; ready/working are explicit
+  ---
+  duration_ms: 208.324452
+  type: 'test'
+  ...
+# Subtest: old plain graph with no metadata remains readable with unknown usage
+ok 134 - old plain graph with no metadata remains readable with unknown usage
+  ---
+  duration_ms: 95.233707
+  type: 'test'
+  ...
+# Subtest: nested workspace writer accepts a guarded transaction and refuses outside/read-only destinations
+ok 135 - nested workspace writer accepts a guarded transaction and refuses outside/read-only destinations
+  ---
+  duration_ms: 676.387018
+  type: 'test'
+  ...
+# node:assert:150
+#   throw new AssertionError(obj);
+#   ^
+# AssertionError [ERR_ASSERTION]: Traceback (most recent call last):
+#   File "<string>", line 8, in <module>
+#   File "tests/rdg-deep-action.acceptance.test.py", line 64, in apply
+#     self.assert_ok(self.write(package, token or self.token))
+#   File "/workspace/repos/rd-graphs/tests/rdg-bearer-package.integration.test.py", line 66, in assert_ok
+#     self.assertEqual(result.returncode, 0, result.stderr)
+#   File "/usr/lib/python3.11/unittest/case.py", line 873, in assertEqual
+#     assertion_func(first, second, msg=msg)
+#   File "/usr/lib/python3.11/unittest/case.py", line 866, in _baseAssertEqual
+#     raise self.failureException(msg)
+# AssertionError: 1 != 0 : Traceback (most recent call last):
+#   File "/tmp/rdg-authority-writer-ti8_n8q8/tools/graph-apply.py", line 560, in <module>
+#     main()
+#   File "/tmp/rdg-authority-writer-ti8_n8q8/tools/graph-apply.py", line 555, in main
+#     package.execute(patch, dry_run=args.dry_run)
+#   File "/tmp/rdg-authority-writer-ti8_n8q8/tools/graph-package.py", line 370, in execute
+#     records = prepare(package)
+#               ^^^^^^^^^^^^^^^^
+#   File "/tmp/rdg-authority-writer-ti8_n8q8/tools/graph-package.py", line 192, in prepare
+#     after, changed = apply_module.apply(before, authoritatively_scoped_patch,
+#                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#   File "/tmp/rdg-authority-writer-ti8_n8q8/tools/graph-apply.py", line 287, in apply
+#     editor = SourceFileLoader("rdg_graph_api", str(ROOT / "tools" / "rdg-graph-api.py")).load_module()
+#              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#   File "<frozen importlib._bootstrap_external>", line 605, in _check_name_wrapper
+#   File "<frozen importlib._bootstrap_external>", line 1120, in load_module
+#   File "<frozen importlib._bootstrap_external>", line 945, in load_module
+#   File "<frozen importlib._bootstrap>", line 290, in _load_module_shim
+#   File "<frozen importlib._bootstrap>", line 721, in _load
+#   File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+#   File "<frozen importlib._bootstrap_external>", line 936, in exec_module
+#   File "<frozen importlib._bootstrap_external>", line 1074, in get_code
+#   File "<frozen importlib._bootstrap_external>", line 1004, in source_to_code
+#   File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+#   File "/tmp/rdg-authority-writer-ti8_n8q8/tools/rdg-graph-api.py", line 225
+#     'CANNOT_ARCHIVE_HISTORIC_DRIVER')
+# IndentationError: unexpected indent
+# 1 !== 0
+#     at Object.<anonymous> (/workspace/repos/rd-graphs/tests/rdg-deep-action-viewer.test.cjs:25:8)
+#     at Module._compile (node:internal/modules/cjs/loader:1781:14)
+#     at Object..js (node:internal/modules/cjs/loader:1913:10)
+#     at Module.load (node:internal/modules/cjs/loader:1505:32)
+#     at Function._load (node:internal/modules/cjs/loader:1309:12)
+#     at wrapModuleLoad (node:internal/modules/cjs/loader:254:19)
+#     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)
+#     at node:internal/main/run_main_module:36:49 {
+#   generatedMessage: false,
+#   code: 'ERR_ASSERTION',
+#   actual: 1,
+#   expected: 0,
+#   operator: 'strictEqual',
+#   diff: 'simple'
+# }
+# Node.js v22.23.3
+# Subtest: /workspace/repos/rd-graphs/tests/rdg-deep-action-viewer.test.cjs
+not ok 17 - /workspace/repos/rd-graphs/tests/rdg-deep-action-viewer.test.cjs
+  ---
+  duration_ms: 1623.98474
+  type: 'test'
+  location: '/workspace/repos/rd-graphs/tests/rdg-deep-action-viewer.test.cjs:1:1'
+  failureType: 'testCodeFailure'
+  exitCode: 1
+  signal: ~
+  error: 'test failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: all 100 originals are accounted for: 6 relocated untouched, approved example sources enriched, unrelated graphs byte-identical
+ok 137 - all 100 originals are accounted for: 6 relocated untouched, approved example sources enriched, unrelated graphs byte-identical
+  ---
+  duration_ms: 690.699397
+  type: 'test'
+  ...
+# Subtest: 16 historical roots and 90 member references are preserved as source identity, not a set manifest
+ok 138 - 16 historical roots and 90 member references are preserved as source identity, not a set manifest
+  ---
+  duration_ms: 1.397152
+  type: 'test'
+  ...
+# Subtest: index and embedded bundle have the same root entries with no set-membership dependency
+ok 139 - index and embedded bundle have the same root entries with no set-membership dependency
+  ---
+  duration_ms: 130.899906
+  type: 'test'
+  ...
+# Subtest: catalog rejects forged full root and unsafe graph file paths, including hostile folder metadata
+ok 140 - catalog rejects forged full root and unsafe graph file paths, including hostile folder metadata
+  ---
+  duration_ms: 1.172257
+  type: 'test'
+  ...
+# Subtest: catalog handles Unicode, literal hash and percent paths without URL interpretation
+ok 141 - catalog handles Unicode, literal hash and percent paths without URL interpretation
+  ---
+  duration_ms: 1.209325
+  type: 'test'
+  ...
+# Subtest: full root scoped context CLI and Viewer give equal field states
+ok 142 - full root scoped context CLI and Viewer give equal field states
+  ---
+  duration_ms: 3598.919368
+  type: 'test'
+  ...
+# Subtest: full-R layout key is separate from local-R key and does not overwrite old graph-set positions
+ok 143 - full-R layout key is separate from local-R key and does not overwrite old graph-set positions
+  ---
+  duration_ms: 289.994855
+  type: 'test'
+  ...
+# Subtest: real index discovers separate root graphs even where user folders coincide
+ok 144 - real index discovers separate root graphs even where user folders coincide
+  ---
+  duration_ms: 224.233671
+  type: 'test'
+  ...
+# Subtest: all two noncausal legacy groups preserve supplementary source navigation without false causal parents
+ok 145 - all two noncausal legacy groups preserve supplementary source navigation without false causal parents
+  ---
+  duration_ms: 801.849163
+  type: 'test'
+  ...
+# Subtest: catalog discovery refuses a graph.json symlink escaping the root, without needing a set manifest
+ok 146 - catalog discovery refuses a graph.json symlink escaping the root, without needing a set manifest
+  ---
+  duration_ms: 118.558601
+  type: 'test'
+  ...
+# Subtest: writer/index supports independently authored writable paper continuations across graph.json files
+ok 147 - writer/index supports independently authored writable paper continuations across graph.json files
+  ---
+  duration_ms: 348.50133
+  type: 'test'
+  ...
+# Subtest: five old unscoped standalone graph.json remain discoverable without forged full identities
+ok 148 - five old unscoped standalone graph.json remain discoverable without forged full identities
+  ---
+  duration_ms: 31.12271
+  type: 'test'
+  ...
+# Subtest: Examples offers exactly one full ready and one full working graph, no blank set folders
+ok 149 - Examples offers exactly one full ready and one full working graph, no blank set folders
+  ---
+  duration_ms: 286.773492
+  type: 'test'
+  ...
+# Subtest: six historical tiny context graphs are archived exactly, not silently deleted or misrepresented as active
+ok 150 - six historical tiny context graphs are archived exactly, not silently deleted or misrepresented as active
+  ---
+  duration_ms: 52.634366
+  type: 'test'
+  ...
+# Subtest: each full example owns the same three field roles and local theory, with no cross-identity answers
+ok 151 - each full example owns the same three field roles and local theory, with no cross-identity answers
+  ---
+  duration_ms: 21.922972
+  type: 'test'
+  ...
+# Subtest: Context CLI reports reused working answer and scenario details deferred; no third tiny full view required
+ok 152 - Context CLI reports reused working answer and scenario details deferred; no third tiny full view required
+  ---
+  duration_ms: 10051.375218
+  type: 'test'
+  ...
+# Subtest: interpreted and link-only canon are real additional methods on a child R and do not rewrite pinned historical choices
+ok 153 - interpreted and link-only canon are real additional methods on a child R and do not rewrite pinned historical choices
+  ---
+  duration_ms: 499.368392
+  type: 'test'
+  ...
+# Subtest: full graph has unique links and visibly different selected, potential and refinement semantics
+ok 154 - full graph has unique links and visibly different selected, potential and refinement semantics
+  ---
+  duration_ms: 7367.928817
+  type: 'test'
+  ...
+# Subtest: DERIVES composite stays in the original requirement column in both view modes
+ok 155 - DERIVES composite stays in the original requirement column in both view modes
+  ---
+  duration_ms: 116.321764
+  type: 'test'
+  ...
+# Subtest: /workspace/repos/rd-graphs/tests/rdg-example-navigation-ux.test.cjs
+ok 20 - /workspace/repos/rd-graphs/tests/rdg-example-navigation-ux.test.cjs
+  ---
+  duration_ms: 274.736177
+  type: 'test'
+  ...
+# Subtest: full prepared Option inspector retains kind, true ID, canon, origin and sources
+ok 157 - full prepared Option inspector retains kind, true ID, canon, origin and sources
+  ---
+  duration_ms: 803.435315
+  type: 'test'
+  ...
+# Subtest: full working Decision inspector shows real selection basis, T1, QRPE, no Requirement alias
+ok 158 - full working Decision inspector shows real selection basis, T1, QRPE, no Requirement alias
+  ---
+  duration_ms: 165.653922
+  type: 'test'
+  ...
+# Subtest: full detailed relation inspector names actual endpoints R to D and cause to R
+ok 159 - full detailed relation inspector names actual endpoints R to D and cause to R
+  ---
+  duration_ms: 134.551891
+  type: 'test'
+  ...
+# Subtest: DERIVES refinement stays visible across detail and coverage, never selected child
+ok 160 - DERIVES refinement stays visible across detail and coverage, never selected child
+  ---
+  duration_ms: 4500.722076
+  type: 'test'
+  ...
+# Subtest: example-only D is active only with all isolation guards, including no main adoption
+ok 161 - example-only D is active only with all isolation guards, including no main adoption
+  ---
+  duration_ms: 1.466637
+  type: 'test'
+  ...
+# Subtest: full detail does not mark invalid example-only Decision or Option as accepted
+ok 162 - full detail does not mark invalid example-only Decision or Option as accepted
+  ---
+  duration_ms: 3887.591013
+  type: 'test'
+  ...
+# Subtest: folder catalog directly lists full-graph roots without graph-set intermediate cards
+ok 163 - folder catalog directly lists full-graph roots without graph-set intermediate cards
+  ---
+  duration_ms: 258.946689
+  type: 'test'
+  ...
+# Subtest: working view is accepted R-only by default and independent coverage/detail switches
+ok 164 - working view is accepted R-only by default and independent coverage/detail switches
+  ---
+  duration_ms: 4994.755426
+  type: 'test'
+  ...
+# Subtest: click R opens its own one-wave display, and back returns full root
+ok 165 - click R opens its own one-wave display, and back returns full root
+  ---
+  duration_ms: 398.381249
+  type: 'test'
+  ...
+# Subtest: refinement is not a duplicate synthetic Requirement; noncausal sources accessible
+ok 166 - refinement is not a duplicate synthetic Requirement; noncausal sources accessible
+  ---
+  duration_ms: 105.259934
+  type: 'test'
+  ...
+# Subtest: full scoped context fields available without a setId
+ok 167 - full scoped context fields available without a setId
+  ---
+  duration_ms: 87.680717
+  type: 'test'
+  ...
+# Subtest: detailed full graph de-duplicates projected Options from separate R files
+ok 168 - detailed full graph de-duplicates projected Options from separate R files
+  ---
+  duration_ms: 518.90258
+  type: 'test'
+  ...
+# Subtest: general graph API creates/updates/deletes via signed normal operations (not Lens)
+not ok 169 - general graph API creates/updates/deletes via signed normal operations (not Lens)
+  ---
+  duration_ms: 1372.562991
+  type: 'test'
+  location: '/workspace/repos/rd-graphs/tests/rdg-general-graph-api.test.cjs:42:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Traceback (most recent call last):
+      File "/tmp/rdg-api-kYrwxM/tools/graph-apply.py", line 560, in <module>
+        main()
+      File "/tmp/rdg-api-kYrwxM/tools/graph-apply.py", line 555, in main
+        package.execute(patch, dry_run=args.dry_run)
+      File "/tmp/rdg-api-kYrwxM/tools/graph-package.py", line 370, in execute
+        records = prepare(package)
+                  ^^^^^^^^^^^^^^^^
+      File "/tmp/rdg-api-kYrwxM/tools/graph-package.py", line 192, in prepare
+        after, changed = apply_module.apply(before, authoritatively_scoped_patch,
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      File "/tmp/rdg-api-kYrwxM/tools/graph-apply.py", line 287, in apply
+        editor = SourceFileLoader("rdg_graph_api", str(ROOT / "tools" / "rdg-graph-api.py")).load_module()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      File "<frozen importlib._bootstrap_external>", line 605, in _check_name_wrapper
+      File "<frozen importlib._bootstrap_external>", line 1120, in load_module
+      File "<frozen importlib._bootstrap_external>", line 945, in load_module
+      File "<frozen importlib._bootstrap>", line 290, in _load_module_shim
+      File "<frozen importlib._bootstrap>", line 721, in _load
+      File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+      File "<frozen importlib._bootstrap_external>", line 936, in exec_module
+      File "<frozen importlib._bootstrap_external>", line 1074, in get_code
+      File "<frozen importlib._bootstrap_external>", line 1004, in source_to_code
+      File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+      File "/tmp/rdg-api-kYrwxM/tools/rdg-graph-api.py", line 225
+        'CANNOT_ARCHIVE_HISTORIC_DRIVER')
+    IndentationError: unexpected indent
+    
+    
+    1 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 1
+  operator: 'strictEqual'
+  stack: |-
+    success (/workspace/repos/rd-graphs/tests/rdg-general-graph-api.test.cjs:40:28)
+    TestContext.<anonymous> (/workspace/repos/rd-graphs/tests/rdg-general-graph-api.test.cjs:48:3)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.start (node:internal/test_runner/test:944:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+# Subtest: archived-only R can be removed with snapshot, but not if still attached
+not ok 170 - archived-only R can be removed with snapshot, but not if still attached
+  ---
+  duration_ms: 835.895447
+  type: 'test'
+  location: '/workspace/repos/rd-graphs/tests/rdg-general-graph-api.test.cjs:63:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Traceback (most recent call last):
+      File "/tmp/rdg-api-Zj7p74/tools/graph-apply.py", line 560, in <module>
+        main()
+      File "/tmp/rdg-api-Zj7p74/tools/graph-apply.py", line 555, in main
+        package.execute(patch, dry_run=args.dry_run)
+      File "/tmp/rdg-api-Zj7p74/tools/graph-package.py", line 370, in execute
+        records = prepare(package)
+                  ^^^^^^^^^^^^^^^^
+      File "/tmp/rdg-api-Zj7p74/tools/graph-package.py", line 192, in prepare
+        after, changed = apply_module.apply(before, authoritatively_scoped_patch,
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      File "/tmp/rdg-api-Zj7p74/tools/graph-apply.py", line 287, in apply
+        editor = SourceFileLoader("rdg_graph_api", str(ROOT / "tools" / "rdg-graph-api.py")).load_module()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      File "<frozen importlib._bootstrap_external>", line 605, in _check_name_wrapper
+      File "<frozen importlib._bootstrap_external>", line 1120, in load_module
+      File "<frozen importlib._bootstrap_external>", line 945, in load_module
+      File "<frozen importlib._bootstrap>", line 290, in _load_module_shim
+      File "<frozen importlib._bootstrap>", line 721, in _load
+      File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+      File "<frozen importlib._bootstrap_external>", line 936, in exec_module
+      File "<frozen importlib._bootstrap_external>", line 1074, in get_code
+      File "<frozen importlib._bootstrap_external>", line 1004, in source_to_code
+      File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+      File "/tmp/rdg-api-Zj7p74/tools/rdg-graph-api.py", line 225
+        'CANNOT_ARCHIVE_HISTORIC_DRIVER')
+    IndentationError: unexpected indent
+    
+    
+    1 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 1
+  operator: 'strictEqual'
+  stack: |-
+    success (/workspace/repos/rd-graphs/tests/rdg-general-graph-api.test.cjs:40:28)
+    TestContext.<anonymous> (/workspace/repos/rd-graphs/tests/rdg-general-graph-api.test.cjs:66:3)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: reconsideration policy is separate from truth and blocks unapproved user-R edits
+not ok 171 - reconsideration policy is separate from truth and blocks unapproved user-R edits
+  ---
+  duration_ms: 786.799427
+  type: 'test'
+  location: '/workspace/repos/rd-graphs/tests/rdg-general-graph-api.test.cjs:78:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Traceback (most recent call last):
+      File "/tmp/rdg-api-AgEOpZ/tools/graph-apply.py", line 560, in <module>
+        main()
+      File "/tmp/rdg-api-AgEOpZ/tools/graph-apply.py", line 555, in main
+        package.execute(patch, dry_run=args.dry_run)
+      File "/tmp/rdg-api-AgEOpZ/tools/graph-package.py", line 370, in execute
+        records = prepare(package)
+                  ^^^^^^^^^^^^^^^^
+      File "/tmp/rdg-api-AgEOpZ/tools/graph-package.py", line 192, in prepare
+        after, changed = apply_module.apply(before, authoritatively_scoped_patch,
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      File "/tmp/rdg-api-AgEOpZ/tools/graph-apply.py", line 287, in apply
+        editor = SourceFileLoader("rdg_graph_api", str(ROOT / "tools" / "rdg-graph-api.py")).load_module()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      File "<frozen importlib._bootstrap_external>", line 605, in _check_name_wrapper
+      File "<frozen importlib._bootstrap_external>", line 1120, in load_module
+      File "<frozen importlib._bootstrap_external>", line 945, in load_module
+      File "<frozen importlib._bootstrap>", line 290, in _load_module_shim
+      File "<frozen importlib._bootstrap>", line 721, in _load
+      File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+      File "<frozen importlib._bootstrap_external>", line 936, in exec_module
+      File "<frozen importlib._bootstrap_external>", line 1074, in get_code
+      File "<frozen importlib._bootstrap_external>", line 1004, in source_to_code
+      File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+      File "/tmp/rdg-api-AgEOpZ/tools/rdg-graph-api.py", line 225
+        'CANNOT_ARCHIVE_HISTORIC_DRIVER')
+    IndentationError: unexpected indent
+    
+    
+    1 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 1
+  operator: 'strictEqual'
+  stack: |-
+    success (/workspace/repos/rd-graphs/tests/rdg-general-graph-api.test.cjs:40:28)
+    TestContext.<anonymous> (/workspace/repos/rd-graphs/tests/rdg-general-graph-api.test.cjs:82:3)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: hard delete never silently destroys selected history or shared support
+not ok 172 - hard delete never silently destroys selected history or shared support
+  ---
+  duration_ms: 1295.967849
+  type: 'test'
+  location: '/workspace/repos/rd-graphs/tests/rdg-general-graph-api.test.cjs:91:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Traceback (most recent call last):
+      File "/tmp/rdg-api-iEDLqC/tools/graph-apply.py", line 560, in <module>
+        main()
+      File "/tmp/rdg-api-iEDLqC/tools/graph-apply.py", line 555, in main
+        package.execute(patch, dry_run=args.dry_run)
+      File "/tmp/rdg-api-iEDLqC/tools/graph-package.py", line 370, in execute
+        records = prepare(package)
+                  ^^^^^^^^^^^^^^^^
+      File "/tmp/rdg-api-iEDLqC/tools/graph-package.py", line 192, in prepare
+        after, changed = apply_module.apply(before, authoritatively_scoped_patch,
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      File "/tmp/rdg-api-iEDLqC/tools/graph-apply.py", line 287, in apply
+        editor = SourceFileLoader("rdg_graph_api", str(ROOT / "tools" / "rdg-graph-api.py")).load_module()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      File "<frozen importlib._bootstrap_external>", line 605, in _check_name_wrapper
+      File "<frozen importlib._bootstrap_external>", line 1120, in load_module
+      File "<frozen importlib._bootstrap_external>", line 945, in load_module
+      File "<frozen importlib._bootstrap>", line 290, in _load_module_shim
+      File "<frozen importlib._bootstrap>", line 721, in _load
+      File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+      File "<frozen importlib._bootstrap_external>", line 936, in exec_module
+      File "<frozen importlib._bootstrap_external>", line 1074, in get_code
+      File "<frozen importlib._bootstrap_external>", line 1004, in source_to_code
+      File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+      File "/tmp/rdg-api-iEDLqC/tools/rdg-graph-api.py", line 225
+        'CANNOT_ARCHIVE_HISTORIC_DRIVER')
+    IndentationError: unexpected indent
+    
+    
+    1 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 1
+  operator: 'strictEqual'
+  stack: |-
+    success (/workspace/repos/rd-graphs/tests/rdg-general-graph-api.test.cjs:40:28)
+    TestContext.<anonymous> (/workspace/repos/rd-graphs/tests/rdg-general-graph-api.test.cjs:95:3)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: protected parent blocks unapproved child, edge removal and reparent (authorized owner allowed)
+not ok 173 - protected parent blocks unapproved child, edge removal and reparent (authorized owner allowed)
+  ---
+  duration_ms: 988.260951
+  type: 'test'
+  location: '/workspace/repos/rd-graphs/tests/rdg-general-graph-api.test.cjs:109:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Traceback (most recent call last):
+      File "/tmp/rdg-api-Gjsbds/tools/graph-apply.py", line 560, in <module>
+        main()
+      File "/tmp/rdg-api-Gjsbds/tools/graph-apply.py", line 555, in main
+        package.execute(patch, dry_run=args.dry_run)
+      File "/tmp/rdg-api-Gjsbds/tools/graph-package.py", line 370, in execute
+        records = prepare(package)
+                  ^^^^^^^^^^^^^^^^
+      File "/tmp/rdg-api-Gjsbds/tools/graph-package.py", line 192, in prepare
+        after, changed = apply_module.apply(before, authoritatively_scoped_patch,
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      File "/tmp/rdg-api-Gjsbds/tools/graph-apply.py", line 287, in apply
+        editor = SourceFileLoader("rdg_graph_api", str(ROOT / "tools" / "rdg-graph-api.py")).load_module()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      File "<frozen importlib._bootstrap_external>", line 605, in _check_name_wrapper
+      File "<frozen importlib._bootstrap_external>", line 1120, in load_module
+      File "<frozen importlib._bootstrap_external>", line 945, in load_module
+      File "<frozen importlib._bootstrap>", line 290, in _load_module_shim
+      File "<frozen importlib._bootstrap>", line 721, in _load
+      File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+      File "<frozen importlib._bootstrap_external>", line 936, in exec_module
+      File "<frozen importlib._bootstrap_external>", line 1074, in get_code
+      File "<frozen importlib._bootstrap_external>", line 1004, in source_to_code
+      File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+      File "/tmp/rdg-api-Gjsbds/tools/rdg-graph-api.py", line 225
+        'CANNOT_ARCHIVE_HISTORIC_DRIVER')
+    IndentationError: unexpected indent
+    
+    
+    1 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 1
+  operator: 'strictEqual'
+  stack: |-
+    success (/workspace/repos/rd-graphs/tests/rdg-general-graph-api.test.cjs:40:28)
+    TestContext.<anonymous> (/workspace/repos/rd-graphs/tests/rdg-general-graph-api.test.cjs:112:3)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: general reparent is history-preserving and safe for active DAG requirements
+not ok 174 - general reparent is history-preserving and safe for active DAG requirements
+  ---
+  duration_ms: 1128.865964
+  type: 'test'
+  location: '/workspace/repos/rd-graphs/tests/rdg-general-graph-api.test.cjs:130:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Traceback (most recent call last):
+      File "/tmp/rdg-api-nR6DIv/tools/graph-apply.py", line 560, in <module>
+        main()
+      File "/tmp/rdg-api-nR6DIv/tools/graph-apply.py", line 555, in main
+        package.execute(patch, dry_run=args.dry_run)
+      File "/tmp/rdg-api-nR6DIv/tools/graph-package.py", line 370, in execute
+        records = prepare(package)
+                  ^^^^^^^^^^^^^^^^
+      File "/tmp/rdg-api-nR6DIv/tools/graph-package.py", line 192, in prepare
+        after, changed = apply_module.apply(before, authoritatively_scoped_patch,
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      File "/tmp/rdg-api-nR6DIv/tools/graph-apply.py", line 287, in apply
+        editor = SourceFileLoader("rdg_graph_api", str(ROOT / "tools" / "rdg-graph-api.py")).load_module()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      File "<frozen importlib._bootstrap_external>", line 605, in _check_name_wrapper
+      File "<frozen importlib._bootstrap_external>", line 1120, in load_module
+      File "<frozen importlib._bootstrap_external>", line 945, in load_module
+      File "<frozen importlib._bootstrap>", line 290, in _load_module_shim
+      File "<frozen importlib._bootstrap>", line 721, in _load
+      File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+      File "<frozen importlib._bootstrap_external>", line 936, in exec_module
+      File "<frozen importlib._bootstrap_external>", line 1074, in get_code
+      File "<frozen importlib._bootstrap_external>", line 1004, in source_to_code
+      File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+      File "/tmp/rdg-api-nR6DIv/tools/rdg-graph-api.py", line 225
+        'CANNOT_ARCHIVE_HISTORIC_DRIVER')
+    IndentationError: unexpected indent
+    
+    
+    1 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 1
+  operator: 'strictEqual'
+  stack: |-
+    success (/workspace/repos/rd-graphs/tests/rdg-general-graph-api.test.cjs:40:28)
+    cr (/workspace/repos/rd-graphs/tests/rdg-general-graph-api.test.cjs:134:4)
+    TestContext.<anonymous> (/workspace/repos/rd-graphs/tests/rdg-general-graph-api.test.cjs:138:3)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: protected parent also gates selected Action introductions and shared-R link
+not ok 175 - protected parent also gates selected Action introductions and shared-R link
+  ---
+  duration_ms: 903.891066
+  type: 'test'
+  location: '/workspace/repos/rd-graphs/tests/rdg-general-graph-api.test.cjs:151:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Traceback (most recent call last):
+      File "/tmp/rdg-api-315pqH/tools/graph-apply.py", line 560, in <module>
+        main()
+      File "/tmp/rdg-api-315pqH/tools/graph-apply.py", line 555, in main
+        package.execute(patch, dry_run=args.dry_run)
+      File "/tmp/rdg-api-315pqH/tools/graph-package.py", line 370, in execute
+        records = prepare(package)
+                  ^^^^^^^^^^^^^^^^
+      File "/tmp/rdg-api-315pqH/tools/graph-package.py", line 192, in prepare
+        after, changed = apply_module.apply(before, authoritatively_scoped_patch,
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      File "/tmp/rdg-api-315pqH/tools/graph-apply.py", line 287, in apply
+        editor = SourceFileLoader("rdg_graph_api", str(ROOT / "tools" / "rdg-graph-api.py")).load_module()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      File "<frozen importlib._bootstrap_external>", line 605, in _check_name_wrapper
+      File "<frozen importlib._bootstrap_external>", line 1120, in load_module
+      File "<frozen importlib._bootstrap_external>", line 945, in load_module
+      File "<frozen importlib._bootstrap>", line 290, in _load_module_shim
+      File "<frozen importlib._bootstrap>", line 721, in _load
+      File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+      File "<frozen importlib._bootstrap_external>", line 936, in exec_module
+      File "<frozen importlib._bootstrap_external>", line 1074, in get_code
+      File "<frozen importlib._bootstrap_external>", line 1004, in source_to_code
+      File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+      File "/tmp/rdg-api-315pqH/tools/rdg-graph-api.py", line 225
+        'CANNOT_ARCHIVE_HISTORIC_DRIVER')
+    IndentationError: unexpected indent
+    
+    
+    1 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 1
+  operator: 'strictEqual'
+  stack: |-
+    success (/workspace/repos/rd-graphs/tests/rdg-general-graph-api.test.cjs:40:28)
+    TestContext.<anonymous> (/workspace/repos/rd-graphs/tests/rdg-general-graph-api.test.cjs:156:3)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: prepared Lens is a connected ordinary RDG graph; separate A1/A2 sessions do not write
+ok 176 - prepared Lens is a connected ordinary RDG graph; separate A1/A2 sessions do not write
+  ---
+  duration_ms: 55.997467
+  type: 'test'
+  ...
+# Subtest: material unresolved canon/QRPE can be saved once, but obsolete and duplicate work is skipped
+ok 177 - material unresolved canon/QRPE can be saved once, but obsolete and duplicate work is skipped
+  ---
+  duration_ms: 6.125567
+  type: 'test'
+  ...
+# Subtest: lookup finds the latest *saved* matching A1, not A2 or latest actual unsaved run
+ok 178 - lookup finds the latest *saved* matching A1, not A2 or latest actual unsaved run
+  ---
+  duration_ms: 6.131549
+  type: 'test'
+  ...
+# Subtest: no root achievement from an unsupported canon, stale assessment, or open QRPE
+ok 179 - no root achievement from an unsupported canon, stale assessment, or open QRPE
+  ---
+  duration_ms: 2.863231
+  type: 'test'
+  ...
+# Subtest: generic Lens runner also accepts ordinary candidate-v6 graph.json, not special DRY source kind
+ok 180 - generic Lens runner also accepts ordinary candidate-v6 graph.json, not special DRY source kind
+  ---
+  duration_ms: 385.546645
+  type: 'test'
+  ...
+# Subtest: ordinary Lens rejects selected Action without real T1 selection history
+ok 181 - ordinary Lens rejects selected Action without real T1 selection history
+  ---
+  duration_ms: 347.130794
+  type: 'test'
+  ...
+# Subtest: completed canon evidence for an unselected target Action may be saved, not arbitrary pending claims
+ok 182 - completed canon evidence for an unselected target Action may be saved, not arbitrary pending claims
+  ---
+  duration_ms: 1.908974
+  type: 'test'
+  ...
+# Subtest: GitHub adapter uses SHA CAS, signed common Graph API and optional Lens research in offline fake
+not ok 183 - GitHub adapter uses SHA CAS, signed common Graph API and optional Lens research in offline fake
+  ---
+  duration_ms: 915.384661
+  type: 'test'
+  location: '/workspace/repos/rd-graphs/tests/rdg-github-store.test.cjs:4:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Traceback (most recent call last):
+      File "/workspace/repos/rd-graphs/tools/rdg-github-store-smoke.py", line 84, in <module>
+        result=service.commit_graph_package(package,initial_sha)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      File "/workspace/repos/rd-graphs/tools/rdg-github-store.py", line 128, in commit_graph_package
+        after,changed=apply_lib.apply(graph,patched,trusted_verified=True)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      File "/workspace/repos/rd-graphs/tools/graph-apply.py", line 287, in apply
+        editor = SourceFileLoader("rdg_graph_api", str(ROOT / "tools" / "rdg-graph-api.py")).load_module()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      File "<frozen importlib._bootstrap_external>", line 605, in _check_name_wrapper
+      File "<frozen importlib._bootstrap_external>", line 1120, in load_module
+      File "<frozen importlib._bootstrap_external>", line 945, in load_module
+      File "<frozen importlib._bootstrap>", line 290, in _load_module_shim
+      File "<frozen importlib._bootstrap>", line 721, in _load
+      File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+      File "<frozen importlib._bootstrap_external>", line 936, in exec_module
+      File "<frozen importlib._bootstrap_external>", line 1074, in get_code
+      File "<frozen importlib._bootstrap_external>", line 1004, in source_to_code
+      File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+      File "/workspace/repos/rd-graphs/tools/rdg-graph-api.py", line 225
+        'CANNOT_ARCHIVE_HISTORIC_DRIVER')
+    IndentationError: unexpected indent
+    
+    
+    1 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 1
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/workspace/repos/rd-graphs/tests/rdg-github-store.test.cjs:6:9)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.start (node:internal/test_runner/test:944:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+# Subtest: shared layout commands are immutable, preserve other graphs and guard revisions/coordinates
+ok 184 - shared layout commands are immutable, preserve other graphs and guard revisions/coordinates
+  ---
+  duration_ms: 7.175777
+  type: 'test'
+  ...
+# Subtest: browser embeds the exact same command core that the CLI imports
+ok 185 - browser embeds the exact same command core that the CLI imports
+  ---
+  duration_ms: 49.092964
+  type: 'test'
+  ...
+# Subtest: opening multiple lists removes headers, reveals only R, preserves camera and unaffected positions
+ok 186 - opening multiple lists removes headers, reveals only R, preserves camera and unaffected positions
+  ---
+  duration_ms: 312.168443
+  type: 'test'
+  ...
+# Subtest: two-R lists are inline; groups reject non-R members without partial loading
+ok 187 - two-R lists are inline; groups reject non-R members without partial loading
+  ---
+  duration_ms: 95.876686
+  type: 'test'
+  ...
+# Subtest: prepared leaves open their own graphs; contextual work starts a separate one-level graph
+ok 188 - prepared leaves open their own graphs; contextual work starts a separate one-level graph
+  ---
+  duration_ms: 712.885197
+  type: 'test'
+  ...
+# Subtest: UI uses shared commands, saves one file, restores positions and refuses external overwrite
+ok 189 - UI uses shared commands, saves one file, restores positions and refuses external overwrite
+  ---
+  duration_ms: 216.820611
+  type: 'test'
+  ...
+# Subtest: pointer movement at actual view scale changes node data without panning or opening its child
+ok 190 - pointer movement at actual view scale changes node data without panning or opening its child
+  ---
+  duration_ms: 77.191934
+  type: 'test'
+  ...
+# Subtest: CLI commits shared format with read-back and rejects stale revisions and unknown nodes
+ok 191 - CLI commits shared format with read-back and rejects stale revisions and unknown nodes
+  ---
+  duration_ms: 1083.34039
+  type: 'test'
+  ...
+# Subtest: an older browser cache cannot replace a newer layout document delivered in the bundle
+ok 192 - an older browser cache cannot replace a newer layout document delivered in the bundle
+  ---
+  duration_ms: 21.51023
+  type: 'test'
+  ...
+# Subtest: a file changed while the browser buffers a write is aborted before close
+ok 193 - a file changed while the browser buffers a write is aborted before close
+  ---
+  duration_ms: 94.232769
+  type: 'test'
+  ...
+# Subtest: F-P-01: edits during save remain dirty, and a second save persists them
+ok 194 - F-P-01: edits during save remain dirty, and a second save persists them
+  ---
+  duration_ms: 501.039148
+  type: 'test'
+  ...
+# Subtest: F-P-01: an edit on graph B survives the completion of graph A save
+ok 195 - F-P-01: an edit on graph B survives the completion of graph A save
+  ---
+  duration_ms: 106.272327
+  type: 'test'
+  ...
+# Subtest: F-P-01/04: a reset during save remains pending and the next commit removes the override
+ok 196 - F-P-01/04: a reset during save remains pending and the next commit removes the override
+  ---
+  duration_ms: 97.970068
+  type: 'test'
+  ...
+# Subtest: F-P-01: failed buffered writes preserve the full newer draft for retry
+ok 197 - F-P-01: failed buffered writes preserve the full newer draft for retry
+  ---
+  duration_ms: 91.871151
+  type: 'test'
+  ...
+# Subtest: F-P-02: a group moved after collapse keeps its latest position after save and reload
+ok 198 - F-P-02: a group moved after collapse keeps its latest position after save and reload
+  ---
+  duration_ms: 107.676661
+  type: 'test'
+  ...
+# Subtest: F-P-02: a command targeting a hidden header overrides its remembered position
+ok 199 - F-P-02: a command targeting a hidden header overrides its remembered position
+  ---
+  duration_ms: 113.473982
+  type: 'test'
+  ...
+# Subtest: F-P-04: the API clear command and the reset button both commit deletion, not old or automatic coordinates
+ok 200 - F-P-04: the API clear command and the reset button both commit deletion, not old or automatic coordinates
+  ---
+  duration_ms: 123.130037
+  type: 'test'
+  ...
+# Subtest: F-P-03: a manual graph without opt-in opens local one-level continuations and returns without changing records
+ok 201 - F-P-03: a manual graph without opt-in opens local one-level continuations and returns without changing records
+  ---
+  duration_ms: 189.702406
+  type: 'test'
+  ...
+# Subtest: F-P-03: legacy inferred roots also stop at one level and allow local expansion
+ok 202 - F-P-03: legacy inferred roots also stop at one level and allow local expansion
+  ---
+  duration_ms: 84.184965
+  type: 'test'
+  ...
+# Subtest: local levels save separately in the common format and CLI accepts a rooted key
+ok 203 - local levels save separately in the common format and CLI accepts a rooted key
+  ---
+  duration_ms: 493.107117
+  type: 'test'
+  ...
+# Subtest: a method shared with another R remains visible when it directly answers the current root
+ok 204 - a method shared with another R remains visible when it directly answers the current root
+  ---
+  duration_ms: 17.319122
+  type: 'test'
+  ...
+# Subtest: F-P-05: routing and labels translate with nodes through all four quadrants and fit includes labels
+ok 205 - F-P-05: routing and labels translate with nodes through all four quadrants and fit includes labels
+  ---
+  duration_ms: 69.729674
+  type: 'test'
+  ...
+# Subtest: F-P-06: opening and closing alternatives preserves pan, zoom and surviving node positions
+ok 206 - F-P-06: opening and closing alternatives preserves pan, zoom and surviving node positions
+  ---
+  duration_ms: 613.136054
+  type: 'test'
+  ...
+# Subtest: F-P-07: file input survives event retargeting after await and is cleared on read failure too
+ok 207 - F-P-07: file input survives event retargeting after await and is cleared on read failure too
+  ---
+  duration_ms: 12.377626
+  type: 'test'
+  ...
+# Subtest: reading a file does not overwrite edits made while that read is pending
+ok 208 - reading a file does not overwrite edits made while that read is pending
+  ---
+  duration_ms: 21.329008
+  type: 'test'
+  ...
+# Subtest: same-origin Web Locks serializes connected browser clients and stale second save is rejected
+ok 209 - same-origin Web Locks serializes connected browser clients and stale second save is rejected
+  ---
+  duration_ms: 89.107266
+  type: 'test'
+  ...
+# Subtest: local continuations retain a Requirement used as a ground without opening its own answer
+ok 210 - local continuations retain a Requirement used as a ground without opening its own answer
+  ---
+  duration_ms: 86.766183
+  type: 'test'
+  ...
+# Subtest: reload keeps the current local root and a missing root in an updated file preserves the old view
+ok 211 - reload keeps the current local root and a missing root in an updated file preserves the old view
+  ---
+  duration_ms: 185.595567
+  type: 'test'
+  ...
+# Subtest: AI-readable Lens CLI does not write any graph or session by default
+ok 212 - AI-readable Lens CLI does not write any graph or session by default
+  ---
+  duration_ms: 315.898905
+  type: 'test'
+  ...
+# Subtest: GitHub-backed Lens lookup requires explicit repository configuration and never silently writes
+ok 213 - GitHub-backed Lens lookup requires explicit repository configuration and never silently writes
+  ---
+  duration_ms: 886.72283
+  type: 'test'
+  ...
+# Subtest: refresh re-reads the index and all scoped files, never using a bundled R0
+ok 214 - refresh re-reads the index and all scoped files, never using a bundled R0
+  ---
+  duration_ms: 561.863287
+  type: 'test'
+  ...
+# Subtest: refresh fails closed on missing source without partially publishing new catalog
+ok 215 - refresh fails closed on missing source without partially publishing new catalog
+  ---
+  duration_ms: 252.820845
+  type: 'test'
+  ...
+# Subtest: fresh index discovers a new causal R in the same identity space
+ok 216 - fresh index discovers a new causal R in the same identity space
+  ---
+  duration_ms: 1715.036642
+  type: 'test'
+  ...
+# Subtest: templateOnly and inactive projected owners are never a selected R path
+ok 217 - templateOnly and inactive projected owners are never a selected R path
+  ---
+  duration_ms: 2.448867
+  type: 'test'
+  ...
+# Subtest: projection owner activity and candidate template status fail closed
+ok 218 - projection owner activity and candidate template status fail closed
+  ---
+  duration_ms: 1.530954
+  type: 'test'
+  ...
+# Subtest: teaching Decision causal edge has an explicit instructional label
+ok 219 - teaching Decision causal edge has an explicit instructional label
+  ---
+  duration_ms: 210.036938
+  type: 'test'
+  ...
+# Subtest: fresh index extends scope to a newly indexed source file
+ok 220 - fresh index extends scope to a newly indexed source file
+  ---
+  duration_ms: 1883.854862
+  type: 'test'
+  ...
+# Subtest: a projected Decision cannot substitute a different selected option
+ok 221 - a projected Decision cannot substitute a different selected option
+  ---
+  duration_ms: 1.355645
+  type: 'test'
+  ...
+# Subtest: sixteen migrated historical entry roots remain discoverable without set membership
+ok 222 - sixteen migrated historical entry roots remain discoverable without set membership
+  ---
+  duration_ms: 4.327857
+  type: 'test'
+  ...
+# Subtest: prepared multiwave prospective R are visible without acceptance
+ok 223 - prepared multiwave prospective R are visible without acceptance
+  ---
+  duration_ms: 4.222147
+  type: 'test'
+  ...
+# Subtest: independent projects sharing a Requirement id do not mix due to identitySpace
+ok 224 - independent projects sharing a Requirement id do not mix due to identitySpace
+  ---
+  duration_ms: 2.209806
+  type: 'test'
+  ...
+# Subtest: source graphs are not mutated by read-only projections
+ok 225 - source graphs are not mutated by read-only projections
+  ---
+  duration_ms: 68.817782
+  type: 'test'
+  ...
+# Subtest: writable paper branches, deeper local choice and unrelated root stay in correct scope
+ok 226 - writable paper branches, deeper local choice and unrelated root stay in correct scope
+  ---
+  duration_ms: 2.781576
+  type: 'test'
+  ...
+# Subtest: non-causal source views remain navigable but are never invented R descendants
+ok 227 - non-causal source views remain navigable but are never invented R descendants
+  ---
+  duration_ms: 1.246776
+  type: 'test'
+  ...
+# Subtest: root closure works without graphSets metadata
+ok 228 - root closure works without graphSets metadata
+  ---
+  duration_ms: 1.049743
+  type: 'test'
+  ...
+# Subtest: current context is one value, never a dated answer timeline
+ok 229 - current context is one value, never a dated answer timeline
+  ---
+  duration_ms: 4.362542
+  type: 'test'
+  ...
+# Subtest: dated legacy answers are rejected; unscoped owner rejected; unavailable condition unknown
+ok 230 - dated legacy answers are rejected; unscoped owner rejected; unavailable condition unknown
+  ---
+  duration_ms: 3.187022
+  type: 'test'
+  ...
+# Subtest: unsupported root-level canon usages fail instead of silently disappearing from the field list
+ok 231 - unsupported root-level canon usages fail instead of silently disappearing from the field list
+  ---
+  duration_ms: 3.946657
+  type: 'test'
+  ...
+# Subtest: multiple conditions retain all consumers; one current usage wins without merging definitions by name
+ok 232 - multiple conditions retain all consumers; one current usage wins without merging definitions by name
+  ---
+  duration_ms: 1.065373
+  type: 'test'
+  ...
+# Subtest: unrelated freeform record does not hide missing current field
+ok 233 - unrelated freeform record does not hide missing current field
+  ---
+  duration_ms: 1.365129
+  type: 'test'
+  ...
+# Subtest: theory links and link-only canon are inspectable; no extra R or saved layout keys
+ok 234 - theory links and link-only canon are inspectable; no extra R or saved layout keys
+  ---
+  duration_ms: 213.0836
+  type: 'test'
+  ...
+# Subtest: empty/unavailable metadata stays incomplete rather than a false success
+ok 235 - empty/unavailable metadata stays incomplete rather than a false success
+  ---
+  duration_ms: 1.669144
+  type: 'test'
+  ...
+# Subtest: shared owner fixture: earlier answer, theory, several consumers and conditional questions
+ok 236 - shared owner fixture: earlier answer, theory, several consumers and conditional questions
+  ---
+  duration_ms: 37.270518
+  type: 'test'
+  ...
+# Subtest: definitions/sources update once; same names do not merge; current value stays shared
+ok 237 - definitions/sources update once; same names do not merge; current value stays shared
+  ---
+  duration_ms: 4.244048
+  type: 'test'
+  ...
+# Subtest: negative contract rejects source execution, duplicate answer owners and invalid refs
+ok 238 - negative contract rejects source execution, duplicate answer owners and invalid refs
+  ---
+  duration_ms: 3.386789
+  type: 'test'
+  ...
+# Subtest: unknown completeness, more than forty fields, project boundary, scoped value and freeform candidates
+ok 239 - unknown completeness, more than forty fields, project boundary, scoped value and freeform candidates
+  ---
+  duration_ms: 2.013614
+  type: 'test'
+  ...
+# Subtest: real writer package replaces current Context value, readback and replay without answer history
+ok 240 - real writer package replaces current Context value, readback and replay without answer history
+  ---
+  duration_ms: 6544.826496
+  type: 'test'
+  ...
+# Subtest: freeform mapping needs an explicit note; selected D snapshots survive later shared definition changes
+ok 241 - freeform mapping needs an explicit note; selected D snapshots survive later shared definition changes
+  ---
+  duration_ms: 5221.875948
+  type: 'test'
+  ...
+# Subtest: a selected Action with real child R and open QRPE cannot be silently revoked
+ok 242 - a selected Action with real child R and open QRPE cannot be silently revoked
+  ---
+  duration_ms: 580.696603
+  type: 'test'
+  ...
+# Subtest: another selected Action can independently justify one of multiple introduced R
+ok 243 - another selected Action can independently justify one of multiple introduced R
+  ---
+  duration_ms: 493.715948
+  type: 'test'
+  ...
+# Subtest: even an Action without child R is not automatically authorized for revocation
+ok 244 - even an Action without child R is not automatically authorized for revocation
+  ---
+  duration_ms: 694.919017
+  type: 'test'
+  ...
+# Subtest: preflight rejects legacy graphs and missing Action IDs
+ok 245 - preflight rejects legacy graphs and missing Action IDs
+  ---
+  duration_ms: 1175.657855
+  type: 'test'
+  ...
+# Subtest: opt-in writer materially reconsiders an Action while preserving history
+ok 246 - opt-in writer materially reconsiders an Action while preserving history
+  ---
+  duration_ms: 2675.137166
+  type: 'test'
+  ...
+# Subtest: missing review Action, approval, canon evidence or child decisions fail without writes
+ok 247 - missing review Action, approval, canon evidence or child decisions fail without writes
+  ---
+  duration_ms: 5439.225144
+  type: 'test'
+  ...
+# Subtest: open reviewer QRPE blocks a materially changing reconsideration
+ok 248 - open reviewer QRPE blocks a materially changing reconsideration
+  ---
+  duration_ms: 1901.016473
+  type: 'test'
+  ...
+# Subtest: retiring an R with downstream work or a dependent Action fails closed
+ok 249 - retiring an R with downstream work or a dependent Action fails closed
+  ---
+  duration_ms: 2203.105293
+  type: 'test'
+  ...
+# Subtest: shared R survives reconsideration of only one introducing Action
+ok 250 - shared R survives reconsideration of only one introducing Action
+  ---
+  duration_ms: 3666.924448
+  type: 'test'
+  ...
+# Subtest: refuse to deactivate a shared R even if submitted disposition claims exclusivity
+ok 251 - refuse to deactivate a shared R even if submitted disposition claims exclusivity
+  ---
+  duration_ms: 2627.521398
+  type: 'test'
+  ...
+# Subtest: cross-file child continuation blocks retiring its owning R
+ok 252 - cross-file child continuation blocks retiring its owning R
+  ---
+  duration_ms: 2707.879914
+  type: 'test'
+  ...
+# Subtest: direct legacy deactivate_requirement cannot bypass the opt-in Action review gate
+ok 253 - direct legacy deactivate_requirement cannot bypass the opt-in Action review gate
+  ---
+  duration_ms: 2288.502843
+  type: 'test'
+  ...
+# Subtest: later QRPE updates on historical Action keep immutable T1 and older decision snapshot
+ok 254 - later QRPE updates on historical Action keep immutable T1 and older decision snapshot
+  ---
+  duration_ms: 2274.986957
+  type: 'test'
+  ...
+# Subtest: tampering with earlier T1/reconsideration evidence fails validation before write
+ok 255 - tampering with earlier T1/reconsideration evidence fails validation before write
+  ---
+  duration_ms: 2198.200999
+  type: 'test'
+  ...
+# Subtest: a reconsideration Action may itself be reconsidered later without rewriting first history
+ok 256 - a reconsideration Action may itself be reconsidered later without rewriting first history
+  ---
+  duration_ms: 2477.324881
+  type: 'test'
+  ...
+# Subtest: authorization proof is mandatory, fresh, secret-backed and bound to exact transaction bytes
+ok 257 - authorization proof is mandatory, fresh, secret-backed and bound to exact transaction bytes
+  ---
+  duration_ms: 3542.561338
+  type: 'test'
+  ...
+# Subtest: stale, nonexistent and unsupported evidence refs are denied even with a valid signature
+ok 258 - stale, nonexistent and unsupported evidence refs are denied even with a valid signature
+  ---
+  duration_ms: 2350.658437
+  type: 'test'
+  ...
+# Subtest: direct unverified library call cannot perform a material reconsideration
+ok 259 - direct unverified library call cannot perform a material reconsideration
+  ---
+  duration_ms: 255.588843
+  type: 'test'
+  ...
+# Subtest: viewer embeds the same root projection as the source module
+ok 260 - viewer embeds the same root projection as the source module
+  ---
+  duration_ms: 28.135392
+  type: 'test'
+  ...
+# Subtest: R-only full mode includes selected Action child Rs, without turning A into R
+ok 261 - R-only full mode includes selected Action child Rs, without turning A into R
+  ---
+  duration_ms: 302.334073
+  type: 'test'
+  ...
+# Subtest: detailed Viewer reveals Action, canon, QRPE, T1 without a new Decision
+ok 262 - detailed Viewer reveals Action, canon, QRPE, T1 without a new Decision
+  ---
+  duration_ms: 114.985974
+  type: 'test'
+  ...
+# Subtest: legacy Decision presentation continues to work
+ok 263 - legacy Decision presentation continues to work
+  ---
+  duration_ms: 283.513827
+  type: 'test'
+  ...
+# Subtest: candidate Action can be explored without being represented as chosen
+ok 264 - candidate Action can be explored without being represented as chosen
+  ---
+  duration_ms: 106.436074
+  type: 'test'
+  ...
+# Subtest: tampered T1 cannot make an Action accepted in Viewer
+ok 265 - tampered T1 cannot make an Action accepted in Viewer
+  ---
+  duration_ms: 120.506966
+  type: 'test'
+  ...
+# Subtest: local file Viewer shows opt-in A and canon without producing a Decision
+ok 266 - local file Viewer shows opt-in A and canon without producing a Decision
+  ---
+  duration_ms: 76.561002
+  type: 'test'
+  ...
+# Subtest: Viewer shows reconsidered Action as historical while independently supported R survives
+ok 267 - Viewer shows reconsidered Action as historical while independently supported R survives
+  ---
+  duration_ms: 184.398305
+  type: 'test'
+  ...
+# Subtest: real package writer creates opt-in Action graph with legacy schemaVersion 1
+ok 268 - real package writer creates opt-in Action graph with legacy schemaVersion 1
+  ---
+  duration_ms: 599.996536
+  type: 'test'
+  ...
+# Subtest: writer selects same Action ID with T1 evidence and grouped child Requirements
+ok 269 - writer selects same Action ID with T1 evidence and grouped child Requirements
+  ---
+  duration_ms: 1983.963986
+  type: 'test'
+  ...
+# Subtest: legacy writer graph remains Option/Decision only without opt-in
+ok 270 - legacy writer graph remains Option/Decision only without opt-in
+  ---
+  duration_ms: 894.714528
+  type: 'test'
+  ...
+# Subtest: plain add_node cannot smuggle an Action into a legacy graph
+ok 271 - plain add_node cannot smuggle an Action into a legacy graph
+  ---
+  duration_ms: 1025.272138
+  type: 'test'
+  ...
+# Subtest: unattributed or fake-actor Action selection leaves graph and revision unchanged
+ok 272 - unattributed or fake-actor Action selection leaves graph and revision unchanged
+  ---
+  duration_ms: 2694.541013
+  type: 'test'
+  ...
+# Subtest: selection requires real existing Action and protects candidate versus selected identity
+ok 273 - selection requires real existing Action and protects candidate versus selected identity
+  ---
+  duration_ms: 3025.980055
+  type: 'test'
+  ...
+# Subtest: generic update_node cannot rewrite Action or normative Requirement in opt-in graph
+ok 274 - generic update_node cannot rewrite Action or normative Requirement in opt-in graph
+  ---
+  duration_ms: 4343.615363
+  type: 'test'
+  ...
+# Subtest: reader rejects fake selected state without matching event and avoids false prepared adoption
+ok 275 - reader rejects fake selected state without matching event and avoids false prepared adoption
+  ---
+  duration_ms: 1430.15777
+  type: 'test'
+  ...
+# Subtest: failed revision or child transaction never commits a partial Action
+ok 276 - failed revision or child transaction never commits a partial Action
+  ---
+  duration_ms: 1795.423809
+  type: 'test'
+  ...
+# Subtest: Action accepts append-only QRPE without splitting into Option and Decision
+ok 277 - Action accepts append-only QRPE without splitting into Option and Decision
+  ---
+  duration_ms: 2368.719452
+  type: 'test'
+  ...
+# Subtest: invalid Action canon and unscoped action model fail before writing
+ok 278 - invalid Action canon and unscoped action model fail before writing
+  ---
+  duration_ms: 1147.992255
+  type: 'test'
+  ...
+# Subtest: cross-file reader recognizes selected Action introducing a root Requirement
+ok 279 - cross-file reader recognizes selected Action introducing a root Requirement
+  ---
+  duration_ms: 2169.551587
+  type: 'test'
+  ...
+# Subtest: real application-format graph.json fixture validates and projects Action without Decision
+ok 280 - real application-format graph.json fixture validates and projects Action without Decision
+  ---
+  duration_ms: 9.683803
+  type: 'test'
+  ...
+# Subtest: generic Action or child edge mutation is rejected even after selected event
+ok 281 - generic Action or child edge mutation is rejected even after selected event
+  ---
+  duration_ms: 2009.583829
+  type: 'test'
+  ...
+# Subtest: same prepared DRY Lens runs against real opt-in graph with zero writes
+ok 282 - same prepared DRY Lens runs against real opt-in graph with zero writes
+  ---
+  duration_ms: 673.804969
+  type: 'test'
+  ...
+# Subtest: DRY on a possibly duplicated real graph remains unresolved, and ignores fake success
+ok 283 - DRY on a possibly duplicated real graph remains unresolved, and ignores fake success
+  ---
+  duration_ms: 536.068514
+  type: 'test'
+  ...
+# Subtest: Maintenance Lens sees real selected Action and discovered alternative without changing target
+ok 284 - Maintenance Lens sees real selected Action and discovered alternative without changing target
+  ---
+  duration_ms: 709.686301
+  type: 'test'
+  ...
+# Subtest: Maintenance Lens without actual comparison evidence does not claim achievement
+ok 285 - Maintenance Lens without actual comparison evidence does not claim achievement
+  ---
+  duration_ms: 915.35291
+  type: 'test'
+  ...
+# Subtest: trusted, fully scoped package can enact material Action from prepared Maintenance Lens once
+ok 286 - trusted, fully scoped package can enact material Action from prepared Maintenance Lens once
+  ---
+  duration_ms: 2779.930338
+  type: 'test'
+  ...
+# Subtest: untrusted Lens package is rejected and never mutates the graph
+ok 287 - untrusted Lens package is rejected and never mutates the graph
+  ---
+  duration_ms: 1806.916179
+  type: 'test'
+  ...
+# Subtest: Lens apply cannot smuggle another operation into signed package
+ok 288 - Lens apply cannot smuggle another operation into signed package
+  ---
+  duration_ms: 1259.122673
+  type: 'test'
+  ...
+# Subtest: stale comparative evidence forces the Maintenance Lens into unknown and forbids apply
+ok 289 - stale comparative evidence forces the Maintenance Lens into unknown and forbids apply
+  ---
+  duration_ms: 1613.073436
+  type: 'test'
+  ...
+# Subtest: DRY report rejects graphs with fabricated or missing R root
+ok 290 - DRY report rejects graphs with fabricated or missing R root
+  ---
+  duration_ms: 277.570738
+  type: 'test'
+  ...
+# Subtest: a signed package with open or missing Lens effects QRPE cannot modify even a favorable target
+ok 291 - a signed package with open or missing Lens effects QRPE cannot modify even a favorable target
+  ---
+  duration_ms: 5001.83264
+  type: 'test'
+  ...
+# Subtest: Lens does not claim root achievement on graph rejected by the authoritative validator
+ok 292 - Lens does not claim root achievement on graph rejected by the authoritative validator
+  ---
+  duration_ms: 605.621074
+  type: 'test'
+  ...
+# Subtest: candidate-v6 blocks silent writes to R, Context, edges, events and owner root
+ok 293 - candidate-v6 blocks silent writes to R, Context, edges, events and owner root
+  ---
+  duration_ms: 3832.90698
+  type: 'test'
+  ...
+# Subtest: untrusted selected Action cannot mint a child Requirement or claim user consent
+ok 294 - untrusted selected Action cannot mint a child Requirement or claim user consent
+  ---
+  duration_ms: 1790.217806
+  type: 'test'
+  ...
+# Subtest: shared-R introduction and a QRPE state transition require separate scoped proof
+ok 295 - shared-R introduction and a QRPE state transition require separate scoped proof
+  ---
+  duration_ms: 3985.709254
+  type: 'test'
+  ...
+# Subtest: no newly selected Action may be smuggled through opt-in graph creation without a receipt
+ok 296 - no newly selected Action may be smuggled through opt-in graph creation without a receipt
+  ---
+  duration_ms: 488.472755
+  type: 'test'
+  ...
+# Subtest: real v7 prepared/planning example: original bytes remain untouched
+ok 297 - real v7 prepared/planning example: original bytes remain untouched
+  ---
+  duration_ms: 342.673923
+  type: 'test'
+  ...
+# Subtest: Option ID reuse is a stable Action ID, with historical D as separate occurrence
+ok 298 - Option ID reuse is a stable Action ID, with historical D as separate occurrence
+  ---
+  duration_ms: 378.483475
+  type: 'test'
+  ...
+# Subtest: New Action IDs need alias mapping; never misattribute a legacy Decision
+ok 299 - New Action IDs need alias mapping; never misattribute a legacy Decision
+  ---
+  duration_ms: 307.652554
+  type: 'test'
+  ...
+# Subtest: A graph of candidates has no actual decision occurrence
+ok 300 - A graph of candidates has no actual decision occurrence
+  ---
+  duration_ms: 328.379169
+  type: 'test'
+  ...
+# Subtest: no status promotion or outcome claim is invented from historical example
+ok 301 - no status promotion or outcome claim is invented from historical example
+  ---
+  duration_ms: 247.474828
+  type: 'test'
+  ...
+# Subtest: source T1 conflicting selected option is rejected, without rewriting source
+ok 302 - source T1 conflicting selected option is rejected, without rewriting source
+  ---
+  duration_ms: 363.327855
+  type: 'test'
+  ...
+# Subtest: new generated Action ID collision fails instead of stealing an existing R identity
+ok 303 - new generated Action ID collision fails instead of stealing an existing R identity
+  ---
+  duration_ms: 664.071347
+  type: 'test'
+  ...
+# Subtest: qualified source refs differ between definitions and applications
+ok 304 - qualified source refs differ between definitions and applications
+  ---
+  duration_ms: 522.121708
+  type: 'test'
+  ...
+# Subtest: candidate assessment has rationale, context version and evidence; engine does not claim truth
+ok 305 - candidate assessment has rationale, context version and evidence; engine does not claim truth
+  ---
+  duration_ms: 604.53504
+  type: 'test'
+  ...
+# Subtest: cannot assert a definite canon result without evidence or context version
+ok 306 - cannot assert a definite canon result without evidence or context version
+  ---
+  duration_ms: 944.105976
+  type: 'test'
+  ...
+# Subtest: minimal typed predicate handles present/missing/stale versioned inputs
+ok 307 - minimal typed predicate handles present/missing/stale versioned inputs
+  ---
+  duration_ms: 1811.125852
+  type: 'test'
+  ...
+# Subtest: typed approach does not pretend to evaluate legacy natural-language canon text
+ok 308 - typed approach does not pretend to evaluate legacy natural-language canon text
+  ---
+  duration_ms: 344.219875
+  type: 'test'
+  ...
+# Subtest: unmatched historical Decision keeps its child links and event snapshots
+ok 309 - unmatched historical Decision keeps its child links and event snapshots
+  ---
+  duration_ms: 418.902443
+  type: 'test'
+  ...
+# Subtest: older Decision-only graph remains historical, not fabricated into an Action
+ok 310 - older Decision-only graph remains historical, not fabricated into an Action
+  ---
+  duration_ms: 346.572844
+  type: 'test'
+  ...
+# Subtest: a user-authored event can be linked but never auto-implies performed Action
+ok 311 - a user-authored event can be linked but never auto-implies performed Action
+  ---
+  duration_ms: 286.441617
+  type: 'test'
+  ...
+# Subtest: tampered selection binding or downstream-child evidence is rejected
+ok 312 - tampered selection binding or downstream-child evidence is rejected
+  ---
+  duration_ms: 157.746324
+  type: 'test'
+  ...
+# Subtest: normal writer commits a valid D without key or receipt and idempotently replays
+ok 313 - normal writer commits a valid D without key or receipt and idempotently replays
+  ---
+  duration_ms: 925.181182
+  type: 'test'
+  ...
+# Subtest: missing selection event cannot create a committed D through legacy path
+ok 314 - missing selection event cannot create a committed D through legacy path
+  ---
+  duration_ms: 764.122572
+  type: 'test'
+  ...
+# Subtest: stale revision, changed replay and invalid path cannot silently mutate committed D
+ok 315 - stale revision, changed replay and invalid path cannot silently mutate committed D
+  ---
+  duration_ms: 2073.132217
+  type: 'test'
+  ...
+# Subtest: dry run previews a valid selected transaction without mutating graph
+ok 316 - dry run previews a valid selected transaction without mutating graph
+  ---
+  duration_ms: 840.840915
+  type: 'test'
+  ...
+# Subtest: create with committed D needs a real selection event shape, not a status alone
+ok 317 - create with committed D needs a real selection event shape, not a status alone
+  ---
+  duration_ms: 425.714282
+  type: 'test'
+  ...
+# Subtest: truthful assistant-authored intentional commit counts as an accepted D
+ok 318 - truthful assistant-authored intentional commit counts as an accepted D
+  ---
+  duration_ms: 713.83802
+  type: 'test'
+  ...
+# Subtest: all 100 graphs have unique nodes/edges and valid root refs without rewriting protected files
+ok 319 - all 100 graphs have unique nodes/edges and valid root refs without rewriting protected files
+  ---
+  duration_ms: 961.738535
+  type: 'test'
+  ...
+# Subtest: modern option badge, full canon text, selected D canon and QRPE are discoverable
+ok 320 - modern option badge, full canon text, selected D canon and QRPE are discoverable
+  ---
+  duration_ms: 301.392098
+  type: 'test'
+  ...
+# Subtest: two active v7 examples carry canonical cases and explicit QRPE slots on every R/D/option
+ok 321 - two active v7 examples carry canonical cases and explicit QRPE slots on every R/D/option
+  ---
+  duration_ms: 68.092038
+  type: 'test'
+  ...
+# Subtest: two child R own their alternatives; index links exact R without a fabricated project commit
+ok 322 - two child R own their alternatives; index links exact R without a fabricated project commit
+  ---
+  duration_ms: 43.438995
+  type: 'test'
+  ...
+# Subtest: prepared option pins source revision/hash and canon; T1 uses that same evidence
+ok 323 - prepared option pins source revision/hash and canon; T1 uses that same evidence
+  ---
+  duration_ms: 2.70697
+  type: 'test'
+  ...
+# Subtest: T1 immutable at source revision 3 while current options pin revision 5 (historical T1 still 3); T2/T3 preserved
+ok 324 - T1 immutable at source revision 3 while current options pin revision 5 (historical T1 still 3); T2/T3 preserved
+  ---
+  duration_ms: 18.607541
+  type: 'test'
+  ...
+# Subtest: reparent and inactive R retain archived relations and do not spawn another accepted D
+ok 325 - reparent and inactive R retain archived relations and do not spawn another accepted D
+  ---
+  duration_ms: 0.783617
+  type: 'test'
+  ...
+# Subtest: Viewer sees selected canon with actual newlines and navigates to undecided child options
+ok 326 - Viewer sees selected canon with actual newlines and navigates to undecided child options
+  ---
+  duration_ms: 217.734817
+  type: 'test'
+  ...
+# Subtest: promoted current R stays visible despite archived potential edge
+ok 327 - promoted current R stays visible despite archived potential edge
+  ---
+  duration_ms: 496.76012
+  type: 'test'
+  ...
+# Subtest: a group containing an option is rejected because Collections list only Requirements
+ok 328 - a group containing an option is rejected because Collections list only Requirements
+  ---
+  duration_ms: 11.803435
+  type: 'test'
+  ...
+# Subtest: inspector distinguishes prepared and situational options
+ok 329 - inspector distinguishes prepared and situational options
+  ---
+  duration_ms: 339.993894
+  type: 'test'
+  ...
+# Subtest: QRPE transitions and dependent invalidation retain prior state
+ok 330 - QRPE transitions and dependent invalidation retain prior state
+  ---
+  duration_ms: 345.35519
+  type: 'test'
+  ...
+# Subtest: forged or missing prepared source is rejected by writer
+ok 331 - forged or missing prepared source is rejected by writer
+  ---
+  duration_ms: 517.553748
+  type: 'test'
+  ...
+# Subtest: T2 composite is the current project statement, not the T1 title
+ok 332 - T2 composite is the current project statement, not the T1 title
+  ---
+  duration_ms: 10682.809403
+  type: 'test'
+  ...
+# Subtest: two distinct scope names require explicit disjointness evidence
+ok 333 - two distinct scope names require explicit disjointness evidence
+  ---
+  duration_ms: 246.948357
+  type: 'test'
+  ...
+# Subtest: project context flags cross-file options whose referenced R became inactive
+ok 334 - project context flags cross-file options whose referenced R became inactive
+  ---
+  duration_ms: 9282.68212
+  type: 'test'
+  ...
+# Subtest: T2 composite revision triggers review of T1 decision and cross-file referenced option
+ok 335 - T2 composite revision triggers review of T1 decision and cross-file referenced option
+  ---
+  duration_ms: 8722.757915
+  type: 'test'
+  ...
+# Subtest: prepared and work preserve mapped data while goal applicability remains an educational assumption
+ok 336 - prepared and work preserve mapped data while goal applicability remains an educational assumption
+  ---
+  duration_ms: 113.567361
+  type: 'test'
+  ...
+# Subtest: ten potential relations are typed, exact-option sourced, and do not invent chosen Decisions
+ok 337 - ten potential relations are typed, exact-option sourced, and do not invent chosen Decisions
+  ---
+  duration_ms: 259.498686
+  type: 'test'
+  ...
+# Subtest: prepared viewer opens all branches through Collections without a work-only all-variants button
+ok 338 - prepared viewer opens all branches through Collections without a work-only all-variants button
+  ---
+  duration_ms: 451.0237
+  type: 'test'
+  ...
+# Subtest: working viewer keeps selected root path and shows unchosen prospective R by explicit toggle
+ok 339 - working viewer keeps selected root path and shows unchosen prospective R by explicit toggle
+  ---
+  duration_ms: 499.320031
+  type: 'test'
+  ...
+# Subtest: multi-file potential navigation restores parent collection, variant mode and focused Requirement on return
+ok 340 - multi-file potential navigation restores parent collection, variant mode and focused Requirement on return
+  ---
+  duration_ms: 1074.761421
+  type: 'test'
+  ...
+# Subtest: a second prospective level returns through both previous graphs without losing options
+ok 341 - a second prospective level returns through both previous graphs without losing options
+  ---
+  duration_ms: 434.181773
+  type: 'test'
+  ...
+# Subtest: canon research advice belongs to a real method; no third pseudo-option or executed experiment
+ok 342 - canon research advice belongs to a real method; no third pseudo-option or executed experiment
+  ---
+  duration_ms: 30.461003
+  type: 'test'
+  ...
+# Subtest: catalog warns on changed prepared canon/revision without rewriting a T1 snapshot
+ok 343 - catalog warns on changed prepared canon/revision without rewriting a T1 snapshot
+  ---
+  duration_ms: 9956.813104
+  type: 'test'
+  ...
+# Subtest: a forged candidate graph root cannot masquerade as an existing Requirement projection
+ok 344 - a forged candidate graph root cannot masquerade as an existing Requirement projection
+  ---
+  duration_ms: 9310.304708
+  type: 'test'
+  ...
+# Subtest: potential graph links remain read-only index projections, never writable workspace operations
+ok 345 - potential graph links remain read-only index projections, never writable workspace operations
+  ---
+  duration_ms: 9422.559128
+  type: 'test'
+  ...
+# Subtest: v7 two-file update with option, composite, QRPE, collection keeps revision replay and context index consistent
+ok 346 - v7 two-file update with option, composite, QRPE, collection keeps revision replay and context index consistent
+  ---
+  duration_ms: 921.076819
+  type: 'test'
+  ...
+# Subtest: v7 journal recovery completes interrupted two-file composite and collection update
+ok 347 - v7 journal recovery completes interrupted two-file composite and collection update
+  ---
+  duration_ms: 720.373811
+  type: 'test'
+  ...
+# Subtest: canon-directed context query uses project collections, distinguishes unknown and cannot access another project
+ok 348 - canon-directed context query uses project collections, distinguishes unknown and cannot access another project
+  ---
+  duration_ms: 622.113567
+  type: 'test'
+  ...
+# Subtest: same Collection ID on two graphs remains owner-scoped; explicit cross-file ref is separate
+ok 349 - same Collection ID on two graphs remains owner-scoped; explicit cross-file ref is separate
+  ---
+  duration_ms: 792.848758
+  type: 'test'
+  ...
+# Subtest: canon lookup never presents future/unrelated contexts as applicable
+ok 350 - canon lookup never presents future/unrelated contexts as applicable
+  ---
+  duration_ms: 581.293584
+  type: 'test'
+  ...
+# Subtest: declared non-overlap cannot override nested scope; other disjointness remains explicitly unverified
+ok 351 - declared non-overlap cannot override nested scope; other disjointness remains explicitly unverified
+  ---
+  duration_ms: 264.468913
+  type: 'test'
+  ...
+# Subtest: canon inspector retains typed IDs, cross-file references, categories and evidence limits
+ok 352 - canon inspector retains typed IDs, cross-file references, categories and evidence limits
+  ---
+  duration_ms: 596.497482
+  type: 'test'
+  ...
+# Subtest: QRPE visible as badges; direct tutorial D gets explicit disclaimer without fake canon
+ok 353 - QRPE visible as badges; direct tutorial D gets explicit disclaimer without fake canon
+  ---
+  duration_ms: 155.169085
+  type: 'test'
+  ...
+# Subtest: Collections retain original candidate R and remain reversible with group labels
+ok 354 - Collections retain original candidate R and remain reversible with group labels
+  ---
+  duration_ms: 610.92323
+  type: 'test'
+  ...
+# Subtest: single-R context lists stay inline without a group header
+ok 355 - single-R context lists stay inline without a group header
+  ---
+  duration_ms: 178.765233
+  type: 'test'
+  ...
+# Subtest: canonical situations are visible blocks and inspectable for selected and unselected options
+ok 356 - canonical situations are visible blocks and inspectable for selected and unselected options
+  ---
+  duration_ms: 354.72629
+  type: 'test'
+  ...
+# Subtest: ten prospective candidate R preserve reversible collection and candidate status
+ok 357 - ten prospective candidate R preserve reversible collection and candidate status
+  ---
+  duration_ms: 532.157222
+  type: 'test'
+  ...
+# Subtest: prepared tree shows two-R lists inline and stops before their own variants
+ok 358 - prepared tree shows two-R lists inline and stops before their own variants
+  ---
+  duration_ms: 214.513392
+  type: 'test'
+  ...
+# Subtest: mixed working sample: selected root hides options; undecided child shows both even under selected ancestor
+ok 359 - mixed working sample: selected root hides options; undecided child shows both even under selected ancestor
+  ---
+  duration_ms: 487.124056
+  type: 'test'
+  ...
+# Subtest: workspace initializer supports real goal dry-run and creates writable graph with zero Decisions
+ok 360 - workspace initializer supports real goal dry-run and creates writable graph with zero Decisions
+  ---
+  duration_ms: 557.157608
+  type: 'test'
+  ...
+# Subtest: v7 workspace: candidate canons, shared composite, QRPE before selection, chosen D with risk and two child roles
+ok 361 - v7 workspace: candidate canons, shared composite, QRPE before selection, chosen D with risk and two child roles
+  ---
+  duration_ms: 791.953011
+  type: 'test'
+  ...
+# Subtest: v7 writer rejects selection without actual event and retains previous candidate state
+ok 362 - v7 writer rejects selection without actual event and retains previous candidate state
+  ---
+  duration_ms: 496.244352
+  type: 'test'
+  ...
+# Subtest: v7 writer rejects canonless option, forged collection owner, and direct QRPE history overwrite
+ok 363 - v7 writer rejects canonless option, forged collection owner, and direct QRPE history overwrite
+  ---
+  duration_ms: 889.573208
+  type: 'test'
+  ...
+# Subtest: v7 selected options cannot conflict in one scope; reviewed R can become inactive without rewriting choice
+ok 364 - v7 selected options cannot conflict in one scope; reviewed R can become inactive without rewriting choice
+  ---
+  duration_ms: 943.921899
+  type: 'test'
+  ...
+# Subtest: v7 actual child may be reparented with authorized event and archived lineage
+ok 365 - v7 actual child may be reparented with authorized event and archived lineage
+  ---
+  duration_ms: 1052.387334
+  type: 'test'
+  ...
+# Subtest: v7 promotes preplanned candidate R from selected option with same identity and QRPE; other branches stay potential
+ok 366 - v7 promotes preplanned candidate R from selected option with same identity and QRPE; other branches stay potential
+  ---
+  duration_ms: 485.856868
+  type: 'test'
+  ...
+# Subtest: v7 refuses promotion of a candidate belonging to an unselected option
+ok 367 - v7 refuses promotion of a candidate belonging to an unselected option
+  ---
+  duration_ms: 630.749693
+  type: 'test'
+  ...
+# Subtest: wheel modes normalize pixels, lines, pages and touchpad axes without changing scale while panning
+ok 368 - wheel modes normalize pixels, lines, pages and touchpad axes without changing scale while panning
+  ---
+  duration_ms: 4.707966
+  type: 'test'
+  ...
+# Subtest: camera events on the real Viewer leave node positions, layout commands and dirty status unchanged
+ok 369 - camera events on the real Viewer leave node positions, layout commands and dirty status unchanged
+  ---
+  duration_ms: 39.953545
+  type: 'test'
+  ...
+# Subtest: target labels stay near each target for left, right, vertical, return and multiple incoming routes
+ok 370 - target labels stay near each target for left, right, vertical, return and multiple incoming routes
+  ---
+  duration_ms: 30.259152
+  type: 'test'
+  ...
+# Subtest: view geometry embedded in the userscript is byte-identical to the shared module
+ok 371 - view geometry embedded in the userscript is byte-identical to the shared module
+  ---
+  duration_ms: 7.550276
+  type: 'test'
+  ...
+# Subtest: verbatim 0.2 source from original user upload remains unchanged
+ok 372 - verbatim 0.2 source from original user upload remains unchanged
+  ---
+  duration_ms: 8.586576
+  type: 'test'
+  ...
+# Subtest: three read-only reference views have intact IDs, edges and source provenance
+ok 373 - three read-only reference views have intact IDs, edges and source provenance
+  ---
+  duration_ms: 24.3681
+  type: 'test'
+  ...
+# Subtest: App Definition contains seven sibling R and concrete scenario-to-feature information
+ok 374 - App Definition contains seven sibling R and concrete scenario-to-feature information
+  ---
+  duration_ms: 10.182843
+  type: 'test'
+  ...
+# Subtest: Scenario delegation is one stable R ID and status QRPE does not assert completion
+ok 375 - Scenario delegation is one stable R ID and status QRPE does not assert completion
+  ---
+  duration_ms: 8.510585
+  type: 'test'
+  ...
+# Subtest: Behavior distinguishes shared scope, local D, pending candidates and hypothetical events
+ok 376 - Behavior distinguishes shared scope, local D, pending candidates and hypothetical events
+  ---
+  duration_ms: 8.6482
+  type: 'test'
+  ...
+# Subtest: bootstrap uses reference-index module but pilot has no preselected decisions
+ok 377 - bootstrap uses reference-index module but pilot has no preselected decisions
+  ---
+  duration_ms: 25.975036
+  type: 'test'
+  ...
+# Subtest: reference-only graphs reject updater commands without creating write locks
+ok 378 - reference-only graphs reject updater commands without creating write locks
+  ---
+  duration_ms: 433.325255
+  type: 'test'
+  ...
+# Subtest: all six hierarchical graphs are read-only demos with exactly one indicated root Requirement
+ok 379 - all six hierarchical graphs are read-only demos with exactly one indicated root Requirement
+  ---
+  duration_ms: 54.230377
+  type: 'test'
+  ...
+# Subtest: parent level delegates a neutral Requirement, not a Feature choice or TM
+ok 380 - parent level delegates a neutral Requirement, not a Feature choice or TM
+  ---
+  duration_ms: 6.911664
+  type: 'test'
+  ...
+# Subtest: R «Расписать функционал» owns both prepared options, one sample choice, four R
+ok 381 - R «Расписать функционал» owns both prepared options, one sample choice, four R
+  ---
+  duration_ms: 6.501413
+  type: 'test'
+  ...
+# Subtest: each concrete child Requirement becomes identical root ID at its own level
+ok 382 - each concrete child Requirement becomes identical root ID at its own level
+  ---
+  duration_ms: 33.834404
+  type: 'test'
+  ...
+# Subtest: index and bootstrap expose only the entry level, without inventing new prompts
+ok 383 - index and bootstrap expose only the entry level, without inventing new prompts
+  ---
+  duration_ms: 147.071955
+  type: 'test'
+  ...
+# Subtest: writer blocks changes to all reference levels without creating locks
+ok 384 - writer blocks changes to all reference levels without creating locks
+  ---
+  duration_ms: 2322.259086
+  type: 'test'
+  ...
+# Subtest: fresh reload after embedded bundle never returns to older revision and preserves data on read failure
+ok 385 - fresh reload after embedded bundle never returns to older revision and preserves data on read failure
+  ---
+  duration_ms: 136.985396
+  type: 'test'
+  ...
+# Subtest: invalid events shape, duplicate event or wrong Decision reference reject without poisoning node inspector
+ok 386 - invalid events shape, duplicate event or wrong Decision reference reject without poisoning node inspector
+  ---
+  duration_ms: 31.004207
+  type: 'test'
+  ...
+# Subtest: real workspace history is not labelled illustration; hypothetical history still is
+ok 387 - real workspace history is not labelled illustration; hypothetical history still is
+  ---
+  duration_ms: 25.379026
+  type: 'test'
+  ...
+# Subtest: all bundled graphs have distinct label rectangles outside node rectangles in both edge modes
+ok 388 - all bundled graphs have distinct label rectangles outside node rectangles in both edge modes
+  ---
+  duration_ms: 3059.767026
+  type: 'test'
+  ...
+# Subtest: reference inspector reads the one owner, opens that exact ID, and returns to the origin
+ok 389 - reference inspector reads the one owner, opens that exact ID, and returns to the origin
+  ---
+  duration_ms: 561.177716
+  type: 'test'
+  ...
+# Subtest: Scenario-to-Feature information and one shared Behavior choice are concrete, not enum coverage
+ok 390 - Scenario-to-Feature information and one shared Behavior choice are concrete, not enum coverage
+  ---
+  duration_ms: 32.938037
+  type: 'test'
+  ...
+# Subtest: a crowded functionality graph opens on its actual root and answer, not auxiliary records
+ok 391 - a crowded functionality graph opens on its actual root and answer, not auxiliary records
+  ---
+  duration_ms: 61.748543
+  type: 'test'
+  ...
+# Subtest: all relations keeps one level, and every original record and relationship remains accessible through levels
+ok 392 - all relations keeps one level, and every original record and relationship remains accessible through levels
+  ---
+  duration_ms: 534.544952
+  type: 'test'
+  ...
+# Subtest: searching a hidden auxiliary record exposes that record instead of dropping its inspector
+ok 393 - searching a hidden auxiliary record exposes that record instead of dropping its inspector
+  ---
+  duration_ms: 158.061664
+  type: 'test'
+  ...
+# Subtest: routed arrows do not cut through unrelated node rectangles in any bundled graph or view
+ok 394 - routed arrows do not cut through unrelated node rectangles in any bundled graph or view
+  ---
+  duration_ms: 2405.666062
+  type: 'test'
+  ...
+# Subtest: missing root and a self reference do not collapse or crash the renderer
+ok 395 - missing root and a self reference do not collapse or crash the renderer
+  ---
+  duration_ms: 12.283342
+  type: 'test'
+  ...
+# Subtest: inspecting one full-view relation dims other arrows but preserves both endpoint records
+ok 396 - inspecting one full-view relation dims other arrows but preserves both endpoint records
+  ---
+  duration_ms: 334.196428
+  type: 'test'
+  ...
+# Subtest: a fitted full graph stays inside the real viewport even at a fractional scale
+ok 397 - a fitted full graph stays inside the real viewport even at a fractional scale
+  ---
+  duration_ms: 162.390536
+  type: 'test'
+  ...
+# Subtest: real Helper Import replaces same IDs, preserves outsiders and is unchanged on repeat
+ok 398 - real Helper Import replaces same IDs, preserves outsiders and is unchanged on repeat
+  ---
+  duration_ms: 62.36434
+  type: 'test'
+  ...
+# Subtest: generated helper-library delivery bytes match the authoring payload
+ok 399 - generated helper-library delivery bytes match the authoring payload
+  ---
+  duration_ms: 274.34375
+  type: 'test'
+  ...
+# Subtest: working bundle includes 4 prompts + 9 modules, no pilot entries
+ok 400 - working bundle includes 4 prompts + 9 modules, no pilot entries
+  ---
+  duration_ms: 2.884596
+  type: 'test'
+  ...
+# Subtest: all working prompts expand the right modules
+ok 401 - all working prompts expand the right modules
+  ---
+  duration_ms: 4.742442
+  type: 'test'
+  ...
+# Subtest: bootstrap includes nine modules and covers runtime storage
+ok 402 - bootstrap includes nine modules and covers runtime storage
+  ---
+  duration_ms: 1.453594
+  type: 'test'
+  ...
+# Subtest: specialized working prompts contain correct boundaries
+ok 403 - specialized working prompts contain correct boundaries
+  ---
+  duration_ms: 0.885783
+  type: 'test'
+  ...
+# Subtest: import text mirrors editable sources
+ok 404 - import text mirrors editable sources
+  ---
+  duration_ms: 116.568407
+  type: 'test'
+  ...
+# Subtest: try-it remains uncommitted before real user selection
+ok 405 - try-it remains uncommitted before real user selection
+  ---
+  duration_ms: 9.374837
+  type: 'test'
+  ...
+1..405
+# tests 405
+# suites 0
+# pass 396
+# fail 9
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 118250.004889

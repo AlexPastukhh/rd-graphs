@@ -1,0 +1,178 @@
+TAP version 13
+# Subtest: opt-in writer materially reconsiders an Action while preserving history
+ok 1 - opt-in writer materially reconsiders an Action while preserving history
+  ---
+  duration_ms: 685.839548
+  type: 'test'
+  ...
+# Subtest: missing review Action, approval, canon evidence or child decisions fail without writes
+ok 2 - missing review Action, approval, canon evidence or child decisions fail without writes
+  ---
+  duration_ms: 1685.260243
+  type: 'test'
+  ...
+# Subtest: open reviewer QRPE blocks a materially changing reconsideration
+ok 3 - open reviewer QRPE blocks a materially changing reconsideration
+  ---
+  duration_ms: 839.551333
+  type: 'test'
+  ...
+# Subtest: retiring an R with downstream work or a dependent Action fails closed
+ok 4 - retiring an R with downstream work or a dependent Action fails closed
+  ---
+  duration_ms: 578.589108
+  type: 'test'
+  ...
+# Subtest: shared R survives reconsideration of only one introducing Action
+ok 5 - shared R survives reconsideration of only one introducing Action
+  ---
+  duration_ms: 665.792527
+  type: 'test'
+  ...
+# Subtest: refuse to deactivate a shared R even if submitted disposition claims exclusivity
+ok 6 - refuse to deactivate a shared R even if submitted disposition claims exclusivity
+  ---
+  duration_ms: 633.294815
+  type: 'test'
+  ...
+# Subtest: cross-file child continuation blocks retiring its owning R
+ok 7 - cross-file child continuation blocks retiring its owning R
+  ---
+  duration_ms: 639.661052
+  type: 'test'
+  ...
+# Subtest: direct legacy deactivate_requirement cannot bypass the opt-in Action review gate
+ok 8 - direct legacy deactivate_requirement cannot bypass the opt-in Action review gate
+  ---
+  duration_ms: 564.633167
+  type: 'test'
+  ...
+# Subtest: later QRPE updates on historical Action keep immutable T1 and older decision snapshot
+ok 9 - later QRPE updates on historical Action keep immutable T1 and older decision snapshot
+  ---
+  duration_ms: 660.708135
+  type: 'test'
+  ...
+# Subtest: tampering with earlier T1/reconsideration evidence fails validation before write
+ok 10 - tampering with earlier T1/reconsideration evidence fails validation before write
+  ---
+  duration_ms: 667.816244
+  type: 'test'
+  ...
+# Subtest: a reconsideration Action may itself be reconsidered later without rewriting first history
+ok 11 - a reconsideration Action may itself be reconsidered later without rewriting first history
+  ---
+  duration_ms: 757.345431
+  type: 'test'
+  ...
+# Subtest: authorization proof is mandatory, fresh, secret-backed and bound to exact transaction bytes
+ok 12 - authorization proof is mandatory, fresh, secret-backed and bound to exact transaction bytes
+  ---
+  duration_ms: 1093.416637
+  type: 'test'
+  ...
+# Subtest: stale, nonexistent and unsupported evidence refs are denied even with a valid signature
+ok 13 - stale, nonexistent and unsupported evidence refs are denied even with a valid signature
+  ---
+  duration_ms: 717.84541
+  type: 'test'
+  ...
+# Subtest: direct unverified library call cannot perform a material reconsideration
+ok 14 - direct unverified library call cannot perform a material reconsideration
+  ---
+  duration_ms: 205.394174
+  type: 'test'
+  ...
+# Subtest: real package writer creates opt-in Action graph with legacy schemaVersion 1
+ok 15 - real package writer creates opt-in Action graph with legacy schemaVersion 1
+  ---
+  duration_ms: 215.025733
+  type: 'test'
+  ...
+# Subtest: writer selects same Action ID with T1 evidence and grouped child Requirements
+ok 16 - writer selects same Action ID with T1 evidence and grouped child Requirements
+  ---
+  duration_ms: 528.93169
+  type: 'test'
+  ...
+# Subtest: legacy writer graph remains Option/Decision only without opt-in
+ok 17 - legacy writer graph remains Option/Decision only without opt-in
+  ---
+  duration_ms: 277.02973
+  type: 'test'
+  ...
+# Subtest: plain add_node cannot smuggle an Action into a legacy graph
+ok 18 - plain add_node cannot smuggle an Action into a legacy graph
+  ---
+  duration_ms: 326.143927
+  type: 'test'
+  ...
+# Subtest: unattributed or fake-actor Action selection leaves graph and revision unchanged
+ok 19 - unattributed or fake-actor Action selection leaves graph and revision unchanged
+  ---
+  duration_ms: 683.483299
+  type: 'test'
+  ...
+# Subtest: selection requires real existing Action and protects candidate versus selected identity
+ok 20 - selection requires real existing Action and protects candidate versus selected identity
+  ---
+  duration_ms: 694.435298
+  type: 'test'
+  ...
+# Subtest: generic update_node cannot rewrite Action or normative Requirement in opt-in graph
+ok 21 - generic update_node cannot rewrite Action or normative Requirement in opt-in graph
+  ---
+  duration_ms: 856.679043
+  type: 'test'
+  ...
+# Subtest: reader rejects fake selected state without matching event and avoids false prepared adoption
+ok 22 - reader rejects fake selected state without matching event and avoids false prepared adoption
+  ---
+  duration_ms: 423.831036
+  type: 'test'
+  ...
+# Subtest: failed revision or child transaction never commits a partial Action
+ok 23 - failed revision or child transaction never commits a partial Action
+  ---
+  duration_ms: 480.093553
+  type: 'test'
+  ...
+# Subtest: Action accepts append-only QRPE without splitting into Option and Decision
+ok 24 - Action accepts append-only QRPE without splitting into Option and Decision
+  ---
+  duration_ms: 563.167916
+  type: 'test'
+  ...
+# Subtest: invalid Action canon and unscoped action model fail before writing
+ok 25 - invalid Action canon and unscoped action model fail before writing
+  ---
+  duration_ms: 308.614008
+  type: 'test'
+  ...
+# Subtest: cross-file reader recognizes selected Action introducing a root Requirement
+ok 26 - cross-file reader recognizes selected Action introducing a root Requirement
+  ---
+  duration_ms: 620.81677
+  type: 'test'
+  ...
+# Subtest: real application-format graph.json fixture validates and projects Action without Decision
+ok 27 - real application-format graph.json fixture validates and projects Action without Decision
+  ---
+  duration_ms: 5.19698
+  type: 'test'
+  ...
+# Subtest: generic Action or child edge mutation is rejected even after selected event
+ok 28 - generic Action or child edge mutation is rejected even after selected event
+  ---
+  duration_ms: 642.359953
+  type: 'test'
+  ...
+1..28
+# tests 28
+# suites 0
+# pass 28
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 17346.058133

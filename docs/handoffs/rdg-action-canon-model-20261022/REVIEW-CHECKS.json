@@ -1,0 +1,196 @@
+{
+  "date": "2026-10-22",
+  "status": "all-recorded-findings-addressed-and-verified-with-listed-limits",
+  "reviewAddressed": "R-RDG-DOCS-POSTFIX-20261022-c94e/v1",
+  "pdfPages": 43,
+  "diagramPages": 43,
+  "pdfNavigationAnnotations": 297,
+  "targetAcceptanceCases": {
+    "count": 36,
+    "status": "semantic specification; no blanket runtime execution claim"
+  },
+  "artifactChecks": {
+    "pages": 43,
+    "textParityPages": 43,
+    "stableExistingPageIds": 42,
+    "mapDestinations": 43,
+    "reproducedDrawioExactly": true,
+    "textOutsidePage": [],
+    "drawioPages": 43,
+    "acceptanceCases": 36,
+    "nativeDrawioEditorChecked": false,
+    "visualReview": "Fresh full-size inspection of edited PDF pages 1, 9, 43. Unchanged page bodies reuse prior 42-page visual evidence; navigation/text/geometry checked across all 43 pages."
+  },
+  "sourceEvidence": "SOURCE-CHECKS.json",
+  "addressed": [
+    {
+      "finding": "F-P-201",
+      "proposal": "PR-201",
+      "disposition": "resolved",
+      "result": "Current README/contract/plan/UI route agrees on implemented core and Viewer 2.5.1; legacy rules explicitly scoped."
+    },
+    {
+      "finding": "F-P-202",
+      "proposal": "PR-202",
+      "disposition": "resolved",
+      "result": "Typed INTRODUCES origin and explicit writer revision implement correct parent blockers and focus boundaries. Model, actual authorized writer/fresh client, UI and real dependency-engine checks passed."
+    },
+    {
+      "finding": "F-O-201",
+      "proposal": "PR-203",
+      "disposition": "resolved",
+      "result": "Removed the phrase about an allowed/resolved assessment as instructed by the user. No stricter soft-unknown gate added."
+    }
+  ],
+  "sha256": {
+    "PROPOSAL.md": "7630e54c70ec30fac6c0a57d47af01d77f68d5311c1d020242ad2c3d657d5efd",
+    "build-example.py": "d4bce4370157e214a4423fb476fc3e01267312ea5f753f5b89d58394db545962",
+    "RDG-MODEL-EXAMPLE.drawio": "63df3d11aa90882ebb841ce8733b39c44c206c3259a683ce06ce6e5c7f2a1c54",
+    "RDG-MODEL-EXAMPLE.pdf": "1e1290312715c7239319cfa2fb37f380421d8367e98036937e3a41221b39306f",
+    "ACCEPTANCE-CASES.json": "5399ca0dd609befda7a7559d18d44b89b256b6639da3a5d94c84e980a242b9c4",
+    "SOURCE-CHECKS.json": "3b9ed162ed6027b2f8b3f36d316a82ffa820fd43bbe574d92481c49290db4a34"
+  },
+  "limits": [
+    "Native diagrams.net import/font reflow was not tested.",
+    "An additional Chromium visual run could not start: Chromium is not installed. Node DOM/UI projections and authenticated package/CLI paths passed; this is not installed-browser acceptance.",
+    "36 acceptance cases are semantic specification, not a claim of 36 executed runtime scenarios.",
+    "Live owners were not migrated; unspecified existing core origins remain readable without fabricated parent obligations.",
+    "User installation, Stage 4 acceptance and semantic truth of live work are not established.",
+    "No .git exists in the source workspace; source write/read-back is confirmed, source Git commit/push is not claimed."
+  ],
+  "priorSnapshot": {
+    "role": "Previous 42-page QA retained unchanged as historical.",
+    "record": {
+      "date": "2026-10-22",
+      "status": "documentation-fixes-verified",
+      "reviewAddressed": "R-RDG-DOCS-20261022-d8c4/v1",
+      "pdfPages": 42,
+      "diagramPages": 42,
+      "pdfNavigationAnnotations": 289,
+      "targetAcceptanceCases": {
+        "count": 33,
+        "status": "semantic specification; no blanket runtime execution claim"
+      },
+      "artifactChecks": {
+        "normalizedTextParityPages": 42,
+        "exactDrawioReproduction": true,
+        "stableExistingPageIds": 41,
+        "coverReachablePagesIncludingMap": 42,
+        "noTextOutsidePage": true,
+        "visualReview": "42 page renders; contact-sheet overview and full-size inspection of edited/new pages. Native diagrams.net not checked."
+      },
+      "sourceEvidence": "SOURCE-CHECKS.json",
+      "addressed": [
+        {
+          "finding": "F-P-01",
+          "proposal": "PR-01",
+          "result": "corrected and checked in this artifact revision"
+        },
+        {
+          "finding": "F-P-02",
+          "proposal": "PR-02",
+          "result": "corrected and checked in this artifact revision"
+        },
+        {
+          "finding": "F-P-03",
+          "proposal": "PR-03",
+          "result": "corrected and checked in this artifact revision"
+        },
+        {
+          "finding": "F-O-01",
+          "proposal": "PR-04",
+          "result": "corrected and checked in this artifact revision"
+        },
+        {
+          "finding": "F-O-02",
+          "proposal": "PR-05",
+          "result": "corrected and checked in this artifact revision"
+        }
+      ],
+      "sha256": {
+        "PROPOSAL.md": "3dcb7ac76ec2de620ca63666d84a8ee3b49b448f1dbbadf30388a2ee4b8ad6c5",
+        "build-example.py": "6ec820e6014cfb7fe5f95ddfd870b5c19f39b5d737756dcf23615203471aa88d",
+        "RDG-MODEL-EXAMPLE.drawio": "368cd2ed9936f4476beceeee31277cf36d1e854cb73a0c2a6230601d1799d27e",
+        "RDG-MODEL-EXAMPLE.pdf": "fdc01be2181787200a11c7858f04647eb024485539a3ed9fd62fddf896e46c86",
+        "ACCEPTANCE-CASES.json": "86d15322c052a710a4eccf19bfd4630c497905af52b0534da80e795c0a692ab8"
+      },
+      "priorSnapshot": {
+        "role": "Previous 41-page execution QA, retained as historical",
+        "record": {
+          "date": "2026-10-22",
+          "status": "clarifications-implemented-and-verified-in-isolated-owners",
+          "diagramPages": 41,
+          "pdfNavigationAnnotations": 284,
+          "lensDefinitions": 10,
+          "artifactChecks": {
+            "xmlIdsAndPageLinks": "PASS",
+            "textOverflowGuard": "PASS",
+            "mapCoverage": "all 40 target pages reachable from map",
+            "visualReview": "Contact sheet of 41 pages and full-size inspection of changed/new pages; six origins and two own-R routes corrected."
+          },
+          "targetAcceptanceCases": {
+            "count": 33,
+            "status": "semantic specification; automated evidence is listed separately, not a blanket execution claim"
+          },
+          "sourceEvidence": "SOURCE-CHECKS.json",
+          "priorSnapshot": {
+            "role": "previous QA record retained; not reaffirmed for the new revision",
+            "record": {
+              "status": "target-draft-reviewed-runtime-model-not-implemented",
+              "date": "2026-10-22",
+              "prototypeLensDefinitionsReviewed": 10,
+              "diagramPages": 35,
+              "pdfNavigationAnnotations": 243,
+              "artifactChecks": {
+                "xmlIdsAndPageLinks": "PASS",
+                "ownGraphBoundaries": "PASS",
+                "sameAssessedActionShownInCanon": "PASS",
+                "canonEntityLinksToOtherPages": 0,
+                "edgesCrossingUnrelatedEntityBoxes": 0,
+                "visualReview": "35 pages inspected; changed pages re-rendered and inspected"
+              },
+              "repositoryChecks": [
+                {
+                  "command": "python3 tools/rdg-docs-audit.py",
+                  "result": "PASS",
+                  "markdownFiles": 257,
+                  "checkedLinks": 395
+                },
+                {
+                  "command": "node --test tests/rdg-documentation.test.cjs",
+                  "result": "PASS",
+                  "passed": 5
+                },
+                {
+                  "command": "python3 -B tests/rdg-lens-catalog.test.py",
+                  "result": "PASS",
+                  "passed": 5
+                }
+              ],
+              "targetAcceptanceCases": {
+                "count": 26,
+                "status": "target-specification-not-executed"
+              },
+              "scope": "Diagram, target proposal, lens semantic review, guide/catalog warnings and reproducible diagram source; no Graph/Plan owner migration or runtime implementation.",
+              "sha256": {
+                "RDG-MODEL-EXAMPLE.drawio": "eb275db19f8959057d826c2600112ff75cbf94e4c6c5c64794874765a0ded66b",
+                "PROPOSAL.md": "a607ec90472c76907f8c8d4f801fcee036429e2076f64bd76a9eb628fd58585c",
+                "LENS-REVIEW.md": "fa31762cb12155ac5f8ecc75f460d84b66014741ee2b161c2aecee9738e3479c",
+                "ACCEPTANCE-CASES.json": "265aa3745a7a2f99aeb66883737ecb39bebe057d6bb1448bdff3f785163bdfab",
+                "build-example.py": "22ce22e7561cfeb6cacbb0d51e66a72d698305aca75d5193256458482f50220a"
+              }
+            }
+          },
+          "sha256": {
+            "PROPOSAL.md": "c661cce39d9d4a143e697b49135bb79f6480d8219c37ce4e4345f3e44d56bff3",
+            "build-example.py": "b8f889a39337e475527de961a7692c4aa88bc47cbb9e7e5705481c5178984952",
+            "RDG-MODEL-EXAMPLE.drawio": "9f86350095e0391477789e6cfb78cd66d58bdf2789d8e49696064fc29d9fdb09",
+            "RDG-MODEL-EXAMPLE.pdf": "d08ae91cfbaea03dc5cfd0e60f16da9b5a5435a8065680d173e1a4e0f2af090d",
+            "LENS-REVIEW.md": "4d0bb067e251ca44f4d631fedbb6266d3bac8623f17eec200674e58c6a4ff503",
+            "ACCEPTANCE-CASES.json": "32c6abb75ae33831052e6e83af60c3f364be546bbb1db665e279cac9e4e39672"
+          }
+        }
+      }
+    }
+  }
+}

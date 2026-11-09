@@ -1,0 +1,12 @@
+test_candidate_plan_claim_and_future_as_of_not_allowed_to_attest (__main__.ProblemEvidence.test_candidate_plan_claim_and_future_as_of_not_allowed_to_attest) ... ok
+test_changed_observation_hash_fail_closed (__main__.ProblemEvidence.test_changed_observation_hash_fail_closed) ... ok
+test_cli_has_no_write_and_rejects_other_graph_path (__main__.ProblemEvidence.test_cli_has_no_write_and_rejects_other_graph_path) ... ok
+test_matching_local_evidence_still_never_issues_f_p (__main__.ProblemEvidence.test_matching_local_evidence_still_never_issues_f_p) ... ok
+test_recorded_later_than_as_of_cannot_prove_t1 (__main__.ProblemEvidence.test_recorded_later_than_as_of_cannot_prove_t1) ... ok
+test_stale_graph_revision_and_invalid_source_ref (__main__.ProblemEvidence.test_stale_graph_revision_and_invalid_source_ref) ... ok
+test_unchecked_context_and_other_scope_do_not_count (__main__.ProblemEvidence.test_unchecked_context_and_other_scope_do_not_count) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.447s
+
+OK

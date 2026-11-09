@@ -1,0 +1,32 @@
+{
+  "joint-context": {
+    "command": "python3 tests/rdg-joint-context.test.py -v",
+    "exitCode": 0,
+    "tests": 12,
+    "log": "joint-context.log"
+  },
+  "applicability-owner": {
+    "command": "python3 tests/rdg-applicability-owner.test.py -v",
+    "exitCode": 0,
+    "tests": 9,
+    "log": "applicability-owner.log"
+  },
+  "future-baseline": {
+    "command": "python3 tests/rdg-future-baseline.test.py -v",
+    "exitCode": 0,
+    "tests": 9,
+    "log": "future-baseline.log"
+  },
+  "exact-history": {
+    "command": "python3 tests/rdg-exact-history.test.py -v",
+    "exitCode": 0,
+    "tests": 13,
+    "log": "exact-history.log"
+  },
+  "event-projection": {
+    "command": "python3 tests/rdg-event-gendocen.test.py -v",
+    "exitCode": 0,
+    "tests": 6,
+    "log": "event-projection.log"
+  }
+}

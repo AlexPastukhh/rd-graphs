@@ -1,0 +1,8 @@
+{
+  "exitCode": 0,
+  "seconds": 1.09,
+  "command": [
+    "/usr/bin/python3",
+    "tests/rdg-temporal-impact.test.py"
+  ]
+}

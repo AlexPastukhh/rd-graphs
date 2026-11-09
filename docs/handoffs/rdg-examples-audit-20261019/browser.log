@@ -1,0 +1,5 @@
+LOCAL_VIEWS 50
+LOCAL_VIEWS 100
+LOCAL_VIEWS 150
+LOCAL_VIEWS 200
+BROWSER_AUDIT_RESULT {"version":"2.2.9","views":271,"pageErrors":0,"renderErrors":0,"overlapViews":0}

@@ -1,0 +1,25 @@
+{
+  "id": "PR-PLAN-COMPLETION-01",
+  "recordedAtUTC": "2026-10-19T01:26:42.060443+00:00",
+  "status": "CANDIDATE",
+  "stage4": "NOT ACCEPTED",
+  "changedFiles": [
+    "README.md",
+    "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md"
+  ],
+  "beforeSHA256": {
+    "README.md": "24d9d0cf5be97cf849d00fd5a1b255c438c2bd22095a387b308b96251fbb7e84",
+    "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md": "1e0b1bd7c9010b55341f5cb268102d19093de016492190366356c9fb4533ff23"
+  },
+  "fileSHA256": {
+    "README.md": "7578be359dcd190648cce1478af493afad2fc912eb0dd25afdd9fc52aeeb7c6c",
+    "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md": "84722dabf62f00a66806f54df0ba47a6e3dc116d5f3ae2e133fe07048f935602"
+  },
+  "runtimeChanged": false,
+  "testsRerun": false,
+  "p2EvidenceUnchanged": true,
+  "localLinksChecked": 87,
+  "implementationState": "no completion/outcome API and no automatic Plan closure yet",
+  "openRule": "same Action in multiple Plan steps/cases",
+  "source": "tentative user workflow proposal in current conversation"
+}

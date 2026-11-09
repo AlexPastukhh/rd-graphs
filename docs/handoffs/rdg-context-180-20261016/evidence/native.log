@@ -1,0 +1,6 @@
+NATIVE_HANDLE {"native":true,"queryPermission":"granted"}
+SCREEN 01-native-autosaved
+SCREEN 02-native-handle-restored
+SCREEN 03-native-crash-draft
+SCREEN 04-native-reset-autosaved
+NATIVE_OPFS_AUTOSAVE_PASS pageerrors=0; isolated Chromium only, not Windows Tampermonkey

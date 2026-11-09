@@ -1,0 +1,18 @@
+test_cli_does_not_change_either_input (__main__.CanonReview.test_cli_does_not_change_either_input) ... ok
+test_cli_rejects_mismatched_source_graph_path (__main__.CanonReview.test_cli_rejects_mismatched_source_graph_path) ... ok
+test_forged_and_changed_context_hashes_fail_to_support_claim (__main__.CanonReview.test_forged_and_changed_context_hashes_fail_to_support_claim) ... ok
+test_malformed_claim_without_evidence_denied (__main__.CanonReview.test_malformed_claim_without_evidence_denied) ... ok
+test_out_of_date_or_scopeless_records_do_not_support_claims (__main__.CanonReview.test_out_of_date_or_scopeless_records_do_not_support_claims) ... ok
+test_plan_owner_ref_is_exact_not_merely_matching_node_id (__main__.CanonReview.test_plan_owner_ref_is_exact_not_merely_matching_node_id) ... ok
+test_positive_and_negative_are_both_reported_not_collapsed (__main__.CanonReview.test_positive_and_negative_are_both_reported_not_collapsed) ... ok
+test_rdg_plan_impact_keeps_candidate_hypothetical_only (__main__.CanonReview.test_rdg_plan_impact_keeps_candidate_hypothetical_only) ... ok
+test_recording_date_is_mandatory_for_local_current_check (__main__.CanonReview.test_recording_date_is_mandatory_for_local_current_check) ... ok
+test_stale_pins_block_both_positive_and_negative_claims (__main__.CanonReview.test_stale_pins_block_both_positive_and_negative_claims) ... ok
+test_t2_later_discovery_is_not_t1_recorded_knowledge (__main__.CanonReview.test_t2_later_discovery_is_not_t1_recorded_knowledge) ... ok
+test_unchecked_context_or_normative_requirement_not_real_observation (__main__.CanonReview.test_unchecked_context_or_normative_requirement_not_real_observation) ... ok
+test_unknown_canon_case_and_missing_assessment_are_explicit (__main__.CanonReview.test_unknown_canon_case_and_missing_assessment_are_explicit) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.337s
+
+OK

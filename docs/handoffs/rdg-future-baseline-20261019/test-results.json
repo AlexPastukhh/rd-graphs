@@ -1,0 +1,44 @@
+{
+  "future-baseline": {
+    "command": "python3 tests/rdg-future-baseline.test.py -v",
+    "exitCode": 0,
+    "tests": 9,
+    "log": "future-baseline.log"
+  },
+  "plan-owner": {
+    "command": "python3 tests/rdg-temporal-plan-owner.test.py -v",
+    "exitCode": 0,
+    "tests": 17,
+    "log": "plan-owner.log"
+  },
+  "applicability-owner": {
+    "command": "python3 tests/rdg-applicability-owner.test.py -v",
+    "exitCode": 0,
+    "tests": 9,
+    "log": "applicability-owner.log"
+  },
+  "exact-history": {
+    "command": "python3 tests/rdg-exact-history.test.py -v",
+    "exitCode": 0,
+    "tests": 13,
+    "log": "exact-history.log"
+  },
+  "two-time-scenario": {
+    "command": "python3 tests/rdg-two-time-scenario.test.py -v",
+    "exitCode": 0,
+    "tests": 6,
+    "log": "two-time-scenario.log"
+  },
+  "writer-recording": {
+    "command": "python3 tests/rdg-writer-recording.test.py -v",
+    "exitCode": 0,
+    "tests": 2,
+    "log": "writer-recording.log"
+  },
+  "bearer-authority": {
+    "command": "node --test tests/rdg-bearer-authority.test.cjs",
+    "exitCode": 0,
+    "tests": 2,
+    "log": "bearer-authority.log"
+  }
+}

@@ -1,0 +1,581 @@
+--- a/tools/graph-package.py
++++ b/tools/graph-package.py
+@@ -6,6 +6,7 @@
+ boundary. A crashed transaction must be recovered before a new writer proceeds.
+ """
+ import copy
++import datetime as dt
+ from contextlib import nullcontext
+ import fcntl
+ import hashlib
+@@ -271,6 +272,31 @@
+     return directory
+ 
+ 
++def writer_recorded_at(ignore_path=None):
++    """Reject local clock regression while holding the existing writer lock."""
++    now = dt.datetime.now(dt.timezone.utc)
++    latest = None
++    for path in journal_dir().glob("*.json"):
++        if path == ignore_path:
++            continue
++        entry = load_json(path)
++        if entry.get("schemaVersion") != 2:
++            continue  # Historical v1 journals have no commit-time observation.
++        check(entry.get("state") == "completed" and
++              isinstance(entry.get("recordedAt"), str),
++              "RECORDED_AT_HISTORY_INVALID")
++        try:
++            moment = dt.datetime.fromisoformat(entry["recordedAt"].replace("Z", "+00:00"))
++        except ValueError as error:
++            raise ValueError("RECORDED_AT_HISTORY_INVALID") from error
++        check(moment.tzinfo is not None and moment.utcoffset() == dt.timedelta(0),
++              "RECORDED_AT_HISTORY_INVALID")
++        if latest is None or moment > latest:
++            latest = moment
++    check(latest is None or now >= latest, "WRITER_CLOCK_REGRESSION")
++    return now.isoformat()
++
++
+ def finish(path, journal):
+     records = journal["records"]
+     for record in records:
+@@ -284,6 +310,11 @@
+     for record in records:
+         check(read_if_exists(target_path(record["file"])) == record["after"], "package read-back differs")
+     index_module.rebuild_index()
++    if journal.get("schemaVersion") == 2:
++        # The graph image has been durably written and read back before this
++        # observation. Recovery records its own conservative upper bound.
++        check(journal.get("recordedAt") is None, "RECORDED_AT_ALREADY_SET")
++        journal["recordedAt"] = writer_recorded_at(ignore_path=path)
+     journal["state"] = "completed"
+     write_json(path, journal)
+ 
+@@ -347,7 +378,12 @@
+             for record in records:
+                 check(read_if_exists(target_path(record["file"])) == record["before"],
+                       "GRAPH_CHANGED_EXTERNALLY")
+-            journal = {"schemaVersion": 1, "transactionId": tid, "requestSHA256": digest,
++            # preparedAt is the technical acceptance attempt, not proof that
++            # graph images were available yet. recordedAt is set only by finish
++            # after graph and catalog durable writes (or later recovery).
++            prepared_at = writer_recorded_at()
++            journal = {"schemaVersion": 2, "transactionId": tid, "requestSHA256": digest,
++                       "preparedAt": prepared_at, "recordedAt": None,
+                        "state": "prepared", "records": records}
+             write_json(path, journal)
+             finish(path, journal)
+--- a/tools/rdg-exact-history.py
++++ b/tools/rdg-exact-history.py
+@@ -1,11 +1,12 @@
+ #!/usr/bin/env python3
+-"""Read-only exact candidate Plan + RDG snapshots; not a two-time as-of resolver.
+-
+-Completed local Graph writer journals contain full images, not trusted recordedAt.
+-Explicit canonical SHA pins are mandatory. No current-file or latest-version fallback.
++"""Read-only exact candidate snapshots with an optional recording-time cutoff.
++
++New Graph writer journals carry a local UTC post-write observation; older journals
++remain undated. No effectiveAt/complete two-time as-of or current fallback.
+ """
+ import argparse
+ import copy
++import datetime as dt
+ import fcntl
+ import hashlib
+ from importlib.machinery import SourceFileLoader
+@@ -55,10 +56,18 @@
+ 
+ def validate_query(query):
+     require(isinstance(query, dict), "REQUEST_SCHEMA")
+-    require(not ({"knownAt", "effectiveAt"} & set(query)), "TWO_TIME_QUERY_NOT_SUPPORTED")
+-    require(set(query) == {"schemaVersion", "mode", "lifecycle", "plan", "graphs", "scenario"} and
++    require("effectiveAt" not in query, "TWO_TIME_QUERY_NOT_SUPPORTED")
++    required = {"schemaVersion", "mode", "lifecycle", "plan", "graphs", "scenario"}
++    require(set(query) in (required, required | {"knownAt"}) and
+             type(query["schemaVersion"]) is int and query["schemaVersion"] == 1 and
+             query["mode"] == "exact-reference" and query["lifecycle"] == "candidate", "REQUEST_SCHEMA")
++    if "knownAt" in query:
++        require(isinstance(query["knownAt"], str) and "T" in query["knownAt"] and
++                bool(re.search(r"(Z|[+-]\d{2}:\d{2})\Z", query["knownAt"])), "KNOWN_AT_INSTANT_REQUIRED")
++        try:
++            OWNER.instant(query["knownAt"])
++        except (ValueError, TypeError) as error:
++            raise ValueError("EXACT_HISTORY_KNOWN_AT_INSTANT_REQUIRED") from error
+     plan = query["plan"]
+     require(isinstance(plan, dict) and set(plan) == {"file", "identitySpace", "planId", "revision", "snapshotSHA256", "recordDigest"}, "PLAN_PIN_SCHEMA")
+     require(isinstance(plan["file"], str) and OWNER.TARGET.fullmatch(plan["file"]) and
+@@ -91,6 +100,7 @@
+     require(directory.is_dir(), "WRITER_HISTORY_NOT_AVAILABLE")
+     found = {graph_key(pin): {} for pin in pins}
+     sources = {key: [] for key in found}
++    recorded_after = {key: [] for key in found}
+     files = {pin["graphFile"] for pin in pins}
+     owners = {pin["graphFile"]: pin["identitySpace"] for pin in pins}
+     require(len(owners) == len({(p["graphFile"], p["identitySpace"]) for p in pins}), "GRAPH_OWNER_CONFLICT")
+@@ -100,12 +110,27 @@
+             path = safe(root, path.relative_to(root).as_posix())
+             raw = path.read_bytes()
+             journal = load_bytes(raw)
+-            require(isinstance(journal, dict) and set(journal) == {"schemaVersion", "transactionId", "requestSHA256", "state", "records"} and
+-                    type(journal["schemaVersion"]) is int and journal["schemaVersion"] == 1 and
++            base_keys = {"schemaVersion", "transactionId", "requestSHA256", "state", "records"}
++            require(isinstance(journal, dict) and type(journal.get("schemaVersion")) is int and
++                    ((journal["schemaVersion"] == 1 and set(journal) == base_keys) or
++                     (journal["schemaVersion"] == 2 and set(journal) == base_keys | {"preparedAt", "recordedAt"})) and
+                     isinstance(journal["transactionId"], str) and TX.fullmatch(journal["transactionId"]) and
+                     path.stem == journal["transactionId"] and isinstance(journal["requestSHA256"], str) and
+                     SHA.fullmatch(journal["requestSHA256"]), "JOURNAL_SCHEMA")
+             require(journal["state"] != "prepared", "GRAPH_RECOVERY_REQUIRED")
++            recorded_at = None
++            if journal["schemaVersion"] == 2:
++                require(isinstance(journal["preparedAt"], str) and
++                        isinstance(journal["recordedAt"], str), "JOURNAL_RECORDED_AT_INVALID")
++                try:
++                    prepared_at = OWNER.instant(journal["preparedAt"])
++                    recorded_at = OWNER.instant(journal["recordedAt"])
++                    raw_prepared = dt.datetime.fromisoformat(journal["preparedAt"].replace("Z", "+00:00"))
++                    raw_recorded = dt.datetime.fromisoformat(journal["recordedAt"].replace("Z", "+00:00"))
++                except (ValueError, TypeError) as error:
++                    raise ValueError("EXACT_HISTORY_JOURNAL_RECORDED_AT_INVALID") from error
++                require(raw_prepared.utcoffset() == raw_recorded.utcoffset() == dt.timedelta(0) and
++                        prepared_at <= recorded_at, "JOURNAL_RECORDED_AT_NOT_UTC_OR_ORDERED")
+             require(journal["state"] == "completed" and isinstance(journal["records"], list) and journal["records"], "JOURNAL_STATE")
+             seen = set()
+             for record in journal["records"]:
+@@ -134,7 +159,11 @@
+                     found[key][sha] = copy.deepcopy(image)
+                     sources[key].append({"journal": path.relative_to(root).as_posix(),
+                                          "journalSHA256": hashlib.sha256(raw).hexdigest(),
+-                                         "transactionId": journal["transactionId"], "side": side})
++                                         "transactionId": journal["transactionId"], "side": side,
++                                         "recordedAt": journal.get("recordedAt") if side == "after" else None})
++                    # A later before-image cannot backdate an earlier revision.
++                    if side == "after" and recorded_at is not None:
++                        recorded_after[key].append(journal["recordedAt"])
+     results = {}
+     for pin in pins:
+         key = graph_key(pin)
+@@ -142,9 +171,12 @@
+         require(len(found[key]) == 1, "AMBIGUOUS_GRAPH_REVISION")
+         sha, graph = next(iter(found[key].items()))
+         require(sha == pin["snapshotSHA256"], "GRAPH_SNAPSHOT_HASH_MISMATCH")
++        times = recorded_after[key]
++        require(len(times) <= 1, "GRAPH_RECORDED_AT_AMBIGUOUS")
+         results[key] = {"graph": graph, "provenance": {
+             **pin, "sourceKind": "completed-writer-journal", "sources": sources[key],
+-            "exactRdgSnapshotResolved": True, "recordedAt": None,
++            "exactRdgSnapshotResolved": True, "recordedAt": times[0] if times else None,
++            "recordingTimeSource": "writer-after-durable-graph" if times else None,
+             "knowledgeTimeVerified": False, "humanIdentityVerified": False}}
+     return results
+ 
+@@ -167,6 +199,26 @@
+     expected = {(ref["identitySpace"], ref["graphFile"], ref["observedGraphRevision"]) for ref in refs}
+     require(expected == {graph_key(pin) for pin in pins}, "SCENARIO_GRAPH_PINS_MISMATCH")
+     graphs = journal_snapshots(graphs_root, pins)
++    cutoff = OWNER.instant(query["knownAt"]) if "knownAt" in query else None
++    if cutoff is not None:
++        # The Plan owner's recordedAt precedes its durable write. For an old
++        # revision, the next guarded edit proves the previous store already
++        # existed when that edit acquired and read it. Latest revisions have
++        # no historical upper bound and cannot pass this gate.
++        try:
++            next_version = OWNER.read_snapshot(plan_root, plan_pin["file"],
++                                               plan_pin["revision"] + 1)
++        except ValueError as error:
++            if "SNAPSHOT_NOT_FOUND" in str(error):
++                raise ValueError("EXACT_HISTORY_PLAN_AVAILABILITY_BOUND_NOT_AVAILABLE") from error
++            raise
++        plan_available_by = next_version["provenance"]["recordedAt"]
++        require(OWNER.instant(plan_available_by) <= cutoff,
++                "PLAN_NOT_PROVEN_AVAILABLE_BY_KNOWN_AT")
++        for item in graphs.values():
++            recorded = item["provenance"]["recordedAt"]
++            require(recorded is not None, "GRAPH_RECORDING_TIME_NOT_AVAILABLE")
++            require(OWNER.instant(recorded) <= cutoff, "GRAPH_RECORDED_AFTER_KNOWN_AT")
+     def graph_resolver(ref):
+         key = ref["identitySpace"], ref["graphFile"], ref["observedGraphRevision"]
+         require(key in graphs, "GRAPH_SNAPSHOT_NOT_FOUND")
+@@ -179,15 +231,19 @@
+     read_receipt = authority.authorize_snapshot_read(token, plan_pin["file"], targets)
+     return {"status": "resolved", "mode": "exact-reference", "lifecycle": "candidate",
+             "scenario": copy.deepcopy(query["scenario"]), "scenarioOnly": True, "readOnly": True,
++            "knownAtCutoff": query.get("knownAt"),
++            "planAvailableBy": plan_available_by if cutoff is not None else None,
+             "plan": plan, "planProvenance": provenance,
+             "graphSnapshots": [graphs[key] for key in sorted(graphs)], "impact": impact,
+             "readAuthorization": read_receipt,
+             "provenance": {"exactPlanSnapshotResolved": True, "exactRdgSnapshotsResolved": True,
++                           "recordingCutoffVerified": cutoff is not None,
+                            "knowledgeTimeVerified": False, "twoTimeAsOfResolved": False,
+                            "historicalT1KnowledgeVerified": False, "semanticTruthVerified": False,
+                            "eventsAttested": False, "productionAccepted": False},
+-            "evidenceGaps": ["RDG writer journals have no trusted recordedAt; knownAt/effectiveAt are unsupported",
+-                             "Exact local hashes do not prove human identity, factual truth, or complete historical context"]}
++            "evidenceGaps": ["Older RDG journals have no availability bound; the latest Plan revision has no historical availability bound",
++                             "The cutoff only proves pinned source availability; it does not select complete applicable as-of context or establish effectiveAt",
++                             "Local hashes/clock do not prove human identity, factual truth, or historical Gendocen validation"]}
+ 
+ 
+ def main():
+--- a/tools/rdg-gendocen-t1-history-smoke.py
++++ b/tools/rdg-gendocen-t1-history-smoke.py
+@@ -7,6 +7,7 @@
+ """
+ import argparse
+ import copy
++import datetime as dt
+ import hashlib
+ import json
+ import os
+@@ -210,10 +211,16 @@
+                 "graphs": [{"graphFile": REL, "identitySpace": t1_graph["identitySpace"],
+                             "revision": 3, "snapshotSHA256": plan_owner.digest(t1_graph)}],
+                 "scenario": {"branchId": "B-RESULT", "outcome": "positive"}}
++            writer_journal = snapshot(workspace / "graphs/workspaces/.transactions/T1-selected.json")
++            require(writer_journal["schemaVersion"] == 2 and
++                    writer_journal["state"] == "completed", "T1_WRITER_TIME_MISSING")
+             exact_initial = history_reader.resolve(
+                 plan_root, workspace / "graphs", auth_store, read_token, exact_query)
+             require(exact_initial["graphSnapshots"][0]["graph"] == t1_graph and
+                     exact_initial["plan"] == plan and
++                    exact_initial["provenance"]["recordingCutoffVerified"] is False and
++                    exact_initial["graphSnapshots"][0]["provenance"]["recordedAt"] ==
++                    writer_journal["recordedAt"] and
+                     exact_initial["provenance"]["twoTimeAsOfResolved"] is False,
+                     "EXACT_INITIAL_SOURCE_MISMATCH")
+         else:
+@@ -480,18 +487,25 @@
+             confirm_t1()
+             require(next(s for s in current_owned["plan"]["steps"] if s["id"] == "S-RESULT")["state"] == "expected",
+                     "OWNED_ASSUMPTION_ATTESTED_EVENT")
++            exact_query["knownAt"] = (max(
++                plan_owner.instant(plan_owner.read_snapshot(plan_root, plan_relative, 2)
++                                   ["provenance"]["recordedAt"]),
++                plan_owner.instant(writer_journal["recordedAt"])) + dt.timedelta(seconds=1)).isoformat()
+             exact_later = history_reader.resolve(
+                 plan_root, workspace / "graphs", auth_store, read_token, exact_query)
+             require(exact_later["graphSnapshots"][0]["graph"] == t1_graph and
+                     exact_later["plan"] == initial_owned_snapshot["plan"] and
+                     exact_later["impact"] == exact_initial["impact"] and
+                     exact_later["provenance"]["historicalT1KnowledgeVerified"] is False and
+-                    exact_later["graphSnapshots"][0]["provenance"]["recordedAt"] is None and
++                    exact_later["provenance"]["recordingCutoffVerified"] is True and
++                    exact_later["graphSnapshots"][0]["provenance"]["recordedAt"] ==
++                    writer_journal["recordedAt"] and
+                     next(n for n in snapshot(graph_path)["nodes"] if n["id"] == "A1")["qrpe"] !=
+                     next(n for n in exact_later["graphSnapshots"][0]["graph"]["nodes"]
+                          if n["id"] == "A1")["qrpe"], "EXACT_HISTORY_CURRENT_FALLBACK")
+             owner_proof = {"currentRevision": current_owned["plan"]["revision"],
+                            "exactHistoricalPlanAndRdg": True,
++                           "recordingCutoffVerified": True,
+                            "twoTimeAsOfResolved": False,
+                            "exactRevision1Preserved": True, "branchSwapRequiresBothReviews": True,
+                            "candidateConflictDrafts": drafts["draftCount"], "draftTypes": ["F-R"],
+--- a/tests/rdg-exact-history.test.py
++++ b/tests/rdg-exact-history.test.py
+@@ -1,6 +1,7 @@
+ #!/usr/bin/env python3
+ """Exact historical Plan/RDG resolution on synthetic roots; no live graph reads."""
+ import copy
++import datetime as dt
+ from importlib.machinery import SourceFileLoader
+ import json
+ from pathlib import Path
+@@ -56,10 +57,14 @@
+         issued = self.auth.manage("issue", self.admin, {"permissions": permissions, "scopes": scopes})
+         return (issued["id"], issued["token"]) if with_id else issued["token"]
+ 
+-    def add_journal(self, tx, before, after, state="completed", file=REL):
+-        value = {"schemaVersion": 1, "transactionId": tx, "requestSHA256": "0"*64,
++    def add_journal(self, tx, before, after, state="completed", file=REL, recorded_at=None):
++        value = {"schemaVersion": 2 if recorded_at else 1,
++                 "transactionId": tx, "requestSHA256": "0"*64,
+                  "state": state, "records": [{"file": file, "before": before,
+                  "after": after, "changed": before != after}]}
++        if recorded_at:
++            value["preparedAt"] = (OWNER.instant(recorded_at) - dt.timedelta(seconds=1)).isoformat()
++            value["recordedAt"] = recorded_at
+         path = self.graphs / "workspaces/.transactions" / (tx + ".json")
+         path.write_text(json.dumps(value))
+         return path
+@@ -109,6 +114,53 @@
+         (self.graphs / "workspaces/.transactions/linked.json").symlink_to(outside)
+         self.assert_denied("SYMLINK_DENIED")
+ 
++    def test_known_at_requires_post_durable_graph_and_plan_successor_bound(self):
++        # r1 already existed when the next guarded Plan edit read the store.
++        later_plan = copy.deepcopy(self.plan)
++        later_plan["revision"] = 2
++        editor = self.grant(["plan.edit"], [PLANREL])
++        OWNER.apply_request(self.plans, self.authpath, editor, {
++            "transactionId": "plan-r2", "op": "edit", "file": PLANREL,
++            "expectedRevision": 1, "plan": later_plan})
++        plan_bound = OWNER.read_snapshot(self.plans, PLANREL, 2)["provenance"]["recordedAt"]
++        graph_time = OWNER.instant(plan_bound) + dt.timedelta(seconds=10)
++        self.add_journal("graph-create", None, self.graph, recorded_at=graph_time.isoformat())
++        q = copy.deepcopy(self.query)
++        q["knownAt"] = (graph_time + dt.timedelta(seconds=1)).isoformat()
++        result = self.resolve(q)
++        self.assertTrue(result["provenance"]["recordingCutoffVerified"])
++        self.assertFalse(result["provenance"]["twoTimeAsOfResolved"])
++        self.assertEqual(result["planAvailableBy"], plan_bound)
++        self.assertEqual(result["graphSnapshots"][0]["provenance"]["recordedAt"], graph_time.isoformat())
++        q["knownAt"] = (graph_time - dt.timedelta(microseconds=1)).isoformat()
++        self.assert_denied("GRAPH_RECORDED_AFTER_KNOWN_AT", q)
++        q["knownAt"] = (OWNER.instant(plan_bound) - dt.timedelta(microseconds=1)).isoformat()
++        self.assert_denied("PLAN_NOT_PROVEN_AVAILABLE_BY_KNOWN_AT", q)
++        # Latest Plan revision has no successor witness.
++        q["knownAt"] = result["knownAtCutoff"]
++        next_meta = OWNER.read_snapshot(self.plans, PLANREL, 2)["provenance"]
++        q["plan"].update(revision=2, snapshotSHA256=next_meta["snapshotSHA256"],
++                         recordDigest=next_meta["recordDigest"])
++        self.assert_denied("PLAN_AVAILABILITY_BOUND_NOT_AVAILABLE", q)
++        # An older Graph journal cannot supply an after-image availability time.
++        q = copy.deepcopy(self.query)
++        q["knownAt"] = result["knownAtCutoff"]
++        self.add_journal("graph-create", None, self.graph)
++        self.assert_denied("GRAPH_RECORDING_TIME_NOT_AVAILABLE", q)
++
++    def test_invalid_v2_clock_and_effective_at_are_rejected(self):
++        q = copy.deepcopy(self.query)
++        q["effectiveAt"] = "2026-11-01"
++        self.assert_denied("TWO_TIME_QUERY_NOT_SUPPORTED", q)
++        q = copy.deepcopy(self.query)
++        q["knownAt"] = "2026-10-19"
++        self.assert_denied("KNOWN_AT_INSTANT_REQUIRED", q)
++        q["knownAt"] = "2026-10-19T00:00:00Z"
++        self.assert_denied("PLAN_AVAILABILITY_BOUND_NOT_AVAILABLE", q)
++        self.add_journal("bad-clock", self.graph, {**self.graph, "revision": 2},
++                         recorded_at="2026-10-19T08:00:00+07:00")
++        self.assert_denied("JOURNAL_RECORDED_AT_NOT_UTC")
++
+     def test_missing_exact_graph_and_no_current_fallback(self):
+         (self.graphs / "workspaces/.transactions/graph-create.json").unlink()
+         path = self.graphs / REL
+@@ -171,8 +223,9 @@
+ 
+     def test_no_two_time_or_lifecycle_claim_is_accepted(self):
+         q = copy.deepcopy(self.query)
+-        q["knownAt"] = "2026-10-19T03:00:00+07:00"
+-        self.assert_denied("TWO_TIME_QUERY_NOT_SUPPORTED", q)
++        q["knownAt"] = (OWNER.instant(self.provenance["recordedAt"]) -
++                        dt.timedelta(microseconds=1)).isoformat()
++        self.assert_denied("PLAN_AVAILABILITY_BOUND_NOT_AVAILABLE", q)
+         q = copy.deepcopy(self.query)
+         q["lifecycle"] = "accepted"
+         self.assert_denied("REQUEST_SCHEMA", q)
+--- a/README.md
++++ b/README.md
+@@ -14,11 +14,15 @@
+ [Реализация и границы P2](docs/guides/RDG-TEMPORAL-PLAN-OWNER-PILOT-P2.md) ·
+ [P0.1/P2 контрольная точка](docs/handoffs/rdg-vertical-slice-20261019/CHECKPOINT.md).
+ 
+-**Следующий локальный срез:** [точные исторические ссылки Plan + RDG](docs/guides/RDG-EXACT-HISTORY-PILOT-P2.md)
+-по закреплённым SHA и завершённым журналам штатного writer.
+-[Текущие результаты](docs/handoffs/rdg-exact-history-20261019/CHECKPOINT.md).
+-Это read-only candidate-пилот: Graph `recordedAt` в журнале нет, полный
+-`knownAt/effectiveAt`, исторический Gendocen и фактический T1-as-of не заявлены.
++**Текущий локальный срез:** [точные Plan + RDG и ограниченный `knownAt`](docs/guides/RDG-EXACT-HISTORY-PILOT-P2.md).
++Точный candidate Plan и образы RDG разрешаются по закреплённым SHA и
++завершённым журналам writer. Новые журналы фиксируют время после сохранения
++Graph; для Plan нужна следующая версия как свидетель доступности предыдущей.
++Последняя версия Plan и старые журналы не дают такого подтверждения.
++[Контрольная точка](docs/handoffs/rdg-known-at-20261019/CHECKPOINT.md) ·
++[предыдущий срез](docs/handoffs/rdg-exact-history-20261019/CHECKPOINT.md).
++Проверка `effectiveAt`, полный historical Gendocen и фактический T1-as-of
++не реализованы.
+ 
+ [Review P0/P1](docs/handoffs/rdg-progress-review-20261019-v1/REVIEW.md)
+ сохранён как основание исправлений. Его F-P-PROGRESS-01 закрыт в локальном пилоте;
+--- a/docs/guides/RDG-EXACT-HISTORY-PILOT-P2.md
++++ b/docs/guides/RDG-EXACT-HISTORY-PILOT-P2.md
+@@ -1,7 +1,9 @@
+ # Точные Plan + RDG snapshots — read-only пилот
+ 
+ **Статус: CANDIDATE. Stage 4 NOT ACCEPTED.** Это локальное разрешение точных
+-ссылок для одного условного сценария, а не полный запрос `knownAt/effectiveAt`.
++ссылок для одного условного сценария. Опциональный `knownAt` проверяет
++доказуемую доступность закреплённых источников к моменту отсечения;
++это не полный исторический as-of с `effectiveAt`.
+ Основание: [контракт P1](RDG-TEMPORAL-PLAN-OWNER-CONTRACT-P1.md) и
+ [Plan owner P2](RDG-TEMPORAL-PLAN-OWNER-PILOT-P2.md).
+ 
+@@ -55,17 +57,38 @@
+ Условный сценарий не становится фактически наступившей ветвью; оценка срока
+ остаётся предположением кандидата. Она не создаёт Finding и не меняет T1.
+ 
+-В Graph writer journal **нет доверенного `recordedAt` для RDG**. Поэтому
+-результат отмечает `knowledgeTimeVerified=false`, `twoTimeAsOfResolved=false`,
+-`historicalT1KnowledgeVerified=false`. Пилот не принимает `knownAt/effectiveAt`,
+-не доказывает знание на T1 и не подключает исторический режим к Gendocen
+-subscription/runtime. Даже совпадение SHA не доказывает человека или факт
+-события. Полный as-of потребует собственных неизменяемых временных records RDG,
+-проверки порядка lifecycle/branch и отдельного trust gate.
++В новых Graph writer journals (schemaVersion 2) `preparedAt` означает
++момент попытки принять транзакцию. Это **не** время доступности нового графа.
++После долговечной записи и обратного чтения графа writer ставит `recordedAt`
++при завершении; после сбоя recovery ставит более позднюю, консервативную
++метку. Для старого schemaVersion 1 метки нет. Локальные часы и SHA не служат
++независимым подтверждением личности или факта.
+ 
+-Проверка: `python3 tests/rdg-exact-history.test.py -v` и
++Опциональный `knownAt` — строка с точным временем и часовым поясом. Resolver
++сравнивает время с `recordedAt` каждого выбранного RDG **after**-образа.
++Для Plan revision N его собственный `recordedAt` ещё предшествует долговечной
++записи. Поэтому resolver требует revision N+1: защищённое редактирование
++уже прочитало N из сохранённого owner store, а его `recordedAt` задаёт
++консервативную верхнюю границу доступности N. Последняя Plan revision,
++Graph только из before-образа или старого журнала не проходят эту проверку.
++Без `knownAt` остаётся прежнее разрешение точных ссылок без утверждения
++о времени. Отсутствующее свидетельство не заменяется текущим файлом.
++
++Успешный запрос ставит `recordingCutoffVerified=true` только для этой
++ограниченной проверки доступности закреплённых источников. Он не выбирает
++полный контекст, который действовал на дату, и не доказывает, что выбранный
++Plan был тогда последним или применимым. `effectiveAt` отклоняется;
++`knowledgeTimeVerified=false`, `twoTimeAsOfResolved=false`,
++`historicalT1KnowledgeVerified=false`. Это не подтверждение знания на T1,
++не исторический Gendocen subscription/runtime и не принятие фактической
++ветви. Для полного as-of нужны проверяемые события и применимость по
++`effectiveAt`, вся относящаяся история RDG и отдельный trust gate.
++
++Проверка: `python3 tests/rdg-exact-history.test.py -v`,
++`python3 tests/rdg-writer-recording.test.py -v` и
+ `python3 tools/rdg-gendocen-t1-history-smoke.py --engine-source /workspace/repos/gendocen --plan-owner`.
+ В последнем прогоне Graph writer создаёт реальный локальный журнал; после
+ последующих QRPE/Plan изменений resolver вновь выдаёт тот же pinned T1 graph
+-snapshot и ту же оценку выбранного сценария. Сам Gendocen остаётся на текущих
++snapshot и ту же оценку выбранного сценария. Пилот отдельно проверяет
++`knownAt` после появления Plan revision 2. Сам Gendocen остаётся на текущих
+ проекциях и не подтверждает historical T1-as-of.
+--- /dev/null
++++ b/tests/rdg-writer-recording.test.py
+@@ -0,0 +1,125 @@
++#!/usr/bin/env python3
++"""Real Graph package journal timestamp, crash recovery and knownAt cutoffs."""
++import datetime as dt
++from importlib.machinery import SourceFileLoader
++import json
++import os
++from pathlib import Path
++import subprocess
++import sys
++import unittest
++
++ROOT = Path(__file__).resolve().parents[1]
++BASE = SourceFileLoader("recording_bearer_fixture", str(ROOT / "tests/rdg-bearer-package.integration.test.py")).load_module()
++HISTORY = SourceFileLoader("recording_exact_history", str(ROOT / "tools/rdg-exact-history.py")).load_module()
++OWNER = HISTORY.OWNER
++REL = "workspaces/demo/graph.json"
++PLANREL = "plans/demo/plan.json"
++
++
++class WriterRecordingTest(unittest.TestCase):
++    def setUp(self):
++        self.writer = BASE.BearerPackage(methodName="test_create_candidate_only_including_legacy")
++        self.writer.setUp()
++        self.addCleanup(self.writer.tearDown)
++        self.grant = self.writer.grant(["graph.create", "graph.add_action"])
++
++    def journal(self, tx):
++        return self.writer.home / "graphs/workspaces/.transactions" / (tx + ".json")
++
++    def test_prepared_time_survives_crash_and_exact_cutoff(self):
++        package = self.writer.create(tid="commit-create")
++        payload = self.writer.home / "prepared-input.json"
++        payload.write_text(json.dumps(package))
++        script = """import json,os,sys
++from importlib.machinery import SourceFileLoader
++m=SourceFileLoader('writer_under_crash',sys.argv[1]).load_module()
++m.finish=lambda *args: os._exit(91)
++m.execute(json.load(open(sys.argv[2])))
++"""
++        crashed = subprocess.run([sys.executable, "-c", script,
++                str(self.writer.home / "tools/graph-package.py"), str(payload)],
++                capture_output=True, text=True,
++                env={**self.writer.env, "RDG_AUTH_TOKEN": self.grant["token"]})
++        self.assertEqual(crashed.returncode, 91, crashed.stderr)
++        pending = json.loads(self.journal("commit-create").read_text())
++        self.assertEqual(pending["schemaVersion"], 2)
++        self.assertEqual(pending["state"], "prepared")
++        prepared_time = pending["preparedAt"]
++        self.assertIsNone(pending["recordedAt"])
++        self.assertIsNone(pending["records"][0]["before"])
++        self.assertFalse(self.writer.path.exists())
++        self.writer.assert_ok(self.writer.write(
++            self.writer.patch([self.writer.action()], 1, "commit-add"), self.grant["token"]))
++        recovered = json.loads(self.journal("commit-create").read_text())
++        added = json.loads(self.journal("commit-add").read_text())
++        self.assertEqual(recovered["state"], "completed")
++        self.assertEqual(recovered["preparedAt"], prepared_time)
++        self.assertGreaterEqual(OWNER.instant(recovered["recordedAt"]), OWNER.instant(prepared_time))
++        self.assertEqual(added["schemaVersion"], 2)
++        self.assertGreaterEqual(OWNER.instant(added["recordedAt"]), OWNER.instant(prepared_time))
++        graph = json.loads(self.writer.path.read_text())
++        self.assertEqual(graph["revision"], 2)
++        # Replaying an older transaction after a later graph revision is
++        # correctly denied by the existing writer; it must not retime it.
++        self.writer.assert_denied(self.writer.write(package, self.grant["token"]),
++                                  "REPLAY_STATE_CHANGED")
++        self.assertEqual(json.loads(self.journal("commit-create").read_text())["recordedAt"],
++                         recovered["recordedAt"])
++
++        store = self.writer.home / "plan-auth.json"
++        auth = OWNER.AUTH.Authority(store)
++        admin = auth.init_local(plan_capable=True)["token"]
++        def issue(perms):
++            return auth.manage("issue", admin, {"permissions": perms,
++                    "scopes": [PLANREL, REL]})["token"]
++        plan = json.loads((ROOT / "docs/examples/temporal-plan-candidate-v1.json").read_text())
++        plan["identitySpace"] = "demo"
++        for step in plan["steps"]:
++            if step["kind"] == "action":
++                step["actionRef"].update(graphFile=REL, identitySpace="demo",
++                                         observedGraphRevision=2)
++        plan_root = self.writer.home / "plan-owner"
++        plan_root.mkdir()
++        OWNER.apply_request(plan_root, store, issue(["plan.create", "plan.branch"]), {
++            "transactionId": "candidate-r1", "op": "create", "file": PLANREL,
++            "expectedRevision": 0, "plan": plan})
++        meta = OWNER.read_snapshot(plan_root, PLANREL, 1)["provenance"]
++        next_plan = json.loads(json.dumps(plan))
++        next_plan["revision"] = 2
++        OWNER.apply_request(plan_root, store, issue(["plan.edit"]), {
++            "transactionId": "candidate-r2", "op": "edit", "file": PLANREL,
++            "expectedRevision": 1, "plan": next_plan})
++        plan_bound = OWNER.read_snapshot(plan_root, PLANREL, 2)["provenance"]["recordedAt"]
++        query = {"schemaVersion": 1, "mode": "exact-reference", "lifecycle": "candidate",
++                 "plan": {"file": PLANREL, "identitySpace": "demo", "planId": plan["id"],
++                          "revision": 1, "snapshotSHA256": meta["snapshotSHA256"],
++                          "recordDigest": meta["recordDigest"]},
++                 "graphs": [{"graphFile": REL, "identitySpace": "demo", "revision": 2,
++                             "snapshotSHA256": OWNER.digest(graph)}],
++                 "scenario": {"branchId": "B-RESULT", "outcome": "positive"},
++                 "knownAt": (max(OWNER.instant(plan_bound),
++                           OWNER.instant(added["recordedAt"])) + dt.timedelta(seconds=1)).isoformat()}
++        resolved = HISTORY.resolve(plan_root, self.writer.home / "graphs", store,
++                                   issue(["plan.read", "graph.read"]), query)
++        self.assertTrue(resolved["provenance"]["recordingCutoffVerified"])
++        self.assertFalse(resolved["provenance"]["twoTimeAsOfResolved"])
++        self.assertEqual(resolved["graphSnapshots"][0]["provenance"]["recordedAt"],
++                         added["recordedAt"])
++
++    def test_clock_regression_does_not_create_new_journal(self):
++        self.writer.assert_ok(self.writer.write(self.writer.create(tid="clock-base"),
++                                                self.grant["token"]))
++        base = self.journal("clock-base")
++        content = json.loads(base.read_text())
++        content["recordedAt"] = "2999-01-01T00:00:00+00:00"
++        base.write_text(json.dumps(content))
++        result = self.writer.write(self.writer.patch([self.writer.action()], 1,
++                                                          "clock-regression"), self.grant["token"])
++        self.writer.assert_denied(result, "WRITER_CLOCK_REGRESSION")
++        self.assertFalse(self.journal("clock-regression").exists())
++        self.assertEqual(json.loads(self.writer.path.read_text())["revision"], 1)
++
++
++if __name__ == "__main__":
++    unittest.main()

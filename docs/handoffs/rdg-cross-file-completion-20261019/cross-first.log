@@ -1,0 +1,8 @@
+test_subgoal_continuation_execution_writes_parent_history_and_future_once (__main__.CrossFile.test_subgoal_continuation_execution_writes_parent_history_and_future_once) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+
+----------------------------------------------------------------------
+Ran 1 test in 2.875s
+
+OK

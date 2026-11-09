@@ -1,0 +1,148 @@
+{
+  "schemaVersion": 1,
+  "planId": "demo",
+  "title": "План во времени",
+  "planProvenance": {
+    "identitySpace": "demo",
+    "planId": "demo",
+    "sourcePath": "plans/demo/plan.json",
+    "revision": 2,
+    "recordedAt": "2026-10-19T09:29:30.060832+00:00",
+    "recordDigest": "bfa39f9f9a43b65f32955fc2f0770270cbdb261b6217d8b6262215b5e63d8199",
+    "snapshotSHA256": "2520b539d515f509c7979679674f6582888d0dd3a2dc97308740fc257cae973e",
+    "exactPlanSnapshotResolved": true,
+    "historicalRdgSnapshotResolved": false,
+    "acceptanceVerified": false,
+    "eventsAttested": false
+  },
+  "graphOwners": {
+    "workspaces/demo/graph.json": {
+      "identitySpace": "demo",
+      "revision": 2
+    }
+  },
+  "future": [
+    {
+      "stepId": "S1",
+      "kind": "action",
+      "graphRef": {
+        "graphFile": "workspaces/demo/graph.json",
+        "identitySpace": "demo",
+        "nodeId": "A1"
+      },
+      "nodeId": "A1",
+      "title": "A1",
+      "plannedTitle": "Разместить A1",
+      "state": "planned",
+      "graphRevision": 2,
+      "timeConstraints": [
+        {
+          "at": "2026-10-20",
+          "basis": "Synthetic placement",
+          "stepId": "S1",
+          "strength": "soft",
+          "type": "notBefore"
+        }
+      ],
+      "sequence": []
+    },
+    {
+      "stepId": "S2",
+      "kind": "action",
+      "graphRef": {
+        "graphFile": "workspaces/demo/graph.json",
+        "identitySpace": "demo",
+        "nodeId": "A2"
+      },
+      "nodeId": "A2",
+      "title": "A2",
+      "plannedTitle": "Разместить A2",
+      "state": "planned",
+      "graphRevision": 2,
+      "timeConstraints": [
+        {
+          "at": "2026-10-20",
+          "basis": "Synthetic placement",
+          "stepId": "S2",
+          "strength": "soft",
+          "type": "notBefore"
+        }
+      ],
+      "sequence": []
+    },
+    {
+      "stepId": "SG",
+      "kind": "requirement",
+      "graphRef": {
+        "graphFile": "workspaces/demo/graph.json",
+        "identitySpace": "demo",
+        "nodeId": "R0"
+      },
+      "nodeId": "R0",
+      "title": "Root",
+      "plannedTitle": "Разместить R0",
+      "state": "planned",
+      "graphRevision": 2,
+      "timeConstraints": [
+        {
+          "at": "2026-10-20",
+          "basis": "Synthetic placement",
+          "stepId": "SG",
+          "strength": "soft",
+          "type": "notBefore"
+        }
+      ],
+      "sequence": []
+    }
+  ],
+  "history": [
+    {
+      "id": "create::workspaces/demo/graph.json::saved",
+      "graphFile": "workspaces/demo/graph.json",
+      "kind": "graph_saved",
+      "recordedAt": "2026-10-19T09:29:29.347762+00:00",
+      "transactionId": "create",
+      "revision": 1,
+      "previousRevision": null,
+      "changed": {
+        "nodes": [
+          "R0"
+        ],
+        "edges": []
+      },
+      "authorityPrincipals": [
+        "bearer:g_bee5d2aa8d3e8e5c4edd"
+      ],
+      "summary": "Изменены: Root",
+      "operations": []
+    },
+    {
+      "id": "tx-1::workspaces/demo/graph.json::saved",
+      "graphFile": "workspaces/demo/graph.json",
+      "kind": "graph_saved",
+      "recordedAt": "2026-10-19T09:29:29.936145+00:00",
+      "transactionId": "tx-1",
+      "revision": 2,
+      "previousRevision": 1,
+      "changed": {
+        "nodes": [
+          "A1",
+          "A2"
+        ],
+        "edges": [
+          "action-drive-A1",
+          "action-drive-A2"
+        ]
+      },
+      "authorityPrincipals": [
+        "bearer:g_7a94c6617d81466217fe"
+      ],
+      "summary": "Изменены: A1, A2",
+      "operations": []
+    }
+  ],
+  "unresolved": [],
+  "excludedPlacements": [],
+  "sourcesChanged": false,
+  "coverage": "current explicit Plan and requested graph owners; external completion unresolved"
+}

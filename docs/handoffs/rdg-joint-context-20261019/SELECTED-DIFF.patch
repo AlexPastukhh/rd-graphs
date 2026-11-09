@@ -1,0 +1,1242 @@
+--- a/README.md
++++ b/README.md
+@@ -29,6 +29,12 @@
+ а проекция с ранним `knownAt` сохраняется. Это scoped event review;
+ полный исторический Plan/RDG resolver остаётся открытым.
+ [Новая контрольная точка](docs/handoffs/rdg-event-gendocen-20261019/CHECKPOINT.md).
++[Совместный context v1](docs/guides/RDG-JOINT-CONTEXT-PILOT.md) связывает
++applicability, точный baseline, Plan/RDG snapshots и совместимый event claim.
++Реальный Gendocen проверяет позднюю реконструкцию и сохранность раннего
++контекста. Scope — один Plan/branch/occurrence; полный автоматический
++lifecycle as-of и достоверность факта остаются открытыми.
++[Совместный checkpoint](docs/handoffs/rdg-joint-context-20261019/CHECKPOINT.md).
+ 
+ Исправлены пропуск вычисляемой группы зависимостей из declaration и потеря
+ смысловых `title`: контракт `rdg-temporal-review/v2` отклоняет неполное покрытие.
+--- a/docs/guides/RDG-CURRENT-EXECUTION-PLAN.md
++++ b/docs/guides/RDG-CURRENT-EXECUTION-PLAN.md
+@@ -1,6 +1,6 @@
+ # RDG + Temporal Plan — актуальный порядок исполнения
+ 
+-**Актуальная контрольная точка:** CPW-RDG-EVENT-GENDOCEN-20261019/v1.
++**Актуальная контрольная точка:** CPW-RDG-JOINT-CONTEXT-20261019/v1.
+ **Статус:** рабочий план
+ для Candidate-пилота. **Stage 4 NOT ACCEPTED.** Этот документ обновляет
+ порядок и фактические статусы после локальных проверок. Он не меняет
+@@ -19,19 +19,20 @@
+ |---|---|---|
+ | P0/P0.1 | Исправлены branch membership, независимая проверка полноты declaration/subscriptions и смысловых title для текущих проекций; scoped acceptance PASS. | Несколько событий, новый lifecycle и исторический контекст ещё не входят в coverage. |
+ | P1 | [Контракт owner/version/as-of](RDG-TEMPORAL-PLAN-OWNER-CONTRACT-P1.md) подготовлен как Candidate. | PR-P1-01..05 не committed; production owner и доверенный источник событий не выбраны. |
+-| P2 | Candidate Plan owner, точные Plan/RDG snapshots, история применимости, технический baseline и event owner. Отдельный [event-контракт Gendocen v1](RDG-EVENT-GENDOCEN-PILOT.md) проверяет свежесть текущего и фиксированного раннего event context; correction/conflict требуют review. [Последнее evidence](../handoffs/rdg-event-gendocen-20261019/CHECKPOINT.md). | Нет подтверждения пользователя, trusted event source, проверки содержания evidence и выбора полного Plan/RDG/lifecycle контекста; `effectiveAt` не аттестовано. Старые journals без времени не проходят `knownAt`. |
++| P2 | [Совместный context v1](RDG-JOINT-CONTEXT-PILOT.md) связывает candidate applicability, точный baseline state, pinned Plan/RDG и один совместимый event claim по двум временам. Реальный Gendocen проверяет позднюю реконструкцию и сохранность раннего контекста. [Последнее evidence](../handoffs/rdg-joint-context-20261019/CHECKPOINT.md). | Scope — один Plan/branch/occurrence. Автоматический effective-time выбор принятых baseline, полнота остальных owners, trusted event source и проверка содержания evidence открыты. Старые journals без времени отклоняются. |
+ | P3 | Есть ограниченные F-R/F-U/F-O, F-P preflight, Canon context review и read-only Plan impact. | Полная семантика Finding/Proposal/Canon, независимое подтверждение F-P, несколько событий и различение позднего знания о T1 от изменения после T1. |
+ | P4 | Есть foundations рабочих/research-графов. | Сквозная передача между чатами, один смысловой owner при promotion/link, archive/retrieval и успешная проверка без искусственного Finding. |
+ | P5 | Есть исходники Viewer и синтетический Gendocen runtime proof. | Helper grants, Plan editor/timeline, читаемая Markdown-проекция, внешний consumer и отдельная проверка установки в Windows/G2. |
+ | P6–P7 | Удалённая запись и вывод legacy из эксплуатации не начинались. | Canonical GitHub owner/branch/writer, multi-file CAS/failure proof, проверка лицензии движка; затем доказанное замещение legacy. |
+ 
+-В последнем срезе прошли 22 адресных теста и новый реальный Gendocen smoke
+-из 25 CLI-запусков: текущая event-проекция требует review после поздних
+-записей, ранняя проекция с фиксированным `knownAt` сохраняется. Проверены
+-stale context, адресность другого occurrence и сохранность source bytes.
+-Прежние 88 тестов и 405 Node PASS относятся к предыдущим срезам и здесь
+-полностью не повторялись. Новый proof ограничен event context; полный
+-исторический Plan/RDG/lifecycle и фактический пользовательский T1 не подтверждены.
++В последнем срезе прошли 49 адресных тестов и совместный реальный Gendocen
++smoke из 15 CLI-запусков со штатным Graph writer. Ранние candidate и точный
++baseline context сохранились после поздних Plan/RDG/applicability/event
++записей; новая реконструкция потребовала review. Проверены stale context,
++отказ новому конфликтующему запросу и сохранность sources при чтении.
++Прежние 88 тестов, event smoke 25 CLI и 405 Node относятся к предыдущим
++срезам; полностью здесь не повторялись. Proof ограничен объявленным scope;
++полная lifecycle applicability и фактический пользовательский T1 открыты.
+ 
+ ## Следующие локальные срезы
+ 
+@@ -42,10 +43,10 @@
+    tempfile. Ранний `knownAt` исключает позднюю поправку; поздний допускает
+    её только как кандидатную реконструкцию. Несвязанные outcomes дают
+    конфликт, а не автоматический выбор. **Следующий технический gate:**
+-   определить полноту применимых owners/событий и испытать P2-AC-13/15/16
+-   на совместном синтетическом контексте вместе с Gendocen. Независимое
+-   подтверждение времени и trusted event source — отдельный предметный
+-   gate перед фактическим применением.
++   расширить полноту за пределы одного Plan/branch/occurrence. Совместный
++   синтетический context v1 и Gendocen уже проверены в этом scope; accepted
++   mode требует точную baseline state revision. Независимое подтверждение
++   времени и trusted event source — предметный gate перед фактическим применением.
+ 2. **Lifecycle: локальные записи есть, доверие и интеграция открыты.**
+    Технический baseline сохраняет точную candidate-версию по `plan.accept`.
+    Отдельный event owner сохраняет claim, attestation и review с разными
+@@ -54,18 +55,20 @@
+    Старый current-only adapter отклоняет sidecars. Новый явный event consumer
+    проверен реальным Gendocen для одного occurrence и фиксированного `knownAt`.
+    **Предметный gate:** определить trusted actor/source и правила независимой
+-   проверки перед пользовательскими фактами. **Технический gate:** объединить
+-   baseline/applicability/Plan/RDG/event context в версионном consumer;
+-   синтетическую реализацию можно продолжать до выбора реального источника.
+-   Проверить P2-AC-08/11/12/13/17/20 на совместном контуре.
+-3. **Ближайший срез — совместный исторический resolver.** На синтетических
+-   данных выбрать lifecycle и условный branch context, затем применимую
+-   версию Plan и все нужные RDG/event
+-   snapshots по двум временам. Если хотя бы одного источника нет, не выдавать
+-   `valid` и не брать текущий graph. Расширить независимую матрицу semantic
+-   reads → declaration → subscriptions на новые поля; испытать свежесть,
+-   correction, concurrent write/revoke/recovery. **Gate:** P2-AC-14/15/16/18/19
+-   и настоящий historical Gendocen review на синтетической истории.
++   проверки перед пользовательскими фактами. **Технический gate:** расширить
++   проверенный joint context на автоматический baseline effective selection,
++   несколько owners/событий и совместные concurrent write/recovery.
++   Синтетическую реализацию можно продолжать до выбора реального источника.
++   P2-AC-08/11/12/13/17/20 остаются PARTIAL для полного контура.
++3. **Следующий технический срез — lifecycle applicability и полнота scope.**
++   Joint context v1 уже проверяет candidate selection и exact baseline state,
++   Plan/RDG/event pins, cutoff и semantic subscriptions. Сначала проверить
++   оставшийся P2-AC-04 (два шага разных cases → один Action). Затем определить
++   явную связь принятого baseline с applicability/effective-интервалом;
++   автоматический выбор прежнего accepted state сейчас не реализован.
++   Сохранить отказ при gap, withdrawn state, конфликте и несовместимой версии.
++   Расширять scope с независимой coverage и проверкой concurrent
++   write/revoke/recovery. **Gate:** P2-AC-08/13/14/15/16/17/18/19.
+ 4. **Дальше P3 → P4 → P5 → P6 → P7.** Завершить семантику Finding/Canon/Proposal;
+    затем двухчатный research workflow; затем пользовательский вертикальный
+    сценарий и installed proof. Удалённый canonical owner и legacy retirement
+@@ -87,19 +90,19 @@
+ | 05 | Локальный PASS | Два процесса: один победитель CAS. |
+ | 06 | Локальный PASS | Revoke до durable prepared journal отклоняет запись. |
+ | 07 | Локальный PASS | Подстановка `accepted` или вызов `accept` через edit отклоняется; само принятие относится к 08. |
+-| 08 | PARTIAL | Отдельный технический baseline доступен по точной ссылке после нового candidate; независимое подтверждение пользователя и T1 не проверены. |
++| 08 | PARTIAL | Joint context сохраняет точный baseline state после нового candidate; автоматическая lifecycle applicability, human acceptance и фактический T1 открыты. |
+ | 09 | PARTIAL | Candidate hard и технический будущий baseline не создают FR/F-P; независимый owner обязательства и applicability не доказаны. |
+ | 10 | PARTIAL | Date/instant/relative subset проверен; новые precision, units и выполнимость окна не доказаны. |
+ | 11 | PARTIAL | Клиентские actual fields в Plan отклоняются; отдельный event owner сохраняет unverified claim/attestation/review, но trusted source отсутствует. |
+ | 12 | PARTIAL | Plan editor и отдельный event-attest bearer не получают graph.select_action; сквозной пользовательский путь не проверен. |
+ | 13 | PARTIAL | Candidate applicability и event history сохраняют исходный claim, correction link и конфликт outcomes; нет trusted attestation и полноты контекста. |
+ | 14 | Локальный PASS | Точные Plan/RDG revision+digest обязательны, missing/mismatch/current fallback отклоняются. |
+-| 15 | PARTIAL | Ранний knownAt исключает поздние records; фиксированная event-проекция и её Gendocen review сохраняются. Полный applicability/Plan/RDG контекст не разрешён. |
+-| 16 | PARTIAL | Поздние event records меняют текущий review и не переписывают ранний event context; фактический T1 и полный as-of не подтверждены. |
++| 15 | PARTIAL | Ранний joint Plan/RDG/applicability/event bundle и Gendocen review сохраняются после поздних записей; полнота остальных owners и effective truth не доказаны. |
++| 16 | PARTIAL | Поздняя joint-реконструкция требует review; ранний bundle и exact baseline сохраняются. Фактический T1 и автоматический accepted lifecycle as-of не подтверждены. |
+ | 17 | PARTIAL | Candidate, baseline и staged event journals/failpoints/recovery проверены; общий lifecycle и фактический T1 не испытаны. |
+-| 18 | PARTIAL | Старый adapter отклоняет sidecars. Новый event-контракт проверяет producer/declaration/subscriptions и реальный Gendocen; совместный Plan/RDG/lifecycle runtime ещё открыт. |
++| 18 | PARTIAL | Старый adapter отклоняет sidecars. Joint-контракт проверяет snapshots, assessment и producer/declaration/subscriptions реальным движком в одном scope; расширенная coverage открыта. |
+ | 19 | PARTIAL | Exact Plan pin проверяется; bearer grant IDs и opaque evidence refs не считаются доказательством человека, содержимого или факта. |
+-| 20 | PARTIAL | Schema v1 и старый adapter отклоняют неподдержанный lifecycle; явный event consumer v1 работает отдельно, полная версионная интеграция ещё открыта. |
++| 20 | PARTIAL | Schema v1 и старый adapter сохраняют отказ; явные event/joint consumers v1 работают отдельно. Полная lifecycle-интеграция ещё открыта. |
+ 
+ Локальные основания: [P0/P0.1](../handoffs/rdg-p0-dependencies-20261018/CHECKPOINT.json),
+ [candidate owner и P2](../handoffs/rdg-vertical-slice-20261019/CHECKPOINT.json),
+@@ -110,7 +113,8 @@
+ [owner history применимости](../handoffs/rdg-applicability-owner-20261019/CHECKPOINT.json),
+ [технический будущий baseline](../handoffs/rdg-future-baseline-20261019/CHECKPOINT.json),
+ [технические стадии события](../handoffs/rdg-event-lifecycle-20261019/CHECKPOINT.json),
+-[event context → Gendocen v1](../handoffs/rdg-event-gendocen-20261019/CHECKPOINT.json).
++[event context → Gendocen v1](../handoffs/rdg-event-gendocen-20261019/CHECKPOINT.json),
++[joint context v1](../handoffs/rdg-joint-context-20261019/CHECKPOINT.json).
+ Полные статусы WR-01..53 сохраняются в [v4.1 ledger](../handoffs/rdg-prework-v4.1-final-20261018/WR-EVIDENCE-LEDGER.md);
+ новые checkpoints меняют только названный scope. При следующем срезе обновлять
+ эту таблицу вместе с доказательством, не повышая PARTIAL до общего PASS.
+--- /dev/null
++++ b/tools/rdg-joint-context.py
+@@ -0,0 +1,411 @@
++#!/usr/bin/env python3
++"""Scoped joint historical context from existing local owners.
++
++Candidate applicability is selected by two times. Accepted-future mode requires
++an exact baseline state revision; automatic effective-time lifecycle selection
++and factual event verification remain unsupported.
++"""
++import argparse
++import copy
++import datetime as dt
++from importlib.machinery import SourceFileLoader
++import json
++import os
++from pathlib import Path
++
++HERE = Path(__file__).resolve().parent
++APP = SourceFileLoader("joint_applicability", str(HERE/"rdg-applicability-owner.py")).load_module()
++BASELINE = SourceFileLoader("joint_baseline", str(HERE/"rdg-future-baseline-owner.py")).load_module()
++EVENT_PROJECTION = SourceFileLoader("joint_event_projection", str(HERE/"rdg-event-gendocen.py")).load_module()
++MODEL, OWNER, HISTORY = APP.MODEL, APP.OWNER, APP.HISTORY
++GROUPS = ("query", "lifecycle", "applicability", "plan", "graphs", "event",
++          "assessment", "boundaries")
++VERSION = "rdg-joint-review/v1"
++READ_MATRIX = {key:[key+"/*"] for key in (
++    "query","lifecycle","applicability","plan","graphs","event","assessment","boundaries")}
++BOUNDARIES = {"readOnly":True,"scenarioOnly":True,
++    "scopedExactContextResolved":True,"knownAtCutoffsChecked":True,
++    "completeApplicableContextVerified":False,
++    "automaticBaselineEffectiveSelectionComplete":False,
++    "applicabilityAttested":False,"factualEventVerified":False,
++    "factualBranchResolved":False,"historicalT1KnowledgeVerified":False,
++    "actionSelected":False,"productionAccepted":False}
++
++
++def require(ok, code):
++    if not ok:
++        raise ValueError("JOINT_CONTEXT_"+code)
++
++
++def validate_query(query):
++    require(isinstance(query, dict) and set(query) == {
++        "schemaVersion", "mode", "lifecycle", "planFile", "knownAt",
++        "effectiveAt", "scenario", "occurrenceId", "baselineStateRevision"} and
++        type(query["schemaVersion"]) is int and query["schemaVersion"] == 1 and
++        query["mode"] == "scoped-joint-context" and
++        query["lifecycle"] in ("candidate", "accepted-future") and
++        isinstance(query["planFile"], str) and OWNER.TARGET.fullmatch(query["planFile"]) and
++        isinstance(query["occurrenceId"], str) and MODEL.ID.fullmatch(query["occurrenceId"]),
++        "REQUEST_SCHEMA")
++    MODEL.known(query["knownAt"])
++    MODEL.effective(query["effectiveAt"])
++    scenario = query["scenario"]
++    require(isinstance(scenario, dict) and set(scenario) == {"branchId","outcome"} and
++            all(isinstance(v,str) and OWNER.PLAN.ident(v) for v in scenario.values()),
++            "SCENARIO_REQUIRED")
++    revision = query["baselineStateRevision"]
++    require((revision is None if query["lifecycle"] == "candidate" else
++             type(revision) is int and revision >= 1), "EXACT_BASELINE_STATE_REQUIRED")
++
++
++def known_applicability(root, plan_file, cutoff):
++    path = APP.target_path(root, plan_file)
++    require(path.is_file(), "APPLICABILITY_HISTORY_NOT_FOUND")
++    store = APP.validate_store(HISTORY.load_bytes(path.read_bytes()), plan_file)
++    result, previous = [], None
++    for record in store["records"]:
++        receipt = APP.read_receipt(root, plan_file, record)
++        require(receipt is not None, "APPLICABILITY_AVAILABILITY_MISSING")
++        available = MODEL.known(receipt["availableBy"])
++        require(previous is None or available >= previous, "AVAILABILITY_CLOCK_ORDER")
++        previous = available
++        if available <= cutoff:
++            result.append({"assertion":copy.deepcopy(record["assertion"]),
++                           "recordDigest":record["digest"],
++                           "recordedAt":record["recordedAt"],
++                           "availableBy":receipt["availableBy"]})
++    require(result, "NO_KNOWN_APPLICABILITY")
++    return result
++
++
++def baseline_ancestry(records, pin):
++    matches = [r for r in records if r["assertion"]["source"]["plan"] == pin]
++    require(len(matches) == 1, "BASELINE_APPLICABILITY_NOT_FOUND")
++    by_id = {r["assertion"]["id"]:r for r in records}
++    selected, current = set(), matches[0]
++    while current is not None:
++        ident = current["assertion"]["id"]
++        require(ident not in selected, "APPLICABILITY_CYCLE")
++        selected.add(ident)
++        prior = current["assertion"]["supersedes"]
++        require(prior is None or prior in by_id, "APPLICABILITY_ANCESTOR_MISSING")
++        current = by_id[prior] if prior is not None else None
++    return [r for r in records if r["assertion"]["id"] in selected]
++
++
++def graph_context(exact, cutoff):
++    graphs = []
++    for item in exact["graphSnapshots"]:
++        provenance = item["provenance"]
++        after = [s for s in provenance["sources"] if s["side"] == "after" and
++                 s["recordedAt"] is not None and MODEL.known(s["recordedAt"]) <= cutoff]
++        require(len(after) == 1, "DIRECT_GRAPH_AVAILABILITY_PROOF_REQUIRED")
++        # Later before-images are supporting current history, not evidence
++        # known at the historical cutoff. Keep only the direct after witness.
++        graphs.append({"pin":{k:provenance[k] for k in (
++                            "graphFile","identitySpace","revision","snapshotSHA256")},
++                       "snapshot":copy.deepcopy(item["graph"]),
++                       "recordedAt":provenance["recordedAt"],
++                       "source":copy.deepcopy(after[0])})
++    return sorted(graphs,key=lambda g:(g["pin"]["identitySpace"],g["pin"]["graphFile"],
++                                      g["pin"]["revision"]))
++
++
++def resolve(plan_root, graphs_root, authority_store, token, request, before_return=None):
++    validate_query(request)
++    root = OWNER.root_path(plan_root)
++    cutoff = MODEL.known(request["knownAt"])
++    require(cutoff <= dt.datetime.now(dt.timezone.utc), "FUTURE_KNOWN_AT_UNSUPPORTED")
++    query = copy.deepcopy(request)
++    query["knownAt"] = cutoff.isoformat()
++    effective_precision,effective_value = MODEL.effective(query["effectiveAt"])
++    if effective_precision == "instant":query["effectiveAt"] = effective_value.isoformat()
++    plan_file = query["planFile"]
++    authority = OWNER.AUTH.Authority(authority_store)
++    authority.authorize_plan(token, ["plan.read"], plan_file)
++    # All four Plan-root writers use this same lock. Nested readers take
++    # shared locks; no owner append can split this combined source read.
++    with OWNER.root_lock(root, False):
++        journals = [OWNER.safe(root,OWNER.JOURNAL,True),APP.journal_path(root),
++                    BASELINE.journal_path(root),EVENT_PROJECTION.EVENT.journal_path(root)]
++        require(not any(p.exists() for p in journals), "RECOVERY_REQUIRED")
++        records = known_applicability(root,plan_file,cutoff)
++        if query["lifecycle"] == "accepted-future":
++            baseline = BASELINE.read(root,authority_store,token,plan_file,
++                query["baselineStateRevision"],query["knownAt"])
++            require(baseline["state"] == "accepted", "BASELINE_WITHDRAWN")
++            records = baseline_ancestry(records,baseline["planPin"])
++            lifecycle = {k:copy.deepcopy(baseline[k]) for k in (
++                "lifecycle","state","stateRevision","recordDigest","recordedAt",
++                "availableBy","planPin","basis")}
++            lifecycle["selectionMode"] = "exact-baseline-state"
++        else:
++            lifecycle = {"lifecycle":"candidate","selectionMode":"candidate-applicability",
++                         "baselineStateRevision":None}
++        for record in records:
++            bound,_ = MODEL.availability(root,record["assertion"]["source"]["plan"])
++            require(bound is not None and MODEL.known(bound)<=cutoff,
++                    "APPLICABILITY_SOURCE_NOT_PROVEN_KNOWN")
++        result = MODEL.resolve(root,graphs_root,authority_store,token,{
++            "schemaVersion":1,"mode":"candidate-two-time-scenario",
++            "knownAt":query["knownAt"],"effectiveAt":query["effectiveAt"],
++            "assertions":[r["assertion"] for r in records]})
++        selected = next(r for r in records if
++                        r["assertion"]["id"] == result["selectedAssertionId"])
++        source, exact = selected["assertion"]["source"], result["exactSource"]
++        require(source["scenario"] == query["scenario"], "SCENARIO_APPLICABILITY_MISMATCH")
++        if query["lifecycle"] == "accepted-future":
++            require(source["plan"] == lifecycle["planPin"], "BASELINE_NOT_APPLICABLE")
++        event = EVENT_PROJECTION.from_owner(root,authority_store,token,plan_file,
++                                            query["occurrenceId"],query["knownAt"])
++        EVENT_PROJECTION.build_contract(event)
++        event_inputs = event["data"]["reviewInputs"]
++        require(not event_inputs["resolution"]["claimConflict"] and
++                len(event_inputs["resolution"]["unresolvedClaimIds"]) == 1,
++                "EVENT_CLAIM_CONFLICT")
++        leaf_id = event_inputs["resolution"]["unresolvedClaimIds"][0]
++        leaf = event_inputs["claims"][leaf_id]["payload"]
++        require(leaf["planPin"] == source["plan"], "EVENT_PLAN_PIN_MISMATCH")
++        branch = next(b for b in exact["plan"]["branches"]
++                      if b["id"] == query["scenario"]["branchId"])
++        require(leaf["eventStepId"] == branch["eventStepId"] and
++                leaf["outcome"] == query["scenario"]["outcome"],
++                "EVENT_SCENARIO_MISMATCH")
++        precision, effective = MODEL.effective(query["effectiveAt"])
++        event_precision, occurred = MODEL.effective(leaf["occurredAt"])
++        require(precision == event_precision, "EVENT_TIME_PRECISION_MISMATCH")
++        require(occurred <= effective, "EVENT_AFTER_EFFECTIVE_AT")
++        context = {"schemaVersion":1,"status":"scoped-joint-context","query":query,
++            "lifecycle":lifecycle,
++            "applicability":{"selectedAssertionId":result["selectedAssertionId"],
++                "selectedRecordDigest":selected["recordDigest"],
++                "records":records,"excluded":result["excluded"],
++                "scope":"candidate-history" if query["lifecycle"]=="candidate" else
++                        "exact-baseline-assertion-and-ancestors"},
++            "plan":{"pin":copy.deepcopy(source["plan"]),"snapshot":exact["plan"],
++                    "recordedAt":exact["planProvenance"]["recordedAt"],
++                    "availableBy":exact["planAvailableBy"],
++                    "availabilitySource":exact["planAvailabilitySource"]},
++            "graphs":graph_context(exact,cutoff),"event":event,
++            "assessment":exact["impact"],
++            "boundaries":copy.deepcopy(BOUNDARIES)}
++        targets = sorted({p["graphFile"] for r in records
++                          for p in r["assertion"]["source"]["graphs"]})
++    validate_context(context)
++    if before_return:
++        before_return()
++    authority.authorize_snapshot_read(token,plan_file,targets)
++    return context
++
++
++def validate_context(context):
++    require(isinstance(context,dict) and set(context) == {
++        "schemaVersion","status",*GROUPS} and type(context["schemaVersion"]) is int and
++        context["schemaVersion"] == 1 and context["status"] == "scoped-joint-context",
++        "CONTEXT_SCHEMA")
++    query = context["query"];validate_query(query)
++    cutoff = MODEL.known(query["knownAt"])
++    require(cutoff <= dt.datetime.now(dt.timezone.utc),"FUTURE_KNOWN_AT_UNSUPPORTED")
++    require(isinstance(context["boundaries"],dict) and
++            set(context["boundaries"]) == set(BOUNDARIES) and
++            all(context["boundaries"][k] is v for k,v in BOUNDARIES.items()),
++            "UNSUPPORTED_TRUST_OR_SCOPE")
++    app = context["applicability"]
++    require(isinstance(app,dict) and set(app) == {"selectedAssertionId",
++        "selectedRecordDigest","records","excluded","scope"} and
++        isinstance(app["records"],list) and app["records"],"APPLICABILITY_SCHEMA")
++    by_id,eligible = {},[]
++    precision,effective = MODEL.effective(query["effectiveAt"])
++    for record in app["records"]:
++        require(isinstance(record,dict) and set(record) == {
++            "assertion","recordDigest","recordedAt","availableBy"} and
++            isinstance(record["recordDigest"],str) and
++            HISTORY.SHA.fullmatch(record["recordDigest"]),"APPLICABILITY_RECORD_SCHEMA")
++        assertion = APP.validate_assertion(record["assertion"])
++        ident = assertion["id"]
++        require(ident not in by_id and
++                assertion["source"]["plan"]["file"] == query["planFile"],
++                "APPLICABILITY_SCOPE")
++        require(MODEL.known(record["recordedAt"]) <=
++                MODEL.known(record["availableBy"]) <= cutoff,"APPLICABILITY_CUTOFF")
++        p,value = MODEL.effective(assertion["effectiveAt"])
++        require(p == precision,"EFFECTIVE_AT_PRECISION_MISMATCH")
++        prior = by_id.get(assertion["supersedes"])
++        require(assertion["supersedes"] is None or prior is not None and
++                prior["assertion"]["source"]["plan"]["revision"] <
++                assertion["source"]["plan"]["revision"] and
++                MODEL.effective(prior["assertion"]["effectiveAt"])[1] <= value,
++                "APPLICABILITY_CHAIN")
++        by_id[ident] = record
++        if value <= effective:eligible.append(record)
++    superseded = {r["assertion"]["supersedes"] for r in eligible}
++    leaves = [r for r in eligible if r["assertion"]["id"] not in superseded]
++    require(len(leaves)==1 and leaves[0]["assertion"]["id"]==app["selectedAssertionId"],
++            "APPLICABILITY_SELECTION")
++    selected = by_id[app["selectedAssertionId"]]
++    source = selected["assertion"]["source"]
++    excluded = [{"id":r["assertion"]["id"],"reason":"effective-after-query"}
++                for r in app["records"] if MODEL.effective(r["assertion"]["effectiveAt"])[1]>effective]
++    require(app["excluded"]==excluded,"APPLICABILITY_EXCLUSION_MISMATCH")
++    require(all(r["assertion"]["source"]["plan"]["identitySpace"]==source["plan"]["identitySpace"] and
++                r["assertion"]["source"]["plan"]["planId"]==source["plan"]["planId"] and
++                r["assertion"]["source"]["scenario"]["branchId"]==query["scenario"]["branchId"]
++                for r in app["records"]),"APPLICABILITY_OWNER_SCOPE")
++    require(selected["recordDigest"] == app["selectedRecordDigest"] and
++            source["scenario"] == query["scenario"],"SELECTED_SOURCE_MISMATCH")
++    plan = context["plan"]
++    require(isinstance(plan,dict) and set(plan) == {
++        "pin","snapshot","recordedAt","availableBy","availabilitySource"} and
++        plan["pin"] == source["plan"],"PLAN_CONTEXT_SCHEMA")
++    OWNER.PLAN.validate(plan["snapshot"])
++    require(OWNER.digest(plan["snapshot"]) == plan["pin"]["snapshotSHA256"] and
++            plan["snapshot"]["identitySpace"] == plan["pin"]["identitySpace"] and
++            plan["snapshot"]["id"] == plan["pin"]["planId"] and
++            plan["snapshot"]["revision"] == plan["pin"]["revision"],"PLAN_SNAPSHOT_MISMATCH")
++    require(MODEL.known(plan["recordedAt"]) <= MODEL.known(plan["availableBy"]) <= cutoff,
++            "PLAN_AVAILABILITY_CUTOFF")
++    life = context["lifecycle"]
++    if query["lifecycle"] == "candidate":
++        require(life == {"lifecycle":"candidate","selectionMode":"candidate-applicability",
++                         "baselineStateRevision":None} and
++                app["scope"]=="candidate-history","CANDIDATE_LIFECYCLE")
++    else:
++        require(isinstance(life,dict) and set(life) == {
++            "lifecycle","state","stateRevision","recordDigest","recordedAt",
++            "availableBy","planPin","basis","selectionMode"} and
++            life["lifecycle"]=="accepted-future" and life["state"]=="accepted" and
++            life["stateRevision"]==query["baselineStateRevision"] and
++            life["selectionMode"]=="exact-baseline-state" and
++            life["planPin"]==plan["pin"] and
++            isinstance(life["basis"],str) and bool(life["basis"].strip()) and
++            isinstance(life["recordDigest"],str) and HISTORY.SHA.fullmatch(life["recordDigest"]) and
++            app["scope"]=="exact-baseline-assertion-and-ancestors",
++            "BASELINE_CONTEXT_MISMATCH")
++        require(MODEL.known(life["recordedAt"]) <= MODEL.known(life["availableBy"]) <= cutoff,
++                "BASELINE_AVAILABILITY_CUTOFF")
++        require(baseline_ancestry(app["records"],life["planPin"])==app["records"],
++                "BASELINE_ANCESTRY_SCOPE")
++    graphs,expected = {},{HISTORY.graph_key(p):p for p in source["graphs"]}
++    require(isinstance(context["graphs"],list) and
++            len(context["graphs"])==len(expected),"GRAPH_CONTEXT_REQUIRED")
++    for graph in context["graphs"]:
++        require(isinstance(graph,dict) and set(graph)=={
++            "pin","snapshot","recordedAt","source"},"GRAPH_CONTEXT_SCHEMA")
++        key = HISTORY.graph_key(graph["pin"])
++        require(key in expected and key not in graphs and graph["pin"]==expected[key],
++                "GRAPH_PINS_MISMATCH")
++        HISTORY.GRAPH.validate(graph["snapshot"])
++        require(OWNER.digest(graph["snapshot"])==graph["pin"]["snapshotSHA256"] and
++                graph["snapshot"]["identitySpace"]==key[0] and
++                graph["snapshot"]["revision"]==key[2],"GRAPH_SNAPSHOT_MISMATCH")
++        proof = graph["source"]
++        require(isinstance(proof,dict) and set(proof)=={
++            "journal","journalSHA256","transactionId","side","recordedAt"} and
++            proof["side"]=="after" and isinstance(proof["transactionId"],str) and
++            HISTORY.TX.fullmatch(proof["transactionId"]) and
++            proof["journal"]=="workspaces/.transactions/"+proof["transactionId"]+".json" and
++            isinstance(proof["journalSHA256"],str) and
++            HISTORY.SHA.fullmatch(proof["journalSHA256"]) and
++            proof["recordedAt"]==graph["recordedAt"] and
++            MODEL.known(graph["recordedAt"])<=cutoff,"GRAPH_PROOF_CUTOFF")
++        graphs[key] = graph["snapshot"]
++    EVENT_PROJECTION.build_contract(context["event"])
++    event = context["event"]["data"]["reviewInputs"]
++    require(event["identity"]["planFile"]==query["planFile"] and
++            event["identity"]["occurrenceId"]==query["occurrenceId"] and
++            event["knowledge"]["knownAt"]==query["knownAt"] and
++            not event["resolution"]["claimConflict"] and
++            len(event["resolution"]["unresolvedClaimIds"])==1,"EVENT_CONTEXT_MISMATCH")
++    leaf = event["claims"][event["resolution"]["unresolvedClaimIds"][0]]["payload"]
++    branch = next(b for b in plan["snapshot"]["branches"]
++                  if b["id"]==query["scenario"]["branchId"])
++    require(leaf["planPin"]==plan["pin"] and leaf["eventStepId"]==branch["eventStepId"] and
++            leaf["outcome"]==query["scenario"]["outcome"],"EVENT_SCENARIO_MISMATCH")
++    p,occurred = MODEL.effective(leaf["occurredAt"])
++    require(p==precision and occurred<=effective,"EVENT_TIME_MISMATCH")
++    expected_assessment = HISTORY.IMPACT.assess(plan["snapshot"],None,
++        graph_resolver=lambda ref:copy.deepcopy(graphs[
++            (ref["identitySpace"],ref["graphFile"],ref["observedGraphRevision"])]),
++        scenario=query["scenario"])
++    require(context["assessment"]==expected_assessment,"ASSESSMENT_INCOMPLETE_OR_STALE")
++
++
++def views(context):
++    validate_context(context)
++    result = {key:copy.deepcopy(context[key]) for key in GROUPS}
++    result["event"] = copy.deepcopy(context["event"]["data"]["reviewInputs"])
++    require(set(result)==set(GROUPS)==set(READ_MATRIX),
++            "SOURCE_GROUPS_INCOMPLETE_OR_UNKNOWN")
++    return result
++
++
++def project(context):
++    inputs = views(context)
++    ident = "rdg.context."+EVENT_PROJECTION.digest({
++        "query":context["query"],"identitySpace":context["plan"]["pin"]["identitySpace"],
++        "planId":context["plan"]["pin"]["planId"]})[:24]
++    return {"$docengine":{"resource_id":ident,"materialize":[]},
++            "data":{"sourceContext":copy.deepcopy(context),
++                "reviewCoverage":{"contract":VERSION,"scope":"declared-plan-branch-occurrence",
++                    "completeForDeclaredScope":True,"sourceReads":copy.deepcopy(READ_MATRIX),
++                    "completeApplicableContextVerified":False},
++                "reviewInputs":inputs,"semanticSHA256":EVENT_PROJECTION.digest(inputs)}}
++
++
++def build_contract(resource):
++    require(isinstance(resource,dict) and set(resource)=={"$docengine","data"} and
++            isinstance(resource["data"],dict) and set(resource["data"])=={
++                "sourceContext","reviewCoverage","reviewInputs","semanticSHA256"},
++            "RESOURCE_SCHEMA")
++    require(resource==project(resource["data"]["sourceContext"]),
++            "PROJECTION_INCOMPLETE_OR_STALE")
++    ref = EVENT_PROJECTION.resource_ref(resource)
++    return {"contract":VERSION,"completeForDeclaredScope":True,
++            "subscriptions":[(ref+"#/reviewCoverage","exact")]+[
++                (ref+"#/reviewInputs/"+key,"exact") for key in GROUPS]}
++
++
++def assert_coverage(contract,declared):
++    require(contract.get("contract")==VERSION and
++            contract.get("completeForDeclaredScope") is True,"UNKNOWN_CONTRACT")
++    expected = {tuple(x) for x in contract["subscriptions"]}
++    require(expected=={tuple(x) for x in declared} and len(declared)==len(expected),
++            "SUBSCRIPTIONS_INCOMPLETE")
++
++
++def project_config(targets):
++    return (
++        "import json\nfrom pathlib import Path\n"
++        "from importlib.machinery import SourceFileLoader\n"
++        f"joint = SourceFileLoader('joint_review_contract', {str(Path(__file__).resolve())!r}).load_module()\n"
++        "def register_builders(registry):\n    pass\n\n"
++        "def register_semantic_dependencies(registry):\n"
++        "    docs = Path(__file__).resolve().parents[1] / 'docs'\n"
++        f"    for target,relative in {targets!r}:\n"
++        "        resource = json.loads((docs/relative).read_text(encoding='utf8'))\n"
++        "        contract = joint.build_contract(resource)\n"
++        "        sources = contract['subscriptions']\n"
++        "        joint.assert_coverage(contract,sources)\n"
++        "        registry.register('file://review/'+target+'.md',sources,\n"
++        f"                          rule_id={VERSION.replace('/','.')!r}+'.'+target,\n"
++        "                          dependency_type='semantic_review')\n"
++    )
++
++
++def main():
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--plan-root",required=True,type=Path)
++    parser.add_argument("--graphs-root",required=True,type=Path)
++    parser.add_argument("--store",default=os.environ.get("RDG_AUTH_STORE"))
++    parser.add_argument("--request",required=True,type=Path)
++    parser.add_argument("--projection",action="store_true")
++    args = parser.parse_args()
++    require(args.store,"AUTH_STORE_REQUIRED")
++    context = resolve(args.plan_root,args.graphs_root,args.store,
++        os.environ.get("RDG_AUTH_TOKEN"),HISTORY.load_bytes(args.request.read_bytes()))
++    print(json.dumps(project(context) if args.projection else context,
++        ensure_ascii=False,sort_keys=True,indent=2))
++
++
++if __name__=="__main__":
++    main()
+--- /dev/null
++++ b/tools/rdg-joint-context-smoke.py
+@@ -0,0 +1,244 @@
++#!/usr/bin/env python3
++"""Real writers and Gendocen on a scoped synthetic joint historical context."""
++import argparse
++import copy
++import datetime as dt
++from importlib.machinery import SourceFileLoader
++import json
++import os
++from pathlib import Path
++import shutil
++import subprocess
++import sys
++import tempfile
++import time
++
++ROOT = Path(__file__).resolve().parent.parent
++JOINT = SourceFileLoader("joint_runtime_context",str(ROOT/"tools/rdg-joint-context.py")).load_module()
++OWNER = JOINT.OWNER
++PLANREL = "plans/demo/plan.json"
++REL = "workspaces/temporal-fixture/graph.json"
++TOOLS = ("rdg-authority.py graph-package.py graph-apply.py graph-index.py "
++         "rdg-v7-model.py rdg-v6-action-reconsider.py rdg-v6-action-trust.py "
++         "rdg-state.py rdg-state.js rdg-state-cli.cjs rdg-catalog.py "
++         "rdg-catalog.js rdg-graph-api.py").split()
++
++
++def require(ok,code):
++    if not ok:raise AssertionError(code)
++
++
++def save(path,value):
++    path.parent.mkdir(parents=True,exist_ok=True)
++    path.write_text(json.dumps(value,ensure_ascii=False,sort_keys=True,indent=2)+"\n")
++
++
++def now():
++    return dt.datetime.now(dt.timezone.utc).isoformat()
++
++
++def smoke(engine_source):
++    engine = Path(engine_source).resolve()/"src"
++    require((engine/"docengine/cli.py").is_file(),"GENDOCEN_SOURCE_UNAVAILABLE")
++    base_env = {k:v for k,v in os.environ.items()
++                if k not in ("RDG_AUTH_TOKEN","RDG_AUTH_STORE","RDG_V6_TRUST_KEY")}
++    with tempfile.TemporaryDirectory(prefix="rdg-joint-runtime-") as name:
++        work = Path(name);(work/"tools").mkdir()
++        for item in TOOLS:shutil.copy2(ROOT/"tools"/item,work/"tools"/item)
++        plans,graphs,store = work/"owner",work/"graphs",work/"grants.json"
++        plans.mkdir()
++        auth = OWNER.AUTH.Authority(store)
++        admin = auth.init_local(plan_capable=True,applicability_capable=True)["token"]
++        def grant(perms,scopes):
++            return auth.manage("issue",admin,{"permissions":perms,"scopes":scopes})["token"]
++        graphwriter = grant(["graph.create","graph.add_action"],[REL])
++        planwriter = grant(["plan.create","plan.edit","plan.branch"],[PLANREL])
++        appwriter = grant(["plan.applicability.write","plan.read","graph.read"],[PLANREL,REL])
++        claimant = grant(["plan.edit","plan.read"],[PLANREL])
++        acceptor = grant(["plan.accept","plan.read"],[PLANREL])
++        reader = grant(["plan.read","graph.read"],[PLANREL,REL])
++        def write_graph(package):
++            path = work/"graph-input.json";save(path,package)
++            proc = subprocess.run([sys.executable,str(work/"tools/graph-apply.py"),
++                "--package","--patch",str(path)],capture_output=True,text=True,
++                env={**base_env,"PYTHONDONTWRITEBYTECODE":"1",
++                     "RDG_AUTH_STORE":str(store),"RDG_AUTH_TOKEN":graphwriter})
++            require(proc.returncode==0,"GRAPH_WRITER_FAILED "+proc.stderr)
++        graph = {"schemaVersion":1,"revision":1,"id":"joint-synthetic","title":"Joint fixture",
++            "identitySpace":"temporal-demo","planningScale":"module",
++            "rootRequirementId":"R0","actionModel":"candidate-v6",
++            "nodes":[{"id":"R0","kind":"requirement","title":"Root","status":"active"}]+[
++                {"id":aid,"kind":"action","title":"Candidate "+aid,"status":"candidate","qrpe":[]}
++                for aid in ("A1","A2")],
++            "edges":[{"id":"E-"+aid,"type":"DRIVES","from":"R0","to":aid}
++                     for aid in ("A1","A2")],"events":[]}
++        write_graph({"schemaVersion":1,"transactionId":"graph-create",
++                     "changes":[{"file":REL,"create":graph}]})
++        graph = json.loads((graphs/REL).read_text())
++        plan = json.loads((ROOT/"docs/examples/temporal-plan-candidate-v1.json").read_text())
++        OWNER.apply_request(plans,store,planwriter,{"transactionId":"plan-r1","op":"create",
++            "file":PLANREL,"expectedRevision":0,"plan":plan})
++        def pin(revision):
++            p = OWNER.read_snapshot(plans,PLANREL,revision)["provenance"]
++            return {"file":PLANREL,"identitySpace":p["identitySpace"],"planId":p["planId"],
++                    "revision":revision,"snapshotSHA256":p["snapshotSHA256"],
++                    "recordDigest":p["recordDigest"]}
++        source1 = {"schemaVersion":1,"mode":"exact-reference","lifecycle":"candidate",
++            "plan":pin(1),"graphs":[{"graphFile":REL,"identitySpace":"temporal-demo",
++                "revision":1,"snapshotSHA256":OWNER.digest(graph)}],
++            "scenario":{"branchId":"B-RESULT","outcome":"positive"}}
++        def app(ident,source,expected,supersedes=None):
++            JOINT.APP.apply(plans,graphs,store,appwriter,{
++                "transactionId":"app-"+ident,"file":PLANREL,"expectedRevision":expected,
++                "assertion":{"id":ident,"effectiveAt":"2026-10-18T10:00:00+00:00"
++                    if supersedes is None else "2026-10-18T10:30:00+00:00",
++                    "supersedes":supersedes,"source":source,"eventClaim":None}})
++        def event(ident,plan_pin,expected,supersedes=None,outcome="positive"):
++            JOINT.EVENT_PROJECTION.EVENT.apply(plans,store,claimant,{
++                "transactionId":"event-"+ident,"kind":"claim","file":PLANREL,
++                "expectedRevision":expected,"payload":{"id":ident,"occurrenceId":"O1",
++                    "planPin":plan_pin,"eventStepId":"S-RESULT","outcome":outcome,
++                    "occurredAt":"2026-10-18T10:00:00+00:00",
++                    "evidenceRefs":["EV-"+ident],"supersedes":supersedes}})
++        app("A1",source1,0);event("E1",pin(1),0)
++        JOINT.BASELINE.apply(plans,store,acceptor,{"transactionId":"baseline-r1","op":"accept",
++            "file":PLANREL,"expectedStateRevision":0,"planPin":pin(1),
++            "basis":"Synthetic technical baseline"})
++        early = {"schemaVersion":1,"mode":"scoped-joint-context","lifecycle":"candidate",
++            "planFile":PLANREL,"knownAt":now(),"effectiveAt":"2026-10-18T10:45:00+00:00",
++            "scenario":source1["scenario"],"occurrenceId":"O1","baselineStateRevision":None}
++        baseline = {**copy.deepcopy(early),"lifecycle":"accepted-future","baselineStateRevision":1}
++        time.sleep(0.02)
++        reconstruction = {**copy.deepcopy(early),"knownAt":now()}
++        def resolve(query):
++            return JOINT.resolve(plans,graphs,store,reader,query)
++        def source_bytes():
++            return {str(p.relative_to(work)):p.read_bytes()
++                    for root in (plans,graphs) for p in root.rglob("*.json")}
++        project = work/"gendocen";(project/"docengine_project").mkdir(parents=True)
++        (project/"docs/review").mkdir(parents=True)
++        (project/"docengine.toml").write_text(
++            '[docengine]\nconfig_version = 1\ndocumentation_root = "docs"\n'
++            'structured_dir = "_structured"\ndependency_dir = "_dependency"\n'
++            'project_package = "docengine_project"\n')
++        targets = [(target,"_structured/joint/"+target+".json")
++                   for target in ("Early","Baseline","Reconstruction")]
++        (project/"docengine_project/__init__.py").write_text(JOINT.project_config(targets))
++        queries = {"Early":early,"Baseline":baseline,"Reconstruction":reconstruction}
++        def reproject():
++            before = source_bytes()
++            contexts = {target:resolve(query) for target,query in queries.items()}
++            for target,relative in targets:
++                path = project/"docs"/relative
++                resource = JOINT.project(contexts[target])
++                if path.exists():
++                    old = json.loads(path.read_text())
++                    if old["$docengine"]["resource_id"] != resource["$docengine"]["resource_id"]:
++                        archive = project/"docs/_structured/joint/archive"/(
++                            old["$docengine"]["resource_id"]+".json")
++                        require(not archive.exists(),"CONTEXT_RESOURCE_ID_REUSED")
++                        archive.parent.mkdir(parents=True,exist_ok=True)
++                        path.replace(archive)
++                save(path,resource)
++            require(before==source_bytes(),"CONSUMER_WROTE_SOURCES")
++            return contexts
++        contexts = reproject()
++        early_bytes = (project/"docs/_structured/joint/Early.json").read_bytes()
++        baseline_bytes = (project/"docs/_structured/joint/Baseline.json").read_bytes()
++        docs = {target:project/("docs/review/"+target+".md") for target,_ in targets}
++        for target,path in docs.items():path.write_text("# Synthetic "+target+" joint review\n")
++        prose = {target:path.read_bytes() for target,path in docs.items()}
++        engine_env = {**base_env,"PYTHONPATH":str(engine),"PYTHONDONTWRITEBYTECODE":"1"}
++        cli_count = 0
++        def cli(*parts):
++            nonlocal cli_count
++            before = source_bytes()
++            proc = subprocess.run([sys.executable,"-m","docengine.cli",*parts,
++                "--project-root",str(project),"--json"],env=engine_env,capture_output=True,text=True)
++            cli_count += 1
++            require(proc.stdout.strip(),"GENDOCEN_NO_JSON "+proc.stderr)
++            result = json.loads(proc.stdout)
++            require(result["meta"]["engine_version"]=="0.1.0.dev25","ENGINE_VERSION")
++            require(before==source_bytes(),"GENDOCEN_WROTE_SOURCES")
++            return proc.returncode,result
++        def context_id(target):
++            _,body = cli("explain","file://review/"+target+".md")
++            return body["data"]["review_context_id"]
++        def validate(target):
++            code,body = cli("validate","file://review/"+target+".md",
++                "--result","still-valid","--reason","Synthetic scoped context only",
++                "--review-context",context_id(target))
++            require(code==0 and body["ok"],"SYNTHETIC_REVIEW_FAILED")
++        def expect(reconstruction_status):
++            _,body = cli("check")
++            actual = {x["target"].rsplit("/",1)[-1][:-3]:x["status"]
++                      for x in body["data"]["results"]}
++            require(actual=={"Early":"valid","Baseline":"valid",
++                "Reconstruction":reconstruction_status},"WRONG_STATUSES "+json.dumps(body))
++            require((project/"docs/_structured/joint/Early.json").read_bytes()==early_bytes and
++                    (project/"docs/_structured/joint/Baseline.json").read_bytes()==baseline_bytes,
++                    "OLD_CUTOFF_CONTEXT_CHANGED")
++            require(all(p.read_bytes()==prose[t] for t,p in docs.items()),"PROSE_CHANGED")
++        code,body = cli("sync")
++        require(code in (0,2) and body["ok"] and len(body["data"]["attention_targets"])==3,
++                "INITIAL_SYNC_FAILED "+json.dumps(body))
++        for target in docs:validate(target)
++        expect("valid")
++        stale = context_id("Reconstruction")
++
++        write_graph({"schemaVersion":1,"transactionId":"graph-add",
++            "changes":[{"file":REL,"patch":{"schemaVersion":1,"expectedRevision":1,
++                "operations":[{"op":"add_action","requirementId":"R0","action":{
++                    "id":"A3","kind":"action","title":"Later candidate A3",
++                    "status":"candidate","qrpe":[]}}]}}]})
++        graph2 = json.loads((graphs/REL).read_text())
++        plan2 = copy.deepcopy(plan);plan2["revision"]=2;plan2["title"]="Later candidate"
++        for step in plan2["steps"]:
++            if step["kind"]=="action":step["actionRef"]["observedGraphRevision"]=2
++        OWNER.apply_request(plans,store,planwriter,{"transactionId":"plan-r2","op":"edit",
++            "file":PLANREL,"expectedRevision":1,"plan":plan2})
++        source2 = copy.deepcopy(source1);source2["plan"]=pin(2)
++        source2["graphs"][0].update(revision=2,snapshotSHA256=OWNER.digest(graph2))
++        app("A2",source2,1,"A1");event("E2",pin(2),1,"E1")
++        queries["Reconstruction"]["knownAt"]=now()
++        contexts = reproject()
++        require(contexts["Reconstruction"]["plan"]["pin"]["revision"]==2 and
++                contexts["Reconstruction"]["graphs"][0]["pin"]["revision"]==2,"LATE_REVISIONS")
++        expect("review_required")
++        state = project/"docs/_dependency/state/dependency_state.json"
++        before_state = state.read_bytes()
++        receipts = project/"docs/_dependency/receipts"
++        before_receipts = sorted(p.name for p in receipts.glob("receipt-*.json"))
++        code,body = cli("validate","file://review/Reconstruction.md","--result","still-valid",
++            "--reason","Stale synthetic joint query","--review-context",stale)
++        require(code!=0 and "stale" in json.dumps(body).lower(),"STALE_CONTEXT_ACCEPTED")
++        require(state.read_bytes()==before_state and
++                sorted(p.name for p in receipts.glob("receipt-*.json"))==before_receipts,
++                "STALE_REJECTION_MUTATED_STATE")
++        validate("Reconstruction");expect("valid")
++        event("E3",pin(2),2,outcome="negative")
++        conflicted = {**copy.deepcopy(queries["Reconstruction"]),"knownAt":now()}
++        try:resolve(conflicted)
++        except ValueError as error:require("EVENT_CLAIM_CONFLICT" in str(error),"WRONG_CONFLICT_ERROR")
++        else:raise AssertionError("CONFLICTED_NEW_QUERY_RESOLVED")
++        reproject();expect("valid")
++        require(all(n.get("status")=="candidate" for n in graph2["nodes"] if n["kind"]=="action")
++                and graph2["events"]==[],"ACTION_SELECTED")
++        return {"status":"PASS","engine":"Gendocen 0.1.0.dev25","contract":JOINT.VERSION,
++            "cliProcesses":cli_count,"temporarySourcesOnly":True,"realGraphWriter":True,
++            "earlyPlanRdgEventContextPreserved":True,"exactBaselineContextPreserved":True,
++            "lateReconstructionRequiresReview":True,"staleContextRejected":True,
++            "conflictedNewQueryRejected":True,"sourceBytesUnchangedByConsumer":True,
++            "automaticBaselineEffectiveSelectionComplete":False,
++            "completeApplicableContextVerified":False,"factualEventVerified":False,
++            "historicalT1KnowledgeVerified":False,"productionStage4Accepted":False}
++
++
++def main():
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--engine-source",required=True,type=Path)
++    args = parser.parse_args()
++    print(json.dumps(smoke(args.engine_source),ensure_ascii=False,sort_keys=True,indent=2))
++
++
++if __name__=="__main__":main()
+--- /dev/null
++++ b/tests/rdg-joint-context.test.py
+@@ -0,0 +1,261 @@
++#!/usr/bin/env python3
++"""Scoped joint context: lifecycle, applicability, exact Plan/RDG and event."""
++import copy
++import datetime as dt
++from importlib.machinery import SourceFileLoader
++import json
++from pathlib import Path
++import time
++import unittest
++
++ROOT = Path(__file__).resolve().parents[1]
++JOINT = SourceFileLoader("test_joint_context", str(ROOT/"tools/rdg-joint-context.py")).load_module()
++FIXTURE = SourceFileLoader("joint_exact_fixture", str(ROOT/"tests/rdg-exact-history.test.py")).load_module()
++PLANREL = FIXTURE.PLANREL
++
++
++class JointContextTest(unittest.TestCase):
++    def setUp(self):
++        self.fixture = FIXTURE.ExactHistoryTest("test_exact_source_is_stable_after_current_graph_changes")
++        self.fixture.applicability_capable = True
++        self.fixture.setUp()
++        self.addCleanup(self.fixture.doCleanups)
++        f = self.fixture
++        f.add_journal("graph-create",None,f.graph,
++                      recorded_at=dt.datetime.now(dt.timezone.utc).isoformat())
++        self.appwriter = f.grant(["plan.applicability.write","plan.read","graph.read"],
++                                 [PLANREL,FIXTURE.REL])
++        self.claimant = f.grant(["plan.edit","plan.read"],[PLANREL])
++        self.acceptor = f.grant(["plan.accept","plan.read"],[PLANREL])
++        self.source1 = copy.deepcopy(f.query)
++        self.app1 = self.app_assertion("A1",self.source1,"2026-10-18T10:00:00+00:00")
++        self.apply_app("app-A1",0,self.app1)
++        self.event1 = self.event_claim("E1",self.source1["plan"])
++        self.apply_event("event-E1",0,self.event1)
++        JOINT.BASELINE.apply(f.plans,f.authpath,self.acceptor,{
++            "transactionId":"accept-r1","op":"accept","file":PLANREL,
++            "expectedStateRevision":0,"planPin":self.source1["plan"],
++            "basis":"Synthetic exact baseline"})
++        self.early = self.now()
++        self.request = {"schemaVersion":1,"mode":"scoped-joint-context",
++            "lifecycle":"candidate","planFile":PLANREL,"knownAt":self.early,
++            "effectiveAt":"2026-10-18T10:45:00+00:00",
++            "scenario":{"branchId":"B-RESULT","outcome":"positive"},
++            "occurrenceId":"O1","baselineStateRevision":None}
++        time.sleep(0.02)
++
++    @staticmethod
++    def now():
++        return dt.datetime.now(dt.timezone.utc).isoformat()
++
++    @staticmethod
++    def app_assertion(ident,source,when,supersedes=None):
++        return {"id":ident,"effectiveAt":when,"supersedes":supersedes,
++                "source":copy.deepcopy(source),"eventClaim":None}
++
++    @staticmethod
++    def event_claim(ident,pin,supersedes=None,outcome="positive"):
++        return {"id":ident,"occurrenceId":"O1","planPin":copy.deepcopy(pin),
++            "eventStepId":"S-RESULT","outcome":outcome,
++            "occurredAt":"2026-10-18T10:00:00+00:00",
++            "evidenceRefs":["EV-"+ident],"supersedes":supersedes}
++
++    def apply_app(self,tx,expected,assertion):
++        f = self.fixture
++        return JOINT.APP.apply(f.plans,f.graphs,f.authpath,self.appwriter,{
++            "transactionId":tx,"file":PLANREL,"expectedRevision":expected,
++            "assertion":assertion})
++
++    def apply_event(self,tx,expected,payload):
++        f = self.fixture
++        return JOINT.EVENT_PROJECTION.EVENT.apply(f.plans,f.authpath,self.claimant,{
++            "transactionId":tx,"kind":"claim","file":PLANREL,
++            "expectedRevision":expected,"payload":payload})
++
++    def resolve(self,request=None,callback=None):
++        f = self.fixture
++        return JOINT.resolve(f.plans,f.graphs,f.authpath,f.reader,
++                             request or self.request,before_return=callback)
++
++    def source_bytes(self):
++        f = self.fixture
++        return {str(p.relative_to(f.base)):p.read_bytes()
++                for root in (f.plans,f.graphs) for p in root.rglob("*.json")}
++
++    def plan2(self,graph2=False):
++        f = self.fixture
++        source = copy.deepcopy(self.source1)
++        plan = copy.deepcopy(f.plan)
++        plan["revision"] = 2
++        plan["title"] = "Later candidate"
++        if graph2:
++            newer = copy.deepcopy(f.graph)
++            newer["revision"] = 2
++            newer["nodes"][1]["title"] = "Later A1 title"
++            f.add_journal("graph-edit",f.graph,newer,recorded_at=self.now())
++            for step in plan["steps"]:
++                if step["kind"] == "action":
++                    step["actionRef"]["observedGraphRevision"] = 2
++            source["graphs"][0].update(revision=2,snapshotSHA256=JOINT.OWNER.digest(newer))
++        JOINT.OWNER.apply_request(f.plans,f.authpath,f.writer,{
++            "transactionId":"plan-r2","op":"edit","file":PLANREL,
++            "expectedRevision":1,"plan":plan})
++        meta = JOINT.OWNER.read_snapshot(f.plans,PLANREL,2)["provenance"]
++        source["plan"].update(revision=2,snapshotSHA256=meta["snapshotSHA256"],
++                              recordDigest=meta["recordDigest"])
++        return source
++
++    def test_read_only_joint_candidate_has_all_declared_sources(self):
++        before = self.source_bytes()
++        context = self.resolve()
++        self.assertEqual(context["plan"]["pin"],self.source1["plan"])
++        self.assertEqual(context["graphs"][0]["snapshot"],self.fixture.graph)
++        self.assertEqual(context["applicability"]["selectedAssertionId"],"A1")
++        self.assertEqual(context["event"]["data"]["reviewInputs"]["resolution"][
++            "unresolvedClaimIds"],["E1"])
++        self.assertTrue(context["boundaries"]["scopedExactContextResolved"])
++        self.assertFalse(context["boundaries"]["completeApplicableContextVerified"])
++        self.assertFalse(context["boundaries"]["factualEventVerified"])
++        self.assertEqual(before,self.source_bytes())
++
++    def test_fixed_early_context_survives_late_plan_graph_app_and_event(self):
++        before = self.resolve()
++        source2 = self.plan2(graph2=True)
++        self.apply_app("app-A2",1,self.app_assertion("A2",source2,
++            "2026-10-18T10:30:00+00:00","A1"))
++        self.apply_event("event-E2",1,self.event_claim("E2",source2["plan"],"E1"))
++        self.assertEqual(self.resolve(),before)
++        late = copy.deepcopy(self.request);late["knownAt"] = self.now()
++        context = self.resolve(late)
++        self.assertEqual(context["plan"]["pin"]["revision"],2)
++        self.assertEqual(context["graphs"][0]["pin"]["revision"],2)
++        self.assertEqual(context["applicability"]["selectedAssertionId"],"A2")
++        self.assertEqual(before["graphs"][0]["source"]["side"],"after")
++
++    def test_exact_accepted_baseline_is_not_replaced_by_candidate(self):
++        source2 = self.plan2()
++        self.apply_app("app-A2",1,self.app_assertion("A2",source2,
++            "2026-10-18T10:30:00+00:00","A1"))
++        accepted = copy.deepcopy(self.request)
++        accepted.update(lifecycle="accepted-future",baselineStateRevision=1,knownAt=self.now())
++        context = self.resolve(accepted)
++        self.assertEqual(context["plan"]["pin"],self.source1["plan"])
++        self.assertEqual([r["assertion"]["id"] for r in
++                          context["applicability"]["records"]],["A1"])
++        self.assertEqual(context["lifecycle"]["selectionMode"],"exact-baseline-state")
++        candidate = copy.deepcopy(self.request);candidate["knownAt"] = self.now()
++        with self.assertRaisesRegex(ValueError,"EVENT_PLAN_PIN_MISMATCH"):
++            self.resolve(candidate)
++
++    def test_event_conflict_and_scenario_mismatch_fail_closed(self):
++        self.apply_event("event-E2",1,self.event_claim("E2",self.source1["plan"],
++                                                     outcome="negative"))
++        request = copy.deepcopy(self.request);request["knownAt"] = self.now()
++        with self.assertRaisesRegex(ValueError,"EVENT_CLAIM_CONFLICT"):
++            self.resolve(request)
++        request = copy.deepcopy(self.request)
++        request["scenario"]["outcome"] = "negative"
++        with self.assertRaisesRegex(ValueError,"SCENARIO_APPLICABILITY_MISMATCH"):
++            self.resolve(request)
++
++    def test_unlinked_applicability_conflict_is_not_resolved_by_latest_revision(self):
++        source2 = self.plan2()
++        self.apply_app("app-A2",1,self.app_assertion("A2",source2,
++            "2026-10-18T10:30:00+00:00"))
++        request = copy.deepcopy(self.request);request["knownAt"] = self.now()
++        with self.assertRaisesRegex(ValueError,"UNRESOLVED_APPLICABILITY_CONFLICT"):
++            self.resolve(request)
++
++    def test_missing_graph_proof_and_pending_owner_journal_rejected(self):
++        journal = self.fixture.graphs/"workspaces/.transactions/graph-create.json"
++        value = json.loads(journal.read_text())
++        old = {k:v for k,v in value.items() if k not in ("preparedAt","recordedAt")}
++        old["schemaVersion"] = 1
++        journal.write_text(json.dumps(old))
++        with self.assertRaisesRegex(ValueError,"GRAPH_RECORDING_TIME_NOT_AVAILABLE"):
++            self.resolve()
++        journal.write_text(json.dumps(value))
++        JOINT.APP.journal_path(self.fixture.plans).write_text("{}")
++        with self.assertRaisesRegex(ValueError,"RECOVERY_REQUIRED"):
++            self.resolve()
++
++    def test_exact_baseline_revision_and_no_future_knowledge_required(self):
++        bad = copy.deepcopy(self.request);bad["lifecycle"] = "accepted-future"
++        with self.assertRaisesRegex(ValueError,"EXACT_BASELINE_STATE_REQUIRED"):
++            self.resolve(bad)
++        bad = copy.deepcopy(self.request)
++        bad["knownAt"] = (dt.datetime.now(dt.timezone.utc)+dt.timedelta(days=1)).isoformat()
++        with self.assertRaisesRegex(ValueError,"FUTURE_KNOWN_AT_UNSUPPORTED"):
++            self.resolve(bad)
++
++    def test_projection_coverage_and_tampered_bundle_rejected(self):
++        context = self.resolve()
++        resource = JOINT.project(context)
++        contract = JOINT.build_contract(resource)
++        self.assertEqual(len(contract["subscriptions"]),9)
++        JOINT.assert_coverage(contract,contract["subscriptions"])
++        with self.assertRaisesRegex(ValueError,"SUBSCRIPTIONS_INCOMPLETE"):
++            JOINT.assert_coverage(contract,contract["subscriptions"][:-1])
++        bad = copy.deepcopy(context)
++        bad["graphs"][0]["snapshot"]["title"] = "Forged after projection"
++        with self.assertRaisesRegex(ValueError,"GRAPH_SNAPSHOT_MISMATCH"):
++            JOINT.project(bad)
++        bad = copy.deepcopy(context);bad["assessment"] = {}
++        with self.assertRaisesRegex(ValueError,"ASSESSMENT_INCOMPLETE_OR_STALE"):
++            JOINT.project(bad)
++        bad = copy.deepcopy(resource);bad["data"]["reviewInputs"]["event"] = {}
++        with self.assertRaisesRegex(ValueError,"PROJECTION_INCOMPLETE_OR_STALE"):
++            JOINT.build_contract(bad)
++
++    def test_producer_group_and_factual_flag_cannot_be_hidden(self):
++        context = self.resolve()
++        original = copy.deepcopy(JOINT.READ_MATRIX)
++        try:
++            JOINT.READ_MATRIX.pop("event")
++            with self.assertRaisesRegex(ValueError,"SOURCE_GROUPS_INCOMPLETE_OR_UNKNOWN"):
++                JOINT.project(context)
++        finally:
++            JOINT.READ_MATRIX.clear();JOINT.READ_MATRIX.update(original)
++        context["boundaries"]["factualEventVerified"] = True
++        with self.assertRaisesRegex(ValueError,"UNSUPPORTED_TRUST_OR_SCOPE"):
++            JOINT.project(context)
++
++    def test_equivalent_time_offsets_have_same_joint_resource(self):
++        request = copy.deepcopy(self.request)
++        request["knownAt"] = JOINT.MODEL.known(request["knownAt"]).astimezone(
++            dt.timezone(dt.timedelta(hours=7))).isoformat()
++        request["effectiveAt"] = "2026-10-18T17:45:00+07:00"
++        self.assertEqual(JOINT.project(self.resolve(request)),
++                         JOINT.project(self.resolve()))
++
++    def test_exact_replacement_baseline_not_applicable_to_earlier_effective_time(self):
++        source2 = self.plan2()
++        self.apply_app("app-A2",1,self.app_assertion("A2",source2,
++            "2026-10-18T10:30:00+00:00","A1"))
++        f = self.fixture
++        JOINT.BASELINE.apply(f.plans,f.authpath,self.acceptor,{
++            "transactionId":"replace-r2","op":"replace","file":PLANREL,
++            "expectedStateRevision":1,"planPin":source2["plan"],
++            "basis":"Synthetic replacement"})
++        request = copy.deepcopy(self.request)
++        request.update(lifecycle="accepted-future",baselineStateRevision=2,
++                       knownAt=self.now(),effectiveAt="2026-10-18T10:15:00+00:00")
++        with self.assertRaisesRegex(ValueError,"BASELINE_NOT_APPLICABLE"):
++            self.resolve(request)
++
++    def test_withdrawn_baseline_and_final_reader_revoke_rejected(self):
++        f = self.fixture
++        JOINT.BASELINE.apply(f.plans,f.authpath,self.acceptor,{
++            "transactionId":"withdraw-r1","op":"withdraw","file":PLANREL,
++            "expectedStateRevision":1,"planPin":self.source1["plan"],
++            "basis":"Synthetic withdrawal"})
++        request = copy.deepcopy(self.request)
++        request.update(lifecycle="accepted-future",baselineStateRevision=2,knownAt=self.now())
++        with self.assertRaisesRegex(ValueError,"BASELINE_WITHDRAWN"):
++            self.resolve(request)
++        with self.assertRaisesRegex(ValueError,"AUTH_TOKEN_REVOKED"):
++            self.resolve(callback=lambda:f.auth.manage("revoke",f.admin,{"id":f.reader_id}))
++
++
++if __name__=="__main__":
++    unittest.main()
+--- /dev/null
++++ b/docs/guides/RDG-JOINT-CONTEXT-PILOT.md
+@@ -0,0 +1,97 @@
++# Совместный исторический context — scoped pilot v1
++
++**Статус: CANDIDATE. Stage 4 NOT ACCEPTED.**
++`tools/rdg-joint-context.py` собирает один явно заданный Plan, условный
++branch/outcome, occurrence, применимость, lifecycle и точные RDG snapshots
++в read-only bundle. Он проверяет согласованность предъявленного scope.
++Полнота всех применимых owners и истинность claims остаются непроверенными.
++
++Запрос:
++
++```json
++{
++  "schemaVersion": 1,
++  "mode": "scoped-joint-context",
++  "lifecycle": "candidate",
++  "planFile": "plans/demo/plan.json",
++  "knownAt": "2026-10-19T00:00:00+00:00",
++  "effectiveAt": "2026-10-18T10:45:00+00:00",
++  "scenario": {"branchId": "B-RESULT", "outcome": "positive"},
++  "occurrenceId": "O1",
++  "baselineStateRevision": null
++}
++```
++
++В `candidate` режиме версия выбирается из долговечной applicability history
++по двум временам. В `accepted-future` режиме `baselineStateRevision`
++обязателен: это **точная** запись отдельного baseline owner. Resolver
++использует assertion этого baseline и цепочку его предков; более поздние
++candidate records его не заменяют. Отозванный baseline, ещё недоступный
++state или неподходящий `effectiveAt` дают ошибку. Автоматического выбора
++между принятыми baseline по `effectiveAt` пока нет: у lifecycle records
++не определена собственная история effective-интервалов.
++
++`knownAt` должен быть timezone-aware instant не позже текущего локального
++времени. `effectiveAt` сохраняет date-only либо instant precision.
++Applicability и event time должны иметь ту же precision. Неизвестная дата
++не подставляется. Нужен один совместимый leaf claim выбранного occurrence:
++его точный Plan pin, event step и outcome должны совпасть со сценарием;
++заявленное время события не должно быть позже `effectiveAt`.
++Конфликт или несовместимая версия дают отказ. Это проверка согласованности
++условного контекста; фактическая ветвь и Action не выбираются.
++
++Четыре Plan-root owners читаются под общим shared lock. Prepared journal
++любого из них блокирует bundle. Graph snapshots берутся только из
++завершённой writer history, с прямым after-свидетельством к cutoff.
++Поздние before-images не входят в историческое доказательство старого
++bundle. Временная доступность проверяется для lifecycle, applicability,
++Plan, Graph и event records. Отсутствие snapshot/квитанции, mismatch,
++неизвестная версия и отзыв read grant дают явный отказ без current fallback.
++
++Bundle содержит полные selected Plan/RDG snapshots и candidate assessment.
++Contract `rdg-joint-review/v1` вычисляет девять subscriptions: coverage и
++`query/lifecycle/applicability/plan/graphs/event/assessment/boundaries`.
++Producer groups независимы от декларации. Перед регистрацией повторно
++проверяются SHA snapshot, выбор применимости, event context, cutoff и
++assessment на предъявленных snapshots. Пропущенные группы/subscriptions,
++подменённая проекция или factual flags отклоняются.
++
++CLI на разрешённых roots:
++
++```bash
++RDG_AUTH_TOKEN=... python3 tools/rdg-joint-context.py \
++  --plan-root PLAN_ROOT --graphs-root GRAPHS_ROOT --store AUTH_STORE \
++  --request REQUEST_JSON --projection
++```
++
++Без `--projection` возвращается bundle; с ним — ресурс Gendocen.
++Нужны `plan.read` и `graph.read` для всех источников выбранной цепочки.
++Новый конфликтующий запрос завершается ошибкой. Сохранённый старый bundle
++остаётся доказательством только собственного явно указанного cutoff;
++его нельзя подставлять как результат нового запроса. Каждый resource ID
++нужно хранить как неизменный bundle. При новой реконструкции прежний ресурс
++сохраняется: Gendocen использует его как основание старой receipt. Если
++перезаписать файл другим resource ID и удалить прежний, движок вернёт
++`invalid` из-за недоступного старого основания.
++
++`scopedExactContextResolved=true` означает согласованную сборку этого
++scope. `completeApplicableContextVerified=false`,
++`automaticBaselineEffectiveSelectionComplete=false`,
++`factualEventVerified=false`, `historicalT1KnowledgeVerified=false`.
++Dependency `valid` в Gendocen относится к свежести документа этого bundle.
++Он не подтверждает факт события, решение пользователя или полный as-of.
++
++Проверки:
++
++```bash
++PYTHONDONTWRITEBYTECODE=1 python3 tests/rdg-joint-context.test.py -v
++PYTHONDONTWRITEBYTECODE=1 python3 tools/rdg-joint-context-smoke.py \
++  --engine-source /workspace/repos/gendocen
++```
++
++Runtime создаёт временные sources через штатные Graph/Plan/applicability/
++baseline/event writers и использует реальный Gendocen. Он проверяет
++ранний контекст, точный baseline, позднюю реконструкцию, stale context,
++отказ новому конфликтующему запросу и неизменность источников при чтении.
++Полный lifecycle effective selection, несколько owners/событий, совместные
++concurrent write/recovery и trusted evidence требуют следующих gates.
+--- /dev/null
++++ b/docs/handoffs/rdg-joint-context-20261019/CHECKPOINT.md
+@@ -0,0 +1,60 @@
++# Совместный context v1 — контрольная точка
++
++**ID:** CPW-RDG-JOINT-CONTEXT-20261019/v1. **Статус:** Candidate.
++**Stage 4 NOT ACCEPTED.** Исходники изменены в Fortis Repo
++`/workspace/repos/rd-graphs` на Windows RW-mount. Runtime использовал
++только временные синтетические roots. Пользовательские графы,
++установленное Windows-приложение и G2 не проверялись. В проекте нет
++`.git`; commit/push и публикация не выполнялись.
++
++## Результат
++
++`tools/rdg-joint-context.py` связывает lifecycle, долговечную применимость,
++точный Plan, завершённые Graph snapshots и один совместимый event occurrence
++по `knownAt/effectiveAt`. Candidate выбирается из applicability history.
++Accepted-future требует точный `baselineStateRevision`; его assertion и
++предки читаются отдельно от новых candidate records. Withdrawn baseline,
++gap, конфликт, несовместимый Plan pin и отсутствие временного доказательства
++дают отказ без current fallback. Четыре Plan-root owners читаются под общим
++shared lock; незавершённый journal блокирует bundle.
++
++Исторический Graph proof сохраняет прямой after-journal к cutoff; поздние
++before-images не меняют старую проекцию. Контракт `rdg-joint-review/v1`
++проверяет девять subscriptions и повторно сверяет snapshot SHA, selection,
++event context и assessment. Неизвестные factual flags, пропущенные группы
++и подменённые snapshots отклоняются.
++[Формат и ограничения](../../guides/RDG-JOINT-CONTEXT-PILOT.md).
++
++Scope ограничен одним Plan/branch/occurrence. Baseline owner пока не задаёт
++собственные effective-интервалы: автоматический выбор между accepted states
++не реализован. `completeApplicableContextVerified=false`,
++`automaticBaselineEffectiveSelectionComplete=false`,
++`factualEventVerified=false`, `historicalT1KnowledgeVerified=false`.
++Gendocen `valid` относится к документу явно указанного bundle.
++
++## Проверки и следующий gate
++
++**49 адресных тестов PASS:** 12 новых joint context/coverage,
++9 applicability, 9 baseline, 13 exact history, 6 event projection.
++**Реальный синтетический Gendocen smoke PASS:** 15 CLI-запусков,
++штатный изолированный Graph writer и настоящие Plan/sidecar writers.
++Ранний candidate bundle и exact baseline сохранились после поздних
++Graph/Plan/applicability/event записей. Новая реконструкция потребовала
++review; stale context отклонён без новой receipt, новый конфликтующий
++запрос отвергнут. Sources и review Markdown при чтении не менялись.
++[Команды и логи](CHECKPOINT.json).
++
++При смене resource ID smoke сохраняет прежний bundle в immutable archive:
++старые receipts должны иметь доступное прежнее основание. Перезапись его
++другим resource ID давала `invalid`; сохранение истории даёт ожидаемый
++`review_required` новой реконструкции.
++
++P2-AC-08/15/16/18/20 остаются PARTIAL; суммы — 7 локальных PASS,
++12 PARTIAL, 1 OPEN. Следующий срез: P2-AC-04, явная lifecycle applicability
++принятого baseline, затем расширение scope и совместные concurrent
++write/revoke/recovery. Trusted источник факта — отдельный предметный gate.
++[План](../../guides/RDG-CURRENT-EXECUTION-PLAN.md) · [WR delta](WR-DELTA.md).
++
++[SELECTED-DIFF.patch](SELECTED-DIFF.patch) охватывает выбранные файлы от
++before-копий и `/dev/null`; это не Git diff всего проекта. SHA источников
++и evidence сохранены отдельно. Прежние checkpoints и архив v4.1 не переписывались.
+--- /dev/null
++++ b/docs/handoffs/rdg-joint-context-20261019/WR-DELTA.md
+@@ -0,0 +1,14 @@
++# WR delta — совместный исторический context
++
++Владелец WR-01..53 — baseline v4.1. PR-P1-01..05 остаются CANDIDATE.
++**Stage 4 NOT ACCEPTED.**
++
++| WR | Статус | Новое локальное доказательство | Открытая граница |
++|---|---|---|---|
++| WR-29 | PARTIAL | Joint resource identity и producer/declaration/subscriptions; snapshots и assessment перепроверяются до регистрации | Несколько owners/событий и полная semantic coverage |
++| WR-48 | PARTIAL | Exact Plan/RDG/applicability/baseline/event pins связаны в одном read-only scope; gap/current fallback отклоняются | Полнота owners и trusted applicability |
++| WR-52 | PARTIAL | Реальный Graph writer + Gendocen сохраняют ранний bundle и exact baseline, новая реконструкция требует review | Автоматическая accepted lifecycle applicability и фактический T1 |
++
++Технический baseline читается только по точному state revision.
++Ни joint bundle, ни dependency receipt не подтверждают истинность события
++или независимое принятие человеком.

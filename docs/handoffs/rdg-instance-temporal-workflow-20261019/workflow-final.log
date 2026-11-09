@@ -1,0 +1,32 @@
+test_child_dispositions_are_required_and_shared_goal_remains_supported (__main__.Workflow.test_child_dispositions_are_required_and_shared_goal_remains_supported) ... ok
+test_cli_renders_the_same_future_and_history (__main__.Workflow.test_cli_renders_the_same_future_and_history) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_one_package_records_only_final_goal_and_keeps_fact_order (__main__.Workflow.test_one_package_records_only_final_goal_and_keeps_fact_order) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_placement_edit_unplace_cas_replay_and_no_graph_writes (__main__.Workflow.test_placement_edit_unplace_cas_replay_and_no_graph_writes) ... ok
+test_placement_recovery_and_read_permission_do_not_change_graph (__main__.Workflow.test_placement_recovery_and_read_permission_do_not_change_graph) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_plan_read_and_graph_read_remain_separate (__main__.Workflow.test_plan_read_and_graph_read_remain_separate) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_sequence_only_r_and_action_and_unsupported_dependency_context (__main__.Workflow.test_sequence_only_r_and_action_and_unsupported_dependency_context) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_unscheduled_action_stays_in_history_after_edit_and_no_second_execution (__main__.Workflow.test_unscheduled_action_stays_in_history_after_edit_and_no_second_execution) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_whole_future_execution_withdrawal_new_variant_and_history (__main__.Workflow.test_whole_future_execution_withdrawal_new_variant_and_history) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_withdrawal_is_separately_authorized_and_denial_does_not_write (__main__.Workflow.test_withdrawal_is_separately_authorized_and_denial_does_not_write) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_withdrawal_keeps_protected_policy_guard (__main__.Workflow.test_withdrawal_keeps_protected_policy_guard) ... ok
+test_withdrawal_recovery_has_one_event_and_never_loses_execution (__main__.Workflow.test_withdrawal_recovery_has_one_event_and_never_loses_execution) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_wrong_owner_ref_fails_instead_of_hiding_future (__main__.Workflow.test_wrong_owner_ref_fails_instead_of_hiding_future) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 25.307s
+
+OK

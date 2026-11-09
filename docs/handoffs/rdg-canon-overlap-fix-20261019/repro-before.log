@@ -1,0 +1,48 @@
+TAP version 13
+# Subtest: dense saved Action coordinates automatically separate the complete canon/Action pairs
+not ok 1 - dense saved Action coordinates automatically separate the complete canon/Action pairs
+  ---
+  duration_ms: 65.043825
+  type: 'test'
+  location: '/workspace/repos/rd-graphs/tests/rdg-canon-attachment.test.cjs:81:1'
+  failureType: 'testCodeFailure'
+  error: 'overlap: A1 / __canon__A2'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    assertClear (/workspace/repos/rd-graphs/tests/rdg-canon-attachment.test.cjs:78:3)
+    TestContext.<anonymous> (/workspace/repos/rd-graphs/tests/rdg-canon-attachment.test.cjs:84:2)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: dragging and saving a repaired dense layout preserve every reflowed pair on reload
+not ok 2 - dragging and saving a repaired dense layout preserve every reflowed pair on reload
+  ---
+  duration_ms: 38.059499
+  type: 'test'
+  location: '/workspace/repos/rd-graphs/tests/rdg-canon-attachment.test.cjs:91:1'
+  failureType: 'testCodeFailure'
+  error: 'overlap: A1 / __canon__A2'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    assertClear (/workspace/repos/rd-graphs/tests/rdg-canon-attachment.test.cjs:78:3)
+    TestContext.<anonymous> (/workspace/repos/rd-graphs/tests/rdg-canon-attachment.test.cjs:97:51)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 0
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 406.77669

@@ -1,0 +1,115 @@
+{
+  "id": "CPW-RDG-EXACT-HISTORY-20261019/v1",
+  "createdAt": "2026-10-18T20:21:42.668283+00:00",
+  "status": "CANDIDATE",
+  "stage4ProductionAccepted": false,
+  "previousCheckpoint": "../rdg-vertical-slice-20261019/CHECKPOINT.json",
+  "pythonTestsPassedThisSlice": 60,
+  "nodeTestsPassedThisSlice": 2,
+  "realGendocenSmokesPassedThisSlice": 1,
+  "results": {
+    "exact-history": {
+      "exitCode": 0,
+      "seconds": 1.23,
+      "command": [
+        "/usr/bin/python3",
+        "tests/rdg-exact-history.test.py",
+        "-v"
+      ],
+      "tests": 11,
+      "log": "exact-history.log"
+    },
+    "temporal-impact": {
+      "exitCode": 0,
+      "seconds": 1.09,
+      "command": [
+        "/usr/bin/python3",
+        "tests/rdg-temporal-impact.test.py"
+      ],
+      "tests": 20,
+      "log": "temporal-impact.log"
+    },
+    "plan-owner": {
+      "exitCode": 0,
+      "seconds": 2.3,
+      "command": [
+        "/usr/bin/python3",
+        "tests/rdg-temporal-plan-owner.test.py"
+      ],
+      "tests": 14,
+      "log": "plan-owner.log"
+    },
+    "bearer-writer": {
+      "exitCode": 0,
+      "seconds": 14.6,
+      "command": [
+        "/usr/bin/python3",
+        "tests/rdg-bearer-package.integration.test.py"
+      ],
+      "tests": 13,
+      "log": "bearer-writer.log"
+    },
+    "branch-acceptance": {
+      "exitCode": 0,
+      "seconds": 12.18,
+      "command": [
+        "/usr/bin/python3",
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/tests/rdg-gendocen-branch-membership.acceptance.test.py"
+      ],
+      "tests": 2,
+      "log": "branch-acceptance.log"
+    },
+    "node-authority": {
+      "exitCode": 0,
+      "seconds": 2.54,
+      "command": [
+        "node",
+        "--test",
+        "tests/rdg-bearer-authority.test.cjs"
+      ],
+      "tests": 2,
+      "log": "node-authority.log"
+    },
+    "owned-real-gendocen": {
+      "exitCode": 0,
+      "seconds": 56.51,
+      "command": [
+        "/usr/bin/python3",
+        "tools/rdg-gendocen-t1-history-smoke.py",
+        "--engine-source",
+        "/workspace/repos/gendocen",
+        "--plan-owner"
+      ],
+      "tests": null,
+      "log": "owned-real-gendocen.log"
+    }
+  },
+  "verticalProof": {
+    "branchSwapRequiresBothReviews": true,
+    "candidateConflictDrafts": 2,
+    "currentRevision": 5,
+    "draftTypes": [
+      "F-R"
+    ],
+    "eventRemainsExpected": true,
+    "exactHistoricalPlanAndRdg": true,
+    "exactRevision1Preserved": true,
+    "historicalGendocenAsOfResolved": false,
+    "noAutomaticFindingOrAction": true,
+    "planEditorCannotSelectGraphAction": true,
+    "twoTimeAsOfResolved": false
+  },
+  "scope": {
+    "exactCandidatePlanAndRdgSnapshots": true,
+    "oneConditionalScenario": true,
+    "currentGraphFallback": false,
+    "twoTimeAsOfResolved": false,
+    "historicalT1KnowledgeVerified": false,
+    "historicalGendocenResolved": false,
+    "actualEventAttested": false,
+    "productionInstalled": false
+  },
+  "historicalNonpassingRuns": [
+    "branch-acceptance-wrong-path-result.json"
+  ]
+}

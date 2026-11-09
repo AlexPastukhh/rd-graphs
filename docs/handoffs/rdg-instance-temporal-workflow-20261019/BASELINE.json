@@ -1,0 +1,70 @@
+{
+  "tools/rdg-v7-model.py": {
+    "exists": true,
+    "sha256": "4f4029b46547ef6810304a71a23f5d4f7dd8a3e8be839d2e8a5eb4efe6b6614a"
+  },
+  "tools/graph-apply.py": {
+    "exists": true,
+    "sha256": "fb15d2061d70e6ae7617ddd71bd0bd87f12121bc4e4103f8e853a6f9e7f41a7e"
+  },
+  "tools/graph-package.py": {
+    "exists": true,
+    "sha256": "3e349a7560ff84918350b47eac584062b76b3a39716050d1e811436ac90dc18f"
+  },
+  "tools/rdg-v6-action-trust.py": {
+    "exists": true,
+    "sha256": "e3185c525924360345d518d96ba677cd48d07411dfd6c3cf7e018666eba5f12f"
+  },
+  "tools/rdg-authority.py": {
+    "exists": true,
+    "sha256": "f1bb2e1f58f172fe035c7249d243b40ba9697903ff232b3841d6f6ca01acc638"
+  },
+  "tools/rdg-v6-action-reconsider.py": {
+    "exists": true,
+    "sha256": "521c8027cbc2dea86f1b6e495aa515d9c273195bc5da40f1d2ea75e92206df9f"
+  },
+  "tools/rdg-activity.py": {
+    "exists": true,
+    "sha256": "3931c8a22e4f86bd8177cc6830abc361f97cc6738e172b151f5810683e50a18b"
+  },
+  "tools/rdg-temporal-plan.py": {
+    "exists": true,
+    "sha256": "6d20400805fa6ee7cee3c5d74008ffbba928266afae81eb93ddcf4ff4079d5bd"
+  },
+  "tools/rdg-temporal-plan-owner.py": {
+    "exists": true,
+    "sha256": "18f1917d93e265d9f13712f2cec2b2aed883126dba4dbc30f2c2fbc644a1e780"
+  },
+  "tools/rdg-gendocen-dependencies.py": {
+    "exists": true,
+    "sha256": "dfede10d87a27503148014ffb295e27f1106f658cf44f6b76a136ada17728095"
+  },
+  "tools/rdg-workflow.py": {
+    "exists": false,
+    "sha256": null
+  },
+  "tests/rdg-deep-action.acceptance.test.py": {
+    "exists": true,
+    "sha256": "fe7b183b343e4acfead636597809537216274f1411bb4fc2d1e54f14a16f7a02"
+  },
+  "tests/rdg-workflow.acceptance.test.py": {
+    "exists": false,
+    "sha256": null
+  },
+  "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md": {
+    "exists": true,
+    "sha256": "520fb9384322550f16bb48413df3b537161b189bcbf8428325b0d62c92a34827"
+  },
+  "docs/guides/RDG-DEEP-ACTION-AND-HISTORY.md": {
+    "exists": true,
+    "sha256": "c473e7718e1ccb13593741c18381fecd07da9616cc52e328fe4ddc06740934d3"
+  },
+  "docs/guides/RDG-V7-WORKING-GRAPHS.md": {
+    "exists": true,
+    "sha256": "f3eff453da1a68d29a0ba89049c4c190beba3e18a3120a94571dc75955471bc5"
+  },
+  "README.md": {
+    "exists": true,
+    "sha256": "61c6d69cc71c087074e951d12115175ba144052e4c14a4fa9b3037c2d28b9772"
+  }
+}
