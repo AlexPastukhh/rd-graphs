@@ -1,0 +1,11 @@
+{
+  "archive": "/workspace/repos/rd-graphs/docs/handoffs/rdg-next-chat-20261020/RDG-HANDOFF-20261020-v2.zip",
+  "bytes": 1657910,
+  "sha256": "09a4e063df992d4a473bf9f8873b6f1781c40db8a5410267638f7036076d5c89",
+  "base64Characters": 2210548,
+  "files": 244,
+  "validatedRelativeLinks": 285,
+  "markdownFiles": 94,
+  "handoffLines": 728,
+  "unchangedRuntimeSources": 44
+}

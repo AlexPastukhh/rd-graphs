@@ -1,0 +1,63 @@
+{
+  "checkpoint": "CPW-RDG-TWO-TIME-SCENARIO-20261019/v1",
+  "status": "CANDIDATE",
+  "stage4": "NOT ACCEPTED",
+  "environment": "Fortis Repo /workspace/repos/rd-graphs (Windows RW mount), synthetic temporary roots only",
+  "gitAvailable": false,
+  "changedFiles": [
+    "README.md",
+    "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md",
+    "tools/rdg-two-time-scenario.py",
+    "tests/rdg-two-time-scenario.test.py",
+    "docs/guides/RDG-TWO-TIME-SCENARIO-PILOT.md",
+    "docs/handoffs/rdg-two-time-scenario-20261019/CHECKPOINT.md",
+    "docs/handoffs/rdg-two-time-scenario-20261019/WR-DELTA.md"
+  ],
+  "fileSHA256": {
+    "README.md": "4270752b2b817bafbd854798353f17074a62e8f18ab694f925ef3fcc956364dd",
+    "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md": "cb1f9c59cce16f91a2fda4d387d3cac6e5b3485fd6cf41886000f778cadc06cc",
+    "tools/rdg-two-time-scenario.py": "ae025071e585a19c0a5c911aac66dda8aba46e6ac7f4d5ef5654ff39f5e6126d",
+    "tests/rdg-two-time-scenario.test.py": "7c9aae9ebe66f9db7ff6fe03550d94ae276b079e54c79a22834dd9d279dcb157",
+    "docs/guides/RDG-TWO-TIME-SCENARIO-PILOT.md": "fb857f5fccad88557f53dded638bd0cb8b82c57fcdc7d8b23c92e29c9fd5f7bf",
+    "docs/handoffs/rdg-two-time-scenario-20261019/CHECKPOINT.md": "d1e5347fc2b0d56d1d3027ef15402caa3dc1424bf11bf619454265b631632377",
+    "docs/handoffs/rdg-two-time-scenario-20261019/WR-DELTA.md": "43cbf5fee1a7799f4731b684dfda5adae69400c948420578398c736cf3f39826"
+  },
+  "tests": {
+    "python": {
+      "two-time-scenario": {
+        "command": "python3 tests/rdg-two-time-scenario.test.py -v",
+        "exitCode": 0,
+        "tests": 6,
+        "log": "two-time-scenario.log"
+      },
+      "exact-history": {
+        "command": "python3 tests/rdg-exact-history.test.py -v",
+        "exitCode": 0,
+        "tests": 13,
+        "log": "exact-history.log"
+      },
+      "writer-recording": {
+        "command": "python3 tests/rdg-writer-recording.test.py -v",
+        "exitCode": 0,
+        "tests": 2,
+        "log": "writer-recording.log"
+      }
+    },
+    "total": 21,
+    "priorGendocen": "Plan availability synthetic current-projection smoke, not rerun",
+    "priorNode": "405 PASS before Plan changes, not rerun"
+  },
+  "p2AcCount": {
+    "Локальный PASS": 7,
+    "PARTIAL": 10,
+    "OPEN": 3
+  },
+  "localLinksChecked": 72,
+  "validation": "PASS: all 20 P2-AC IDs once; selected source diff and local links checked",
+  "v41ZipSHA256": "ab5ba0acf4a116eb24ac24340f151527786cf1e93c90aa7b38f52e50b92d5401",
+  "limitations": [
+    "caller-supplied unverified applicability assertions and event claim",
+    "no owner applicability journal, trusted event source or complete applicable context",
+    "no historical Gendocen as-of, Windows installed proof or publication"
+  ]
+}

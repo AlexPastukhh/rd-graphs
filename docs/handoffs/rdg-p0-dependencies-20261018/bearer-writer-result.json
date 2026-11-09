@@ -1,0 +1,10 @@
+{
+  "exitCode": 0,
+  "seconds": 10.48,
+  "command": [
+    "python3",
+    "tests/rdg-bearer-package.integration.test.py",
+    "-v"
+  ],
+  "log": "bearer-writer.log"
+}

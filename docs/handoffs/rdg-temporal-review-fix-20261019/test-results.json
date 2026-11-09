@@ -1,0 +1,197 @@
+{
+  "results": {
+    "temporal-plan": {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/workspace/repos/rd-graphs/tests/rdg-temporal-plan.test.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "tests": 12,
+      "seconds": 0.6,
+      "log": "temporal-plan.log"
+    },
+    "temporal-placement.acceptance": {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/workspace/repos/rd-graphs/tests/rdg-temporal-placement.acceptance.test.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "tests": 5,
+      "seconds": 0.82,
+      "log": "temporal-placement.acceptance.log"
+    },
+    "temporal-impact": {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/workspace/repos/rd-graphs/tests/rdg-temporal-impact.test.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "tests": 20,
+      "seconds": 1.05,
+      "log": "temporal-impact.log"
+    },
+    "temporal-plan-owner": {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/workspace/repos/rd-graphs/tests/rdg-temporal-plan-owner.test.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "tests": 17,
+      "seconds": 2.8,
+      "log": "temporal-plan-owner.log"
+    },
+    "gendocen-resources": {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/workspace/repos/rd-graphs/tests/rdg-gendocen-resources.test.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "tests": 10,
+      "seconds": 0.97,
+      "log": "gendocen-resources.log"
+    },
+    "joint-context": {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/workspace/repos/rd-graphs/tests/rdg-joint-context.test.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "tests": 12,
+      "seconds": 5.35,
+      "log": "joint-context.log"
+    },
+    "gendocen-coverage-guard": {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/workspace/repos/rd-graphs/tests/rdg-gendocen-coverage-guard.test.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "tests": 4,
+      "seconds": 6.42,
+      "log": "gendocen-coverage-guard.log"
+    },
+    "future-baseline": {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/workspace/repos/rd-graphs/tests/rdg-future-baseline.test.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "tests": 9,
+      "seconds": 5.2,
+      "log": "future-baseline.log"
+    },
+    "exact-history": {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/workspace/repos/rd-graphs/tests/rdg-exact-history.test.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "tests": 13,
+      "seconds": 1.65,
+      "log": "exact-history.log"
+    },
+    "shared-action-occurrences.acceptance": {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/workspace/repos/rd-graphs/tests/rdg-shared-action-occurrences.acceptance.test.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "tests": 2,
+      "seconds": 24.3,
+      "log": "shared-action-occurrences.acceptance.log"
+    },
+    "event-owner": {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/workspace/repos/rd-graphs/tests/rdg-event-owner.test.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "tests": 13,
+      "seconds": 5.36,
+      "log": "event-owner.log"
+    },
+    "event-gendocen": {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/workspace/repos/rd-graphs/tests/rdg-event-gendocen.test.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "tests": 6,
+      "seconds": 2.16,
+      "log": "event-gendocen.log"
+    },
+    "event-consumer-guard": {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/workspace/repos/rd-graphs/tests/rdg-event-consumer-guard.test.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "tests": 3,
+      "seconds": 2.02,
+      "log": "event-consumer-guard.log"
+    },
+    "two-time-scenario": {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/workspace/repos/rd-graphs/tests/rdg-two-time-scenario.test.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "tests": 6,
+      "seconds": 2.01,
+      "log": "two-time-scenario.log"
+    },
+    "applicability-owner": {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/workspace/repos/rd-graphs/tests/rdg-applicability-owner.test.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "tests": 9,
+      "seconds": 4.33,
+      "log": "applicability-owner.log"
+    },
+    "gendocen-dependencies": {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/workspace/repos/rd-graphs/tests/rdg-gendocen-dependencies.test.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "tests": 14,
+      "seconds": 75.83,
+      "log": "gendocen-dependencies.log"
+    }
+  },
+  "totalTests": 155
+}

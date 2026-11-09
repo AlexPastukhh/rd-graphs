@@ -1,0 +1,580 @@
+--- before/README.md
++++ after/README.md
+@@ -10,13 +10,16 @@
+ без принятия предыдущих шагов. **План во времени** задаёт явное время и/или
+ порядок выполнения выбранных для размещения сущностей, в том числе предварительных.
+ Создание Action само по себе не добавляет его в будущую часть плана во времени.
++Пустое будущее теперь допустимо; новый Action-шаг сохраняется только с явным
++временем или порядком. Старые версии и принятые повторы запросов читаются.
++[Исправление и проверка](docs/handoffs/rdg-temporal-review-fix-20261019/CHECKPOINT.md).
+ 
+ Человек работает вручную, ИИ — через API над теми же данными. Выполнение без
+ предварительного размещения попадает прямо в историю выполнения; фиктивный
+ будущий шаг не создаётся. Изменения графа тоже имеют историю, с отдельным
+ смыслом записи правки и записи выполнения.
+ 
+-Достижение R и выполнение Action рассчитываются по обязательным зависимостям
++Достижение R и выполнение Action должны рассчитываться по обязательным зависимостям
+ выбранной композиции, с разными ролями подцелей и Requirements корректности.
+ Action без подцелей допустим, когда разбиение не оправдано действующими тремя
+ критериями. Реализация этого расчёта и автоматического закрытия пока отсутствует.
+--- before/docs/guides/RDG-CURRENT-EXECUTION-PLAN.md
++++ after/docs/guides/RDG-CURRENT-EXECUTION-PLAN.md
+@@ -1,7 +1,7 @@
+ # RDG + Temporal Plan — актуальный порядок исполнения
+ 
+-**Последняя реализация:** [CPW-RDG-SHARED-ACTION-20261019/v1](../handoffs/rdg-shared-action-20261019/CHECKPOINT.md).
+-**Проверка плана и продвижения:** [R-RDG-PLAN-PROGRESS-20261019/v2](../handoffs/rdg-plan-progress-review-20261019-v2/REVIEW.md).
++**Последняя реализация:** [CPW-RDG-TEMPORAL-PLACEMENT-20261019/v1](../handoffs/rdg-temporal-review-fix-20261019/CHECKPOINT.md).
++**Последняя проверка сообщения и плана:** [REVIEW](../handoffs/rdg-temporal-review-fix-20261019/REVIEW.md).
+ **Статус:** рабочий план
+ для Candidate-пилота. **Stage 4 NOT ACCEPTED.** Этот документ обновляет
+ порядок и фактические статусы после локальных проверок. Он не меняет
+@@ -50,8 +50,8 @@
+ Существование кода не превращает его в требование. Остальные Need / FR /
+ Desired Scenario / SRU не переписываются без сопоставления с новым уточнением.
+ 
+-PR-PLAN-COMPLETION-01 уточнён этим прямым указанием пользователя. Его прежняя
+-механика автоматического включения Action не действует; конкретные поля,
++PR-PLAN-COMPLETION-01 уточнён этим прямым указанием пользователя. Отменена
++прежняя фраза ассистента об автоматическом включении Action; конкретные поля,
+ API-операции и сериализация остаются Candidate до реализации и проверки.
+ План во времени не является планом функциональности приложения: приложение
+ или любой иной артефакт может быть результатом работы по графу.
+@@ -59,7 +59,7 @@
+ ## Ранее выполненные технические срезы
+ 
+ Таблица ниже — inventory прежней работы. Незавершённый экспериментальный
+-gate не означает обязательную работу для ручного Plan.
++gate не означает обязательную работу для плана во времени.
+ 
+ 
+ | Срез | Факт | Граница прежнего пилота |
+@@ -95,22 +95,32 @@
+ 
+ ## Ближайший результат и порядок
+ 
+-Результат — связанный путь граф-модель → явное размещение во времени →
+-выполнение → история. Реализовать его через существующие writer/API и ручной
+-интерфейс. Новый сервер, production root или миграция графов автоматически
+-не назначаются.
++Результат — два допустимых пути с общей историей:
+ 
+-1. Уточнить и проверить операции графа: подцели через Actions их создания,
++- граф-модель → выполнение без предварительного размещения → история;
++- граф-модель → явное размещение по времени/порядку → выполнение → история.
++
++Размещение не является обязательным этапом выполнения. Реализовать оба пути
++через существующие writer/API и ручной интерфейс. Новый сервер, production root
++или миграция графов автоматически не назначаются.
++
++1. Уточнить и проверить операции графа с reader/projection acceptance:
++   подцели через Actions их создания,
+    Requirements корректности от Action, потенциальные R под непринятыми Actions.
+    Сохранить смысл subgoal/method_correctness и отдельный challenge; DERIVES
+-   не использовать как подмену причинного разбиения. Старые файлы не мигрировать молча.
++   не использовать как подмену причинного разбиения. Нельзя просто разрешить
++   INTRODUCES для candidate: это изменит смысл актуальных связей и проекций.
++   Нужен явный путь потенциальных R. Старые файлы не мигрировать молча.
+ 2. Добавить запись/расчёт выполнения Action и достижения R с правами и историей.
+    Листовые сущности оцениваются по определению; составные — по обязательным
+    зависимостям выбранной композиции. Не выбранные варианты не блокируют
+-   выполнение, пустой список не означает автоматический успех.
+-3. Довести план во времени: отдельная операция назначения/изменения времени
+-   или порядка, допустимая для предварительных сущностей. Без размещения
+-   новый Action не попадает в будущее расписание. Ручной путь и API общие.
++   выполнение, пустой список не означает автоматический успех. Создание
++   подцели и достижение созданной подцели проверяются раздельно.
++3. Довести явное размещение в плане во времени. Локальная граница уже
++   исправлена: пустое будущее разрешено; новая запись Action-шага требует
++   времени или sequence; старые snapshots и принятые retries читаются как
++   прежде. Размещение R, пользовательский интерфейс и операция назначения/
++   снятия размещения как отдельный удобный API ещё не завершены.
+ 4. Связать предстоящую работу с выполнением в графе. Завершённое исключается
+    из предстоящего, ссылки и история сохраняются. Выполнение без предварительного
+    размещения создаёт запись истории на тех же основаниях, без фиктивного future step.
+@@ -122,7 +132,11 @@
+ 6. Второстепенно: скрытие и понижение приоритета записей как настройка показа
+    с возвратом полного списка; исходная история не удаляется.
+ 
+-Первое сквозное доказательство должно включать: непринятую будущую ветвь,
++Независимые однозначные исправления делать сразу, не ожидая завершения
++всех шагов. Пункт 3 не требует предварительно реализовать весь расчёт
++пункта 2. Объединять изменения там, где у них общие семантические зависимости.
++
++Первое сквозное доказательство должно включать: пустую будущую часть, непринятую будущую ветвь,
+ Action без размещения, размещение только по порядку, выполнение без
+ предварительного размещения, незавершённую обязательную подцель, выполненную
+ выбранную композицию и листовой Action без искусственной декомпозиции.
+@@ -135,8 +149,8 @@
+ ## Сверка с P2-AC-01..20
+ 
+ Это техническая сверка ранее исследованной матрицы, а не список обязательных
+-доработок ручного плана. После уточнения scope статусы 8 локальных PASS и
+-12 PARTIAL сохраняются как evidence; закрывать все PARTIAL ради ручного Plan
++доработок плана во времени. После уточнения scope статусы 8 локальных PASS и
++12 PARTIAL сохраняются как evidence; закрывать все PARTIAL ради плана во времени
+ не требуется. Исходный `PLANNED-NOT-EXECUTED` не переписывается.
+ 
+ | ID | Сейчас | Основание или следующий недостающий proof |
+--- before/docs/guides/RDG-V7-WORKING-GRAPHS.md
++++ after/docs/guides/RDG-V7-WORKING-GRAPHS.md
+@@ -21,6 +21,12 @@
+ **План во времени** добавляет явное время и/или порядок выполнения выбранных
+ для размещения целей и Actions. Размещать можно предварительные, ещё не принятые
+ сущности. Само создание Action не добавляет его в будущую часть плана во времени.
++Будущая часть может быть пустой. В текущем Plan writer новая запись Action-шага
++требует timeConstraints или участия в sequence; одна ссылка без размещения
++не сохраняется как новый будущий шаг. Только порядок допустим без даты.
++Старые schema-v1 snapshots остаются структурно читаемыми; старый принятый
++transactionId можно повторить без новой записи. Это проверка новых записей,
++а не переопределение прошлой истории. Размещение R ещё не реализовано.
+ Назначение времени не является принятием Action. Это исправляет прежнее
+ предположение ассистента об автоматическом добавлении всех созданных Actions.
+ 
+@@ -28,8 +34,10 @@
+ Выполнение попадает в историю выполнения плана во времени с исходным Action;
+ фиктивный будущий шаг задним числом не создаётся. Предварительное размещение
+ нужно, когда важно заранее задать «сейчас/потом», дату или иной порядок.
+-История сохранённых изменений графа также доступна, но запись правки и факт
+-выполнения работы различаются по смыслу. Фильтры/приоритет истории второстепенны.
++История сохранённых изменений графа также должна быть доступна; запись правки
++и факт выполнения работы различаются по смыслу. Существующие writer journals
++и события — основа, а общая читаемая лента ещё не реализована.
++Фильтры/приоритет истории второстепенны.
+ 
+ Предмет RDG — цели, способы их достижения, Requirements и работа с этой моделью.
+ План приложения, расписанная функциональность или другой создаваемый артефакт
+@@ -56,6 +64,13 @@
+ Достичь R — выполнить обязательные подцели выбранного разбиения и выбранные
+ Actions выполнения этой R. Не выбранные альтернативы и не включённые в выбранную
+ композицию необязательные ветви не входят в обязательное «всё выполнено».
++Расчёт относится к конкретной выбранной композиции и активным связям.
++Недоступная или неразрешённая обязательная зависимость означает неполноту
++знания, а не автоматический успех.
++
++Action создания подцели завершается созданием/введением подцели в модели.
++Созданная подцель при этом может оставаться недостигнутой: её достижение
++требуется родительской R, а не для признания выполненной работы по её созданию.
+ 
+ Выполнить составной Action — достичь обязательных целей/Requirements,
+ необходимых для его корректного выполнения. Подцели, создаваемые Action разбиения
+--- before/docs/guides/RDG-TEMPORAL-PLAN-STAGE2P.md
++++ after/docs/guides/RDG-TEMPORAL-PLAN-STAGE2P.md
+@@ -28,6 +28,21 @@
+ 
+ Реализация отклоняет неизвестные поля вместо молчаливого приёма якобы `selectedCase`, `actualEvents` или исполнения. Синтаксическая проверка `basis`, `state` и `actionRef` не равна проверке реальных обстоятельств.
+ 
++## Текущая граница записи будущего плана
++
++Пустая будущая часть допустима: steps/sequence/branches/timeConstraints могут
++быть пустыми. Наличие Actions в исходном графе не добавляет сюда шаги.
++Plan owner при новой create/edit/branch записи вызывает validate_future_write:
++каждый Action-шаг должен иметь явное timeConstraints либо участвовать в sequence.
++Без этого возвращается TEMPORAL_PLAN_ACTION_STEP_NOT_PLACED без записи.
++Только порядок достаточен; дата не выдумывается.
++
++Структурное чтение старых schema-v1 snapshots сохраняется; уже принятый
++transactionId повторяется идемпотентно с прежними правами. Новую версию
++проверяет новое правило размещения. Общая история выполнения и размещение R
++этим исправлением не реализованы. CLI inspect остаётся структурным reader,
++а не доказательством, что старый snapshot прошёл текущее правило записи.
++
+ ## Использование и проверка
+ 
+ Файл-пример: `docs/examples/temporal-plan-candidate-v1.json`. Он **иллюстративный**, его `actionRef` направлены в **синтетический** `workspaces/temporal-fixture/graph.json`, который создаётся только во временной директории тестов; в реальных графах проекта никаких обязательств нет.
+@@ -40,7 +55,12 @@
+ 
+ Без `--graphs-root` ссылки получают `verification: not-checked`. С указанным каталогом проверяются RDG `identitySpace`, ID и `kind: action`. Отсутствующий граф маркируется `missing-graph`, несовпавшая identity/тип — ошибка. Ответ содержит read-only `actionReferences`, `sequence`, `branches`, `timeConstraints` и `reviewLeads` с `requiresAssessment: true`, `findingType: null`. Это основания для будущей оценки канонов/Findings **относительно ветви и срока**, а не автоматически созданные F-P/F-R.
+ 
+-## Оставшиеся этапы (не заявлять реализованными)
++## Ограничения пилота и отложенные расширения
++
++Исходный read-only пилот описан ниже исторически. Локальный guarded Plan
++writer уже существует отдельно: [пилот P2](RDG-TEMPORAL-PLAN-OWNER-PILOT-P2.md).
++Этот список не является обязательной очередью для текущего пользовательского
++пути; актуальный scope и порядок — в [рабочем плане](RDG-CURRENT-EXECUTION-PLAN.md).
+ 
+ - Plan как полноценный отдельный **canonical owner**, writer с авторизацией и version/transaction history, доверенное подтверждение реального события и пересмотр временного плана.
+ - Конкретное вычисление календарной осуществимости/критического пути с effort, ресурсами, hard/soft constraints и conditional branches. Текущий валидатор проверяет структуру, но **не доказывает выполнимость графика**.
+--- before/tools/rdg-temporal-plan.py
++++ after/tools/rdg-temporal-plan.py
+@@ -58,7 +58,7 @@
+            plan["revision"] >= 1, "IDENTITY")
+     ensure(plan.get("status") == "candidate", "CANDIDATE_ONLY")
+     steps = plan.get("steps")
+-    ensure(isinstance(steps, list) and steps, "STEPS_REQUIRED")
++    ensure(isinstance(steps, list), "STEPS_REQUIRED")
+     by_id = {}
+     for step in steps:
+         ensure(isinstance(step, dict), "INVALID_STEP")
+@@ -193,6 +193,18 @@
+     return by_id, temporal
+ 
+ 
++def validate_future_write(plan):
++    """Current write rule; immutable v1 snapshots retain structural readability."""
++    by_id, temporal = validate(plan)
++    placed = {rule["stepId"] for rule in temporal}
++    for edge in plan.get("sequence", []):
++        placed.update((edge["before"], edge["after"]))
++    for sid, step in by_id.items():
++        if step["kind"] == "action":
++            ensure(sid in placed, "ACTION_STEP_NOT_PLACED")
++    return by_id, temporal
++
++
+ def inspect(plan, graphs_root=None):
+     by_id, temporal = validate(plan)
+     refs = []
+--- before/tests/rdg-shared-action-occurrences.acceptance.test.py
++++ after/tests/rdg-shared-action-occurrences.acceptance.test.py
+@@ -45,6 +45,7 @@
+             "title":"Unrelated A2 occurrence","state":"planned",
+             "actionRef":{"graphFile":GRAPH,"identitySpace":"temporal-demo",
+                          "nodeId":"A2","observedGraphRevision":1}})
++        self.owner.plan["sequence"].append({"before":"S-RESULT","after":"S-CONTROL"})
+         self.owner.apply(self.owner.request())
+         self.original = FIXTURE.OWNER.read_snapshot(self.owner.root,REL,1)
+ 
+--- before/tools/rdg-temporal-plan-owner.py
++++ after/tools/rdg-temporal-plan-owner.py
+@@ -329,6 +329,9 @@
+         require(request["expectedRevision"] == expected, "CAS_MISMATCH")
+         require((op == "create") == (old is None), "CREATE_OR_EDIT_STATE")
+         require(plan["revision"] == expected + 1, "NEXT_REVISION_REQUIRED")
++        # Replays retain the acceptance rule of their saved transaction. New
++        # writes require explicit placement; historical snapshots remain readable.
++        PLAN.validate_future_write(plan)
+         owner = {"identitySpace": plan["identitySpace"], "planId": plan["id"], "sourcePath": relative}
+         require(not old or old["owner"] == owner, "OWNER_IDENTITY_IMMUTABLE")
+         key = identity(plan)
+--- /dev/null
++++ after/tests/rdg-temporal-placement.acceptance.test.py
+@@ -0,0 +1,155 @@
++#!/usr/bin/env python3
++"""Explicit temporal placement and an empty future through the real Plan writer."""
++import copy
++from importlib.machinery import SourceFileLoader
++import json
++from pathlib import Path
++import unittest
++
++ROOT = Path(__file__).resolve().parents[1]
++FIXTURE = SourceFileLoader("placement_owner_fixture",
++    str(ROOT/"tests/rdg-temporal-plan-owner.test.py")).load_module()
++OWNER, ADAPTER = FIXTURE.OWNER, FIXTURE.ADAPTER
++REL = FIXTURE.REL
++GRAPH = "workspaces/temporal-fixture/graph.json"
++
++
++class TemporalPlacementAcceptance(unittest.TestCase):
++    def setUp(self):
++        self.owner = FIXTURE.PlanOwnerTest(
++            "test_create_edit_history_exact_snapshot_and_idempotency")
++        self.owner.setUp()
++        self.addCleanup(self.owner.doCleanups)
++        self.graphs = self.owner.base/"graphs"
++        self.graphfile = self.graphs/GRAPH
++        self.graphfile.parent.mkdir(parents=True)
++        self.graphfile.write_text(json.dumps({"schemaVersion":1,"revision":1,
++            "id":"placement","identitySpace":"temporal-demo","rootRequirementId":"R0",
++            "actionModel":"candidate-v6","edges":[],"events":[],
++            "nodes":[{"id":"R0","kind":"requirement","title":"Root"}]+[
++                {"id":aid,"kind":"action","title":aid,"status":"candidate"}
++                for aid in ("A1","A2")]}))
++        self.graph_before = self.graphfile.read_bytes()
++
++    def plan(self, step_ids=(), sequence=(), constraints=()):
++        result = copy.deepcopy(self.owner.plan)
++        steps = {s["id"]:s for s in result["steps"]}
++        result["steps"] = [copy.deepcopy(steps[sid]) for sid in step_ids]
++        for step in result["steps"]:
++            step["state"] = "planned"
++        result["branches"] = []
++        result["sequence"] = list(copy.deepcopy(sequence))
++        result["timeConstraints"] = list(copy.deepcopy(constraints))
++        return result
++
++    def create(self, plan):
++        return self.owner.apply(self.owner.request(plan=plan))
++
++    def report(self, revision=None):
++        saved = OWNER.read_snapshot(self.owner.root,REL,revision)
++        return OWNER.PLAN.inspect(saved["plan"],self.graphs)
++
++    def assert_graph_unchanged(self):
++        self.assertEqual(self.graphfile.read_bytes(),self.graph_before)
++
++    def test_empty_future_can_be_saved_placed_and_cleared_without_fake_steps(self):
++        empty = self.plan()
++        self.create(empty)
++        original = OWNER.read_snapshot(self.owner.root,REL,1)
++        report = self.report()
++        self.assertEqual(report["steps"],[])
++        self.assertEqual(report["actionReferences"],[])
++        self.assertFalse(report["executionPerformed"])
++        resource = ADAPTER.plan_resource(self.owner.root/REL,plan_root=self.owner.root)
++        self.assertEqual(resource["data"]["actionRefsByStep"],{})
++        self.assertEqual(resource["data"]["reviewInputsByStep"],{})
++        ordered = self.plan(("S-A1","S-A2"),({"before":"S-A1","after":"S-A2"},))
++        ordered["revision"] = 2
++        self.owner.apply(self.owner.request("edit",1,ordered))
++        self.assertEqual(len(self.report()["actionReferences"]),2)
++        cleared = self.plan()
++        cleared["revision"] = 3
++        self.owner.apply(self.owner.request("edit",2,cleared))
++        self.assertEqual(self.report()["steps"],[])
++        self.assertEqual(OWNER.read_snapshot(self.owner.root,REL,1),original)
++        self.assertEqual(self.report(2)["sequence"],ordered["sequence"])
++        self.assert_graph_unchanged()
++
++    def test_order_only_places_candidate_actions_without_inventing_dates(self):
++        plan = self.plan(("S-A1","S-A2"),({"before":"S-A1","after":"S-A2"},))
++        self.create(plan)
++        report = self.report()
++        self.assertEqual(report["timeConstraints"],[])
++        self.assertEqual(report["sequence"],[{"before":"S-A1","after":"S-A2"}])
++        self.assertEqual({r["actionStatus"] for r in report["actionReferences"]},
++                         {"candidate"})
++        graph = ADAPTER.graph_resource(self.graphfile,graph_ref=GRAPH)
++        resource = ADAPTER.plan_resource(self.owner.root/REL,plan_root=self.owner.root)
++        for aid in ("A1","A2"):
++            contract = ADAPTER.DEPENDENCIES.build_action_contract(
++                graph,resource,aid,["S-"+aid])
++            self.assertTrue(contract["complete"])
++        self.assert_graph_unchanged()
++
++    def test_date_only_places_action_and_cannot_be_removed_leaving_it_unplaced(self):
++        rule = {"stepId":"S-A1","type":"notBefore","at":"2026-11-15",
++                "strength":"hypothetical","basis":"Explicit candidate placement"}
++        self.create(self.plan(("S-A1",),constraints=(rule,)))
++        report = self.report()
++        self.assertEqual(report["sequence"],[])
++        self.assertEqual(report["timeConstraints"][0]["precision"],"date")
++        before = self.owner.source_bytes()
++        invalid = self.plan(("S-A1",))
++        invalid["revision"] = 2
++        with self.assertRaisesRegex(ValueError,"ACTION_STEP_NOT_PLACED"):
++            self.owner.apply(self.owner.request("edit",1,invalid))
++        self.assertEqual(self.owner.source_bytes(),before)
++        self.assertEqual(self.report()["planRevision"],1)
++        self.assert_graph_unchanged()
++
++    def test_legacy_snapshot_and_accepted_retry_remain_readable_after_new_rule(self):
++        legacy = self.plan(("S-A1",))
++        request = self.owner.request(plan=legacy,tx="legacy-accepted-create")
++        new_rule = OWNER.PLAN.validate_future_write
++        try:
++            # Simulate the former writer accepting a structurally valid v1 Plan.
++            OWNER.PLAN.validate_future_write = OWNER.PLAN.validate
++            self.owner.apply(request)
++        finally:
++            OWNER.PLAN.validate_future_write = new_rule
++        original = OWNER.read_snapshot(self.owner.root,REL,1)
++        before = self.owner.source_bytes()
++        self.assertTrue(self.owner.apply(request)["idempotent"])
++        self.assertEqual(self.owner.source_bytes(),before)
++        self.assertEqual(self.report()["actionReferences"][0]["nodeId"],"A1")
++        invalid = copy.deepcopy(legacy)
++        invalid["revision"] = 2
++        with self.assertRaisesRegex(ValueError,"ACTION_STEP_NOT_PLACED"):
++            self.owner.apply(self.owner.request("edit",1,invalid,tx="new-unplaced"))
++        self.assertEqual(self.owner.source_bytes(),before)
++        placed = copy.deepcopy(invalid)
++        placed["timeConstraints"] = [{"stepId":"S-A1","type":"notBefore",
++            "at":"2026-11-15","strength":"hypothetical","basis":"Explicit placement"}]
++        self.owner.apply(self.owner.request("edit",1,placed,tx="new-placed"))
++        self.assertEqual(OWNER.read_snapshot(self.owner.root,REL,1),original)
++        self.assert_graph_unchanged()
++
++    def test_unplaced_action_rejected_atomically_on_create_and_edit(self):
++        before = self.owner.source_bytes()
++        with self.assertRaisesRegex(ValueError,"ACTION_STEP_NOT_PLACED"):
++            self.create(self.plan(("S-A1",)))
++        self.assertEqual(self.owner.source_bytes(),before)
++        rule = {"stepId":"S-A1","type":"deadline","at":"2026-11-15",
++                "strength":"hypothetical","basis":"Explicit candidate deadline"}
++        self.create(self.plan(("S-A1",),constraints=(rule,)))
++        before = self.owner.source_bytes()
++        invalid = self.plan(("S-A1","S-A2"),constraints=(rule,))
++        invalid["revision"] = 2
++        with self.assertRaisesRegex(ValueError,"ACTION_STEP_NOT_PLACED"):
++            self.owner.apply(self.owner.request("edit",1,invalid))
++        self.assertEqual(self.owner.source_bytes(),before)
++        self.assert_graph_unchanged()
++
++
++if __name__=="__main__":
++    unittest.main()
+--- /dev/null
++++ after/docs/handoffs/rdg-temporal-review-fix-20261019/REVIEW.md
+@@ -0,0 +1,100 @@
++# Повторная сверка сообщения, плана и существующего кода
++
++**ID:** R-RDG-TEMPORAL-MESSAGE-20261019/v2. **Статус:** Candidate review.
++**Stage 4 NOT ACCEPTED.** Сообщение пользователя о граф-модели и плане во
++времени сопоставлено с его ответом о листовом Action, актуальным планом,
++владельцем определений и существующим writer/reader.
++
++## Findings — по важности
++
++1. **F-R-REVIEW-01 — маршрут ошибочно делал размещение обязательным.**
++   В плане было «граф → размещение → выполнение → история».
++   Исправлено на два пути: выполнить без размещения либо предварительно
++   разместить и выполнить; история общая. Область новых определений сохранена:
++   граф сам планирует варианты, план во времени задаёт время/порядок.
++2. **F-R-REVIEW-02 — недостаточно разделены результаты разбиения и корректность Action.**
++   Action создания подцели заканчивает работу её созданием. Достижение
++   созданной подцели требуется родительской R. Требования корректности самого
++   Action имеют другую роль. Это уточнено у существующего владельца определений;
++   расчёт относится к выбранной композиции, а неизвестная обязательная
++   зависимость не превращается в успех. Автоматический evaluator этим не создан.
++3. **F-P-REVIEW-03 — границы будущего плана расходились с новым scope.**
++   Writer запрещал пустой future, но принимал новый Action-шаг без времени
++   и порядка. Реальный candidate Plan writer воспроизвёл несоответствие:
++   до исправления 4 cases дали 1 OK, 2 FAIL и 1 ERROR.
++   [Отрицательный прогон](before-placement-fix.log).
++   Исправлено: пустое будущее допустимо; свежая create/edit/branch запись
++   Action-шага требует timeConstraints или участия в sequence. Отказ
++   TEMPORAL_PLAN_ACTION_STEP_NOT_PLACED происходит без новой версии/истории.
++4. **F-R-REVIEW-04 — новое правило не должно ломать прошлые версии и retry.**
++   Структурный schema-v1 reader сохранён отдельно от validate_future_write.
++   Placement guard применяется только к новым записям после проверки принятого
++   transaction replay. Тест моделирует прежний writer, читает прежний snapshot,
++   повторяет уже принятую транзакцию без записи и запрещает новый unplaced edit.
++5. **F-P-REVIEW-05 — часть формулировок выдавала требуемую историю за доступную ленту.**
++   В руководстве было «история ... также доступна». Теперь явно различены
++   существующие journals/events и ещё не реализованная общая читаемая лента.
++   В плане исправлена также ошибочная атрибуция прежней фразы ассистента
++   об автодобавлении Action самому PR-PLAN-COMPLETION-01.
++6. **F-U-REVIEW-06 — топология и полный расчёт пока не закрыты.**
++   Candidate Action → potential R всё ещё не поддержан новым Action writer;
++   create_requirement создаёт прямой DERIVES; outcome API/evaluator отсутствует.
++   Ослаблять INTRODUCES одним условием нельзя: оно обозначает актуальную
++   связь и используется reader/projection. План требует связанный writer +
++   reader/projection acceptance. Эти изменения не были сделаны молча.
++
++## Сверка с исходным сообщением
++
++| Указание пользователя | Исправление или фактический статус |
++|---|---|
++| Граф сам позволяет планировать будущее на бумаге | Сохранено как определение; непринятые Action-продолжения в текущем новом writer требуют доработки. |
++| План приложения и план действий граф-модели различаются | Разделены у владельца определений. |
++| Новая вещь — план во времени | Термин и scope сохранены в текущем плане. |
++| Размещение требует времени и/или порядка | Новый write guard; оба варианта проверены. |
++| Создание Action не добавляет его в будущее автоматически | В definitions и API-тесте пустого future; граф содержит A1/A2, Plan остаётся пустым. |
++| Можно выполнить без предварительного размещения | Маршрут исправлен; история выполнения/outcome API пока не реализованы. Пустой future сам по себе не доказывает эту функцию. |
++| Подцели через Actions создания; Requirements корректности от способа | Роли разъяснены; структура исходников сопоставлена и пробелы оставлены явно. |
++| Необязательная R имеет отдельный оспариваемый Action введения | Сохранено; физический тип связи ещё Candidate, без нового ребра в runtime. |
++| Альтернативы реализации Action раскрываются через R «решить как» | Сохранено; произвольное дерево Action → Action не добавлено. |
++| Выполнение зависит от ролей и выбранного разбиения | Уточнены композиция, листовой случай и неполнота данных; evaluator открыт. |
++| Листовой Action допустим по существующим критериям | Обязательная дополнительная R результата не введена. Критерии не переопределены. |
++
++## Что изменено в коде и тестах
++
++- tools/rdg-temporal-plan.py: steps=[] допустим; validate_future_write
++  проверяет размещение Action по явным sequence/timeConstraints.
++- tools/rdg-temporal-plan-owner.py: guard для свежих записей, сохранение
++  структурного чтения и идемпотентного принятого replay.
++- tests/rdg-temporal-placement.acceptance.test.py: 5 новых поведенческих cases.
++- Shared Action acceptance: контрольный S-CONTROL теперь явно поставлен
++  после S-RESULT. Предмет проверки membership и локального review не ослаблен.
++
++Новые поля, типы рёбер, completion statuses или baseline lifecycle не вводились.
++Пустой future — допустимая будущая часть, не искусственно созданный выполненный
++шаг. Old schema-v1 snapshots читаются, но это не утверждает, что они прошли
++новое правило свежей записи.
++
++## Проверки и ограничения
++
++**155 тестов PASS**, 16 связанных Python suites. Включены 5 новых placement
++cases, Plan owner/reader/impact, shared Action, Gendocen dependencies и guards,
++resources, exact history, two-time, applicability, baseline, event и joint.
++[Runner](run-related-tests.py) · [Команды, exit codes и логи](test-results.json).
++Shared Action real-engine scenario снова выполнил 21 CLI-вызов Gendocen;
++число 21 относится только к нему, не суммирует прочие runtime-проверки.
++
++Это локальные synthetic/temp источники. Полная Node regression, отдельный
++joint smoke и Windows/G2 install здесь не запускались. Пустой Plan не делает
++старую dependency-конфигурацию с несуществующим target-step корректной: такой
++consumer должен обработать изменение явно. Общая лента, R-placement, удобный
++пользовательский интерфейс и completion API/evaluator остаются открытыми.
++
++Точные формулировки трёх критериев выделения сущностей не восстановлены.
++WR-22 persistence formula не объявлена их эквивалентом. Это Evidence Gap;
++он не блокирует однозначные правила пустого future и явного размещения.
++Формат записи листового результата, optional R creation и повторных вхождений
++должны быть определены перед соответствующими runtime-операциями.
++
++[Выбранный diff](SELECTED-DIFF.patch) основан на before-копиях; .git нет.
++Прежние checkpoints и архив v4.1 не переписывались. Пользовательские графы,
++commit/push, установка и публикация не выполнялись.
+--- /dev/null
++++ after/docs/handoffs/rdg-temporal-review-fix-20261019/CHECKPOINT.md
+@@ -0,0 +1,29 @@
++# Явное размещение и повторная сверка плана
++
++**ID:** CPW-RDG-TEMPORAL-PLACEMENT-20261019/v1. **Статус:** CANDIDATE,
++PASS только для проверенного локального scope. **Stage 4 NOT ACCEPTED.**
++Fortis Repo: /workspace/repos/rd-graphs, Windows RW 9p mount. .git отсутствует.
++
++Новая запись Action-шага в будущую часть требует времени или явного порядка.
++Пустое будущее допустимо. Структурное чтение старых schema-v1 snapshots и
++идемпотентный повтор уже принятого запроса сохраняются. Отказ новой записи
++без размещения не создаёт версию/историю и не меняет RDG.
++
++Исправлены также маршрут выполнения без предварительного размещения,
++различие создания/достижения подцели и преждевременное утверждение о готовой
++общей истории. Описание и полный scope — [повторный review](REVIEW.md).
++
++**155 тестов PASS** в 16 связанных suites, включая 5 новых acceptance cases.
++[Результаты](test-results.json). Реальный shared Action Gendocen case —
++21 CLI-запуск; control A2 остаётся valid при адресных изменениях A1.
++До исправления новые 4 cases: 1 OK, 2 FAIL, 1 ERROR; это доказательство
++несоответствия, а не PASS старого поведения.
++
++R-placement, candidate Action descendants, completion/outcome evaluator,
++общая читаемая лента и installed Windows proof не закрыты этим срезом.
++Исторические P2-AC статусы остаются 8 локальных PASS / 12 PARTIAL / 0 OPEN.
++Полные WR и Proposals не повышены автоматически.
++
++[Diff](SELECTED-DIFF.patch) · [Metadata и хеши](CHECKPOINT.json).
++Тесты работали только на временных данных; пользовательские графы,
++remote/commit/push и публикацию не меняли.
+--- /dev/null
++++ after/docs/handoffs/rdg-temporal-review-fix-20261019/run-related-tests.py
+@@ -0,0 +1,33 @@
++#!/usr/bin/env python3
++"""Related Python regression; writers use only their temporary fixtures."""
++from concurrent.futures import ThreadPoolExecutor, as_completed
++from pathlib import Path
++import json, os, re, subprocess, sys, time
++ROOT = Path(__file__).resolve().parents[3]
++OUT = Path(__file__).resolve().parent
++NAMES = ["temporal-placement.acceptance", "temporal-plan", "temporal-plan-owner",
++ "temporal-impact", "shared-action-occurrences.acceptance", "joint-context",
++ "gendocen-resources", "gendocen-dependencies", "gendocen-coverage-guard",
++ "future-baseline", "exact-history", "event-owner", "event-gendocen",
++ "event-consumer-guard", "two-time-scenario", "applicability-owner"]
++def run(name):
++ path = ROOT/("tests/rdg-"+name+".test.py")
++ assert path.is_file(), str(path)
++ command = [sys.executable, "-B", str(path), "-v"]
++ start = time.monotonic()
++ result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True,
++  env={**os.environ, "PYTHONDONTWRITEBYTECODE":"1"}, timeout=180)
++ log = result.stdout+result.stderr
++ (OUT/(name+".log")).write_text(log)
++ match = re.search(r"Ran (\d+) tests?",log)
++ return name, {"command":command, "exitCode":result.returncode,
++  "tests":int(match[1]) if match else None,
++  "seconds":round(time.monotonic()-start,2), "log":name+".log"}
++results = {}
++with ThreadPoolExecutor(max_workers=3) as pool:
++ for future in as_completed([pool.submit(run,name) for name in NAMES]):
++  name,result = future.result();results[name] = result
++  print(name, result["exitCode"], result["tests"], flush=True)
++(OUT/"test-results.json").write_text(json.dumps({"results":results,
++ "totalTests":sum(x["tests"] or 0 for x in results.values())},indent=2)+"\n")
++sys.exit(int(any(x["exitCode"] for x in results.values())))

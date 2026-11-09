@@ -1,0 +1,383 @@
+{
+  "id": "CPW-RDG-TEMPORAL-OWNER-P1-20261019/v1",
+  "status": "CANDIDATE",
+  "type": "semantic-contract-index-not-plan-schema",
+  "definitionOwner": "docs/guides/RDG-TEMPORAL-PLAN-OWNER-CONTRACT-P1.md",
+  "requirementsOwner": "docs/handoffs/rdg-prework-v4.1-final-20261018/candidate-prework-v4.1-execution-reconciled.md",
+  "runtimeSchemaUnchanged": true,
+  "planWriterImplemented": false,
+  "productionStorageChosen": false,
+  "realEventTrustImplemented": false,
+  "historicalSnapshotAvailable": false,
+  "productionStage4Accepted": false,
+  "identity": {
+    "logical": [
+      "identitySpace",
+      "planId"
+    ],
+    "schemaV1IdField": "id",
+    "sourcePath": "explicit-root-relative locator; not identity",
+    "stepId": "Plan occurrence identity; Action nodeId remains in RDG owner"
+  },
+  "version": {
+    "exactReference": [
+      "PlanRef",
+      "revision",
+      "snapshotDigest"
+    ],
+    "metadata": [
+      "recordedAt",
+      "effectiveAt",
+      "writerPrincipal",
+      "basis",
+      "previousRevision"
+    ],
+    "serialization": "CANDIDATE; P2 must choose and verify; no fields added to schemaVersion=1"
+  },
+  "asOf": {
+    "modes": [
+      "exact-snapshot",
+      "knownAt+effectiveAt+lifecycleScope",
+      "retrospective-reconstruction"
+    ],
+    "currentFallbackAllowed": false,
+    "latestCandidateReplacesAcceptedBaseline": false
+  },
+  "invariants": [
+    {
+      "id": "P1-I01",
+      "topic": "semantic-ownership",
+      "status": "CANDIDATE-CONTRACT-RULE",
+      "fr": [
+        "FR-06",
+        "FR-11",
+        "FR-12"
+      ],
+      "wr": [
+        "WR-45",
+        "WR-48"
+      ],
+      "meaning": "RDG владеет смыслом и T1; Plan — временным содержанием и историей; consumers получают проекции."
+    },
+    {
+      "id": "P1-I02",
+      "topic": "owner-binding",
+      "status": "CANDIDATE-CONTRACT-RULE",
+      "fr": [
+        "FR-11"
+      ],
+      "wr": [
+        "WR-45"
+      ],
+      "meaning": "Один writable source на identity Plan в явно выбранном owner-контуре; production root не выбран."
+    },
+    {
+      "id": "P1-I03",
+      "topic": "qualified-reference",
+      "status": "CANDIDATE-CONTRACT-RULE",
+      "fr": [
+        "FR-11",
+        "FR-12"
+      ],
+      "wr": [
+        "WR-45",
+        "WR-48"
+      ],
+      "meaning": "Identity, путь и содержимое ссылки согласованы; step обозначает вхождение, а не новую identity Action."
+    },
+    {
+      "id": "P1-I04",
+      "topic": "path-boundary",
+      "status": "CANDIDATE-CONTRACT-RULE",
+      "fr": [
+        "FR-03",
+        "FR-10"
+      ],
+      "wr": [
+        "WR-45",
+        "WR-51"
+      ],
+      "meaning": "Выход из root, неоднозначный путь и конфликт owner отклоняются; перенос требует полномочия и истории."
+    },
+    {
+      "id": "P1-I05",
+      "topic": "exact-revision",
+      "status": "CANDIDATE-CONTRACT-RULE",
+      "fr": [
+        "FR-06",
+        "FR-12"
+      ],
+      "wr": [
+        "WR-48",
+        "WR-52"
+      ],
+      "meaning": "Точная revision и digest требуют доступного snapshot с проверенным owner; hash не доказывает истину или право."
+    },
+    {
+      "id": "P1-I06",
+      "topic": "immutable-version",
+      "status": "CANDIDATE-CONTRACT-RULE",
+      "fr": [
+        "FR-06",
+        "FR-15"
+      ],
+      "wr": [
+        "WR-45",
+        "WR-51",
+        "WR-52"
+      ],
+      "meaning": "Материальные изменения версионируются; прежние snapshots сохраняются; нужны CAS и revoke-before-commit; сериализация — P2."
+    },
+    {
+      "id": "P1-I07",
+      "topic": "provenance",
+      "status": "CANDIDATE-CONTRACT-RULE",
+      "fr": [
+        "FR-06",
+        "FR-15"
+      ],
+      "wr": [
+        "WR-51",
+        "WR-52"
+      ],
+      "meaning": "Происхождение формирует writer; bearer actor не доказывает личность человека."
+    },
+    {
+      "id": "P1-I08",
+      "topic": "future-baseline",
+      "status": "CANDIDATE-CONTRACT-RULE",
+      "fr": [
+        "FR-11",
+        "FR-14"
+      ],
+      "wr": [
+        "WR-45",
+        "WR-47",
+        "WR-51"
+      ],
+      "meaning": "Candidate отличается от принятого будущего baseline; клиентский статус не создаёт принятия."
+    },
+    {
+      "id": "P1-I09",
+      "topic": "selection-separation",
+      "status": "CANDIDATE-CONTRACT-RULE",
+      "fr": [
+        "FR-06",
+        "FR-12",
+        "FR-14"
+      ],
+      "wr": [
+        "WR-47",
+        "WR-48",
+        "WR-52"
+      ],
+      "meaning": "Принятие и пересмотр Plan не выбирают Action и не переписывают T1."
+    },
+    {
+      "id": "P1-I10",
+      "topic": "time-precision",
+      "status": "CANDIDATE-CONTRACT-RULE",
+      "fr": [
+        "FR-11"
+      ],
+      "wr": [
+        "WR-46"
+      ],
+      "meaning": "Календарная дата и момент с UTC offset сохраняют разную precision."
+    },
+    {
+      "id": "P1-I11",
+      "topic": "relative-unknown",
+      "status": "CANDIDATE-CONTRACT-RULE",
+      "fr": [
+        "FR-11"
+      ],
+      "wr": [
+        "WR-46"
+      ],
+      "meaning": "Порядок и минимальная задержка не задают длительность или абсолютную дату; неизвестный anchor остаётся неизвестным."
+    },
+    {
+      "id": "P1-I12",
+      "topic": "time-window",
+      "status": "CANDIDATE-CONTRACT-RULE",
+      "fr": [
+        "FR-11"
+      ],
+      "wr": [
+        "WR-46"
+      ],
+      "meaning": "notBefore/deadline описывают окно; корректная структура не доказывает выполнимость."
+    },
+    {
+      "id": "P1-I13",
+      "topic": "constraint-authority",
+      "status": "CANDIDATE-CONTRACT-RULE",
+      "fr": [
+        "FR-13"
+      ],
+      "wr": [
+        "WR-46",
+        "WR-49"
+      ],
+      "meaning": "Hard или принятый будущий Plan не создаёт FR и не доказывает F-P автоматически."
+    },
+    {
+      "id": "P1-I14",
+      "topic": "conditional-future",
+      "status": "CANDIDATE-CONTRACT-RULE",
+      "fr": [
+        "FR-12"
+      ],
+      "wr": [
+        "WR-47"
+      ],
+      "meaning": "Case/outcome и выбор сценария не подтверждают наступление события."
+    },
+    {
+      "id": "P1-I15",
+      "topic": "event-evidence",
+      "status": "CANDIDATE-CONTRACT-RULE",
+      "fr": [
+        "FR-12",
+        "FR-14"
+      ],
+      "wr": [
+        "WR-47",
+        "WR-51"
+      ],
+      "meaning": "Заявление, attestation и независимая verification разделены; доверенный путь факта остаётся открытым."
+    },
+    {
+      "id": "P1-I16",
+      "topic": "event-correction",
+      "status": "CANDIDATE-CONTRACT-RULE",
+      "fr": [
+        "FR-06",
+        "FR-12"
+      ],
+      "wr": [
+        "WR-47",
+        "WR-52"
+      ],
+      "meaning": "Исправления и конфликты сохраняют исходное событие и позднее время знания."
+    },
+    {
+      "id": "P1-I17",
+      "topic": "two-times",
+      "status": "CANDIDATE-CONTRACT-RULE",
+      "fr": [
+        "FR-06",
+        "FR-11"
+      ],
+      "wr": [
+        "WR-46",
+        "WR-52"
+      ],
+      "meaning": "recordedAt отличается от effectiveAt; позднее знание не становится историческим."
+    },
+    {
+      "id": "P1-I18",
+      "topic": "historical-query",
+      "status": "CANDIDATE-CONTRACT-RULE",
+      "fr": [
+        "FR-06",
+        "FR-11"
+      ],
+      "wr": [
+        "WR-45",
+        "WR-52"
+      ],
+      "meaning": "Точный или known/effective/lifecycle-scoped запрос не подменяется latest/current."
+    },
+    {
+      "id": "P1-I19",
+      "topic": "assessment-context",
+      "status": "CANDIDATE-CONTRACT-RULE",
+      "fr": [
+        "FR-06",
+        "FR-12",
+        "FR-13"
+      ],
+      "wr": [
+        "WR-48",
+        "WR-49",
+        "WR-52"
+      ],
+      "meaning": "Оценка фиксирует Plan/branch/outcome и RDG snapshots; отсутствие evidence блокирует историческое утверждение."
+    },
+    {
+      "id": "P1-I20",
+      "topic": "coverage-extension",
+      "status": "CANDIDATE-CONTRACT-RULE",
+      "fr": [
+        "FR-09",
+        "FR-10"
+      ],
+      "wr": [
+        "WR-50",
+        "WR-52"
+      ],
+      "meaning": "Новые lifecycle/time/owner/event поля требуют нового dependency coverage или явной блокировки."
+    }
+  ],
+  "proposals": [
+    {
+      "id": "PR-P1-01",
+      "status": "CANDIDATE",
+      "committed": false
+    },
+    {
+      "id": "PR-P1-02",
+      "status": "CANDIDATE",
+      "committed": false
+    },
+    {
+      "id": "PR-P1-03",
+      "status": "CANDIDATE",
+      "committed": false
+    },
+    {
+      "id": "PR-P1-04",
+      "status": "CANDIDATE",
+      "committed": false
+    },
+    {
+      "id": "PR-P1-05",
+      "status": "CANDIDATE",
+      "committed": false
+    }
+  ],
+  "decisionGates": [
+    {
+      "id": "P1-DG-OWNER",
+      "neededBefore": "real persistent owner or relocation",
+      "decision": "production root/binding/remote actor",
+      "blocksSyntheticP2": false
+    },
+    {
+      "id": "P1-DG-ACCEPT",
+      "neededBefore": "real accepted future baseline",
+      "decision": "acceptance rights and trusted path; no human identity from bearer",
+      "blocksSyntheticP2": false
+    },
+    {
+      "id": "P1-DG-EVENT",
+      "neededBefore": "real event attestation or factual use",
+      "decision": "trusted source, issuer and verification workflow",
+      "blocksSyntheticP2": false
+    },
+    {
+      "id": "P1-DG-ROLLOUT",
+      "neededBefore": "installed deployment or legacy cutover",
+      "decision": "user-facing rollout scope and replacement proof",
+      "blocksSyntheticP2": false
+    }
+  ],
+  "scopeLimits": [
+    "No writer, event-attest, scheduler, grants or schema migration implemented.",
+    "Temporal precision describes current behavior and desired semantic limits; not a complete temporal algebra.",
+    "P0 current-projection/one-branch contract remains unchanged.",
+    "Descriptor indexes Candidate rules; it is not a second canonical requirements source."
+  ]
+}

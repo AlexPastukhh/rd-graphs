@@ -1,0 +1,74 @@
+[
+  {
+    "path": "README.md",
+    "status": "modified",
+    "sha256": "1fab88448052411e7fda88763c040bc5737fdb27732f9a458394295fbb461f98",
+    "beforeSHA256": "2c01d334946fc8173bca0116e4b34b72cfb57441b46e4fcbbd14e1a04ae7756e"
+  },
+  {
+    "path": "tools/rdg-authority.py",
+    "status": "modified",
+    "sha256": "942dc71082701a8e485c61f2c9632c702f67bb1a77f256b82e05ac58c16f319b",
+    "beforeSHA256": "184b618ca907e842c7199c65df07a0e0a7aff5b5f0645b23b74b9298b44c1803"
+  },
+  {
+    "path": "tools/rdg-gendocen-adapter.py",
+    "status": "modified",
+    "sha256": "82e5116bed2b3f99bcbebbd42f42b41137b3e4ea607291d870bc6ecacef07169",
+    "beforeSHA256": "d5ff1d241dbcf960b59abd9757d853f69711c30c1d2536137e56b3271d87567f"
+  },
+  {
+    "path": "tools/rdg-gendocen-dependencies.py",
+    "status": "modified",
+    "sha256": "661454cb83dc5afc06f8c54227cbf6745666dff4a8cffd7220a6f7638bcce8a9",
+    "beforeSHA256": "7ba606a32c9c6832cca86d78d65a115b551268930cc7bb86920e27e303288e86"
+  },
+  {
+    "path": "tools/rdg-gendocen-t1-history-smoke.py",
+    "status": "modified",
+    "sha256": "21e58fc39927864f81524b7157911ef2b77da9cb87ee5d25ac3cfac94aceaf4d",
+    "beforeSHA256": "092b623fdf49bf5d0928d12418fae89cac419eb73674127746a4a1b2f789130e"
+  },
+  {
+    "path": "tests/rdg-gendocen-dependencies.test.py",
+    "status": "modified",
+    "sha256": "8648ccf591f9f8762f2f019335237be7c21a0d7b2580de02625aa070aaa32d3f",
+    "beforeSHA256": "6b3e798e0f279988bf046689bdeb07827978ff1799c21b2d334f91834b1b5fce"
+  },
+  {
+    "path": "docs/guides/RDG-GENDOCEN-DEPENDENCY-COVERAGE-P0.md",
+    "status": "modified",
+    "sha256": "efb0f4ccaafbcdb644856ad37866a769d9e8d8dcd41b8dcea09ccb468741d610",
+    "beforeSHA256": "cb1f40ed431cf4e26875206c489783d73351bf8fd094bbd8a650c0848de72f72"
+  },
+  {
+    "path": "docs/guides/RDG-TEMPORAL-PLAN-OWNER-CONTRACT-P1.md",
+    "status": "modified",
+    "sha256": "e83c1ce10c8cec8f545b0400085582a204212b7e236bde1f1da6f4030dfb7896",
+    "beforeSHA256": "d56f86b854992c92d8f2afbdb4d3e39868527c0b6b6b9a793c1fdc263b93ac07"
+  },
+  {
+    "path": "tools/rdg-temporal-plan-owner.py",
+    "status": "new",
+    "sha256": "8891846a0134ce044a405ca72492fa900878e04ccbdbb7dfa776360d101aab71",
+    "beforeSHA256": null
+  },
+  {
+    "path": "tests/rdg-temporal-plan-owner.test.py",
+    "status": "new",
+    "sha256": "0e482e66978270c79b677de01dceab338dbebdab04e97c7121fa256079be1f2a",
+    "beforeSHA256": null
+  },
+  {
+    "path": "tests/rdg-gendocen-coverage-guard.test.py",
+    "status": "new",
+    "sha256": "c386015cb159e106367eb466abe1484912cc7904dfa3d35f475d5b478c210159",
+    "beforeSHA256": null
+  },
+  {
+    "path": "docs/guides/RDG-TEMPORAL-PLAN-OWNER-PILOT-P2.md",
+    "status": "new",
+    "sha256": "167ef5ead30beaff4978902dad588fb7134387d0ebe6076d3a46304057a50769",
+    "beforeSHA256": null
+  }
+]

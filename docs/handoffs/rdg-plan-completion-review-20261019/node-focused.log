@@ -1,0 +1,196 @@
+TAP version 13
+# Subtest: deep paper branch is visible with variants and stays potential at every level
+ok 1 - deep paper branch is visible with variants and stays potential at every level
+  ---
+  duration_ms: 401.66114
+  type: 'test'
+  ...
+# Subtest: decomposition Action shows its type and execution history while subgoal is unfinished
+ok 2 - decomposition Action shows its type and execution history while subgoal is unfinished
+  ---
+  duration_ms: 201.111702
+  type: 'test'
+  ...
+# Subtest: generated root projection matches its source after potential Action support
+ok 3 - generated root projection matches its source after potential Action support
+  ---
+  duration_ms: 24.678067
+  type: 'test'
+  ...
+# Subtest: general graph API creates/updates/deletes via signed normal operations (not Lens)
+ok 4 - general graph API creates/updates/deletes via signed normal operations (not Lens)
+  ---
+  duration_ms: 2716.835784
+  type: 'test'
+  ...
+# Subtest: archived-only R can be removed with snapshot, but not if still attached
+ok 5 - archived-only R can be removed with snapshot, but not if still attached
+  ---
+  duration_ms: 2171.964537
+  type: 'test'
+  ...
+# Subtest: reconsideration policy is separate from truth and blocks unapproved user-R edits
+ok 6 - reconsideration policy is separate from truth and blocks unapproved user-R edits
+  ---
+  duration_ms: 1319.27323
+  type: 'test'
+  ...
+# Subtest: hard delete never silently destroys selected history or shared support
+ok 7 - hard delete never silently destroys selected history or shared support
+  ---
+  duration_ms: 1470.972565
+  type: 'test'
+  ...
+# Subtest: protected parent blocks unapproved child, edge removal and reparent (authorized owner allowed)
+ok 8 - protected parent blocks unapproved child, edge removal and reparent (authorized owner allowed)
+  ---
+  duration_ms: 3353.933638
+  type: 'test'
+  ...
+# Subtest: general reparent is history-preserving and safe for active DAG requirements
+ok 9 - general reparent is history-preserving and safe for active DAG requirements
+  ---
+  duration_ms: 1990.98094
+  type: 'test'
+  ...
+# Subtest: protected parent also gates selected Action introductions and shared-R link
+ok 10 - protected parent also gates selected Action introductions and shared-R link
+  ---
+  duration_ms: 3861.897002
+  type: 'test'
+  ...
+# Subtest: sixteen migrated historical entry roots remain discoverable without set membership
+ok 11 - sixteen migrated historical entry roots remain discoverable without set membership
+  ---
+  duration_ms: 3.904836
+  type: 'test'
+  ...
+# Subtest: prepared multiwave prospective R are visible without acceptance
+ok 12 - prepared multiwave prospective R are visible without acceptance
+  ---
+  duration_ms: 3.631761
+  type: 'test'
+  ...
+# Subtest: independent projects sharing a Requirement id do not mix due to identitySpace
+ok 13 - independent projects sharing a Requirement id do not mix due to identitySpace
+  ---
+  duration_ms: 3.169077
+  type: 'test'
+  ...
+# Subtest: source graphs are not mutated by read-only projections
+ok 14 - source graphs are not mutated by read-only projections
+  ---
+  duration_ms: 77.479225
+  type: 'test'
+  ...
+# Subtest: writable paper branches, deeper local choice and unrelated root stay in correct scope
+ok 15 - writable paper branches, deeper local choice and unrelated root stay in correct scope
+  ---
+  duration_ms: 2.180541
+  type: 'test'
+  ...
+# Subtest: non-causal source views remain navigable but are never invented R descendants
+ok 16 - non-causal source views remain navigable but are never invented R descendants
+  ---
+  duration_ms: 0.953606
+  type: 'test'
+  ...
+# Subtest: root closure works without graphSets metadata
+ok 17 - root closure works without graphSets metadata
+  ---
+  duration_ms: 0.613683
+  type: 'test'
+  ...
+# Subtest: real package writer creates opt-in Action graph with legacy schemaVersion 1
+ok 18 - real package writer creates opt-in Action graph with legacy schemaVersion 1
+  ---
+  duration_ms: 514.566376
+  type: 'test'
+  ...
+# Subtest: writer selects same Action ID with T1 evidence and grouped child Requirements
+ok 19 - writer selects same Action ID with T1 evidence and grouped child Requirements
+  ---
+  duration_ms: 1890.277168
+  type: 'test'
+  ...
+# Subtest: legacy writer graph remains Option/Decision only without opt-in
+ok 20 - legacy writer graph remains Option/Decision only without opt-in
+  ---
+  duration_ms: 681.129352
+  type: 'test'
+  ...
+# Subtest: plain add_node cannot smuggle an Action into a legacy graph
+ok 21 - plain add_node cannot smuggle an Action into a legacy graph
+  ---
+  duration_ms: 676.797015
+  type: 'test'
+  ...
+# Subtest: unattributed or fake-actor Action selection leaves graph and revision unchanged
+ok 22 - unattributed or fake-actor Action selection leaves graph and revision unchanged
+  ---
+  duration_ms: 1662.07543
+  type: 'test'
+  ...
+# Subtest: selection requires real existing Action and protects candidate versus selected identity
+ok 23 - selection requires real existing Action and protects candidate versus selected identity
+  ---
+  duration_ms: 2540.710901
+  type: 'test'
+  ...
+# Subtest: generic update_node cannot rewrite Action or normative Requirement in opt-in graph
+ok 24 - generic update_node cannot rewrite Action or normative Requirement in opt-in graph
+  ---
+  duration_ms: 2608.551618
+  type: 'test'
+  ...
+# Subtest: reader rejects fake selected state without matching event and avoids false prepared adoption
+ok 25 - reader rejects fake selected state without matching event and avoids false prepared adoption
+  ---
+  duration_ms: 1222.595381
+  type: 'test'
+  ...
+# Subtest: failed revision or child transaction never commits a partial Action
+ok 26 - failed revision or child transaction never commits a partial Action
+  ---
+  duration_ms: 1613.276397
+  type: 'test'
+  ...
+# Subtest: Action accepts append-only QRPE without splitting into Option and Decision
+ok 27 - Action accepts append-only QRPE without splitting into Option and Decision
+  ---
+  duration_ms: 1552.934588
+  type: 'test'
+  ...
+# Subtest: invalid Action canon and unscoped action model fail before writing
+ok 28 - invalid Action canon and unscoped action model fail before writing
+  ---
+  duration_ms: 757.274414
+  type: 'test'
+  ...
+# Subtest: cross-file reader recognizes selected Action introducing a root Requirement
+ok 29 - cross-file reader recognizes selected Action introducing a root Requirement
+  ---
+  duration_ms: 1346.383654
+  type: 'test'
+  ...
+# Subtest: real application-format graph.json fixture validates and projects Action without Decision
+ok 30 - real application-format graph.json fixture validates and projects Action without Decision
+  ---
+  duration_ms: 8.621489
+  type: 'test'
+  ...
+# Subtest: generic Action or child edge mutation is rejected even after selected event
+ok 31 - generic Action or child edge mutation is rejected even after selected event
+  ---
+  duration_ms: 1300.661161
+  type: 'test'
+  ...
+1..31
+# tests 31
+# suites 0
+# pass 31
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 20400.386898

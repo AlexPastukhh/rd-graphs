@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 1,
+  "kind": "temporalPlan",
+  "id": "P-DEMO",
+  "title": "Conditional delivery timeline (illustrative)",
+  "identitySpace": "temporal-demo",
+  "revision": 1,
+  "status": "candidate",
+  "steps": [
+    {
+      "id": "S-TRIAL",
+      "kind": "milestone",
+      "title": "Complete comparison experiment",
+      "state": "planned"
+    },
+    {
+      "id": "S-RESULT",
+      "kind": "event",
+      "title": "Receive experiment outcome",
+      "state": "expected",
+      "outcomes": [
+        "positive",
+        "negative"
+      ]
+    },
+    {
+      "id": "S-A1",
+      "kind": "action",
+      "title": "Possible execution of A1 after explicit selection",
+      "state": "possible",
+      "actionRef": {
+        "graphFile": "workspaces/temporal-fixture/graph.json",
+        "identitySpace": "temporal-demo",
+        "nodeId": "A1",
+        "observedGraphRevision": 1
+      }
+    },
+    {
+      "id": "S-A2",
+      "kind": "action",
+      "title": "Possible study of alternative A2",
+      "state": "possible",
+      "actionRef": {
+        "graphFile": "workspaces/temporal-fixture/graph.json",
+        "identitySpace": "temporal-demo",
+        "nodeId": "A2",
+        "observedGraphRevision": 1
+      }
+    },
+    {
+      "id": "S-DECISION",
+      "kind": "decision_gate",
+      "title": "Later authorized RDG decision (not performed)",
+      "state": "planned"
+    },
+    {
+      "id": "S-DELIVERY",
+      "kind": "milestone",
+      "title": "Potential delivery",
+      "state": "planned"
+    }
+  ],
+  "sequence": [
+    {
+      "before": "S-TRIAL",
+      "after": "S-RESULT",
+      "minDelayDays": 2
+    },
+    {
+      "before": "S-RESULT",
+      "after": "S-A1"
+    },
+    {
+      "before": "S-RESULT",
+      "after": "S-A2"
+    },
+    {
+      "before": "S-RESULT",
+      "after": "S-DECISION"
+    },
+    {
+      "before": "S-DECISION",
+      "after": "S-DELIVERY"
+    }
+  ],
+  "branches": [
+    {
+      "id": "B-RESULT",
+      "eventStepId": "S-RESULT",
+      "cases": [
+        {
+          "outcome": "positive",
+          "stepIds": [
+            "S-A1"
+          ]
+        },
+        {
+          "outcome": "negative",
+          "stepIds": [
+            "S-A2"
+          ]
+        }
+      ]
+    }
+  ],
+  "timeConstraints": [
+    {
+      "stepId": "S-DELIVERY",
+      "type": "deadline",
+      "at": "2026-11-20",
+      "strength": "hypothetical",
+      "basis": "Illustrative target in a candidate plan, not a committed project deadline"
+    },
+    {
+      "stepId": "S-TRIAL",
+      "type": "notBefore",
+      "at": "2026-11-01T09:00:00+02:00",
+      "strength": "soft",
+      "basis": "Illustrative time-zone-aware earliest instant"
+    }
+  ]
+}

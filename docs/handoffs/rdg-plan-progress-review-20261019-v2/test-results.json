@@ -1,0 +1,51 @@
+{
+  "checkedAtUTC": "2026-10-19T00:42:26.101954+00:00",
+  "results": {
+    "plan-owner": {
+      "command": [
+        "/usr/bin/python3",
+        "tests/rdg-temporal-plan-owner.test.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "seconds": 2.9,
+      "log": "plan-owner.log",
+      "tests": 17
+    },
+    "joint-context": {
+      "command": [
+        "/usr/bin/python3",
+        "tests/rdg-joint-context.test.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "seconds": 5.11,
+      "log": "joint-context.log",
+      "tests": 12
+    },
+    "branch-acceptance": {
+      "command": [
+        "/usr/bin/python3",
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/tests/rdg-gendocen-branch-membership.acceptance.test.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "seconds": 12.64,
+      "log": "branch-acceptance.log",
+      "tests": 2
+    },
+    "coverage-guard": {
+      "command": [
+        "/usr/bin/python3",
+        "tests/rdg-gendocen-coverage-guard.test.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "seconds": 8.73,
+      "log": "coverage-guard.log",
+      "tests": 4
+    }
+  },
+  "totalTests": 35,
+  "allExitZero": true
+}

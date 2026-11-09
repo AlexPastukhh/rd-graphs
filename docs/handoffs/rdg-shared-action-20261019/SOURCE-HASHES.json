@@ -1,0 +1,9 @@
+{
+  "README.md": "9b5cf34a902c7f4ebb8583022a65b513e6fbd8b0f54fb485b41b5895e5a64a7e",
+  "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md": "bd1144605726d77750fff182157e35c37e6347a685cbc4ecb7132bfc42472f68",
+  "tools/rdg-gendocen-dependencies.py": "dfede10d87a27503148014ffb295e27f1106f658cf44f6b76a136ada17728095",
+  "docs/guides/RDG-GENDOCEN-DEPENDENCY-COVERAGE-P0.md": "04f682b2fa73771844d91db51b50afd60d52dd41f2f26120fc541cabd0a3decd",
+  "tests/rdg-shared-action-occurrences.acceptance.test.py": "19ff51bfb694d88b6375248d1761853075e7aceb77180350fde1a60f8553100a",
+  "docs/handoffs/rdg-shared-action-20261019/CHECKPOINT.md": "b3f6e35de0dd64fb18ac975af3951466fd35fe81f97c3e2d3990f7b0e75235c0",
+  "docs/handoffs/rdg-shared-action-20261019/WR-DELTA.md": "b63ae9195f66aa39edce89265ab71220fc83d94424804bb62f4f28864e7b4043"
+}

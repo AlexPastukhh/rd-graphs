@@ -1,0 +1,9 @@
+{
+  "README.md": "6ed994f9e14a446aecb4190a245e49f8b0310bacb8c3a2ebe2d665487433e65b",
+  "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md": "cd52675d0b98ca3d9ec5935d492a7f59ee6986b30f265391008f9e9380b1ff0d",
+  "docs/guides/RDG-V7-WORKING-GRAPHS.md": "e97e68bb4f6e8b6e24cc8f90f5f960d26c124bd975054b58fa161d52a60cf3a7",
+  "docs/guides/RDG-TEMPORAL-PLAN-STAGE2P.md": "934da8267cce164307051e800300fb9a382c73d147e4405a21d5db4c1d5f95ac",
+  "tools/rdg-temporal-plan.py": "a72b037a21740eec5d7ece9af29aa91f3fdf9fd59eb8a4b1da65faf62a8e9179",
+  "tests/rdg-shared-action-occurrences.acceptance.test.py": "19ff51bfb694d88b6375248d1761853075e7aceb77180350fde1a60f8553100a",
+  "tools/rdg-temporal-plan-owner.py": "6fc18feae35f80413e52bfb4fe67f8cbf5559cca89d86c223b6380c7e2c51c54"
+}

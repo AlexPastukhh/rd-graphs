@@ -1,0 +1,10 @@
+{
+  "exitCode": 0,
+  "seconds": 0.65,
+  "command": [
+    "python3",
+    "tests/rdg-temporal-impact.test.py",
+    "-v"
+  ],
+  "log": "impact.log"
+}

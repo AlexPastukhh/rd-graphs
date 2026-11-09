@@ -1,0 +1,19 @@
+test_author_and_selector_are_distinct_and_receipt_is_internal (__main__.BearerPackage.test_author_and_selector_are_distinct_and_receipt_is_internal) ... ok
+test_create_candidate_only_including_legacy (__main__.BearerPackage.test_create_candidate_only_including_legacy) ... ok
+test_finding_requires_separate_grant_and_is_qrpe_not_a_second_registry (__main__.BearerPackage.test_finding_requires_separate_grant_and_is_qrpe_not_a_second_registry) ... ok
+test_findings_on_selected_action_do_not_rewrite_T1_or_accept_proposal (__main__.BearerPackage.test_findings_on_selected_action_do_not_rewrite_T1_or_accept_proposal) ... ok
+test_generic_node_and_event_operations_cannot_commit_a_decision (__main__.BearerPackage.test_generic_node_and_event_operations_cannot_commit_a_decision) ... ok
+test_legacy_option_selection_uses_separate_permission_and_internal_receipt (__main__.BearerPackage.test_legacy_option_selection_uses_separate_permission_and_internal_receipt) ... ok
+test_mixed_scope_denied_without_partial_graph (__main__.BearerPackage.test_mixed_scope_denied_without_partial_graph) ... ok
+test_revoke_between_prepare_and_commit_prevents_write (__main__.BearerPackage.test_revoke_between_prepare_and_commit_prevents_write) ... ok
+test_revoke_blocks_replay (__main__.BearerPackage.test_revoke_blocks_replay) ... ok
+test_revoke_waits_for_durable_commit_boundary (__main__.BearerPackage.test_revoke_waits_for_durable_commit_boundary)
+Two processes: revocation cannot overtake an accepted journal. ... ok
+test_uncertainty_finding_reuses_existing_qrpe_transition_history (__main__.BearerPackage.test_uncertainty_finding_reuses_existing_qrpe_transition_history) ... ok
+test_unverified_problem_and_invalid_uncertainty_are_rejected_without_write (__main__.BearerPackage.test_unverified_problem_and_invalid_uncertainty_are_rejected_without_write) ... ok
+test_user_claim_cannot_be_forged_by_bearer (__main__.BearerPackage.test_user_claim_cannot_be_forged_by_bearer) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 15.751s
+
+OK

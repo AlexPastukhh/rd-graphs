@@ -1,0 +1,58 @@
+TAP version 13
+# Subtest: lost response retains exact request, blocks a new action and permits safe retry
+ok 1 - lost response retains exact request, blocks a new action and permits safe retry
+  ---
+  duration_ms: 9.244285
+  type: 'test'
+  ...
+# Subtest: known rejection preserves source state and clears uncertain request
+ok 2 - known rejection preserves source state and clears uncertain request
+  ---
+  duration_ms: 2.17579
+  type: 'test'
+  ...
+# Subtest: a render failure after save reports saved, rather than an unknown writer outcome
+ok 3 - a render failure after save reports saved, rather than an unknown writer outcome
+  ---
+  duration_ms: 0.944668
+  type: 'test'
+  ...
+# Subtest: read-only and protected sessions disable writes, source text is rendered as text
+ok 4 - read-only and protected sessions disable writes, source text is rendered as text
+  ---
+  duration_ms: 0.748793
+  type: 'test'
+  ...
+# Subtest: Viewer keeps manual controls detached until explicit local attachment
+ok 5 - Viewer keeps manual controls detached until explicit local attachment
+  ---
+  duration_ms: 43.083561
+  type: 'test'
+  ...
+# Subtest: manual controls traverse real HTTP, writers and Viewer: A1 -> withdraw -> A2
+ok 6 - manual controls traverse real HTTP, writers and Viewer: A1 -> withdraw -> A2 # SKIP
+  ---
+  duration_ms: 0.425486
+  type: 'test'
+  ...
+# Subtest: generated workflow controller matches the shared source exactly
+ok 7 - generated workflow controller matches the shared source exactly
+  ---
+  duration_ms: 15.650828
+  type: 'test'
+  ...
+# Subtest: cross-owner Helper: manual action under projection root completes the owning parent
+ok 8 - cross-owner Helper: manual action under projection root completes the owning parent # SKIP
+  ---
+  duration_ms: 0.169464
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 2
+# todo 0
+# duration_ms 316.995342

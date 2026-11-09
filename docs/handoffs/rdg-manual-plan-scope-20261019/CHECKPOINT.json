@@ -1,0 +1,20 @@
+{
+  "id": "RDG-MANUAL-AND-AI-API-SCOPE-20261019/v1",
+  "recordedAtUTC": "2026-10-19T01:07:50.917151+00:00",
+  "status": "SCOPE-UPDATED",
+  "stage4": "NOT ACCEPTED",
+  "changedFiles": [
+    "README.md",
+    "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md"
+  ],
+  "fileSHA256": {
+    "README.md": "a3efd0183aca189cb24e6b1e359ec6af9c186fa0d3160845e22e831e473ecc27",
+    "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md": "873c956b6aef658108f015db30b50fa57a1955c5de18d28845fc118be6720590"
+  },
+  "runtimeChanged": false,
+  "testsRerun": false,
+  "p2EvidenceRowsUnchanged": true,
+  "localLinksChecked": 87,
+  "source": "two direct user clarifications in current conversation",
+  "next": "manual Plan and AI API on same storage, guarded read/create/edit and entity references"
+}

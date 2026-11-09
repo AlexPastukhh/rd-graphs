@@ -1,0 +1,26 @@
+[
+  {
+    "name": "requirement-with-action-type",
+    "requirementEditAccepted": true,
+    "resultAccepted": false,
+    "errorMessage": "ERROR: required work must be completed first; unknown roles cannot be bypassed",
+    "readReason": "decomposition-without-subgoals",
+    "rejectedRequestSourcesUnchanged": true
+  },
+  {
+    "name": "output-annotation-retains-result",
+    "sameBasis": true,
+    "sameResult": true,
+    "stillComplete": true,
+    "oldEventsUnchanged": true
+  },
+  {
+    "name": "reverse-order-final-composition",
+    "actionComplete": false,
+    "addedResults": []
+  },
+  {
+    "name": "real-old-format-result-read",
+    "error": "FileNotFoundError: [Errno 2] No such file or directory: '/workspace/repos/rd-graphs/docs/handoffs/rdg-completion-repair-20261019/before/tools/rdg-state.py'"
+  }
+]

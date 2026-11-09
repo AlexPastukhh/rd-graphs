@@ -1,0 +1,118 @@
+[
+  {
+    "changedFacets": [],
+    "checkExitCode": 0,
+    "checkOk": true,
+    "computedFacets": [
+      "branches",
+      "identity",
+      "sequence",
+      "steps",
+      "timeConstraints"
+    ],
+    "coverageComplete": true,
+    "declaredGroups": [
+      "branches",
+      "identity",
+      "sequence",
+      "steps",
+      "timeConstraints"
+    ],
+    "engine": "0.1.0.dev25",
+    "guardAccepted": true,
+    "mode": "event-title",
+    "projectionSemanticHashChanged": true,
+    "registeredSources": [
+      "resource://rdg/graph.cad870d76f7aae7c360ed7e1#/reviewIdentity",
+      "resource://rdg/graph.cad870d76f7aae7c360ed7e1#/reviewNodesById/A1",
+      "resource://rdg/plan.05d4dd44bed09ec7d038ec1c#/reviewCoverage",
+      "resource://rdg/plan.05d4dd44bed09ec7d038ec1c#/reviewInputsByStep/S-A1/identity",
+      "resource://rdg/plan.05d4dd44bed09ec7d038ec1c#/reviewInputsByStep/S-A1/branches",
+      "resource://rdg/plan.05d4dd44bed09ec7d038ec1c#/reviewInputsByStep/S-A1/steps",
+      "resource://rdg/plan.05d4dd44bed09ec7d038ec1c#/reviewInputsByStep/S-A1/sequence",
+      "resource://rdg/plan.05d4dd44bed09ec7d038ec1c#/reviewInputsByStep/S-A1/timeConstraints"
+    ],
+    "statuses": {
+      "A1": "valid",
+      "A2": "valid"
+    }
+  },
+  {
+    "changedFacets": [
+      "sequence"
+    ],
+    "checkExitCode": 2,
+    "checkOk": true,
+    "computedFacets": [
+      "branches",
+      "identity",
+      "sequence",
+      "steps",
+      "timeConstraints"
+    ],
+    "coverageComplete": true,
+    "declaredGroups": [
+      "branches",
+      "identity",
+      "sequence",
+      "steps",
+      "timeConstraints"
+    ],
+    "engine": "0.1.0.dev25",
+    "guardAccepted": true,
+    "mode": "normal-sequence",
+    "projectionSemanticHashChanged": true,
+    "registeredSources": [
+      "resource://rdg/graph.cad870d76f7aae7c360ed7e1#/reviewIdentity",
+      "resource://rdg/graph.cad870d76f7aae7c360ed7e1#/reviewNodesById/A1",
+      "resource://rdg/plan.05d4dd44bed09ec7d038ec1c#/reviewCoverage",
+      "resource://rdg/plan.05d4dd44bed09ec7d038ec1c#/reviewInputsByStep/S-A1/identity",
+      "resource://rdg/plan.05d4dd44bed09ec7d038ec1c#/reviewInputsByStep/S-A1/branches",
+      "resource://rdg/plan.05d4dd44bed09ec7d038ec1c#/reviewInputsByStep/S-A1/steps",
+      "resource://rdg/plan.05d4dd44bed09ec7d038ec1c#/reviewInputsByStep/S-A1/sequence",
+      "resource://rdg/plan.05d4dd44bed09ec7d038ec1c#/reviewInputsByStep/S-A1/timeConstraints"
+    ],
+    "statuses": {
+      "A1": "review_required",
+      "A2": "review_required"
+    }
+  },
+  {
+    "changedFacets": [
+      "sequence"
+    ],
+    "checkExitCode": 0,
+    "checkOk": true,
+    "computedFacets": [
+      "branches",
+      "identity",
+      "sequence",
+      "steps",
+      "timeConstraints"
+    ],
+    "coverageComplete": true,
+    "declaredGroups": [
+      "branches",
+      "identity",
+      "steps",
+      "timeConstraints"
+    ],
+    "engine": "0.1.0.dev25",
+    "guardAccepted": true,
+    "mode": "missing-source-group",
+    "projectionSemanticHashChanged": true,
+    "registeredSources": [
+      "resource://rdg/graph.cad870d76f7aae7c360ed7e1#/reviewIdentity",
+      "resource://rdg/graph.cad870d76f7aae7c360ed7e1#/reviewNodesById/A1",
+      "resource://rdg/plan.05d4dd44bed09ec7d038ec1c#/reviewCoverage",
+      "resource://rdg/plan.05d4dd44bed09ec7d038ec1c#/reviewInputsByStep/S-A1/identity",
+      "resource://rdg/plan.05d4dd44bed09ec7d038ec1c#/reviewInputsByStep/S-A1/branches",
+      "resource://rdg/plan.05d4dd44bed09ec7d038ec1c#/reviewInputsByStep/S-A1/steps",
+      "resource://rdg/plan.05d4dd44bed09ec7d038ec1c#/reviewInputsByStep/S-A1/timeConstraints"
+    ],
+    "statuses": {
+      "A1": "valid",
+      "A2": "valid"
+    }
+  }
+]

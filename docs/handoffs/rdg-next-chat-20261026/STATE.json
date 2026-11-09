@@ -1,0 +1,23 @@
+{
+  "id": "RDG-HANDOFF-NEXT-CHAT-20261026/v1",
+  "status": "prototype_decision_groups_actions_outside_graph",
+  "repo": "/workspace/repos/rd-graphs",
+  "prototype": "tests/visual/rdg-ui-prototype.html",
+  "current_state": "docs/guides/RDG-CURRENT-STATE.md",
+  "active_contract": "docs/guides/RDG-ACTIVE-CONTRACT.md",
+  "development_plan": "docs/guides/RDG-DEVELOPMENT-PLAN.md",
+  "operations": "docs/guides/RDG-OPERATIONS.md",
+  "actions_in_graph": false,
+  "actions_in_history_plan": true,
+  "groups_as_plan_entries": false,
+  "decision_to_decision_edges": false,
+  "membership_direction": "Requirement-to-Decision only",
+  "group_context_navigation": true,
+  "combined_group_navigation": true,
+  "backend_decision_model_migrated": false,
+  "prototype_browser_manual_pass": false,
+  "syntax_check": "PASS",
+  "group_context_smoke": "PASS",
+  "documentation_tests": "5/5",
+  "git_diff_check": "PASS"
+}

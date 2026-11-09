@@ -1,0 +1,70 @@
+TAP version 13
+# Subtest: lost response retains exact request, blocks a new action and permits safe retry
+ok 1 - lost response retains exact request, blocks a new action and permits safe retry
+  ---
+  duration_ms: 40.135421
+  type: 'test'
+  ...
+# Subtest: known rejection preserves source state and clears uncertain request
+ok 2 - known rejection preserves source state and clears uncertain request
+  ---
+  duration_ms: 7.017994
+  type: 'test'
+  ...
+# Subtest: a render failure after save reports saved, rather than an unknown writer outcome
+ok 3 - a render failure after save reports saved, rather than an unknown writer outcome
+  ---
+  duration_ms: 2.251262
+  type: 'test'
+  ...
+# Subtest: read-only and protected sessions disable writes, source text is rendered as text
+ok 4 - read-only and protected sessions disable writes, source text is rendered as text
+  ---
+  duration_ms: 1.997753
+  type: 'test'
+  ...
+# Subtest: Viewer keeps manual controls detached until explicit local attachment
+ok 5 - Viewer keeps manual controls detached until explicit local attachment
+  ---
+  duration_ms: 99.131514
+  type: 'test'
+  ...
+# Subtest: manual controls traverse real HTTP, writers and Viewer: A1 -> withdraw -> A2
+ok 6 - manual controls traverse real HTTP, writers and Viewer: A1 -> withdraw -> A2 # SKIP
+  ---
+  duration_ms: 0.434846
+  type: 'test'
+  ...
+# Subtest: generated workflow controller matches the shared source exactly
+ok 7 - generated workflow controller matches the shared source exactly
+  ---
+  duration_ms: 27.1911
+  type: 'test'
+  ...
+# Subtest: cross-owner Helper: manual action under projection root completes the owning parent
+ok 8 - cross-owner Helper: manual action under projection root completes the owning parent
+  ---
+  duration_ms: 3731.242325
+  type: 'test'
+  ...
+# Subtest: placement selection reloads shown fields and protects unsupported rules
+ok 9 - placement selection reloads shown fields and protects unsupported rules
+  ---
+  duration_ms: 2.448743
+  type: 'test'
+  ...
+# Subtest: manual date and order edits preserve successor, deadline and strength through real writers
+ok 10 - manual date and order edits preserve successor, deadline and strength through real writers # SKIP
+  ---
+  duration_ms: 1.157054
+  type: 'test'
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 2
+# todo 0
+# duration_ms 4306.454891

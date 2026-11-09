@@ -1,0 +1,13 @@
+test_cross_owner_gui_uses_same_writers_and_can_build_on_projection_root (__main__.CrossFile.test_cross_owner_gui_uses_same_writers_and_can_build_on_projection_root) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_plan_places_only_existing_authorized_graph_nodes_without_mutating_graphs (__main__.CrossFile.test_plan_places_only_existing_authorized_graph_nodes_without_mutating_graphs) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 8.858s
+
+OK

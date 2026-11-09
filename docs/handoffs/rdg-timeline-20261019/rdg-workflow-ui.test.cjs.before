@@ -1,0 +1,381 @@
+'use strict';
+const {test}=require('node:test'),assert=require('node:assert/strict');
+const UI=require('../tools/rdg-workflow-ui.js');
+const {simulate}=require('./viewer-test-helper.cjs');
+function doc(){
+  const createElement=tag=>{
+    let own='';const classes=new Set();
+    const n={tag,children:[],value:'',disabled:false,hidden:false,
+      appendChild(x){n.children.push(x);return x;},replaceChildren(...xs){n.children=xs;},
+      setAttribute(){},classList:{add:x=>classes.add(x),remove:x=>classes.delete(x),toggle:(x,on)=>on?classes.add(x):classes.delete(x)},
+      get textContent(){return own+n.children.map(x=>x.textContent).join('');},
+      set textContent(x){own=String(x);n.children=[];}};
+    if(['select','textarea'].includes(tag))Object.defineProperty(n,'type',{get:()=>tag==='select'?'select-one':'textarea'});
+    return n;
+  };
+  return {createElement};
+}
+function minimal(){
+ const graph={identitySpace:'test',revision:1,nodes:[{id:'R0',kind:'requirement',title:'Root',status:'active'}],edges:[],events:[]};
+ return {title:'Plan',graphFile:'workspaces/test/graph.json',planFile:'plans/test/plan.json',
+   permissions:['graph.write','graph.read','plan.read','plan.edit'],future:[],history:[],unresolved:[],
+   sources:{graphs:{'workspaces/test/graph.json':graph},completion:{},
+     plan:{revision:1,steps:[],timeConstraints:[],sequence:[]}}};
+}
+test('lost response retains exact request, blocks a new action and permits safe retry',async()=>{
+ const d=doc(),container=d.createElement('div'),snapshot=minimal(),requests=[];
+ let count=0;
+ const ui=UI.mount(container,{read:async()=>snapshot,write:async r=>{
+   requests.push(structuredClone(r));if(count++===0)throw Error('connection lost');
+   return {saved:true,replayed:true,view:snapshot};
+ }},{document:d});
+ await ui.refresh();ui.fields.title.value='New';ui.fields.recommended.value='Case';ui.fields.note.value='Manual change';
+ await ui.buttons.add.onclick();assert(ui.pending);assert.equal(ui.view.history.length,0);
+ const first=structuredClone(ui.pending);await ui.run('edit_title');assert.equal(requests.length,1);
+ await ui.buttons.retry.onclick();assert.equal(ui.pending,null);assert.deepEqual(requests,[first,first]);
+ assert.match(ui.status,/повторного действия нет/);
+});
+test('known rejection preserves source state and clears uncertain request',async()=>{
+ const d=doc(),snapshot=minimal();
+ const ui=UI.mount(d.createElement('div'),{read:async()=>snapshot,write:async()=>{
+   const e=Error('CAS_MISMATCH');e.definite=true;throw e;
+ }},{document:d});
+ await ui.refresh();ui.fields.note.value='note';await ui.buttons.title.onclick();
+ assert.equal(ui.pending,null);assert.equal(ui.view.sources.graphs[ui.view.graphFile].revision,1);
+ assert.match(ui.status,/отклонена/);
+});
+test('a render failure after save reports saved, rather than an unknown writer outcome',async()=>{
+ const d=doc(),snapshot=minimal();let fail=false;
+ const ui=UI.mount(d.createElement('div'),{read:async()=>snapshot,write:async()=>({saved:true,view:snapshot})},
+   {document:d,graphContainer:d.createElement('section'),onGraph:async()=>{if(fail)throw Error('render failed');}});
+ await ui.refresh();fail=true;ui.fields.note.value='note';await ui.buttons.title.onclick();
+ assert.equal(ui.pending,null);assert.match(ui.status,/Запись сохранена/);
+ assert.doesNotMatch(ui.status,/Исход запроса не подтверждён/);
+});
+test('read-only and protected sessions disable writes, source text is rendered as text',async()=>{
+ const d=doc(),snapshot=minimal();snapshot.permissions=['graph.read','plan.read'];
+ snapshot.sources.graphs[snapshot.graphFile].nodes[0].title='<img src=x onerror=alert(1)>';
+ const container=d.createElement('div');
+ const ui=UI.mount(container,{read:async()=>snapshot},{document:d});await ui.refresh();
+ for(const key of ['add','title','complete','place','unplace'])assert.equal(ui.buttons[key].disabled,true,key);
+ assert(container.textContent.includes('<img src=x onerror=alert(1)>'));
+ snapshot.permissions=['graph.read','graph.write','plan.read','plan.edit'];
+ snapshot.sources.graphs[snapshot.graphFile].nodes[0].reconsiderationPolicy={mode:'protected',authorityPrincipal:'owner'};
+ await ui.refresh();
+ for(const key of ['add','title','complete','qrpe'])assert.equal(ui.buttons[key].disabled,true,key+' protected');
+ assert.equal(ui.buttons.place.disabled,false,'placement does not mutate protected graph');
+});
+test('plan tab opens without requesting files and preserves graph and editor across switches',async()=>{
+ const viewer=simulate();let picks=0;viewer.window.showDirectoryPicker=async()=>{picks++;throw Error('unexpected picker');};
+ await viewer.flush();assert.equal(viewer.ids['workflow-toggle'].hidden,false);
+ await viewer.loadFile(viewer.fixture);const before=viewer.root.querySelectorAll('.node').map(n=>n.getAttribute('data-id'));
+ viewer.ids['workflow-toggle'].onclick();
+ assert.equal(viewer.ids['workflow-page'].hidden,false);assert.equal(viewer.ids['graph-pane'].hidden,true);
+ assert.equal(viewer.ids['workflow-toggle'].getAttribute('aria-selected'),'true');assert.equal(picks,0);
+ const panel=viewer.host.rdgWorkflow.attach();assert.equal(panel.hidden,false);
+ viewer.ids['graph-tab'].onclick();assert.equal(viewer.ids['workflow-page'].hidden,true);
+ assert.equal(viewer.ids['graph-pane'].hidden,false);assert.equal(viewer.ids['graph-tab'].getAttribute('aria-selected'),'true');
+ assert.deepEqual(viewer.root.querySelectorAll('.node').map(n=>n.getAttribute('data-id')),before);
+ viewer.ids['workflow-toggle'].onclick();assert.equal(panel.hidden,false);assert.equal(picks,0);
+});
+test('manual controls traverse real HTTP, writers and Viewer: A1 -> withdraw -> A2',
+ {skip:!process.env.RDG_WORKFLOW_TEST_URL&&!process.env.RDG_WORKFLOW_TEST_DIR},async()=>{
+ const fileDir=process.env.RDG_WORKFLOW_TEST_DIR;
+ const fs=require('node:fs/promises'),path=require('node:path');
+ const missing=e=>{if(e.code==='ENOENT'){const error=Error('Not found');error.name='NotFoundError';throw error;}throw e;};
+ const directory={async getFileHandle(name,options={}){
+   assert.match(name,/^[A-Za-z0-9_.-]+$/);const file=path.join(fileDir,name);
+   if(!options.create)await fs.stat(file).catch(missing);
+   return {async getFile(){return {async text(){return fs.readFile(file,'utf8').catch(missing);}};},
+     async createWritable(){let text='';return {async write(x){text=x;},async close(){await fs.writeFile(file,text);}};}};
+ },async removeEntry(name){await fs.unlink(path.join(fileDir,name));}};
+ const base=new URL(process.env.RDG_WORKFLOW_TEST_URL||'http://127.0.0.1/'),session=base.pathname.split('/').filter(Boolean).at(-1);
+ const request=async(path,body)=>{
+   const r=await fetch(new URL(path,base),{method:body?'POST':'GET',headers:{
+     'X-RDG-Session':session,...(body?{'Content-Type':'application/json','Origin':base.origin}:{})},
+     ...(body?{body:JSON.stringify(body)}:{})});
+   const x=await r.json();if(!r.ok){const e=Error(x.error);e.definite=true;throw e;}return x;
+ };
+ const viewer=simulate();await viewer.flush();const d=doc();
+ const transport=fileDir?UI.fileTransport(directory,{timeoutMs:30000,pollMs:10}):{read:()=>request('state'),write:r=>request('command',r)};
+ const ui=UI.mount(viewer.host.rdgWorkflow.attach(),transport,
+   {document:d,graphContainer:d.createElement('section'),onGraph:g=>viewer.host.rdgWorkflow.loadGraph(g)});
+ await ui.refresh();assert(ui.view);
+ const choose=id=>{ui.fields.target.value=id;ui.fields.target.onchange();};
+ const click=async name=>{assert.equal(ui.buttons[name].disabled,false,name+' should be available');
+   await ui.buttons[name].onclick();assert.match(ui.status,/Запись сохранена/,ui.status);};
+ ui.fields.note.value='User entered synthetic change/result';
+ ui.fields.title.value='First action';ui.fields.recommended.value='Applicable';
+ await click('add');const a1=ui.fields.target.value;
+ ui.fields.at.value='2026-10-21';await click('place');
+ choose('R0');ui.fields.title.value='Second action';ui.fields.recommended.value='Different applicable method';
+ await click('add');const a2=ui.fields.target.value;assert.notEqual(a1,a2);
+ ui.fields.at.value='2026-10-22';await click('place');
+ choose('R0');ui.fields.at.value='2026-10-23';await click('place');
+ assert.equal(ui.view.future.length,3);
+ choose(a1);await click('select');await click('complete');
+ assert.deepEqual(ui.view.future.map(r=>r.nodeId),[a2]);
+ await click('withdraw');assert(ui.view.future.some(r=>r.nodeId==='R0'));
+ choose(a2);await click('select');assert(ui.view.future.some(r=>r.nodeId===a2));await click('complete');
+ assert.equal(ui.view.future.length,0);
+ const facts=ui.view.history.filter(r=>r.kind==='action_executed'||r.kind==='action_withdrawn');
+ assert.deepEqual(facts.map(r=>[r.kind,r.targetId]),[
+   ['action_executed',a1],['action_withdrawn',a1],['action_executed',a2]]);
+ assert(ui.text.includes('Отозван Action'));assert(ui.text.includes('First action'));
+ if(fileDir)assert.deepEqual((await fs.readdir(fileDir)).filter(n=>!n.startsWith('.')),['session.json'],'client removes only its own exchange files');
+ const graph=ui.view.sources.graphs[ui.view.graphFile];
+ assert.equal(graph.events.filter(e=>e.type==='action_executed'&&e.targetId===a1).length,1);
+ // Build a deeper preliminary branch through the actual controls, without selecting its ancestors.
+ choose('R0');ui.fields.title.value='Unselected decomposition';ui.fields.recommended.value='Split when useful';ui.fields.actionType.value='decomposition';
+ await click('add');const draft=ui.fields.target.value;
+ ui.fields.title.value='Deep potential goal';ui.fields.childRole.value='subgoal';await click('requirement');const potential=ui.fields.target.value;
+ ui.fields.qrpe.value='Review this potential goal';await click('qrpe');
+ ui.fields.title.value='Deep candidate action';ui.fields.recommended.value='Deep applicable case';ui.fields.actionType.value='general';await click('add');
+ const deep=ui.fields.target.value;ui.fields.recommended.value='Updated deep canon';await click('canon');
+ const finalGraph=ui.view.sources.graphs[ui.view.graphFile];
+ assert.equal(finalGraph.nodes.find(n=>n.id===draft).status,'candidate');
+ assert.equal(finalGraph.nodes.find(n=>n.id===potential).status,'potential');
+ assert.equal(finalGraph.nodes.find(n=>n.id===deep).status,'candidate');
+ assert.equal(finalGraph.nodes.find(n=>n.id===potential).qrpe[0].text,'Review this potential goal');
+ assert(viewer.root.querySelectorAll('.node').length>0,'the same source is rendered by Viewer');
+ assert.equal(ui.pending,null);
+});
+
+test('generated workflow controller matches the shared source exactly',()=>{
+ const fs=require('node:fs'),path=require('node:path');const text=fs.readFileSync(path.join(__dirname,'../tools/rd-graph-viewer.user.js'),'utf8');
+ const begin='// BEGIN GENERATED RDG WORKFLOW UI\n',end='// END GENERATED RDG WORKFLOW UI\n';
+ assert.equal(text.slice(text.indexOf(begin)+begin.length,text.indexOf(end)),fs.readFileSync(path.join(__dirname,'../tools/rdg-workflow-ui.js'),'utf8'));
+});
+
+test('cross-owner Helper: manual action under projection root completes the owning parent',
+ {skip:!process.env.RDG_CROSS_TEST_URL},async()=>{
+ const base=new URL(process.env.RDG_CROSS_TEST_URL),session=base.pathname.split('/').filter(Boolean).at(-1);
+ const request=async(path,body)=>{
+   const r=await fetch(new URL(path,base),{method:body?'POST':'GET',headers:{
+     'X-RDG-Session':session,...(body?{'Content-Type':'application/json','Origin':base.origin}:{})},
+     ...(body?{body:JSON.stringify(body)}:{})});
+   const x=await r.json();if(!r.ok){const e=Error(x.error);e.definite=x.definite!==false;throw e;}return x;
+ };
+ const d=doc(),viewer=simulate();await viewer.flush();
+ const ui=UI.mount(viewer.host.rdgWorkflow.attach(),{read:()=>request('state'),write:r=>request('command',r)},
+   {document:d,graphContainer:d.createElement('section'),onGraph:g=>viewer.host.rdgWorkflow.loadGraph(g)});
+ await ui.refresh();assert(ui.view,ui.status);assert.equal(ui.view.continuationRootId,'R1');
+ assert.equal(ui.fields.target.value,'R1');assert.equal(ui.buttons.add.disabled,false);
+ ui.fields.title.value='Manual child action';ui.fields.recommended.value='Suitable method';ui.fields.note.value='Manual cross-owner proof';
+ await ui.buttons.add.onclick();assert.match(ui.status,/Запись сохранена/,ui.status);
+ const action=ui.fields.target.value;
+ ui.fields.target.value='R1';ui.fields.target.onchange();assert.equal(ui.buttons.place.disabled,false);
+ ui.fields.at.value='2026-10-21';await ui.buttons.place.onclick();assert.match(ui.status,/Запись сохранена/,ui.status);
+ const row=ui.view.future.find(r=>r.nodeId==='R1');assert(row);assert.notEqual(row.ownerRef.graphFile,row.graphRef.graphFile);
+ ui.fields.target.value=action;ui.fields.target.onchange();await ui.buttons.select.onclick();assert.match(ui.status,/Запись сохранена/,ui.status);
+ await ui.buttons.complete.onclick();assert.match(ui.status,/Запись сохранена/,ui.status);
+ assert.equal(ui.view.future.length,0);
+ const parent=ui.view.sources.graphs[row.ownerRef.graphFile];
+ assert(parent.events.some(e=>e.type==='requirement_achieved'&&e.targetId==='R0'));
+ assert(ui.view.history.some(r=>r.kind==='requirement_achieved'&&r.targetId==='R1'));
+ assert(viewer.root.querySelectorAll('.node').length>0);
+});
+
+
+test('placement selection reloads shown fields and protects unsupported rules',async()=>{
+ const d=doc(),snapshot=minimal(),ref={graphFile:snapshot.graphFile,identitySpace:'test',nodeId:'R0'};
+ snapshot.sources.plan.steps=['P1','P2'].map(id=>({id,title:id,kind:'requirement',state:'planned',requirementRef:{...ref}}));
+ snapshot.sources.plan.steps.push({id:'OTHER',title:'Other owner',kind:'requirement',requirementRef:{...ref,graphFile:'workspaces/other/graph.json'}});
+ snapshot.sources.plan.timeConstraints=[
+   {stepId:'P1',type:'notBefore',at:'2026-10-20',strength:'hard'},
+   {stepId:'P1',type:'deadline',at:'2026-10-25',strength:'hard'},
+   {stepId:'P2',type:'notBefore',at:'2026-10-23',strength:'soft'}];
+ const ui=UI.mount(d.createElement('div'),{read:async()=>snapshot},{document:d});await ui.refresh();
+ assert(!ui.fields.placement.children.some(x=>x.value==='OTHER'));
+ ui.fields.placement.value='P1';ui.fields.placement.onchange();
+ assert.equal(ui.fields.at.value,'2026-10-20');assert(ui.text.includes('Срок до 2026-10-25 [hard]'));
+ ui.fields.placement.value='P2';ui.fields.placement.onchange();assert.equal(ui.fields.at.value,'2026-10-23');
+ snapshot.sources.plan.timeConstraints[2].at='2026-10-23T10:00:00Z';
+ ui.fields.placement.onchange();assert.equal(ui.buttons.place.disabled,true);assert(ui.text.includes('полный API'));
+ snapshot.sources.plan.timeConstraints[2].at='2026-10-23';
+ snapshot.sources.plan.sequence=[{before:'P1',after:'P2'}];
+ ui.fields.placement.onchange();assert.equal(ui.fields.after.value,'P1');
+ assert(ui.fields.after.children.some(x=>x.value==='P1'),'another placement of the same entity is a valid predecessor');
+ snapshot.sources.plan.sequence.push({before:'OTHER',after:'P2'});
+ ui.fields.placement.onchange();assert.equal(ui.buttons.place.disabled,true);
+ assert.equal(ui.buttons.unplace.disabled,false,'explicit unplace remains separate from editing');
+});
+
+test('manual date and order edits preserve successor, deadline and strength through real writers',
+ {skip:!process.env.RDG_PLACEMENT_TEST_URL},async()=>{
+ const base=new URL(process.env.RDG_PLACEMENT_TEST_URL),session=base.pathname.split('/').filter(Boolean).at(-1);
+ const request=async(path,body)=>{
+   const r=await fetch(new URL(path,base),{method:body?'POST':'GET',headers:{
+     'X-RDG-Session':session,...(body?{'Content-Type':'application/json','Origin':base.origin}:{})},
+     ...(body?{body:JSON.stringify(body)}:{})});
+   const value=await r.json();if(!r.ok){const error=Error(value.error);error.definite=true;throw error;}return value;
+ };
+ const d=doc(),ui=UI.mount(d.createElement('div'),{read:()=>request('state'),write:r=>request('command',r)},{document:d});
+ await ui.refresh();
+ const choose=id=>{ui.fields.target.value=id;ui.fields.target.onchange();};
+ const save=async()=>{assert.equal(ui.buttons.place.disabled,false);await ui.buttons.place.onclick();assert.match(ui.status,/Запись сохранена/,ui.status);};
+ const plan=()=>ui.view.sources.plan;
+ const deadline=structuredClone(plan().timeConstraints.find(r=>r.type==='deadline'));
+ const order=structuredClone(plan().sequence);
+ choose('A1');assert.equal(ui.fields.at.value,'2026-10-20');ui.fields.at.value='2026-10-21';await save();
+ assert.deepEqual(plan().sequence,order);assert.deepEqual(plan().timeConstraints.find(r=>r.type==='deadline'),deadline);
+ assert.equal(plan().timeConstraints.find(r=>r.stepId==='S-A1'&&r.type==='notBefore').strength,'hard');
+ choose('A2');assert.equal(ui.fields.after.value,'S-A1');
+ ui.fields.after.value='S-A3';await save();
+ assert.deepEqual(plan().sequence,[{before:'S-A3',after:'S-A2',minDelayDays:2}]);
+ ui.fields.after.value='';ui.fields.at.value='2026-10-23';await save();assert.deepEqual(plan().sequence,[]);
+ choose('A1');ui.fields.at.value='';await save();
+ assert.deepEqual(plan().timeConstraints.filter(r=>r.stepId==='S-A1'),[deadline]);
+ assert.equal(ui.pending,null);
+});
+
+
+function sessionDirectory(descriptor,config={}){
+ const files=new Map(descriptor===undefined?[]:[['session.json',JSON.stringify(descriptor)]]);
+ const directory={async getFileHandle(name,options={}){
+   if(options.create&&config.denied){const e=Error('denied');e.name='NotAllowedError';throw e;}
+   if(!options.create&&!files.has(name)){const e=Error('missing');e.name='NotFoundError';throw e;}
+   return {async getFile(){return {text:async()=>files.get(name)};},async createWritable(){let text;
+     return {async write(value){text=value;},async close(){files.set(name,text);}};}};
+ },async removeEntry(name){files.delete(name);}};
+ return {directory,files};
+}
+const liveSession={schemaVersion:1,kind:'rdg-local-manual-session',active:true,session:'synthetic-test-session'};
+test('closed Helper descriptor without a token reports ended session and queues no request',async()=>{
+ const {directory,files}=sessionDirectory({schemaVersion:1,kind:'rdg-local-manual-session',active:false});
+ await assert.rejects(UI.fileTransport(directory).read(),e=>e.definite===true&&/Сессия Helper завершена/.test(e.message));
+ assert.equal(files.size,1);
+});
+test('wrong folder and incomplete descriptor produce actionable read errors',async()=>{
+ for(const descriptor of [undefined,null,{...liveSession,session:''}]){
+   const {directory,files}=sessionDirectory(descriptor);
+   await assert.rejects(UI.fileTransport(directory).read(),e=>e.definite===true&&/session|сессии|Helper/.test(e.message));
+   assert.equal(files.size,descriptor===undefined?0:1);
+ }
+});
+test('denied write access stops before ready marker and explains reconnect',async()=>{
+ const {directory,files}=sessionDirectory(liveSession,{denied:true});
+ await assert.rejects(UI.fileTransport(directory).write({transactionId:'test'}),
+   e=>e.definite===true&&/разрешите чтение и запись/.test(e.message));
+ assert.equal(files.size,1);
+});
+test('unresponsive Helper shows progress then unlocks refresh without showing empty form',async()=>{
+ const {directory}=sessionDirectory(liveSession),messages=[],states=[],d=doc(),container=d.createElement('div');
+ const transport=UI.fileTransport(directory,{timeoutMs:25,pollMs:1});
+ const setStatus=transport.setStatus;transport.setStatus=callback=>setStatus(message=>{messages.push(message);callback(message);});
+ const ui=UI.mount(container,transport,{document:d,onStateChange:s=>states.push(s)});
+ await ui.refresh();assert.equal(ui.view,null);assert.equal(ui.busy,false);assert.equal(ui.pending,null);
+ assert.match(ui.status,/Helper не ответил/);assert(messages.some(m=>m.includes('Ожидаю ответ')));
+ assert.equal(ui.buttons.refresh.disabled,false);assert.equal(ui.buttons.place.disabled,true);
+ assert(container.children.find(n=>n.classList&&n.children.some(c=>c.tag==='section')).hidden);
+ assert(states.some(s=>s.busy));assert.equal(states.at(-1).busy,false);
+});
+test('unanswered file command keeps exact pending transaction and blocks further edits',async()=>{
+ const {directory}=sessionDirectory(liveSession),d=doc();
+ const transport=UI.fileTransport(directory,{timeoutMs:20,pollMs:1});
+ const ui=UI.mount(d.createElement('div'),{read:async()=>minimal(),write:transport.write},{document:d});
+ await ui.refresh();ui.fields.note.value='Synthetic note';await ui.run('edit_title');
+ assert(ui.pending);assert.match(ui.status,/Исход запроса не подтверждён/);
+ assert.equal(ui.buttons.title.disabled,true);assert.equal(ui.buttons.retry.hidden,false);
+ const transaction=ui.pending.transactionId;await ui.buttons.retry.onclick();assert.equal(ui.pending.transactionId,transaction);
+});
+
+
+function tree(root,predicate){return [...(predicate(root)?[root]:[]),...root.children.flatMap(n=>tree(n,predicate))];}
+function nodeSnapshot(){
+ const fs=require('node:fs'),path=require('node:path'),v=minimal();
+ const g=JSON.parse(fs.readFileSync(path.join(__dirname,'fixtures/rdg-v6-action-optin/graph.json'),'utf8'));
+ v.sources.graphs[v.graphFile]=g;
+ const ref={graphFile:v.graphFile,identitySpace:g.identitySpace,nodeId:'R0'};
+ v.sources.plan.steps=[{id:'S-R0',title:g.nodes[0].title,kind:'requirement',requirementRef:ref}];
+ v.future=[{stepId:'S-R0',nodeId:'R0',kind:'requirement',graphRef:ref,timeConstraints:[{type:'notBefore',at:'2026-10-23',strength:'hard'}],sequence:[]}];
+ return v;
+}
+test('plan shows graph cards and Action canon/QRPE, and contains no creation controls',async()=>{
+ const d=doc(),container=d.createElement('div'),graphContainer=d.createElement('section'),snapshot=nodeSnapshot(),writes=[],navigation=[];
+ const g=snapshot.sources.graphs[snapshot.graphFile],alternative=structuredClone(g.nodes.find(n=>n.id==='A1'));
+ alternative.id='A2';alternative.title='Another method';alternative.status='candidate';alternative.qrpe=[{id:'Q2',text:'Check second method',status:'open'}];
+ alternative.canonBlock.recommended=[{id:'C2',text:'Use when second case applies'}];
+ g.nodes.push(alternative);g.edges.push({id:'drive-A2',type:'DRIVES',from:'R0',to:'A2'});
+ const before=JSON.stringify(snapshot);
+ const ui=UI.mount(container,{read:async()=>snapshot,write:async r=>writes.push(r)},
+   {document:d,graphContainer,onNavigate:async ref=>navigation.push(ref)});await ui.refresh();
+ assert(!container.textContent.includes('Создать вариант Action'));assert(!container.textContent.includes('Добавить дочернюю R'));
+ assert(graphContainer.textContent.includes('Создать вариант Action'));
+ const cards=tree(container,n=>n.tag==='article');assert.equal(cards.length,3,'one placed goal and its two Action variants');
+ assert(container.textContent.includes('Use when second case applies'));assert(container.textContent.includes('Check second method'));
+ assert.equal(snapshot.future.length,1);assert.equal(JSON.stringify(snapshot),before);assert.equal(writes.length,0);
+ const titles=tree(container,n=>n.tag==='button'&&n.textContent==='Another method');await titles[0].onclick();
+ assert.equal(navigation[0].nodeId,'A2');assert.equal(writes.length,0);
+ ui.editPlacement(snapshot.future[0].graphRef,'S-R0');assert.equal(ui.fields.target.value,'R0');assert.equal(ui.fields.placement.value,'S-R0');
+});
+test('projection navigation resolves the owning declaration and its introducing context',async()=>{
+ const v=nodeSnapshot(),g=v.sources.graphs[v.graphFile],childFile='workspaces/test/child/graph.json';
+ const child={identitySpace:g.identitySpace,rootRequirementId:'R1',nodes:[{id:'R1',kind:'requirement',title:'Personal R graph',projectionOf:{graphSlug:'test',nodeId:'R1'}}],edges:[],events:[]};
+ v.sources.graphs[childFile]=child;const owner={graphFile:v.graphFile,identitySpace:g.identitySpace,nodeId:'R1'};
+ v.sources.completion[childFile]={R1:{ownerRef:owner}};
+ const projection={...owner,graphFile:childFile},origin=UI.declarationFor(v,projection);
+ assert.equal(origin.ref.graphFile,v.graphFile);assert.equal(origin.contextRootId,'R0');
+ const viewer=simulate();await viewer.flush();const result=await viewer.host.rdgWorkflow.openDeclaration(projection,v);
+ assert.equal(result.graphFile,v.graphFile);assert.equal(result.contextRootId,'R0');assert.equal(result.nodeId,'R1');
+ const shown=viewer.root.querySelectorAll('.node');assert(shown.some(n=>n.getAttribute('data-id')==='R0'));
+ assert(shown.some(n=>n.getAttribute('data-id')==='R1'&&n.classList.contains('selected')));
+ assert.equal(viewer.ids['workflow-page'].hidden,true);
+ delete v.sources.completion[childFile];assert.throws(()=>UI.declarationFor(v,projection),/Владелец проекции не подтверждён/);
+ assert.throws(()=>UI.declarationFor(v,{...owner,identitySpace:'another project'}),/недоступен/);
+});
+test('a deep goal opens its parent wave, while an Action opens its driver wave',()=>{
+ const v=nodeSnapshot(),g=v.sources.graphs[v.graphFile];
+ g.nodes.push({id:'A2',kind:'action',title:'Deep method',status:'candidate'},{id:'R3',kind:'requirement',title:'Deep child',status:'potential'});
+ g.edges.push({id:'d2',type:'DRIVES',from:'R1',to:'A2'},{id:'i2',type:'INTRODUCES',from:'A2',to:'R3',parent:'R1'});
+ const ref=id=>({graphFile:v.graphFile,identitySpace:g.identitySpace,nodeId:id});
+ assert.equal(UI.declarationFor(v,ref('R3')).contextRootId,'R1');
+ assert.equal(UI.declarationFor(v,ref('A2')).contextRootId,'R1');
+});
+
+
+test('editing a placed Action variant keeps the actual projection placement and step identity',async()=>{
+ const v=nodeSnapshot(),g=v.sources.graphs[v.graphFile],file='workspaces/test/child/graph.json';
+ const canonical={graphFile:v.graphFile,identitySpace:g.identitySpace,nodeId:'A1'},projection={...canonical,graphFile:file};
+ v.sources.graphs[file]={identitySpace:g.identitySpace,nodes:[{id:'A1',kind:'action',title:'Projection of method',status:'selected',projectionOf:{graphSlug:'test',nodeId:'A1'}}],edges:[],events:[]};
+ v.sources.completion[file]={A1:{ownerRef:canonical}};v.capabilities=['plan.place.from-read-sources'];
+ v.sources.plan.steps.push({id:'ORIGINAL-PLACEMENT',title:'Existing method placement',kind:'action',actionRef:projection});
+ v.future.push({stepId:'ORIGINAL-PLACEMENT',kind:'action',nodeId:'A1',graphRef:projection,timeConstraints:[],sequence:[]});
+ const d=doc(),container=d.createElement('div'),ui=UI.mount(container,{read:async()=>v},{document:d});await ui.refresh();
+ const variant=tree(container,n=>n.tag==='article'&&n.children.some(c=>c.tag==='small'&&c.textContent.includes('размещён отдельно')))[0];
+ assert(variant);const edit=variant.children.find(n=>n.tag==='button'&&n.textContent==='Изменить размещение');
+ assert.equal(edit.disabled,false);edit.onclick();
+ assert.equal(ui.fields.graph.value,file);assert.equal(ui.fields.target.value,'A1');assert.equal(ui.fields.placement.value,'ORIGINAL-PLACEMENT');
+});
+
+
+test('a goal collects Action variants from its continuation graph without changing its own declaration',async()=>{
+ const v=nodeSnapshot(),g=v.sources.graphs[v.graphFile],child='workspaces/test/continuation/graph.json';
+ const owner={graphFile:v.graphFile,identitySpace:g.identitySpace,nodeId:'R0'};
+ v.sources.graphs[child]={identitySpace:g.identitySpace,rootRequirementId:'R0',
+  nodes:[{id:'R0',kind:'requirement',title:'Continuation root',projectionOf:{graphSlug:'test',nodeId:'R0'}},
+   {id:'A-CHILD',kind:'action',title:'Method defined in continuation',status:'candidate',
+    canonBlock:{recommended:[{id:'CC',text:'Applicable continuation case'}],contraindicated:[]},qrpe:[{id:'QC',text:'Continuation question',status:'open'}]}],
+  edges:[{id:'DC',type:'DRIVES',from:'R0',to:'A-CHILD'}],events:[]};
+ v.sources.completion[child]={R0:{ownerRef:owner}};
+ const d=doc(),container=d.createElement('div'),navigations=[];
+ const ui=UI.mount(container,{read:async()=>v},{document:d,onNavigate:async ref=>navigations.push(ref)});await ui.refresh();
+ assert(container.textContent.includes('Method defined in continuation'));assert(container.textContent.includes('Applicable continuation case'));
+ assert(container.textContent.includes('Continuation question'));assert.equal(v.future.length,1);
+ await tree(container,n=>n.tag==='button'&&n.textContent==='Method defined in continuation')[0].onclick();
+ assert.equal(navigations[0].graphFile,child);assert.equal(navigations[0].nodeId,'A-CHILD');
+ assert.equal(UI.declarationFor(v,{...owner,graphFile:child}).ref.graphFile,v.graphFile);
+});
+
+
+test('graph authoring reports uncertain writes and exposes exact retry on the graph surface',async()=>{
+ const d=doc(),graphContainer=d.createElement('section'),v=minimal();let request=null,count=0;
+ const ui=UI.mount(d.createElement('div'),{read:async()=>v,write:async r=>{
+   if(count++===0){request=structuredClone(r);throw Error('Lost response');}
+   assert.deepEqual(r,request);return {saved:true,replayed:true,view:v};
+ }},{document:d,graphContainer});await ui.refresh();ui.fields.note.value='Graph edit';
+ await ui.buttons.title.onclick();assert(ui.pending);assert(graphContainer.textContent.includes('Исход запроса не подтверждён'));
+ const retry=tree(graphContainer,n=>n.tag==='button'&&n.textContent==='Повторить тот же запрос')[0];
+ assert.equal(retry.hidden,false);await retry.onclick();assert.equal(ui.pending,null);
+ assert(graphContainer.textContent.includes('повторного действия нет'));
+});

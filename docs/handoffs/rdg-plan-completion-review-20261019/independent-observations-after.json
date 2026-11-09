@@ -1,0 +1,22 @@
+[
+  {
+    "name": "requirement-with-action-type-after-fix",
+    "reasonBefore": "result-not-recorded",
+    "completeAfter": {
+      "R1": true,
+      "A": true,
+      "R0": true
+    }
+  },
+  {
+    "name": "signed-package-result-and-final-derivation",
+    "exitCode": 0,
+    "actionComplete": true,
+    "rootComplete": true,
+    "newResultKinds": [
+      "action_executed",
+      "requirement_achieved",
+      "requirement_achieved"
+    ]
+  }
+]

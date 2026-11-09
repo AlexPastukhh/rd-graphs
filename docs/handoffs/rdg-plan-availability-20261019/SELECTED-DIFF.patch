@@ -1,0 +1,405 @@
+--- a/tools/rdg-temporal-plan-owner.py
++++ b/tools/rdg-temporal-plan-owner.py
+@@ -96,6 +96,32 @@
+ 
+ def identity(plan):
+     return digest({"identitySpace": plan["identitySpace"], "planId": plan["id"]})
++
++
++def availability_path(root, relative, revision):
++    target = safe(root, relative)
++    require(type(revision) is int and revision >= 1, "AVAILABILITY_REVISION")
++    path = target.with_name(f".rdg-plan-available-r{revision}.json")
++    require(not path.is_symlink() and path.resolve().is_relative_to(root),
++            "AVAILABILITY_PATH_INVALID")
++    return path
++
++
++def availability_receipt(root, relative, record):
++    path = availability_path(root, relative, record["revision"])
++    if not path.exists():
++        return None
++    receipt = json.loads(path.read_text())
++    require(isinstance(receipt, dict) and
++            set(receipt) == {"schemaVersion", "sourcePath", "revision", "recordDigest", "availableBy"} and
++            receipt["schemaVersion"] == 1 and receipt["sourcePath"] == relative and
++            type(receipt["revision"]) is int and receipt["revision"] == record["revision"] and
++            receipt["recordDigest"] == record["digest"], "AVAILABILITY_RECEIPT_INVALID")
++    available = instant(receipt["availableBy"])
++    raw = dt.datetime.fromisoformat(receipt["availableBy"].replace("Z", "+00:00"))
++    require(raw.utcoffset() == dt.timedelta(0) and available >= instant(record["recordedAt"]),
++            "AVAILABILITY_TIME_INVALID")
++    return receipt
+ 
+ 
+ def instant(value):
+@@ -188,12 +214,31 @@
+                 digest(entry["after"]) == entry["afterSHA256"], "JOURNAL_HASH")
+         path = safe(root, entry["path"], entry["path"] == INDEX)
+         require(raw_hash(path) in (entry["beforeSHA256"], entry["afterSHA256"]), "RECOVERY_CONFLICT")
++    record = store["versions"][-1]
++    existing_receipt = availability_receipt(root, journal["target"], record)
++    prior_receipt = (availability_receipt(root, journal["target"], store["versions"][-2])
++                     if len(store["versions"]) > 1 else None)
++    if existing_receipt and prior_receipt:
++        require(instant(existing_receipt["availableBy"]) >= instant(prior_receipt["availableBy"]),
++                "AVAILABILITY_CLOCK_REGRESSION")
+     for position, entry in enumerate(journal["writes"]):
+         path = safe(root, entry["path"], entry["path"] == INDEX)
+         if raw_hash(path) != entry["afterSHA256"]:
+             atomic(path, entry["after"])
+         if position == 0:
+             failpoint("after-plan-write")
++    if existing_receipt is None:
++        # Plan store and owner binding have been written and fsynced. This
++        # observation bounds their availability, even if recovery ran later.
++        now = dt.datetime.now(dt.timezone.utc)
++        require(now >= instant(record["recordedAt"]) and
++                (prior_receipt is None or now >= instant(prior_receipt["availableBy"])),
++                "AVAILABILITY_CLOCK_REGRESSION")
++        atomic(availability_path(root, journal["target"], record["revision"]), {
++            "schemaVersion": 1, "sourcePath": journal["target"],
++            "revision": record["revision"], "recordDigest": record["digest"],
++            "availableBy": now.isoformat()})
++    failpoint("after-availability-write")
+     safe(root, JOURNAL, True).unlink()
+     sync_dir(root)
+ 
+@@ -228,6 +273,24 @@
+             "recordDigest": record["digest"], "snapshotSHA256": digest(record["plan"]),
+             "exactPlanSnapshotResolved": True, "historicalRdgSnapshotResolved": False,
+             "acceptanceVerified": False, "eventsAttested": False}}
++
++
++def read_availability(root, path, revision, record_digest):
++    """Return a durable availability witness, if this revision has one."""
++    root = root_path(root)
++    relative = str(Path(path).relative_to(root)) if Path(path).is_absolute() else str(path)
++    target = safe(root, relative)
++    with root_lock(root, False):
++        require(not safe(root, JOURNAL, True).exists(), "RECOVERY_REQUIRED")
++        require(target.is_file(), "PLAN_NOT_FOUND")
++        store = validate_store(json.loads(target.read_text()), relative)
++        require(load_index(root)["bindings"].get(identity(store["versions"][-1]["plan"])) ==
++                store["owner"], "OWNER_BINDING_MISMATCH")
++        require(type(revision) is int and 1 <= revision <= store["revision"], "SNAPSHOT_NOT_FOUND")
++        record = store["versions"][revision-1]
++        require(record["digest"] == record_digest, "AVAILABILITY_RECORD_MISMATCH")
++        receipt = availability_receipt(root, relative, record)
++        return copy.deepcopy(receipt)
+ 
+ 
+ def apply_request(root, authority_store, token, request, before_prepare=None):
+--- a/tools/rdg-exact-history.py
++++ b/tools/rdg-exact-history.py
+@@ -201,18 +201,23 @@
+     graphs = journal_snapshots(graphs_root, pins)
+     cutoff = OWNER.instant(query["knownAt"]) if "knownAt" in query else None
+     if cutoff is not None:
+-        # The Plan owner's recordedAt precedes its durable write. For an old
+-        # revision, the next guarded edit proves the previous store already
+-        # existed when that edit acquired and read it. Latest revisions have
+-        # no historical upper bound and cannot pass this gate.
+-        try:
+-            next_version = OWNER.read_snapshot(plan_root, plan_pin["file"],
+-                                               plan_pin["revision"] + 1)
+-        except ValueError as error:
+-            if "SNAPSHOT_NOT_FOUND" in str(error):
+-                raise ValueError("EXACT_HISTORY_PLAN_AVAILABILITY_BOUND_NOT_AVAILABLE") from error
+-            raise
+-        plan_available_by = next_version["provenance"]["recordedAt"]
++        receipt = OWNER.read_availability(plan_root, plan_pin["file"],
++                                          plan_pin["revision"], provenance["recordDigest"])
++        if receipt is not None:
++            plan_available_by = receipt["availableBy"]
++            plan_availability_source = "owner-after-durable-store"
++        else:
++            # Legacy Plan records have no post-write witness. A later guarded
++            # edit read the previous store before minting its own recordedAt.
++            try:
++                next_version = OWNER.read_snapshot(plan_root, plan_pin["file"],
++                                                   plan_pin["revision"] + 1)
++            except ValueError as error:
++                if "SNAPSHOT_NOT_FOUND" in str(error):
++                    raise ValueError("EXACT_HISTORY_PLAN_AVAILABILITY_BOUND_NOT_AVAILABLE") from error
++                raise
++            plan_available_by = next_version["provenance"]["recordedAt"]
++            plan_availability_source = "next-guarded-plan-edit"
+         require(OWNER.instant(plan_available_by) <= cutoff,
+                 "PLAN_NOT_PROVEN_AVAILABLE_BY_KNOWN_AT")
+         for item in graphs.values():
+@@ -233,6 +238,7 @@
+             "scenario": copy.deepcopy(query["scenario"]), "scenarioOnly": True, "readOnly": True,
+             "knownAtCutoff": query.get("knownAt"),
+             "planAvailableBy": plan_available_by if cutoff is not None else None,
++            "planAvailabilitySource": plan_availability_source if cutoff is not None else None,
+             "plan": plan, "planProvenance": provenance,
+             "graphSnapshots": [graphs[key] for key in sorted(graphs)], "impact": impact,
+             "readAuthorization": read_receipt,
+@@ -241,7 +247,7 @@
+                            "knowledgeTimeVerified": False, "twoTimeAsOfResolved": False,
+                            "historicalT1KnowledgeVerified": False, "semanticTruthVerified": False,
+                            "eventsAttested": False, "productionAccepted": False},
+-            "evidenceGaps": ["Older RDG journals have no availability bound; the latest Plan revision has no historical availability bound",
++            "evidenceGaps": ["Older RDG journals lack an availability bound; legacy latest Plan revisions without a receipt lack one too",
+                              "The cutoff only proves pinned source availability; it does not select complete applicable as-of context or establish effectiveAt",
+                              "Local hashes/clock do not prove human identity, factual truth, or historical Gendocen validation"]}
+ 
+--- a/tools/rdg-gendocen-t1-history-smoke.py
++++ b/tools/rdg-gendocen-t1-history-smoke.py
+@@ -214,11 +214,16 @@
+             writer_journal = snapshot(workspace / "graphs/workspaces/.transactions/T1-selected.json")
+             require(writer_journal["schemaVersion"] == 2 and
+                     writer_journal["state"] == "completed", "T1_WRITER_TIME_MISSING")
++            plan_bound = plan_owner.read_availability(plan_root, plan_relative, 1,
++                                                       prior["recordDigest"])["availableBy"]
++            exact_query["knownAt"] = (max(plan_owner.instant(plan_bound),
++                plan_owner.instant(writer_journal["recordedAt"])) + dt.timedelta(seconds=1)).isoformat()
+             exact_initial = history_reader.resolve(
+                 plan_root, workspace / "graphs", auth_store, read_token, exact_query)
+             require(exact_initial["graphSnapshots"][0]["graph"] == t1_graph and
+                     exact_initial["plan"] == plan and
+-                    exact_initial["provenance"]["recordingCutoffVerified"] is False and
++                    exact_initial["provenance"]["recordingCutoffVerified"] is True and
++                    exact_initial["planAvailabilitySource"] == "owner-after-durable-store" and
+                     exact_initial["graphSnapshots"][0]["provenance"]["recordedAt"] ==
+                     writer_journal["recordedAt"] and
+                     exact_initial["provenance"]["twoTimeAsOfResolved"] is False,
+@@ -487,10 +492,6 @@
+             confirm_t1()
+             require(next(s for s in current_owned["plan"]["steps"] if s["id"] == "S-RESULT")["state"] == "expected",
+                     "OWNED_ASSUMPTION_ATTESTED_EVENT")
+-            exact_query["knownAt"] = (max(
+-                plan_owner.instant(plan_owner.read_snapshot(plan_root, plan_relative, 2)
+-                                   ["provenance"]["recordedAt"]),
+-                plan_owner.instant(writer_journal["recordedAt"])) + dt.timedelta(seconds=1)).isoformat()
+             exact_later = history_reader.resolve(
+                 plan_root, workspace / "graphs", auth_store, read_token, exact_query)
+             require(exact_later["graphSnapshots"][0]["graph"] == t1_graph and
+--- a/tests/rdg-temporal-plan-owner.test.py
++++ b/tests/rdg-temporal-plan-owner.test.py
+@@ -81,6 +81,46 @@
+             self.apply(conflicting)
+         with self.assertRaisesRegex(ValueError, "SNAPSHOT_NOT_FOUND"):
+             OWNER.read_snapshot(self.root, REL, 999)
++
++    def test_latest_plan_has_post_write_availability_receipt(self):
++        create = self.request()
++        self.apply(create)
++        saved = OWNER.read_snapshot(self.root, REL, 1)
++        receipt = OWNER.read_availability(self.root, REL, 1,
++                                          saved["provenance"]["recordDigest"])
++        self.assertEqual(receipt["sourcePath"], REL)
++        self.assertEqual(receipt["revision"], 1)
++        self.assertGreaterEqual(OWNER.instant(receipt["availableBy"]),
++                                OWNER.instant(saved["provenance"]["recordedAt"]))
++        before = self.source_bytes()
++        self.assertTrue(self.apply(create)["idempotent"])
++        self.assertEqual(self.source_bytes(), before)
++        with self.assertRaisesRegex(ValueError, "AVAILABILITY_RECORD_MISMATCH"):
++            OWNER.read_availability(self.root, REL, 1, "0"*64)
++
++    def test_recovery_after_availability_receipt_preserves_its_time(self):
++        self.apply(self.request())
++        self.crash_edit("after-availability-write")
++        witness = self.root / "plans/demo/.rdg-plan-available-r2.json"
++        before = witness.read_bytes()
++        with self.assertRaisesRegex(ValueError, "RECOVERY_REQUIRED"):
++            OWNER.read_snapshot(self.root, REL, 2)
++        self.assertTrue(OWNER.recover(self.root)["recovered"])
++        self.assertEqual(witness.read_bytes(), before)
++        saved = OWNER.read_snapshot(self.root, REL, 2)
++        self.assertEqual(OWNER.read_availability(self.root, REL, 2,
++                         saved["provenance"]["recordDigest"])["availableBy"],
++                         json.loads(before)["availableBy"])
++
++    def test_corrupt_availability_receipt_fails_closed(self):
++        self.apply(self.request())
++        witness = self.root / "plans/demo/.rdg-plan-available-r1.json"
++        data = json.loads(witness.read_text())
++        data["recordDigest"] = "0"*64
++        witness.write_text(json.dumps(data))
++        meta = OWNER.read_snapshot(self.root, REL, 1)["provenance"]
++        with self.assertRaisesRegex(ValueError, "AVAILABILITY_RECEIPT_INVALID"):
++            OWNER.read_availability(self.root, REL, 1, meta["recordDigest"])
+ 
+     def test_branch_permission_and_graph_permissions_remain_separate(self):
+         _, create_only = self.grant(["plan.create"])
+@@ -258,6 +298,9 @@
+         self.assertEqual(projection["data"]["sourceRevision"], 2)
+         self.assertEqual(projection["data"]["sourcePath"], REL)
+         self.assertTrue(projection["data"]["ownerVersion"]["exactPlanSnapshotResolved"])
++        meta = OWNER.read_snapshot(self.root, REL, 2)["provenance"]
++        self.assertIsNotNone(OWNER.read_availability(self.root, REL, 2,
++                                                     meta["recordDigest"]))
+ 
+     def test_corrupt_journal_does_not_overwrite_source(self):
+         self.apply(self.request())
+--- a/tests/rdg-exact-history.test.py
++++ b/tests/rdg-exact-history.test.py
+@@ -114,7 +114,7 @@
+         (self.graphs / "workspaces/.transactions/linked.json").symlink_to(outside)
+         self.assert_denied("SYMLINK_DENIED")
+ 
+-    def test_known_at_requires_post_durable_graph_and_plan_successor_bound(self):
++    def test_known_at_uses_direct_plan_receipt_and_legacy_successor(self):
+         # r1 already existed when the next guarded Plan edit read the store.
+         later_plan = copy.deepcopy(self.plan)
+         later_plan["revision"] = 2
+@@ -130,21 +130,29 @@
+         result = self.resolve(q)
+         self.assertTrue(result["provenance"]["recordingCutoffVerified"])
+         self.assertFalse(result["provenance"]["twoTimeAsOfResolved"])
+-        self.assertEqual(result["planAvailableBy"], plan_bound)
++        direct_bound = OWNER.read_availability(self.plans, PLANREL, 1,
++                         self.provenance["recordDigest"])["availableBy"]
++        self.assertEqual(result["planAvailableBy"], direct_bound)
++        self.assertEqual(result["planAvailabilitySource"], "owner-after-durable-store")
+         self.assertEqual(result["graphSnapshots"][0]["provenance"]["recordedAt"], graph_time.isoformat())
+         q["knownAt"] = (graph_time - dt.timedelta(microseconds=1)).isoformat()
+         self.assert_denied("GRAPH_RECORDED_AFTER_KNOWN_AT", q)
+-        q["knownAt"] = (OWNER.instant(plan_bound) - dt.timedelta(microseconds=1)).isoformat()
++        q["knownAt"] = (OWNER.instant(direct_bound) - dt.timedelta(microseconds=1)).isoformat()
+         self.assert_denied("PLAN_NOT_PROVEN_AVAILABLE_BY_KNOWN_AT", q)
+-        # Latest Plan revision has no successor witness.
++        # The current Plan revision also has its own post-write witness.
+         q["knownAt"] = result["knownAtCutoff"]
+         next_meta = OWNER.read_snapshot(self.plans, PLANREL, 2)["provenance"]
+         q["plan"].update(revision=2, snapshotSHA256=next_meta["snapshotSHA256"],
+                          recordDigest=next_meta["recordDigest"])
++        self.assertEqual(self.resolve(q)["planAvailabilitySource"], "owner-after-durable-store")
++        # Simulate a legacy Plan store without receipts: the older version uses
++        # the next guarded edit, while the latest fails closed.
++        OWNER.availability_path(self.plans, PLANREL, 1).unlink()
++        OWNER.availability_path(self.plans, PLANREL, 2).unlink()
+         self.assert_denied("PLAN_AVAILABILITY_BOUND_NOT_AVAILABLE", q)
+-        # An older Graph journal cannot supply an after-image availability time.
+         q = copy.deepcopy(self.query)
+         q["knownAt"] = result["knownAtCutoff"]
++        self.assertEqual(self.resolve(q)["planAvailabilitySource"], "next-guarded-plan-edit")
+         self.add_journal("graph-create", None, self.graph)
+         self.assert_denied("GRAPH_RECORDING_TIME_NOT_AVAILABLE", q)
+ 
+@@ -156,7 +164,7 @@
+         q["knownAt"] = "2026-10-19"
+         self.assert_denied("KNOWN_AT_INSTANT_REQUIRED", q)
+         q["knownAt"] = "2026-10-19T00:00:00Z"
+-        self.assert_denied("PLAN_AVAILABILITY_BOUND_NOT_AVAILABLE", q)
++        self.assert_denied("GRAPH_RECORDING_TIME_NOT_AVAILABLE|PLAN_NOT_PROVEN_AVAILABLE_BY_KNOWN_AT", q)
+         self.add_journal("bad-clock", self.graph, {**self.graph, "revision": 2},
+                          recorded_at="2026-10-19T08:00:00+07:00")
+         self.assert_denied("JOURNAL_RECORDED_AT_NOT_UTC")
+@@ -225,7 +233,7 @@
+         q = copy.deepcopy(self.query)
+         q["knownAt"] = (OWNER.instant(self.provenance["recordedAt"]) -
+                         dt.timedelta(microseconds=1)).isoformat()
+-        self.assert_denied("PLAN_AVAILABILITY_BOUND_NOT_AVAILABLE", q)
++        self.assert_denied("PLAN_NOT_PROVEN_AVAILABLE_BY_KNOWN_AT", q)
+         q = copy.deepcopy(self.query)
+         q["lifecycle"] = "accepted"
+         self.assert_denied("REQUEST_SCHEMA", q)
+--- a/README.md
++++ b/README.md
+@@ -16,11 +16,11 @@
+ 
+ **Текущий локальный срез:** [точные Plan + RDG и ограниченный `knownAt`](docs/guides/RDG-EXACT-HISTORY-PILOT-P2.md).
+ Точный candidate Plan и образы RDG разрешаются по закреплённым SHA и
+-завершённым журналам writer. Новые журналы фиксируют время после сохранения
+-Graph; для Plan нужна следующая версия как свидетель доступности предыдущей.
+-Последняя версия Plan и старые журналы не дают такого подтверждения.
+-[Контрольная точка](docs/handoffs/rdg-known-at-20261019/CHECKPOINT.md) ·
+-[предыдущий срез](docs/handoffs/rdg-exact-history-20261019/CHECKPOINT.md).
++завершённым журналам writer. Новый Plan owner сохраняет отдельную квитанцию
++доступности после долговечной записи; для прежних Plan без неё остаётся
++свидетельство следующей версии. Graph writer фиксирует время после сохранения
++графа. [Текущая контрольная точка](docs/handoffs/rdg-plan-availability-20261019/CHECKPOINT.md) ·
++[предыдущая](docs/handoffs/rdg-known-at-20261019/CHECKPOINT.md).
+ Проверка `effectiveAt`, полный historical Gendocen и фактический T1-as-of
+ не реализованы.
+ 
+--- a/docs/guides/RDG-EXACT-HISTORY-PILOT-P2.md
++++ b/docs/guides/RDG-EXACT-HISTORY-PILOT-P2.md
+@@ -67,10 +67,17 @@
+ Опциональный `knownAt` — строка с точным временем и часовым поясом. Resolver
+ сравнивает время с `recordedAt` каждого выбранного RDG **after**-образа.
+ Для Plan revision N его собственный `recordedAt` ещё предшествует долговечной
+-записи. Поэтому resolver требует revision N+1: защищённое редактирование
+-уже прочитало N из сохранённого owner store, а его `recordedAt` задаёт
+-консервативную верхнюю границу доступности N. Последняя Plan revision,
+-Graph только из before-образа или старого журнала не проходят эту проверку.
++записи. Новый owner создаёт отдельную квитанцию `availableBy` после записи и
++синхронизации Plan store и owner index. Она привязана к пути, ревизии и
++`recordDigest`. При сбое до квитанции recovery завершает запись и ставит
++более позднее время; при сбое после квитанции сохраняет её прежнее время.
++Поэтому и **последняя** новая версия Plan может пройти `knownAt`.
++
++Для старой версии без квитанции resolver требует revision N+1: защищённое
++редактирование уже прочитало N из сохранённого owner store, а время N+1
++задаёт консервативную верхнюю границу доступности N. Старая последняя
++версия без квитанции, Graph только из before-образа или старого журнала
++не проходят проверку.
+ Без `knownAt` остаётся прежнее разрешение точных ссылок без утверждения
+ о времени. Отсутствующее свидетельство не заменяется текущим файлом.
+ 
+@@ -90,5 +97,5 @@
+ В последнем прогоне Graph writer создаёт реальный локальный журнал; после
+ последующих QRPE/Plan изменений resolver вновь выдаёт тот же pinned T1 graph
+ snapshot и ту же оценку выбранного сценария. Пилот отдельно проверяет
+-`knownAt` после появления Plan revision 2. Сам Gendocen остаётся на текущих
++`knownAt` для последней Plan revision 1 по её собственной квитанции. Сам Gendocen остаётся на текущих
+ проекциях и не подтверждает historical T1-as-of.
+--- a/docs/guides/RDG-TEMPORAL-PLAN-OWNER-PILOT-P2.md
++++ b/docs/guides/RDG-TEMPORAL-PLAN-OWNER-PILOT-P2.md
+@@ -14,7 +14,12 @@
+ реестр владельцев между разными roots и не защита от прямой записи файлов.
+ 
+ Каждая версия содержит полный Plan, серверный `recordedAt`, hash-цепочку,
+-transaction ID и технический bearer receipt. Проверка `expectedRevision`
++transaction ID и технический bearer receipt. Время `recordedAt` создаётся
++до долговечной записи версии и само по себе не доказывает её доступность.
++Для новых версий owner после записи Plan store и индекса добавляет отдельную
++квитанцию `availableBy` с точным путём, ревизией и `recordDigest`. Она
++сохраняется в `plans/<имя>/.rdg-plan-available-rN.json`. Старые версии
++без неё читаются как прежде. Проверка `expectedRevision`
+ предотвращает потерю конкурирующей записи. Совпадающий повтор transaction ID
+ возвращает прежний результат; другое содержимое с тем же ID отклоняется.
+ `read --revision N` возвращает точную сохранённую версию или ошибку;
+@@ -34,8 +39,11 @@
+ Authority store должен находиться вне Plan root. Финальная проверка grant
+ и запись удерживают общий grant-lock. Долговечный journal `prepared` — точка
+ принятия технической транзакции: отзыв до неё запрещает запись, после неё
+-`recover` завершает уже принятую транзакцию, включая запись индекса.
+-Незавершённый journal блокирует чтение и проекцию. Recovery сначала проверяет
++`recover` завершает уже принятую транзакцию, включая запись индекса и
++квитанции доступности. Если сбой произошёл после квитанции, recovery не
++меняет её время.
++Незавершённый journal блокирует чтение и проекцию. Повреждённая или
++несоответствующая квитанция закрывает временное разрешение версии. Recovery сначала проверяет
+ все цели; неожиданные raw-изменения или повреждённая история блокируют запись.
+ Повтор завершённого recovery безопасен. Это не принятие будущего плана.
+ 
+--- a/tests/rdg-writer-recording.test.py
++++ b/tests/rdg-writer-recording.test.py
+@@ -85,12 +85,8 @@
+             "transactionId": "candidate-r1", "op": "create", "file": PLANREL,
+             "expectedRevision": 0, "plan": plan})
+         meta = OWNER.read_snapshot(plan_root, PLANREL, 1)["provenance"]
+-        next_plan = json.loads(json.dumps(plan))
+-        next_plan["revision"] = 2
+-        OWNER.apply_request(plan_root, store, issue(["plan.edit"]), {
+-            "transactionId": "candidate-r2", "op": "edit", "file": PLANREL,
+-            "expectedRevision": 1, "plan": next_plan})
+-        plan_bound = OWNER.read_snapshot(plan_root, PLANREL, 2)["provenance"]["recordedAt"]
++        plan_bound = OWNER.read_availability(plan_root, PLANREL, 1,
++                                             meta["recordDigest"])["availableBy"]
+         query = {"schemaVersion": 1, "mode": "exact-reference", "lifecycle": "candidate",
+                  "plan": {"file": PLANREL, "identitySpace": "demo", "planId": plan["id"],
+                           "revision": 1, "snapshotSHA256": meta["snapshotSHA256"],
+@@ -103,6 +99,7 @@
+         resolved = HISTORY.resolve(plan_root, self.writer.home / "graphs", store,
+                                    issue(["plan.read", "graph.read"]), query)
+         self.assertTrue(resolved["provenance"]["recordingCutoffVerified"])
++        self.assertEqual(resolved["planAvailabilitySource"], "owner-after-durable-store")
+         self.assertFalse(resolved["provenance"]["twoTimeAsOfResolved"])
+         self.assertEqual(resolved["graphSnapshots"][0]["provenance"]["recordedAt"],
+                          added["recordedAt"])

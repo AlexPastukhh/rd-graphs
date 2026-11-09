@@ -1,0 +1,33 @@
+[
+  {
+    "case": "A2 has date and order",
+    "beforeSequence": [
+      {
+        "after": "S-A2",
+        "before": "S-A1"
+      }
+    ],
+    "afterSequence": [],
+    "error": null,
+    "planUnchanged": false,
+    "graphUnchanged": true
+  },
+  {
+    "case": "A2 has only order",
+    "beforeSequence": [
+      {
+        "after": "S-A2",
+        "before": "S-A1"
+      }
+    ],
+    "afterSequence": [
+      {
+        "after": "S-A2",
+        "before": "S-A1"
+      }
+    ],
+    "error": "TEMPORAL_PLAN_ACTION_STEP_NOT_PLACED",
+    "planUnchanged": true,
+    "graphUnchanged": true
+  }
+]

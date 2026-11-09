@@ -1,0 +1,11 @@
+{
+  "command": [
+    "python3",
+    "tools/rdg-gendocen-runtime-smoke.py",
+    "--engine-source",
+    "/workspace/repos/gendocen"
+  ],
+  "exitCode": 0,
+  "seconds": 560.45,
+  "log": "runtime-smoke.log"
+}

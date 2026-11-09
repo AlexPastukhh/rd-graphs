@@ -1,0 +1,167 @@
+{
+  "checkpoint": "CPW-RDG-SHARED-ACTION-20261019/v1",
+  "verifiedAtUTC": "2026-10-19T01:00:08.849786+00:00",
+  "status": "PASS-SCOPED-CANDIDATE",
+  "stage4": "NOT ACCEPTED",
+  "scope": "one candidate Plan, one conditional branch, one graph; current projections; temporary synthetic roots",
+  "changedFiles": [
+    "README.md",
+    "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md",
+    "tools/rdg-gendocen-dependencies.py",
+    "docs/guides/RDG-GENDOCEN-DEPENDENCY-COVERAGE-P0.md",
+    "tests/rdg-shared-action-occurrences.acceptance.test.py",
+    "docs/handoffs/rdg-shared-action-20261019/CHECKPOINT.md",
+    "docs/handoffs/rdg-shared-action-20261019/WR-DELTA.md"
+  ],
+  "fileSHA256": {
+    "README.md": "9b5cf34a902c7f4ebb8583022a65b513e6fbd8b0f54fb485b41b5895e5a64a7e",
+    "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md": "bd1144605726d77750fff182157e35c37e6347a685cbc4ecb7132bfc42472f68",
+    "tools/rdg-gendocen-dependencies.py": "dfede10d87a27503148014ffb295e27f1106f658cf44f6b76a136ada17728095",
+    "docs/guides/RDG-GENDOCEN-DEPENDENCY-COVERAGE-P0.md": "04f682b2fa73771844d91db51b50afd60d52dd41f2f26120fc541cabd0a3decd",
+    "tests/rdg-shared-action-occurrences.acceptance.test.py": "19ff51bfb694d88b6375248d1761853075e7aceb77180350fde1a60f8553100a",
+    "docs/handoffs/rdg-shared-action-20261019/CHECKPOINT.md": "b3f6e35de0dd64fb18ac975af3951466fd35fe81f97c3e2d3990f7b0e75235c0",
+    "docs/handoffs/rdg-shared-action-20261019/WR-DELTA.md": "b63ae9195f66aa39edce89265ab71220fc83d94424804bb62f4f28864e7b4043"
+  },
+  "tests": {
+    "acceptance": {
+      "command": [
+        "/usr/bin/python3",
+        "tests/rdg-shared-action-occurrences.acceptance.test.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "tests": 2,
+      "runtime": {
+        "actionSelected": false,
+        "cliProcesses": 21,
+        "omittedOccurrence": "rejected",
+        "results": {
+          "S-A1_constraint": {
+            "A1": "review_required",
+            "A2": "valid"
+          },
+          "S-A2_constraint": {
+            "A1": "review_required",
+            "A2": "valid"
+          },
+          "baseline": {
+            "A1": "valid",
+            "A2": "valid"
+          },
+          "cosmetic": {
+            "A1": "valid",
+            "A2": "valid"
+          },
+          "membership_swap": {
+            "A1": "review_required",
+            "A2": "valid"
+          },
+          "restored": {
+            "A1": "valid",
+            "A2": "valid"
+          }
+        },
+        "sourceBytesUnchanged": true
+      }
+    },
+    "regression": {
+      "results": {
+        "plan-owner": {
+          "command": [
+            "/usr/bin/python3",
+            "tests/rdg-temporal-plan-owner.test.py",
+            "-v"
+          ],
+          "exitCode": 0,
+          "tests": 17,
+          "seconds": 2.72,
+          "log": "plan-owner.log"
+        },
+        "plan-reader": {
+          "command": [
+            "/usr/bin/python3",
+            "tests/rdg-temporal-plan.test.py",
+            "-v"
+          ],
+          "exitCode": 0,
+          "tests": 12,
+          "seconds": 0.62,
+          "log": "plan-reader.log"
+        },
+        "resources": {
+          "command": [
+            "/usr/bin/python3",
+            "tests/rdg-gendocen-resources.test.py",
+            "-v"
+          ],
+          "exitCode": 0,
+          "tests": 10,
+          "seconds": 1.03,
+          "log": "resources.log"
+        },
+        "coverage-guard": {
+          "command": [
+            "/usr/bin/python3",
+            "tests/rdg-gendocen-coverage-guard.test.py",
+            "-v"
+          ],
+          "exitCode": 0,
+          "tests": 4,
+          "seconds": 6.35,
+          "log": "coverage-guard.log"
+        },
+        "joint-context": {
+          "command": [
+            "/usr/bin/python3",
+            "tests/rdg-joint-context.test.py",
+            "-v"
+          ],
+          "exitCode": 0,
+          "tests": 12,
+          "seconds": 4.83,
+          "log": "joint-context.log"
+        },
+        "dependencies": {
+          "command": [
+            "/usr/bin/python3",
+            "tests/rdg-gendocen-dependencies.test.py",
+            "-v"
+          ],
+          "exitCode": 0,
+          "tests": 14,
+          "seconds": 76.75,
+          "log": "dependencies.log"
+        }
+      },
+      "totalTests": 69
+    },
+    "total": 71,
+    "jointSmokeRerun": false,
+    "fullNodeRegressionRerun": false
+  },
+  "beforeFix": {
+    "tests": 2,
+    "failures": 1,
+    "exitCode": 1,
+    "reason": "duplicate semantic review target for two occurrences of A1"
+  },
+  "p2AcCount": {
+    "Локальный PASS": 8,
+    "PARTIAL": 12,
+    "OPEN": 0
+  },
+  "p2Ac04": "LOCAL-PASS",
+  "priorCheckpointEvidenceUnchanged": true,
+  "v41ZipSHA256": "ab5ba0acf4a116eb24ac24340f151527786cf1e93c90aa7b38f52e50b92d5401",
+  "gitAvailable": false,
+  "userGraphsChanged": false,
+  "windowsInstalledOrG2Verified": false,
+  "published": false,
+  "limitations": [
+    "current-projection scope only; accepted lifecycle applicability still open",
+    "no trusted event source, human acceptance or factual user T1",
+    "same-environment tests, not independent production review"
+  ],
+  "next": "Candidate lifecycle applicability contract and implementation using knownAt/effectiveAt",
+  "localLinksChecked": 96
+}

@@ -1,0 +1,10 @@
+{
+  "exitCode": 0,
+  "seconds": 0.41,
+  "command": [
+    "python3",
+    "tests/rdg-temporal-plan.test.py",
+    "-v"
+  ],
+  "log": "plan.log"
+}

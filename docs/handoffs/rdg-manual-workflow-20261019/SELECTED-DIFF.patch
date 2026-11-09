@@ -1,0 +1,1833 @@
+--- a/tools/graph-package.py
++++ b/tools/graph-package.py
+@@ -94,14 +94,20 @@
+         (bool((c.get('create') or {}).get('events')) or any(
+             n.get('kind') == 'action' and n.get('status') in ('selected','superseded')
+             for n in (c.get('create') or {}).get('nodes', []))) for c in changes)
++    local_manual = False
+     if trust_required:
+         trust = SourceFileLoader('rdg_v6_action_trust',
+             str(BASE / 'tools/rdg-v6-action-trust.py')).load_module()
+         if bearer is None:
+             trust.verify_transaction(package)  # Legacy signed package unchanged.
+         else:
+-            check('trustedApproval' not in package,
+-                  'BEARER_CLIENT_MUST_NOT_SUPPLY_HMAC_APPROVAL')
++            if 'trustedApproval' in package:
++                check(os.environ.get('RDG_LOCAL_MANUAL_SESSION') == '1',
++                      'BEARER_CLIENT_MUST_NOT_SUPPLY_HMAC_APPROVAL')
++                trust.verify_transaction(package)
++                check(package['trustedApproval']['principal'] == 'bearer:' + bearer['grantId'],
++                      'MANUAL_SESSION_GRANT_MISMATCH')
++                local_manual = True
+     seen, records, overrides = set(), [], {}
+     for change in changes:
+         check(isinstance(change, dict), "invalid package change")
+@@ -147,11 +153,11 @@
+                                 'transactionId': package['transactionId'],
+                                 'signedChangesSHA256': trust.fingerprint(package['changes'])}
+                         else:
+-                            # A chat bearer is NOT authenticated user identity.
+-                            # Protected/user-attributed ops require a separate,
+-                            # future trusted Helper identity path.
++                            # Ordinary bearers do not prove a human. The explicit local
++                            # manual session binds its exact MAC to this grant;
++                            # it remains local attribution, not remote identity.
+                             if op.get('op') != 'transition_qrpe':
+-                                check(receipt_target.get('by') != 'user',
++                                check(receipt_target.get('by') != 'user' or local_manual,
+                                       'BEARER_CANNOT_CLAIM_USER_IDENTITY')
+                             principal = 'bearer:' + bearer['grantId']
+                             claimed = (op.get('authorityPrincipal') if op.get('op') == 'transition_qrpe'
+@@ -163,7 +169,7 @@
+                             else:
+                                 receipt_target['authorityPrincipal'] = principal
+                             receipt_target['verifiedTrustReceipt'] = {
+-                                'mode': 'bearer', 'principal': principal,
++                                'mode': 'local-manual-session' if local_manual else 'bearer', 'principal': principal,
+                                 'grantId': bearer['grantId'],
+                                 'grantRevision': bearer['grantRevision'],
+                                 'transactionId': package.get('transactionId'),
+@@ -182,7 +188,7 @@
+                           'BEARER_AUTHORITY_PRINCIPAL_MISMATCH')
+                     ev['authorityPrincipal'] = principal
+                     ev['verifiedTrustReceipt'] = {
+-                        'mode': 'bearer', 'principal': principal,
++                        'mode': 'local-manual-session' if local_manual else 'bearer', 'principal': principal,
+                         'grantId': bearer['grantId'],
+                         'grantRevision': bearer['grantRevision'],
+                         'transactionId': package.get('transactionId'),
+--- a/tools/rdg-activity.py
++++ b/tools/rdg-activity.py
+@@ -15,7 +15,7 @@
+ MODEL = SourceFileLoader("rdg_activity_model", str(TOOLS/"rdg-v7-model.py")).load_module()
+ 
+ 
+-def read_activity(graph_root, graph_refs, token=None, authority_store=None):
++def read_activity(graph_root, graph_refs, token=None, authority_store=None, include_sources=False):
+     root = Path(graph_root).resolve()
+     lock_path = root/"workspaces/.writer.lock"
+     if lock_path.exists():
+@@ -23,11 +23,11 @@
+             raise ValueError("ACTIVITY_UNSAFE_LOCK")
+         with os.fdopen(os.open(lock_path, os.O_RDONLY | os.O_NOFOLLOW), "rb") as lock:
+             fcntl.flock(lock, fcntl.LOCK_SH)
+-            return _read_activity_unlocked(root, graph_refs, token, authority_store)
+-    return _read_activity_unlocked(root, graph_refs, token, authority_store)
++            return _read_activity_unlocked(root, graph_refs, token, authority_store, include_sources)
++    return _read_activity_unlocked(root, graph_refs, token, authority_store, include_sources)
+ 
+ 
+-def _read_activity_unlocked(graph_root, graph_refs, token=None, authority_store=None):
++def _read_activity_unlocked(graph_root, graph_refs, token=None, authority_store=None, include_sources=False):
+     root = Path(graph_root).resolve()
+     refs = list(dict.fromkeys(graph_refs))
+     if not refs:
+@@ -120,6 +120,7 @@
+                               for n in graph["nodes"] if n["kind"] in {"requirement", "action"}}}
+               for ref,graph in graphs.items()}
+     return {"schemaVersion": 1, "activities": rows, "currentCompletion": states, "graphOwners": owners,
++            **({"sourceGraphs": graphs} if include_sources else {}),
+             "coverage": "requested-graph-owners; cross-file completion requires owner resolution",
+             "sourcesChanged": False}
+ 
+--- a/tools/rdg-workflow.py
++++ b/tools/rdg-workflow.py
+@@ -16,7 +16,7 @@
+ ACTIVITY = SourceFileLoader('workflow_activity', str(TOOLS/'rdg-activity.py')).load_module()
+ 
+ 
+-def read_workflow(plan_root, plan_file, graph_root, authority_store, token, graph_refs=()):
++def read_workflow(plan_root, plan_file, graph_root, authority_store, token, graph_refs=(), include_sources=False):
+     if not authority_store:
+         raise ValueError('WORKFLOW_AUTHORITY_STORE_REQUIRED')
+     OWNER.AUTH.Authority(authority_store).authorize_plan(token, ['plan.read'], plan_file)
+@@ -29,7 +29,7 @@
+             if step['kind'] in ('action', 'requirement'):
+                 ref = step['actionRef' if step['kind'] == 'action' else 'requirementRef']
+                 refs.append(ref['graphFile'])
+-        report = ACTIVITY.read_activity(graph_root, refs, token, authority_store)
++        report = ACTIVITY.read_activity(graph_root, refs, token, authority_store, include_sources)
+     rules = plan.get('timeConstraints', [])
+     links = plan.get('sequence', [])
+     placed = {r['stepId'] for r in rules}
+@@ -73,6 +73,7 @@
+     return {'schemaVersion': 1, 'planId': plan['id'], 'title': plan['title'],
+             'planProvenance': snapshot['provenance'], 'graphOwners': {
+                 k: {f:v[f] for f in ('identitySpace', 'revision')} for k,v in report['graphOwners'].items()},
++            **({'sources': {'plan': plan, 'graphs': report['sourceGraphs'], 'completion': report['currentCompletion']}} if include_sources else {}),
+             'future': future, 'history': report['activities'], 'unresolved': unresolved,
+             'excludedPlacements': excluded, 'sourcesChanged': False,
+             'coverage': 'current explicit Plan and requested graph owners; external completion unresolved'}
+--- a/tools/rd-graph-viewer.user.js
++++ b/tools/rd-graph-viewer.user.js
+@@ -1,13 +1,245 @@
+ // ==UserScript==
+ // @name         R-D Graph Viewer
+ // @namespace    rdg.local
+-// @version      2.0.3
++// @version      2.1.0
+ // @description  Local Requirements-Decisions JSON graph viewer
+ // @match        https://chatgpt.com/*
+ // @match        https://chat.openai.com/*
+ // @grant        GM_xmlhttpRequest
+ // @run-at       document-idle
+ // ==/UserScript==
++// BEGIN GENERATED RDG WORKFLOW UI
++/* Local manual workflow controller. Same Graph/Plan writers, no optimistic facts. */
++(function(root,factory){
++  const api=factory();
++  if(typeof module==='object'&&module.exports)module.exports=api;
++  else{
++    root.RDGWorkflowUI=api;
++    const host=document.getElementById('rdg-viewer-root');
++    if(host&&root.RDG_LOCAL_WORKFLOW){
++      const base=new URL('./',location.href),session=root.RDG_SESSION;
++      const request=async(path,body)=>{
++        const response=await fetch(new URL(path,base),{method:body?'POST':'GET',credentials:'omit',
++          redirect:'error',headers:{'X-RDG-Session':session,...(body?{'Content-Type':'application/json'}:{})},
++          ...(body?{body:JSON.stringify(body)}:{})});
++        const result=await response.json();
++        if(!response.ok){const error=Error(result.error||'Запрос отклонён');error.definite=result.definite!==false;throw error;}
++        return result;
++      };
++      const ui=api.mount(host.rdgWorkflow.attach(),{read:()=>request('state'),write:r=>request('command',r)},
++        {document,onGraph:g=>host.rdgWorkflow.loadGraph(g)});
++      root.RDG_LOCAL_EDITOR=ui;void ui.refresh();
++    }
++  }
++})(globalThis,function(){
++  'use strict';
++  function fileTransport(directory,options={}){
++    const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
++    let descriptor=null;
++    const readJson=async name=>JSON.parse(await (await directory.getFileHandle(name)).getFile().then(f=>f.text()));
++    const writeJson=async(name,value)=>{
++      const file=await directory.getFileHandle(name,{create:true}),writer=await file.createWritable();
++      await writer.write(JSON.stringify(value));await writer.close();
++    };
++    async function exchange(kind,body){
++      if(!descriptor){
++        descriptor=await readJson('session.json');
++        if(descriptor.schemaVersion!==1||descriptor.kind!=='rdg-local-manual-session'||!descriptor.active||typeof descriptor.session!=='string')
++          throw Error('Выбрана неактивная папка сессии RDG');
++      }
++      const random=typeof crypto!=='undefined'&&crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+'-'+Math.random().toString(36).slice(2);
++      const id='io-'+random,request='request-'+id+'.json',ready='request-'+id+'.ready',response='response-'+id+'.json';
++      await writeJson(request,{session:descriptor.session,kind,body});
++      // The worker never reads a payload before its completed write/close marker.
++      await writeJson(ready,{ready:true});
++      const end=Date.now()+(options.timeoutMs||45000);
++      while(Date.now()<end){
++        let result;
++        try{result=await readJson(response);}
++        catch(e){if(e.name!=='NotFoundError')throw e;await pause(options.pollMs||150);continue;}
++        for(const name of [ready,request,response]){
++          try{await directory.removeEntry(name);}catch{/* cleanup failure never changes accepted outcome */}
++        }
++        if(!result.ok){const error=Error(result.error||'Запрос отклонён');error.definite=result.definite!==false;throw error;}
++        return result.result;
++      }
++      throw Error('Время ожидания истекло. Проверьте, что локальный Helper запущен; исход записи пока неизвестен.');
++    }
++    return {read:()=>exchange('state',null),write:body=>exchange('command',body)};
++  }
++  function mount(container,transport,options={}){
++    const doc=options.document||document,fields={},buttons={};
++    let view=null,busy=false,pending=null,activeId=null;
++    const make=(tag,text,parent)=>{const x=doc.createElement(tag);if(text!==undefined)x.textContent=text;
++      if(parent)parent.appendChild(x);return x;};
++    const heading=make('h2','План во времени и история',container);
++    const status=make('div','Загрузка…',container);status.classList.add('wf-status');status.setAttribute('role','status');
++    const refresh=make('button','Обновить',container);
++    const grid=make('div',undefined,container);grid.classList.add('wf-grid');
++    const editor=make('section',undefined,grid),future=make('section',undefined,grid),history=make('section',undefined,grid);
++    make('h3','Работа с графом',editor);
++    function field(name,label,tag='input',type='text'){
++      const l=make('label',label,editor),x=make(tag,undefined,l);x.type=type;x.value='';
++      x.setAttribute('aria-label',label);fields[name]=x;return x;
++    }
++    const target=field('target','Цель или Action','select');
++    const details=make('p','',editor);
++    field('title','Название');
++    field('actionType','Тип нового Action','select');
++    field('recommended','Когда способ подходит — по одному случаю на строку','textarea');
++    field('contraindicated','Когда способ не подходит','textarea');
++    field('childRole','Роль новой дочерней R','select');
++    field('note','Основание изменения или результат выполнения','textarea');
++    field('qrpe','Новая запись QRPE');
++    field('at','Дата начала не ранее','input','date');
++    field('after','После размещённой цели или Action','select');
++    field('placement','Сохранённое размещение','select');
++    const childBox=make('div',undefined,editor);make('p','При отзыве укажите судьбу каждой введённой R. Изменения примет только штатный writer.',childBox);
++    const dispositionFields=[];
++    const controls=make('div',undefined,editor);
++    function button(name,title,action){
++      const b=make('button',title,controls);b.onclick=()=>run(action);buttons[name]=b;return b;
++    }
++    button('add','Создать вариант Action','add_action');button('title','Изменить название','edit_title');
++    button('canon','Записать канон','edit_canon');button('requirement','Добавить дочернюю R','prepare_requirement');
++    button('qrpe','Добавить QRPE','add_qrpe');button('select','Выбрать Action','select');
++    button('complete','Записать выполнение / достижение','complete');button('withdraw','Отозвать выполненный Action','withdraw');
++    button('place','Разместить / изменить место','place');button('unplace','Снять размещение','unplace');
++    buttons.retry=make('button','Повторить тот же запрос',controls);buttons.retry.onclick=()=>send(pending);
++    buttons.refresh=refresh;refresh.onclick=()=>refreshView();
++    function optionsFor(select,items,value){
++      select.replaceChildren();for(const [id,title] of items){const o=make('option',title,select);o.value=id;}
++      select.value=items.some(x=>x[0]===value)?value:(items[0]?.[0]||'');
++    }
++    optionsFor(fields.actionType,[['general','Обычный'],['decomposition','Выделение подцелей']],'general');
++    optionsFor(fields.childRole,[['subgoal','Часть разбиения родительской цели'],['method_correctness','Нужно для корректного выполнения Action']],'subgoal');
++    function graph(){return view?.sources.graphs[view.graphFile];}
++    function selected(){return graph()?.nodes.find(n=>n.id===target.value);}
++    function updateControls(){
++      const n=selected(),perms=view?.permissions||[],graphWrite=p=>perms.includes('graph.write')||perms.includes('graph.'+p);
++      const protectedGraph=graph()?.nodes.some(n=>n.reconsiderationPolicy?.mode==='protected');
++      const locked=busy||!!pending||!view,own=n&&!n.projectionOf,executed=graph()?.events.some(e=>e.type==='action_executed'&&e.targetId===n?.id);
++      const policy=protectedGraph||!own;
++      buttons.add.disabled=locked||policy||n?.kind!=='requirement'||!graphWrite('add_action');
++      buttons.title.disabled=locked||policy||!graphWrite('graph_edit.edit_node');
++      buttons.canon.disabled=locked||policy||n?.kind!=='action'||!graphWrite('graph_edit.edit_node');
++      buttons.requirement.disabled=locked||policy||n?.kind!=='action'||!graphWrite('graph_edit.prepare_action_requirement');
++      buttons.qrpe.disabled=locked||policy||!graphWrite('append_qrpe');
++      buttons.select.disabled=locked||policy||n?.kind!=='action'||n.status!=='candidate'||!graphWrite('select_action');
++      buttons.complete.disabled=locked||policy||executed||n?.status==='superseded'||
++        !graphWrite(n?.kind==='action'?'record_action_execution':'record_requirement_achievement');
++      buttons.withdraw.disabled=locked||policy||n?.kind!=='action'||n.status!=='selected'||!executed||!graphWrite('withdraw_action');
++      buttons.place.disabled=locked||!own||!perms.includes('plan.edit');
++      buttons.unplace.disabled=locked||!fields.placement.value||!perms.includes('plan.edit');
++      buttons.retry.disabled=busy||!pending;buttons.refresh.disabled=busy;
++    }
++    function focus(){
++      const n=selected();if(!n)return;activeId=n.id;
++      fields.title.value=n.title;
++      fields.recommended.value=(n.canonBlock?.recommended||[]).map(c=>c.text).join('\n');
++      fields.contraindicated.value=(n.canonBlock?.contraindicated||[]).map(c=>c.text).join('\n');
++      const completion=view.sources.completion?.[view.graphFile]?.[n.id];
++      details.textContent=n.id+' · '+n.kind+' · '+(n.status||'active')+
++        (completion?.complete?' · выполнено':' · не завершено')+
++        (n.qrpe?.length?'\nQRPE: '+n.qrpe.map(q=>'['+q.status+'] '+q.text).join('; '):'')+
++        (n.reconsiderationPolicy?.mode==='protected'?' · защищено: ручная запись недоступна':'');
++      const placements=view.sources.plan.steps.filter(s=>(s.actionRef||s.requirementRef)?.nodeId===n.id);
++      optionsFor(fields.placement,[['','Выберите размещение'],...placements.map(s=>[s.id,s.title+' · '+s.id])],
++        placements.length===1?placements[0].id:'');
++      const steps=view.sources.plan.steps.filter(s=>!placements.some(p=>p.id===s.id));
++      optionsFor(fields.after,[['','Без порядка'],...steps.map(s=>[s.id,s.title])],fields.after.value);
++      const chosen=placements.find(s=>s.id===fields.placement.value);
++      fields.at.value=(view.sources.plan.timeConstraints||[]).find(r=>r.stepId===chosen?.id&&r.type==='notBefore')?.at||'';
++      fields.after.value=(view.sources.plan.sequence||[]).find(e=>e.after===chosen?.id)?.before||'';
++      childBox.replaceChildren();dispositionFields.length=0;
++      for(const e of graph().edges.filter(e=>e.type==='INTRODUCES'&&e.from===n.id&&!e.archived)){
++        const row=make('label',graph().nodes.find(n=>n.id===e.to)?.title||e.to,childBox);
++        const select=make('select',undefined,row);optionsFor(select,[['','Выберите судьбу R'],['retain_supported','Сохранить: поддержана другим выбранным Action'],['deactivate','Деактивировать: нет других зависимостей']],'');
++        dispositionFields.push({id:e.to,select});
++      }
++      updateControls();
++    }
++    target.onchange=focus;fields.placement.onchange=()=>updateControls();
++    function list(section,title,rows,empty){
++      section.replaceChildren();make('h3',title,section);
++      if(!rows.length){make('p',empty,section);return;}
++      const ul=make('ul',undefined,section);for(const text of rows)make('li',text,ul);
++    }
++    async function install(next){
++      view=next;
++      optionsFor(target,graph().nodes.filter(n=>['action','requirement'].includes(n.kind)).map(n=>[n.id,n.title+' · '+n.kind+' · '+(n.status||'active')]),activeId);
++      list(future,'Предстоит',view.future.map(r=>r.title+' · '+r.nodeId+
++        (r.timeConstraints.length?' · '+r.timeConstraints.map(t=>t.at).join(', '):'')+
++        (r.sequence.length?' · '+r.sequence.map(e=>e.before+' → '+e.after).join(', '):'')),'Нет предстоящих целей или Actions.');
++      if(view.unresolved.length)make('p','Не разрешены ссылки: '+view.unresolved.map(r=>r.nodeId).join(', '),future);
++      const labels={graph_saved:'Изменён граф',action_executed:'Выполнен Action',requirement_achieved:'Достигнута цель',action_withdrawn:'Отозван Action'};
++      list(history,'История',view.history.map(r=>(labels[r.kind]||r.kind)+' · '+(r.title||r.summary||r.targetId||'')+
++        (r.targetId?' · '+r.targetId:'')+' · '+(r.recordedAt||'Время неизвестно')),'Записей ещё нет.');
++      heading.textContent=view.title+' · план и история';focus();
++      if(options.onGraph)await options.onGraph(graph());
++    }
++    async function refreshView(){
++      if(busy)return;busy=true;updateControls();
++      try{await install(await transport.read());status.textContent='Данные перечитаны.';status.classList.remove('wf-error');}
++      catch(e){status.textContent='Не удалось обновить: '+e.message;status.classList.add('wf-error');}
++      finally{busy=false;updateControls();}
++    }
++    function request(action){
++      const n=selected();if(!n)throw Error('Выберите сущность графа');
++      const random=typeof crypto!=='undefined'&&crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+'-'+Math.random().toString(36).slice(2);
++      const req={action,transactionId:'ui-'+random,nodeId:n.id,note:fields.note.value,
++        expectedGraphRevision:graph().revision,expectedPlanRevision:view.sources.plan.revision};
++      if(['add_action','edit_title','prepare_requirement'].includes(action))req.title=fields.title.value;
++      if(['add_action','edit_canon'].includes(action)){req.recommended=fields.recommended.value;req.contraindicated=fields.contraindicated.value;}
++      if(action==='add_action')req.actionType=fields.actionType.value;
++      if(action==='prepare_requirement')req.childRole=fields.childRole.value;
++      if(action==='add_qrpe')req.title=fields.qrpe.value;
++      if(action==='place'){req.at=fields.at.value;req.afterStepId=fields.after.value;req.stepId=fields.placement.value;}
++      if(action==='unplace')req.stepId=fields.placement.value;
++      if(action==='withdraw'){
++        req.dispositions=dispositionFields.map(d=>{
++          if(!d.select.value)throw Error('Укажите судьбу каждой дочерней R');
++          const result={requirementId:d.id,effect:d.select.value,reason:fields.note.value};
++          if(d.select.value==='deactivate')result.downstreamScope='single_graph_verified';
++          else result.supportingActionIds=graph().edges.filter(e=>e.type==='INTRODUCES'&&e.to===d.id&&e.from!==n.id&&!e.archived&&
++            graph().nodes.some(n=>n.id===e.from&&n.status==='selected')).map(e=>e.from);
++          return result;
++        });
++      }
++      return req;
++    }
++    async function run(action){
++      if(busy)return;
++      if(pending){status.textContent='Сначала проверьте исход предыдущего запроса или повторите тот же запрос.';return;}
++      try{return await send(request(action));}
++      catch(e){status.textContent=e.message;status.classList.add('wf-error');}
++    }
++    async function send(req){
++      if(busy||!req)return;busy=true;pending=req;let accepted=false;updateControls();status.textContent='Сохранение…';
++      try{
++        const result=await transport.write(req);
++        if(!result.saved)throw Error('Writer не подтвердил сохранение');
++        pending=null;accepted=true;
++        if(req.action==='add_action')activeId='A-'+req.transactionId;
++        if(req.action==='prepare_requirement')activeId='R-'+req.transactionId;
++        if(result.view)await install(result.view);
++        status.textContent=result.refreshError?'Запись сохранена, но перечитать данные не удалось: '+result.refreshError:
++          result.replayed?'Предыдущая запись подтверждена; повторного действия нет.':'Запись сохранена и перечитана.';
++        status.classList.toggle('wf-error',!!result.refreshError);
++        return result;
++      }catch(e){
++        if(e.definite)pending=null;
++        status.textContent=accepted?'Запись сохранена, интерфейс не обновлён: '+e.message:(e.definite?'Запись отклонена: ':'Исход запроса не подтверждён; обновите данные и повторите тот же запрос: ')+e.message;
++        status.classList.add('wf-error');
++      }finally{busy=false;updateControls();}
++    }
++    updateControls();
++    return {fields,buttons,refresh:refreshView,run,get view(){return view;},get pending(){return pending;},
++      get status(){return status.textContent;},get text(){return container.textContent;}};
++  }
++  return {mount,fileTransport};
++});
++// END GENERATED RDG WORKFLOW UI
+ // BEGIN GENERATED RDG ROOT PROJECTION
+ /* Read-only root-Requirement projection for migration away from graph-set maps.
+  * A folder is a navigation container; only typed graph edges establish lineage.
+@@ -562,7 +794,7 @@
+   document.documentElement.appendChild(host);
+   Object.assign(host.style, {position:'fixed',right:'14px',bottom:'94px',
+     zIndex:'2147483600',display:'block'});
+-  host.dataset.rdgVersion = '2.0.3';
++  host.dataset.rdgVersion = '2.1.0';
+   const root = host.attachShadow({ mode: 'open' });
+   const ns = 'http://www.w3.org/2000/svg';
+   // Local Windows directory belonging to this viewer. No filesystem picker on startup.
+@@ -924,12 +1156,12 @@
+     '.edge-legend-symbol.g-ready{border-bottom-style:dashed;border-bottom-color:#d3be9e}',
+     '.edge-legend-symbol.g-review{border-bottom-style:dotted;border-bottom-color:#d0a7b1}',
+     '.edge-legend-symbol.g-scope{border-bottom-style:dashed;border-bottom-color:#c8bae4}',
+-    '#info a{color:#a7dcff}#info a:visited{color:#d2c0ff}#info section{border-top:1px solid #42546a;padding-top:8px}#info small{color:#adbfcd}',
++    '#workflow-panel{overflow:auto;max-height:58vh;flex-shrink:0;padding:14px;background:#17283b}#workflow-panel[hidden],#workflow-toggle[hidden]{display:none}#workflow-panel input,#workflow-panel textarea,#workflow-panel select{box-sizing:border-box;max-width:100%;background:#102235;color:white;padding:7px;border:1px solid #526680;border-radius:5px}#workflow-panel textarea{width:100%;min-height:54px}#workflow-panel label{display:block;margin:6px 0}#workflow-panel .wf-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}#workflow-panel button{margin:4px}#workflow-panel .wf-status{white-space:pre-wrap;padding:8px}#workflow-panel .wf-error{color:#ffc49d}#workflow-panel ul{padding-left:22px}#info a{color:#a7dcff}#info a:visited{color:#d2c0ff}#info section{border-top:1px solid #42546a;padding-top:8px}#info small{color:#adbfcd}',
+     '@media(max-width:650px){#panel{inset:4px}#bar{gap:6px;padding:7px 48px 7px 7px;flex-shrink:0}#bar strong{font-size:14px}#message{max-height:58px;overflow:auto;flex-shrink:0}#content{flex-direction:column}#canvas-wrap{min-height:0}#info{display:none;width:auto;max-width:none;min-height:0;max-height:38%;box-sizing:border-box;flex:0 0 auto;border-left:none;border-top:1px solid #42546a;padding:12px;font-size:13px;line-height:1.4}#content.info-open #info{display:block}#inspector-toggle{display:block}#edge-toolbar{gap:5px;flex-shrink:0;max-height:92px}#edge-label-hint,#edge-legend{display:none}#pan-hint{display:block}}',
+     '@media(max-width:650px) and (max-height:650px){#bar{max-height:28vh;overflow:auto}#message{max-height:40px}#edge-toolbar{max-height:70px}}</style>',
+     '<button id="launch">Граф R–D</button><section id="panel"><div id="bar">',
+     '<button id="back" hidden>← Назад</button><button id="level-up" hidden>← Уровень выше</button><button id="example-set-map" hidden>Карта набора графов</button><strong id="bar-title">Графы R–D</strong>',
+-    '<button id="file">Другой JSON</button><button id="source" hidden>Исходный модуль</button><button id="reload" hidden>Обновить</button><button id="fit" hidden title="Показывает всю схему; не меняет координаты блоков">Показать всю схему</button>',
++    '<button id="workflow-toggle" hidden>План и история</button><button id="file">Другой JSON</button><button id="source" hidden>Исходный модуль</button><button id="reload" hidden>Обновить</button><button id="fit" hidden title="Показывает всю схему; не меняет координаты блоков">Показать всю схему</button>',
+     '<input type="search" id="search" hidden placeholder="Найти узел"><button id="close" aria-label="Закрыть">×</button></div>',
+     '<div id="breadcrumbs" aria-label="Путь"></div><div id="layout-indicator"><span id="layout-status" role="status" aria-live="polite"></span><button id="layout-connect">Подключить файл расположений</button></div><div id="message">Загрузка локальных графов…</div>',
+     '<div id="catalog"><div id="catalog-header"><button id="folder-back" hidden>← Все папки</button><h2 id="catalog-title">Папки графов</h2>',
+@@ -937,6 +1169,7 @@
+     '<input id="catalog-search" type="search" placeholder="Найти папку, набор или граф" aria-label="Поиск в проводнике"><div id="folder-list" aria-label="Папки графов"></div>',
+     '<div id="graph-list" aria-label="Графы и наборы"></div></div>',
+     '<div id="edge-toolbar" hidden><span>Отношения:</span><button id="edges-core" aria-pressed="true" title="Требование → решение → дочерние требования. Дополнительные основания и контекст скрыты. Показ всех вариантов управляется отдельной кнопкой.">Основная цепочка</button><button id="edges-all" aria-pressed="false" title="Дополнительно показывает основания, контекст, вопросы и другие связи текущего графа. Невыбранные варианты включаются отдельно.">Связи и контекст</button><button id="variants-all" aria-pressed="false">Показать все варианты</button><button id="context-fields">Поля контекста</button><button id="context-mode" hidden aria-pressed="false">Просмотр контекста: выкл.</button><button id="collections-collapse" hidden>Свернуть в группы</button><details id="layout-controls"><summary>Расположение</summary><div class="layout-actions"><button id="layout-save">Записать сейчас</button><button id="layout-pause">Приостановить автосохранение</button><button id="layout-open">Файл расположений</button><button id="layout-export">Экспорт расположения</button><button id="layout-reset">Авторасположение</button><button id="layout-discard">Отменить правки расположения</button><button id="layout-drafts">Восстановить черновик…</button></div><div id="layout-draft-list" class="layout-actions"></div></details><div id="edge-legend"></div><span id="edge-label-hint"></span></div>',
++    '<section id="workflow-panel" hidden aria-label="План и история"></section>',
+     '<div id="content" hidden><div id="canvas-wrap"><svg id="canvas"></svg><button id="inspector-toggle" aria-controls="info" aria-expanded="false">Сведения</button><div id="pan-hint">↔ Перетащите схему: продолжение за краем экрана</div></div><aside id="info">Выберите узел или подпись стрелки.</aside></div>',
+     '<div id="source-view" hidden><pre id="source-text"></pre></div></section>',
+     '<input type="file" id="picker" accept=".json,application/json" hidden>'
+@@ -955,7 +1188,7 @@
+   const message = text => { el('message').textContent = text; };
+   const launcher = el('launch');
+   if (!launcher) throw new Error('[RDG] Launcher was not created');
+-  console.info('[RDG Viewer] loaded v2.0.3');
++  console.info('[RDG Viewer] loaded v2.1.0');
+   const launcherPositionKey = 'rdg-viewer-launcher-position-v1';
+   let launcherDrag = null;
+   let suppressLauncherClickUntil = 0;
+@@ -2669,8 +2902,33 @@
+     activeFullRootSlug=null;selectedFolder=item.folder;
+     return loadGraphSlug(slug);
+   },getCatalog:()=>JSON.parse(JSON.stringify(catalogModel))});
++  let workflowAttached=false;
++  host.rdgWorkflow=Object.freeze({
++    attach(){workflowAttached=true;el('workflow-toggle').hidden=false;el('workflow-panel').hidden=false;
++      el('panel').classList.add('open');return el('workflow-panel');},
++    async loadGraph(data){
++      const ok=await load(JSON.stringify(data),'Локальный Helper');
++      if(!ok)throw Error('Helper вернул некорректный граф');
++      source='helper';activeSlug=null;showGraph();
++    }
++  });
++  el('workflow-toggle').hidden=typeof window.showDirectoryPicker!=='function';el('workflow-panel').hidden=true;
++  let manualEditor=null;
++  el('workflow-toggle').onclick=async()=>{
++    if(workflowAttached||manualEditor||globalThis.RDG_LOCAL_WORKFLOW){el('workflow-panel').hidden=!el('workflow-panel').hidden;return;}
++    try{
++      if(typeof window.showDirectoryPicker!=='function')throw Error('Выбор папки сессии недоступен');
++      const handle=await window.showDirectoryPicker({mode:'readwrite'});
++      if(handle.requestPermission&&await handle.requestPermission({mode:'readwrite'})!=='granted')throw Error('Нет разрешения на папку сессии');
++      const api=globalThis.RDGWorkflowUI;
++      if(!api)throw Error('Обновите исходник Viewer с модулем ручного интерфейса');
++      manualEditor=api.mount(host.rdgWorkflow.attach(),api.fileTransport(handle),
++        {document,onGraph:g=>host.rdgWorkflow.loadGraph(g)});
++      await manualEditor.refresh();
++    }catch(error){message(error.name==='AbortError'?'Подключение сессии отменено.':error.message);}
++  };
+   host.rdgStart = startViewer;
+   Promise.resolve().then(() => {
+-    if(!startupRequested) return startViewer();
++    if(!startupRequested && !globalThis.RDG_LOCAL_WORKFLOW) return startViewer();
+   });
+ })();--- a/tools/rdg-workflow-helper.py
++++ b/tools/rdg-workflow-helper.py
+@@ -0,0 +1,423 @@
++#!/usr/bin/env python3
++"""Explicit local editor session over the existing Graph/Plan owners.
++
++Binds loopback only while this command runs. No grants are created or widened.
++The session uses its configured bearer plus a process-local MAC for manual
++attribution; this is not verified human identity or protected-owner approval.
++"""
++import argparse
++import hashlib
++import hmac
++from http.server import BaseHTTPRequestHandler, HTTPServer
++from importlib.machinery import SourceFileLoader
++import json
++import os
++from pathlib import Path
++import re
++import secrets
++import subprocess
++import stat
++import tempfile
++import time
++
++TOOLS = Path(__file__).resolve().parent
++WF = SourceFileLoader('manual_workflow', str(TOOLS/'rdg-workflow.py')).load_module()
++AUTH = WF.OWNER.AUTH
++
++
++def require(ok, message):
++    if not ok:
++        raise ValueError(message)
++
++
++def canonical(value):
++    return json.dumps(value, sort_keys=True, ensure_ascii=False,
++                      separators=(',', ':'), allow_nan=False).encode()
++
++
++class Editor:
++    def __init__(self, plan_root, plan_file, graph_root, graph_file, store, token, tools=TOOLS):
++        self.plan_root, self.plan_file = Path(plan_root), plan_file
++        self.graph_root, self.graph_file = Path(graph_root), graph_file
++        self.store, self.token, self.tools = str(store), token, Path(tools)
++        self.key = secrets.token_hex(32)
++        self.requests = {}
++        require((self.tools/'graph-apply.py').is_file(), 'WRITER_UNAVAILABLE')
++        require(self.graph_root.resolve() == (self.tools.parent/'graphs').resolve(),
++                'HELPER_GRAPH_ROOT_MUST_MATCH_WRITER')
++        self.snapshot()  # fail before binding a port if sources/rights unavailable
++
++    def snapshot(self):
++        view = WF.read_workflow(self.plan_root, self.plan_file, self.graph_root,
++            self.store, self.token, [self.graph_file], include_sources=True)
++        graph = view['sources']['graphs'][self.graph_file]
++        require(graph.get('actionModel') == 'candidate-v6' and not graph.get('readOnly') and
++                not graph.get('templateOnly') and not graph.get('exampleOnly'), 'HELPER_WORKSPACE_REQUIRED')
++        require(view['sources']['plan']['identitySpace'] == graph['identitySpace'],
++                'HELPER_PLAN_GRAPH_IDENTITY_MISMATCH')
++        require(not view['sources']['plan'].get('branches') and all(
++            s['kind'] in ('action','requirement') for s in view['sources']['plan']['steps']),
++            'HELPER_PLAN_BRANCH_OR_EVENT_EDITOR_NOT_IMPLEMENTED')
++        # This first editor is deliberately one owning graph, not a partial multi-owner UI.
++        require(set(view['sources']['graphs']) == {self.graph_file}, 'HELPER_SINGLE_OWNER_ONLY')
++        data = AUTH.Authority(self.store)._read()
++        _, grant = AUTH.Authority(self.store)._actor(data, self.token)
++        view['permissions'] = [p for p in grant['permissions'] if p.startswith(('graph.', 'plan.'))]
++        view['graphFile'], view['planFile'] = self.graph_file, self.plan_file
++        return view
++
++    def event(self, tid, kind, note, **fields):
++        return {'id':'EV-'+tid, 'type':kind, 'by':'user', 'note':note, **fields}
++
++    def operation(self, req, graph):
++        action, tid = req['action'], req['transactionId']
++        nodes = {n['id']:n for n in graph['nodes']}
++        nid = req.get('nodeId')
++        node = nodes.get(nid)
++        note = req.get('note', '').strip()
++        require(note, 'RESULT_OR_CHANGE_NOTE_REQUIRED')
++        # Local manual attribution does not unlock protected-owner policy.
++        require(not any(n.get('reconsiderationPolicy', {}).get('mode') == 'protected'
++                        for n in graph['nodes']), 'HELPER_PROTECTED_OWNER_APPROVAL_UNAVAILABLE')
++        def target(kind=None):
++            require(node and not node.get('projectionOf') and
++                    (not kind or node['kind'] == kind), 'HELPER_TARGET_NOT_OWNED')
++        if action == 'add_action':
++            target('requirement')
++            title = req.get('title', '').strip()
++            cases = req.get('recommended', '').splitlines()
++            negative = req.get('contraindicated', '').splitlines()
++            require(title and any(x.strip() for x in cases), 'ACTION_TITLE_AND_CANON_REQUIRED')
++            aid = 'A-'+tid
++            return {'op':'add_action', 'requirementId':nid,
++                'action':{'id':aid,'kind':'action','title':title,'status':'candidate',
++                    'actionType':req.get('actionType','general'), 'qrpe':[],
++                    'canonBlock':{key:[{'id':prefix+tid+'-'+str(i),'text':x.strip()}
++                                      for i,x in enumerate(values) if x.strip()]
++                        for key,prefix,values in [('recommended','C-',cases),
++                                                 ('contraindicated','N-',negative)]}}}
++        if action == 'edit_title':
++            target()
++            require(node['kind'] in ('action','requirement'), 'HELPER_TARGET_KIND')
++            title = req.get('title','').strip();require(title, 'TITLE_REQUIRED')
++            return {'op':'graph_edit','action':'edit_node','nodeId':nid,'changes':{'title':title},
++                    'event':self.event(tid,'graph_changed',note,operation='edit_node')}
++        if action == 'prepare_requirement':
++            target('action')
++            title=req.get('title','').strip();require(title,'TITLE_REQUIRED')
++            return {'op':'graph_edit','action':'prepare_action_requirement','actionId':nid,
++                    'node':{'id':'R-'+tid,'kind':'requirement','title':title},
++                    'edgeId':'PE-'+tid,'childRole':req.get('childRole'),
++                    'event':self.event(tid,'graph_changed',note,operation='prepare_action_requirement')}
++        if action == 'edit_canon':
++            target('action')
++            old=node.get('canonBlock',{})
++            require(set(old)<={'recommended','contraindicated'} and all(
++                set(c)<={'id','text'} for values in old.values() for c in values),
++                'HELPER_COMPLEX_CANON_USE_FULL_API')
++            plus=[x.strip() for x in req.get('recommended','').splitlines() if x.strip()]
++            minus=[x.strip() for x in req.get('contraindicated','').splitlines() if x.strip()]
++            require(plus,'CANON_RECOMMENDED_REQUIRED')
++            canon={key:[{'id':prefix+tid+'-'+str(i),'text':x} for i,x in enumerate(values)]
++                   for key,prefix,values in [('recommended','C-',plus),('contraindicated','N-',minus)]}
++            return {'op':'graph_edit','action':'edit_node','nodeId':nid,'changes':{'canonBlock':canon},
++                    'event':self.event(tid,'graph_changed',note,operation='edit_node')}
++        if action == 'add_qrpe':
++            target()
++            text=req.get('title','').strip();require(text,'QRPE_TEXT_REQUIRED')
++            return {'op':'append_qrpe','targetId':nid,
++                    'issue':{'id':'Q-'+tid,'text':text,'status':'open'}}
++        if action == 'select':
++            target('action')
++            drivers=[e['from'] for e in graph['edges'] if e['type']=='DRIVES' and
++                     e['to']==nid and not e.get('archived')]
++            require(len(drivers)==1,'ACTION_DRIVER_REQUIRED')
++            return {'op':'select_action','actionId':nid,
++                    'event':self.event(tid,'action_selected',note,actionId=nid,driverRequirementId=drivers[0])}
++        if action == 'complete':
++            target()
++            require(node['kind'] in ('action','requirement'),'HELPER_TARGET_KIND')
++            kind='action_executed' if node['kind']=='action' else 'requirement_achieved'
++            return {'op':'record_action_execution' if node['kind']=='action' else 'record_requirement_achievement',
++                    'targetId':nid,'event':self.event(tid,kind,note,targetId=nid)}
++        if action == 'withdraw':
++            target('action')
++            drivers=[e['from'] for e in graph['edges'] if e['type']=='DRIVES' and
++                     e['to']==nid and not e.get('archived')]
++            require(len(drivers)==1,'ACTION_DRIVER_REQUIRED')
++            return {'op':'withdraw_action','actionId':nid,'dispositions':req.get('dispositions',[]),
++                    'event':self.event(tid,'action_withdrawn',note,actionId=nid,driverRequirementId=drivers[0])}
++        raise ValueError('HELPER_UNKNOWN_ACTION')
++
++    def dispatch(self, req):
++        require(isinstance(req,dict) and set(req) <= {'action','transactionId','nodeId','title',
++            'note','recommended','contraindicated','actionType','childRole','dispositions',
++            'expectedGraphRevision','expectedPlanRevision','at','afterStepId','stepId'}, 'HELPER_REQUEST_SCHEMA')
++        tid=req.get('transactionId')
++        require(isinstance(tid,str) and re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_-]{0,70}',tid),
++                'HELPER_TRANSACTION_ID')
++        for name in ('action','nodeId','title','note','recommended','contraindicated','actionType','childRole','at','afterStepId','stepId'):
++            require(name not in req or isinstance(req[name],str), 'HELPER_FIELD_TYPE_'+name)
++        digest=hashlib.sha256(canonical(req)).hexdigest()
++        view=self.snapshot()
++        old=self.requests.get(tid)
++        if old:
++            require(old['digest']==digest,'HELPER_TRANSACTION_ID_CONFLICT')
++            self.authorize(old)
++            if old.get('saved'):
++                return self.result(old, replay=True)
++            record=old
++        else:
++            graph=view['sources']['graphs'][self.graph_file]
++            action=req.get('action')
++            if action in ('place','unplace'):
++                require(req.get('expectedPlanRevision')==view['sources']['plan']['revision'],'HELPER_PLAN_CAS_MISMATCH')
++                plan=view['sources']['plan']
++                if action=='unplace':
++                    ops=[{'op':'unplace','stepId':req.get('stepId')}]
++                else:
++                    node=next((n for n in graph['nodes'] if n['id']==req.get('nodeId')),None)
++                    require(node and node['kind'] in ('action','requirement') and not node.get('projectionOf'),
++                            'HELPER_TARGET_NOT_OWNED')
++                    ref={'graphFile':self.graph_file,'identitySpace':graph['identitySpace'],'nodeId':node['id']}
++                    field='actionRef' if node['kind']=='action' else 'requirementRef'
++                    matches=[s for s in plan['steps'] if all(s.get(field,{}).get(k)==v for k,v in ref.items())]
++                    require(len(matches)<=1 or req.get('stepId'), 'CHOOSE_EXISTING_PLACEMENT')
++                    existing=next((s for s in matches if s['id']==req.get('stepId')),None) if req.get('stepId') else next(iter(matches),None)
++                    require(not req.get('stepId') or existing, 'PLACEMENT_TARGET_MISMATCH')
++                    sid=existing['id'] if existing else 'S-'+node['id']
++                    step={'id':sid,'title':node['title'],'kind':node['kind'],'state':'planned',
++                          'actionRef' if node['kind']=='action' else 'requirementRef':ref}
++                    operation={'op':'place','step':step,'timeConstraints':[],'sequence':[]}
++                    if req.get('at'):
++                        operation['timeConstraints']=[{'type':'notBefore','at':req['at'],
++                            'strength':'soft','basis':req.get('note') or 'Manual placement'}]
++                    if req.get('afterStepId'):
++                        operation['sequence']=[{'before':req['afterStepId'],'after':sid}]
++                    require(operation['timeConstraints'] or operation['sequence'],'EXPLICIT_TIME_OR_ORDER_REQUIRED')
++                    ops=[operation]
++                request={'transactionId':tid,'op':'edit','file':self.plan_file,
++                    'expectedRevision':req['expectedPlanRevision'],'operations':ops}
++                record={'kind':'plan','request':request,'digest':digest}
++            else:
++                require(req.get('expectedGraphRevision')==graph['revision'],'HELPER_GRAPH_CAS_MISMATCH')
++                op=self.operation(req,graph)
++                package={'schemaVersion':1,'transactionId':tid,'changes':[{'file':self.graph_file,
++                    'patch':{'schemaVersion':1,'expectedRevision':req['expectedGraphRevision'],'operations':[op]}}]}
++                actor=AUTH.Authority(self.store).authorize_package(self.token,package)
++                principal='bearer:'+actor['grantId']
++                if op.get('event'):op['event']['authorityPrincipal']=principal
++                # Exact signed changes, using the established verifier; no browser HMAC key.
++                claim={'principal':principal,'expiresAt':int(time.time())+600,'purpose':'rdg-v6-material-action-v1'}
++                package['trustedApproval']=claim
++                payload={'transactionId':tid,'changes':package['changes'],**{k:claim[k] for k in ('principal','expiresAt','purpose')}}
++                claim['signature']=hmac.new(self.key.encode(),canonical(payload),hashlib.sha256).hexdigest()
++                # add_action is candidate preparation, not a material event; no fake human fact.
++                if op['op'] in ('add_action','append_qrpe'):package.pop('trustedApproval')
++                record={'kind':'graph','package':package,'digest':digest}
++            self.requests[tid]=record
++        self.authorize(record)
++        try:
++            if record['kind']=='plan':
++                try:
++                    receipt=WF.OWNER.apply_request(self.plan_root,self.store,self.token,record['request'])
++                except (OSError,ValueError,KeyError,TypeError) as exc:
++                    # A failed response can follow durable acceptance. Inspect this
++                    # exact transaction before describing it as rejected.
++                    try:
++                        path=WF.OWNER.safe(self.plan_root,self.plan_file)
++                        stored=json.loads(path.read_text())
++                        accepted=stored.get('transactions',{}).get(tid)
++                    except (OSError,ValueError,KeyError,TypeError):
++                        raise ValueError('WRITER_OUTCOME_UNCONFIRMED: Plan read-back unavailable') from exc
++                    if (self.plan_root/WF.OWNER.JOURNAL).exists():
++                        raise ValueError('WRITER_OUTCOME_UNCONFIRMED: inspect/recover Plan journal before retry') from exc
++                    if accepted and accepted.get('requestSHA256')==WF.OWNER.digest(record['request']):
++                        receipt={'idempotent':True,**accepted}
++                    elif isinstance(exc,OSError):
++                        raise ValueError('WRITER_OUTCOME_UNCONFIRMED: Plan result needs read-back') from exc
++                    else:raise
++            else:
++                with tempfile.TemporaryDirectory(prefix='rdg-manual-request-') as tmp:
++                    path=Path(tmp)/'request.json';path.write_text(json.dumps(record['package'],ensure_ascii=False))
++                    run=subprocess.run(['python3','-B',str(self.tools/'graph-apply.py'),'--package','--patch',str(path)],
++                        text=True,capture_output=True,timeout=60,env={**os.environ,
++                            'RDG_AUTH_STORE':self.store,'RDG_AUTH_TOKEN':self.token,
++                            'RDG_V6_TRUST_KEY':self.key,'RDG_LOCAL_MANUAL_SESSION':'1'})
++                    if run.returncode:
++                        journal=self.graph_root/'workspaces/.transactions'/(tid+'.json')
++                        require(not journal.exists(),'WRITER_OUTCOME_UNCONFIRMED: inspect/recover accepted journal before retry')
++                        raise ValueError((run.stderr.strip() or 'WRITER_FAILED')[-1500:])
++                    receipt={'transactionId':tid,'writer':run.stdout.strip()}
++        except subprocess.TimeoutExpired as exc:
++            raise ValueError('WRITER_OUTCOME_UNCONFIRMED: timeout; inspect state/journal before retry') from exc
++        record.update(saved=True,receipt=receipt)
++        return self.result(record)
++
++    def authorize(self, record):
++        auth=AUTH.Authority(self.store)
++        if record['kind']=='plan':
++            auth.authorize_plan(self.token,['plan.edit'],self.plan_file)
++        else:
++            auth.authorize_package(self.token,record['package'])
++
++    def result(self, record, replay=False):
++        result={'saved':True,'replayed':replay,'receipt':record['receipt']}
++        try:result['view']=self.snapshot()
++        except (ValueError,OSError,KeyError) as exc:
++            result.update(view=None,refreshError=str(exc))
++        return result
++
++
++class FileSession:
++    """No network: an explicit session folder on an already authorized mount.
++
++    Files are transient request/response views, not graph/plan owners. Possession
++    of this local session folder is a capability within the configured grant.
++    """
++    def __init__(self, editor, directory):
++        self.editor, self.directory = editor, Path(directory)
++        require(self.directory.is_absolute(), 'SESSION_DIRECTORY_MUST_BE_ABSOLUTE')
++        require(not any(p.is_symlink() for p in [self.directory,*self.directory.parents]),
++                'SESSION_DIRECTORY_SYMLINK_DENIED')
++        require(self.directory.parent.is_dir() and not self.directory.exists(),
++                'CHOOSE_NEW_SESSION_DIRECTORY')
++        self.directory.mkdir()
++        self.session=secrets.token_urlsafe(32)
++        self.seen=set()
++        self.write('session.json',{'schemaVersion':1,'kind':'rdg-local-manual-session',
++            'active':True,'session':self.session,'graphFile':editor.graph_file,'planFile':editor.plan_file})
++
++    def write(self,name,value):
++        # Never follow response symlinks or overwrite any file outside this session folder.
++        fd,temp=tempfile.mkstemp(prefix='.response-',dir=self.directory)
++        try:
++            with os.fdopen(fd,'w',encoding='utf-8') as out:
++                json.dump(value,out,ensure_ascii=False,allow_nan=False)
++                out.flush();os.fsync(out.fileno())
++            os.replace(temp,self.directory/name)
++        finally:
++            if os.path.exists(temp):os.unlink(temp)
++
++    def process_once(self):
++        count=0
++        for ready in sorted(self.directory.glob('request-*.ready')):
++            match=re.fullmatch(r'request-([A-Za-z0-9_-]{1,90})\.ready',ready.name)
++            if not match or ready.name in self.seen:continue
++            self.seen.add(ready.name);qid=match[1];count+=1
++            try:
++                require(not ready.is_symlink(),'SESSION_REQUEST_SYMLINK_DENIED')
++                path=self.directory/('request-'+qid+'.json')
++                with os.fdopen(os.open(path,os.O_RDONLY|os.O_NOFOLLOW|os.O_NONBLOCK),'rb') as source:
++                    require(stat.S_ISREG(os.fstat(source.fileno()).st_mode),'SESSION_REGULAR_REQUEST_REQUIRED')
++                    raw=source.read(1000001)
++                require(len(raw)<=1000000,'HELPER_REQUEST_SIZE')
++                req=json.loads(raw)
++                require(isinstance(req,dict) and set(req)=={'session','kind','body'} and
++                        hmac.compare_digest(str(req['session']),self.session),'HELPER_SESSION_DENIED')
++                if req['kind']=='state':
++                    require(req['body'] is None,'STATE_REQUEST_BODY')
++                    result=self.editor.snapshot()
++                else:
++                    require(req['kind']=='command','SESSION_UNKNOWN_REQUEST')
++                    result=self.editor.dispatch(req['body'])
++                response={'ok':True,'result':result}
++            except (ValueError,OSError,KeyError,TypeError) as exc:
++                response={'ok':False,'error':str(exc),'definite':not str(exc).startswith('WRITER_OUTCOME_UNCONFIRMED')}
++            self.write('response-'+qid+'.json',response)
++        return count
++
++    def close(self):
++        self.write('session.json',{'schemaVersion':1,'kind':'rdg-local-manual-session','active':False})
++
++
++def make_server(editor):
++    session=secrets.token_urlsafe(32)
++    prefix='/session/'+session+'/'
++    class Handler(BaseHTTPRequestHandler):
++        def setup(self):
++            super().setup();self.connection.settimeout(10)
++        def log_message(self,*args):pass  # no session URLs, bearer or request bodies in logs
++        def output(self,status,body,content_type='application/json'):
++            if not isinstance(body,bytes):body=json.dumps(body,ensure_ascii=False).encode()
++            self.send_response(status)
++            for k,v in {'Content-Type':content_type,'Content-Length':str(len(body)),
++                'Cache-Control':'no-store','Referrer-Policy':'no-referrer','X-Content-Type-Options':'nosniff',
++                'Content-Security-Policy':"default-src 'self'; script-src 'self' 'nonce-"+session+"'; style-src 'self' 'unsafe-inline'; connect-src 'self'; img-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'"}.items():
++                self.send_header(k,v)
++            self.end_headers()
++            try:self.wfile.write(body)
++            except (BrokenPipeError,ConnectionResetError):pass
++        def route(self):
++            require(self.headers.get('Host')==self.server.origin.removeprefix('http://'),'HELPER_HOST_DENIED')
++            require(self.path.startswith(prefix),'HELPER_SESSION_DENIED')
++            return self.path[len(prefix):]
++        def do_GET(self):
++            try:
++                route=self.route()
++                if route=='':
++                    boot="globalThis.RDG_LOCAL_WORKFLOW=true;globalThis.RDG_SESSION="+json.dumps(session)+";"
++                    body=('<!doctype html><html lang="ru"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
++                        '<title>RDG — локальная рабочая сессия</title><body style="background:#101b29;color:#e4edf7;font:16px system-ui">'
++                        '<p>RDG · локальная ручная сессия · закройте процесс Helper после работы.</p>'
++                        '<script nonce="'+session+'">'+boot+'</script><script src="viewer.js"></script><script src="ui.js"></script></body></html>').encode()
++                    self.output(200,body,'text/html; charset=utf-8')
++                elif route in ('viewer.js','ui.js'):
++                    name='rd-graph-viewer.user.js' if route=='viewer.js' else 'rdg-workflow-ui.js'
++                    self.output(200,(TOOLS/name).read_bytes(),'text/javascript; charset=utf-8')
++                elif route=='state':
++                    require(self.headers.get('X-RDG-Session')==session,'HELPER_SESSION_HEADER_REQUIRED')
++                    self.output(200,editor.snapshot())
++                else:self.output(404,{'error':'NOT_FOUND'})
++            except (ValueError,OSError,KeyError) as exc:self.output(403,{'error':str(exc)})
++        def do_POST(self):
++            try:
++                require(self.route()=='command','NOT_FOUND')
++                require(self.headers.get('Origin')==self.server.origin,'HELPER_ORIGIN_DENIED')
++                require(self.headers.get('X-RDG-Session')==session,'HELPER_SESSION_HEADER_REQUIRED')
++                require(self.headers.get('Content-Type','').split(';')[0]=='application/json','HELPER_CONTENT_TYPE')
++                size=int(self.headers.get('Content-Length','0'))
++                require(0<size<=1000000,'HELPER_REQUEST_SIZE')
++                req=json.loads(self.rfile.read(size))
++                self.output(200,editor.dispatch(req))
++            except (ValueError,OSError,KeyError,TypeError) as exc:
++                self.output(400,{'error':str(exc),'definite':not str(exc).startswith('WRITER_OUTCOME_UNCONFIRMED')})
++    server=HTTPServer(('127.0.0.1',0),Handler)
++    server.origin='http://127.0.0.1:'+str(server.server_port)
++    server.session_url=server.origin+prefix
++    return server
++
++
++def main():
++    parser=argparse.ArgumentParser(description=__doc__)
++    parser.add_argument('--manual-session',action='store_true',required=True,
++                        help='Explicitly opt in local manual attribution; does not prove human identity')
++    parser.add_argument('--root',required=True)
++    parser.add_argument('--file',required=True)
++    parser.add_argument('--graph',required=True)
++    parser.add_argument('--store',default=os.environ.get('RDG_AUTH_STORE'))
++    parser.add_argument('--transport',choices=('files','loopback'),default='files')
++    parser.add_argument('--session-dir',help='New session folder on an existing authorized mount; no new sharing')
++    args=parser.parse_args()
++    require(args.transport!='files' or args.session_dir,'SESSION_DIRECTORY_REQUIRED')
++    require(args.store and os.environ.get('RDG_AUTH_TOKEN'),'CONFIGURED_STORE_AND_TOKEN_REQUIRED')
++    editor=Editor(args.root,args.file,TOOLS.parent/'graphs',args.graph,args.store,os.environ['RDG_AUTH_TOKEN'])
++    if args.transport=='files':
++        session=FileSession(editor,args.session_dir)
++        print('В Viewer нажмите «План и история» и выберите папку этой сессии: '+str(session.directory),flush=True)
++        try:
++            while True:
++                session.process_once();time.sleep(0.15)
++        except KeyboardInterrupt:pass
++        finally:session.close()
++        return
++    server=make_server(editor)
++    print('Откройте локальную сессию: '+server.session_url,flush=True)
++    try:server.serve_forever()
++    except KeyboardInterrupt:pass
++    finally:server.server_close()
++
++
++if __name__=='__main__':
++    try:main()
++    except (ValueError,OSError,KeyError) as exc:raise SystemExit('ERROR: '+str(exc))
+--- a/tools/rdg-workflow-ui.js
++++ b/tools/rdg-workflow-ui.js
+@@ -0,0 +1,230 @@
++/* Local manual workflow controller. Same Graph/Plan writers, no optimistic facts. */
++(function(root,factory){
++  const api=factory();
++  if(typeof module==='object'&&module.exports)module.exports=api;
++  else{
++    root.RDGWorkflowUI=api;
++    const host=document.getElementById('rdg-viewer-root');
++    if(host&&root.RDG_LOCAL_WORKFLOW){
++      const base=new URL('./',location.href),session=root.RDG_SESSION;
++      const request=async(path,body)=>{
++        const response=await fetch(new URL(path,base),{method:body?'POST':'GET',credentials:'omit',
++          redirect:'error',headers:{'X-RDG-Session':session,...(body?{'Content-Type':'application/json'}:{})},
++          ...(body?{body:JSON.stringify(body)}:{})});
++        const result=await response.json();
++        if(!response.ok){const error=Error(result.error||'Запрос отклонён');error.definite=result.definite!==false;throw error;}
++        return result;
++      };
++      const ui=api.mount(host.rdgWorkflow.attach(),{read:()=>request('state'),write:r=>request('command',r)},
++        {document,onGraph:g=>host.rdgWorkflow.loadGraph(g)});
++      root.RDG_LOCAL_EDITOR=ui;void ui.refresh();
++    }
++  }
++})(globalThis,function(){
++  'use strict';
++  function fileTransport(directory,options={}){
++    const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
++    let descriptor=null;
++    const readJson=async name=>JSON.parse(await (await directory.getFileHandle(name)).getFile().then(f=>f.text()));
++    const writeJson=async(name,value)=>{
++      const file=await directory.getFileHandle(name,{create:true}),writer=await file.createWritable();
++      await writer.write(JSON.stringify(value));await writer.close();
++    };
++    async function exchange(kind,body){
++      if(!descriptor){
++        descriptor=await readJson('session.json');
++        if(descriptor.schemaVersion!==1||descriptor.kind!=='rdg-local-manual-session'||!descriptor.active||typeof descriptor.session!=='string')
++          throw Error('Выбрана неактивная папка сессии RDG');
++      }
++      const random=typeof crypto!=='undefined'&&crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+'-'+Math.random().toString(36).slice(2);
++      const id='io-'+random,request='request-'+id+'.json',ready='request-'+id+'.ready',response='response-'+id+'.json';
++      await writeJson(request,{session:descriptor.session,kind,body});
++      // The worker never reads a payload before its completed write/close marker.
++      await writeJson(ready,{ready:true});
++      const end=Date.now()+(options.timeoutMs||45000);
++      while(Date.now()<end){
++        let result;
++        try{result=await readJson(response);}
++        catch(e){if(e.name!=='NotFoundError')throw e;await pause(options.pollMs||150);continue;}
++        for(const name of [ready,request,response]){
++          try{await directory.removeEntry(name);}catch{/* cleanup failure never changes accepted outcome */}
++        }
++        if(!result.ok){const error=Error(result.error||'Запрос отклонён');error.definite=result.definite!==false;throw error;}
++        return result.result;
++      }
++      throw Error('Время ожидания истекло. Проверьте, что локальный Helper запущен; исход записи пока неизвестен.');
++    }
++    return {read:()=>exchange('state',null),write:body=>exchange('command',body)};
++  }
++  function mount(container,transport,options={}){
++    const doc=options.document||document,fields={},buttons={};
++    let view=null,busy=false,pending=null,activeId=null;
++    const make=(tag,text,parent)=>{const x=doc.createElement(tag);if(text!==undefined)x.textContent=text;
++      if(parent)parent.appendChild(x);return x;};
++    const heading=make('h2','План во времени и история',container);
++    const status=make('div','Загрузка…',container);status.classList.add('wf-status');status.setAttribute('role','status');
++    const refresh=make('button','Обновить',container);
++    const grid=make('div',undefined,container);grid.classList.add('wf-grid');
++    const editor=make('section',undefined,grid),future=make('section',undefined,grid),history=make('section',undefined,grid);
++    make('h3','Работа с графом',editor);
++    function field(name,label,tag='input',type='text'){
++      const l=make('label',label,editor),x=make(tag,undefined,l);x.type=type;x.value='';
++      x.setAttribute('aria-label',label);fields[name]=x;return x;
++    }
++    const target=field('target','Цель или Action','select');
++    const details=make('p','',editor);
++    field('title','Название');
++    field('actionType','Тип нового Action','select');
++    field('recommended','Когда способ подходит — по одному случаю на строку','textarea');
++    field('contraindicated','Когда способ не подходит','textarea');
++    field('childRole','Роль новой дочерней R','select');
++    field('note','Основание изменения или результат выполнения','textarea');
++    field('qrpe','Новая запись QRPE');
++    field('at','Дата начала не ранее','input','date');
++    field('after','После размещённой цели или Action','select');
++    field('placement','Сохранённое размещение','select');
++    const childBox=make('div',undefined,editor);make('p','При отзыве укажите судьбу каждой введённой R. Изменения примет только штатный writer.',childBox);
++    const dispositionFields=[];
++    const controls=make('div',undefined,editor);
++    function button(name,title,action){
++      const b=make('button',title,controls);b.onclick=()=>run(action);buttons[name]=b;return b;
++    }
++    button('add','Создать вариант Action','add_action');button('title','Изменить название','edit_title');
++    button('canon','Записать канон','edit_canon');button('requirement','Добавить дочернюю R','prepare_requirement');
++    button('qrpe','Добавить QRPE','add_qrpe');button('select','Выбрать Action','select');
++    button('complete','Записать выполнение / достижение','complete');button('withdraw','Отозвать выполненный Action','withdraw');
++    button('place','Разместить / изменить место','place');button('unplace','Снять размещение','unplace');
++    buttons.retry=make('button','Повторить тот же запрос',controls);buttons.retry.onclick=()=>send(pending);
++    buttons.refresh=refresh;refresh.onclick=()=>refreshView();
++    function optionsFor(select,items,value){
++      select.replaceChildren();for(const [id,title] of items){const o=make('option',title,select);o.value=id;}
++      select.value=items.some(x=>x[0]===value)?value:(items[0]?.[0]||'');
++    }
++    optionsFor(fields.actionType,[['general','Обычный'],['decomposition','Выделение подцелей']],'general');
++    optionsFor(fields.childRole,[['subgoal','Часть разбиения родительской цели'],['method_correctness','Нужно для корректного выполнения Action']],'subgoal');
++    function graph(){return view?.sources.graphs[view.graphFile];}
++    function selected(){return graph()?.nodes.find(n=>n.id===target.value);}
++    function updateControls(){
++      const n=selected(),perms=view?.permissions||[],graphWrite=p=>perms.includes('graph.write')||perms.includes('graph.'+p);
++      const protectedGraph=graph()?.nodes.some(n=>n.reconsiderationPolicy?.mode==='protected');
++      const locked=busy||!!pending||!view,own=n&&!n.projectionOf,executed=graph()?.events.some(e=>e.type==='action_executed'&&e.targetId===n?.id);
++      const policy=protectedGraph||!own;
++      buttons.add.disabled=locked||policy||n?.kind!=='requirement'||!graphWrite('add_action');
++      buttons.title.disabled=locked||policy||!graphWrite('graph_edit.edit_node');
++      buttons.canon.disabled=locked||policy||n?.kind!=='action'||!graphWrite('graph_edit.edit_node');
++      buttons.requirement.disabled=locked||policy||n?.kind!=='action'||!graphWrite('graph_edit.prepare_action_requirement');
++      buttons.qrpe.disabled=locked||policy||!graphWrite('append_qrpe');
++      buttons.select.disabled=locked||policy||n?.kind!=='action'||n.status!=='candidate'||!graphWrite('select_action');
++      buttons.complete.disabled=locked||policy||executed||n?.status==='superseded'||
++        !graphWrite(n?.kind==='action'?'record_action_execution':'record_requirement_achievement');
++      buttons.withdraw.disabled=locked||policy||n?.kind!=='action'||n.status!=='selected'||!executed||!graphWrite('withdraw_action');
++      buttons.place.disabled=locked||!own||!perms.includes('plan.edit');
++      buttons.unplace.disabled=locked||!fields.placement.value||!perms.includes('plan.edit');
++      buttons.retry.disabled=busy||!pending;buttons.refresh.disabled=busy;
++    }
++    function focus(){
++      const n=selected();if(!n)return;activeId=n.id;
++      fields.title.value=n.title;
++      fields.recommended.value=(n.canonBlock?.recommended||[]).map(c=>c.text).join('\n');
++      fields.contraindicated.value=(n.canonBlock?.contraindicated||[]).map(c=>c.text).join('\n');
++      const completion=view.sources.completion?.[view.graphFile]?.[n.id];
++      details.textContent=n.id+' · '+n.kind+' · '+(n.status||'active')+
++        (completion?.complete?' · выполнено':' · не завершено')+
++        (n.qrpe?.length?'\nQRPE: '+n.qrpe.map(q=>'['+q.status+'] '+q.text).join('; '):'')+
++        (n.reconsiderationPolicy?.mode==='protected'?' · защищено: ручная запись недоступна':'');
++      const placements=view.sources.plan.steps.filter(s=>(s.actionRef||s.requirementRef)?.nodeId===n.id);
++      optionsFor(fields.placement,[['','Выберите размещение'],...placements.map(s=>[s.id,s.title+' · '+s.id])],
++        placements.length===1?placements[0].id:'');
++      const steps=view.sources.plan.steps.filter(s=>!placements.some(p=>p.id===s.id));
++      optionsFor(fields.after,[['','Без порядка'],...steps.map(s=>[s.id,s.title])],fields.after.value);
++      const chosen=placements.find(s=>s.id===fields.placement.value);
++      fields.at.value=(view.sources.plan.timeConstraints||[]).find(r=>r.stepId===chosen?.id&&r.type==='notBefore')?.at||'';
++      fields.after.value=(view.sources.plan.sequence||[]).find(e=>e.after===chosen?.id)?.before||'';
++      childBox.replaceChildren();dispositionFields.length=0;
++      for(const e of graph().edges.filter(e=>e.type==='INTRODUCES'&&e.from===n.id&&!e.archived)){
++        const row=make('label',graph().nodes.find(n=>n.id===e.to)?.title||e.to,childBox);
++        const select=make('select',undefined,row);optionsFor(select,[['','Выберите судьбу R'],['retain_supported','Сохранить: поддержана другим выбранным Action'],['deactivate','Деактивировать: нет других зависимостей']],'');
++        dispositionFields.push({id:e.to,select});
++      }
++      updateControls();
++    }
++    target.onchange=focus;fields.placement.onchange=()=>updateControls();
++    function list(section,title,rows,empty){
++      section.replaceChildren();make('h3',title,section);
++      if(!rows.length){make('p',empty,section);return;}
++      const ul=make('ul',undefined,section);for(const text of rows)make('li',text,ul);
++    }
++    async function install(next){
++      view=next;
++      optionsFor(target,graph().nodes.filter(n=>['action','requirement'].includes(n.kind)).map(n=>[n.id,n.title+' · '+n.kind+' · '+(n.status||'active')]),activeId);
++      list(future,'Предстоит',view.future.map(r=>r.title+' · '+r.nodeId+
++        (r.timeConstraints.length?' · '+r.timeConstraints.map(t=>t.at).join(', '):'')+
++        (r.sequence.length?' · '+r.sequence.map(e=>e.before+' → '+e.after).join(', '):'')),'Нет предстоящих целей или Actions.');
++      if(view.unresolved.length)make('p','Не разрешены ссылки: '+view.unresolved.map(r=>r.nodeId).join(', '),future);
++      const labels={graph_saved:'Изменён граф',action_executed:'Выполнен Action',requirement_achieved:'Достигнута цель',action_withdrawn:'Отозван Action'};
++      list(history,'История',view.history.map(r=>(labels[r.kind]||r.kind)+' · '+(r.title||r.summary||r.targetId||'')+
++        (r.targetId?' · '+r.targetId:'')+' · '+(r.recordedAt||'Время неизвестно')),'Записей ещё нет.');
++      heading.textContent=view.title+' · план и история';focus();
++      if(options.onGraph)await options.onGraph(graph());
++    }
++    async function refreshView(){
++      if(busy)return;busy=true;updateControls();
++      try{await install(await transport.read());status.textContent='Данные перечитаны.';status.classList.remove('wf-error');}
++      catch(e){status.textContent='Не удалось обновить: '+e.message;status.classList.add('wf-error');}
++      finally{busy=false;updateControls();}
++    }
++    function request(action){
++      const n=selected();if(!n)throw Error('Выберите сущность графа');
++      const random=typeof crypto!=='undefined'&&crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+'-'+Math.random().toString(36).slice(2);
++      const req={action,transactionId:'ui-'+random,nodeId:n.id,note:fields.note.value,
++        expectedGraphRevision:graph().revision,expectedPlanRevision:view.sources.plan.revision};
++      if(['add_action','edit_title','prepare_requirement'].includes(action))req.title=fields.title.value;
++      if(['add_action','edit_canon'].includes(action)){req.recommended=fields.recommended.value;req.contraindicated=fields.contraindicated.value;}
++      if(action==='add_action')req.actionType=fields.actionType.value;
++      if(action==='prepare_requirement')req.childRole=fields.childRole.value;
++      if(action==='add_qrpe')req.title=fields.qrpe.value;
++      if(action==='place'){req.at=fields.at.value;req.afterStepId=fields.after.value;req.stepId=fields.placement.value;}
++      if(action==='unplace')req.stepId=fields.placement.value;
++      if(action==='withdraw'){
++        req.dispositions=dispositionFields.map(d=>{
++          if(!d.select.value)throw Error('Укажите судьбу каждой дочерней R');
++          const result={requirementId:d.id,effect:d.select.value,reason:fields.note.value};
++          if(d.select.value==='deactivate')result.downstreamScope='single_graph_verified';
++          else result.supportingActionIds=graph().edges.filter(e=>e.type==='INTRODUCES'&&e.to===d.id&&e.from!==n.id&&!e.archived&&
++            graph().nodes.some(n=>n.id===e.from&&n.status==='selected')).map(e=>e.from);
++          return result;
++        });
++      }
++      return req;
++    }
++    async function run(action){
++      if(busy)return;
++      if(pending){status.textContent='Сначала проверьте исход предыдущего запроса или повторите тот же запрос.';return;}
++      try{return await send(request(action));}
++      catch(e){status.textContent=e.message;status.classList.add('wf-error');}
++    }
++    async function send(req){
++      if(busy||!req)return;busy=true;pending=req;let accepted=false;updateControls();status.textContent='Сохранение…';
++      try{
++        const result=await transport.write(req);
++        if(!result.saved)throw Error('Writer не подтвердил сохранение');
++        pending=null;accepted=true;
++        if(req.action==='add_action')activeId='A-'+req.transactionId;
++        if(req.action==='prepare_requirement')activeId='R-'+req.transactionId;
++        if(result.view)await install(result.view);
++        status.textContent=result.refreshError?'Запись сохранена, но перечитать данные не удалось: '+result.refreshError:
++          result.replayed?'Предыдущая запись подтверждена; повторного действия нет.':'Запись сохранена и перечитана.';
++        status.classList.toggle('wf-error',!!result.refreshError);
++        return result;
++      }catch(e){
++        if(e.definite)pending=null;
++        status.textContent=accepted?'Запись сохранена, интерфейс не обновлён: '+e.message:(e.definite?'Запись отклонена: ':'Исход запроса не подтверждён; обновите данные и повторите тот же запрос: ')+e.message;
++        status.classList.add('wf-error');
++      }finally{busy=false;updateControls();}
++    }
++    updateControls();
++    return {fields,buttons,refresh:refreshView,run,get view(){return view;},get pending(){return pending;},
++      get status(){return status.textContent;},get text(){return container.textContent;}};
++  }
++  return {mount,fileTransport};
++});
+--- a/tests/rdg-workflow-helper.test.py
++++ b/tests/rdg-workflow-helper.test.py
+@@ -0,0 +1,252 @@
++#!/usr/bin/env python3
++"""Real local session HTTP -> existing writers; isolated synthetic owners only."""
++from importlib.machinery import SourceFileLoader
++import copy
++import json
++import os
++from pathlib import Path
++import subprocess
++import threading
++import unittest
++from urllib.request import Request, urlopen
++from urllib.error import HTTPError
++
++ROOT=Path(__file__).resolve().parents[1]
++FIX=SourceFileLoader('manual_fixture',str(ROOT/'tests/rdg-workflow.acceptance.test.py')).load_module()
++H=SourceFileLoader('manual_helper_test',str(ROOT/'tools/rdg-workflow-helper.py')).load_module()
++
++
++class Manual(unittest.TestCase):
++    def setUp(self):
++        self.f=FIX.Workflow('test_whole_future_execution_withdrawal_new_variant_and_history')
++        self.f.setUp();self.addCleanup(self.f.doCleanups)
++        self.w=self.f.w
++        self.editor=H.Editor(self.f.root,self.f.rel,self.w.home/'graphs',self.w.rel,
++            self.w.store,self.w.token,tools=self.w.home/'tools')
++        self.server=H.make_server(self.editor)
++        self.thread=threading.Thread(target=self.server.serve_forever,daemon=True);self.thread.start()
++        self.addCleanup(self.close)
++        self.seq=0
++        self.base=self.server.session_url
++        self.session=self.base.rstrip('/').split('/')[-1]
++
++    def close(self):
++        self.server.shutdown();self.server.server_close();self.thread.join(2)
++
++    def http(self,path='state',body=None,headers=None,expected=200,url=None):
++        base={'X-RDG-Session':self.session}
++        if body is not None:base.update({'Content-Type':'application/json','Origin':self.server.origin})
++        base.update(headers or {})
++        req=Request(url or self.base+path,data=json.dumps(body).encode() if body is not None else None,headers=base)
++        try:
++            with urlopen(req,timeout=30) as r:status=r.status;data=r.read();hdr=r.headers
++        except HTTPError as r:status=r.code;data=r.read();hdr=r.headers
++        self.assertEqual(status,expected,data[:500])
++        return json.loads(data) if hdr.get_content_type()=='application/json' else data.decode()
++
++    def command(self,action,node='R0',**extra):
++        self.seq+=1;view=self.editor.snapshot()
++        return {'action':action,'nodeId':node,'transactionId':'manual-'+str(self.seq),'note':'Synthetic manual note',
++            'expectedGraphRevision':view['sources']['graphs'][self.w.rel]['revision'],
++            'expectedPlanRevision':view['sources']['plan']['revision'],**extra}
++
++    def apply(self,action,node='R0',**extra):
++        return self.http('command',self.command(action,node,**extra))
++
++    def add(self,title='Action'):
++        r=self.apply('add_action',title=title,recommended='Suitable synthetic case',actionType='general')
++        return next(n['id'] for n in r['view']['sources']['graphs'][self.w.rel]['nodes'] if n['title']==title)
++
++    def test_gui_controller_whole_path_through_http_and_real_writers(self):
++        run=subprocess.run(['node','--test','tests/rdg-workflow-ui.test.cjs'],cwd=ROOT,
++            text=True,capture_output=True,timeout=90,
++            env={**os.environ,'RDG_WORKFLOW_TEST_URL':self.base})
++        self.assertEqual(run.returncode,0,run.stdout+'\n'+run.stderr)
++        out=ROOT/'docs/handoffs/rdg-manual-workflow-20261019/gui-controller.log'
++        out.write_text(run.stdout+run.stderr)
++        events=self.w.read()['events']
++        actions=[e for e in events if e['type'] in ('action_executed','action_withdrawn')]
++        self.assertEqual([e['type'] for e in actions],['action_executed','action_withdrawn','action_executed'])
++        self.assertTrue(all(e['by']=='user' and e['authorityPrincipal'].startswith('bearer:') for e in actions))
++        self.assertTrue(all(e['verifiedTrustReceipt']['mode']=='local-manual-session' for e in actions))
++
++    def test_gui_controller_whole_path_through_files_without_network_transport(self):
++        session=H.FileSession(self.editor,self.w.home/'manual-session')
++        stop=threading.Event()
++        def poll():
++            while not stop.wait(0.01):session.process_once()
++        worker=threading.Thread(target=poll,daemon=True);worker.start()
++        try:
++            env={**os.environ,'RDG_WORKFLOW_TEST_DIR':str(session.directory)}
++            env.pop('RDG_WORKFLOW_TEST_URL',None)
++            run=subprocess.run(['node','--test','tests/rdg-workflow-ui.test.cjs'],cwd=ROOT,
++                text=True,capture_output=True,timeout=90,env=env)
++            self.assertEqual(run.returncode,0,run.stdout+'\n'+run.stderr)
++            (ROOT/'docs/handoffs/rdg-manual-workflow-20261019/gui-file-controller.log').write_text(run.stdout+run.stderr)
++            before=self.w.sources()
++            session.process_once();self.assertEqual(before,self.w.sources())
++        finally:
++            stop.set();worker.join(2);session.close()
++
++    def test_file_session_rejects_wrong_capability_symlinks_and_reused_directory(self):
++        session=H.FileSession(self.editor,self.w.home/'manual-session')
++        before=self.w.sources(),self.f.plan_sources()
++        q=session.directory/'request-bad.json'
++        q.write_text(json.dumps({'session':'wrong','kind':'command','body':self.command('edit_title',title='Denied')}))
++        (session.directory/'request-bad.ready').write_text('1')
++        session.process_once();r=json.loads((session.directory/'response-bad.json').read_text())
++        self.assertFalse(r['ok']);self.assertIn('SESSION_DENIED',r['error'])
++        (session.directory/'request-link.json').symlink_to(self.w.store)
++        (session.directory/'request-link.ready').write_text('1')
++        session.process_once();self.assertFalse(json.loads((session.directory/'response-link.json').read_text())['ok'])
++        self.assertEqual(before,(self.w.sources(),self.f.plan_sources()))
++        with self.assertRaisesRegex(ValueError,'CHOOSE_NEW'):H.FileSession(self.editor,session.directory)
++        session.close();self.assertFalse(json.loads((session.directory/'session.json').read_text())['active'])
++
++    def test_read_only_snapshot_static_assets_and_no_bearer_exposure(self):
++        before=self.w.sources(),self.f.plan_sources()
++        state=self.http();html=self.http('')
++        for path in ['viewer.js','ui.js']:
++            text=self.http(path);self.assertGreater(len(text),100)
++        self.assertNotIn(self.w.token,json.dumps(state)+html)
++        self.assertNotIn(self.editor.key,json.dumps(state)+html)
++        self.assertIn('sources',state)
++        self.assertEqual(before,(self.w.sources(),self.f.plan_sources()))
++
++    def test_session_origin_host_content_and_request_guards(self):
++        original=self.w.sources(),self.f.plan_sources()
++        req=self.command('add_action',title='Denied',recommended='Case')
++        self.http('command',req,{'Origin':'https://example.invalid'},400)
++        self.http('command',req,{'Host':'attacker.invalid'},400)
++        self.http('command',req,{'X-RDG-Session':'bad'},400)
++        self.http('command',req,{'Content-Type':'text/plain'},400)
++        self.http(headers={'X-RDG-Session':'bad'},expected=403)
++        self.http(url=self.server.origin+'/state',expected=403)
++        self.http('command',{**req,'package':{}},expected=400)
++        self.assertEqual(original,(self.w.sources(),self.f.plan_sources()))
++
++    def test_exact_retry_after_lost_response_and_later_mutation(self):
++        aid=self.add()
++        req=self.command('select',aid)
++        first=self.http('command',req);self.assertTrue(first['saved'])
++        sources=self.w.sources()
++        again=self.http('command',req);self.assertTrue(again['replayed']);self.assertEqual(sources,self.w.sources())
++        self.apply('complete',aid)
++        sources=self.w.sources()
++        self.assertTrue(self.http('command',req)['replayed']);self.assertEqual(sources,self.w.sources())
++        self.http('command',{**req,'note':'different'},expected=400)
++        self.assertEqual(len([e for e in self.w.read()['events'] if e['type']=='action_selected']),1)
++
++    def test_stale_view_and_second_execution_are_denied_without_writes(self):
++        aid=self.add()
++        stale=self.command('edit_title',aid,title='Stale')
++        self.apply('select',aid)
++        before=self.w.sources()
++        self.assertIn('CAS',self.http('command',stale,expected=400)['error']);self.assertEqual(before,self.w.sources())
++        self.apply('complete',aid)
++        self.apply('edit_title',aid,title='Edited executed instance')
++        before=self.w.sources()
++        self.assertIn('already executed',self.http('command',self.command('complete',aid),expected=400)['error'])
++        self.assertEqual(before,self.w.sources());self.assertEqual(self.http()['future'],[])
++
++    def test_deep_candidate_canon_qrpe_requirement_placement_and_unplace(self):
++        aid=self.add()
++        self.apply('edit_canon',aid,recommended='Updated case',contraindicated='Contraindication')
++        self.apply('add_qrpe',aid,title='Check the mechanism')
++        r=self.apply('prepare_requirement',aid,title='Potential child',childRole='method_correctness')
++        child=next(n for n in r['view']['sources']['graphs'][self.w.rel]['nodes'] if n['title']=='Potential child')
++        self.assertEqual(child['status'],'potential')
++        self.apply('place',aid,at='2026-10-21')
++        first=self.http()['sources']['plan']['steps'][0]['id']
++        self.apply('place',child['id'],afterStepId=first)
++        view=self.http();self.assertEqual(len(view['future']),2)
++        self.assertTrue(all(n['status']=='candidate' for n in self.w.read()['nodes'] if n['kind']=='action'))
++        sid=next(s['id'] for s in view['sources']['plan']['steps'] if s['kind']=='requirement')
++        before=self.w.sources()
++        self.apply('unplace',child['id'],stepId=sid)
++        self.assertEqual(before,self.w.sources())
++        self.assertEqual(len(self.http()['future']),1)
++
++    def test_unscheduled_execution_and_protected_graph_denial(self):
++        aid=self.add();self.apply('select',aid);self.apply('complete',aid)
++        state=self.http();self.assertEqual(state['future'],[]);self.assertEqual(state['sources']['plan']['steps'],[])
++        graph=self.w.read();graph['nodes'][0]['reconsiderationPolicy']={'mode':'protected','authorityPrincipal':'owner'}
++        # Test fixture only; do not use raw edits as the product mutation path.
++        self.w.path.write_text(json.dumps(graph))
++        before=self.w.sources()
++        self.assertIn('PROTECTED',self.http('command',self.command('edit_title',aid,title='Denied'),expected=400)['error'])
++        self.assertEqual(before,self.w.sources())
++
++    def test_api_bearer_keeps_user_and_forged_manual_proof_denial(self):
++        aid=self.add()
++        op=self.w.choose(aid);op['event']['by']='user'
++        before=self.w.sources()
++        package=self.w.patch([op],self.w.read()['revision'],'ordinary-user-spoof')
++        self.w.assert_denied(self.w.write(package,self.w.token),'BEARER_CANNOT_CLAIM_USER_IDENTITY')
++        forged=copy.deepcopy(package);forged['trustedApproval']={'principal':'fake','expiresAt':9999999999,'purpose':'rdg-v6-material-action-v1','signature':'0'*64}
++        self.w.assert_denied(self.w.write(forged,self.w.token),'BEARER_CLIENT_MUST_NOT_SUPPLY_HMAC_APPROVAL')
++        forged['trustedApproval'].update(expiresAt=int(__import__('time').time())+60)
++        forged['trustedApproval']['principal']='bearer:'+H.AUTH.Authority(self.w.store)._actor(H.AUTH.Authority(self.w.store)._read(),self.w.token)[0]
++        path=self.w.home/'forged-manual.json';path.write_text(json.dumps(forged))
++        result=subprocess.run(['python3','-B',str(self.w.home/'tools/graph-apply.py'),'--package','--patch',str(path)],
++            text=True,capture_output=True,env={**self.w.env,'RDG_AUTH_TOKEN':self.w.token,
++                'RDG_LOCAL_MANUAL_SESSION':'1','RDG_V6_TRUST_KEY':self.editor.key})
++        self.w.assert_denied(result,'TRUST_SIGNATURE_INVALID')
++        self.assertEqual(before,self.w.sources())
++
++    def test_write_permissions_and_revocation_apply_to_session_and_cached_retry(self):
++        aid=self.add()
++        request=self.command('select',aid);self.http('command',request)
++        grant_id=H.AUTH.Authority(self.w.store)._actor(H.AUTH.Authority(self.w.store)._read(),self.w.token)[0]
++        self.w.admin('amend',{'id':grant_id,'grant':{'permissions':['graph.read','plan.read'],'scopes':['workspaces/','plans/']}},self.w.owner)
++        before=self.w.sources(),self.f.plan_sources()
++        self.assertIn('MISSING_PERMISSION',self.http('command',request,expected=400)['error'])
++        self.assertIn('MISSING_PERMISSION',self.http('command',self.command('place',aid,at='2026-10-21'),expected=400)['error'])
++        self.w.admin('revoke',{'id':grant_id},self.w.owner)
++        self.assertIn('TOKEN_REVOKED',self.http(expected=403)['error'])
++        self.assertEqual(before,(self.w.sources(),self.f.plan_sources()))
++
++    def test_plan_error_after_durable_prepare_retains_uncertain_outcome_until_recovery(self):
++        aid=self.add();req=self.command('place',aid,at='2026-10-21')
++        original=H.WF.OWNER.replay
++        def fault(root,journal):
++            first=journal['writes'][0]
++            H.WF.OWNER.atomic(H.WF.OWNER.safe(root,first['path']),first['after'])
++            raise OSError('Synthetic interruption after first accepted Plan write')
++        H.WF.OWNER.replay=fault
++        try:
++            response=self.http('command',req,expected=400)
++            self.assertFalse(response['definite']);self.assertIn('OUTCOME_UNCONFIRMED',response['error'])
++            self.assertTrue((self.f.root/H.WF.OWNER.JOURNAL).exists())
++            self.assertIn('RECOVERY_REQUIRED',self.http(expected=403)['error'])
++        finally:H.WF.OWNER.replay=original
++        H.WF.OWNER.recover(self.f.root)
++        result=self.http('command',req);self.assertTrue(result['saved'])
++        self.assertEqual(result['view']['sources']['plan']['revision'],2)
++        sources=self.f.plan_sources();self.http('command',req);self.assertEqual(sources,self.f.plan_sources())
++
++    def test_pending_graph_journal_blocks_gui_until_existing_recovery(self):
++        aid=self.add()
++        op=self.w.choose(aid);package=self.w.patch([op],self.w.read()['revision'],'pending')
++        # Produce an actual prepared journal using the existing fixture failpoint hook.
++        script=self.w.home/'prepare-pending.py'
++        script.write_text("""
++from importlib.machinery import SourceFileLoader
++from pathlib import Path
++import json,os
++m=SourceFileLoader('pending_package',str(Path(__file__).parent/'tools/graph-package.py')).load_module()
++real=m.finish
++def crash(path,journal):os._exit(77)
++m.finish=crash
++m.execute(json.loads((Path(__file__).parent/'pending-package.json').read_text()))
++""")
++        (self.w.home/'pending-package.json').write_text(json.dumps(package))
++        r=subprocess.run(['python3','-B',str(script)],env={**self.w.env,'RDG_AUTH_TOKEN':self.w.token},capture_output=True)
++        self.assertEqual(r.returncode,77)
++        before=self.w.sources()
++        self.assertIn('RECOVERY_REQUIRED',self.http(expected=403)['error']);self.assertEqual(before,self.w.sources())
++        self.w.assert_ok(self.w.write(package,self.w.token))
++        self.assertEqual(self.http()['sources']['graphs'][self.w.rel]['revision'],self.w.read()['revision'])
++
++
++if __name__=='__main__':unittest.main()
+--- a/tests/rdg-workflow-ui.test.cjs
++++ b/tests/rdg-workflow-ui.test.cjs
+@@ -0,0 +1,139 @@
++'use strict';
++const {test}=require('node:test'),assert=require('node:assert/strict');
++const UI=require('../tools/rdg-workflow-ui.js');
++const {simulate}=require('./viewer-test-helper.cjs');
++function doc(){
++  const createElement=tag=>{
++    let own='';const classes=new Set();
++    const n={tag,children:[],value:'',disabled:false,hidden:false,
++      appendChild(x){n.children.push(x);return x;},replaceChildren(...xs){n.children=xs;},
++      setAttribute(){},classList:{add:x=>classes.add(x),remove:x=>classes.delete(x),toggle:(x,on)=>on?classes.add(x):classes.delete(x)},
++      get textContent(){return own+n.children.map(x=>x.textContent).join('');},
++      set textContent(x){own=String(x);n.children=[];}};
++    return n;
++  };
++  return {createElement};
++}
++function minimal(){
++ const graph={identitySpace:'test',revision:1,nodes:[{id:'R0',kind:'requirement',title:'Root',status:'active'}],edges:[],events:[]};
++ return {title:'Plan',graphFile:'workspaces/test/graph.json',planFile:'plans/test/plan.json',
++   permissions:['graph.write','graph.read','plan.read','plan.edit'],future:[],history:[],unresolved:[],
++   sources:{graphs:{'workspaces/test/graph.json':graph},completion:{},
++     plan:{revision:1,steps:[],timeConstraints:[],sequence:[]}}};
++}
++test('lost response retains exact request, blocks a new action and permits safe retry',async()=>{
++ const d=doc(),container=d.createElement('div'),snapshot=minimal(),requests=[];
++ let count=0;
++ const ui=UI.mount(container,{read:async()=>snapshot,write:async r=>{
++   requests.push(structuredClone(r));if(count++===0)throw Error('connection lost');
++   return {saved:true,replayed:true,view:snapshot};
++ }},{document:d});
++ await ui.refresh();ui.fields.title.value='New';ui.fields.recommended.value='Case';ui.fields.note.value='Manual change';
++ await ui.buttons.add.onclick();assert(ui.pending);assert.equal(ui.view.history.length,0);
++ const first=structuredClone(ui.pending);await ui.run('edit_title');assert.equal(requests.length,1);
++ await ui.buttons.retry.onclick();assert.equal(ui.pending,null);assert.deepEqual(requests,[first,first]);
++ assert.match(ui.status,/повторного действия нет/);
++});
++test('known rejection preserves source state and clears uncertain request',async()=>{
++ const d=doc(),snapshot=minimal();
++ const ui=UI.mount(d.createElement('div'),{read:async()=>snapshot,write:async()=>{
++   const e=Error('CAS_MISMATCH');e.definite=true;throw e;
++ }},{document:d});
++ await ui.refresh();ui.fields.note.value='note';await ui.buttons.title.onclick();
++ assert.equal(ui.pending,null);assert.equal(ui.view.sources.graphs[ui.view.graphFile].revision,1);
++ assert.match(ui.status,/отклонена/);
++});
++test('a render failure after save reports saved, rather than an unknown writer outcome',async()=>{
++ const d=doc(),snapshot=minimal();let fail=false;
++ const ui=UI.mount(d.createElement('div'),{read:async()=>snapshot,write:async()=>({saved:true,view:snapshot})},
++   {document:d,onGraph:async()=>{if(fail)throw Error('render failed');}});
++ await ui.refresh();fail=true;ui.fields.note.value='note';await ui.buttons.title.onclick();
++ assert.equal(ui.pending,null);assert.match(ui.status,/Запись сохранена/);
++ assert.doesNotMatch(ui.status,/Исход запроса не подтверждён/);
++});
++test('read-only and protected sessions disable writes, source text is rendered as text',async()=>{
++ const d=doc(),snapshot=minimal();snapshot.permissions=['graph.read','plan.read'];
++ snapshot.sources.graphs[snapshot.graphFile].nodes[0].title='<img src=x onerror=alert(1)>';
++ const container=d.createElement('div');
++ const ui=UI.mount(container,{read:async()=>snapshot},{document:d});await ui.refresh();
++ for(const key of ['add','title','complete','place','unplace'])assert.equal(ui.buttons[key].disabled,true,key);
++ assert(container.textContent.includes('<img src=x onerror=alert(1)>'));
++ snapshot.permissions=['graph.read','graph.write','plan.read','plan.edit'];
++ snapshot.sources.graphs[snapshot.graphFile].nodes[0].reconsiderationPolicy={mode:'protected',authorityPrincipal:'owner'};
++ await ui.refresh();
++ for(const key of ['add','title','complete','qrpe'])assert.equal(ui.buttons[key].disabled,true,key+' protected');
++ assert.equal(ui.buttons.place.disabled,false,'placement does not mutate protected graph');
++});
++test('Viewer keeps manual controls detached until explicit local attachment',async()=>{
++ const viewer=simulate();await viewer.flush();assert.equal(viewer.ids['workflow-toggle'].hidden,true);
++ const panel=viewer.host.rdgWorkflow.attach();assert.equal(viewer.ids['workflow-toggle'].hidden,false);
++ assert.equal(panel.hidden,false);viewer.ids['workflow-toggle'].onclick();assert.equal(panel.hidden,true);
++});
++test('manual controls traverse real HTTP, writers and Viewer: A1 -> withdraw -> A2',
++ {skip:!process.env.RDG_WORKFLOW_TEST_URL&&!process.env.RDG_WORKFLOW_TEST_DIR},async()=>{
++ const fileDir=process.env.RDG_WORKFLOW_TEST_DIR;
++ const fs=require('node:fs/promises'),path=require('node:path');
++ const missing=e=>{if(e.code==='ENOENT'){const error=Error('Not found');error.name='NotFoundError';throw error;}throw e;};
++ const directory={async getFileHandle(name,options={}){
++   assert.match(name,/^[A-Za-z0-9_.-]+$/);const file=path.join(fileDir,name);
++   if(!options.create)await fs.stat(file).catch(missing);
++   return {async getFile(){return {async text(){return fs.readFile(file,'utf8').catch(missing);}};},
++     async createWritable(){let text='';return {async write(x){text=x;},async close(){await fs.writeFile(file,text);}};}};
++ },async removeEntry(name){await fs.unlink(path.join(fileDir,name));}};
++ const base=new URL(process.env.RDG_WORKFLOW_TEST_URL||'http://127.0.0.1/'),session=base.pathname.split('/').filter(Boolean).at(-1);
++ const request=async(path,body)=>{
++   const r=await fetch(new URL(path,base),{method:body?'POST':'GET',headers:{
++     'X-RDG-Session':session,...(body?{'Content-Type':'application/json','Origin':base.origin}:{})},
++     ...(body?{body:JSON.stringify(body)}:{})});
++   const x=await r.json();if(!r.ok){const e=Error(x.error);e.definite=true;throw e;}return x;
++ };
++ const viewer=simulate();await viewer.flush();const d=doc();
++ const transport=fileDir?UI.fileTransport(directory,{timeoutMs:30000,pollMs:10}):{read:()=>request('state'),write:r=>request('command',r)};
++ const ui=UI.mount(viewer.host.rdgWorkflow.attach(),transport,
++   {document:d,onGraph:g=>viewer.host.rdgWorkflow.loadGraph(g)});
++ await ui.refresh();assert(ui.view);
++ const choose=id=>{ui.fields.target.value=id;ui.fields.target.onchange();};
++ const click=async name=>{assert.equal(ui.buttons[name].disabled,false,name+' should be available');
++   await ui.buttons[name].onclick();assert.match(ui.status,/Запись сохранена/,ui.status);};
++ ui.fields.note.value='User entered synthetic change/result';
++ ui.fields.title.value='First action';ui.fields.recommended.value='Applicable';
++ await click('add');const a1=ui.fields.target.value;
++ ui.fields.at.value='2026-10-21';await click('place');
++ choose('R0');ui.fields.title.value='Second action';ui.fields.recommended.value='Different applicable method';
++ await click('add');const a2=ui.fields.target.value;assert.notEqual(a1,a2);
++ ui.fields.at.value='2026-10-22';await click('place');
++ choose('R0');ui.fields.at.value='2026-10-23';await click('place');
++ assert.equal(ui.view.future.length,3);
++ choose(a1);await click('select');await click('complete');
++ assert.deepEqual(ui.view.future.map(r=>r.nodeId),[a2]);
++ await click('withdraw');assert(ui.view.future.some(r=>r.nodeId==='R0'));
++ choose(a2);await click('select');assert(ui.view.future.some(r=>r.nodeId===a2));await click('complete');
++ assert.equal(ui.view.future.length,0);
++ const facts=ui.view.history.filter(r=>r.kind==='action_executed'||r.kind==='action_withdrawn');
++ assert.deepEqual(facts.map(r=>[r.kind,r.targetId]),[
++   ['action_executed',a1],['action_withdrawn',a1],['action_executed',a2]]);
++ assert(ui.text.includes('Отозван Action'));assert(ui.text.includes('First action'));
++ if(fileDir)assert.deepEqual((await fs.readdir(fileDir)).filter(n=>!n.startsWith('.')),['session.json'],'client removes only its own exchange files');
++ const graph=ui.view.sources.graphs[ui.view.graphFile];
++ assert.equal(graph.events.filter(e=>e.type==='action_executed'&&e.targetId===a1).length,1);
++ // Build a deeper preliminary branch through the actual controls, without selecting its ancestors.
++ choose('R0');ui.fields.title.value='Unselected decomposition';ui.fields.recommended.value='Split when useful';ui.fields.actionType.value='decomposition';
++ await click('add');const draft=ui.fields.target.value;
++ ui.fields.title.value='Deep potential goal';ui.fields.childRole.value='subgoal';await click('requirement');const potential=ui.fields.target.value;
++ ui.fields.qrpe.value='Review this potential goal';await click('qrpe');
++ ui.fields.title.value='Deep candidate action';ui.fields.recommended.value='Deep applicable case';ui.fields.actionType.value='general';await click('add');
++ const deep=ui.fields.target.value;ui.fields.recommended.value='Updated deep canon';await click('canon');
++ const finalGraph=ui.view.sources.graphs[ui.view.graphFile];
++ assert.equal(finalGraph.nodes.find(n=>n.id===draft).status,'candidate');
++ assert.equal(finalGraph.nodes.find(n=>n.id===potential).status,'potential');
++ assert.equal(finalGraph.nodes.find(n=>n.id===deep).status,'candidate');
++ assert.equal(finalGraph.nodes.find(n=>n.id===potential).qrpe[0].text,'Review this potential goal');
++ assert(viewer.root.querySelectorAll('.node').length>0,'the same source is rendered by Viewer');
++ assert.equal(ui.pending,null);
++});
++
++test('generated workflow controller matches the shared source exactly',()=>{
++ const fs=require('node:fs'),path=require('node:path');const text=fs.readFileSync(path.join(__dirname,'../tools/rd-graph-viewer.user.js'),'utf8');
++ const begin='// BEGIN GENERATED RDG WORKFLOW UI\n',end='// END GENERATED RDG WORKFLOW UI\n';
++ assert.equal(text.slice(text.indexOf(begin)+begin.length,text.indexOf(end)),fs.readFileSync(path.join(__dirname,'../tools/rdg-workflow-ui.js'),'utf8'));
++});
+--- a/docs/guides/RDG-CURRENT-EXECUTION-PLAN.md
++++ b/docs/guides/RDG-CURRENT-EXECUTION-PLAN.md
+@@ -1,6 +1,7 @@
+ # RDG + Temporal Plan — актуальный порядок исполнения
+ 
+-**Последний проверенный срез кода:** [сквозной пакет Action-instance / Plan API / будущее и история](../handoffs/rdg-instance-temporal-workflow-20261019/CHECKPOINT.md).
++**Последний проверенный срез кода:** [ручной Viewer/Helper и общая лента](../handoffs/rdg-manual-workflow-20261019/CHECKPOINT.md).
++**Предыдущий сквозной API-пакет:** [Action-instance / Plan API / будущее и история](../handoffs/rdg-instance-temporal-workflow-20261019/CHECKPOINT.md).
+ **Предыдущая сверка:** [контрольная точка](../handoffs/rdg-plan-completion-review-20261019/CHECKPOINT.md).
+ **Предшествующий ремонт:** [исправление завершённости и истории](../handoffs/rdg-completion-repair-20261019/CHECKPOINT.md).
+ **Предшествующий срез:** [CPW-RDG-DEEP-ACTION-20261019/v1](../handoffs/rdg-deep-action-model-20261019/CHECKPOINT.md).
+@@ -27,8 +28,10 @@
+ прежнее выполнение, отзыв и новое выполнение сохраняются раздельно.
+ Повторные физические исполнения одного Action и отдельный жизненный цикл
+ закрытия шага расписания в текущую работу не входят. Эти уточнения реализованы
+-и проверены сквозным API-сценарием внутри одного владельца графа. Живой ручной
+-редактор и межфайловой расчёт ещё не завершены; общий PASS им не назначен.
++и проверены сквозным API-сценарием внутри одного владельца графа. Контроллер ручного
++редактора теперь также проходит этот путь с настоящими writers через файловый
++и loopback-транспорты. DOM имитируется; установленный браузер Windows/G2 и native
++picker ещё не проверены. Межфайловой расчёт открыт; общего PASS им не назначено.
+ 
+ Основные определения принадлежат [руководству граф-модели](RDG-V7-WORKING-GRAPHS.md),
+ разделу «Уточнение модели: граф, план во времени и выполнение — 2026-10-19».
+@@ -86,7 +89,8 @@
+ | Локальный PASS, Candidate: экземпляр Action и история | Выполнен A1 → отозван A1 → выполнен A2 для той же R. Старое выполнение и отдельный отзыв сохранены; повторное выполнение A1 после правки отклоняется. | Проверены отдельное право отзыва, политики защищённых R, судьба дочерних R, snapshots, retry/recovery и финальный состав одного пакета. Новый прямой отзыв относится к уже выполненному Action; прежний reconsider_action сохраняет свои review-условия. |
+ | Локальный PASS, Candidate: размещение R и API | В существующем Plan owner доступны R/Action refs и place/unplace по времени или порядку, в том числе для предварительной ветви. | Проверены CAS, права, replay/recovery и снятие incident sequence/timeConstraints без правки графа. Нет скрытого выбора Action. Старые snapshots остаются читаемыми. |
+ | Локальный PASS, Candidate: однофайловое будущее и история | Новый read-only workflow-reader объединяет будущие размещения и историю графа в JSON, Markdown и HTML. Выполненное исключается из будущего, Plan не переписывается. | Проверены оба пути — с размещением и без него, исходные ID и owner refs, отказ при неверной ссылке/недостатке прав и отсутствие ложного успеха предварительной ветви. HTML — снимок, не живой редактор. |
+-| Следующий связный пакет: первый ручной путь | Через существующий Viewer/Helper показать создание/правку, размещение, запись результата, отзыв и общую историю. ИИ использует тот же API. | Источник и ручной интерфейс должны пройти один сценарий с одинаковыми статусами и правами. Установленный Windows/G2 проверяется отдельно. |
++| Локальная интеграция, Candidate: ручной Viewer/Helper 2.1.0 | Кнопки создания/правки, глубоких предварительных R/Actions с каноном/QRPE, размещения, выбора, результата и отзыва; общее будущее и история из действующих owners. | Сквозной controller → файловый/HTTP transport → настоящие writers проходит на временных источниках. DOM имитируется; это не native browser proof. CAS, отказ, retry и recovery сохранены. |
++| Следующий пользовательский gate: установленный Windows/G2 путь | В обновлённом Viewer выбрать доступную папку явно запущенной локальной сессии и повторить тот же сценарий в настоящем браузере. | Проверить эффективный доступ к той же папке, native picker, читаемость и фактическую запись. Без новых mounts/ACL/туннелей и предположения о Docker-loopback. Установку и реальную пользовательскую запись этим срезом не объявлять. |
+ | Расширение на несколько владельцев | Вычислить обязательную композицию через явные owning/projectionOf refs без копирования смысла. | Нет успеха при missing/ambiguous owner или denied read; нет циклов; согласованное чтение и запрет двойного учёта. До этого межфайловое выполнение остаётся unresolved. |
+ 
+ Уточнение пользователя 2026-10-19: будущее и история выполнения основаны на
+@@ -129,7 +133,8 @@
+   и не создаёт отдельный owner выполнения. Выполненный A1 не возвращается в будущее.
+ - `rdg-activity.py` показывает отдельные отзывы и исходные выполнения, сохраняет
+   порядок событий одного пакета и даёт простые описания сохранений. Есть JSON,
+-  Markdown и читаемый HTML-снимок; живая общая GUI-лента ещё не сделана.
++  Markdown и читаемый HTML-снимок. В исходнике Viewer 2.1.0 добавлена общая ручная
++  GUI-лента; контроллер проверен с реальными writers, установленный GUI ещё нет.
+ 
+ Новые тесты проверяют полный путь и безопасность отказов. Старые deep-action tests
+ согласованы с последним уточнением, сохранив проверки истории, двух ролей дочерних R,
+@@ -143,10 +148,39 @@
+ engine smoke именно нового scope не выполнялся; старые engine-наборы прошли
+ регрессию. До расширения claims требуется отдельное покрытие поддержанного контекста.
+ 
+-PR-DA-04 частично выполнен простыми описаниями сохранений; дальнейшую детализацию
+-объединить с общей GUI-лентой. Скрытие/приоритет истории остаются второстепенными.
++PR-DA-04 частично выполнен простыми описаниями сохранений и общей лентой
++ручного раздела. Полная смысловая детализация всех сохранений не заявлена. Скрытие/приоритет истории остаются второстепенными.
+ Старые knownAt/effectiveAt эксперименты, новый сервер и production owner не являются
+ условиями следующего ручного пути.
++
++### Новый ручной пакет — фактический scope
++
++Viewer 2.1.0 подключает общий `rdg-workflow-ui.js`, встроенный штатным builder.
++Без явной сессии предметные факты Viewer остаются read-only. Для Docker/Windows
++основной путь — **папка сессии на уже разрешённом mount**, которую пользователь
++явно выбирает picker. Helper запускается отдельной явной командой, использует
++указанные Plan/Graph и тот же grant. Необязательный loopback adapter нужен только
++если браузер уже видит его loopback; новых пробросов портов/туннелей нет.
++
++Проверены через контроллер: A1 → размещение → выполнение → отзыв → A2, будущая R,
++новая глубокая непринятая ветвь с subgoal и каноном/QRPE, разделение выбора и
++выполнения, потеря ответа без нового действия, старый CAS и отказ без перезаписи.
++Отдельно проверены две роли дочерних R через API, grant revoke, неподдельный MAC,
++защита session/Origin/Host, pending Graph journal и частичный Plan write/recovery.
++
++Ручное `by:user` здесь означает origin локальной opt-in сессии, а не verified
++human identity. Обычный bearer не получает это право по одному полю события;
++нужен точный process-local MAC с тем же principal, а прежние grants проверяются
++writer. Protected R через этот Helper не меняются; admin UI/выдачи grants нет.
++Первый редактор ограничен одним owning graph, Plan без старых event/gate steps
++и branches; предварительные ветви **графа** разрешены. Сложный canon metadata
++не теряется: его GUI-правка отказывается и остаётся в полном API.
++
++Дальше не нужен ещё один общий перепланировочный цикл. Готовы два независимых
++направления: (1) установленный browser/G2 proof при реальном доступе к выбранной
++папке и обновлённому Viewer; (2) реализация межфайлового resolver по owning refs.
++Ни одно не выдаётся за уже сделанное. Полный новый Gendocen context остаётся
++отдельным scope перед расширением claims; скрытие/приоритет истории второстепенны.
+ 
+ ## Ранее выполненные технические срезы
+ 
+@@ -228,7 +262,8 @@
+    или по порядку, включая предварительные сущности. Удобные place/unplace
+    работают через существующий Plan owner с CAS, правами, историей и recovery.
+    Пустое будущее разрешено; новые записи требуют места; старые snapshots и
+-   принятые retries читаются. Живой редактор размещений ещё открыт.
++   принятые retries читаются. Ручной контроллер размещений реализован в Viewer;
++   native File System Access и установленный Windows/G2 путь ещё открыты.
+ 4. **Локальный PASS, Candidate, один владелец графа:** предстоящее связано с
+    результатами в графе через `rdg-workflow.py`. Выполненное исключается из
+    предстоящего, ссылки и история сохраняются. Выполнение без размещения видно
+@@ -239,7 +274,8 @@
+    выполнения и отзыва Actions доступна в JSON/Markdown/HTML. Простые описания
+    сохранений и порядок событий одного пакета проверены. Повтор запроса, отказ,
+    dry-run и recovery не создают дублирующих результатов; неизвестные старые
+-   даты/авторы остаются неизвестными. Общая живая GUI-лента ещё открыта.
++   даты/авторы остаются неизвестными. Общая GUI-лента реализована в подключаемом
++   ручном разделе; фактический установленный браузерный путь ещё не проверен.
+ 6. **Второстепенно, не начато:** скрытие и понижение приоритета записей как настройка показа
+    с возвратом полного списка; исходная история не удаляется.
+ 
+@@ -277,6 +313,14 @@
+ [контрольной точке](../handoffs/rdg-instance-temporal-workflow-20261019/CHECKPOINT.md).
+ Наборы пересекаются и не суммируются. Это локальное proof в Repo, не установка
+ Windows и не принятие Stage 4.
++
++В ручном срезе заново прошли **239 Python tests**, а общий Node run содержит
++414 cases: **413 PASS, 0 FAIL, 1 SKIP**. Пропущенный в общем Node run случай требует
++живого Helper и отдельно выполнен внутри Python acceptance через оба транспорта.
++После дополнительной защиты частичного Plan write выполнен адресный повтор
++ручного набора; его точный результат и финальные хеши — в
++[новом checkpoint](../handoffs/rdg-manual-workflow-20261019/CHECKPOINT.md).
++Наборы пересекаются; это не сумма уникальных проверок и не native browser proof.
+ 
+ ## Сверка с P2-AC-01..20
+ 
+--- a/docs/guides/RDG-DEEP-ACTION-AND-HISTORY.md
++++ b/docs/guides/RDG-DEEP-ACTION-AND-HISTORY.md
+@@ -218,7 +218,7 @@
+ Выполненный Action и отозванный вариант не показываются как предстоящие. История
+ показывает выполнение A1, отзыв A1 и выполнение A2 в порядке событий, в том числе
+ внутри одного пакета. Неполная или неразрешённая R не получает успеха. Формат HTML
+-предназначен для чтения; живой редактор Viewer/Helper ещё не реализован.
++предназначен для чтения. Ручной редактор Viewer/Helper 2.1.0 описан ниже; его установленный Windows/G2 путь пока не проверен.
+ 
+ Gendocen projection теперь учитывает actionType. Requirement steps пока явно
+ получают `REQUIREMENT_STEPS_NOT_COVERED`, а не ложное полное покрытие; произвольный
+@@ -250,3 +250,99 @@
+ Общий HTML-снимок будущего/истории уже доступен. Живая GUI-лента в Viewer,
+ пользовательские фильтры/понижение приоритета и новый ручной editor ещё не реализованы. В существующем Viewer добавлен просмотр истории результатов
+ конкретного узла. Публичный API не меняет границы аутентификации Helper.
++
++## Локальная ручная сессия Viewer/Helper 2.1.0
++
++Статус: **Candidate, локальная интеграция**, один owning graph и существующий Plan.
++Контроллер Viewer проходит оба транспорта через настоящие writers в синтетическом
++acceptance-прогоне. DOM в этом прогоне имитируется; это не установленный браузерный
++или Windows/G2 proof. Исходник Viewer обновлён до 2.1.0; установленный Tampermonkey
++не обновлялся. Local Loader не получает новых grants или @require: общий UI-модуль
++встраивается штатным `build-rdg-layout.py` из `rdg-workflow-ui.js`.
++
++Ручной раздел «План и история» позволяет:
++
++- создать candidate Action с обычным типом или decomposition и каноном;
++- изменить название, простой канон, добавить открытую запись QRPE;
++- подготовить дочернюю R с ролью subgoal или method_correctness, в том числе
++  под непринятым Action; затем строить следующую волну без принятия предков;
++- явно разместить R/Action по дате или после другого размещения, изменить место
++  и снять размещение;
++- отдельно выбрать Action, записать его выполнение или достижение R, отозвать
++  выполненный Action с точной судьбой введённых R;
++- прочитать общее будущее и историю из тех же владельцев. Выполнение не требует
++  предварительного размещения; нового lifecycle закрытия шага нет.
++
++Поддержка простого канона ограничена id/text случаев. Сложные case metadata,
++ссылки проверки и расширенные материалы не обрезаются: их GUI-правка отклоняется
++с `HELPER_COMPLEX_CANON_USE_FULL_API`. Чтение таких материалов остаётся во Viewer,
++а изменение — через полный API. Пустой выбранный decomposition, неизвестные роли,
++неполная композиция и повторное выполнение экземпляра по-прежнему отклоняются writer.
++
++### Файловое подключение без нового сервера
++
++Оператор запускает Helper в Repo, указывая существующих владельцев, grant-store
++и **новую папку сессии внутри уже разрешённого RW-монтирования**. Токен берётся
++из существующего `RDG_AUTH_TOKEN`; выдача/расширение grant, mounts, ACL и Windows
++полномочий не выполняются автоматически.
++
++```sh
++python3 -B tools/rdg-workflow-helper.py --manual-session \
++  --root /path/to/plan-owner --file plans/example/plan.json \
++  --graph workspaces/example/graph.json --store /path/to/grants.json \
++  --session-dir /path/on/existing-mount/new-session-directory
++```
++
++1. В обновлённом Viewer нажмите «План и история».
++2. Выберите **эту же папку сессии** через системный picker и разрешите запись
++   в неё. Windows-путь и доступность для учётной записи G2 проверяются отдельно;
++   соответствие Docker/Windows не выводится из старого пути Loader.
++3. Проверьте выбранные цель/Action и версию; выполните нужную операцию.
++4. После работы остановите свой процесс Helper. Общая инфраструктура не перезапускается.
++
++Нужен браузер с File System Access API в текущем контексте Viewer. Если picker
++недоступен, подключение не имитируется. В папке лежат только descriptor сессии,
++временные запросы и ответы. Это транспортные снимки, не новый owner. Браузер удаляет
++свои завершённые exchange-файлы; чужие файлы не трогает. Bearer/HMAC ключи в эту
++папку и браузер не передаются. Доступ к активной папке даёт локальную capability
++запросов в пределах настроенного grant; папку выбирает оператор/пользователь.
++При остановке descriptor помечается inactive. После перезапуска подключают новую
++папку сессии; интерфейс можно перечитать/открыть заново.
++
++Дополнительный **opt-in** `--transport loopback` открывает временную сессию на
++127.0.0.1 со случайным портом и секретным URL. Это необязательный адаптер для
++среды, где браузер уже видит этот loopback. Docker-loopback не объявляется
++Windows-доступом; порты, туннели и общие сервисы не создаются/не публикуются.
++Проверяются точный Host, Origin, session capability, content type и размер запроса;
++нет CORS или маршрута произвольного чтения файлов/исполнения команд.
++
++### Права, ручное авторство, отказ и восстановление
++
++Права совпадают с API: plan.read и graph.read для источников, plan.edit для
++размещения, отдельные Graph permissions или graph.write для Graph операций.
++Существующие branch grants, CAS, catalog, snapshots, журналы и recovery применяются
++штатными владельцами. Helper не создаёт граф или Plan и не меняет grant-store.
++Первый редактор работает только с одним владельцем, Plan без старых event/gate
++steps и branches. Предварительные **ветви самого графа** поддержаны.
++Межфайловые owning/projectionOf completion, Plan branch editor и удалённая запись
++остаются вне этого GUI-среза.
++
++Обычный bearer по-прежнему не может присвоить `by:user`. Явно запущенная локальная
++manual-сессия создаёт временный process-local HMAC key; существующий verifier
++проверяет точный пакет, TTL и principal того же bearer grant. Для этого запуска
++writer получает opt-in `RDG_LOCAL_MANUAL_SESSION=1`; без него присланный HMAC при
++bearer остаётся запрещённым. Receipt помечается `local-manual-session`.
++Это **локальное ручное авторство, не проверенная личность человека**, не remote
++identity и не разрешение protected-owner операций. Этот Helper отклоняет Graph
++запись, если в графе есть protected R; она не разблокируется локальным MAC.
++Операции изменения политики и административные операции через GUI не предоставлены.
++
++Writer-отказ не меняет локальный результат на «выполнено». При потере ответа
++интерфейс удерживает **тот же запрос** и не начинает новую операцию; retry не
++создаёт новое действие. Уже сохранённый запрос подтверждается повторно без новой
++записи, после проверки актуальных прав. Если writer успел принять журнал, но не
++закончить запись, чтение успеха блокируется до существующего recovery. Нет
++автоматического повторения после timeout. Ошибка отрисовки после подтверждённого
++сохранения показывается отдельно от исхода записи. После перезапуска Helper его
++in-memory cache утрачен: сначала перечитайте фактическое состояние/журнал, не
++пересоздавайте прежнее действие с новым ID вслепую.
+--- a/docs/guides/VIEWER-EXPLORER.md
++++ b/docs/guides/VIEWER-EXPLORER.md
+@@ -1,4 +1,14 @@
+ # RDG Viewer 2.0.3 — папки и полный граф Requirements
++
++**Исходник Viewer 2.1.0 (2026-10-19):** добавлен подключаемый ручной раздел
++«План и история». Основной Viewer остаётся read-only без явно подключённого
++Helper. Файловое подключение использует выбранную папку сессии на существующем
++RW-монтировании, без обязательного сервера и новых Tampermonkey grants.
++[Операции, запуск и границы](RDG-DEEP-ACTION-AND-HISTORY.md#локальная-ручная-сессия-viewerhelper-210).
++Контроллер проверен с настоящими writers на временных источниках через файловый
++и loopback-транспорты; DOM имитируется. Установленный Tampermonkey/G2, native
++picker и визуальная читаемость нового раздела ещё не проверены. Исторические
++Viewer-срезы ниже не переписываются как evidence 2.1.0.
+ 
+ **Новая синтетическая проверка:** [после пересмотра Action](../examples/RDG-V6-ACTION-RECONSIDERATION-WRITER.md) Viewer отличает исторический `A1` от действующего `A3` и показывает актуальную shared R без архивной R. Это не приемка установленного браузера.
+ 
+--- a/README.md
++++ b/README.md
+@@ -1,6 +1,6 @@
+ # Requirements–Decisions Graphs — папки и полные Requirements-графы
+ 
+-Текущий исходный Viewer **2.0.3**, Local Loader **2.5.2**: папки → полные Requirements-графы от корневой R → локальный R-граф одной волны. Полный граф поддерживает независимые «Принятое/Все ветви» и «Только Requirements/Показать всё»; «Обновить» перечитывает текущие файлы и индекс, при недоступности оставляет явно помеченную встроенную копию. Расположение сохраняется отдельно и только с разрешённым доступом. [Актуальная инструкция](docs/guides/VIEWER-EXPLORER.md) · [граница R-графа и общий слой координат](docs/guides/VIEWER-LAYOUT.md) · [план и порядок реализации](docs/guides/VIEWER-EXPLORER-PLAN.md). Обновление исходника не подтверждает обновления установленного Tampermonkey.
++Текущий исходный Viewer **2.1.0**, Local Loader **2.5.2**: папки → полные Requirements-графы от корневой R → локальный R-граф одной волны. Полный граф поддерживает независимые «Принятое/Все ветви» и «Только Requirements/Показать всё»; «Обновить» перечитывает текущие файлы и индекс, при недоступности оставляет явно помеченную встроенную копию. Расположение сохраняется отдельно и только с разрешённым доступом. [Актуальная инструкция](docs/guides/VIEWER-EXPLORER.md) · [граница R-графа и общий слой координат](docs/guides/VIEWER-LAYOUT.md) · [план и порядок реализации](docs/guides/VIEWER-EXPLORER-PLAN.md). Обновление исходника не подтверждает обновления установленного Tampermonkey.
+ 
+ Отдельное экспериментальное хранилище графов. Не является канонической методологией OBS и не заменяет действующие документы.
+ 
+@@ -27,8 +27,11 @@
+ результатов узла. Однофайловой сквозной путь дополнен: один Action — один
+ экземпляр; доступны явный отзыв, place/unplace R и Actions, единые будущее/история
+ в JSON, Markdown и HTML. Выполненное исчезает из будущего при чтении без новой
+-записи Plan; исходные ID и история сохраняются. Межфайловой расчёт и живой ручной
+-editor/GUI-лента в Viewer ещё не реализованы.
++записи Plan; исходные ID и история сохраняются. В исходнике Viewer 2.1.0 добавлен ручной редактор и общая лента через явно
++подключаемый локальный Helper: выбранная папка сессии на существующем mount,
++те же Graph/Plan writers, права и история. Контроллер прошёл сквозные тесты с
++реальными writers; браузерный DOM имитируется. Установленный Windows/G2 путь,
++native picker и межфайловой расчёт ещё не проверены/не завершены.
+ [API и границы](docs/guides/RDG-DEEP-ACTION-AND-HISTORY.md).
+ 
+ [Определения и границы реализации](docs/guides/RDG-V7-WORKING-GRAPHS.md) ·
+@@ -131,7 +134,7 @@
+ Токены выдаются через команды `init / issue / amend / revoke / list`; секрет возвращается только при выдаче, в grant-store сохраняется его SHA-256.
+ При явной настройке `RDG_AUTH_STORE` и `RDG_AUTH_TOKEN` пакетный writer дополнительно проверяет bearer-grant, scope и каждую операцию.
+ Без `RDG_AUTH_STORE` старый writer остаётся совместимым; это **не production enforcement**.
+-**Stage 1C (opt-in bearer):** клиенту нужен только `RDG_AUTH_TOKEN`; для material Action/legacy Option selection writer после проверки grant сам формирует `verifiedTrustReceipt` с principal вида `bearer:<grantId>` и SHA изменений. Клиентский HMAC-ключ не нужен. В старом режиме **без** `RDG_AUTH_STORE` прежняя проверка `trustedApproval`/HMAC для candidate-v6 остаётся обязательной и неизменённой. Bearer не доказывает личность человека или истинность evidence; материал с `by: "user"` в bearer-режиме намеренно отклоняется до реализации доверенного пользовательского Helper identity path.
++**Stage 1C (opt-in bearer):** клиенту нужен только `RDG_AUTH_TOKEN`; для material Action/legacy Option selection writer после проверки grant сам формирует `verifiedTrustReceipt` с principal вида `bearer:<grantId>` и SHA изменений. Клиентский HMAC-ключ не нужен. В старом режиме **без** `RDG_AUTH_STORE` прежняя проверка `trustedApproval`/HMAC для candidate-v6 остаётся обязательной и неизменённой. Bearer не доказывает личность человека или истинность evidence; материал с `by: "user"` обычным bearer отклоняется. Отдельный явно запущенный локальный Helper допускает ручное авторство только с точным process-local MAC и тем же grant; это не verified human identity и не protected approval. [Границы ручной сессии](docs/guides/RDG-DEEP-ACTION-AND-HISTORY.md).
+ 
+ `graph.create` теперь разрешает **только граф с кандидатами**: нельзя при создании сохранить `Decision.committed`, `Action.selected`, события принятия или неканонический импорт истории. Принятие требует отдельной операции (`graph.select_action` либо legacy `graph.select_option`) и отдельного grant; общие `add_node/update_node/append_event` не должны служить обходом. Работа по подготовке кандидатов, канонов и Finding не даёт права выбора.
+ 
+@@ -139,7 +142,7 @@
+ 
+ Для безопасного локального эксперимента grant-store следует хранить **вне графов и синхронизируемых директорий** с ограниченным доступом.
+ `init` — локальный bootstrap доверенного оператора, не пользовательская кнопка Helper.
+-Пока **нет** подключённого административного Helper UI, доверенного подтверждения личности пользователя, сетевого admin API, независимой полной проверки crash-recovery на всех fail-points, remote authorization и изоляции прямой записи в JSON. Исполнение `by:"user"`/protected approval через bearer пока недоступно и требует отдельной доверенной проверки реального пользователя.
++Локальный ручной UI не администрирует grants. Пока **нет** доверенного подтверждения личности пользователя, сетевого admin API, независимой полной проверки crash-recovery на всех fail-points, remote authorization и изоляции прямой записи в JSON. Protected approval через обычный bearer и новый локальный Helper недоступен; локальное ручное авторство не заменяет доверенную проверку реального пользователя.
+ Не используйте экспериментальный режим как защиту пользовательских или production-графов.
+ Применимость для нескольких чатов ограничена одинаково настроенным writer; это не механизм делегирования ОС или GitHub-полномочий.
+ 
+--- a/tools/build-rdg-layout.py
++++ b/tools/build-rdg-layout.py
+@@ -4,7 +4,7 @@
+ root=Path(__file__).resolve().parent
+ viewer=root/'rd-graph-viewer.user.js'
+ text=viewer.read_text()
+-for label,source in [('LAYOUT CORE','rdg-layout-core.js'),('CATALOG','rdg-catalog.js'),('ROOT PROJECTION','rdg-root-projection.js'),('VIEW GEOMETRY','rdg-view-geometry.js'),('STATE','rdg-state.js')]:
++for label,source in [('WORKFLOW UI','rdg-workflow-ui.js'),('LAYOUT CORE','rdg-layout-core.js'),('CATALOG','rdg-catalog.js'),('ROOT PROJECTION','rdg-root-projection.js'),('VIEW GEOMETRY','rdg-view-geometry.js'),('STATE','rdg-state.js')]:
+     start=f'// BEGIN GENERATED RDG {label}\n'
+     end=f'// END GENERATED RDG {label}\n'
+     block=start+(root/source).read_text()+end
+--- a/tools/rd-graph-viewer-smoke.test.cjs
++++ b/tools/rd-graph-viewer-smoke.test.cjs
+@@ -37,7 +37,7 @@
+     localStorage:{getItem:k=>storage.get(k)??null,setItem:(k,v)=>storage.set(k,v)},
+     console,Date,Math,JSON,Object,Number,Error};
+   vm.runInNewContext(script,context,{timeout:2000});
+-  assert.equal(host.dataset.rdgVersion,'2.0.3');
++  assert.equal(host.dataset.rdgVersion,'2.1.0');
+   assert(elements.launch,'launcher created');
+   return {host,elements};
+ }
+--- a/tests/visual/rdg-full-detail-201.cjs
++++ b/tests/visual/rdg-full-detail-201.cjs
+@@ -24,7 +24,7 @@
+   const countRefine=()=>page.evaluate(()=>[...document.getElementById('rdg-viewer-root').shadowRoot.querySelectorAll('#canvas path[data-relation-kind="refinement"]')].length);
+   const nodes=()=>page.evaluate(()=>[...document.getElementById('rdg-viewer-root').shadowRoot.querySelectorAll('#canvas .node')].map(n=>n.getAttribute('data-id')));
+   const screen=async(name)=>page.screenshot({path:path.join(output,name+'.png')});
+-  assert.equal(await page.evaluate(()=>document.getElementById('rdg-viewer-root').dataset.rdgVersion),'2.0.3');
++  assert.equal(await page.evaluate(()=>document.getElementById('rdg-viewer-root').dataset.rdgVersion),'2.1.0');
+   await open('reference-prepared-planning-tree');
+   assert((await nodes()).includes('RF-DEEP'),'complete prepared root covers grandchildren');
+   await button('edges-all');
+@@ -53,6 +53,6 @@
+   assert(!(await nodes()).some(n=>n.startsWith('__cause__')),'R-only hides D and O');
+   await screen('working-R-only-all-branches');
+   assert.deepEqual(errors,[],'no JavaScript page errors');
+-  console.log('BROWSER_FULL_DETAIL_202_PASS, screenshots: 4, version 2.0.3');
++  console.log('BROWSER_FULL_DETAIL_202_PASS, screenshots: 4, version 2.1.0');
+  } finally {await browser.close();}
+ })().catch(error=>{console.error(error);process.exitCode=1});

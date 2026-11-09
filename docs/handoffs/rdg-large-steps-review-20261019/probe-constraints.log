@@ -1,0 +1,28 @@
+{
+  "before": [
+    {
+      "at": "2026-10-20",
+      "basis": "Synthetic existing lower bound",
+      "stepId": "S-A1",
+      "strength": "hard",
+      "type": "notBefore"
+    },
+    {
+      "at": "2026-10-25",
+      "basis": "Synthetic candidate deadline",
+      "stepId": "S-A1",
+      "strength": "hard",
+      "type": "deadline"
+    }
+  ],
+  "after": [
+    {
+      "at": "2026-10-21",
+      "basis": "Change only the displayed start date",
+      "stepId": "S-A1",
+      "strength": "soft",
+      "type": "notBefore"
+    }
+  ],
+  "saved": true
+}

@@ -1,0 +1,58 @@
+{
+  "tools/rdg-workflow-helper.py": {
+    "exists": true,
+    "sha256": "90c10ae6bb9fa7c4ebf34085d78758f6a2336ad0a35c4c58d751b518c846b0dd"
+  },
+  "tools/rdg-workflow-ui.js": {
+    "exists": true,
+    "sha256": "b409b7cb12ec91030312fe86802b0ad1161919bfcfc6e63a15adf269190ec855"
+  },
+  "tools/rd-graph-viewer.user.js": {
+    "exists": true,
+    "sha256": "4f35e81d49dc9324d096475f59191c68359661e4fda18e37a016d7bc30e6c1b7"
+  },
+  "tests/rdg-workflow-ui.test.cjs": {
+    "exists": true,
+    "sha256": "6c6e574222b79f922f350a69c8d8318060629366321f80c5bf0b6b055820a7b7"
+  },
+  "tests/rdg-placement-edit.acceptance.test.py": {
+    "exists": false,
+    "sha256": null
+  },
+  "tools/rd-graph-viewer-smoke.test.cjs": {
+    "exists": true,
+    "sha256": "4432827083d30d93ea54e17fb9561a9cf86ddcfbdfcb4db200c18b2be24e32b9"
+  },
+  "tests/visual/rdg-full-detail-201.cjs": {
+    "exists": true,
+    "sha256": "5eef64ead5c9fc5d499efc5f0e84986005e6b67157449030b8ffa510b8f048a7"
+  },
+  "README.md": {
+    "exists": true,
+    "sha256": "f4df783a74309ee0a7380d0abe881fd93340c681bd939b02163d512e2fe9bbe2"
+  },
+  "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md": {
+    "exists": true,
+    "sha256": "5fccb45927be4789bf489fb7acf39f4f686b89dbe32b1f4b78005c4c82a1f344"
+  },
+  "docs/guides/RDG-DEEP-ACTION-AND-HISTORY.md": {
+    "exists": true,
+    "sha256": "b7e64bb5a9deda7f987a4aae4d79ba2d2fc8ef3373f76a588446e0579da78741"
+  },
+  "docs/guides/RDG-V7-WORKING-GRAPHS.md": {
+    "exists": true,
+    "sha256": "479b1ad0cd5f075a3bad9aa908dd8b9c63890d43922630a1806e17e2ec20ae4b"
+  },
+  "docs/guides/VIEWER-EXPLORER.md": {
+    "exists": true,
+    "sha256": "76cba7a937f1aef6ee7f66cbd6449056661a58e98cc89cf8036035ddbf41f3d0"
+  },
+  "tests/rdg-workflow-helper.test.py": {
+    "exists": true,
+    "sha256": "b2a4c44ef964174994805611e586c47975cfcd964d4d0e9cb01e8677872119b5"
+  },
+  "tests/rdg-cross-file-completion.test.py": {
+    "exists": true,
+    "sha256": "24defc995fbf01162793c6cc13d957b4f2333f355e21a151f948affbebc6e1b7"
+  }
+}

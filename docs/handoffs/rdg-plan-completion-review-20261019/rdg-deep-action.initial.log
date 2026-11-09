@@ -1,0 +1,40 @@
+test_action_type_metadata_on_requirement_does_not_apply_action_rules (__main__.DeepAction.test_action_type_metadata_on_requirement_does_not_apply_action_rules) ... FAIL
+test_activity_shows_edits_results_actor_and_idempotency_without_schedule (__main__.DeepAction.test_activity_shows_edits_results_actor_and_idempotency_without_schedule) ... ok
+test_atomic_output_replacement_and_incomplete_candidate_are_allowed (__main__.DeepAction.test_atomic_output_replacement_and_incomplete_candidate_are_allowed) ... ok
+test_composite_definition_change_needs_result_review_instead_of_auto_success (__main__.DeepAction.test_composite_definition_change_needs_result_review_instead_of_auto_success) ... ok
+test_create_select_execute_in_one_transaction_needs_no_temporal_step (__main__.DeepAction.test_create_select_execute_in_one_transaction_needs_no_temporal_step) ... ok
+test_decomposition_execution_does_not_mean_its_subgoals_are_achieved (__main__.DeepAction.test_decomposition_execution_does_not_mean_its_subgoals_are_achieved) ... ok
+test_deep_unselected_branch_retains_canons_qrpe_and_distinct_roles (__main__.DeepAction.test_deep_unselected_branch_retains_canons_qrpe_and_distinct_roles) ... ok
+test_denied_result_candidate_and_separate_grants_cannot_forge_completion (__main__.DeepAction.test_denied_result_candidate_and_separate_grants_cannot_forge_completion) ... ok
+test_dry_run_and_recovered_result_have_no_duplicate_success_in_activity (__main__.DeepAction.test_dry_run_and_recovered_result_have_no_duplicate_success_in_activity) ... ok
+test_explicit_result_does_not_derive_from_intermediate_composition (__main__.DeepAction.test_explicit_result_does_not_derive_from_intermediate_composition) ... ok
+test_explicit_result_keeps_its_scope_when_definition_changes_later_in_package (__main__.DeepAction.test_explicit_result_keeps_its_scope_when_definition_changes_later_in_package) ... ok
+test_leaf_no_extra_result_goal_and_later_definition_edit_preserves_history (__main__.DeepAction.test_leaf_no_extra_result_goal_and_later_definition_edit_preserves_history) ... ok
+test_mixed_action_uses_correctness_for_itself_and_subgoals_for_parent (__main__.DeepAction.test_mixed_action_uses_correctness_for_itself_and_subgoals_for_parent) ... ok
+test_mixed_general_action_gets_new_output_scope_from_completed_correctness (__main__.DeepAction.test_mixed_general_action_gets_new_output_scope_from_completed_correctness) ... ok
+test_no_phantom_results_while_replacing_incomplete_correctness (__main__.DeepAction.test_no_phantom_results_while_replacing_incomplete_correctness) ... ok
+test_output_set_changes_result_scope_without_requiring_subgoal_achievement (__main__.DeepAction.test_output_set_changes_result_scope_without_requiring_subgoal_achievement) ... ok
+test_potential_composition_can_be_revised_without_accepting_it (__main__.DeepAction.test_potential_composition_can_be_revised_without_accepting_it) ... ok
+test_potential_cycle_unknown_type_and_empty_decomposition_fail_atomically (__main__.DeepAction.test_potential_cycle_unknown_type_and_empty_decomposition_fail_atomically) ... ok
+test_prospective_action_continuation_across_explicit_identity_owner (__main__.DeepAction.test_prospective_action_continuation_across_explicit_identity_owner) ... ok
+test_select_promotes_same_ids_without_accepting_descendants_or_other_group (__main__.DeepAction.test_select_promotes_same_ids_without_accepting_descendants_or_other_group) ... ok
+test_selected_decomposition_cannot_lose_its_last_active_output (__main__.DeepAction.test_selected_decomposition_cannot_lose_its_last_active_output) ... ok
+test_unavailable_projection_blocks_composite_without_erasing_result_history (__main__.DeepAction.test_unavailable_projection_blocks_composite_without_erasing_result_history) ... ok
+test_unchanged_graph_in_multifile_transaction_is_not_a_saved_edit (__main__.DeepAction.test_unchanged_graph_in_multifile_transaction_is_not_a_saved_edit) ... ok
+test_unknown_child_role_is_incomplete_and_annotation_does_not_erase_results (__main__.DeepAction.test_unknown_child_role_is_incomplete_and_annotation_does_not_erase_results) ... ok
+
+======================================================================
+FAIL: test_action_type_metadata_on_requirement_does_not_apply_action_rules (__main__.DeepAction.test_action_type_metadata_on_requirement_does_not_apply_action_rules)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/repos/rd-graphs/tests/rdg-deep-action.acceptance.test.py", line 359, in test_action_type_metadata_on_requirement_does_not_apply_action_rules
+    self.assertEqual(result["type"], "requirement_achieved")
+AssertionError: 'graph_changed' != 'requirement_achieved'
+- graph_changed
++ requirement_achieved
+
+
+----------------------------------------------------------------------
+Ran 24 tests in 48.270s
+
+FAILED (failures=1)

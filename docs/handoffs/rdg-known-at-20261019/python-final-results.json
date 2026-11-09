@@ -1,0 +1,18 @@
+{
+  "exact-history-final": {
+    "command": "python3 tests/rdg-exact-history.test.py -v",
+    "exitCode": 0
+  },
+  "writer-recording-final": {
+    "command": "python3 tests/rdg-writer-recording.test.py -v",
+    "exitCode": 0
+  },
+  "bearer-writer-final": {
+    "command": "python3 tests/rdg-bearer-package.integration.test.py -v",
+    "exitCode": 0
+  },
+  "plan-owner-final": {
+    "command": "python3 tests/rdg-temporal-plan-owner.test.py -v",
+    "exitCode": 0
+  }
+}

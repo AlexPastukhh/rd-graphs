@@ -1,0 +1,14 @@
+{
+  "plan-owner": {
+    "command": "python3 tests/rdg-temporal-plan-owner.test.py -v",
+    "exitCode": 0
+  },
+  "exact-history": {
+    "command": "python3 tests/rdg-exact-history.test.py -v",
+    "exitCode": 0
+  },
+  "writer-recording": {
+    "command": "python3 tests/rdg-writer-recording.test.py -v",
+    "exitCode": 0
+  }
+}

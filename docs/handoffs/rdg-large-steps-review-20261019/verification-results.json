@@ -1,0 +1,22 @@
+[
+  {
+    "name": "deep-action",
+    "exitCode": 0,
+    "log": "deep-action.log"
+  },
+  {
+    "name": "workflow",
+    "exitCode": 0,
+    "log": "workflow.log"
+  },
+  {
+    "name": "cross-file",
+    "exitCode": 0,
+    "log": "cross-file.log"
+  },
+  {
+    "name": "ui-controller",
+    "exitCode": 0,
+    "log": "ui-controller.log"
+  }
+]

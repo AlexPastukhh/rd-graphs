@@ -1,0 +1,104 @@
+{
+  "id": "R-RDG-PLAN-PROGRESS-20261019/v2",
+  "checkedAtUTC": "2026-10-19T00:46:17.763392+00:00",
+  "verdict": "PLAN-REFINED-LOCAL-PROOFS-CONFIRMED",
+  "status": "CANDIDATE",
+  "stage4": "NOT ACCEPTED",
+  "environment": "Fortis Repo /workspace/repos/rd-graphs; Windows RW 9p mount; no .git; no AGENTS found",
+  "implementationCheckpoint": "CPW-RDG-JOINT-CONTEXT-20261019/v1",
+  "changedExistingFiles": [
+    "README.md",
+    "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md"
+  ],
+  "fileSHA256": {
+    "README.md": "8272e1b6da952c345ccf74d63e6800063eaa6dbe2b411b79d513ee31f9e90e9c",
+    "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md": "339fd76664b8bece635da954c19bd8dcd1271f1aef428dde79c8ed07870f75c2"
+  },
+  "beforeSHA256": {
+    "README.md": "8cf89d160981effd25457ea8a4e0176342e028b4ec84552ea9c4e3ca4b38b2c6",
+    "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md": "dcbc19b2bab1bf56689a88553059334a8a2c1b60cc48cd634b151f82a99df60c"
+  },
+  "p2AcCount": {
+    "Локальный PASS": 7,
+    "PARTIAL": 12,
+    "OPEN": 1
+  },
+  "freshTests": {
+    "checkedAtUTC": "2026-10-19T00:42:26.101954+00:00",
+    "results": {
+      "plan-owner": {
+        "command": [
+          "/usr/bin/python3",
+          "tests/rdg-temporal-plan-owner.test.py",
+          "-v"
+        ],
+        "exitCode": 0,
+        "seconds": 2.9,
+        "log": "plan-owner.log",
+        "tests": 17
+      },
+      "joint-context": {
+        "command": [
+          "/usr/bin/python3",
+          "tests/rdg-joint-context.test.py",
+          "-v"
+        ],
+        "exitCode": 0,
+        "seconds": 5.11,
+        "log": "joint-context.log",
+        "tests": 12
+      },
+      "branch-acceptance": {
+        "command": [
+          "/usr/bin/python3",
+          "docs/handoffs/rdg-prework-v4.1-final-20261018/tests/rdg-gendocen-branch-membership.acceptance.test.py",
+          "-v"
+        ],
+        "exitCode": 0,
+        "seconds": 12.64,
+        "log": "branch-acceptance.log",
+        "tests": 2
+      },
+      "coverage-guard": {
+        "command": [
+          "/usr/bin/python3",
+          "tests/rdg-gendocen-coverage-guard.test.py",
+          "-v"
+        ],
+        "exitCode": 0,
+        "seconds": 8.73,
+        "log": "coverage-guard.log",
+        "tests": 4
+      }
+    },
+    "totalTests": 35,
+    "allExitZero": true
+  },
+  "priorEvidence": {
+    "sourceFiles": 8,
+    "dependencies": 22,
+    "evidenceFiles": 16,
+    "mismatchesBeforeDocChanges": 0,
+    "jointSmokeRerun": false,
+    "jointSmokePreviousCliProcesses": 15
+  },
+  "localLinksChecked": 93,
+  "reviewFindings": {
+    "F-R-PLAN-01": "route bounded in plan; implementation still open",
+    "F-U-PLAN-02": "OPEN lifecycle effective semantics; next Candidate contract",
+    "F-R-PLAN-03": "OPEN durable consumer bundle storage; explicit plan deliverable",
+    "DOC-01": "README navigation corrected"
+  },
+  "next": "P2-AC-04 acceptance; then lifecycle applicability, combined safety, ordinary local consumer; P3 in same scope",
+  "runtimeCodeChanged": false,
+  "userGraphsChanged": false,
+  "gitCommit": null,
+  "windowsG2Verified": false,
+  "published": false,
+  "reviewLimitations": [
+    "same-environment limited review, not independent acceptance",
+    "not a new full audit of WR-01..53 or all mutation paths",
+    "no full regression or latest joint smoke rerun",
+    "human trust, production owner, factual T1 and installed rollout remain open"
+  ]
+}

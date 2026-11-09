@@ -1,0 +1,136 @@
+TAP version 13
+# Subtest: lost response retains exact request, blocks a new action and permits safe retry
+ok 1 - lost response retains exact request, blocks a new action and permits safe retry
+  ---
+  duration_ms: 15.385724
+  type: 'test'
+  ...
+# Subtest: known rejection preserves source state and clears uncertain request
+ok 2 - known rejection preserves source state and clears uncertain request
+  ---
+  duration_ms: 1.363398
+  type: 'test'
+  ...
+# Subtest: a render failure after save reports saved, rather than an unknown writer outcome
+ok 3 - a render failure after save reports saved, rather than an unknown writer outcome
+  ---
+  duration_ms: 1.499148
+  type: 'test'
+  ...
+# Subtest: read-only and protected sessions disable writes, source text is rendered as text
+ok 4 - read-only and protected sessions disable writes, source text is rendered as text
+  ---
+  duration_ms: 3.377274
+  type: 'test'
+  ...
+# Subtest: plan tab opens without requesting files and preserves graph and editor across switches
+ok 5 - plan tab opens without requesting files and preserves graph and editor across switches
+  ---
+  duration_ms: 56.777256
+  type: 'test'
+  ...
+# Subtest: manual controls traverse real HTTP, writers and Viewer: A1 -> withdraw -> A2
+ok 6 - manual controls traverse real HTTP, writers and Viewer: A1 -> withdraw -> A2
+  ---
+  duration_ms: 7924.360974
+  type: 'test'
+  ...
+# Subtest: generated workflow controller matches the shared source exactly
+ok 7 - generated workflow controller matches the shared source exactly
+  ---
+  duration_ms: 28.805767
+  type: 'test'
+  ...
+# Subtest: cross-owner Helper: manual action under projection root completes the owning parent
+ok 8 - cross-owner Helper: manual action under projection root completes the owning parent # SKIP
+  ---
+  duration_ms: 0.229148
+  type: 'test'
+  ...
+# Subtest: placement selection reloads shown fields and protects unsupported rules
+ok 9 - placement selection reloads shown fields and protects unsupported rules
+  ---
+  duration_ms: 1.821798
+  type: 'test'
+  ...
+# Subtest: manual date and order edits preserve successor, deadline and strength through real writers
+ok 10 - manual date and order edits preserve successor, deadline and strength through real writers # SKIP
+  ---
+  duration_ms: 0.619036
+  type: 'test'
+  ...
+# Subtest: closed Helper descriptor without a token reports ended session and queues no request
+ok 11 - closed Helper descriptor without a token reports ended session and queues no request
+  ---
+  duration_ms: 2.04341
+  type: 'test'
+  ...
+# Subtest: wrong folder and incomplete descriptor produce actionable read errors
+ok 12 - wrong folder and incomplete descriptor produce actionable read errors
+  ---
+  duration_ms: 0.935147
+  type: 'test'
+  ...
+# Subtest: denied write access stops before ready marker and explains reconnect
+ok 13 - denied write access stops before ready marker and explains reconnect
+  ---
+  duration_ms: 0.830157
+  type: 'test'
+  ...
+# Subtest: unresponsive Helper shows progress then unlocks refresh without showing empty form
+ok 14 - unresponsive Helper shows progress then unlocks refresh without showing empty form
+  ---
+  duration_ms: 26.320996
+  type: 'test'
+  ...
+# Subtest: unanswered file command keeps exact pending transaction and blocks further edits
+ok 15 - unanswered file command keeps exact pending transaction and blocks further edits
+  ---
+  duration_ms: 41.861336
+  type: 'test'
+  ...
+# Subtest: plan shows graph cards and Action canon/QRPE, and contains no creation controls
+ok 16 - plan shows graph cards and Action canon/QRPE, and contains no creation controls
+  ---
+  duration_ms: 13.333298
+  type: 'test'
+  ...
+# Subtest: projection navigation resolves the owning declaration and its introducing context
+ok 17 - projection navigation resolves the owning declaration and its introducing context
+  ---
+  duration_ms: 39.428211
+  type: 'test'
+  ...
+# Subtest: a deep goal opens its parent wave, while an Action opens its driver wave
+ok 18 - a deep goal opens its parent wave, while an Action opens its driver wave
+  ---
+  duration_ms: 10.83303
+  type: 'test'
+  ...
+# Subtest: editing a placed Action variant keeps the actual projection placement and step identity
+ok 19 - editing a placed Action variant keeps the actual projection placement and step identity
+  ---
+  duration_ms: 13.356901
+  type: 'test'
+  ...
+# Subtest: a goal collects Action variants from its continuation graph without changing its own declaration
+ok 20 - a goal collects Action variants from its continuation graph without changing its own declaration
+  ---
+  duration_ms: 12.488025
+  type: 'test'
+  ...
+# Subtest: graph authoring reports uncertain writes and exposes exact retry on the graph surface
+ok 21 - graph authoring reports uncertain writes and exposes exact retry on the graph surface
+  ---
+  duration_ms: 1.769193
+  type: 'test'
+  ...
+1..21
+# tests 21
+# suites 0
+# pass 19
+# fail 0
+# cancelled 0
+# skipped 2
+# todo 0
+# duration_ms 8536.030722

@@ -1,0 +1,250 @@
+{
+  "id": "P1-P2-ACCEPTANCE-MATRIX-20261019/v1",
+  "status": "PLANNED-NOT-EXECUTED",
+  "definitionOwner": "docs/guides/RDG-TEMPORAL-PLAN-OWNER-CONTRACT-P1.md",
+  "allNewLifecycleTestsExecuted": false,
+  "existingTestReferencesMeaning": "Только частичные существующие основания; ни одна ссылка не доказывает Plan writer или исторический as-of.",
+  "cases": [
+    {
+      "id": "P2-AC-01",
+      "invariants": [
+        "P1-I02",
+        "P1-I03"
+      ],
+      "trigger": "Одна identity у двух независимо изменяемых путей",
+      "expected": "Отклонить конфликт owner; не выбирать самый новый файл и не создавать второго writable owner.",
+      "stage": "P2",
+      "executionStatus": "PLANNED-NOT-EXECUTED",
+      "partialExistingTest": null
+    },
+    {
+      "id": "P2-AC-02",
+      "invariants": [
+        "P1-I04"
+      ],
+      "trigger": "sourcePath содержит traversal, абсолютный путь или symlink за root",
+      "expected": "Отклонить без записи и без поиска в других контурах.",
+      "stage": "P2",
+      "executionStatus": "PLANNED-NOT-EXECUTED",
+      "partialExistingTest": null
+    },
+    {
+      "id": "P2-AC-03",
+      "invariants": [
+        "P1-I01",
+        "P1-I09"
+      ],
+      "trigger": "Создать/изменить/разветвить candidate Plan со ссылкой на candidate A1",
+      "expected": "Байты RDG, status и T1 неизменны; preselected не появляется.",
+      "stage": "P2",
+      "executionStatus": "PLANNED-NOT-EXECUTED",
+      "partialExistingTest": "tests/rdg-temporal-plan.test.py::test_two_branches_keep_candidate_actions_and_graph_file_unchanged"
+    },
+    {
+      "id": "P2-AC-04",
+      "invariants": [
+        "P1-I03",
+        "P1-I09"
+      ],
+      "trigger": "Два разных шага в разных cases ссылаются на один RDG Action",
+      "expected": "Один смысловой владелец Action; membership относится к вхождению; нет копии или автоматического выбора.",
+      "stage": "P2",
+      "executionStatus": "PLANNED-NOT-EXECUTED",
+      "partialExistingTest": null
+    },
+    {
+      "id": "P2-AC-05",
+      "invariants": [
+        "P1-I06"
+      ],
+      "trigger": "Два writer изменяют одну expectedRevision",
+      "expected": "Не более одного commit; устаревшая запись отклоняется; смешанной версии нет.",
+      "stage": "P2",
+      "executionStatus": "PLANNED-NOT-EXECUTED",
+      "partialExistingTest": null
+    },
+    {
+      "id": "P2-AC-06",
+      "invariants": [
+        "P1-I06",
+        "P1-I07"
+      ],
+      "trigger": "Plan grant отозван до durable commit",
+      "expected": "Новая версия/state/history не записаны; bearer secret не раскрыт.",
+      "stage": "P2",
+      "executionStatus": "PLANNED-NOT-EXECUTED",
+      "partialExistingTest": null
+    },
+    {
+      "id": "P2-AC-07",
+      "invariants": [
+        "P1-I08",
+        "P1-I09"
+      ],
+      "trigger": "Edit grant передаёт accepted status или acceptance operation",
+      "expected": "Отклонить до проверки отдельного права и пути принятия baseline; Action.select не вызывается.",
+      "stage": "P2",
+      "executionStatus": "PLANNED-NOT-EXECUTED",
+      "partialExistingTest": null
+    },
+    {
+      "id": "P2-AC-08",
+      "invariants": [
+        "P1-I08",
+        "P1-I09",
+        "P1-I18"
+      ],
+      "trigger": "После принятого будущего baseline создан новый candidate",
+      "expected": "Прежний принятый baseline доступен по точной ссылке; нет автоматической замены или правки T1.",
+      "stage": "P2",
+      "executionStatus": "PLANNED-NOT-EXECUTED",
+      "partialExistingTest": null
+    },
+    {
+      "id": "P2-AC-09",
+      "invariants": [
+        "P1-I13"
+      ],
+      "trigger": "Candidate или принятый будущий Plan содержит hard deadline",
+      "expected": "Новый FR или F-P не создаётся автоматически; provenance/applicability ограничения явны.",
+      "stage": "P2/P3",
+      "executionStatus": "PLANNED-NOT-EXECUTED",
+      "partialExistingTest": "tests/rdg-temporal-plan.test.py::test_relative_time_and_deadline_do_not_create_dates_or_requirements"
+    },
+    {
+      "id": "P2-AC-10",
+      "invariants": [
+        "P1-I10",
+        "P1-I11",
+        "P1-I12"
+      ],
+      "trigger": "Date-only, instant с offset, неизвестный относительный anchor и окно notBefore/deadline",
+      "expected": "Не выдумывать дату или instant; несовместимая precision явна; delay остаётся нижней границей; выполнимость не заявляется.",
+      "stage": "P2",
+      "executionStatus": "PLANNED-NOT-EXECUTED",
+      "partialExistingTest": "tests/rdg-temporal-plan.test.py::test_time_zone_date_validation_and_basis"
+    },
+    {
+      "id": "P2-AC-11",
+      "invariants": [
+        "P1-I14",
+        "P1-I15"
+      ],
+      "trigger": "Автор Plan передаёт observedAt/outcomeObserved, чужой receipt или by=user",
+      "expected": "Строка не подтверждает реальное событие; требуется отдельное право и проверенный источник.",
+      "stage": "P2",
+      "executionStatus": "PLANNED-NOT-EXECUTED",
+      "partialExistingTest": "tests/rdg-temporal-plan.test.py::test_no_invented_accepted_action_or_observed_event"
+    },
+    {
+      "id": "P2-AC-12",
+      "invariants": [
+        "P1-I15"
+      ],
+      "trigger": "Plan editor или event-attest actor пытается вызвать graph.select_action",
+      "expected": "Отклонить без повышения прав между owners и без частичной записи Plan/RDG.",
+      "stage": "P2",
+      "executionStatus": "PLANNED-NOT-EXECUTED",
+      "partialExistingTest": null
+    },
+    {
+      "id": "P2-AC-13",
+      "invariants": [
+        "P1-I16",
+        "P1-I17"
+      ],
+      "trigger": "Позднее исправление или конфликт outcome для одного event occurrence",
+      "expected": "Сохранить исходную запись, correction link и recordedAt; незакрытый конфликт вернуть явно.",
+      "stage": "P2/P3",
+      "executionStatus": "PLANNED-NOT-EXECUTED",
+      "partialExistingTest": null
+    },
+    {
+      "id": "P2-AC-14",
+      "invariants": [
+        "P1-I05",
+        "P1-I18",
+        "P1-I19"
+      ],
+      "trigger": "Точный исторический Plan/RDG snapshot отсутствует или digest не совпадает",
+      "expected": "Явный evidence gap и блокировка исторического утверждения; не подставлять current projection.",
+      "stage": "P2/P3",
+      "executionStatus": "PLANNED-NOT-EXECUTED",
+      "partialExistingTest": null
+    },
+    {
+      "id": "P2-AC-15",
+      "invariants": [
+        "P1-I17",
+        "P1-I18"
+      ],
+      "trigger": "r1 recorded 10:00/effective 10:00; r2 recorded 14:00/effective 10:30; запрос known 11:00/effective 10:45",
+      "expected": "Исключить r2; не считать её известной на T1=11:00.",
+      "stage": "P2/P3",
+      "executionStatus": "PLANNED-NOT-EXECUTED",
+      "partialExistingTest": null
+    },
+    {
+      "id": "P2-AC-16",
+      "invariants": [
+        "P1-I17",
+        "P1-I18",
+        "P1-I19"
+      ],
+      "trigger": "Та же история: known 15:00/effective 10:45, явная ретроспективная реконструкция",
+      "expected": "r2 допустима только с обозначением позднего знания; исходный T1/selectionBasis неизменен.",
+      "stage": "P2/P3",
+      "executionStatus": "PLANNED-NOT-EXECUTED",
+      "partialExistingTest": null
+    },
+    {
+      "id": "P2-AC-17",
+      "invariants": [
+        "P1-I06",
+        "P1-I09"
+      ],
+      "trigger": "Crash на каждом failpoint Plan persistence; recover выполнен дважды",
+      "expected": "Согласованно завершить принятую транзакцию или откатить; сохранить прежние baseline/events/T1; повтор идемпотентен.",
+      "stage": "P2",
+      "executionStatus": "PLANNED-NOT-EXECUTED",
+      "partialExistingTest": null
+    },
+    {
+      "id": "P2-AC-18",
+      "invariants": [
+        "P1-I20"
+      ],
+      "trigger": "Новые owner/lifecycle/event данные переданы старому current-only контракту Gendocen",
+      "expected": "Явное unsupported coverage или review_required; silent valid недопустим.",
+      "stage": "P2/P3",
+      "executionStatus": "PLANNED-NOT-EXECUTED",
+      "partialExistingTest": "tests/rdg-gendocen-dependencies.test.py::test_multiple_branches_are_explicitly_uncovered"
+    },
+    {
+      "id": "P2-AC-19",
+      "invariants": [
+        "P1-I05",
+        "P1-I07",
+        "P1-I19"
+      ],
+      "trigger": "Клиент передал revision/hash и bearer receipt без доверенного snapshot/источника",
+      "expected": "Не подтверждать историческое знание, личность человека или истинность факта.",
+      "stage": "P2/P3",
+      "executionStatus": "PLANNED-NOT-EXECUTED",
+      "partialExistingTest": "tests/rdg-gendocen-dependencies.test.py::test_action_ref_revision_is_local_but_not_historical_truth"
+    },
+    {
+      "id": "P2-AC-20",
+      "invariants": [
+        "P1-I01",
+        "P1-I08",
+        "P1-I14"
+      ],
+      "trigger": "SchemaVersion=1 consumer получает неподдержанные accepted/actual поля",
+      "expected": "Сохранить candidate-only поведение; отклонить неподдержанные данные до явной версионной интеграции.",
+      "stage": "P2",
+      "executionStatus": "PLANNED-NOT-EXECUTED",
+      "partialExistingTest": "tests/rdg-temporal-plan.test.py::test_unrecognized_fields_cannot_smuggle_execution_claims"
+    }
+  ]
+}

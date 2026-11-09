@@ -1,0 +1,9 @@
+UI_STATE Cannot set property type of #<HTMLSelectElement> which has only a getter Данные планаДанные ещё не загружены. Нажмите «Обновить».ОбновитьРазмещение цели или ActionЦель или Action
+TimeoutError: Waiting failed: 15000ms exceeded
+    at new WaitTask (file:///opt/dc/node_modules/puppeteer-core/lib/puppeteer/common/WaitTask.js:46:34)
+    at IsolatedWorld.waitForFunction (file:///opt/dc/node_modules/puppeteer-core/lib/puppeteer/api/Realm.js:49:26)
+    at CdpFrame.waitForFunction (file:///opt/dc/node_modules/puppeteer-core/lib/puppeteer/api/Frame.js:585:43)
+    at CdpFrame.<anonymous> (file:///opt/dc/node_modules/puppeteer-core/lib/puppeteer/util/decorators.js:101:27)
+    at CdpPage.waitForFunction (file:///opt/dc/node_modules/puppeteer-core/lib/puppeteer/api/Page.js:1537:37)
+    at waitText (/workspace/repos/rd-graphs/tests/visual/rdg-workflow-tabs.cjs:35:46)
+    at /workspace/repos/rd-graphs/tests/visual/rdg-workflow-tabs.cjs:48:83

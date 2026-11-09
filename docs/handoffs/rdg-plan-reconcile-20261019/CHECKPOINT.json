@@ -1,0 +1,26 @@
+{
+  "checkpoint": "CPW-RDG-PLAN-RECONCILE-20261019/v1",
+  "status": "CANDIDATE",
+  "stage4": "NOT ACCEPTED",
+  "changedFiles": [
+    "README.md",
+    "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md",
+    "docs/handoffs/rdg-plan-reconcile-20261019/CHECKPOINT.md"
+  ],
+  "fileSHA256": {
+    "README.md": "9bfcd7bacc2a91c249d0ca4cc1e483d9c1f689e1b4d85cbfe50d6998592e382e",
+    "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md": "363ed78a153de1564da7a46979675be499cd68531f846c318336ed5fdb024e9a",
+    "docs/handoffs/rdg-plan-reconcile-20261019/CHECKPOINT.md": "a6ed754c30bbbed815beda66fab1093f672cbef9d5ad6de08addd053b0b67f2b"
+  },
+  "p2AcCount": {
+    "Локальный PASS": 7,
+    "PARTIAL": 7,
+    "OPEN": 6
+  },
+  "localLinksChecked": 10,
+  "validation": "PASS: all 20 IDs once, local links resolve, selected diff generated",
+  "runtimeTestsRerun": false,
+  "gitAvailable": false,
+  "v41ZipSHA256": "ab5ba0acf4a116eb24ac24340f151527786cf1e93c90aa7b38f52e50b92d5401",
+  "scope": "documentation/status reconciliation only; prior runtime checks cited by current plan"
+}

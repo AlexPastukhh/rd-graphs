@@ -1,0 +1,2 @@
+OBSERVED_AFTER_BRANCH_SWAP={"A1": "valid", "A2": "valid"}
+GAP_REPRODUCED: actual branch membership changed; Gendocen semantic reviews stayed valid.

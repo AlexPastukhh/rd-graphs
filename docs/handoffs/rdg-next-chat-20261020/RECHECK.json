@@ -1,0 +1,33 @@
+{
+  "revision": 2,
+  "runtimeSourceFilesUnchanged": 44,
+  "liveSourceInitialManifestMatch": 126,
+  "initialRawUnresolvedRelativeLinks": 143,
+  "relativeLinksUnresolvedAfterReview": [],
+  "codeFenceExamplesExcludedFromLinkValidation": true,
+  "visitedMarkdown": 94,
+  "nodeEvidence": {
+    "total": 185,
+    "pass": 182,
+    "skip": 3,
+    "fail": 0
+  },
+  "pythonEvidencePass": 72,
+  "catalogBrowserViews": 277,
+  "activeTextViews": 49,
+  "p2Matrix": {
+    "localPass": 8,
+    "partial": 12
+  },
+  "userBrowserInstallVerified": false,
+  "stage4Accepted": false,
+  "lastSessionActive": false,
+  "runtimeSuitesRerunInHandoffReview": false,
+  "corrections": [
+    "complete linked text documents and evidence",
+    "preserve historical plan relative namespace",
+    "copy current HANDOFF at plan link target",
+    "state exact Helper and multi-owner permission limitations",
+    "set fresh RDG_WORKFLOW_TEST_LOG_DIR before Python suites"
+  ]
+}

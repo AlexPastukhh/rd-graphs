@@ -1,0 +1,20 @@
+[
+  {
+    "path": "README.md",
+    "bytes": 55391,
+    "sha256": "cc35797b0fb8124f087a2ca74a956153ed21d2109484240aa5998bd9918b4338",
+    "baselineSHA256": "165bbab35d910e146818d8c0fb0a20b7c4b174f3b6181f3f375efcec54494648"
+  },
+  {
+    "path": "docs/guides/RDG-TEMPORAL-PLAN-STAGE2P.md",
+    "bytes": 7979,
+    "sha256": "934da8267cce164307051e800300fb9a382c73d147e4405a21d5db4c1d5f95ac",
+    "baselineSHA256": "f1a1c00f944a6164e698f8e15325904a460e1bae3b8aecddf224816612668430"
+  },
+  {
+    "path": "docs/guides/RDG-TEMPORAL-PLAN-OWNER-CONTRACT-P1.md",
+    "bytes": 23895,
+    "sha256": "d56f86b854992c92d8f2afbdb4d3e39868527c0b6b6b9a793c1fdc263b93ac07",
+    "baselineSHA256": null
+  }
+]

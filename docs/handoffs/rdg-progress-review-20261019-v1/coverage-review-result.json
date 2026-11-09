@@ -1,0 +1,11 @@
+{
+  "command": [
+    "python3",
+    "/workspace/repos/rd-graphs/docs/handoffs/rdg-progress-review-20261019-v1/coverage-review.acceptance.test.py",
+    "-v"
+  ],
+  "exitCode": 1,
+  "seconds": 14.33,
+  "probes": 3,
+  "log": "coverage-review.log"
+}

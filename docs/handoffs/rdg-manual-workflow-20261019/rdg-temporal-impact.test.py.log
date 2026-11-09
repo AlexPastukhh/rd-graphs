@@ -1,0 +1,25 @@
+test_branch_only_delay_causes_branch_only_review (__main__.ImpactTest.test_branch_only_delay_causes_branch_only_review) ... ok
+test_cli_before_after_output_and_no_file_changes (__main__.ImpactTest.test_cli_before_after_output_and_no_file_changes) ... ok
+test_deadline_change_in_ancestor_output_affects_both (__main__.ImpactTest.test_deadline_change_in_ancestor_output_affects_both) ... ok
+test_draft_source_rejects_claimed_committed_findings (__main__.ImpactTest.test_draft_source_rejects_claimed_committed_findings) ... ok
+test_explicit_mixed_precision_never_proves_a_conflict (__main__.ImpactTest.test_explicit_mixed_precision_never_proves_a_conflict) ... ok
+test_explicitly_qualified_cross_identity_reference_read_only (__main__.ImpactTest.test_explicitly_qualified_cross_identity_reference_read_only) ... ok
+test_finding_draft_cli_round_trip (__main__.ImpactTest.test_finding_draft_cli_round_trip) ... ok
+test_graph_canon_change_targeted_without_modifying_action (__main__.ImpactTest.test_graph_canon_change_targeted_without_modifying_action) ... ok
+test_graph_revision_only_is_not_canon_change_and_is_reported (__main__.ImpactTest.test_graph_revision_only_is_not_canon_change_and_is_reported) ... ok
+test_irrelevant_branch_change_does_not_invalidate_other_action (__main__.ImpactTest.test_irrelevant_branch_change_does_not_invalidate_other_action) ... ok
+test_missing_graph_and_wrong_identity_fail_closed (__main__.ImpactTest.test_missing_graph_and_wrong_identity_fail_closed) ... ok
+test_mixed_instant_calendar_dates_remain_incomparable (__main__.ImpactTest.test_mixed_instant_calendar_dates_remain_incomparable) ... ok
+test_multiple_branch_events_are_explicitly_unsupported (__main__.ImpactTest.test_multiple_branch_events_are_explicitly_unsupported) ... ok
+test_nonconflicting_plan_creates_no_finding_drafts (__main__.ImpactTest.test_nonconflicting_plan_creates_no_finding_drafts) ... ok
+test_reorder_titles_and_revision_do_not_fake_semantic_change (__main__.ImpactTest.test_reorder_titles_and_revision_do_not_fake_semantic_change) ... ok
+test_soft_and_hypothetical_deadlines_do_not_claim_hard_conflict (__main__.ImpactTest.test_soft_and_hypothetical_deadlines_do_not_claim_hard_conflict) ... ok
+test_source_files_unchanged_and_two_conditioned_actions (__main__.ImpactTest.test_source_files_unchanged_and_two_conditioned_actions) ... ok
+test_temporary_conflict_produces_only_reviewable_F_R_drafts (__main__.ImpactTest.test_temporary_conflict_produces_only_reviewable_F_R_drafts) ... ok
+test_tight_deadline_yields_assumption_only_signal_not_confirmed_finding (__main__.ImpactTest.test_tight_deadline_yields_assumption_only_signal_not_confirmed_finding) ... ok
+test_timezone_aware_instants_compare_only_with_instants (__main__.ImpactTest.test_timezone_aware_instants_compare_only_with_instants) ... ok
+
+----------------------------------------------------------------------
+Ran 20 tests in 0.630s
+
+OK

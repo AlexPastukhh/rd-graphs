@@ -1,0 +1,14 @@
+# Viewer 2.2.6: remembered session folder
+- Stores only the selected FileSystemDirectoryHandle in IndexedDB, scoped by project URL.
+- Page startup restores the selection without picker, permission prompt, Helper requests, or switching tabs.
+- Opening Plan reconnects if permission is granted; otherwise the Settings reconnect button requests permission explicitly.
+- Cancellation and permission denial preserve the previous selection. Change/forget controls respect busy and uncertain writes.
+- Folder memory does not extend Helper lifetime. Expired-session errors remain visible.
+- Native Chromium test uses real OPFS handles and real IndexedDB; picker and permission decisions are simulated.
+- Node regression: 70 pass, 3 gated live tests skipped, 0 fail.
+- Existing workflow browser regression: pass (tabs, cancel/denial, expiry, timeout, connected, mobile), pageerrors=0.
+- Browser memory check: pass, pageerrors=0 (reload, permission, cancellation, denial, replacement, expiry, forgetting).
+- New isolated synthetic session: ../rdg-windows-manual-session-20261019-150658/session, 7200 seconds.
+- Live file transport read returned both test Actions and plan.place.from-read-sources.
+- Actual user's installed Tampermonkey script and native Windows permission prompt are not verified.
+- No real user graph/plan edits, new grants, mount changes, git commit, or push.

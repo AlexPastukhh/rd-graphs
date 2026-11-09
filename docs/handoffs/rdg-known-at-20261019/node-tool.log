@@ -1,0 +1,42 @@
+TAP version 13
+# [RDG Viewer] loaded v2.0.3
+# [RDG Viewer] loaded v2.0.3
+# SMOKE_OK: launcher, default position, drag, click separation, persistence
+# [RDG Viewer] loaded v2.0.3
+# [RDG Viewer] Local graph load failed: Error: Нет API локального чтения в Tampermonkey. Установите актуальный Local Loader v2.5.2 с @grant GM_xmlhttpRequest.
+#     at readLocalFile (evalmachine.<anonymous>:2357:29)
+#     at evalmachine.<anonymous>:2437:47
+#     at loadCatalog (evalmachine.<anonymous>:2450:7)
+#     at startViewer (evalmachine.<anonymous>:2659:12)
+#     at evalmachine.<anonymous>:2668:34
+#     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+# [RDG Viewer] Local graph load failed: Error: Нет API локального чтения в Tampermonkey. Установите актуальный Local Loader v2.5.2 с @grant GM_xmlhttpRequest.
+#     at readLocalFile (evalmachine.<anonymous>:2357:29)
+#     at evalmachine.<anonymous>:2437:47
+#     at loadCatalog (evalmachine.<anonymous>:2450:7)
+#     at startViewer (evalmachine.<anonymous>:2659:12)
+#     at evalmachine.<anonymous>:2668:34
+#     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+# [RDG Viewer] Local graph load failed: Error: Нет API локального чтения в Tampermonkey. Установите актуальный Local Loader v2.5.2 с @grant GM_xmlhttpRequest.
+#     at readLocalFile (evalmachine.<anonymous>:2357:29)
+#     at evalmachine.<anonymous>:2437:47
+#     at loadCatalog (evalmachine.<anonymous>:2450:7)
+#     at startViewer (evalmachine.<anonymous>:2659:12)
+#     at evalmachine.<anonymous>:2668:34
+#     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+# SMOKE_OK: JSON validation, SVG rendering, graph summary
+# Subtest: tools/rd-graph-viewer-smoke.test.cjs
+ok 1 - tools/rd-graph-viewer-smoke.test.cjs
+  ---
+  duration_ms: 218.791129
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 242.933713

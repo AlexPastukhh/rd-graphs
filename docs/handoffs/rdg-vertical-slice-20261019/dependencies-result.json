@@ -1,0 +1,10 @@
+{
+  "command": [
+    "python3",
+    "tests/rdg-gendocen-dependencies.test.py",
+    "-v"
+  ],
+  "exitCode": 0,
+  "seconds": 74.19,
+  "log": "dependencies.log"
+}

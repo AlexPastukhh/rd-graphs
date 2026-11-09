@@ -1,0 +1,55 @@
+{
+  "checkpoint": "CPW-RDG-PLAN-AVAILABILITY-20261019/v1",
+  "status": "CANDIDATE",
+  "stage4": "NOT ACCEPTED",
+  "environment": "Fortis Repo /workspace/repos/rd-graphs, synthetic temporary roots only",
+  "gitAvailable": false,
+  "tests": {
+    "python": {
+      "plan-owner": {
+        "command": "python3 tests/rdg-temporal-plan-owner.test.py -v",
+        "exitCode": 0,
+        "tests": 17,
+        "log": "plan-owner.log"
+      },
+      "exact-history": {
+        "command": "python3 tests/rdg-exact-history.test.py -v",
+        "exitCode": 0,
+        "tests": 13,
+        "log": "exact-history.log"
+      },
+      "writer-recording": {
+        "command": "python3 tests/rdg-writer-recording.test.py -v",
+        "exitCode": 0,
+        "tests": 2,
+        "log": "writer-recording.log"
+      }
+    },
+    "gendocen": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 tools/rdg-gendocen-t1-history-smoke.py --engine-source /workspace/repos/gendocen --plan-owner",
+      "status": "PASS",
+      "log": "smoke.log"
+    },
+    "priorNode": "405 PASS in ../rdg-known-at-20261019/CHECKPOINT.json, not rerun here"
+  },
+  "v41ZipSHA256": "ab5ba0acf4a116eb24ac24340f151527786cf1e93c90aa7b38f52e50b92d5401",
+  "changedFiles": [
+    "tools/rdg-temporal-plan-owner.py",
+    "tools/rdg-exact-history.py",
+    "tools/rdg-gendocen-t1-history-smoke.py",
+    "tests/rdg-temporal-plan-owner.test.py",
+    "tests/rdg-exact-history.test.py",
+    "README.md",
+    "docs/guides/RDG-EXACT-HISTORY-PILOT-P2.md",
+    "docs/guides/RDG-TEMPORAL-PLAN-OWNER-PILOT-P2.md",
+    "tests/rdg-writer-recording.test.py",
+    "docs/handoffs/rdg-plan-availability-20261019/CHECKPOINT.md",
+    "docs/handoffs/rdg-plan-availability-20261019/WR-DELTA.md"
+  ],
+  "limitations": [
+    "local clock and hashes are not independent human/event attestation",
+    "knownAt proves pinned source availability, not complete applicable context",
+    "effectiveAt and historical Gendocen as-of not implemented",
+    "legacy latest Plan revisions without receipt still lack a bound"
+  ]
+}

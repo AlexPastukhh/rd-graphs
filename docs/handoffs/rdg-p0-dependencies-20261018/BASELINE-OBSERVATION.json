@@ -1,0 +1,19 @@
+{
+  "baseline": "Candidate Pre-work v4.1; 30/30 source snapshots matched before changes",
+  "command": "RDG_GENDOCEN_SOURCE=/workspace/repos/gendocen PYTHONDONTWRITEBYTECODE=1 python3 docs/handoffs/rdg-prework-v4.1-final-20261018/tests/rdg-gendocen-branch-membership.acceptance.test.py -v",
+  "observedExitCode": 1,
+  "tests": 2,
+  "failures": 1,
+  "cosmetic": "PASS",
+  "meaningfulBranchSwap": {
+    "expected": {
+      "A1": "review_required",
+      "A2": "review_required"
+    },
+    "actual": {
+      "A1": "valid",
+      "A2": "valid"
+    }
+  },
+  "note": "Actual pre-edit run in this session. Historical raw expected-failure log remains in the immutable v4.1 package."
+}

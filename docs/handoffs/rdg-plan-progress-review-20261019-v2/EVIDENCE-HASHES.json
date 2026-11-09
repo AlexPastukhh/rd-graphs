@@ -1,0 +1,14 @@
+{
+  "BASELINE-AND-INTEGRITY.json": "2433b649b513dfb56080d7c665072e5a0ac3f3e00d0594530d6542cd62587fa7",
+  "CHECKPOINT.json": "7eebaaa62a8856e14765f674c149585a626dd57aac5125220bc8bab42cb8b925",
+  "REVIEW.md": "a00bf0b13461453f20f45e51d744061bde68555d5fe9d75d63535f0af2f41b5b",
+  "SELECTED-DIFF.patch": "cb99a69279a3a42b87d4f0fbbc04432bb2f1539a2e7bf48f597f7d37a71885a6",
+  "before-RDG-CURRENT-EXECUTION-PLAN.md": "dcbc19b2bab1bf56689a88553059334a8a2c1b60cc48cd634b151f82a99df60c",
+  "before-README.md": "8cf89d160981effd25457ea8a4e0176342e028b4ec84552ea9c4e3ca4b38b2c6",
+  "branch-acceptance.log": "604aa28a569efafaea6d464311bac8b582e4a1a1aeb33c2928aa019ed0420d4f",
+  "coverage-guard.log": "7daa63c723d32ae60486422ee9b340132eccee56235f8600271b36a133123fbe",
+  "joint-context.log": "3ae8e02eeb6bf542b695d5cee95f8ce1235e986aaafc2919b3e2b8e5148b134b",
+  "plan-owner.log": "a9e3d17002a76e546b01d432997990d7e05dbd0030d3ae6eb82cc89b89fdf071",
+  "run-focused-checks.py": "414464cd577ac1867482aac54d13454ff592e56024cd8abe1a5849dbda0d3901",
+  "test-results.json": "fc7487f0b41ca51b2d3364311868e024726717657fd32dbcc0963bd47a7793a0"
+}

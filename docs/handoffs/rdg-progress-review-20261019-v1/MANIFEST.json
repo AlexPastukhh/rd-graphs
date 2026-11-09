@@ -1,0 +1,85 @@
+{
+  "review": "R-RDG-PROGRESS-20261019/v1",
+  "files": [
+    {
+      "path": "CHECKPOINT.json",
+      "bytes": 1460,
+      "sha256": "e120eb5caa62b0cba12ecbebd9bfe14114b43e7540e5926e76b29713d9c3c973"
+    },
+    {
+      "path": "FINDINGS.json",
+      "bytes": 5034,
+      "sha256": "ff74326d820648290b9fc92850a37a2275740a60ae2aa0231a55d3cdcd28cf0e"
+    },
+    {
+      "path": "HANDOFF.md",
+      "bytes": 2395,
+      "sha256": "184d93f50324614f30b7a4869248f9531ba27cbf9c2898100e5947e35fa3d895"
+    },
+    {
+      "path": "PROBES.json",
+      "bytes": 3697,
+      "sha256": "532e5ac34789741bb9eb647971988c31c33a95608a072c7035f231206cd8041f"
+    },
+    {
+      "path": "README-before.md",
+      "bytes": 55391,
+      "sha256": "cc35797b0fb8124f087a2ca74a956153ed21d2109484240aa5998bd9918b4338"
+    },
+    {
+      "path": "README.patch",
+      "bytes": 2339,
+      "sha256": "4e03b7a113768a80f214ac042232e604eb2e393c32c1722f6753f7dae3c52af2"
+    },
+    {
+      "path": "REVIEW.md",
+      "bytes": 14169,
+      "sha256": "97456d78671de9fe9acb6ff18e7639e48a022b46ccddac8ec778a09ae41b2ec2"
+    },
+    {
+      "path": "WR-EVIDENCE-LEDGER.json",
+      "bytes": 31620,
+      "sha256": "ad08321d31e82455467bf58933a9b118f6d811acf1e4c91f29b164d3bf9a3bb1"
+    },
+    {
+      "path": "WR-EVIDENCE-LEDGER.md",
+      "bytes": 5038,
+      "sha256": "4f611a5a2cd469b678c4c093c16960017823336db8058fbb91fa83e538d4b061"
+    },
+    {
+      "path": "acceptance-result.json",
+      "bytes": 219,
+      "sha256": "a5e63de3db451a1f79f2d93624764747fd41676e33a6ea4157a875e858f0a49b"
+    },
+    {
+      "path": "acceptance.log",
+      "bytes": 748,
+      "sha256": "1280a578067fc59c2031bfc8dc19d2ba7bc10985e0ea62e2310e854807bedf61"
+    },
+    {
+      "path": "coverage-review-result.json",
+      "bytes": 246,
+      "sha256": "1d0305520599e2021fb5c8b5eeeeafe6220e196a7ec6f1d977babfbaff816d67"
+    },
+    {
+      "path": "coverage-review.acceptance.test.py",
+      "bytes": 5856,
+      "sha256": "767744aa5b0c5dfac5e43191fc8bd12837bb6c5a2e6b3424f1afa0544a5dff09"
+    },
+    {
+      "path": "coverage-review.log",
+      "bytes": 4313,
+      "sha256": "e04fc3d061a2c47828d2007a90a82f02fbb8872a528cf105be012b952d0e0638"
+    },
+    {
+      "path": "dependencies-result.json",
+      "bytes": 160,
+      "sha256": "9f27d2e70769ff4d754bbe1589c74a4cf6c684f7ede287b82d4c0416610fbdb2"
+    },
+    {
+      "path": "dependencies.log",
+      "bytes": 2639,
+      "sha256": "cc8b79d10def8fb62dcc51ce198379854d712ac52d663780ad93ad580d169003"
+    }
+  ]
+}

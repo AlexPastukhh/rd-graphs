@@ -1,0 +1,122 @@
+[
+  {
+    "suite": "rdg-applicability-owner.test.py",
+    "exitCode": 0,
+    "log": "rdg-applicability-owner.test.py.log"
+  },
+  {
+    "suite": "rdg-bearer-package.integration.test.py",
+    "exitCode": 0,
+    "log": "rdg-bearer-package.integration.test.py.log"
+  },
+  {
+    "suite": "rdg-canon-context-review.test.py",
+    "exitCode": 0,
+    "log": "rdg-canon-context-review.test.py.log"
+  },
+  {
+    "suite": "rdg-deep-action.acceptance.test.py",
+    "exitCode": 0,
+    "log": "rdg-deep-action.acceptance.test.py.log"
+  },
+  {
+    "suite": "rdg-event-consumer-guard.test.py",
+    "exitCode": 0,
+    "log": "rdg-event-consumer-guard.test.py.log"
+  },
+  {
+    "suite": "rdg-event-gendocen.test.py",
+    "exitCode": 0,
+    "log": "rdg-event-gendocen.test.py.log"
+  },
+  {
+    "suite": "rdg-event-owner.test.py",
+    "exitCode": 0,
+    "log": "rdg-event-owner.test.py.log"
+  },
+  {
+    "suite": "rdg-exact-history.test.py",
+    "exitCode": 0,
+    "log": "rdg-exact-history.test.py.log"
+  },
+  {
+    "suite": "rdg-future-baseline.test.py",
+    "exitCode": 0,
+    "log": "rdg-future-baseline.test.py.log"
+  },
+  {
+    "suite": "rdg-gendocen-coverage-guard.test.py",
+    "exitCode": 0,
+    "log": "rdg-gendocen-coverage-guard.test.py.log"
+  },
+  {
+    "suite": "rdg-gendocen-dependencies.test.py",
+    "exitCode": 0,
+    "log": "rdg-gendocen-dependencies.test.py.log"
+  },
+  {
+    "suite": "rdg-gendocen-resources.test.py",
+    "exitCode": 0,
+    "log": "rdg-gendocen-resources.test.py.log"
+  },
+  {
+    "suite": "rdg-joint-context.test.py",
+    "exitCode": 0,
+    "log": "rdg-joint-context.test.py.log"
+  },
+  {
+    "suite": "rdg-problem-evidence-preflight.test.py",
+    "exitCode": 0,
+    "log": "rdg-problem-evidence-preflight.test.py.log"
+  },
+  {
+    "suite": "rdg-shared-action-occurrences.acceptance.test.py",
+    "exitCode": 0,
+    "log": "rdg-shared-action-occurrences.acceptance.test.py.log"
+  },
+  {
+    "suite": "rdg-temporal-impact.test.py",
+    "exitCode": 0,
+    "log": "rdg-temporal-impact.test.py.log"
+  },
+  {
+    "suite": "rdg-temporal-placement.acceptance.test.py",
+    "exitCode": 0,
+    "log": "rdg-temporal-placement.acceptance.test.py.log"
+  },
+  {
+    "suite": "rdg-temporal-plan-owner.test.py",
+    "exitCode": 0,
+    "log": "rdg-temporal-plan-owner.test.py.log"
+  },
+  {
+    "suite": "rdg-temporal-plan.test.py",
+    "exitCode": 0,
+    "log": "rdg-temporal-plan.test.py.log"
+  },
+  {
+    "suite": "rdg-two-time-scenario.test.py",
+    "exitCode": 0,
+    "log": "rdg-two-time-scenario.test.py.log"
+  },
+  {
+    "suite": "rdg-workflow-helper.test.py",
+    "exitCode": 0,
+    "log": "rdg-workflow-helper.test.py.log"
+  },
+  {
+    "suite": "rdg-workflow.acceptance.test.py",
+    "exitCode": 0,
+    "log": "rdg-workflow.acceptance.test.py.log"
+  },
+  {
+    "suite": "rdg-writer-recording.test.py",
+    "exitCode": 0,
+    "log": "rdg-writer-recording.test.py.log"
+  },
+  {
+    "suite": "node-all",
+    "exitCode": 0,
+    "log": "node-all.log"
+  }
+]

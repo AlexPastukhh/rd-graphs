@@ -1,0 +1,635 @@
+{
+  "checkpoint": "R-RDG-PROGRESS-20261019/v1",
+  "baseline": "docs/handoffs/rdg-p1-plan-contract-20261019/WR-EVIDENCE-LEDGER.json",
+  "scope": "Source/evidence review; P0.1 coverage gate reopened; P1 remains Candidate; P2 pending",
+  "requirements": [
+    {
+      "id": "WR-01",
+      "status": "PARTIAL",
+      "remaining_gate": "repo preflight done; no Git owner diff",
+      "evidence_source_labels": "README.md (preflight; no .git)",
+      "resolved_evidence_paths": [],
+      "direct_independent_acceptance_proven": false
+    },
+    {
+      "id": "WR-02",
+      "status": "PARTIAL",
+      "remaining_gate": "user decisions preserved, not all PR accepted",
+      "evidence_source_labels": "source-candidate-prework-v3-reading-copy.md; source-independent-review-v1-reading-copy.md",
+      "resolved_evidence_paths": [
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-candidate-prework-v3-reading-copy.md",
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-independent-review-v1-reading-copy.md"
+      ],
+      "direct_independent_acceptance_proven": false
+    },
+    {
+      "id": "WR-03",
+      "status": "OPEN",
+      "remaining_gate": "trusted Helper grant UI",
+      "evidence_source_labels": "NO DIRECT PROOF: installed Helper UI pending",
+      "resolved_evidence_paths": [],
+      "direct_independent_acceptance_proven": false
+    },
+    {
+      "id": "WR-04",
+      "status": "DONE-LOCAL",
+      "remaining_gate": "bearer for 2 test actors",
+      "evidence_source_labels": "tools/rdg-authority.py; tests/rdg-bearer-package.integration.test.py",
+      "resolved_evidence_paths": [
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tools/rdg-authority.py",
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tests/rdg-bearer-package.integration.test.py"
+      ],
+      "direct_independent_acceptance_proven": false
+    },
+    {
+      "id": "WR-05",
+      "status": "DONE-LOCAL",
+      "remaining_gate": "admin issue/amend/revoke/list",
+      "evidence_source_labels": "tools/rdg-authority.py; tests/rdg-bearer-package.integration.test.py",
+      "resolved_evidence_paths": [
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tools/rdg-authority.py",
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tests/rdg-bearer-package.integration.test.py"
+      ],
+      "direct_independent_acceptance_proven": false
+    },
+    {
+      "id": "WR-06",
+      "status": "PARTIAL",
+      "remaining_gate": "delegated admin scoped tested",
+      "evidence_source_labels": "tools/rdg-authority.py; tests/rdg-bearer-package.integration.test.py",
+      "resolved_evidence_paths": [
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tools/rdg-authority.py",
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tests/rdg-bearer-package.integration.test.py"
+      ],
+      "direct_independent_acceptance_proven": false
+    },
+    {
+      "id": "WR-07",
+      "status": "DONE-LOCAL",
+      "remaining_gate": "revocation race/replay local",
+      "evidence_source_labels": "tools/rdg-authority.py; tests/rdg-bearer-package.integration.test.py",
+      "resolved_evidence_paths": [
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tools/rdg-authority.py",
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tests/rdg-bearer-package.integration.test.py"
+      ],
+      "direct_independent_acceptance_proven": false
+    },
+    {
+      "id": "WR-08",
+      "status": "PARTIAL",
+      "remaining_gate": "user-facing useful denial UI",
+      "evidence_source_labels": "tools/rdg-authority.py; tests/rdg-bearer-package.integration.test.py",
+      "resolved_evidence_paths": [
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tools/rdg-authority.py",
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tests/rdg-bearer-package.integration.test.py"
+      ],
+      "direct_independent_acceptance_proven": false
+    },
+    {
+      "id": "WR-09",
+      "status": "PARTIAL",
+      "remaining_gate": "full operation path matrix",
+      "evidence_source_labels": "tools/rdg-authority.py; tests/rdg-bearer-package.integration.test.py",
+      "resolved_evidence_paths": [
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tools/rdg-authority.py",
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tests/rdg-bearer-package.integration.test.py"
+      ],
+      "direct_independent_acceptance_proven": false
+    },
+    {
+      "id": "WR-10",
+      "status": "PARTIAL",
+      "remaining_gate": "human trust and decision autonomy",
+      "evidence_source_labels": "tools/rdg-authority.py; tests/rdg-bearer-package.integration.test.py",
+      "resolved_evidence_paths": [
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tools/rdg-authority.py",
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tests/rdg-bearer-package.integration.test.py"
+      ],
+      "direct_independent_acceptance_proven": false
+    },
+    {
+      "id": "WR-11",
+      "status": "PARTIAL",
+      "remaining_gate": "all redaction/secret logs",
+      "evidence_source_labels": "tools/rdg-authority.py; tests/rdg-bearer-package.integration.test.py",
+      "resolved_evidence_paths": [
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tools/rdg-authority.py",
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tests/rdg-bearer-package.integration.test.py"
+      ],
+      "direct_independent_acceptance_proven": false
+    },
+    {
+      "id": "WR-12",
+      "status": "DONE-LOCAL",
+      "remaining_gate": "guard boundary explicit",
+      "evidence_source_labels": "tools/rdg-authority.py; tests/rdg-bearer-package.integration.test.py",
+      "resolved_evidence_paths": [
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tools/rdg-authority.py",
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tests/rdg-bearer-package.integration.test.py"
+      ],
+      "direct_independent_acceptance_proven": false
+    },
+    {
+      "id": "WR-13",
+      "status": "PARTIAL",
+      "remaining_gate": "F-R/U/O typed; F-P blocked",
+      "evidence_source_labels": "tools/rdg-v7-model.py; docs/guides/RDG-TYPED-FINDINGS-STAGE2-PILOT.md",
+      "resolved_evidence_paths": [
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tools/rdg-v7-model.py",
+        "docs/guides/RDG-TYPED-FINDINGS-STAGE2-PILOT.md"
+      ],
+      "direct_independent_acceptance_proven": false
+    },
+    {
+      "id": "WR-14",
+      "status": "PARTIAL",
+      "remaining_gate": "questions/evidence/PR multi-relations",
+      "evidence_source_labels": "tools/rdg-v7-model.py; docs/guides/RDG-TYPED-FINDINGS-STAGE2-PILOT.md",
+      "resolved_evidence_paths": [
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tools/rdg-v7-model.py",
+        "docs/guides/RDG-TYPED-FINDINGS-STAGE2-PILOT.md"
+      ],
+      "direct_independent_acceptance_proven": false
+    },
+    {
+      "id": "WR-15",
+      "status": "PARTIAL",
+      "remaining_gate": "independent dispositions/status",
+      "evidence_source_labels": "tools/rdg-v7-model.py; docs/guides/RDG-TYPED-FINDINGS-STAGE2-PILOT.md",
+      "resolved_evidence_paths": [
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tools/rdg-v7-model.py",
+        "docs/guides/RDG-TYPED-FINDINGS-STAGE2-PILOT.md"
+      ],
+      "direct_independent_acceptance_proven": false
+    },
+    {
+      "id": "WR-16",
+      "status": "PARTIAL",
+      "remaining_gate": "open canon authoring provenance",
+      "evidence_source_labels": "tools/rdg-canon-context-review.py (read-only only)",
+      "resolved_evidence_paths": [
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tools/rdg-canon-context-review.py"
+      ],
+      "direct_independent_acceptance_proven": false
+    },
+    {
+      "id": "WR-17",
+      "status": "PARTIAL",
+      "remaining_gate": "upstream comparison end-to-end",
+      "evidence_source_labels": "tools/rdg-canon-context-review.py (upstream proof incomplete)",
+      "resolved_evidence_paths": [
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tools/rdg-canon-context-review.py"
+      ],
+      "direct_independent_acceptance_proven": false
+    },
+    {
+      "id": "WR-18",
+      "status": "PARTIAL",
+      "remaining_gate": "T1/prepared-to-working full lifecycle",
+      "evidence_source_labels": "tools/rdg-gendocen-t1-history-smoke.py (synthetic T1 only)",
+      "resolved_evidence_paths": [
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tools/rdg-gendocen-t1-history-smoke.py"
+      ],
+      "direct_independent_acceptance_proven": false
+    },
+    {
+      "id": "WR-19",
+      "status": "PARTIAL",
+      "remaining_gate": "selected vs performed/verified",
+      "evidence_source_labels": "tools/rdg-v7-model.py; docs/guides/RDG-TYPED-FINDINGS-STAGE2-PILOT.md",
+      "resolved_evidence_paths": [
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tools/rdg-v7-model.py",
+        "docs/guides/RDG-TYPED-FINDINGS-STAGE2-PILOT.md"
+      ],
+      "direct_independent_acceptance_proven": false
+    },
+    {
+      "id": "WR-20",
+      "status": "PARTIAL",
+      "remaining_gate": "full Graph API operation inventory",
+      "evidence_source_labels": "tools/rdg-v7-model.py; docs/guides/RDG-TYPED-FINDINGS-STAGE2-PILOT.md",
+      "resolved_evidence_paths": [
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tools/rdg-v7-model.py",
+        "docs/guides/RDG-TYPED-FINDINGS-STAGE2-PILOT.md"
+      ],
+      "direct_independent_acceptance_proven": false
+    },
+    {
+      "id": "WR-21",
+      "status": "PARTIAL",
+      "remaining_gate": "legacy O/D compatibility not migration",
+      "evidence_source_labels": "docs/guides/RDG-V7-WORKING-GRAPHS.md",
+      "resolved_evidence_paths": [
+        "docs/guides/RDG-V7-WORKING-GRAPHS.md"
+      ],
+      "direct_independent_acceptance_proven": false
+    },
+    {
+      "id": "WR-22",
+      "status": "OPEN",
+      "remaining_gate": "C1 OR C2 plus C3 applied scenario",
+      "evidence_source_labels": "docs/guides/RDG-V7-WORKING-GRAPHS.md",
+      "resolved_evidence_paths": [
+        "docs/guides/RDG-V7-WORKING-GRAPHS.md"
+      ],
+      "direct_independent_acceptance_proven": false
+    },
+    {
+      "id": "WR-23",
+      "status": "PARTIAL",
+      "remaining_gate": "transient Lens yes, retirement later",
+      "evidence_source_labels": "docs/guides/RDG-V7-WORKING-GRAPHS.md",
+      "resolved_evidence_paths": [
+        "docs/guides/RDG-V7-WORKING-GRAPHS.md"
+      ],
+      "direct_independent_acceptance_proven": false
+    },
+    {
+      "id": "WR-24",
+      "status": "PARTIAL",
+      "remaining_gate": "research two-chat demonstration",
+      "evidence_source_labels": "docs/guides/RDG-V7-WORKING-GRAPHS.md",
+      "resolved_evidence_paths": [
+        "docs/guides/RDG-V7-WORKING-GRAPHS.md"
+      ],
+      "direct_independent_acceptance_proven": false
+    },
+    {
+      "id": "WR-25",
+      "status": "OPEN",
+      "remaining_gate": "hide/detach/archive/delete/lazy retrieval",
+      "evidence_source_labels": "NO DIRECT PROOF: hide/detach/archive pending",
+      "resolved_evidence_paths": [],
+      "direct_independent_acceptance_proven": false
+    },
+    {
+      "id": "WR-26",
+      "status": "OPEN",
+      "remaining_gate": "cross-graph promotion one owner",
+      "evidence_source_labels": "NO DIRECT PROOF: promotion/link pending",
+      "resolved_evidence_paths": [],
+      "direct_independent_acceptance_proven": false
+    },
+    {
+      "id": "WR-27",
+      "status": "OPEN",
+      "remaining_gate": "valuable success without Finding",
+      "evidence_source_labels": "NO DIRECT PROOF: saved success without Finding pending",
+      "resolved_evidence_paths": [],
+      "direct_independent_acceptance_proven": false
+    },
+    {
+      "id": "WR-28",
+      "status": "DONE-LOCAL",
+      "remaining_gate": "RDG JSON read-only Gendocen projection",
+      "evidence_source_labels": "tools/rdg-gendocen-adapter.py; tests/rdg-gendocen-resources.test.py",
+      "resolved_evidence_paths": [
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tools/rdg-gendocen-adapter.py",
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tests/rdg-gendocen-resources.test.py"
+      ],
+      "direct_independent_acceptance_proven": false
+    },
+    {
+      "id": "WR-29",
+      "status": "PARTIAL",
+      "remaining_gate": "Stable IDs and scoped dependencies verified; historical as-of and full production consumers remain open.",
+      "evidence_source_labels": "P0 scoped regression and actual Gendocen dependency matrix",
+      "resolved_evidence_paths": [
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tools/rdg-gendocen-adapter.py",
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tests/rdg-gendocen-resources.test.py",
+        "tools/rdg-gendocen-dependencies.py",
+        "tests/rdg-gendocen-dependencies.test.py",
+        "docs/guides/RDG-GENDOCEN-DEPENDENCY-COVERAGE-P0.md",
+        "docs/handoffs/rdg-p0-dependencies-20261018/acceptance.log",
+        "docs/handoffs/rdg-p0-dependencies-20261018/dependencies.log"
+      ],
+      "direct_independent_acceptance_proven": false,
+      "baseline_status": "PARTIAL"
+    },
+    {
+      "id": "WR-30",
+      "status": "DONE-LOCAL",
+      "remaining_gate": "real receipts and stale review in pilot",
+      "evidence_source_labels": "tools/rdg-gendocen-adapter.py; tests/rdg-gendocen-resources.test.py",
+      "resolved_evidence_paths": [
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tools/rdg-gendocen-adapter.py",
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tests/rdg-gendocen-resources.test.py"
+      ],
+      "direct_independent_acceptance_proven": false
+    },
+    {
+      "id": "WR-31",
+      "status": "PARTIAL",
+      "remaining_gate": "P0.1: guard принимает пропуск группы sequence в producer declaration как complete; закрыть независимую проверку покрытия до P2. Исходный branch swap исправлен.",
+      "evidence_source_labels": "P0 scoped regression and actual Gendocen dependency matrix",
+      "resolved_evidence_paths": [
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/tests/rdg-gendocen-branch-membership.acceptance.test.py",
+        "tools/rdg-gendocen-dependencies.py",
+        "tests/rdg-gendocen-dependencies.test.py",
+        "docs/guides/RDG-GENDOCEN-DEPENDENCY-COVERAGE-P0.md",
+        "docs/handoffs/rdg-p0-dependencies-20261018/acceptance.log",
+        "docs/handoffs/rdg-p0-dependencies-20261018/dependencies.log",
+        "docs/handoffs/rdg-progress-review-20261019-v1/REVIEW.md",
+        "docs/handoffs/rdg-progress-review-20261019-v1/PROBES.json",
+        "docs/handoffs/rdg-progress-review-20261019-v1/coverage-review.acceptance.test.py",
+        "docs/handoffs/rdg-progress-review-20261019-v1/coverage-review.log"
+      ],
+      "direct_independent_acceptance_proven": false,
+      "baseline_status": "DEFECT-REPRODUCED",
+      "local_defect_status": "FIXED-AND-VERIFIED-SCOPED",
+      "original_branch_defect_status": "FIXED-AND-VERIFIED-SCOPED",
+      "coverage_guard_status": "REOPENED-CONFIRMED-SOURCE-GROUP-GAP",
+      "review_finding_ids": [
+        "F-P-PROGRESS-01"
+      ]
+    },
+    {
+      "id": "WR-32",
+      "status": "OPEN",
+      "remaining_gate": "narrative Markdown representation",
+      "evidence_source_labels": "NO DIRECT PROOF: narrative Markdown pending",
+      "resolved_evidence_paths": [],
+      "direct_independent_acceptance_proven": false
+    },
+    {
+      "id": "WR-33",
+      "status": "OPEN",
+      "remaining_gate": "external consumer read view",
+      "evidence_source_labels": "tools/rdg-gendocen-adapter.py (external consumer unverified)",
+      "resolved_evidence_paths": [
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tools/rdg-gendocen-adapter.py"
+      ],
+      "direct_independent_acceptance_proven": false
+    },
+    {
+      "id": "WR-34",
+      "status": "PARTIAL",
+      "remaining_gate": "no silent RDG write, real authorized review pending",
+      "evidence_source_labels": "tools/rdg-gendocen-adapter.py; tests/rdg-gendocen-resources.test.py",
+      "resolved_evidence_paths": [
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tools/rdg-gendocen-adapter.py",
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tests/rdg-gendocen-resources.test.py"
+      ],
+      "direct_independent_acceptance_proven": false
+    },
+    {
+      "id": "WR-35",
+      "status": "PARTIAL",
+      "remaining_gate": "local recovery yes, remote no",
+      "evidence_source_labels": "tools/graph-apply.py; tests/rdg-bearer-package.integration.test.py",
+      "resolved_evidence_paths": [
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tools/graph-apply.py",
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tests/rdg-bearer-package.integration.test.py"
+      ],
+      "direct_independent_acceptance_proven": false
+    },
+    {
+      "id": "WR-36",
+      "status": "DECISION-GATE",
+      "remaining_gate": "canonical GitHub repo/branch/writer",
+      "evidence_source_labels": "NO DIRECT PROOF: GitHub owner user decision pending",
+      "resolved_evidence_paths": [],
+      "direct_independent_acceptance_proven": false
+    },
+    {
+      "id": "WR-37",
+      "status": "OPEN",
+      "remaining_gate": "Helper+Viewer new features installed",
+      "evidence_source_labels": "NO DIRECT PROOF: installed Helper/Viewer pending",
+      "resolved_evidence_paths": [],
+      "direct_independent_acceptance_proven": false
+    },
+    {
+      "id": "WR-38",
+      "status": "OPEN",
+      "remaining_gate": "no deprecation decision",
+      "evidence_source_labels": "NO DIRECT PROOF: retirement intentionally deferred",
+      "resolved_evidence_paths": [],
+      "direct_independent_acceptance_proven": false
+    },
+    {
+      "id": "WR-39",
+      "status": "PARTIAL",
+      "remaining_gate": "Fresh scoped/full regression passed; independent production review and installed checks remain open.",
+      "evidence_source_labels": "P0 scoped regression and actual Gendocen dependency matrix",
+      "resolved_evidence_paths": [
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tools/graph-apply.py",
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tests/rdg-bearer-package.integration.test.py",
+        "tools/rdg-gendocen-dependencies.py",
+        "tests/rdg-gendocen-dependencies.test.py",
+        "docs/guides/RDG-GENDOCEN-DEPENDENCY-COVERAGE-P0.md",
+        "docs/handoffs/rdg-p0-dependencies-20261018/acceptance.log",
+        "docs/handoffs/rdg-p0-dependencies-20261018/dependencies.log"
+      ],
+      "direct_independent_acceptance_proven": false,
+      "baseline_status": "PARTIAL"
+    },
+    {
+      "id": "WR-40",
+      "status": "PARTIAL",
+      "remaining_gate": "runtime yes, license pending",
+      "evidence_source_labels": "docs/guides/RDG-GENDOCEN-RESOURCES-STAGE1B.md (license open)",
+      "resolved_evidence_paths": [
+        "docs/guides/RDG-GENDOCEN-RESOURCES-STAGE1B.md"
+      ],
+      "direct_independent_acceptance_proven": false
+    },
+    {
+      "id": "WR-41",
+      "status": "DONE-LOCAL",
+      "remaining_gate": "candidate-only graph.create",
+      "evidence_source_labels": "tools/rdg-v7-model.py; tests/rdg-bearer-package.integration.test.py",
+      "resolved_evidence_paths": [
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tools/rdg-v7-model.py",
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tests/rdg-bearer-package.integration.test.py"
+      ],
+      "direct_independent_acceptance_proven": false
+    },
+    {
+      "id": "WR-42",
+      "status": "DONE-LOCAL",
+      "remaining_gate": "separate selected Action",
+      "evidence_source_labels": "tools/rdg-v7-model.py; tests/rdg-bearer-package.integration.test.py",
+      "resolved_evidence_paths": [
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tools/rdg-v7-model.py",
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tests/rdg-bearer-package.integration.test.py"
+      ],
+      "direct_independent_acceptance_proven": false
+    },
+    {
+      "id": "WR-43",
+      "status": "DONE-LOCAL",
+      "remaining_gate": "local revoke vs durable commit",
+      "evidence_source_labels": "tools/rdg-v7-model.py; tests/rdg-bearer-package.integration.test.py",
+      "resolved_evidence_paths": [
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tools/rdg-v7-model.py",
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tests/rdg-bearer-package.integration.test.py"
+      ],
+      "direct_independent_acceptance_proven": false
+    },
+    {
+      "id": "WR-44",
+      "status": "DONE-LOCAL",
+      "remaining_gate": "bearer-only client + internal receipt",
+      "evidence_source_labels": "tools/rdg-v7-model.py; tests/rdg-bearer-package.integration.test.py",
+      "resolved_evidence_paths": [
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tools/rdg-v7-model.py",
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tests/rdg-bearer-package.integration.test.py"
+      ],
+      "direct_independent_acceptance_proven": false
+    },
+    {
+      "id": "WR-45",
+      "status": "PARTIAL",
+      "remaining_gate": "P1: Candidate-контракт identity/owner/path/version описан. Canonical Plan owner и guarded persistence ещё не реализованы.",
+      "evidence_source_labels": "tools/rdg-temporal-plan.py; tests/rdg-temporal-plan.test.py; Candidate P1 contract and source-consistency review",
+      "resolved_evidence_paths": [
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tools/rdg-temporal-plan.py",
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tests/rdg-temporal-plan.test.py",
+        "docs/guides/RDG-TEMPORAL-PLAN-OWNER-CONTRACT-P1.md",
+        "docs/handoffs/rdg-p1-plan-contract-20261019/P1-CONTRACT.json",
+        "docs/handoffs/rdg-p1-plan-contract-20261019/P2-ACCEPTANCE-MATRIX.json",
+        "docs/handoffs/rdg-p1-plan-contract-20261019/DOCUMENT-CONSISTENCY.json"
+      ],
+      "direct_independent_acceptance_proven": false,
+      "p0_status": "PARTIAL",
+      "p1_contract_state": "CANDIDATE-DOCUMENTED-NOT-IMPLEMENTED"
+    },
+    {
+      "id": "WR-46",
+      "status": "PARTIAL",
+      "remaining_gate": "P1: precision, relative/unknown time и окна определены как Candidate. Новые temporal units и полная проверка выполнимости не реализованы.",
+      "evidence_source_labels": "tools/rdg-temporal-plan.py; tests/rdg-temporal-plan.test.py; Candidate P1 contract and source-consistency review",
+      "resolved_evidence_paths": [
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tools/rdg-temporal-plan.py",
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tests/rdg-temporal-plan.test.py",
+        "docs/guides/RDG-TEMPORAL-PLAN-OWNER-CONTRACT-P1.md",
+        "docs/handoffs/rdg-p1-plan-contract-20261019/P1-CONTRACT.json",
+        "docs/handoffs/rdg-p1-plan-contract-20261019/P2-ACCEPTANCE-MATRIX.json",
+        "docs/handoffs/rdg-p1-plan-contract-20261019/DOCUMENT-CONSISTENCY.json"
+      ],
+      "direct_independent_acceptance_proven": false,
+      "p0_status": "PARTIAL",
+      "p1_contract_state": "CANDIDATE-DOCUMENTED-NOT-IMPLEMENTED"
+    },
+    {
+      "id": "WR-47",
+      "status": "PARTIAL",
+      "remaining_gate": "P1: будущие ветви отделены от actual event и verification. Actual-event lifecycle и несколько событий ещё не реализованы. Review: определить границу presentation title и semantic event definition перед расширением lifecycle.",
+      "evidence_source_labels": "tools/rdg-temporal-plan.py; tests/rdg-temporal-plan.test.py; Candidate P1 contract and source-consistency review",
+      "resolved_evidence_paths": [
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tools/rdg-temporal-plan.py",
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tests/rdg-temporal-plan.test.py",
+        "docs/guides/RDG-TEMPORAL-PLAN-OWNER-CONTRACT-P1.md",
+        "docs/handoffs/rdg-p1-plan-contract-20261019/P1-CONTRACT.json",
+        "docs/handoffs/rdg-p1-plan-contract-20261019/P2-ACCEPTANCE-MATRIX.json",
+        "docs/handoffs/rdg-p1-plan-contract-20261019/DOCUMENT-CONSISTENCY.json"
+      ],
+      "direct_independent_acceptance_proven": false,
+      "p0_status": "PARTIAL",
+      "p1_contract_state": "CANDIDATE-DOCUMENTED-NOT-IMPLEMENTED",
+      "review_risk_ids": [
+        "F-R-PROGRESS-02"
+      ]
+    },
+    {
+      "id": "WR-48",
+      "status": "PARTIAL",
+      "remaining_gate": "P1: квалифицированные refs и различие step occurrence/Action identity описаны. Owner binding и точные исторические RDG snapshots ещё не реализованы.",
+      "evidence_source_labels": "tools/rdg-temporal-plan.py; tests/rdg-temporal-plan.test.py; Candidate P1 contract and source-consistency review",
+      "resolved_evidence_paths": [
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tools/rdg-temporal-plan.py",
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tests/rdg-temporal-plan.test.py",
+        "docs/guides/RDG-TEMPORAL-PLAN-OWNER-CONTRACT-P1.md",
+        "docs/handoffs/rdg-p1-plan-contract-20261019/P1-CONTRACT.json",
+        "docs/handoffs/rdg-p1-plan-contract-20261019/P2-ACCEPTANCE-MATRIX.json",
+        "docs/handoffs/rdg-p1-plan-contract-20261019/DOCUMENT-CONSISTENCY.json"
+      ],
+      "direct_independent_acceptance_proven": false,
+      "p0_status": "PARTIAL",
+      "p1_contract_state": "CANDIDATE-DOCUMENTED-NOT-IMPLEMENTED"
+    },
+    {
+      "id": "WR-49",
+      "status": "PARTIAL",
+      "remaining_gate": "deadline risk F-R pilot not full Canon",
+      "evidence_source_labels": "tools/rdg-temporal-impact.py; tools/rdg-gendocen-t1-history-smoke.py",
+      "resolved_evidence_paths": [
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tools/rdg-temporal-impact.py",
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tools/rdg-gendocen-t1-history-smoke.py"
+      ],
+      "direct_independent_acceptance_proven": false
+    },
+    {
+      "id": "WR-50",
+      "status": "PARTIAL",
+      "remaining_gate": "P0.1: guard принимает пропуск группы sequence в producer declaration как complete; закрыть независимую проверку покрытия до P2. Исходный branch swap исправлен.",
+      "evidence_source_labels": "P0 scoped regression and actual Gendocen dependency matrix",
+      "resolved_evidence_paths": [
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/tests/rdg-gendocen-branch-membership.acceptance.test.py",
+        "tools/rdg-gendocen-dependencies.py",
+        "tests/rdg-gendocen-dependencies.test.py",
+        "docs/guides/RDG-GENDOCEN-DEPENDENCY-COVERAGE-P0.md",
+        "docs/handoffs/rdg-p0-dependencies-20261018/acceptance.log",
+        "docs/handoffs/rdg-p0-dependencies-20261018/dependencies.log",
+        "docs/handoffs/rdg-progress-review-20261019-v1/REVIEW.md",
+        "docs/handoffs/rdg-progress-review-20261019-v1/PROBES.json",
+        "docs/handoffs/rdg-progress-review-20261019-v1/coverage-review.acceptance.test.py",
+        "docs/handoffs/rdg-progress-review-20261019-v1/coverage-review.log"
+      ],
+      "direct_independent_acceptance_proven": false,
+      "baseline_status": "DEFECT-REPRODUCED",
+      "local_defect_status": "FIXED-AND-VERIFIED-SCOPED",
+      "original_branch_defect_status": "FIXED-AND-VERIFIED-SCOPED",
+      "coverage_guard_status": "REOPENED-CONFIRMED-SOURCE-GROUP-GAP",
+      "review_finding_ids": [
+        "F-P-PROGRESS-01"
+      ]
+    },
+    {
+      "id": "WR-51",
+      "status": "OPEN",
+      "remaining_gate": "OPEN: разделение Plan write/accept/event-attest/Action.select описано в Candidate; Plan authorizer/writer и trusted event path отсутствуют.",
+      "evidence_source_labels": "NO DIRECT PROOF: Plan writer and attest grants pending; Candidate P1 contract and source-consistency review",
+      "resolved_evidence_paths": [
+        "docs/guides/RDG-TEMPORAL-PLAN-OWNER-CONTRACT-P1.md",
+        "docs/handoffs/rdg-p1-plan-contract-20261019/P1-CONTRACT.json",
+        "docs/handoffs/rdg-p1-plan-contract-20261019/P2-ACCEPTANCE-MATRIX.json",
+        "docs/handoffs/rdg-p1-plan-contract-20261019/DOCUMENT-CONSISTENCY.json"
+      ],
+      "direct_independent_acceptance_proven": false,
+      "p0_status": "OPEN",
+      "p1_contract_state": "CANDIDATE-DOCUMENTED-NOT-IMPLEMENTED"
+    },
+    {
+      "id": "WR-52",
+      "status": "PARTIAL",
+      "remaining_gate": "P1: knownAt/effectiveAt/lifecycle-scoped as-of описан. Хранение версий, исторический resolver и доказательство T1-as-of отсутствуют. Review: определить границу presentation title и semantic event definition перед расширением lifecycle.",
+      "evidence_source_labels": "tools/rdg-gendocen-t1-history-smoke.py (synthetic T1 only); Candidate P1 contract and source-consistency review",
+      "resolved_evidence_paths": [
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tools/rdg-gendocen-t1-history-smoke.py",
+        "docs/guides/RDG-TEMPORAL-PLAN-OWNER-CONTRACT-P1.md",
+        "docs/handoffs/rdg-p1-plan-contract-20261019/P1-CONTRACT.json",
+        "docs/handoffs/rdg-p1-plan-contract-20261019/P2-ACCEPTANCE-MATRIX.json",
+        "docs/handoffs/rdg-p1-plan-contract-20261019/DOCUMENT-CONSISTENCY.json"
+      ],
+      "direct_independent_acceptance_proven": false,
+      "p0_status": "PARTIAL",
+      "p1_contract_state": "CANDIDATE-DOCUMENTED-NOT-IMPLEMENTED",
+      "review_risk_ids": [
+        "F-R-PROGRESS-02"
+      ]
+    },
+    {
+      "id": "WR-53",
+      "status": "PARTIAL",
+      "remaining_gate": "Plan read-only not timeline UI",
+      "evidence_source_labels": "tools/rdg-temporal-plan.py; docs/examples/temporal-plan-candidate-v1.json",
+      "resolved_evidence_paths": [
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/tools/rdg-temporal-plan.py",
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-snapshot/rd-graphs/docs/examples/temporal-plan-candidate-v1.json"
+      ],
+      "direct_independent_acceptance_proven": false
+    }
+  ]
+}

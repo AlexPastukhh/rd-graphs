@@ -1,0 +1,123 @@
+--- a/tools/rdg-legacy-migration.py
++++ b/tools/rdg-legacy-migration.py
+@@ -244,6 +244,7 @@
+         if self.journal(tx).is_file():
+             prior=json.loads(self.journal(tx).read_bytes())
+             self.check(prior['requestSHA256']==request_sha and prior['actorTokenSHA256']==actor_sha,'EXACT_ACTOR_AND_REQUEST_REQUIRED')
++            self.check(prior['state']!='cancelled','TRANSACTION_CANCELLED')
+         if not preflight and self.journal(tx).is_file():
+             if self.store.metadata_path('accepted',tx).is_file():
+                 with self.store.lock(True):return self.resume(prior,request_sha,actor_sha)
+@@ -327,6 +328,32 @@
+         result=self.store.replay(record['transactionId'],request_sha,actor_sha)
+         return result if record['state']=='completed' else self.finish(record,result)
+ 
++    def cancel(self,transaction_id):
++        """Unfreeze this actor's unaccepted switch; never undo accepted facts."""
++        self.check(isinstance(transaction_id,str) and str(uuid.UUID(transaction_id))==transaction_id,'TRANSACTION_ID')
++        actor=hashlib.sha256(self.app.token.encode()).hexdigest()
++        with self.store.lock(True,create=False):
++            path=self.journal(transaction_id);self.check(path.is_file(),'TRANSACTION_NOT_FOUND')
++            record=json.loads(path.read_bytes());self.check(record['actorTokenSHA256']==actor,'EXACT_ACTOR_AND_REQUEST_REQUIRED')
++            self.check(not self.store.metadata_path('accepted',transaction_id).exists() and
++                not self.store.metadata_path('completed',transaction_id).exists(),'ACCEPTED_SWITCH_REQUIRES_FORWARD_RECOVERY')
++            for row in self.store.scan():
++                if row.get('packageId')!=record['packageId']:continue
++                directory=self.store.package_path(row['path'])
++                self.check(not row.get('head') and not any(self.io.safe_path(directory,'.rdg/'+kind+'/'+transaction_id+'.json',True).exists()
++                    for kind in ('acceptances','commits','completed')),'PUBLISHED_STAGE_CANNOT_CANCEL')
++            markers=[]
++            for route in record['routes']:
++                marker=self.configured_path(route['path'])
++                if not marker.exists():continue
++                self.check(not marker.is_symlink(),'SYMLINK_SOURCE');value=json.loads(marker.read_bytes())
++                self.check(value.get('transactionId')==transaction_id and value.get('requestSHA256')==record['requestSHA256'] and
++                    value.get('state')=='switching','SOURCE_ROUTE_CONFLICT')
++                markers.append(marker)
++            for marker in markers:marker.unlink();self.io.sync_dir(marker.parent)
++            record['state']='cancelled';self.io.atomic_bytes(path,self.store.encode(record))
++            return {'cancelled':True,'accepted':False,'transactionId':transaction_id,'sourceFactsRewritten':False,'stagedBytesRetained':True}
++
+     def historical_records(self,row,records,inventory):
+         """Read owned migration evidence after copy/move, without a legacy path."""
+         directory=self.store.package_path(row['path']);events={};plans=[];graphs=[];gaps=[];seen=set()
+--- a/tools/rdg-portable-service.py
++++ b/tools/rdg-portable-service.py
+@@ -189,7 +189,8 @@
+                 'resolve':{'packageId','reference'},'source_snapshot':{'packageId','pin','view'},
+                 'schema':{'op','packageId','nodeId','sourcePackageId','command','sourcePath','sourceKey'},
+                 'migration_sources':set(),'migration_inspect':{'sourceKey'},
+-                'receipt':{'packageId','transactionId'},'recover':{'transactionId'},'preflight':{'request'},'apply':{'request'}}
++                'receipt':{'packageId','transactionId'},'recover':{'transactionId'},'cancel_migration':{'transactionId'},
++                'preflight':{'request'},'apply':{'request'}}
+         self.check(method in fields and set(message)<={'method'}|fields[method],'MESSAGE_FIELDS')
+         if method=='catalog':return self.catalog()
+         if method=='migration_sources':return self.migration.sources()
+@@ -202,6 +203,7 @@
+                                                message.get('sourcePackageId'),message.get('command'),message.get('sourcePath'),message.get('sourceKey'))
+         if method=='receipt':return self.receipt(message['packageId'],message['transactionId'])
+         if method=='recover':return self.recover(message['transactionId'])
++        if method=='cancel_migration':return self.migration.cancel(message['transactionId'])
+         return self.request(message['request'],preflight=method=='preflight')
+ 
+     def recover(self,transaction_id):
+--- a/tools/rdg-portable.py
++++ b/tools/rdg-portable.py
+@@ -32,7 +32,7 @@
+ 
+ def main(argv=None):
+     parser=argparse.ArgumentParser(description=__doc__)
+-    parser.add_argument('command',choices=('catalog','read','history','resolve','source_snapshot','migration_sources','migration_inspect','preflight','apply','schema','receipt','recover'))
++    parser.add_argument('command',choices=('catalog','read','history','resolve','source_snapshot','migration_sources','migration_inspect','preflight','apply','schema','receipt','recover','cancel_migration'))
+     parser.add_argument('--packages',required=True,type=Path)
+     parser.add_argument('--namespace',required=True)
+     parser.add_argument('--coordination-root',type=Path)
+@@ -57,6 +57,7 @@
+     if args.command=='schema':result=app.schema(args.op,args.package_id,args.node,args.source_package_id,args.core_command,args.source_folder,args.source_key)
+     elif args.command=='receipt':result=app.receipt(args.package_id,args.transaction_id)
+     elif args.command=='recover':result=app.recover(args.transaction_id)
++    elif args.command=='cancel_migration':result=app.migration.cancel(args.transaction_id)
+     elif args.command=='catalog':result=app.catalog()
+     elif args.command=='migration_sources':result=app.migration.sources()
+     elif args.command=='migration_inspect':result=app.migration.inspect(args.source_key)
+--- a/tools/rdg-portable-ui.js
++++ b/tools/rdg-portable-ui.js
+@@ -114,6 +114,7 @@
+       button(folders,'Проверить перенос папки',async()=>{const request=(await call({method:'schema',op:'folder_move',sourcePath:source.value})).request;request.path=destination.value;await prepare(request);});
+       const recovery=field(folders,'ID уже принятой операции');
+       button(folders,'Завершить принятую операцию',async()=>{guarded();cleanLayout();await call({method:'recover',transactionId:recovery.value.trim()});await refresh();});
++      button(folders,'Снять блокировку непринятой миграции',async()=>{guarded();cleanLayout();await call({method:'cancel_migration',transactionId:recovery.value.trim()});await refresh();});
+       if(migrationSources?.sources?.some(s=>!s.route)){
+         const migration=details(parent,'Перенести прежний owner в пакет');
+         const sources=select(migration,'Источник',migrationSources.sources.filter(s=>!s.route).map(s=>[s.sourceKey,s.sourceKey+' · '+s.graphFile]));
+--- a/tests/rdg-legacy-migration.test.py
++++ b/tests/rdg-legacy-migration.test.py
+@@ -127,9 +127,28 @@
+         with self.assertRaisesRegex(RuntimeError,'Injected prepared'):app.request(request,failpoint=self.fail('prepared'))
+         with self.assertRaisesRegex(ValueError,'LEGACY_OWNER_MIGRATED'):OWNER.read_snapshot(self.old_plans,self.plan_file)
+         self.authority.manage('revoke',self.admin,{'id':self.grant_id})
++        with self.assertRaisesRegex(ValueError,'ACCEPTED_SWITCH_REQUIRES_FORWARD_RECOVERY'):app.migration.cancel(request['transactionId'])
+         result=app.call({'method':'recover','transactionId':request['transactionId']});self.assertTrue(result['published'])
+         route=json.loads(app.migration.marker(self.graph_path).read_bytes());self.assertEqual(route['state'],'committed')
+         self.assertTrue(app.request(request)['idempotent'])
++
++    def test_cancel_unaccepted_switch_unfreezes_only_own_routes_without_discarding_facts(self):
++        request=self.prepared();app=self.app();original=self.graph_path.read_bytes()
++        with self.assertRaisesRegex(RuntimeError,'Injected staged'):app.request(request,failpoint=self.fail('staged'))
++        record=json.loads(app.migration.journal(request['transactionId']).read_bytes())
++        # Simulate process loss after its own route markers, before acceptance.
++        for route in record['routes']:
++            marker={'schemaVersion':1,'kind':'legacyOwnerRoute','transactionId':request['transactionId'],
++                'requestSHA256':record['requestSHA256'],'packageId':record['packageId'],'namespaceId':self.namespace,'state':'switching'}
++            Path(route['path']).write_bytes(self.store.encode(marker))
++        with self.assertRaisesRegex(ValueError,'EXACT_ACTOR'):
++            self.app(self.admin).migration.cancel(request['transactionId'])
++        result=app.call({'method':'cancel_migration','transactionId':request['transactionId']})
++        self.assertTrue(result['cancelled']);self.assertFalse(result['accepted']);self.assertTrue(result['stagedBytesRetained'])
++        self.assertEqual(self.graph_path.read_bytes(),original)
++        self.assertEqual(OWNER.read_snapshot(self.old_plans,self.plan_file)['plan']['revision'],1)
++        self.assertTrue(app.migration.cancel(request['transactionId'])['cancelled'])
++        with self.assertRaisesRegex(ValueError,'TRANSACTION_CANCELLED'):app.request(request)
+ 
+     def test_preacceptance_retry_reuses_witness_time_and_provenance_bytes(self):
+         request=self.prepared();app=self.app()

@@ -1,0 +1,8 @@
+{
+  "exitCode": 0,
+  "seconds": 0.93,
+  "command": [
+    "/usr/bin/python3",
+    "tests/rdg-canon-context-review.test.py"
+  ]
+}

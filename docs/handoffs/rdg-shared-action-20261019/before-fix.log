@@ -1,0 +1,17 @@
+test_real_engine_reviews_action_once_and_covers_both_occurrences (__main__.SharedActionAcceptance.test_real_engine_reviews_action_once_and_covers_both_occurrences) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+FAIL
+test_writer_reader_keep_one_action_and_distinct_case_membership (__main__.SharedActionAcceptance.test_writer_reader_keep_one_action_and_distinct_case_membership) ... ok
+
+======================================================================
+FAIL: test_real_engine_reviews_action_once_and_covers_both_occurrences (__main__.SharedActionAcceptance.test_real_engine_reviews_action_once_and_covers_both_occurrences)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/repos/rd-graphs/tests/rdg-shared-action-occurrences.acceptance.test.py", line 159, in test_real_engine_reviews_action_once_and_covers_both_occurrences
+    self.assertTrue(body.get("ok"),run.stdout+run.stderr)
+AssertionError: False is not true : {"attention_required": false, "command": "sync", "data": {"migration_before_command": {"changed": true, "event": {"action": "initialized_runtime_layout", "event_id": "migration-a6a95889-03ff-49d2-98d1-64cffe862654", "event_schema_version": "1.0.0", "from_version": null, "preserved_file_count": 0, "recorded_at": "2026-10-19T00:52:59.703922Z", "to_version": "1.0.0"}, "from_version": null, "initialized_from_empty": true, "preserved_files": [], "to_version": "1.0.0"}}, "errors": [{"code": "sync_failed", "details": null, "message": "current project builder/semantic/renderer registry is unavailable: semantic rule already registered for target file://review/A1.md", "severity": "error"}], "meta": {"engine_version": "0.1.0.dev25", "exit_code": 3, "status": "sync_failed"}, "ok": false, "schema_version": "2.0.0", "warnings": []}
+
+
+----------------------------------------------------------------------
+Ran 2 tests in 1.866s
+
+FAILED (failures=1)

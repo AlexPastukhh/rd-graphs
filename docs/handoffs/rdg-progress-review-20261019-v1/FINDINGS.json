@@ -1,0 +1,142 @@
+{
+  "review": "R-RDG-PROGRESS-20261019/v1",
+  "canonicalRdgGraphWritten": false,
+  "findings": [
+    {
+      "id": "F-P-PROGRESS-01",
+      "type": "F-P",
+      "severity": "HIGH",
+      "status": "OPEN",
+      "confidence": "HIGH",
+      "scope": "Coverage guard/proof; controlled omission in trusted producer declaration; default READ_MATRIX is not missing sequence.",
+      "actual": {
+        "changedFacets": [
+          "sequence"
+        ],
+        "checkExitCode": 0,
+        "checkOk": true,
+        "computedFacets": [
+          "branches",
+          "identity",
+          "sequence",
+          "steps",
+          "timeConstraints"
+        ],
+        "coverageComplete": true,
+        "declaredGroups": [
+          "branches",
+          "identity",
+          "steps",
+          "timeConstraints"
+        ],
+        "engine": "0.1.0.dev25",
+        "guardAccepted": true,
+        "mode": "missing-source-group",
+        "projectionSemanticHashChanged": true,
+        "registeredSources": [
+          "resource://rdg/graph.cad870d76f7aae7c360ed7e1#/reviewIdentity",
+          "resource://rdg/graph.cad870d76f7aae7c360ed7e1#/reviewNodesById/A1",
+          "resource://rdg/plan.05d4dd44bed09ec7d038ec1c#/reviewCoverage",
+          "resource://rdg/plan.05d4dd44bed09ec7d038ec1c#/reviewInputsByStep/S-A1/identity",
+          "resource://rdg/plan.05d4dd44bed09ec7d038ec1c#/reviewInputsByStep/S-A1/branches",
+          "resource://rdg/plan.05d4dd44bed09ec7d038ec1c#/reviewInputsByStep/S-A1/steps",
+          "resource://rdg/plan.05d4dd44bed09ec7d038ec1c#/reviewInputsByStep/S-A1/timeConstraints"
+        ],
+        "statuses": {
+          "A1": "valid",
+          "A2": "valid"
+        }
+      },
+      "control": {
+        "changedFacets": [
+          "sequence"
+        ],
+        "checkExitCode": 2,
+        "checkOk": true,
+        "computedFacets": [
+          "branches",
+          "identity",
+          "sequence",
+          "steps",
+          "timeConstraints"
+        ],
+        "coverageComplete": true,
+        "declaredGroups": [
+          "branches",
+          "identity",
+          "sequence",
+          "steps",
+          "timeConstraints"
+        ],
+        "engine": "0.1.0.dev25",
+        "guardAccepted": true,
+        "mode": "normal-sequence",
+        "projectionSemanticHashChanged": true,
+        "registeredSources": [
+          "resource://rdg/graph.cad870d76f7aae7c360ed7e1#/reviewIdentity",
+          "resource://rdg/graph.cad870d76f7aae7c360ed7e1#/reviewNodesById/A1",
+          "resource://rdg/plan.05d4dd44bed09ec7d038ec1c#/reviewCoverage",
+          "resource://rdg/plan.05d4dd44bed09ec7d038ec1c#/reviewInputsByStep/S-A1/identity",
+          "resource://rdg/plan.05d4dd44bed09ec7d038ec1c#/reviewInputsByStep/S-A1/branches",
+          "resource://rdg/plan.05d4dd44bed09ec7d038ec1c#/reviewInputsByStep/S-A1/steps",
+          "resource://rdg/plan.05d4dd44bed09ec7d038ec1c#/reviewInputsByStep/S-A1/sequence",
+          "resource://rdg/plan.05d4dd44bed09ec7d038ec1c#/reviewInputsByStep/S-A1/timeConstraints"
+        ],
+        "statuses": {
+          "A1": "review_required",
+          "A2": "review_required"
+        }
+      },
+      "proposal": "PR-PROGRESS-01",
+      "blocksUnconditionalP2": true
+    },
+    {
+      "id": "F-R-PROGRESS-02",
+      "type": "F-R",
+      "severity": "MEDIUM",
+      "status": "OPEN",
+      "confidence": "HIGH observation; MEDIUM semantic consequence",
+      "scope": "Presentation vs semantic event definition before future event lifecycle; current title exclusion is intentional.",
+      "actual": {
+        "changedFacets": [],
+        "checkExitCode": 0,
+        "checkOk": true,
+        "computedFacets": [
+          "branches",
+          "identity",
+          "sequence",
+          "steps",
+          "timeConstraints"
+        ],
+        "coverageComplete": true,
+        "declaredGroups": [
+          "branches",
+          "identity",
+          "sequence",
+          "steps",
+          "timeConstraints"
+        ],
+        "engine": "0.1.0.dev25",
+        "guardAccepted": true,
+        "mode": "event-title",
+        "projectionSemanticHashChanged": true,
+        "registeredSources": [
+          "resource://rdg/graph.cad870d76f7aae7c360ed7e1#/reviewIdentity",
+          "resource://rdg/graph.cad870d76f7aae7c360ed7e1#/reviewNodesById/A1",
+          "resource://rdg/plan.05d4dd44bed09ec7d038ec1c#/reviewCoverage",
+          "resource://rdg/plan.05d4dd44bed09ec7d038ec1c#/reviewInputsByStep/S-A1/identity",
+          "resource://rdg/plan.05d4dd44bed09ec7d038ec1c#/reviewInputsByStep/S-A1/branches",
+          "resource://rdg/plan.05d4dd44bed09ec7d038ec1c#/reviewInputsByStep/S-A1/steps",
+          "resource://rdg/plan.05d4dd44bed09ec7d038ec1c#/reviewInputsByStep/S-A1/sequence",
+          "resource://rdg/plan.05d4dd44bed09ec7d038ec1c#/reviewInputsByStep/S-A1/timeConstraints"
+        ],
+        "statuses": {
+          "A1": "valid",
+          "A2": "valid"
+        }
+      },
+      "proposal": "PR-PROGRESS-02",
+      "blocksUnconditionalP2": false
+    }
+  ]
+}

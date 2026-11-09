@@ -1,0 +1,10 @@
+{
+  "files": {
+    "README.md": "8272e1b6da952c345ccf74d63e6800063eaa6dbe2b411b79d513ee31f9e90e9c",
+    "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md": "339fd76664b8bece635da954c19bd8dcd1271f1aef428dde79c8ed07870f75c2",
+    "tools/rdg-gendocen-dependencies.py": "661454cb83dc5afc06f8c54227cbf6745666dff4a8cffd7220a6f7638bcce8a9",
+    "docs/guides/RDG-GENDOCEN-DEPENDENCY-COVERAGE-P0.md": "efb0f4ccaafbcdb644856ad37866a769d9e8d8dcd41b8dcea09ccb468741d610"
+  },
+  "gitAvailable": false,
+  "scope": "temporary synthetic roots only"
+}

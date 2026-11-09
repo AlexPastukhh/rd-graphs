@@ -1,0 +1,62 @@
+{
+  "tools/graph-package.py": {
+    "exists": true,
+    "sha256": "8831da6f5f584fb3a15803a13b4def79c57de80395527e38389b35d4fd627421"
+  },
+  "tools/rdg-activity.py": {
+    "exists": true,
+    "sha256": "ec1172dde50341ddac050a53d0c55d6d6157422d2237ae12eb73bb95e57555db"
+  },
+  "tools/rdg-workflow.py": {
+    "exists": true,
+    "sha256": "3a8be1eade0e4f96227ee36075ef4af40dbed6d16011c0e974051f726844aea0"
+  },
+  "tools/rd-graph-viewer.user.js": {
+    "exists": true,
+    "sha256": "44c86a37e128632961e075dd5c916a771a0158dc7d6b340fd594d2d2e61339fd"
+  },
+  "tools/rdg-workflow-helper.py": {
+    "exists": false,
+    "sha256": null
+  },
+  "tools/rdg-workflow-ui.js": {
+    "exists": false,
+    "sha256": null
+  },
+  "tests/rdg-workflow-helper.test.py": {
+    "exists": false,
+    "sha256": null
+  },
+  "tests/rdg-workflow-ui.test.cjs": {
+    "exists": false,
+    "sha256": null
+  },
+  "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md": {
+    "exists": true,
+    "sha256": "5feb6b78ce27259608bc76589e0f2b48e26c1c675cdb879870ed5a080376967f"
+  },
+  "docs/guides/RDG-DEEP-ACTION-AND-HISTORY.md": {
+    "exists": true,
+    "sha256": "9512edb9896e5ff8e28cef0068e08ce8e7a77a4ae544aa85cea7d998bb5f7914"
+  },
+  "docs/guides/VIEWER-EXPLORER.md": {
+    "exists": true,
+    "sha256": "89e0efcdbc710f05415843b17a060dd5235362efce7a1de946346cf83ad709d6"
+  },
+  "README.md": {
+    "exists": true,
+    "sha256": "fcb0bbff9376958c79ab76c9513243fcde3cce836f34571d5c5d0508643dcab5"
+  },
+  "tools/build-rdg-layout.py": {
+    "exists": true,
+    "sha256": "5e959e8168d84054341c3b924844677ae36d91c59b02e693b9c2e8a50c171792"
+  },
+  "tools/rd-graph-viewer-smoke.test.cjs": {
+    "exists": true,
+    "sha256": "156121a2d68b6110fa640f4db5eed1a6e3b14b92bc8fd8862ddfb75e286f83f1"
+  },
+  "tests/visual/rdg-full-detail-201.cjs": {
+    "exists": true,
+    "sha256": "351e31bf8840bdb3abcf71f885c0a82e5931eed79665699fad174688435aa6af"
+  }
+}

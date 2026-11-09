@@ -1,0 +1,7 @@
+{
+  "tools/rd-graph-viewer.user.js": "9089b152a7b73d5dc62d72cd1e359dd8830341b5ffd8914a12de3849989ba741",
+  "tools/rd-graph-viewer-smoke.test.cjs": "223ecb2ed3a6c2e483bf50db5e16539e0816252dee3b166b55c7d6f5a22af1ca",
+  "tests/visual/rdg-full-detail-201.cjs": "8439ff865cf86d8c798b3b2439bb18fc924258c1d72f9319ab7c2b1ce5c3efdf",
+  "README.md": "b629c431b3485aa99e69c20a3ff464936faba498530fd074cc77db47d8123bb8",
+  "docs/guides/VIEWER-EXPLORER.md": "07f607c98515ed5e80d07707ff2f0cbc0d9a4e0709dd66bd83e055deb56584ac"
+}

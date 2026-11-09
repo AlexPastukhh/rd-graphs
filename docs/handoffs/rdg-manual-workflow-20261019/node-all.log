@@ -1,0 +1,2494 @@
+TAP version 13
+# Subtest: one Requirement remains same between successive graph files, 1..N differs from precisely two branches
+ok 1 - one Requirement remains same between successive graph files, 1..N differs from precisely two branches
+  ---
+  duration_ms: 1260.070221
+  type: 'test'
+  ...
+# Subtest: one coherent seven-level suite, stable distinct root Requirements, complete set of 17 relations
+ok 2 - one coherent seven-level suite, stable distinct root Requirements, complete set of 17 relations
+  ---
+  duration_ms: 4.684365
+  type: 'test'
+  ...
+# Subtest: six separate Requirement-rooted graph levels derived from actual INTRODUCES, without manual arrows
+ok 3 - six separate Requirement-rooted graph levels derived from actual INTRODUCES, without manual arrows
+  ---
+  duration_ms: 110.809689
+  type: 'test'
+  ...
+# Subtest: one prepared PER_ITEM 1..N proposal leads to exactly two actual branches; one TM model with two applications
+ok 4 - one prepared PER_ITEM 1..N proposal leads to exactly two actual branches; one TM model with two applications
+  ---
+  duration_ms: 21.416175
+  type: 'test'
+  ...
+# Subtest: origins are NOT children; crosscutting has one ID, distinct scope edges; shared decision serves two Rs
+ok 5 - origins are NOT children; crosscutting has one ID, distinct scope edges; shared decision serves two Rs
+  ---
+  duration_ms: 46.068228
+  type: 'test'
+  ...
+# Subtest: open candidate is distinct from actual historical revision in another level
+ok 6 - open candidate is distinct from actual historical revision in another level
+  ---
+  duration_ms: 18.029299
+  type: 'test'
+  ...
+# Subtest: generator idempotence, writer strict restrictions and preserved original/real graphs
+ok 7 - generator idempotence, writer strict restrictions and preserved original/real graphs
+  ---
+  duration_ms: 613.443368
+  type: 'test'
+  ...
+# Subtest: all 10 registered 2D Target Modules are present, exactly once
+ok 8 - all 10 registered 2D Target Modules are present, exactly once
+  ---
+  duration_ms: 150.147815
+  type: 'test'
+  ...
+# Subtest: source content is bit-preserved; inventory, Unit IDs and guidance roundtrip
+ok 9 - source content is bit-preserved; inventory, Unit IDs and guidance roundtrip
+  ---
+  duration_ms: 956.227718
+  type: 'test'
+  ...
+# Subtest: original module whole guidance preserved: gates, workflow, validators, sources, file contracts
+ok 10 - original module whole guidance preserved: gates, workflow, validators, sources, file contracts
+  ---
+  duration_ms: 218.73695
+  type: 'test'
+  ...
+# Subtest: source files are not copied into graph as accepted project state
+ok 11 - source files are not copied into graph as accepted project state
+  ---
+  duration_ms: 254.980584
+  type: 'test'
+  ...
+# Subtest: template protection refuses writer without creating lock
+ok 12 - template protection refuses writer without creating lock
+  ---
+  duration_ms: 708.097308
+  type: 'test'
+  ...
+# Subtest: browser index and bundled Javascript expose all ten reusable template graphs
+ok 13 - browser index and bundled Javascript expose all ten reusable template graphs
+  ---
+  duration_ms: 194.064427
+  type: 'test'
+  ...
+# Subtest: CLI dry-run validates without changing graph or revision
+ok 14 - CLI dry-run validates without changing graph or revision
+  ---
+  duration_ms: 443.728195
+  type: 'test'
+  ...
+# Subtest: CLI acceptance atomically updates nodes edges events
+ok 15 - CLI acceptance atomically updates nodes edges events
+  ---
+  duration_ms: 532.415119
+  type: 'test'
+  ...
+# Subtest: CLI stale expectedRevision rejects without modifying graph
+ok 16 - CLI stale expectedRevision rejects without modifying graph
+  ---
+  duration_ms: 820.473017
+  type: 'test'
+  ...
+# Subtest: CLI no-op does not increase revision
+ok 17 - CLI no-op does not increase revision
+  ---
+  duration_ms: 284.620994
+  type: 'test'
+  ...
+# Subtest: CLI rejects D without decision_selected event
+ok 18 - CLI rejects D without decision_selected event
+  ---
+  duration_ms: 279.107286
+  type: 'test'
+  ...
+# Subtest: CLI rejects wrong parent semantics and keeps file
+ok 19 - CLI rejects wrong parent semantics and keeps file
+  ---
+  duration_ms: 359.147099
+  type: 'test'
+  ...
+# Subtest: CLI rejects cyclical decomposition
+ok 20 - CLI rejects cyclical decomposition
+  ---
+  duration_ms: 329.942889
+  type: 'test'
+  ...
+# Subtest: CLI rejects unsupported operations
+ok 21 - CLI rejects unsupported operations
+  ---
+  duration_ms: 349.407147
+  type: 'test'
+  ...
+# Subtest: pilot try-it file remains initial until user selects D
+ok 22 - pilot try-it file remains initial until user selects D
+  ---
+  duration_ms: 10.126856
+  type: 'test'
+  ...
+# Subtest: full two-level workflow: selected D introduces next R and stays traceable
+ok 23 - full two-level workflow: selected D introduces next R and stays traceable
+  ---
+  duration_ms: 647.502229
+  type: 'test'
+  ...
+# Subtest: crosscutting R applies to two R without cloning or decision event
+ok 24 - crosscutting R applies to two R without cloning or decision event
+  ---
+  duration_ms: 859.051042
+  type: 'test'
+  ...
+# Subtest: crosscutting APPLIES_TO refuses unmarked source and self-link
+ok 25 - crosscutting APPLIES_TO refuses unmarked source and self-link
+  ---
+  duration_ms: 1801.830283
+  type: 'test'
+  ...
+# Subtest: writer rejects non-workspace graph even without readOnly flag
+ok 26 - writer rejects non-workspace graph even without readOnly flag
+  ---
+  duration_ms: 1003.787177
+  type: 'test'
+  ...
+# Subtest: history guard rejects rewriting, broadening or superseding an accepted D without losing original
+ok 27 - history guard rejects rewriting, broadening or superseding an accepted D without losing original
+  ---
+  duration_ms: 3183.739449
+  type: 'test'
+  ...
+# Subtest: verification metadata may advance without overwriting the accepted answer or adding fictitious choice
+ok 28 - verification metadata may advance without overwriting the accepted answer or adding fictitious choice
+  ---
+  duration_ms: 931.247936
+  type: 'test'
+  ...
+# Subtest: unchanged accepted D fields remain no-op under history guard
+ok 29 - unchanged accepted D fields remain no-op under history guard
+  ---
+  duration_ms: 979.265581
+  type: 'test'
+  ...
+# Subtest: G01 example: 9 nodes / 8 edges, contiguous IDs, meaningful chain
+ok 30 - G01 example: 9 nodes / 8 edges, contiguous IDs, meaningful chain
+  ---
+  duration_ms: 2.611371
+  type: 'test'
+  ...
+# Subtest: G02 duplicate node ID is rejected
+ok 31 - G02 duplicate node ID is rejected
+  ---
+  duration_ms: 0.589989
+  type: 'test'
+  ...
+# Subtest: G03 duplicate edge ID is rejected
+ok 32 - G03 duplicate edge ID is rejected
+  ---
+  duration_ms: 0.393789
+  type: 'test'
+  ...
+# Subtest: G04 dangling edge is rejected
+ok 33 - G04 dangling edge is rejected
+  ---
+  duration_ms: 2.813206
+  type: 'test'
+  ...
+# Subtest: G05 INTRODUCES without parent is rejected
+ok 34 - G05 INTRODUCES without parent is rejected
+  ---
+  duration_ms: 1.29775
+  type: 'test'
+  ...
+# Subtest: G12 incompatible schemaVersion is rejected
+ok 35 - G12 incompatible schemaVersion is rejected
+  ---
+  duration_ms: 0.708343
+  type: 'test'
+  ...
+# Subtest: G13 empty graph can be validated
+ok 36 - G13 empty graph can be validated
+  ---
+  duration_ms: 0.674195
+  type: 'test'
+  ...
+# Subtest: G13 isolated requirement without a decision is allowed
+ok 37 - G13 isolated requirement without a decision is allowed
+  ---
+  duration_ms: 0.355714
+  type: 'test'
+  ...
+# Subtest: G14 Unicode / literal HTML-like content are valid data
+ok 38 - G14 Unicode / literal HTML-like content are valid data
+  ---
+  duration_ms: 0.945091
+  type: 'test'
+  ...
+# Subtest: G15 valid 500-node limit
+ok 39 - G15 valid 500-node limit
+  ---
+  duration_ms: 50.392996
+  type: 'test'
+  ...
+# Subtest: G15 501 nodes are rejected
+ok 40 - G15 501 nodes are rejected
+  ---
+  duration_ms: 2.314844
+  type: 'test'
+  ...
+# Subtest: relation index records five exact R identities, not links between similarly named files
+ok 41 - relation index records five exact R identities, not links between similarly named files
+  ---
+  duration_ms: 128.943785
+  type: 'test'
+  ...
+# Subtest: examples map has six connected graphs and four isolated; 2D template map has no invented arrows
+ok 42 - examples map has six connected graphs and four isolated; 2D template map has no invented arrows
+  ---
+  duration_ms: 214.890374
+  type: 'test'
+  ...
+# Subtest: identity is scoped, not assumed by equal title or same folder; no hard-coded graph arrows
+ok 43 - identity is scoped, not assumed by equal title or same folder; no hard-coded graph arrows
+  ---
+  duration_ms: 2761.359324
+  type: 'test'
+  ...
+# Subtest: legacy DEMO levels project roots to exactly one existing R owner
+ok 44 - legacy DEMO levels project roots to exactly one existing R owner
+  ---
+  duration_ms: 87.15653
+  type: 'test'
+  ...
+# Subtest: folder catalog maps all 100 unique stable slugs to actual grouped files
+ok 45 - folder catalog maps all 100 unique stable slugs to actual grouped files
+  ---
+  duration_ms: 1673.390749
+  type: 'test'
+  ...
+# Subtest: three category groups have exact counts and nested level visibility
+ok 46 - three category groups have exact counts and nested level visibility
+  ---
+  duration_ms: 0.971475
+  type: 'test'
+  ...
+# Subtest: working graph only writable type; all examples and 2d graphs are readOnly
+ok 47 - working graph only writable type; all examples and 2d graphs are readOnly
+  ---
+  duration_ms: 817.784093
+  type: 'test'
+  ...
+# Subtest: original user example preserved at relocated path with expected exact hash
+ok 48 - original user example preserved at relocated path with expected exact hash
+  ---
+  duration_ms: 30.003673
+  type: 'test'
+  ...
+# Subtest: index links chosen decomposition with its parent driver, including explicitly hypothetical selection
+ok 49 - index links chosen decomposition with its parent driver, including explicitly hypothetical selection
+  ---
+  duration_ms: 635.416775
+  type: 'test'
+  ...
+# Subtest: pending, superseded and template introductions never become proven child levels
+ok 50 - pending, superseded and template introductions never become proven child levels
+  ---
+  duration_ms: 2844.151811
+  type: 'test'
+  ...
+# Subtest: index rejects a chosen introduction whose parent does not drive D
+ok 51 - index rejects a chosen introduction whose parent does not drive D
+  ---
+  duration_ms: 455.378614
+  type: 'test'
+  ...
+# Subtest: same R identity requires one owner; projected titles may differ but normative text may not
+ok 52 - same R identity requires one owner; projected titles may differ but normative text may not
+  ---
+  duration_ms: 1600.424426
+  type: 'test'
+  ...
+# Subtest: duplicate auxiliary ID is rejected even when neither occurrence is a graph root
+ok 53 - duplicate auxiliary ID is rejected even when neither occurrence is a graph root
+  ---
+  duration_ms: 599.138756
+  type: 'test'
+  ...
+# Subtest: unresolved, wrong-scope and cyclic record owner links are rejected
+ok 54 - unresolved, wrong-scope and cyclic record owner links are rejected
+  ---
+  duration_ms: 1123.05282
+  type: 'test'
+  ...
+# Subtest: invalid graph schema and changed source Markdown fail closed before catalog publication
+ok 55 - invalid graph schema and changed source Markdown fail closed before catalog publication
+  ---
+  duration_ms: 618.511752
+  type: 'test'
+  ...
+# Subtest: Unit source owner and anchor resolve to existing source text
+ok 56 - Unit source owner and anchor resolve to existing source text
+  ---
+  duration_ms: 971.745217
+  type: 'test'
+  ...
+# Subtest: S03 fixture supports multi-level origin trace of requirement
+ok 57 - S03 fixture supports multi-level origin trace of requirement
+  ---
+  duration_ms: 3.705422
+  type: 'test'
+  ...
+# Subtest: S04 requirement may have a direct decision without decomposition
+ok 58 - S04 requirement may have a direct decision without decomposition
+  ---
+  duration_ms: 0.587834
+  type: 'test'
+  ...
+# Subtest: S10 fixture has context attached to a decision without extra Requirement
+ok 59 - S10 fixture has context attached to a decision without extra Requirement
+  ---
+  duration_ms: 0.429651
+  type: 'test'
+  ...
+# Subtest: S16 storage round-trip with separate test copy and manual change
+ok 60 - S16 storage round-trip with separate test copy and manual change
+  ---
+  duration_ms: 2.009211
+  type: 'test'
+  ...
+# Subtest: V01 graph file: title, number and revision
+ok 61 - V01 graph file: title, number and revision
+  ---
+  duration_ms: 322.26298
+  type: 'test'
+  ...
+# Subtest: V02 inspect decision and requirement, show type and end points
+ok 62 - V02 inspect decision and requirement, show type and end points
+  ---
+  duration_ms: 85.56169
+  type: 'test'
+  ...
+# Subtest: V03 search by ID and title, clearing restores overview
+ok 63 - V03 search by ID and title, clearing restores overview
+  ---
+  duration_ms: 96.259173
+  type: 'test'
+  ...
+# Subtest: V04 zoom and Fit restore viewport
+ok 64 - V04 zoom and Fit restore viewport
+  ---
+  duration_ms: 10.77421
+  type: 'test'
+  ...
+# Subtest: V05 loads local catalog and refreshes changed revision
+ok 65 - V05 loads local catalog and refreshes changed revision
+  ---
+  duration_ms: 101.715368
+  type: 'test'
+  ...
+# Subtest: V06 file refresh requires explicitly selecting file again
+ok 66 - V06 file refresh requires explicitly selecting file again
+  ---
+  duration_ms: 12.974534
+  type: 'test'
+  ...
+# Subtest: V07 invalid JSON preserves prior rendering
+ok 67 - V07 invalid JSON preserves prior rendering
+  ---
+  duration_ms: 73.701156
+  type: 'test'
+  ...
+# Subtest: V08 switching graphs removes previous nodes
+ok 68 - V08 switching graphs removes previous nodes
+  ---
+  duration_ms: 16.823565
+  type: 'test'
+  ...
+# Subtest: V09 empty graph gets finite transform
+ok 69 - V09 empty graph gets finite transform
+  ---
+  duration_ms: 5.872587
+  type: 'test'
+  ...
+# Subtest: V10 built-in bundle defaults to folders and workspace is available
+ok 70 - V10 built-in bundle defaults to folders and workspace is available
+  ---
+  duration_ms: 170.167477
+  type: 'test'
+  ...
+# Subtest: V11 rejects graph with duplicate node ID
+ok 71 - V11 rejects graph with duplicate node ID
+  ---
+  duration_ms: 6.09903
+  type: 'test'
+  ...
+# Subtest: V12 rejects graph with dangling edge
+ok 72 - V12 rejects graph with dangling edge
+  ---
+  duration_ms: 4.154478
+  type: 'test'
+  ...
+# Subtest: V13 rejects graph with missing INTRODUCES parent
+ok 73 - V13 rejects graph with missing INTRODUCES parent
+  ---
+  duration_ms: 3.502175
+  type: 'test'
+  ...
+# Subtest: V14 HTML injection is inert plain text in inspector
+ok 74 - V14 HTML injection is inert plain text in inspector
+  ---
+  duration_ms: 17.353602
+  type: 'test'
+  ...
+# Subtest: V15 rejects unsupported schemaVersion
+ok 75 - V15 rejects unsupported schemaVersion
+  ---
+  duration_ms: 4.303156
+  type: 'test'
+  ...
+# Subtest: V16 accepts optional events without inventing state
+ok 76 - V16 accepts optional events without inventing state
+  ---
+  duration_ms: 82.838686
+  type: 'test'
+  ...
+# Subtest: V17 selects a node and records selection only in DOM
+ok 77 - V17 selects a node and records selection only in DOM
+  ---
+  duration_ms: 78.192418
+  type: 'test'
+  ...
+# Subtest: V18 opens local bundled graph without file XHR
+ok 78 - V18 opens local bundled graph without file XHR
+  ---
+  duration_ms: 117.63795
+  type: 'test'
+  ...
+# Subtest: V19 folder card goes back to correct group
+ok 79 - V19 folder card goes back to correct group
+  ---
+  duration_ms: 211.493125
+  type: 'test'
+  ...
+# Subtest: V20 graph card safely exposes read-only status
+ok 80 - V20 graph card safely exposes read-only status
+  ---
+  duration_ms: 100.991721
+  type: 'test'
+  ...
+# Subtest: V21 2D Target Module has complete source display
+ok 81 - V21 2D Target Module has complete source display
+  ---
+  duration_ms: 201.729634
+  type: 'test'
+  ...
+# Subtest: V22 go from neutral parent R to functionality R with choices
+ok 82 - V22 go from neutral parent R to functionality R with choices
+  ---
+  duration_ms: 274.293059
+  type: 'test'
+  ...
+# Subtest: V23 go to specific Feature and back preserving Requirement ID
+ok 83 - V23 go to specific Feature and back preserving Requirement ID
+  ---
+  duration_ms: 217.646416
+  type: 'test'
+  ...
+# Subtest: V24 2D folder lists ten graph sets
+ok 84 - V24 2D folder lists ten graph sets
+  ---
+  duration_ms: 20.264429
+  type: 'test'
+  ...
+# Subtest: V28 malicious nested path is rejected
+ok 85 - V28 malicious nested path is rejected
+  ---
+  duration_ms: 60.110489
+  type: 'test'
+  ...
+# Subtest: V28b cross-file root inspector reports exact introducing Decision
+ok 86 - V28b cross-file root inspector reports exact introducing Decision
+  ---
+  duration_ms: 121.278418
+  type: 'test'
+  ...
+# Subtest: V29 relationship types are labeled in Russian directly on arrows and explained on click
+ok 87 - V29 relationship types are labeled in Russian directly on arrows and explained on click
+  ---
+  duration_ms: 5611.128308
+  type: 'test'
+  ...
+# Subtest: V30 filter keeps plan/decomposition only; all view restores all labeled relations
+ok 88 - V30 filter keeps plan/decomposition only; all view restores all labeled relations
+  ---
+  duration_ms: 393.674189
+  type: 'test'
+  ...
+# Subtest: V31 proposed reconsideration and QRPE are visually distinguished from ready variants
+ok 89 - V31 proposed reconsideration and QRPE are visually distinguished from ready variants
+  ---
+  duration_ms: 846.886354
+  type: 'test'
+  ...
+# Subtest: 38 source Units have distinct R graphs, shared identity, direct methods and no duplicated full source
+ok 90 - 38 source Units have distinct R graphs, shared identity, direct methods and no duplicated full source
+  ---
+  duration_ms: 7257.839229
+  type: 'test'
+  ...
+# Subtest: prepared broad → split Unit → leaf Unit keeps R IDs and back; direct Unit has no forced split
+ok 91 - prepared broad → split Unit → leaf Unit keeps R IDs and back; direct Unit has no forced split
+  ---
+  duration_ms: 219.236377
+  type: 'test'
+  ...
+# Subtest: package dry-run creates nothing; apply/readback/replay preserve files and reject changed transaction IDs
+ok 92 - package dry-run creates nothing; apply/readback/replay preserve files and reject changed transaction IDs
+  ---
+  duration_ms: 1097.982317
+  type: 'test'
+  ...
+# Subtest: invalid owner or prepared version fails before either workspace file is written
+ok 93 - invalid owner or prepared version fails before either workspace file is written
+  ---
+  duration_ms: 809.389947
+  type: 'test'
+  ...
+# Subtest: D revision archives former answer, scope, drivers and edges, preserving child IDs and history
+ok 94 - D revision archives former answer, scope, drivers and edges, preserving child IDs and history
+  ---
+  duration_ms: 813.942435
+  type: 'test'
+  ...
+# Subtest: interrupted journal completes on retry
+ok 95 - interrupted journal completes on retry
+  ---
+  duration_ms: 615.021937
+  type: 'test'
+  ...
+# Subtest: typed prepared application pins source version, driver and the whole declared composition
+ok 96 - typed prepared application pins source version, driver and the whole declared composition
+  ---
+  duration_ms: 1960.699782
+  type: 'test'
+  ...
+# Subtest: cycles split across files are rejected before committing a package
+ok 97 - cycles split across files are rejected before committing a package
+  ---
+  duration_ms: 458.665799
+  type: 'test'
+  ...
+# Subtest: recovery refuses an external change and does not publish the remaining file
+ok 98 - recovery refuses an external change and does not publish the remaining file
+  ---
+  duration_ms: 674.67098
+  type: 'test'
+  ...
+# Subtest: candidate fixture remains deliberately outside the accepted graph.json schema and catalog
+ok 99 - candidate fixture remains deliberately outside the accepted graph.json schema and catalog
+  ---
+  duration_ms: 4.203459
+  type: 'test'
+  ...
+# Subtest: each lens has a real own root R, scoped A, canon cases, QRPE and conditional child R
+ok 100 - each lens has a real own root R, scoped A, canon cases, QRPE and conditional child R
+  ---
+  duration_ms: 1.984752
+  type: 'test'
+  ...
+# Subtest: DRY applies the same graph to different contexts, achieves goal each time, no graph writes
+ok 101 - DRY applies the same graph to different contexts, achieves goal each time, no graph writes
+  ---
+  duration_ms: 16.834508
+  type: 'test'
+  ...
+# Subtest: similar requirements may have justified different behavior, not blindly marked duplicative
+ok 102 - similar requirements may have justified different behavior, not blindly marked duplicative
+  ---
+  duration_ms: 1.253454
+  type: 'test'
+  ...
+# Subtest: maintenance lens discovers new action, leaves accepted choice unchanged and can only suggest revoke
+ok 103 - maintenance lens discovers new action, leaves accepted choice unchanged and can only suggest revoke
+  ---
+  duration_ms: 1.579219
+  type: 'test'
+  ...
+# Subtest: different meanings of removing R: selection revoke does not remove independently supported R or undo effects
+ok 104 - different meanings of removing R: selection revoke does not remove independently supported R or undo effects
+  ---
+  duration_ms: 5.584776
+  type: 'test'
+  ...
+# Subtest: dependencies already live in action canon references, no mandatory external block or derived view
+ok 105 - dependencies already live in action canon references, no mandatory external block or derived view
+  ---
+  duration_ms: 0.540591
+  type: 'test'
+  ...
+# Subtest: legacy writer/schema is not silently changed by the candidate semantic fixture
+ok 106 - legacy writer/schema is not silently changed by the candidate semantic fixture
+  ---
+  duration_ms: 64.511624
+  type: 'test'
+  ...
+# Subtest: DRY does not claim success on an empty or unverified requirement scope
+ok 107 - DRY does not claim success on an empty or unverified requirement scope
+  ---
+  duration_ms: 1.576915
+  type: 'test'
+  ...
+# Subtest: DRY unknown concept never becomes positive evidence of duplication
+ok 108 - DRY unknown concept never becomes positive evidence of duplication
+  ---
+  duration_ms: 1.38821
+  type: 'test'
+  ...
+# Subtest: Maintenance returns an unresolved QRPE when alternative evidence is unavailable or stale
+ok 109 - Maintenance returns an unresolved QRPE when alternative evidence is unavailable or stale
+  ---
+  duration_ms: 2.27101
+  type: 'test'
+  ...
+# Subtest: Maintenance can retain existing selection when evaluated alternative is worse
+ok 110 - Maintenance can retain existing selection when evaluated alternative is worse
+  ---
+  duration_ms: 0.883611
+  type: 'test'
+  ...
+# Subtest: a simple Lens Action without canon/QRPE is valid; malformed supplied fields are not
+ok 111 - a simple Lens Action without canon/QRPE is valid; malformed supplied fields are not
+  ---
+  duration_ms: 1.145384
+  type: 'test'
+  ...
+# Subtest: an unintended cycle in the candidate Lens topology is rejected
+ok 112 - an unintended cycle in the candidate Lens topology is rejected
+  ---
+  duration_ms: 0.597654
+  type: 'test'
+  ...
+# Subtest: pilot is not mistaken for a real self-initiating runner or canon evaluator
+ok 113 - pilot is not mistaken for a real self-initiating runner or canon evaluator
+  ---
+  duration_ms: 8.62456
+  type: 'test'
+  ...
+# Subtest: illustrative change refuses favorable flag when target/evidence disagrees
+ok 114 - illustrative change refuses favorable flag when target/evidence disagrees
+  ---
+  duration_ms: 1.207122
+  type: 'test'
+  ...
+# Subtest: autosave coalesces changes after drag and confirms only a read-back of the latest edit
+ok 115 - autosave coalesces changes after drag and confirms only a read-back of the latest edit
+  ---
+  duration_ms: 221.943013
+  type: 'test'
+  ...
+# Subtest: autosave records a real pointer drag without moving the camera
+ok 116 - autosave records a real pointer drag without moving the camera
+  ---
+  duration_ms: 34.975694
+  type: 'test'
+  ...
+# Subtest: new edits during a buffered write automatically receive their own next save, including another graph
+ok 117 - new edits during a buffered write automatically receive their own next save, including another graph
+  ---
+  duration_ms: 23.668834
+  type: 'test'
+  ...
+# Subtest: external changes stop the automatic queue without overwriting the other writer
+ok 118 - external changes stop the automatic queue without overwriting the other writer
+  ---
+  duration_ms: 8.89468
+  type: 'test'
+  ...
+# Subtest: revoked permissions do not open prompts from autosave; draft remains available
+ok 119 - revoked permissions do not open prompts from autosave; draft remains available
+  ---
+  duration_ms: 13.05619
+  type: 'test'
+  ...
+# Subtest: write errors remain dirty and are not retried endlessly
+ok 120 - write errors remain dirty and are not retried endlessly
+  ---
+  duration_ms: 10.038431
+  type: 'test'
+  ...
+# Subtest: pause provides a visible sequential handoff to CLI; resume schedules pending work
+ok 121 - pause provides a visible sequential handoff to CLI; resume schedules pending work
+  ---
+  duration_ms: 37.308902
+  type: 'test'
+  ...
+# Subtest: without a connected file changes remain a draft and no picker opens automatically
+ok 122 - without a connected file changes remain a draft and no picker opens automatically
+  ---
+  duration_ms: 8.030843
+  type: 'test'
+  ...
+# Subtest: a crash draft restores without silently replacing a newer external base
+ok 123 - a crash draft restores without silently replacing a newer external base
+  ---
+  duration_ms: 23.201038
+  type: 'test'
+  ...
+# Subtest: catalog generated helper in the userscript is byte-identical to the CLI source
+ok 124 - catalog generated helper in the userscript is byte-identical to the CLI source
+  ---
+  duration_ms: 7.169045
+  type: 'test'
+  ...
+# Subtest: pausing after an edit cancels the already scheduled automatic write
+ok 125 - pausing after an edit cancels the already scheduled automatic write
+  ---
+  duration_ms: 14.286002
+  type: 'test'
+  ...
+# Subtest: saving or discarding one tab cannot delete another tab recovery journal, even for the same graph
+ok 126 - saving or discarding one tab cannot delete another tab recovery journal, even for the same graph
+  ---
+  duration_ms: 59.428091
+  type: 'test'
+  ...
+# Subtest: the legacy draft is copied without deleting the migration source
+ok 127 - the legacy draft is copied without deleting the migration source
+  ---
+  duration_ms: 115.761319
+  type: 'test'
+  ...
+# Subtest: the first real drag without a file visibly changes the status and never says saved
+ok 128 - the first real drag without a file visibly changes the status and never says saved
+  ---
+  duration_ms: 77.589732
+  type: 'test'
+  ...
+# Subtest: Viewer reads hash and percent paths through encoded local file URLs
+ok 129 - Viewer reads hash and percent paths through encoded local file URLs
+  ---
+  duration_ms: 10.006307
+  type: 'test'
+  ...
+# Subtest: draft recovery refuses an edit made while the source is being read
+ok 130 - draft recovery refuses an edit made while the source is being read
+  ---
+  duration_ms: 12.492939
+  type: 'test'
+  ...
+# Subtest: grant creation, modification and revocation apply to next request
+ok 131 - grant creation, modification and revocation apply to next request
+  ---
+  duration_ms: 1368.992083
+  type: 'test'
+  ...
+# Subtest: delegated administrator cannot enlarge scope or modify owner
+ok 132 - delegated administrator cannot enlarge scope or modify owner
+  ---
+  duration_ms: 769.285254
+  type: 'test'
+  ...
+# Subtest: arbitrary nested and empty folders are discovered without adding code branches; ready/working are explicit
+ok 133 - arbitrary nested and empty folders are discovered without adding code branches; ready/working are explicit
+  ---
+  duration_ms: 227.575207
+  type: 'test'
+  ...
+# Subtest: old plain graph with no metadata remains readable with unknown usage
+ok 134 - old plain graph with no metadata remains readable with unknown usage
+  ---
+  duration_ms: 107.610479
+  type: 'test'
+  ...
+# Subtest: nested workspace writer accepts a guarded transaction and refuses outside/read-only destinations
+ok 135 - nested workspace writer accepts a guarded transaction and refuses outside/read-only destinations
+  ---
+  duration_ms: 744.019084
+  type: 'test'
+  ...
+# Subtest: deep paper branch is visible with variants and stays potential at every level
+ok 136 - deep paper branch is visible with variants and stays potential at every level
+  ---
+  duration_ms: 245.564508
+  type: 'test'
+  ...
+# Subtest: decomposition Action shows its type and execution history while subgoal is unfinished
+ok 137 - decomposition Action shows its type and execution history while subgoal is unfinished
+  ---
+  duration_ms: 116.740961
+  type: 'test'
+  ...
+# Subtest: generated root projection matches its source after potential Action support
+ok 138 - generated root projection matches its source after potential Action support
+  ---
+  duration_ms: 46.655197
+  type: 'test'
+  ...
+# Subtest: all 100 originals are accounted for: 6 relocated untouched, approved example sources enriched, unrelated graphs byte-identical
+ok 139 - all 100 originals are accounted for: 6 relocated untouched, approved example sources enriched, unrelated graphs byte-identical
+  ---
+  duration_ms: 739.429865
+  type: 'test'
+  ...
+# Subtest: 16 historical roots and 90 member references are preserved as source identity, not a set manifest
+ok 140 - 16 historical roots and 90 member references are preserved as source identity, not a set manifest
+  ---
+  duration_ms: 1.720449
+  type: 'test'
+  ...
+# Subtest: index and embedded bundle have the same root entries with no set-membership dependency
+ok 141 - index and embedded bundle have the same root entries with no set-membership dependency
+  ---
+  duration_ms: 138.163318
+  type: 'test'
+  ...
+# Subtest: catalog rejects forged full root and unsafe graph file paths, including hostile folder metadata
+ok 142 - catalog rejects forged full root and unsafe graph file paths, including hostile folder metadata
+  ---
+  duration_ms: 1.377579
+  type: 'test'
+  ...
+# Subtest: catalog handles Unicode, literal hash and percent paths without URL interpretation
+ok 143 - catalog handles Unicode, literal hash and percent paths without URL interpretation
+  ---
+  duration_ms: 1.246209
+  type: 'test'
+  ...
+# Subtest: full root scoped context CLI and Viewer give equal field states
+ok 144 - full root scoped context CLI and Viewer give equal field states
+  ---
+  duration_ms: 3706.729426
+  type: 'test'
+  ...
+# Subtest: full-R layout key is separate from local-R key and does not overwrite old graph-set positions
+ok 145 - full-R layout key is separate from local-R key and does not overwrite old graph-set positions
+  ---
+  duration_ms: 379.767615
+  type: 'test'
+  ...
+# Subtest: real index discovers separate root graphs even where user folders coincide
+ok 146 - real index discovers separate root graphs even where user folders coincide
+  ---
+  duration_ms: 197.85448
+  type: 'test'
+  ...
+# Subtest: all two noncausal legacy groups preserve supplementary source navigation without false causal parents
+ok 147 - all two noncausal legacy groups preserve supplementary source navigation without false causal parents
+  ---
+  duration_ms: 869.562399
+  type: 'test'
+  ...
+# Subtest: catalog discovery refuses a graph.json symlink escaping the root, without needing a set manifest
+ok 148 - catalog discovery refuses a graph.json symlink escaping the root, without needing a set manifest
+  ---
+  duration_ms: 124.66948
+  type: 'test'
+  ...
+# Subtest: writer/index supports independently authored writable paper continuations across graph.json files
+ok 149 - writer/index supports independently authored writable paper continuations across graph.json files
+  ---
+  duration_ms: 371.032111
+  type: 'test'
+  ...
+# Subtest: five old unscoped standalone graph.json remain discoverable without forged full identities
+ok 150 - five old unscoped standalone graph.json remain discoverable without forged full identities
+  ---
+  duration_ms: 30.132492
+  type: 'test'
+  ...
+# Subtest: Examples offers exactly one full ready and one full working graph, no blank set folders
+ok 151 - Examples offers exactly one full ready and one full working graph, no blank set folders
+  ---
+  duration_ms: 210.904456
+  type: 'test'
+  ...
+# Subtest: six historical tiny context graphs are archived exactly, not silently deleted or misrepresented as active
+ok 152 - six historical tiny context graphs are archived exactly, not silently deleted or misrepresented as active
+  ---
+  duration_ms: 55.612254
+  type: 'test'
+  ...
+# Subtest: each full example owns the same three field roles and local theory, with no cross-identity answers
+ok 153 - each full example owns the same three field roles and local theory, with no cross-identity answers
+  ---
+  duration_ms: 22.551507
+  type: 'test'
+  ...
+# Subtest: Context CLI reports reused working answer and scenario details deferred; no third tiny full view required
+ok 154 - Context CLI reports reused working answer and scenario details deferred; no third tiny full view required
+  ---
+  duration_ms: 11394.858612
+  type: 'test'
+  ...
+# Subtest: interpreted and link-only canon are real additional methods on a child R and do not rewrite pinned historical choices
+ok 155 - interpreted and link-only canon are real additional methods on a child R and do not rewrite pinned historical choices
+  ---
+  duration_ms: 500.242155
+  type: 'test'
+  ...
+# Subtest: full graph has unique links and visibly different selected, potential and refinement semantics
+ok 156 - full graph has unique links and visibly different selected, potential and refinement semantics
+  ---
+  duration_ms: 7939.085361
+  type: 'test'
+  ...
+# Subtest: DERIVES composite stays in the original requirement column in both view modes
+ok 157 - DERIVES composite stays in the original requirement column in both view modes
+  ---
+  duration_ms: 159.729727
+  type: 'test'
+  ...
+# Subtest: /workspace/repos/rd-graphs/tests/rdg-example-navigation-ux.test.cjs
+ok 20 - /workspace/repos/rd-graphs/tests/rdg-example-navigation-ux.test.cjs
+  ---
+  duration_ms: 255.082946
+  type: 'test'
+  ...
+# Subtest: full prepared Option inspector retains kind, true ID, canon, origin and sources
+ok 159 - full prepared Option inspector retains kind, true ID, canon, origin and sources
+  ---
+  duration_ms: 761.19252
+  type: 'test'
+  ...
+# Subtest: full working Decision inspector shows real selection basis, T1, QRPE, no Requirement alias
+ok 160 - full working Decision inspector shows real selection basis, T1, QRPE, no Requirement alias
+  ---
+  duration_ms: 190.342686
+  type: 'test'
+  ...
+# Subtest: full detailed relation inspector names actual endpoints R to D and cause to R
+ok 161 - full detailed relation inspector names actual endpoints R to D and cause to R
+  ---
+  duration_ms: 191.248683
+  type: 'test'
+  ...
+# Subtest: DERIVES refinement stays visible across detail and coverage, never selected child
+ok 162 - DERIVES refinement stays visible across detail and coverage, never selected child
+  ---
+  duration_ms: 5030.404314
+  type: 'test'
+  ...
+# Subtest: example-only D is active only with all isolation guards, including no main adoption
+ok 163 - example-only D is active only with all isolation guards, including no main adoption
+  ---
+  duration_ms: 1.133615
+  type: 'test'
+  ...
+# Subtest: full detail does not mark invalid example-only Decision or Option as accepted
+ok 164 - full detail does not mark invalid example-only Decision or Option as accepted
+  ---
+  duration_ms: 4179.297517
+  type: 'test'
+  ...
+# Subtest: folder catalog directly lists full-graph roots without graph-set intermediate cards
+ok 165 - folder catalog directly lists full-graph roots without graph-set intermediate cards
+  ---
+  duration_ms: 428.400592
+  type: 'test'
+  ...
+# Subtest: working view is accepted R-only by default and independent coverage/detail switches
+ok 166 - working view is accepted R-only by default and independent coverage/detail switches
+  ---
+  duration_ms: 5340.202881
+  type: 'test'
+  ...
+# Subtest: click R opens its own one-wave display, and back returns full root
+ok 167 - click R opens its own one-wave display, and back returns full root
+  ---
+  duration_ms: 374.663511
+  type: 'test'
+  ...
+# Subtest: refinement is not a duplicate synthetic Requirement; noncausal sources accessible
+ok 168 - refinement is not a duplicate synthetic Requirement; noncausal sources accessible
+  ---
+  duration_ms: 105.873557
+  type: 'test'
+  ...
+# Subtest: full scoped context fields available without a setId
+ok 169 - full scoped context fields available without a setId
+  ---
+  duration_ms: 86.405607
+  type: 'test'
+  ...
+# Subtest: detailed full graph de-duplicates projected Options from separate R files
+ok 170 - detailed full graph de-duplicates projected Options from separate R files
+  ---
+  duration_ms: 609.092818
+  type: 'test'
+  ...
+# Subtest: general graph API creates/updates/deletes via signed normal operations (not Lens)
+ok 171 - general graph API creates/updates/deletes via signed normal operations (not Lens)
+  ---
+  duration_ms: 2619.343675
+  type: 'test'
+  ...
+# Subtest: archived-only R can be removed with snapshot, but not if still attached
+ok 172 - archived-only R can be removed with snapshot, but not if still attached
+  ---
+  duration_ms: 2168.438992
+  type: 'test'
+  ...
+# Subtest: reconsideration policy is separate from truth and blocks unapproved user-R edits
+ok 173 - reconsideration policy is separate from truth and blocks unapproved user-R edits
+  ---
+  duration_ms: 1517.847528
+  type: 'test'
+  ...
+# Subtest: hard delete never silently destroys selected history or shared support
+ok 174 - hard delete never silently destroys selected history or shared support
+  ---
+  duration_ms: 1711.497052
+  type: 'test'
+  ...
+# Subtest: protected parent blocks unapproved child, edge removal and reparent (authorized owner allowed)
+ok 175 - protected parent blocks unapproved child, edge removal and reparent (authorized owner allowed)
+  ---
+  duration_ms: 2602.291329
+  type: 'test'
+  ...
+# Subtest: general reparent is history-preserving and safe for active DAG requirements
+ok 176 - general reparent is history-preserving and safe for active DAG requirements
+  ---
+  duration_ms: 1626.18734
+  type: 'test'
+  ...
+# Subtest: protected parent also gates selected Action introductions and shared-R link
+ok 177 - protected parent also gates selected Action introductions and shared-R link
+  ---
+  duration_ms: 3365.229281
+  type: 'test'
+  ...
+# Subtest: prepared Lens is a connected ordinary RDG graph; separate A1/A2 sessions do not write
+ok 178 - prepared Lens is a connected ordinary RDG graph; separate A1/A2 sessions do not write
+  ---
+  duration_ms: 29.689447
+  type: 'test'
+  ...
+# Subtest: material unresolved canon/QRPE can be saved once, but obsolete and duplicate work is skipped
+ok 179 - material unresolved canon/QRPE can be saved once, but obsolete and duplicate work is skipped
+  ---
+  duration_ms: 5.466832
+  type: 'test'
+  ...
+# Subtest: lookup finds the latest *saved* matching A1, not A2 or latest actual unsaved run
+ok 180 - lookup finds the latest *saved* matching A1, not A2 or latest actual unsaved run
+  ---
+  duration_ms: 60.669782
+  type: 'test'
+  ...
+# Subtest: no root achievement from an unsupported canon, stale assessment, or open QRPE
+ok 181 - no root achievement from an unsupported canon, stale assessment, or open QRPE
+  ---
+  duration_ms: 2.711222
+  type: 'test'
+  ...
+# Subtest: generic Lens runner also accepts ordinary candidate-v6 graph.json, not special DRY source kind
+ok 182 - generic Lens runner also accepts ordinary candidate-v6 graph.json, not special DRY source kind
+  ---
+  duration_ms: 448.331832
+  type: 'test'
+  ...
+# Subtest: ordinary Lens rejects selected Action without real T1 selection history
+ok 183 - ordinary Lens rejects selected Action without real T1 selection history
+  ---
+  duration_ms: 404.85118
+  type: 'test'
+  ...
+# Subtest: completed canon evidence for an unselected target Action may be saved, not arbitrary pending claims
+ok 184 - completed canon evidence for an unselected target Action may be saved, not arbitrary pending claims
+  ---
+  duration_ms: 2.014352
+  type: 'test'
+  ...
+# Subtest: GitHub adapter uses SHA CAS, signed common Graph API and optional Lens research in offline fake
+ok 185 - GitHub adapter uses SHA CAS, signed common Graph API and optional Lens research in offline fake
+  ---
+  duration_ms: 789.743222
+  type: 'test'
+  ...
+# Subtest: shared layout commands are immutable, preserve other graphs and guard revisions/coordinates
+ok 186 - shared layout commands are immutable, preserve other graphs and guard revisions/coordinates
+  ---
+  duration_ms: 8.972067
+  type: 'test'
+  ...
+# Subtest: browser embeds the exact same command core that the CLI imports
+ok 187 - browser embeds the exact same command core that the CLI imports
+  ---
+  duration_ms: 6.763422
+  type: 'test'
+  ...
+# Subtest: opening multiple lists removes headers, reveals only R, preserves camera and unaffected positions
+ok 188 - opening multiple lists removes headers, reveals only R, preserves camera and unaffected positions
+  ---
+  duration_ms: 253.825219
+  type: 'test'
+  ...
+# Subtest: two-R lists are inline; groups reject non-R members without partial loading
+ok 189 - two-R lists are inline; groups reject non-R members without partial loading
+  ---
+  duration_ms: 112.151093
+  type: 'test'
+  ...
+# Subtest: prepared leaves open their own graphs; contextual work starts a separate one-level graph
+ok 190 - prepared leaves open their own graphs; contextual work starts a separate one-level graph
+  ---
+  duration_ms: 603.799214
+  type: 'test'
+  ...
+# Subtest: UI uses shared commands, saves one file, restores positions and refuses external overwrite
+ok 191 - UI uses shared commands, saves one file, restores positions and refuses external overwrite
+  ---
+  duration_ms: 176.082312
+  type: 'test'
+  ...
+# Subtest: pointer movement at actual view scale changes node data without panning or opening its child
+ok 192 - pointer movement at actual view scale changes node data without panning or opening its child
+  ---
+  duration_ms: 17.797369
+  type: 'test'
+  ...
+# Subtest: CLI commits shared format with read-back and rejects stale revisions and unknown nodes
+ok 193 - CLI commits shared format with read-back and rejects stale revisions and unknown nodes
+  ---
+  duration_ms: 899.574885
+  type: 'test'
+  ...
+# Subtest: an older browser cache cannot replace a newer layout document delivered in the bundle
+ok 194 - an older browser cache cannot replace a newer layout document delivered in the bundle
+  ---
+  duration_ms: 25.444957
+  type: 'test'
+  ...
+# Subtest: a file changed while the browser buffers a write is aborted before close
+ok 195 - a file changed while the browser buffers a write is aborted before close
+  ---
+  duration_ms: 47.96551
+  type: 'test'
+  ...
+# Subtest: F-P-01: edits during save remain dirty, and a second save persists them
+ok 196 - F-P-01: edits during save remain dirty, and a second save persists them
+  ---
+  duration_ms: 178.449368
+  type: 'test'
+  ...
+# Subtest: F-P-01: an edit on graph B survives the completion of graph A save
+ok 197 - F-P-01: an edit on graph B survives the completion of graph A save
+  ---
+  duration_ms: 74.49694
+  type: 'test'
+  ...
+# Subtest: F-P-01/04: a reset during save remains pending and the next commit removes the override
+ok 198 - F-P-01/04: a reset during save remains pending and the next commit removes the override
+  ---
+  duration_ms: 27.712655
+  type: 'test'
+  ...
+# Subtest: F-P-01: failed buffered writes preserve the full newer draft for retry
+ok 199 - F-P-01: failed buffered writes preserve the full newer draft for retry
+  ---
+  duration_ms: 21.284995
+  type: 'test'
+  ...
+# Subtest: F-P-02: a group moved after collapse keeps its latest position after save and reload
+ok 200 - F-P-02: a group moved after collapse keeps its latest position after save and reload
+  ---
+  duration_ms: 79.949433
+  type: 'test'
+  ...
+# Subtest: F-P-02: a command targeting a hidden header overrides its remembered position
+ok 201 - F-P-02: a command targeting a hidden header overrides its remembered position
+  ---
+  duration_ms: 88.309994
+  type: 'test'
+  ...
+# Subtest: F-P-04: the API clear command and the reset button both commit deletion, not old or automatic coordinates
+ok 202 - F-P-04: the API clear command and the reset button both commit deletion, not old or automatic coordinates
+  ---
+  duration_ms: 121.341458
+  type: 'test'
+  ...
+# Subtest: F-P-03: a manual graph without opt-in opens local one-level continuations and returns without changing records
+ok 203 - F-P-03: a manual graph without opt-in opens local one-level continuations and returns without changing records
+  ---
+  duration_ms: 162.645193
+  type: 'test'
+  ...
+# Subtest: F-P-03: legacy inferred roots also stop at one level and allow local expansion
+ok 204 - F-P-03: legacy inferred roots also stop at one level and allow local expansion
+  ---
+  duration_ms: 22.114172
+  type: 'test'
+  ...
+# Subtest: local levels save separately in the common format and CLI accepts a rooted key
+ok 205 - local levels save separately in the common format and CLI accepts a rooted key
+  ---
+  duration_ms: 436.190021
+  type: 'test'
+  ...
+# Subtest: a method shared with another R remains visible when it directly answers the current root
+ok 206 - a method shared with another R remains visible when it directly answers the current root
+  ---
+  duration_ms: 14.186775
+  type: 'test'
+  ...
+# Subtest: F-P-05: routing and labels translate with nodes through all four quadrants and fit includes labels
+ok 207 - F-P-05: routing and labels translate with nodes through all four quadrants and fit includes labels
+  ---
+  duration_ms: 28.382257
+  type: 'test'
+  ...
+# Subtest: F-P-06: opening and closing alternatives preserves pan, zoom and surviving node positions
+ok 208 - F-P-06: opening and closing alternatives preserves pan, zoom and surviving node positions
+  ---
+  duration_ms: 413.790106
+  type: 'test'
+  ...
+# Subtest: F-P-07: file input survives event retargeting after await and is cleared on read failure too
+ok 209 - F-P-07: file input survives event retargeting after await and is cleared on read failure too
+  ---
+  duration_ms: 9.654534
+  type: 'test'
+  ...
+# Subtest: reading a file does not overwrite edits made while that read is pending
+ok 210 - reading a file does not overwrite edits made while that read is pending
+  ---
+  duration_ms: 14.461309
+  type: 'test'
+  ...
+# Subtest: same-origin Web Locks serializes connected browser clients and stale second save is rejected
+ok 211 - same-origin Web Locks serializes connected browser clients and stale second save is rejected
+  ---
+  duration_ms: 59.056741
+  type: 'test'
+  ...
+# Subtest: local continuations retain a Requirement used as a ground without opening its own answer
+ok 212 - local continuations retain a Requirement used as a ground without opening its own answer
+  ---
+  duration_ms: 26.22335
+  type: 'test'
+  ...
+# Subtest: reload keeps the current local root and a missing root in an updated file preserves the old view
+ok 213 - reload keeps the current local root and a missing root in an updated file preserves the old view
+  ---
+  duration_ms: 108.622868
+  type: 'test'
+  ...
+# Subtest: AI-readable Lens CLI does not write any graph or session by default
+ok 214 - AI-readable Lens CLI does not write any graph or session by default
+  ---
+  duration_ms: 275.957216
+  type: 'test'
+  ...
+# Subtest: GitHub-backed Lens lookup requires explicit repository configuration and never silently writes
+ok 215 - GitHub-backed Lens lookup requires explicit repository configuration and never silently writes
+  ---
+  duration_ms: 826.311486
+  type: 'test'
+  ...
+# Subtest: refresh re-reads the index and all scoped files, never using a bundled R0
+ok 216 - refresh re-reads the index and all scoped files, never using a bundled R0
+  ---
+  duration_ms: 368.276882
+  type: 'test'
+  ...
+# Subtest: refresh fails closed on missing source without partially publishing new catalog
+ok 217 - refresh fails closed on missing source without partially publishing new catalog
+  ---
+  duration_ms: 197.276527
+  type: 'test'
+  ...
+# Subtest: fresh index discovers a new causal R in the same identity space
+ok 218 - fresh index discovers a new causal R in the same identity space
+  ---
+  duration_ms: 1433.627263
+  type: 'test'
+  ...
+# Subtest: templateOnly and inactive projected owners are never a selected R path
+ok 219 - templateOnly and inactive projected owners are never a selected R path
+  ---
+  duration_ms: 3.984055
+  type: 'test'
+  ...
+# Subtest: projection owner activity and candidate template status fail closed
+ok 220 - projection owner activity and candidate template status fail closed
+  ---
+  duration_ms: 1.157985
+  type: 'test'
+  ...
+# Subtest: teaching Decision causal edge has an explicit instructional label
+ok 221 - teaching Decision causal edge has an explicit instructional label
+  ---
+  duration_ms: 270.758049
+  type: 'test'
+  ...
+# Subtest: fresh index extends scope to a newly indexed source file
+ok 222 - fresh index extends scope to a newly indexed source file
+  ---
+  duration_ms: 1769.499681
+  type: 'test'
+  ...
+# Subtest: a projected Decision cannot substitute a different selected option
+ok 223 - a projected Decision cannot substitute a different selected option
+  ---
+  duration_ms: 1.039309
+  type: 'test'
+  ...
+# Subtest: sixteen migrated historical entry roots remain discoverable without set membership
+ok 224 - sixteen migrated historical entry roots remain discoverable without set membership
+  ---
+  duration_ms: 34.375017
+  type: 'test'
+  ...
+# Subtest: prepared multiwave prospective R are visible without acceptance
+ok 225 - prepared multiwave prospective R are visible without acceptance
+  ---
+  duration_ms: 3.413152
+  type: 'test'
+  ...
+# Subtest: independent projects sharing a Requirement id do not mix due to identitySpace
+ok 226 - independent projects sharing a Requirement id do not mix due to identitySpace
+  ---
+  duration_ms: 0.930735
+  type: 'test'
+  ...
+# Subtest: source graphs are not mutated by read-only projections
+ok 227 - source graphs are not mutated by read-only projections
+  ---
+  duration_ms: 23.624189
+  type: 'test'
+  ...
+# Subtest: writable paper branches, deeper local choice and unrelated root stay in correct scope
+ok 228 - writable paper branches, deeper local choice and unrelated root stay in correct scope
+  ---
+  duration_ms: 2.56897
+  type: 'test'
+  ...
+# Subtest: non-causal source views remain navigable but are never invented R descendants
+ok 229 - non-causal source views remain navigable but are never invented R descendants
+  ---
+  duration_ms: 0.986014
+  type: 'test'
+  ...
+# Subtest: root closure works without graphSets metadata
+ok 230 - root closure works without graphSets metadata
+  ---
+  duration_ms: 0.698754
+  type: 'test'
+  ...
+# Subtest: current context is one value, never a dated answer timeline
+ok 231 - current context is one value, never a dated answer timeline
+  ---
+  duration_ms: 7.124298
+  type: 'test'
+  ...
+# Subtest: dated legacy answers are rejected; unscoped owner rejected; unavailable condition unknown
+ok 232 - dated legacy answers are rejected; unscoped owner rejected; unavailable condition unknown
+  ---
+  duration_ms: 32.101301
+  type: 'test'
+  ...
+# Subtest: unsupported root-level canon usages fail instead of silently disappearing from the field list
+ok 233 - unsupported root-level canon usages fail instead of silently disappearing from the field list
+  ---
+  duration_ms: 2.891315
+  type: 'test'
+  ...
+# Subtest: multiple conditions retain all consumers; one current usage wins without merging definitions by name
+ok 234 - multiple conditions retain all consumers; one current usage wins without merging definitions by name
+  ---
+  duration_ms: 0.694887
+  type: 'test'
+  ...
+# Subtest: unrelated freeform record does not hide missing current field
+ok 235 - unrelated freeform record does not hide missing current field
+  ---
+  duration_ms: 0.405403
+  type: 'test'
+  ...
+# Subtest: theory links and link-only canon are inspectable; no extra R or saved layout keys
+ok 236 - theory links and link-only canon are inspectable; no extra R or saved layout keys
+  ---
+  duration_ms: 276.805794
+  type: 'test'
+  ...
+# Subtest: empty/unavailable metadata stays incomplete rather than a false success
+ok 237 - empty/unavailable metadata stays incomplete rather than a false success
+  ---
+  duration_ms: 1.639919
+  type: 'test'
+  ...
+# Subtest: shared owner fixture: earlier answer, theory, several consumers and conditional questions
+ok 238 - shared owner fixture: earlier answer, theory, several consumers and conditional questions
+  ---
+  duration_ms: 20.72079
+  type: 'test'
+  ...
+# Subtest: definitions/sources update once; same names do not merge; current value stays shared
+ok 239 - definitions/sources update once; same names do not merge; current value stays shared
+  ---
+  duration_ms: 2.57632
+  type: 'test'
+  ...
+# Subtest: negative contract rejects source execution, duplicate answer owners and invalid refs
+ok 240 - negative contract rejects source execution, duplicate answer owners and invalid refs
+  ---
+  duration_ms: 51.942213
+  type: 'test'
+  ...
+# Subtest: unknown completeness, more than forty fields, project boundary, scoped value and freeform candidates
+ok 241 - unknown completeness, more than forty fields, project boundary, scoped value and freeform candidates
+  ---
+  duration_ms: 2.363078
+  type: 'test'
+  ...
+# Subtest: real writer package replaces current Context value, readback and replay without answer history
+ok 242 - real writer package replaces current Context value, readback and replay without answer history
+  ---
+  duration_ms: 4812.040217
+  type: 'test'
+  ...
+# Subtest: freeform mapping needs an explicit note; selected D snapshots survive later shared definition changes
+ok 243 - freeform mapping needs an explicit note; selected D snapshots survive later shared definition changes
+  ---
+  duration_ms: 4122.578716
+  type: 'test'
+  ...
+# Subtest: a selected Action with real child R and open QRPE cannot be silently revoked
+ok 244 - a selected Action with real child R and open QRPE cannot be silently revoked
+  ---
+  duration_ms: 438.289437
+  type: 'test'
+  ...
+# Subtest: another selected Action can independently justify one of multiple introduced R
+ok 245 - another selected Action can independently justify one of multiple introduced R
+  ---
+  duration_ms: 489.09855
+  type: 'test'
+  ...
+# Subtest: even an Action without child R is not automatically authorized for revocation
+ok 246 - even an Action without child R is not automatically authorized for revocation
+  ---
+  duration_ms: 404.530937
+  type: 'test'
+  ...
+# Subtest: preflight rejects legacy graphs and missing Action IDs
+ok 247 - preflight rejects legacy graphs and missing Action IDs
+  ---
+  duration_ms: 940.123092
+  type: 'test'
+  ...
+# Subtest: opt-in writer materially reconsiders an Action while preserving history
+ok 248 - opt-in writer materially reconsiders an Action while preserving history
+  ---
+  duration_ms: 1874.488164
+  type: 'test'
+  ...
+# Subtest: missing review Action, approval, canon evidence or child decisions fail without writes
+ok 249 - missing review Action, approval, canon evidence or child decisions fail without writes
+  ---
+  duration_ms: 4272.428422
+  type: 'test'
+  ...
+# Subtest: open reviewer QRPE blocks a materially changing reconsideration
+ok 250 - open reviewer QRPE blocks a materially changing reconsideration
+  ---
+  duration_ms: 1249.676187
+  type: 'test'
+  ...
+# Subtest: retiring an R with downstream work or a dependent Action fails closed
+ok 251 - retiring an R with downstream work or a dependent Action fails closed
+  ---
+  duration_ms: 1314.433047
+  type: 'test'
+  ...
+# Subtest: shared R survives reconsideration of only one introducing Action
+ok 252 - shared R survives reconsideration of only one introducing Action
+  ---
+  duration_ms: 1763.786396
+  type: 'test'
+  ...
+# Subtest: refuse to deactivate a shared R even if submitted disposition claims exclusivity
+ok 253 - refuse to deactivate a shared R even if submitted disposition claims exclusivity
+  ---
+  duration_ms: 1613.311404
+  type: 'test'
+  ...
+# Subtest: cross-file child continuation blocks retiring its owning R
+ok 254 - cross-file child continuation blocks retiring its owning R
+  ---
+  duration_ms: 1576.395465
+  type: 'test'
+  ...
+# Subtest: direct legacy deactivate_requirement cannot bypass the opt-in Action review gate
+ok 255 - direct legacy deactivate_requirement cannot bypass the opt-in Action review gate
+  ---
+  duration_ms: 1413.833734
+  type: 'test'
+  ...
+# Subtest: later QRPE updates on historical Action keep immutable T1 and older decision snapshot
+ok 256 - later QRPE updates on historical Action keep immutable T1 and older decision snapshot
+  ---
+  duration_ms: 1874.46959
+  type: 'test'
+  ...
+# Subtest: tampering with earlier T1/reconsideration evidence fails validation before write
+ok 257 - tampering with earlier T1/reconsideration evidence fails validation before write
+  ---
+  duration_ms: 1808.756477
+  type: 'test'
+  ...
+# Subtest: a reconsideration Action may itself be reconsidered later without rewriting first history
+ok 258 - a reconsideration Action may itself be reconsidered later without rewriting first history
+  ---
+  duration_ms: 2202.652298
+  type: 'test'
+  ...
+# Subtest: authorization proof is mandatory, fresh, secret-backed and bound to exact transaction bytes
+ok 259 - authorization proof is mandatory, fresh, secret-backed and bound to exact transaction bytes
+  ---
+  duration_ms: 2939.158566
+  type: 'test'
+  ...
+# Subtest: stale, nonexistent and unsupported evidence refs are denied even with a valid signature
+ok 260 - stale, nonexistent and unsupported evidence refs are denied even with a valid signature
+  ---
+  duration_ms: 1743.915929
+  type: 'test'
+  ...
+# Subtest: direct unverified library call cannot perform a material reconsideration
+ok 261 - direct unverified library call cannot perform a material reconsideration
+  ---
+  duration_ms: 259.729012
+  type: 'test'
+  ...
+# Subtest: viewer embeds the same root projection as the source module
+ok 262 - viewer embeds the same root projection as the source module
+  ---
+  duration_ms: 44.255498
+  type: 'test'
+  ...
+# Subtest: R-only full mode includes selected Action child Rs, without turning A into R
+ok 263 - R-only full mode includes selected Action child Rs, without turning A into R
+  ---
+  duration_ms: 207.664441
+  type: 'test'
+  ...
+# Subtest: detailed Viewer reveals Action, canon, QRPE, T1 without a new Decision
+ok 264 - detailed Viewer reveals Action, canon, QRPE, T1 without a new Decision
+  ---
+  duration_ms: 88.543148
+  type: 'test'
+  ...
+# Subtest: legacy Decision presentation continues to work
+ok 265 - legacy Decision presentation continues to work
+  ---
+  duration_ms: 132.262518
+  type: 'test'
+  ...
+# Subtest: candidate Action can be explored without being represented as chosen
+ok 266 - candidate Action can be explored without being represented as chosen
+  ---
+  duration_ms: 91.471801
+  type: 'test'
+  ...
+# Subtest: tampered T1 cannot make an Action accepted in Viewer
+ok 267 - tampered T1 cannot make an Action accepted in Viewer
+  ---
+  duration_ms: 83.907844
+  type: 'test'
+  ...
+# Subtest: local file Viewer shows opt-in A and canon without producing a Decision
+ok 268 - local file Viewer shows opt-in A and canon without producing a Decision
+  ---
+  duration_ms: 29.212104
+  type: 'test'
+  ...
+# Subtest: Viewer shows reconsidered Action as historical while independently supported R survives
+ok 269 - Viewer shows reconsidered Action as historical while independently supported R survives
+  ---
+  duration_ms: 158.213124
+  type: 'test'
+  ...
+# Subtest: real package writer creates opt-in Action graph with legacy schemaVersion 1
+ok 270 - real package writer creates opt-in Action graph with legacy schemaVersion 1
+  ---
+  duration_ms: 374.874103
+  type: 'test'
+  ...
+# Subtest: writer selects same Action ID with T1 evidence and grouped child Requirements
+ok 271 - writer selects same Action ID with T1 evidence and grouped child Requirements
+  ---
+  duration_ms: 1488.263497
+  type: 'test'
+  ...
+# Subtest: legacy writer graph remains Option/Decision only without opt-in
+ok 272 - legacy writer graph remains Option/Decision only without opt-in
+  ---
+  duration_ms: 611.370089
+  type: 'test'
+  ...
+# Subtest: plain add_node cannot smuggle an Action into a legacy graph
+ok 273 - plain add_node cannot smuggle an Action into a legacy graph
+  ---
+  duration_ms: 618.567822
+  type: 'test'
+  ...
+# Subtest: unattributed or fake-actor Action selection leaves graph and revision unchanged
+ok 274 - unattributed or fake-actor Action selection leaves graph and revision unchanged
+  ---
+  duration_ms: 1984.496679
+  type: 'test'
+  ...
+# Subtest: selection requires real existing Action and protects candidate versus selected identity
+ok 275 - selection requires real existing Action and protects candidate versus selected identity
+  ---
+  duration_ms: 1901.70599
+  type: 'test'
+  ...
+# Subtest: generic update_node cannot rewrite Action or normative Requirement in opt-in graph
+ok 276 - generic update_node cannot rewrite Action or normative Requirement in opt-in graph
+  ---
+  duration_ms: 2008.824691
+  type: 'test'
+  ...
+# Subtest: reader rejects fake selected state without matching event and avoids false prepared adoption
+ok 277 - reader rejects fake selected state without matching event and avoids false prepared adoption
+  ---
+  duration_ms: 927.483187
+  type: 'test'
+  ...
+# Subtest: failed revision or child transaction never commits a partial Action
+ok 278 - failed revision or child transaction never commits a partial Action
+  ---
+  duration_ms: 1293.536184
+  type: 'test'
+  ...
+# Subtest: Action accepts append-only QRPE without splitting into Option and Decision
+ok 279 - Action accepts append-only QRPE without splitting into Option and Decision
+  ---
+  duration_ms: 1453.86562
+  type: 'test'
+  ...
+# Subtest: invalid Action canon and unscoped action model fail before writing
+ok 280 - invalid Action canon and unscoped action model fail before writing
+  ---
+  duration_ms: 668.100127
+  type: 'test'
+  ...
+# Subtest: cross-file reader recognizes selected Action introducing a root Requirement
+ok 281 - cross-file reader recognizes selected Action introducing a root Requirement
+  ---
+  duration_ms: 1599.558864
+  type: 'test'
+  ...
+# Subtest: real application-format graph.json fixture validates and projects Action without Decision
+ok 282 - real application-format graph.json fixture validates and projects Action without Decision
+  ---
+  duration_ms: 10.067613
+  type: 'test'
+  ...
+# Subtest: generic Action or child edge mutation is rejected even after selected event
+ok 283 - generic Action or child edge mutation is rejected even after selected event
+  ---
+  duration_ms: 1766.631426
+  type: 'test'
+  ...
+# Subtest: same prepared DRY Lens runs against real opt-in graph with zero writes
+ok 284 - same prepared DRY Lens runs against real opt-in graph with zero writes
+  ---
+  duration_ms: 553.69173
+  type: 'test'
+  ...
+# Subtest: DRY on a possibly duplicated real graph remains unresolved, and ignores fake success
+ok 285 - DRY on a possibly duplicated real graph remains unresolved, and ignores fake success
+  ---
+  duration_ms: 423.248858
+  type: 'test'
+  ...
+# Subtest: Maintenance Lens sees real selected Action and discovered alternative without changing target
+ok 286 - Maintenance Lens sees real selected Action and discovered alternative without changing target
+  ---
+  duration_ms: 508.74611
+  type: 'test'
+  ...
+# Subtest: Maintenance Lens without actual comparison evidence does not claim achievement
+ok 287 - Maintenance Lens without actual comparison evidence does not claim achievement
+  ---
+  duration_ms: 484.383901
+  type: 'test'
+  ...
+# Subtest: trusted, fully scoped package can enact material Action from prepared Maintenance Lens once
+ok 288 - trusted, fully scoped package can enact material Action from prepared Maintenance Lens once
+  ---
+  duration_ms: 1227.384471
+  type: 'test'
+  ...
+# Subtest: untrusted Lens package is rejected and never mutates the graph
+ok 289 - untrusted Lens package is rejected and never mutates the graph
+  ---
+  duration_ms: 1154.879133
+  type: 'test'
+  ...
+# Subtest: Lens apply cannot smuggle another operation into signed package
+ok 290 - Lens apply cannot smuggle another operation into signed package
+  ---
+  duration_ms: 754.616267
+  type: 'test'
+  ...
+# Subtest: stale comparative evidence forces the Maintenance Lens into unknown and forbids apply
+ok 291 - stale comparative evidence forces the Maintenance Lens into unknown and forbids apply
+  ---
+  duration_ms: 1136.112293
+  type: 'test'
+  ...
+# Subtest: DRY report rejects graphs with fabricated or missing R root
+ok 292 - DRY report rejects graphs with fabricated or missing R root
+  ---
+  duration_ms: 199.733017
+  type: 'test'
+  ...
+# Subtest: a signed package with open or missing Lens effects QRPE cannot modify even a favorable target
+ok 293 - a signed package with open or missing Lens effects QRPE cannot modify even a favorable target
+  ---
+  duration_ms: 3142.675651
+  type: 'test'
+  ...
+# Subtest: Lens does not claim root achievement on graph rejected by the authoritative validator
+ok 294 - Lens does not claim root achievement on graph rejected by the authoritative validator
+  ---
+  duration_ms: 480.114126
+  type: 'test'
+  ...
+# Subtest: candidate-v6 blocks silent writes to R, Context, edges, events and owner root
+ok 295 - candidate-v6 blocks silent writes to R, Context, edges, events and owner root
+  ---
+  duration_ms: 3063.352266
+  type: 'test'
+  ...
+# Subtest: untrusted selected Action cannot mint a child Requirement or claim user consent
+ok 296 - untrusted selected Action cannot mint a child Requirement or claim user consent
+  ---
+  duration_ms: 1843.56936
+  type: 'test'
+  ...
+# Subtest: shared-R introduction and a QRPE state transition require separate scoped proof
+ok 297 - shared-R introduction and a QRPE state transition require separate scoped proof
+  ---
+  duration_ms: 3069.208285
+  type: 'test'
+  ...
+# Subtest: no newly selected Action may be smuggled through opt-in graph creation without a receipt
+ok 298 - no newly selected Action may be smuggled through opt-in graph creation without a receipt
+  ---
+  duration_ms: 293.220702
+  type: 'test'
+  ...
+# Subtest: real v7 prepared/planning example: original bytes remain untouched
+ok 299 - real v7 prepared/planning example: original bytes remain untouched
+  ---
+  duration_ms: 313.10278
+  type: 'test'
+  ...
+# Subtest: Option ID reuse is a stable Action ID, with historical D as separate occurrence
+ok 300 - Option ID reuse is a stable Action ID, with historical D as separate occurrence
+  ---
+  duration_ms: 251.993355
+  type: 'test'
+  ...
+# Subtest: New Action IDs need alias mapping; never misattribute a legacy Decision
+ok 301 - New Action IDs need alias mapping; never misattribute a legacy Decision
+  ---
+  duration_ms: 279.607533
+  type: 'test'
+  ...
+# Subtest: A graph of candidates has no actual decision occurrence
+ok 302 - A graph of candidates has no actual decision occurrence
+  ---
+  duration_ms: 239.563658
+  type: 'test'
+  ...
+# Subtest: no status promotion or outcome claim is invented from historical example
+ok 303 - no status promotion or outcome claim is invented from historical example
+  ---
+  duration_ms: 267.814497
+  type: 'test'
+  ...
+# Subtest: source T1 conflicting selected option is rejected, without rewriting source
+ok 304 - source T1 conflicting selected option is rejected, without rewriting source
+  ---
+  duration_ms: 307.036277
+  type: 'test'
+  ...
+# Subtest: new generated Action ID collision fails instead of stealing an existing R identity
+ok 305 - new generated Action ID collision fails instead of stealing an existing R identity
+  ---
+  duration_ms: 587.647129
+  type: 'test'
+  ...
+# Subtest: qualified source refs differ between definitions and applications
+ok 306 - qualified source refs differ between definitions and applications
+  ---
+  duration_ms: 569.109181
+  type: 'test'
+  ...
+# Subtest: candidate assessment has rationale, context version and evidence; engine does not claim truth
+ok 307 - candidate assessment has rationale, context version and evidence; engine does not claim truth
+  ---
+  duration_ms: 457.357546
+  type: 'test'
+  ...
+# Subtest: cannot assert a definite canon result without evidence or context version
+ok 308 - cannot assert a definite canon result without evidence or context version
+  ---
+  duration_ms: 826.005358
+  type: 'test'
+  ...
+# Subtest: minimal typed predicate handles present/missing/stale versioned inputs
+ok 309 - minimal typed predicate handles present/missing/stale versioned inputs
+  ---
+  duration_ms: 1374.06143
+  type: 'test'
+  ...
+# Subtest: typed approach does not pretend to evaluate legacy natural-language canon text
+ok 310 - typed approach does not pretend to evaluate legacy natural-language canon text
+  ---
+  duration_ms: 165.076787
+  type: 'test'
+  ...
+# Subtest: unmatched historical Decision keeps its child links and event snapshots
+ok 311 - unmatched historical Decision keeps its child links and event snapshots
+  ---
+  duration_ms: 224.338803
+  type: 'test'
+  ...
+# Subtest: older Decision-only graph remains historical, not fabricated into an Action
+ok 312 - older Decision-only graph remains historical, not fabricated into an Action
+  ---
+  duration_ms: 219.571348
+  type: 'test'
+  ...
+# Subtest: a user-authored event can be linked but never auto-implies performed Action
+ok 313 - a user-authored event can be linked but never auto-implies performed Action
+  ---
+  duration_ms: 208.553274
+  type: 'test'
+  ...
+# Subtest: tampered selection binding or downstream-child evidence is rejected
+ok 314 - tampered selection binding or downstream-child evidence is rejected
+  ---
+  duration_ms: 123.910294
+  type: 'test'
+  ...
+# Subtest: normal writer commits a valid D without key or receipt and idempotently replays
+ok 315 - normal writer commits a valid D without key or receipt and idempotently replays
+  ---
+  duration_ms: 848.27009
+  type: 'test'
+  ...
+# Subtest: missing selection event cannot create a committed D through legacy path
+ok 316 - missing selection event cannot create a committed D through legacy path
+  ---
+  duration_ms: 891.697852
+  type: 'test'
+  ...
+# Subtest: stale revision, changed replay and invalid path cannot silently mutate committed D
+ok 317 - stale revision, changed replay and invalid path cannot silently mutate committed D
+  ---
+  duration_ms: 1175.887358
+  type: 'test'
+  ...
+# Subtest: dry run previews a valid selected transaction without mutating graph
+ok 318 - dry run previews a valid selected transaction without mutating graph
+  ---
+  duration_ms: 537.455735
+  type: 'test'
+  ...
+# Subtest: create with committed D needs a real selection event shape, not a status alone
+ok 319 - create with committed D needs a real selection event shape, not a status alone
+  ---
+  duration_ms: 403.288636
+  type: 'test'
+  ...
+# Subtest: truthful assistant-authored intentional commit counts as an accepted D
+ok 320 - truthful assistant-authored intentional commit counts as an accepted D
+  ---
+  duration_ms: 763.552635
+  type: 'test'
+  ...
+# Subtest: all 100 graphs have unique nodes/edges and valid root refs without rewriting protected files
+ok 321 - all 100 graphs have unique nodes/edges and valid root refs without rewriting protected files
+  ---
+  duration_ms: 952.678866
+  type: 'test'
+  ...
+# Subtest: modern option badge, full canon text, selected D canon and QRPE are discoverable
+ok 322 - modern option badge, full canon text, selected D canon and QRPE are discoverable
+  ---
+  duration_ms: 298.080263
+  type: 'test'
+  ...
+# Subtest: two active v7 examples carry canonical cases and explicit QRPE slots on every R/D/option
+ok 323 - two active v7 examples carry canonical cases and explicit QRPE slots on every R/D/option
+  ---
+  duration_ms: 60.899891
+  type: 'test'
+  ...
+# Subtest: two child R own their alternatives; index links exact R without a fabricated project commit
+ok 324 - two child R own their alternatives; index links exact R without a fabricated project commit
+  ---
+  duration_ms: 75.067636
+  type: 'test'
+  ...
+# Subtest: prepared option pins source revision/hash and canon; T1 uses that same evidence
+ok 325 - prepared option pins source revision/hash and canon; T1 uses that same evidence
+  ---
+  duration_ms: 2.93689
+  type: 'test'
+  ...
+# Subtest: T1 immutable at source revision 3 while current options pin revision 5 (historical T1 still 3); T2/T3 preserved
+ok 326 - T1 immutable at source revision 3 while current options pin revision 5 (historical T1 still 3); T2/T3 preserved
+  ---
+  duration_ms: 8.502259
+  type: 'test'
+  ...
+# Subtest: reparent and inactive R retain archived relations and do not spawn another accepted D
+ok 327 - reparent and inactive R retain archived relations and do not spawn another accepted D
+  ---
+  duration_ms: 0.608947
+  type: 'test'
+  ...
+# Subtest: Viewer sees selected canon with actual newlines and navigates to undecided child options
+ok 328 - Viewer sees selected canon with actual newlines and navigates to undecided child options
+  ---
+  duration_ms: 346.504075
+  type: 'test'
+  ...
+# Subtest: promoted current R stays visible despite archived potential edge
+ok 329 - promoted current R stays visible despite archived potential edge
+  ---
+  duration_ms: 453.629222
+  type: 'test'
+  ...
+# Subtest: a group containing an option is rejected because Collections list only Requirements
+ok 330 - a group containing an option is rejected because Collections list only Requirements
+  ---
+  duration_ms: 14.190601
+  type: 'test'
+  ...
+# Subtest: inspector distinguishes prepared and situational options
+ok 331 - inspector distinguishes prepared and situational options
+  ---
+  duration_ms: 300.106323
+  type: 'test'
+  ...
+# Subtest: QRPE transitions and dependent invalidation retain prior state
+ok 332 - QRPE transitions and dependent invalidation retain prior state
+  ---
+  duration_ms: 306.95507
+  type: 'test'
+  ...
+# Subtest: forged or missing prepared source is rejected by writer
+ok 333 - forged or missing prepared source is rejected by writer
+  ---
+  duration_ms: 520.620475
+  type: 'test'
+  ...
+# Subtest: T2 composite is the current project statement, not the T1 title
+ok 334 - T2 composite is the current project statement, not the T1 title
+  ---
+  duration_ms: 9914.02053
+  type: 'test'
+  ...
+# Subtest: two distinct scope names require explicit disjointness evidence
+ok 335 - two distinct scope names require explicit disjointness evidence
+  ---
+  duration_ms: 245.478959
+  type: 'test'
+  ...
+# Subtest: project context flags cross-file options whose referenced R became inactive
+ok 336 - project context flags cross-file options whose referenced R became inactive
+  ---
+  duration_ms: 8822.476657
+  type: 'test'
+  ...
+# Subtest: T2 composite revision triggers review of T1 decision and cross-file referenced option
+ok 337 - T2 composite revision triggers review of T1 decision and cross-file referenced option
+  ---
+  duration_ms: 9867.768262
+  type: 'test'
+  ...
+# Subtest: prepared and work preserve mapped data while goal applicability remains an educational assumption
+ok 338 - prepared and work preserve mapped data while goal applicability remains an educational assumption
+  ---
+  duration_ms: 109.871193
+  type: 'test'
+  ...
+# Subtest: ten potential relations are typed, exact-option sourced, and do not invent chosen Decisions
+ok 339 - ten potential relations are typed, exact-option sourced, and do not invent chosen Decisions
+  ---
+  duration_ms: 288.764112
+  type: 'test'
+  ...
+# Subtest: prepared viewer opens all branches through Collections without a work-only all-variants button
+ok 340 - prepared viewer opens all branches through Collections without a work-only all-variants button
+  ---
+  duration_ms: 356.346445
+  type: 'test'
+  ...
+# Subtest: working viewer keeps selected root path and shows unchosen prospective R by explicit toggle
+ok 341 - working viewer keeps selected root path and shows unchosen prospective R by explicit toggle
+  ---
+  duration_ms: 505.727513
+  type: 'test'
+  ...
+# Subtest: multi-file potential navigation restores parent collection, variant mode and focused Requirement on return
+ok 342 - multi-file potential navigation restores parent collection, variant mode and focused Requirement on return
+  ---
+  duration_ms: 1116.702109
+  type: 'test'
+  ...
+# Subtest: a second prospective level returns through both previous graphs without losing options
+ok 343 - a second prospective level returns through both previous graphs without losing options
+  ---
+  duration_ms: 393.453482
+  type: 'test'
+  ...
+# Subtest: canon research advice belongs to a real method; no third pseudo-option or executed experiment
+ok 344 - canon research advice belongs to a real method; no third pseudo-option or executed experiment
+  ---
+  duration_ms: 29.551124
+  type: 'test'
+  ...
+# Subtest: catalog warns on changed prepared canon/revision without rewriting a T1 snapshot
+ok 345 - catalog warns on changed prepared canon/revision without rewriting a T1 snapshot
+  ---
+  duration_ms: 9109.899973
+  type: 'test'
+  ...
+# Subtest: a forged candidate graph root cannot masquerade as an existing Requirement projection
+ok 346 - a forged candidate graph root cannot masquerade as an existing Requirement projection
+  ---
+  duration_ms: 8784.807807
+  type: 'test'
+  ...
+# Subtest: potential graph links remain read-only index projections, never writable workspace operations
+ok 347 - potential graph links remain read-only index projections, never writable workspace operations
+  ---
+  duration_ms: 10086.138347
+  type: 'test'
+  ...
+# Subtest: v7 two-file update with option, composite, QRPE, collection keeps revision replay and context index consistent
+ok 348 - v7 two-file update with option, composite, QRPE, collection keeps revision replay and context index consistent
+  ---
+  duration_ms: 1662.619955
+  type: 'test'
+  ...
+# Subtest: v7 journal recovery completes interrupted two-file composite and collection update
+ok 349 - v7 journal recovery completes interrupted two-file composite and collection update
+  ---
+  duration_ms: 1090.204642
+  type: 'test'
+  ...
+# Subtest: canon-directed context query uses project collections, distinguishes unknown and cannot access another project
+ok 350 - canon-directed context query uses project collections, distinguishes unknown and cannot access another project
+  ---
+  duration_ms: 687.353477
+  type: 'test'
+  ...
+# Subtest: same Collection ID on two graphs remains owner-scoped; explicit cross-file ref is separate
+ok 351 - same Collection ID on two graphs remains owner-scoped; explicit cross-file ref is separate
+  ---
+  duration_ms: 600.218929
+  type: 'test'
+  ...
+# Subtest: canon lookup never presents future/unrelated contexts as applicable
+ok 352 - canon lookup never presents future/unrelated contexts as applicable
+  ---
+  duration_ms: 678.081583
+  type: 'test'
+  ...
+# Subtest: declared non-overlap cannot override nested scope; other disjointness remains explicitly unverified
+ok 353 - declared non-overlap cannot override nested scope; other disjointness remains explicitly unverified
+  ---
+  duration_ms: 232.595768
+  type: 'test'
+  ...
+# Subtest: canon inspector retains typed IDs, cross-file references, categories and evidence limits
+ok 354 - canon inspector retains typed IDs, cross-file references, categories and evidence limits
+  ---
+  duration_ms: 471.13853
+  type: 'test'
+  ...
+# Subtest: QRPE visible as badges; direct tutorial D gets explicit disclaimer without fake canon
+ok 355 - QRPE visible as badges; direct tutorial D gets explicit disclaimer without fake canon
+  ---
+  duration_ms: 127.293813
+  type: 'test'
+  ...
+# Subtest: Collections retain original candidate R and remain reversible with group labels
+ok 356 - Collections retain original candidate R and remain reversible with group labels
+  ---
+  duration_ms: 468.680046
+  type: 'test'
+  ...
+# Subtest: single-R context lists stay inline without a group header
+ok 357 - single-R context lists stay inline without a group header
+  ---
+  duration_ms: 162.959484
+  type: 'test'
+  ...
+# Subtest: canonical situations are visible blocks and inspectable for selected and unselected options
+ok 358 - canonical situations are visible blocks and inspectable for selected and unselected options
+  ---
+  duration_ms: 414.289593
+  type: 'test'
+  ...
+# Subtest: ten prospective candidate R preserve reversible collection and candidate status
+ok 359 - ten prospective candidate R preserve reversible collection and candidate status
+  ---
+  duration_ms: 536.997184
+  type: 'test'
+  ...
+# Subtest: prepared tree shows two-R lists inline and stops before their own variants
+ok 360 - prepared tree shows two-R lists inline and stops before their own variants
+  ---
+  duration_ms: 185.322111
+  type: 'test'
+  ...
+# Subtest: mixed working sample: selected root hides options; undecided child shows both even under selected ancestor
+ok 361 - mixed working sample: selected root hides options; undecided child shows both even under selected ancestor
+  ---
+  duration_ms: 424.529051
+  type: 'test'
+  ...
+# Subtest: workspace initializer supports real goal dry-run and creates writable graph with zero Decisions
+ok 362 - workspace initializer supports real goal dry-run and creates writable graph with zero Decisions
+  ---
+  duration_ms: 560.011326
+  type: 'test'
+  ...
+# Subtest: v7 workspace: candidate canons, shared composite, QRPE before selection, chosen D with risk and two child roles
+ok 363 - v7 workspace: candidate canons, shared composite, QRPE before selection, chosen D with risk and two child roles
+  ---
+  duration_ms: 808.549763
+  type: 'test'
+  ...
+# Subtest: v7 writer rejects selection without actual event and retains previous candidate state
+ok 364 - v7 writer rejects selection without actual event and retains previous candidate state
+  ---
+  duration_ms: 693.471063
+  type: 'test'
+  ...
+# Subtest: v7 writer rejects canonless option, forged collection owner, and direct QRPE history overwrite
+ok 365 - v7 writer rejects canonless option, forged collection owner, and direct QRPE history overwrite
+  ---
+  duration_ms: 972.2178
+  type: 'test'
+  ...
+# Subtest: v7 selected options cannot conflict in one scope; reviewed R can become inactive without rewriting choice
+ok 366 - v7 selected options cannot conflict in one scope; reviewed R can become inactive without rewriting choice
+  ---
+  duration_ms: 992.729252
+  type: 'test'
+  ...
+# Subtest: v7 actual child may be reparented with authorized event and archived lineage
+ok 367 - v7 actual child may be reparented with authorized event and archived lineage
+  ---
+  duration_ms: 1032.311102
+  type: 'test'
+  ...
+# Subtest: v7 promotes preplanned candidate R from selected option with same identity and QRPE; other branches stay potential
+ok 368 - v7 promotes preplanned candidate R from selected option with same identity and QRPE; other branches stay potential
+  ---
+  duration_ms: 527.93858
+  type: 'test'
+  ...
+# Subtest: v7 refuses promotion of a candidate belonging to an unselected option
+ok 369 - v7 refuses promotion of a candidate belonging to an unselected option
+  ---
+  duration_ms: 540.997561
+  type: 'test'
+  ...
+# Subtest: wheel modes normalize pixels, lines, pages and touchpad axes without changing scale while panning
+ok 370 - wheel modes normalize pixels, lines, pages and touchpad axes without changing scale while panning
+  ---
+  duration_ms: 3.677077
+  type: 'test'
+  ...
+# Subtest: camera events on the real Viewer leave node positions, layout commands and dirty status unchanged
+ok 371 - camera events on the real Viewer leave node positions, layout commands and dirty status unchanged
+  ---
+  duration_ms: 46.779246
+  type: 'test'
+  ...
+# Subtest: target labels stay near each target for left, right, vertical, return and multiple incoming routes
+ok 372 - target labels stay near each target for left, right, vertical, return and multiple incoming routes
+  ---
+  duration_ms: 30.351164
+  type: 'test'
+  ...
+# Subtest: view geometry embedded in the userscript is byte-identical to the shared module
+ok 373 - view geometry embedded in the userscript is byte-identical to the shared module
+  ---
+  duration_ms: 7.554776
+  type: 'test'
+  ...
+# Subtest: lost response retains exact request, blocks a new action and permits safe retry
+ok 374 - lost response retains exact request, blocks a new action and permits safe retry
+  ---
+  duration_ms: 17.446254
+  type: 'test'
+  ...
+# Subtest: known rejection preserves source state and clears uncertain request
+ok 375 - known rejection preserves source state and clears uncertain request
+  ---
+  duration_ms: 9.894729
+  type: 'test'
+  ...
+# Subtest: a render failure after save reports saved, rather than an unknown writer outcome
+ok 376 - a render failure after save reports saved, rather than an unknown writer outcome
+  ---
+  duration_ms: 2.158137
+  type: 'test'
+  ...
+# Subtest: read-only and protected sessions disable writes, source text is rendered as text
+ok 377 - read-only and protected sessions disable writes, source text is rendered as text
+  ---
+  duration_ms: 1.470144
+  type: 'test'
+  ...
+# Subtest: Viewer keeps manual controls detached until explicit local attachment
+ok 378 - Viewer keeps manual controls detached until explicit local attachment
+  ---
+  duration_ms: 47.995901
+  type: 'test'
+  ...
+# Subtest: manual controls traverse real HTTP, writers and Viewer: A1 -> withdraw -> A2
+ok 379 - manual controls traverse real HTTP, writers and Viewer: A1 -> withdraw -> A2 # SKIP
+  ---
+  duration_ms: 0.674832
+  type: 'test'
+  ...
+# Subtest: generated workflow controller matches the shared source exactly
+ok 380 - generated workflow controller matches the shared source exactly
+  ---
+  duration_ms: 30.328483
+  type: 'test'
+  ...
+# Subtest: verbatim 0.2 source from original user upload remains unchanged
+ok 381 - verbatim 0.2 source from original user upload remains unchanged
+  ---
+  duration_ms: 8.216693
+  type: 'test'
+  ...
+# Subtest: three read-only reference views have intact IDs, edges and source provenance
+ok 382 - three read-only reference views have intact IDs, edges and source provenance
+  ---
+  duration_ms: 24.454048
+  type: 'test'
+  ...
+# Subtest: App Definition contains seven sibling R and concrete scenario-to-feature information
+ok 383 - App Definition contains seven sibling R and concrete scenario-to-feature information
+  ---
+  duration_ms: 9.700986
+  type: 'test'
+  ...
+# Subtest: Scenario delegation is one stable R ID and status QRPE does not assert completion
+ok 384 - Scenario delegation is one stable R ID and status QRPE does not assert completion
+  ---
+  duration_ms: 6.837029
+  type: 'test'
+  ...
+# Subtest: Behavior distinguishes shared scope, local D, pending candidates and hypothetical events
+ok 385 - Behavior distinguishes shared scope, local D, pending candidates and hypothetical events
+  ---
+  duration_ms: 8.000174
+  type: 'test'
+  ...
+# Subtest: bootstrap uses reference-index module but pilot has no preselected decisions
+ok 386 - bootstrap uses reference-index module but pilot has no preselected decisions
+  ---
+  duration_ms: 24.422966
+  type: 'test'
+  ...
+# Subtest: reference-only graphs reject updater commands without creating write locks
+ok 387 - reference-only graphs reject updater commands without creating write locks
+  ---
+  duration_ms: 424.79184
+  type: 'test'
+  ...
+# Subtest: all six hierarchical graphs are read-only demos with exactly one indicated root Requirement
+ok 388 - all six hierarchical graphs are read-only demos with exactly one indicated root Requirement
+  ---
+  duration_ms: 51.136085
+  type: 'test'
+  ...
+# Subtest: parent level delegates a neutral Requirement, not a Feature choice or TM
+ok 389 - parent level delegates a neutral Requirement, not a Feature choice or TM
+  ---
+  duration_ms: 9.168449
+  type: 'test'
+  ...
+# Subtest: R «Расписать функционал» owns both prepared options, one sample choice, four R
+ok 390 - R «Расписать функционал» owns both prepared options, one sample choice, four R
+  ---
+  duration_ms: 8.147567
+  type: 'test'
+  ...
+# Subtest: each concrete child Requirement becomes identical root ID at its own level
+ok 391 - each concrete child Requirement becomes identical root ID at its own level
+  ---
+  duration_ms: 41.545474
+  type: 'test'
+  ...
+# Subtest: index and bootstrap expose only the entry level, without inventing new prompts
+ok 392 - index and bootstrap expose only the entry level, without inventing new prompts
+  ---
+  duration_ms: 143.64533
+  type: 'test'
+  ...
+# Subtest: writer blocks changes to all reference levels without creating locks
+ok 393 - writer blocks changes to all reference levels without creating locks
+  ---
+  duration_ms: 2428.999942
+  type: 'test'
+  ...
+# Subtest: fresh reload after embedded bundle never returns to older revision and preserves data on read failure
+ok 394 - fresh reload after embedded bundle never returns to older revision and preserves data on read failure
+  ---
+  duration_ms: 149.163346
+  type: 'test'
+  ...
+# Subtest: invalid events shape, duplicate event or wrong Decision reference reject without poisoning node inspector
+ok 395 - invalid events shape, duplicate event or wrong Decision reference reject without poisoning node inspector
+  ---
+  duration_ms: 30.501707
+  type: 'test'
+  ...
+# Subtest: real workspace history is not labelled illustration; hypothetical history still is
+ok 396 - real workspace history is not labelled illustration; hypothetical history still is
+  ---
+  duration_ms: 26.145323
+  type: 'test'
+  ...
+# Subtest: all bundled graphs have distinct label rectangles outside node rectangles in both edge modes
+ok 397 - all bundled graphs have distinct label rectangles outside node rectangles in both edge modes
+  ---
+  duration_ms: 3480.574838
+  type: 'test'
+  ...
+# Subtest: reference inspector reads the one owner, opens that exact ID, and returns to the origin
+ok 398 - reference inspector reads the one owner, opens that exact ID, and returns to the origin
+  ---
+  duration_ms: 622.912882
+  type: 'test'
+  ...
+# Subtest: Scenario-to-Feature information and one shared Behavior choice are concrete, not enum coverage
+ok 399 - Scenario-to-Feature information and one shared Behavior choice are concrete, not enum coverage
+  ---
+  duration_ms: 31.215352
+  type: 'test'
+  ...
+# Subtest: a crowded functionality graph opens on its actual root and answer, not auxiliary records
+ok 400 - a crowded functionality graph opens on its actual root and answer, not auxiliary records
+  ---
+  duration_ms: 60.185214
+  type: 'test'
+  ...
+# Subtest: all relations keeps one level, and every original record and relationship remains accessible through levels
+ok 401 - all relations keeps one level, and every original record and relationship remains accessible through levels
+  ---
+  duration_ms: 679.190854
+  type: 'test'
+  ...
+# Subtest: searching a hidden auxiliary record exposes that record instead of dropping its inspector
+ok 402 - searching a hidden auxiliary record exposes that record instead of dropping its inspector
+  ---
+  duration_ms: 304.641121
+  type: 'test'
+  ...
+# Subtest: routed arrows do not cut through unrelated node rectangles in any bundled graph or view
+ok 403 - routed arrows do not cut through unrelated node rectangles in any bundled graph or view
+  ---
+  duration_ms: 3809.654183
+  type: 'test'
+  ...
+# Subtest: missing root and a self reference do not collapse or crash the renderer
+ok 404 - missing root and a self reference do not collapse or crash the renderer
+  ---
+  duration_ms: 9.3953
+  type: 'test'
+  ...
+# Subtest: inspecting one full-view relation dims other arrows but preserves both endpoint records
+ok 405 - inspecting one full-view relation dims other arrows but preserves both endpoint records
+  ---
+  duration_ms: 297.471697
+  type: 'test'
+  ...
+# Subtest: a fitted full graph stays inside the real viewport even at a fractional scale
+ok 406 - a fitted full graph stays inside the real viewport even at a fractional scale
+  ---
+  duration_ms: 214.143327
+  type: 'test'
+  ...
+# Subtest: real Helper Import replaces same IDs, preserves outsiders and is unchanged on repeat
+ok 407 - real Helper Import replaces same IDs, preserves outsiders and is unchanged on repeat
+  ---
+  duration_ms: 76.633578
+  type: 'test'
+  ...
+# Subtest: generated helper-library delivery bytes match the authoring payload
+ok 408 - generated helper-library delivery bytes match the authoring payload
+  ---
+  duration_ms: 157.622053
+  type: 'test'
+  ...
+# Subtest: working bundle includes 4 prompts + 9 modules, no pilot entries
+ok 409 - working bundle includes 4 prompts + 9 modules, no pilot entries
+  ---
+  duration_ms: 2.349633
+  type: 'test'
+  ...
+# Subtest: all working prompts expand the right modules
+ok 410 - all working prompts expand the right modules
+  ---
+  duration_ms: 3.451129
+  type: 'test'
+  ...
+# Subtest: bootstrap includes nine modules and covers runtime storage
+ok 411 - bootstrap includes nine modules and covers runtime storage
+  ---
+  duration_ms: 0.715173
+  type: 'test'
+  ...
+# Subtest: specialized working prompts contain correct boundaries
+ok 412 - specialized working prompts contain correct boundaries
+  ---
+  duration_ms: 0.819399
+  type: 'test'
+  ...
+# Subtest: import text mirrors editable sources
+ok 413 - import text mirrors editable sources
+  ---
+  duration_ms: 116.541737
+  type: 'test'
+  ...
+# Subtest: try-it remains uncommitted before real user selection
+ok 414 - try-it remains uncommitted before real user selection
+  ---
+  duration_ms: 7.593917
+  type: 'test'
+  ...
+1..414
+# tests 414
+# suites 0
+# pass 413
+# fail 0
+# cancelled 0
+# skipped 1
+# todo 0
+# duration_ms 109890.139806

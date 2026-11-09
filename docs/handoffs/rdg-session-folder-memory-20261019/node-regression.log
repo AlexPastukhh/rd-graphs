@@ -1,0 +1,448 @@
+TAP version 13
+# Subtest: V01 graph file: title, number and revision
+ok 1 - V01 graph file: title, number and revision
+  ---
+  duration_ms: 140.521598
+  type: 'test'
+  ...
+# Subtest: V02 inspect decision and requirement, show type and end points
+ok 2 - V02 inspect decision and requirement, show type and end points
+  ---
+  duration_ms: 31.952748
+  type: 'test'
+  ...
+# Subtest: V03 search by ID and title, clearing restores overview
+ok 3 - V03 search by ID and title, clearing restores overview
+  ---
+  duration_ms: 33.370919
+  type: 'test'
+  ...
+# Subtest: V04 zoom and Fit restore viewport
+ok 4 - V04 zoom and Fit restore viewport
+  ---
+  duration_ms: 18.797687
+  type: 'test'
+  ...
+# Subtest: V05 loads local catalog and refreshes changed revision
+ok 5 - V05 loads local catalog and refreshes changed revision
+  ---
+  duration_ms: 46.659767
+  type: 'test'
+  ...
+# Subtest: V06 file refresh requires explicitly selecting file again
+ok 6 - V06 file refresh requires explicitly selecting file again
+  ---
+  duration_ms: 18.904539
+  type: 'test'
+  ...
+# Subtest: V07 invalid JSON preserves prior rendering
+ok 7 - V07 invalid JSON preserves prior rendering
+  ---
+  duration_ms: 19.532514
+  type: 'test'
+  ...
+# Subtest: V08 switching graphs removes previous nodes
+ok 8 - V08 switching graphs removes previous nodes
+  ---
+  duration_ms: 14.874943
+  type: 'test'
+  ...
+# Subtest: V09 empty graph gets finite transform
+ok 9 - V09 empty graph gets finite transform
+  ---
+  duration_ms: 5.808641
+  type: 'test'
+  ...
+# Subtest: V10 built-in bundle defaults to folders and workspace is available
+ok 10 - V10 built-in bundle defaults to folders and workspace is available
+  ---
+  duration_ms: 102.552702
+  type: 'test'
+  ...
+# Subtest: V11 rejects graph with duplicate node ID
+ok 11 - V11 rejects graph with duplicate node ID
+  ---
+  duration_ms: 3.422479
+  type: 'test'
+  ...
+# Subtest: V12 rejects graph with dangling edge
+ok 12 - V12 rejects graph with dangling edge
+  ---
+  duration_ms: 4.724779
+  type: 'test'
+  ...
+# Subtest: V13 rejects graph with missing INTRODUCES parent
+ok 13 - V13 rejects graph with missing INTRODUCES parent
+  ---
+  duration_ms: 7.578988
+  type: 'test'
+  ...
+# Subtest: V14 HTML injection is inert plain text in inspector
+ok 14 - V14 HTML injection is inert plain text in inspector
+  ---
+  duration_ms: 11.696966
+  type: 'test'
+  ...
+# Subtest: V15 rejects unsupported schemaVersion
+ok 15 - V15 rejects unsupported schemaVersion
+  ---
+  duration_ms: 4.117616
+  type: 'test'
+  ...
+# Subtest: V16 accepts optional events without inventing state
+ok 16 - V16 accepts optional events without inventing state
+  ---
+  duration_ms: 13.112437
+  type: 'test'
+  ...
+# Subtest: V17 selects a node and records selection only in DOM
+ok 17 - V17 selects a node and records selection only in DOM
+  ---
+  duration_ms: 10.494553
+  type: 'test'
+  ...
+# Subtest: V18 opens local bundled graph without file XHR
+ok 18 - V18 opens local bundled graph without file XHR
+  ---
+  duration_ms: 34.824917
+  type: 'test'
+  ...
+# Subtest: V19 folder card goes back to correct group
+ok 19 - V19 folder card goes back to correct group
+  ---
+  duration_ms: 72.347651
+  type: 'test'
+  ...
+# Subtest: V20 graph card safely exposes read-only status
+ok 20 - V20 graph card safely exposes read-only status
+  ---
+  duration_ms: 26.904134
+  type: 'test'
+  ...
+# Subtest: V21 2D Target Module has complete source display
+ok 21 - V21 2D Target Module has complete source display
+  ---
+  duration_ms: 48.277305
+  type: 'test'
+  ...
+# Subtest: V22 go from neutral parent R to functionality R with choices
+ok 22 - V22 go from neutral parent R to functionality R with choices
+  ---
+  duration_ms: 98.617488
+  type: 'test'
+  ...
+# Subtest: V23 go to specific Feature and back preserving Requirement ID
+ok 23 - V23 go to specific Feature and back preserving Requirement ID
+  ---
+  duration_ms: 100.500385
+  type: 'test'
+  ...
+# Subtest: V24 2D folder lists ten graph sets
+ok 24 - V24 2D folder lists ten graph sets
+  ---
+  duration_ms: 18.417781
+  type: 'test'
+  ...
+# Subtest: V28 malicious nested path is rejected
+ok 25 - V28 malicious nested path is rejected
+  ---
+  duration_ms: 20.456633
+  type: 'test'
+  ...
+# Subtest: V28b cross-file root inspector reports exact introducing Decision
+ok 26 - V28b cross-file root inspector reports exact introducing Decision
+  ---
+  duration_ms: 62.537548
+  type: 'test'
+  ...
+# Subtest: V29 relationship types are labeled in Russian directly on arrows and explained on click
+ok 27 - V29 relationship types are labeled in Russian directly on arrows and explained on click
+  ---
+  duration_ms: 2191.662006
+  type: 'test'
+  ...
+# Subtest: V30 filter keeps plan/decomposition only; all view restores all labeled relations
+ok 28 - V30 filter keeps plan/decomposition only; all view restores all labeled relations
+  ---
+  duration_ms: 250.285245
+  type: 'test'
+  ...
+# Subtest: V31 proposed reconsideration and QRPE are visually distinguished from ready variants
+ok 29 - V31 proposed reconsideration and QRPE are visually distinguished from ready variants
+  ---
+  duration_ms: 740.428819
+  type: 'test'
+  ...
+# Subtest: autosave coalesces changes after drag and confirms only a read-back of the latest edit
+ok 30 - autosave coalesces changes after drag and confirms only a read-back of the latest edit
+  ---
+  duration_ms: 166.689602
+  type: 'test'
+  ...
+# Subtest: autosave records a real pointer drag without moving the camera
+ok 31 - autosave records a real pointer drag without moving the camera
+  ---
+  duration_ms: 18.603788
+  type: 'test'
+  ...
+# Subtest: new edits during a buffered write automatically receive their own next save, including another graph
+ok 32 - new edits during a buffered write automatically receive their own next save, including another graph
+  ---
+  duration_ms: 30.253608
+  type: 'test'
+  ...
+# Subtest: external changes stop the automatic queue without overwriting the other writer
+ok 33 - external changes stop the automatic queue without overwriting the other writer
+  ---
+  duration_ms: 15.577116
+  type: 'test'
+  ...
+# Subtest: revoked permissions do not open prompts from autosave; draft remains available
+ok 34 - revoked permissions do not open prompts from autosave; draft remains available
+  ---
+  duration_ms: 12.493159
+  type: 'test'
+  ...
+# Subtest: write errors remain dirty and are not retried endlessly
+ok 35 - write errors remain dirty and are not retried endlessly
+  ---
+  duration_ms: 9.360204
+  type: 'test'
+  ...
+# Subtest: pause provides a visible sequential handoff to CLI; resume schedules pending work
+ok 36 - pause provides a visible sequential handoff to CLI; resume schedules pending work
+  ---
+  duration_ms: 21.143657
+  type: 'test'
+  ...
+# Subtest: without a connected file changes remain a draft and no picker opens automatically
+ok 37 - without a connected file changes remain a draft and no picker opens automatically
+  ---
+  duration_ms: 6.618058
+  type: 'test'
+  ...
+# Subtest: a crash draft restores without silently replacing a newer external base
+ok 38 - a crash draft restores without silently replacing a newer external base
+  ---
+  duration_ms: 22.057775
+  type: 'test'
+  ...
+# Subtest: catalog generated helper in the userscript is byte-identical to the CLI source
+ok 39 - catalog generated helper in the userscript is byte-identical to the CLI source
+  ---
+  duration_ms: 6.264555
+  type: 'test'
+  ...
+# Subtest: pausing after an edit cancels the already scheduled automatic write
+ok 40 - pausing after an edit cancels the already scheduled automatic write
+  ---
+  duration_ms: 8.695412
+  type: 'test'
+  ...
+# Subtest: saving or discarding one tab cannot delete another tab recovery journal, even for the same graph
+ok 41 - saving or discarding one tab cannot delete another tab recovery journal, even for the same graph
+  ---
+  duration_ms: 29.04812
+  type: 'test'
+  ...
+# Subtest: the legacy draft is copied without deleting the migration source
+ok 42 - the legacy draft is copied without deleting the migration source
+  ---
+  duration_ms: 81.659361
+  type: 'test'
+  ...
+# Subtest: the first real drag without a file visibly changes the status and never says saved
+ok 43 - the first real drag without a file visibly changes the status and never says saved
+  ---
+  duration_ms: 9.407734
+  type: 'test'
+  ...
+# Subtest: Viewer reads hash and percent paths through encoded local file URLs
+ok 44 - Viewer reads hash and percent paths through encoded local file URLs
+  ---
+  duration_ms: 10.455775
+  type: 'test'
+  ...
+# Subtest: draft recovery refuses an edit made while the source is being read
+ok 45 - draft recovery refuses an edit made while the source is being read
+  ---
+  duration_ms: 11.720531
+  type: 'test'
+  ...
+# Subtest: lost response retains exact request, blocks a new action and permits safe retry
+ok 46 - lost response retains exact request, blocks a new action and permits safe retry
+  ---
+  duration_ms: 18.585912
+  type: 'test'
+  ...
+# Subtest: known rejection preserves source state and clears uncertain request
+ok 47 - known rejection preserves source state and clears uncertain request
+  ---
+  duration_ms: 1.023166
+  type: 'test'
+  ...
+# Subtest: a render failure after save reports saved, rather than an unknown writer outcome
+ok 48 - a render failure after save reports saved, rather than an unknown writer outcome
+  ---
+  duration_ms: 2.204617
+  type: 'test'
+  ...
+# Subtest: read-only and protected sessions disable writes, source text is rendered as text
+ok 49 - read-only and protected sessions disable writes, source text is rendered as text
+  ---
+  duration_ms: 4.168164
+  type: 'test'
+  ...
+# Subtest: plan tab opens without requesting files and preserves graph and editor across switches
+ok 50 - plan tab opens without requesting files and preserves graph and editor across switches
+  ---
+  duration_ms: 68.298219
+  type: 'test'
+  ...
+# Subtest: manual controls traverse real HTTP, writers and Viewer: A1 -> withdraw -> A2
+ok 51 - manual controls traverse real HTTP, writers and Viewer: A1 -> withdraw -> A2 # SKIP
+  ---
+  duration_ms: 0.749862
+  type: 'test'
+  ...
+# Subtest: generated workflow controller matches the shared source exactly
+ok 52 - generated workflow controller matches the shared source exactly
+  ---
+  duration_ms: 30.575219
+  type: 'test'
+  ...
+# Subtest: cross-owner Helper: manual action under projection root completes the owning parent
+ok 53 - cross-owner Helper: manual action under projection root completes the owning parent # SKIP
+  ---
+  duration_ms: 0.275478
+  type: 'test'
+  ...
+# Subtest: placement selection reloads shown fields and protects unsupported rules
+ok 54 - placement selection reloads shown fields and protects unsupported rules
+  ---
+  duration_ms: 3.393182
+  type: 'test'
+  ...
+# Subtest: manual date and order edits preserve successor, deadline and strength through real writers
+ok 55 - manual date and order edits preserve successor, deadline and strength through real writers # SKIP
+  ---
+  duration_ms: 0.765022
+  type: 'test'
+  ...
+# Subtest: closed Helper descriptor without a token reports ended session and queues no request
+ok 56 - closed Helper descriptor without a token reports ended session and queues no request
+  ---
+  duration_ms: 2.102523
+  type: 'test'
+  ...
+# Subtest: wrong folder and incomplete descriptor produce actionable read errors
+ok 57 - wrong folder and incomplete descriptor produce actionable read errors
+  ---
+  duration_ms: 0.93436
+  type: 'test'
+  ...
+# Subtest: denied write access stops before ready marker and explains reconnect
+ok 58 - denied write access stops before ready marker and explains reconnect
+  ---
+  duration_ms: 0.751004
+  type: 'test'
+  ...
+# Subtest: unresponsive Helper shows progress then unlocks refresh without showing empty form
+ok 59 - unresponsive Helper shows progress then unlocks refresh without showing empty form
+  ---
+  duration_ms: 27.607583
+  type: 'test'
+  ...
+# Subtest: unanswered file command keeps exact pending transaction and blocks further edits
+ok 60 - unanswered file command keeps exact pending transaction and blocks further edits
+  ---
+  duration_ms: 43.183656
+  type: 'test'
+  ...
+# Subtest: plan shows graph cards and Action canon/QRPE, and contains no creation controls
+ok 61 - plan shows graph cards and Action canon/QRPE, and contains no creation controls
+  ---
+  duration_ms: 16.831126
+  type: 'test'
+  ...
+# Subtest: projection navigation resolves the owning declaration and its introducing context
+ok 62 - projection navigation resolves the owning declaration and its introducing context
+  ---
+  duration_ms: 54.642162
+  type: 'test'
+  ...
+# Subtest: a deep goal opens its parent wave, while an Action opens its driver wave
+ok 63 - a deep goal opens its parent wave, while an Action opens its driver wave
+  ---
+  duration_ms: 10.668909
+  type: 'test'
+  ...
+# Subtest: editing a placed Action variant keeps the actual projection placement and step identity
+ok 64 - editing a placed Action variant keeps the actual projection placement and step identity
+  ---
+  duration_ms: 14.848675
+  type: 'test'
+  ...
+# Subtest: a goal collects Action variants from its continuation graph without changing its own declaration
+ok 65 - a goal collects Action variants from its continuation graph without changing its own declaration
+  ---
+  duration_ms: 11.133764
+  type: 'test'
+  ...
+# Subtest: graph authoring reports uncertain writes and exposes exact retry on the graph surface
+ok 66 - graph authoring reports uncertain writes and exposes exact retry on the graph surface
+  ---
+  duration_ms: 1.83961
+  type: 'test'
+  ...
+# Subtest: a crowded functionality graph opens on its actual root and answer, not auxiliary records
+ok 67 - a crowded functionality graph opens on its actual root and answer, not auxiliary records
+  ---
+  duration_ms: 65.482777
+  type: 'test'
+  ...
+# Subtest: all relations keeps one level, and every original record and relationship remains accessible through levels
+ok 68 - all relations keeps one level, and every original record and relationship remains accessible through levels
+  ---
+  duration_ms: 515.761931
+  type: 'test'
+  ...
+# Subtest: searching a hidden auxiliary record exposes that record instead of dropping its inspector
+ok 69 - searching a hidden auxiliary record exposes that record instead of dropping its inspector
+  ---
+  duration_ms: 166.640541
+  type: 'test'
+  ...
+# Subtest: routed arrows do not cut through unrelated node rectangles in any bundled graph or view
+ok 70 - routed arrows do not cut through unrelated node rectangles in any bundled graph or view
+  ---
+  duration_ms: 2611.346337
+  type: 'test'
+  ...
+# Subtest: missing root and a self reference do not collapse or crash the renderer
+ok 71 - missing root and a self reference do not collapse or crash the renderer
+  ---
+  duration_ms: 8.009026
+  type: 'test'
+  ...
+# Subtest: inspecting one full-view relation dims other arrows but preserves both endpoint records
+ok 72 - inspecting one full-view relation dims other arrows but preserves both endpoint records
+  ---
+  duration_ms: 358.964026
+  type: 'test'
+  ...
+# Subtest: a fitted full graph stays inside the real viewport even at a fractional scale
+ok 73 - a fitted full graph stays inside the real viewport even at a fractional scale
+  ---
+  duration_ms: 135.16245
+  type: 'test'
+  ...
+1..73
+# tests 73
+# suites 0
+# pass 70
+# fail 0
+# cancelled 0
+# skipped 3
+# todo 0
+# duration_ms 10344.773252

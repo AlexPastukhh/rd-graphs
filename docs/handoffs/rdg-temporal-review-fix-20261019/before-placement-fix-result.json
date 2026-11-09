@@ -1,0 +1,8 @@
+{
+  "exitCode": 1,
+  "expected": "3 failures before placement/empty-future fix; one order-only case passes",
+  "tests": 4,
+  "passed": 1,
+  "failures": 2,
+  "errors": 1
+}

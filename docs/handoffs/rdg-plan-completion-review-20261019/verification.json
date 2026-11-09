@@ -1,0 +1,32 @@
+[
+  {
+    "suite": "rdg-deep-action.acceptance.test.py",
+    "exitCode": 0,
+    "tests": 24,
+    "log": "rdg-deep-action.acceptance.test.py.log"
+  },
+  {
+    "suite": "rdg-bearer-package.integration.test.py",
+    "exitCode": 0,
+    "tests": 13,
+    "log": "rdg-bearer-package.integration.test.py.log"
+  },
+  {
+    "suite": "rdg-temporal-placement.acceptance.test.py",
+    "exitCode": 0,
+    "tests": 5,
+    "log": "rdg-temporal-placement.acceptance.test.py.log"
+  },
+  {
+    "suite": "rdg-temporal-plan-owner.test.py",
+    "exitCode": 0,
+    "tests": 17,
+    "log": "rdg-temporal-plan-owner.test.py.log"
+  },
+  {
+    "suite": "node-focused",
+    "exitCode": 0,
+    "tests": 31,
+    "log": "node-focused.log"
+  }
+]

@@ -1,0 +1,10 @@
+{
+  "command": [
+    "python3",
+    "docs/handoffs/rdg-prework-v4.1-final-20261018/tests/rdg-gendocen-branch-membership.acceptance.test.py",
+    "-v"
+  ],
+  "exitCode": 0,
+  "seconds": 7.75,
+  "log": "acceptance.log"
+}

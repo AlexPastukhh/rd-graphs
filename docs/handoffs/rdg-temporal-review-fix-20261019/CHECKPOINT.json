@@ -1,0 +1,304 @@
+{
+  "checkpoint": "CPW-RDG-TEMPORAL-PLACEMENT-20261019/v1",
+  "recordedAtUTC": "2026-10-19T06:15:46.874792+00:00",
+  "status": "PASS-SCOPED-CANDIDATE",
+  "stage4": "NOT ACCEPTED",
+  "scope": "fresh candidate Plan placement; empty future; compatible v1 historical read and accepted replay",
+  "changedFiles": [
+    "README.md",
+    "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md",
+    "docs/guides/RDG-V7-WORKING-GRAPHS.md",
+    "docs/guides/RDG-TEMPORAL-PLAN-STAGE2P.md",
+    "tools/rdg-temporal-plan.py",
+    "tests/rdg-shared-action-occurrences.acceptance.test.py",
+    "tools/rdg-temporal-plan-owner.py",
+    "tests/rdg-temporal-placement.acceptance.test.py",
+    "docs/handoffs/rdg-temporal-review-fix-20261019/REVIEW.md",
+    "docs/handoffs/rdg-temporal-review-fix-20261019/CHECKPOINT.md",
+    "docs/handoffs/rdg-temporal-review-fix-20261019/run-related-tests.py"
+  ],
+  "beforeSHA256": {
+    "README.md": "6ed994f9e14a446aecb4190a245e49f8b0310bacb8c3a2ebe2d665487433e65b",
+    "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md": "cd52675d0b98ca3d9ec5935d492a7f59ee6986b30f265391008f9e9380b1ff0d",
+    "docs/guides/RDG-V7-WORKING-GRAPHS.md": "e97e68bb4f6e8b6e24cc8f90f5f960d26c124bd975054b58fa161d52a60cf3a7",
+    "docs/guides/RDG-TEMPORAL-PLAN-STAGE2P.md": "934da8267cce164307051e800300fb9a382c73d147e4405a21d5db4c1d5f95ac",
+    "tools/rdg-temporal-plan.py": "a72b037a21740eec5d7ece9af29aa91f3fdf9fd59eb8a4b1da65faf62a8e9179",
+    "tests/rdg-shared-action-occurrences.acceptance.test.py": "19ff51bfb694d88b6375248d1761853075e7aceb77180350fde1a60f8553100a",
+    "tools/rdg-temporal-plan-owner.py": "6fc18feae35f80413e52bfb4fe67f8cbf5559cca89d86c223b6380c7e2c51c54"
+  },
+  "fileSHA256": {
+    "README.md": "340c4d527ab5091e706ba98a9ea389e69d99f14870ae8e93fdbc6cbcb41ae735",
+    "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md": "b71661e13f361143724bc98e0b458e80e4739ee3d22c2182a381f38f1d4ed311",
+    "docs/guides/RDG-V7-WORKING-GRAPHS.md": "6ba84e72750621f7be92c6fa6be83776bd17f3eb769dae357f78cab0a0635b9f",
+    "docs/guides/RDG-TEMPORAL-PLAN-STAGE2P.md": "08173b168430a815a2e1cf013baa5f1fcc0824e284719d66065a381638070618",
+    "tools/rdg-temporal-plan.py": "6d20400805fa6ee7cee3c5d74008ffbba928266afae81eb93ddcf4ff4079d5bd",
+    "tests/rdg-shared-action-occurrences.acceptance.test.py": "3aaf6e8b6441e7f5e902a73a112f6d4d51a06e4bb6d0e6ceee2cc73cc6c977b2",
+    "tools/rdg-temporal-plan-owner.py": "18f1917d93e265d9f13712f2cec2b2aed883126dba4dbc30f2c2fbc644a1e780",
+    "tests/rdg-temporal-placement.acceptance.test.py": "ff767dc2eaf367a20efc2e4727eddf451d553b502757117441796dd7d12fef2e",
+    "docs/handoffs/rdg-temporal-review-fix-20261019/REVIEW.md": "9b04c9ecf0573f8fafd2a2ff15d78e923c54f0c77f377eecf19579a7ff4fbfc5",
+    "docs/handoffs/rdg-temporal-review-fix-20261019/CHECKPOINT.md": "812c9df275b4a09d9f25cf9c228f01c3d6e0f64a46c5aae82401579cd9e1c748",
+    "docs/handoffs/rdg-temporal-review-fix-20261019/run-related-tests.py": "79bef281f0338fe6a6887d29a50eea521c31f2da0a7c01748f3494e397075415"
+  },
+  "tests": {
+    "results": {
+      "temporal-plan": {
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "/workspace/repos/rd-graphs/tests/rdg-temporal-plan.test.py",
+          "-v"
+        ],
+        "exitCode": 0,
+        "tests": 12,
+        "seconds": 0.6,
+        "log": "temporal-plan.log"
+      },
+      "temporal-placement.acceptance": {
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "/workspace/repos/rd-graphs/tests/rdg-temporal-placement.acceptance.test.py",
+          "-v"
+        ],
+        "exitCode": 0,
+        "tests": 5,
+        "seconds": 0.82,
+        "log": "temporal-placement.acceptance.log"
+      },
+      "temporal-impact": {
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "/workspace/repos/rd-graphs/tests/rdg-temporal-impact.test.py",
+          "-v"
+        ],
+        "exitCode": 0,
+        "tests": 20,
+        "seconds": 1.05,
+        "log": "temporal-impact.log"
+      },
+      "temporal-plan-owner": {
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "/workspace/repos/rd-graphs/tests/rdg-temporal-plan-owner.test.py",
+          "-v"
+        ],
+        "exitCode": 0,
+        "tests": 17,
+        "seconds": 2.8,
+        "log": "temporal-plan-owner.log"
+      },
+      "gendocen-resources": {
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "/workspace/repos/rd-graphs/tests/rdg-gendocen-resources.test.py",
+          "-v"
+        ],
+        "exitCode": 0,
+        "tests": 10,
+        "seconds": 0.97,
+        "log": "gendocen-resources.log"
+      },
+      "joint-context": {
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "/workspace/repos/rd-graphs/tests/rdg-joint-context.test.py",
+          "-v"
+        ],
+        "exitCode": 0,
+        "tests": 12,
+        "seconds": 5.35,
+        "log": "joint-context.log"
+      },
+      "gendocen-coverage-guard": {
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "/workspace/repos/rd-graphs/tests/rdg-gendocen-coverage-guard.test.py",
+          "-v"
+        ],
+        "exitCode": 0,
+        "tests": 4,
+        "seconds": 6.42,
+        "log": "gendocen-coverage-guard.log"
+      },
+      "future-baseline": {
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "/workspace/repos/rd-graphs/tests/rdg-future-baseline.test.py",
+          "-v"
+        ],
+        "exitCode": 0,
+        "tests": 9,
+        "seconds": 5.2,
+        "log": "future-baseline.log"
+      },
+      "exact-history": {
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "/workspace/repos/rd-graphs/tests/rdg-exact-history.test.py",
+          "-v"
+        ],
+        "exitCode": 0,
+        "tests": 13,
+        "seconds": 1.65,
+        "log": "exact-history.log"
+      },
+      "shared-action-occurrences.acceptance": {
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "/workspace/repos/rd-graphs/tests/rdg-shared-action-occurrences.acceptance.test.py",
+          "-v"
+        ],
+        "exitCode": 0,
+        "tests": 2,
+        "seconds": 24.3,
+        "log": "shared-action-occurrences.acceptance.log"
+      },
+      "event-owner": {
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "/workspace/repos/rd-graphs/tests/rdg-event-owner.test.py",
+          "-v"
+        ],
+        "exitCode": 0,
+        "tests": 13,
+        "seconds": 5.36,
+        "log": "event-owner.log"
+      },
+      "event-gendocen": {
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "/workspace/repos/rd-graphs/tests/rdg-event-gendocen.test.py",
+          "-v"
+        ],
+        "exitCode": 0,
+        "tests": 6,
+        "seconds": 2.16,
+        "log": "event-gendocen.log"
+      },
+      "event-consumer-guard": {
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "/workspace/repos/rd-graphs/tests/rdg-event-consumer-guard.test.py",
+          "-v"
+        ],
+        "exitCode": 0,
+        "tests": 3,
+        "seconds": 2.02,
+        "log": "event-consumer-guard.log"
+      },
+      "two-time-scenario": {
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "/workspace/repos/rd-graphs/tests/rdg-two-time-scenario.test.py",
+          "-v"
+        ],
+        "exitCode": 0,
+        "tests": 6,
+        "seconds": 2.01,
+        "log": "two-time-scenario.log"
+      },
+      "applicability-owner": {
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "/workspace/repos/rd-graphs/tests/rdg-applicability-owner.test.py",
+          "-v"
+        ],
+        "exitCode": 0,
+        "tests": 9,
+        "seconds": 4.33,
+        "log": "applicability-owner.log"
+      },
+      "gendocen-dependencies": {
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "/workspace/repos/rd-graphs/tests/rdg-gendocen-dependencies.test.py",
+          "-v"
+        ],
+        "exitCode": 0,
+        "tests": 14,
+        "seconds": 75.83,
+        "log": "gendocen-dependencies.log"
+      }
+    },
+    "totalTests": 155
+  },
+  "sharedActionRealEngine": {
+    "actionSelected": false,
+    "cliProcesses": 21,
+    "omittedOccurrence": "rejected",
+    "results": {
+      "S-A1_constraint": {
+        "A1": "review_required",
+        "A2": "valid"
+      },
+      "S-A2_constraint": {
+        "A1": "review_required",
+        "A2": "valid"
+      },
+      "baseline": {
+        "A1": "valid",
+        "A2": "valid"
+      },
+      "cosmetic": {
+        "A1": "valid",
+        "A2": "valid"
+      },
+      "membership_swap": {
+        "A1": "review_required",
+        "A2": "valid"
+      },
+      "restored": {
+        "A1": "valid",
+        "A2": "valid"
+      }
+    },
+    "sourceBytesUnchanged": true
+  },
+  "beforeFix": {
+    "tests": 4,
+    "passed": 1,
+    "failures": 2,
+    "errors": 1,
+    "exitCode": 1
+  },
+  "p2AcCount": {
+    "Локальный PASS": 8,
+    "PARTIAL": 12,
+    "OPEN": 0
+  },
+  "localLinksChecked": 108,
+  "priorEvidenceAndUnselectedInspectedSourcesUnchanged": true,
+  "v41ZipSHA256": "ab5ba0acf4a116eb24ac24340f151527786cf1e93c90aa7b38f52e50b92d5401",
+  "runtimeChanged": [
+    "tools/rdg-temporal-plan.py",
+    "tools/rdg-temporal-plan-owner.py"
+  ],
+  "stillUnimplemented": [
+    "candidate Action descendants",
+    "Requirement placement",
+    "completion outcome API/evaluator",
+    "unified readable history",
+    "installed manual UI"
+  ],
+  "evidenceGap": "exact three entity-creation criteria not recovered; WR-22 formula not assumed equivalent",
+  "userGraphWrites": false,
+  "gitAvailable": false,
+  "fullNodeRegressionRerun": false,
+  "separateJointSmokeRerun": false,
+  "windowsG2Verified": false,
+  "published": false
+}

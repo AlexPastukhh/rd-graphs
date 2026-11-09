@@ -1,0 +1,11 @@
+{
+  "exitCode": 0,
+  "seconds": 23.81,
+  "command": [
+    "python3",
+    "tools/rdg-gendocen-t1-history-smoke.py",
+    "--engine-source",
+    "/workspace/repos/gendocen"
+  ],
+  "log": "t1-history-smoke.log"
+}

@@ -1,0 +1,55 @@
+{
+  "A1_canon": {
+    "A1": "review_required",
+    "A2": "valid"
+  },
+  "A1_qrpe": {
+    "A1": "review_required",
+    "A2": "valid"
+  },
+  "A1_ref_revision": {
+    "A1": "review_required",
+    "A2": "valid"
+  },
+  "A2_only": {
+    "A1": "valid",
+    "A2": "review_required"
+  },
+  "A2_status": {
+    "A1": "valid",
+    "A2": "review_required"
+  },
+  "baseline": {
+    "A1": "valid",
+    "A2": "valid"
+  },
+  "branch_swap": {
+    "A1": "review_required",
+    "A2": "review_required"
+  },
+  "cosmetic_reorder": {
+    "A1": "valid",
+    "A2": "valid"
+  },
+  "first_indirect_constraint": {
+    "A1": "review_required",
+    "A2": "review_required"
+  },
+  "indirect_sequence": {
+    "A1": "review_required",
+    "A2": "review_required"
+  },
+  "new_indirect_predecessor": {
+    "A1": "review_required",
+    "A2": "review_required"
+  },
+  "omitted_indirect_subscription": "fail-closed; check records unavailable-registry diagnostic; validate/state and receipts unchanged",
+  "restored_complete_contract": {
+    "A1": "valid",
+    "A2": "valid"
+  },
+  "shared_deadline": {
+    "A1": "review_required",
+    "A2": "review_required"
+  }
+}

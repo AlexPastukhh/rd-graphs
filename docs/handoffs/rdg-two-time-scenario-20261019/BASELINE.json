@@ -1,0 +1,8 @@
+{
+  "createdAtUTC": "2026-10-18T21:41:58.402121+00:00",
+  "previousCheckpoint": "../rdg-plan-reconcile-20261019/CHECKPOINT.json",
+  "files": {
+    "README.md": "9bfcd7bacc2a91c249d0ca4cc1e483d9c1f689e1b4d85cbfe50d6998592e382e",
+    "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md": "363ed78a153de1564da7a46979675be499cd68531f846c318336ed5fdb024e9a"
+  }
+}

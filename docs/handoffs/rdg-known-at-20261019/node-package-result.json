@@ -1,0 +1,10 @@
+{
+  "exitCode": 0,
+  "seconds": 15.94,
+  "command": [
+    "node",
+    "--test",
+    "tests/rdg-v7-package.test.cjs",
+    "tests/module-unit.test.cjs"
+  ]
+}
