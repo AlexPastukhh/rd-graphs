@@ -1,0 +1,71 @@
+{
+  "results": {
+    "plan-owner": {
+      "command": [
+        "/usr/bin/python3",
+        "tests/rdg-temporal-plan-owner.test.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "tests": 17,
+      "seconds": 2.72,
+      "log": "plan-owner.log"
+    },
+    "plan-reader": {
+      "command": [
+        "/usr/bin/python3",
+        "tests/rdg-temporal-plan.test.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "tests": 12,
+      "seconds": 0.62,
+      "log": "plan-reader.log"
+    },
+    "resources": {
+      "command": [
+        "/usr/bin/python3",
+        "tests/rdg-gendocen-resources.test.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "tests": 10,
+      "seconds": 1.03,
+      "log": "resources.log"
+    },
+    "coverage-guard": {
+      "command": [
+        "/usr/bin/python3",
+        "tests/rdg-gendocen-coverage-guard.test.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "tests": 4,
+      "seconds": 6.35,
+      "log": "coverage-guard.log"
+    },
+    "joint-context": {
+      "command": [
+        "/usr/bin/python3",
+        "tests/rdg-joint-context.test.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "tests": 12,
+      "seconds": 4.83,
+      "log": "joint-context.log"
+    },
+    "dependencies": {
+      "command": [
+        "/usr/bin/python3",
+        "tests/rdg-gendocen-dependencies.test.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "tests": 14,
+      "seconds": 76.75,
+      "log": "dependencies.log"
+    }
+  },
+  "totalTests": 69
+}

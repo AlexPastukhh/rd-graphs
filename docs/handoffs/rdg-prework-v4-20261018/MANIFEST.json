@@ -1,0 +1,117 @@
+{
+  "asOf": "2026-10-18",
+  "bearerCredentialsIncluded": false,
+  "criticalOpenDefect": "Case outcome Action mapping changed without invalidation. Observed A1/A2=valid.",
+  "engineSourcePath": "/workspace/repos/gendocen",
+  "files": [
+    {
+      "bytes": 23216,
+      "path": "HANDOFF.md",
+      "sha256": "455d1384f5291199e33aab6d2d0836ea86b6ff92f08ce2177298afd8e98a348b"
+    },
+    {
+      "bytes": 3657,
+      "path": "README-NEXT-CHAT.md",
+      "sha256": "5a72908cc79c325835152b8134cb6cd8ef948d3a42f645b192c36aff7e2ad15e"
+    },
+    {
+      "bytes": 148,
+      "path": "branch-membership-gap-observed-20261018.log",
+      "sha256": "d2e7dd94be6c711a02c9251fb7aeb9f43be95db6d2cf50caa1a81ad8ed3ac880"
+    },
+    {
+      "bytes": 175910,
+      "path": "candidate-prework-v4-execution-reconciled.md",
+      "sha256": "976e9e26147a7bf2757240b7387a19326e4222529dcb850a36892cbae42b54f2"
+    },
+    {
+      "bytes": 8168,
+      "path": "evidence/RDG-CANON-CONTEXT-REVIEW-STAGE2.md",
+      "sha256": "d6965ed90f5e343f76f5b96f765094715a5a676b455a39e87bdc5b982181b04f"
+    },
+    {
+      "bytes": 1825,
+      "path": "evidence/RDG-GENDOCEN-COLOCATED-RUNTIME-CHECKPOINT-20261018.json",
+      "sha256": "44b19fb27f3887909fcfd22ba2ae2980259029af2d562f2dbcc87a77c9ce8aa6"
+    },
+    {
+      "bytes": 2454,
+      "path": "evidence/RDG-GENDOCEN-CRASH-HISTORY-CHECKPOINT-20261018.json",
+      "sha256": "d742c9727de25c1c5b9dc920c3b14a1ffa6228b32dad6ffd7bf52fa2fcf9271c"
+    },
+    {
+      "bytes": 3871,
+      "path": "evidence/RDG-GENDOCEN-CRASH-HISTORY-STAGE4.md",
+      "sha256": "a29bc885615e6e7db46ddb40b1fb139705d4aacdc479990ecbc5b975fcd7519a"
+    },
+    {
+      "bytes": 2656,
+      "path": "evidence/RDG-GENDOCEN-T1-QRPE-PLAN-STAGE4-20261018.json",
+      "sha256": "77e421bcabcaa93320846d7988c672ac9a21cc7212b839256287d1dc08c52876"
+    },
+    {
+      "bytes": 5371,
+      "path": "evidence/RDG-GENDOCEN-T1-QRPE-PLAN-STAGE4.md",
+      "sha256": "1c81e03373472e26bba23a17723df4b188858a8b891b9a78327593697520279e"
+    },
+    {
+      "bytes": 9849,
+      "path": "evidence/RDG-TEMPORAL-IMPACT-STAGE3P.md",
+      "sha256": "404c3d7c26555adf9bd54ae0f94505a7aa131e06bb37839752edecc707b858bd"
+    },
+    {
+      "bytes": 7417,
+      "path": "evidence/RDG-TEMPORAL-PLAN-STAGE2P.md",
+      "sha256": "f1a1c00f944a6164e698f8e15325904a460e1bae3b8aecddf224816612668430"
+    },
+    {
+      "bytes": 7502,
+      "path": "evidence/RDG-TYPED-FINDINGS-STAGE2-PILOT.md",
+      "sha256": "585ac7bdf05bed89598605b639ee4dd507f7093a8f82241ad3be2178d4c4c356"
+    },
+    {
+      "bytes": 2670,
+      "path": "evidence/temporal-plan-candidate-v1.json",
+      "sha256": "8ea7def804338b3c1eede415b75da639c56fa4c825882e32782408a2395f54c0"
+    },
+    {
+      "bytes": 2661,
+      "path": "repro-branch-membership-gap.py",
+      "sha256": "c5bc6edd94f5bce5f2fbb8d7b8260ba7253079d0fb16fd742749bf1fe4e2eff7"
+    },
+    {
+      "bytes": 156851,
+      "path": "source-candidate-prework-v3-reading-copy.md",
+      "sha256": "6dafff8d76021b4a2e9699b96c3d401c4d70b9195374ced77144cc74445ff8c7"
+    },
+    {
+      "bytes": 46778,
+      "path": "source-independent-review-v1-reading-copy.md",
+      "sha256": "d80a8f6dd53cb3a7d9e9ffe475c9cf9cc425508084a69e79df87548c30a802f4"
+    }
+  ],
+  "gitCommitInWorkingRepo": null,
+  "independentReviewGitHubBlobSHA1": "5eb5267ac4a2fd626ff840b9c26b8816e2c96373",
+  "nextPriority": "P0: branch dependency coverage with negative and cosmetic tests.",
+  "originalV3GitHubBlobSHA1": "6da1a3648528c01179bcc792b636f56d6b823901",
+  "packageId": "RDG-PREWORK-V4-HANDOFF-20261018-01",
+  "reproExpectedExitCode": 0,
+  "reproExpectedLog": "GAP_REPRODUCED (product defect, not acceptance)",
+  "sourceFileSha256": {
+    "tools/graph-apply.py": "dd5e3ea3b7f460363e97683b8c6494b853ddf31bf098b53ec04a449e647444c7",
+    "tools/graph-package.py": "690218b9fc301dd4279b15f47f3a33f0ee5963b4e18c17c787a3ba54b3fe2d48",
+    "tools/rdg-authority.py": "184b618ca907e842c7199c65df07a0e0a7aff5b5f0645b23b74b9298b44c1803",
+    "tools/rdg-canon-context-review.py": "be4d272ea58162d3c4ca504e8229cba95b0d2e36e3d744528d2f9de64bce624d",
+    "tools/rdg-finding-drafts.py": "2c3bfd6515583304ab03999d2d671101b44cc2150b3c60549da20e052716e64b",
+    "tools/rdg-gendocen-adapter.py": "bc35ede7cc39a5425758192a68e7405b273edd1e663c0d1c4c2fa7a0beb124cf",
+    "tools/rdg-gendocen-runtime-smoke.py": "bcfd09fda9b008a0005059f77bc6537122277c0cfddf9370cc4ddd978091bdf4",
+    "tools/rdg-gendocen-t1-history-smoke.py": "b65276404d16196cf574192f26344460e1789709fa51ae3b2daf82b194622bef",
+    "tools/rdg-temporal-impact.py": "70f3d85fe05090d3385ec2e03cca66c17b215d7b61f9b06b286ff4e1b71f6198",
+    "tools/rdg-temporal-plan.py": "a72b037a21740eec5d7ece9af29aa91f3fdf9fd59eb8a4b1da65faf62a8e9179",
+    "tools/rdg-v7-model.py": "b80af6d28482d20fd47184c6785cd96154e8faffb3725d0970323d3f65541d47"
+  },
+  "status": "CANDIDATE-NOT-PRODUCTION",
+  "v4ContainsOriginalV3InAppendix": true,
+  "workingGraphFilesIncluded": false,
+  "workingRepoPath": "/workspace/repos/rd-graphs"
+}

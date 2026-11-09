@@ -1,0 +1,10 @@
+{
+  "exitCode": 0,
+  "seconds": 0.53,
+  "command": [
+    "python3",
+    "tests/rdg-canon-context-review.test.py",
+    "-v"
+  ],
+  "log": "canon.log"
+}

@@ -1,0 +1,46 @@
+test_date_only_places_action_and_cannot_be_removed_leaving_it_unplaced (__main__.TemporalPlacementAcceptance.test_date_only_places_action_and_cannot_be_removed_leaving_it_unplaced) ... FAIL
+test_empty_future_can_be_saved_placed_and_cleared_without_fake_steps (__main__.TemporalPlacementAcceptance.test_empty_future_can_be_saved_placed_and_cleared_without_fake_steps) ... ERROR
+test_order_only_places_candidate_actions_without_inventing_dates (__main__.TemporalPlacementAcceptance.test_order_only_places_candidate_actions_without_inventing_dates) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_unplaced_action_rejected_atomically_on_create_and_edit (__main__.TemporalPlacementAcceptance.test_unplaced_action_rejected_atomically_on_create_and_edit) ... FAIL
+
+======================================================================
+ERROR: test_empty_future_can_be_saved_placed_and_cleared_without_fake_steps (__main__.TemporalPlacementAcceptance.test_empty_future_can_be_saved_placed_and_cleared_without_fake_steps)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/repos/rd-graphs/tests/rdg-temporal-placement.acceptance.test.py", line 57, in test_empty_future_can_be_saved_placed_and_cleared_without_fake_steps
+    self.create(empty)
+  File "/workspace/repos/rd-graphs/tests/rdg-temporal-placement.acceptance.test.py", line 46, in create
+    return self.owner.apply(self.owner.request(plan=plan))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/repos/rd-graphs/tests/rdg-temporal-plan-owner.test.py", line 56, in apply
+    return OWNER.apply_request(self.root, self.store, token or self.author, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/repos/rd-graphs/tools/rdg-temporal-plan-owner.py", line 312, in apply_request
+    PLAN.validate(plan)
+  File "/workspace/repos/rd-graphs/tools/rdg-temporal-plan.py", line 61, in validate
+    ensure(isinstance(steps, list) and steps, "STEPS_REQUIRED")
+  File "/workspace/repos/rd-graphs/tools/rdg-temporal-plan.py", line 22, in ensure
+    raise ValueError("TEMPORAL_PLAN_" + code)
+ValueError: TEMPORAL_PLAN_STEPS_REQUIRED
+
+======================================================================
+FAIL: test_date_only_places_action_and_cannot_be_removed_leaving_it_unplaced (__main__.TemporalPlacementAcceptance.test_date_only_places_action_and_cannot_be_removed_leaving_it_unplaced)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/repos/rd-graphs/tests/rdg-temporal-placement.acceptance.test.py", line 104, in test_date_only_places_action_and_cannot_be_removed_leaving_it_unplaced
+    with self.assertRaisesRegex(ValueError,"ACTION_STEP_NOT_PLACED"):
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_unplaced_action_rejected_atomically_on_create_and_edit (__main__.TemporalPlacementAcceptance.test_unplaced_action_rejected_atomically_on_create_and_edit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/repos/rd-graphs/tests/rdg-temporal-placement.acceptance.test.py", line 112, in test_unplaced_action_rejected_atomically_on_create_and_edit
+    with self.assertRaisesRegex(ValueError,"ACTION_STEP_NOT_PLACED"):
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.231s
+
+FAILED (failures=2, errors=1)

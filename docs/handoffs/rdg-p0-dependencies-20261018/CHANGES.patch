@@ -1,0 +1,691 @@
+--- a/README.md
++++ b/README.md
+@@ -3,6 +3,17 @@
+ Текущий исходный Viewer **2.0.3**, Local Loader **2.5.2**: папки → полные Requirements-графы от корневой R → локальный R-граф одной волны. Полный граф поддерживает независимые «Принятое/Все ветви» и «Только Requirements/Показать всё»; «Обновить» перечитывает текущие файлы и индекс, при недоступности оставляет явно помеченную встроенную копию. Расположение сохраняется отдельно и только с разрешённым доступом. [Актуальная инструкция](docs/guides/VIEWER-EXPLORER.md) · [граница R-графа и общий слой координат](docs/guides/VIEWER-LAYOUT.md) · [план и порядок реализации](docs/guides/VIEWER-EXPLORER-PLAN.md). Обновление исходника не подтверждает обновления установленного Tampermonkey.
+ 
+ Отдельное экспериментальное хранилище графов. Не является канонической методологией OBS и не заменяет действующие документы.
++
++## P0 — зависимости условных ветвей (локальное исправление)
++
++Добавлен общий контракт `rdg-temporal-review/v1`: оба Gendocen runtime runner
++используют адресные зависимости от ветвей, шагов, ActionRefs, последовательности,
++косвенных предпосылок, сроков и данных Action. Пропущенная подписка блокирует
++подтверждение. Контракт ограничен текущими проекциями и одной условной ветвью;
++исторические snapshots, Plan writer и production acceptance остаются открытыми.
++[Матрица источников, границы и команды](docs/guides/RDG-GENDOCEN-DEPENDENCY-COVERAGE-P0.md).
++Результаты и актуальный WR-ledger: `docs/handoffs/rdg-p0-dependencies-20261018/`.
++**Stage 4 NOT ACCEPTED**; старый v4.1 и его ZIP сохранены без изменений.
+ 
+ ## Экспериментальный bearer guard (2026-10-18, opt-in)
+ 
+--- a/tools/rdg-gendocen-adapter.py
++++ b/tools/rdg-gendocen-adapter.py
+@@ -13,6 +13,7 @@
+ 
+ ROOT = Path(__file__).resolve().parent
+ PLAN = SourceFileLoader("rdg_temporal_for_gendocen", str(ROOT / "rdg-temporal-plan.py")).load_module()
++DEPENDENCIES = SourceFileLoader("rdg_gendocen_dependencies", str(ROOT / "rdg-gendocen-dependencies.py")).load_module()
+ GRAPH_REF = re.compile(r"workspaces/(?:[a-z0-9][a-z0-9_-]*/)+graph\.json\Z")
+ 
+ 
+@@ -75,7 +76,7 @@
+         "nodesById": nodes_by, "edgesById": edges_by,
+         "events": events, "actionModel": graph.get("actionModel"),
+     }
+-    data = {**content,
++    data = {**content, **DEPENDENCIES.graph_views(content),
+             "sourceRevision": graph.get("revision"),
+             "semanticSHA256": digest(content)}
+     ident = "rdg.graph." + digest({"identitySpace": owner, "graphFile": ref})[:24]
+@@ -122,7 +123,8 @@
+         "timeConstraintsByStep": time_by,
+         "actionRefsByStep": refs_by_step,
+     }
+-    data = {**content, "sourceRevision": plan["revision"],
++    data = {**content, **DEPENDENCIES.plan_views(content),
++            "sourceRevision": plan["revision"],
+             "semanticSHA256": digest(content)}
+     ident = "rdg.plan." + digest({"identitySpace": plan["identitySpace"],
+                                   "planId": plan["id"]})[:24]
+--- a/tools/rdg-gendocen-runtime-smoke.py
++++ b/tools/rdg-gendocen-runtime-smoke.py
+@@ -71,16 +71,10 @@
+         save(plan_projection, plan_obj)
+         gref, pref = engine_ref(graph_obj), engine_ref(plan_obj)
+         (project / "docengine_project/__init__.py").write_text(
+-            "def register_builders(registry):\n    pass\n\n"
+-            "def register_semantic_dependencies(registry):\n"
+-            "    for aid in ('A1', 'A2'):\n"
+-            "        registry.register(\n"
+-            "            f'file://review/{aid}.md',\n"
+-            "            [(f'" + pref + "#/timeConstraintsByStep/S-{aid}', 'exact'),\n"
+-            "             ('" + pref + "#/timeConstraintsByStep/S-DELIVERY', 'exact'),\n"
+-            "             (f'" + gref + "#/nodesById/{aid}/canonBlock', 'exact')],\n"
+-            "            rule_id=f'rdg-temporal-review.{aid}',\n"
+-            "            dependency_type='semantic_review')\n")
++            adapter.DEPENDENCIES.project_config(
++                "_structured/rdg/graph.json", "_structured/rdg/plan.json",
++                [("A1", "S-A1"), ("A2", "S-A2")], "rdg-temporal-review"),
++            encoding="utf8")
+         docs = {}
+         for aid in ("A1", "A2"):
+             docs[aid] = project / ("docs/review/" + aid + ".md")
+@@ -184,7 +178,7 @@
+         check_expected("valid", "review_required", "A2 branch only")
+         _, a2_explain = cli("explain", "file://review/A2.md")
+         require(a2_explain["data"]["changed_dependencies"] ==
+-                [pref + "#/timeConstraintsByStep/S-A2"],
++                [pref + "#/reviewInputsByStep/S-A2/timeConstraints"],
+                 "A2_DEPENDENCY_NOT_PRECISE")
+         accept_synthetic_baseline("A2")
+         check_expected("valid", "valid", "A2 review completed")
+--- a/tools/rdg-gendocen-t1-history-smoke.py
++++ b/tools/rdg-gendocen-t1-history-smoke.py
+@@ -201,19 +201,9 @@
+         project_graph()
+         project_plan()
+         graph_uri, plan_uri = uri(snapshot(gproj)), uri(snapshot(pproj))
+-        registration = (
+-            "def register_builders(registry):\n    pass\n\n"
+-            "def register_semantic_dependencies(registry):\n"
+-            "    for aid in ('A1', 'A2'):\n"
+-            "        registry.register(\n"
+-            "            f'file://review/{aid}.md',\n"
+-            "            [(f'" + graph_uri + "#/nodesById/{aid}/canonBlock', 'exact'),\n"
+-            "             (f'" + graph_uri + "#/nodesById/{aid}/qrpe', 'exact'),\n"
+-            "             (f'" + plan_uri + "#/timeConstraintsByStep/S-{aid}', 'exact'),\n"
+-            "             ('" + plan_uri + "#/timeConstraintsByStep/S-DELIVERY', 'exact')],\n"
+-            "            rule_id=f'synthetic-t1-review.{aid}',\n"
+-            "            dependency_type='semantic_review')\n"
+-        )
++        registration = ADAPTER.DEPENDENCIES.project_config(
++            "_structured/rdg/graph.json", "_structured/rdg/plan.json",
++            [("A1", "S-A1"), ("A2", "S-A2")], "synthetic-t1-review")
+         (project / "docengine_project/__init__.py").write_text(
+             registration, encoding="utf8")
+         docs = {}
+--- /dev/null
++++ b/tools/rdg-gendocen-dependencies.py
+@@ -0,0 +1,175 @@
++#!/usr/bin/env python3
++"""Scoped freshness inputs for the candidate, one-event Temporal Plan pilot.
++
++Read-only projection/registration contract; not truth, authority or a full
++Finding evaluator. Recompute after every source change before engine checks.
++"""
++import copy
++import json
++from pathlib import Path
++
++VERSION = "rdg-temporal-review/v1"
++READ_MATRIX = {
++    "identity": ["identitySpace", "planId", "planStatus", "actionRefsByStep/{step}"],
++    "branches": ["branchesById/*/eventStepId", "branchesById/*/cases",
++                 "stepsById/*/state", "stepsById/*/outcomes"],
++    "steps": ["stepsById/*/{id,kind,state,actionRef,outcomes}"],
++    "sequence": ["sequenceByPair/*/{before,after,minDelayDays}"],
++    "timeConstraints": ["timeConstraintsByStep/*/{stepId,type,at,strength,basis}"],
++}
++GRAPH_READS = ["identitySpace", "graphFile", "rootRequirementId", "actionModel",
++               "nodesById/{action}/{id,kind,status,canonBlock,qrpe,selectionBasis}"]
++
++
++def require(value, code):
++    if not value:
++        raise ValueError("RDG_REVIEW_COVERAGE_" + code)
++
++
++def pointer(value):
++    return value.replace("~", "~0").replace("/", "~1")
++
++
++def resource_ref(resource):
++    return "resource://" + resource["$docengine"]["resource_id"].replace(".", "/", 1)
++
++
++def graph_views(data):
++    identity = {k: data[k] for k in
++                ("identitySpace", "graphFile", "rootRequirementId", "actionModel")}
++    nodes = {
++        aid: {k: node.get(k) for k in
++              ("id", "kind", "status", "canonBlock", "qrpe", "selectionBasis")}
++        for aid, node in data["nodesById"].items() if node.get("kind") == "action"
++    }
++    return copy.deepcopy({"reviewIdentity": identity, "reviewNodesById": nodes})
++
++
++def closure(seed, edges, direction):
++    result, todo = set(seed), list(seed)
++    while todo:
++        sid = todo.pop()
++        for edge in edges:
++            start, end = ((edge["before"], edge["after"]) if direction == "forward"
++                          else (edge["after"], edge["before"]))
++            if start == sid and end not in result:
++                result.add(end)
++                todo.append(end)
++    return result
++
++
++def plan_views(data):
++    branches = list(data["branchesById"].values())
++    coverage = {"contract": VERSION, "scope": "one-conditional-event/current-projection",
++                "complete": len(branches) <= 1, "sourceReads": READ_MATRIX,
++                "graphReads": GRAPH_READS,
++                "historicalSnapshotAvailable": False}
++    if not coverage["complete"]:
++        coverage["diagnostic"] = "MULTI_BRANCH_NOT_COVERED"
++        return {"reviewCoverage": coverage, "reviewInputsByStep": {}}
++    steps = data["stepsById"]
++    possible = {sid for sid, step in steps.items() if step["state"] == "possible"}
++    branch = branches[0] if branches else None
++    cases = branch["cases"] if branch else [{"outcome": None, "stepIds": []}]
++    views = {}
++    for sid, step in sorted(steps.items()):
++        if step["kind"] != "action":
++            continue
++        facets = {key: {} for key in ("branches", "steps", "sequence", "timeConstraints")}
++        facets["identity"] = {k: data[k] for k in ("identitySpace", "planId", "planStatus")}
++        facets["identity"]["actionRef"] = data["actionRefsByStep"][sid]
++        for case in sorted(cases, key=lambda c: c["outcome"] or ""):
++            active = (set(steps) - possible) | set(case["stepIds"])
++            if sid not in active:
++                continue
++            edges = [e for e in data["sequenceByPair"].values()
++                     if e["before"] in active and e["after"] in active]
++            # The existing review includes all active deadlines, including the
++            # shared delivery milestone; their indirect prerequisites matter.
++            deadlines = {key for key, rules in data["timeConstraintsByStep"].items()
++                         if key in active and any(r["type"] == "deadline" for r in rules)}
++            related = (closure({sid}, edges, "forward") |
++                       closure({sid} | deadlines, edges, "reverse"))
++            if branch:
++                related.add(branch["eventStepId"])
++            label = case["outcome"] or "unconditional"
++            facets["branches"][label] = {
++                "branchId": branch["id"] if branch else None,
++                "eventStepId": branch["eventStepId"] if branch else None,
++                "outcome": case["outcome"],
++                "stepIds": sorted(set(case["stepIds"]) & related),
++            }
++            facets["steps"][label] = {
++                key: {k: value for k, value in steps[key].items() if k != "title"}
++                for key in sorted(related)
++            }
++            facets["sequence"][label] = sorted(
++                [e for e in edges if e["before"] in related and e["after"] in related],
++                key=lambda e: (e["before"], e["after"]))
++            facets["timeConstraints"][label] = {
++                key: data["timeConstraintsByStep"][key] for key in sorted(related)
++            }
++        views[sid] = facets
++    return copy.deepcopy({"reviewCoverage": coverage, "reviewInputsByStep": views})
++
++
++def build_contract(graph, plan, action_id, step_id):
++    gd, pd = graph["data"], plan["data"]
++    expected = plan_views(pd)
++    require(expected["reviewCoverage"]["complete"], "MULTI_BRANCH_NOT_COVERED")
++    for key, value in expected.items():
++        require(pd.get(key) == value, "PLAN_PROJECTION_INCOMPLETE_OR_STALE_" + key)
++    for key, value in graph_views(gd).items():
++        require(gd.get(key) == value, "GRAPH_PROJECTION_INCOMPLETE_OR_STALE_" + key)
++    require(action_id in gd["reviewNodesById"], "ACTION_NOT_FOUND")
++    require(step_id in pd["reviewInputsByStep"], "STEP_NOT_FOUND")
++    ref = pd["actionRefsByStep"][step_id]
++    require(ref["identitySpace"] == gd["identitySpace"] and
++            ref["graphFile"] == gd["graphFile"] and ref["nodeId"] == action_id,
++            "ACTION_OWNER_MISMATCH")
++    gref, pref = resource_ref(graph), resource_ref(plan)
++    sources = [(gref + "#/reviewIdentity", "exact"),
++               (gref + "#/reviewNodesById/" + pointer(action_id), "exact"),
++               (pref + "#/reviewCoverage", "exact")]
++    sources += [(pref + "#/reviewInputsByStep/" + pointer(step_id) + "/" + key, "exact")
++                for key in READ_MATRIX]
++    return {"contract": VERSION, "complete": True,
++            "subscriptions": sources,
++            "provenance": {"graphResource": gref, "planResource": pref,
++                           "graphRevision": gd["sourceRevision"],
++                           "planRevision": pd["sourceRevision"],
++                           "observedGraphRevision": ref.get("observedGraphRevision"),
++                           "asOfMode": "current-projection",
++                           "historicalSnapshotAvailable": False}}
++
++
++def assert_coverage(contract, declared):
++    require(contract.get("contract") == VERSION and contract.get("complete"),
++            "UNKNOWN_CONTRACT")
++    expected = {tuple(x) for x in contract["subscriptions"]}
++    actual = {tuple(x) for x in declared}
++    missing, extra = expected - actual, actual - expected
++    require(not missing and not extra and len(declared) == len(expected),
++            "SUBSCRIPTIONS_INCOMPLETE missing=" + repr(sorted(missing)) +
++            " extra=" + repr(sorted(extra)))
++
++
++def project_config(graph_relative, plan_relative, targets, rule_prefix):
++    """Trusted local project config, validated on every Gendocen CLI startup."""
++    return (
++        "import json\nfrom pathlib import Path\n"
++        "from importlib.machinery import SourceFileLoader\n"
++        f"dependency = SourceFileLoader('rdg_review_dependencies', {str(Path(__file__).resolve())!r}).load_module()\n"
++        "def register_builders(registry):\n    pass\n\n"
++        "def register_semantic_dependencies(registry):\n"
++        "    docs = Path(__file__).resolve().parents[1] / 'docs'\n"
++        f"    graph = json.loads((docs / {graph_relative!r}).read_text(encoding='utf8'))\n"
++        f"    plan = json.loads((docs / {plan_relative!r}).read_text(encoding='utf8'))\n"
++        f"    for aid, sid in {targets!r}:\n"
++        "        contract = dependency.build_contract(graph, plan, aid, sid)\n"
++        "        sources = contract['subscriptions']\n"
++        "        dependency.assert_coverage(contract, sources)\n"
++        "        registry.register(f'file://review/{aid}.md', sources,\n"
++        f"                          rule_id={rule_prefix!r} + '.' + aid,\n"
++        "                          dependency_type='semantic_review')\n"
++    )
+--- /dev/null
++++ b/tests/rdg-gendocen-dependencies.test.py
+@@ -0,0 +1,287 @@
++#!/usr/bin/env python3
++"""Behavioral and real-engine regression for scoped dependency coverage."""
++import copy
++from importlib.machinery import SourceFileLoader
++import json
++import os
++from pathlib import Path
++import subprocess
++import sys
++import tempfile
++import unittest
++
++ROOT = Path(__file__).resolve().parents[1]
++ADAPTER = SourceFileLoader("rdg_p0_adapter", str(ROOT / "tools/rdg-gendocen-adapter.py")).load_module()
++DEP = ADAPTER.DEPENDENCIES
++ENGINE = Path(os.environ.get("RDG_GENDOCEN_SOURCE", "/workspace/repos/gendocen"))
++
++
++class DependencyContractTest(unittest.TestCase):
++    def setUp(self):
++        self.temp = tempfile.TemporaryDirectory(prefix="rdg-p0-dependencies-")
++        self.addCleanup(self.temp.cleanup)
++        self.root = Path(self.temp.name)
++        self.graphfile = self.root / "workspaces/temporal-fixture/graph.json"
++        self.graphfile.parent.mkdir(parents=True)
++        self.planfile = self.root / "plan.json"
++        self.plan = json.loads((ROOT / "docs/examples/temporal-plan-candidate-v1.json").read_text())
++        self.graph = {
++            "schemaVersion": 1, "id": "synthetic-p0", "revision": 1,
++            "identitySpace": "temporal-demo", "rootRequirementId": "R0",
++            "actionModel": "candidate-v6", "edges": [], "events": [],
++            "nodes": [{"id": "R0", "kind": "requirement", "title": "Synthetic"}] +
++                     [{"id": a, "kind": "action", "status": "candidate", "qrpe": [],
++                       "canonBlock": {"recommended": [{"id": "C-" + a, "text": "Review"}],
++                                      "contraindicated": []}}
++                      for a in ("A1", "A2")],
++        }
++
++    def projections(self):
++        self.graphfile.write_text(json.dumps(self.graph))
++        self.planfile.write_text(json.dumps(self.plan))
++        return ADAPTER.graph_resource(self.graphfile), ADAPTER.plan_resource(self.planfile)
++
++    def views(self):
++        return self.projections()[1]["data"]["reviewInputsByStep"]
++
++    def test_branch_reassignment_changes_both_action_contexts(self):
++        before = self.views()
++        cases = self.plan["branches"][0]["cases"]
++        cases[0]["stepIds"], cases[1]["stepIds"] = cases[1]["stepIds"], cases[0]["stepIds"]
++        after = self.views()
++        for aid in ("A1", "A2"):
++            self.assertNotEqual(before["S-" + aid]["branches"], after["S-" + aid]["branches"])
++
++    def test_cosmetic_reorder_and_revision_keep_contexts(self):
++        before = self.views()
++        self.plan["steps"].reverse()
++        self.plan["sequence"].reverse()
++        self.plan["timeConstraints"].reverse()
++        self.plan["branches"][0]["cases"].reverse()
++        for step in self.plan["steps"]:
++            if step["kind"] == "event":
++                step["outcomes"].reverse()
++            step["title"] += " (display edit)"
++        self.plan["revision"] += 1
++        self.assertEqual(before, self.views())
++
++    def test_alternative_only_constraint_stays_local(self):
++        before = self.views()
++        self.plan["timeConstraints"].append({
++            "stepId": "S-A2", "type": "notBefore", "at": "2026-11-15",
++            "strength": "hypothetical", "basis": "Synthetic alternative"})
++        after = self.views()
++        self.assertEqual(before["S-A1"], after["S-A1"])
++        self.assertNotEqual(before["S-A2"], after["S-A2"])
++
++    def test_indirect_sequence_and_first_prerequisite_constraint_are_covered(self):
++        before = self.views()
++        self.plan["sequence"][0]["minDelayDays"] += 1
++        after = self.views()
++        for aid in ("A1", "A2"):
++            self.assertNotEqual(before["S-" + aid]["sequence"], after["S-" + aid]["sequence"])
++        self.plan["timeConstraints"].append({
++            "stepId": "S-RESULT", "type": "notBefore", "at": "2026-11-16",
++            "strength": "hard", "basis": "Synthetic prerequisite"})
++        latest = self.views()
++        for aid in ("A1", "A2"):
++            self.assertNotEqual(after["S-" + aid]["timeConstraints"],
++                                latest["S-" + aid]["timeConstraints"])
++
++    def test_action_ref_revision_is_local_but_not_historical_truth(self):
++        before = self.views()
++        self.plan["steps"][2]["actionRef"]["observedGraphRevision"] += 1
++        after = self.views()
++        self.assertNotEqual(before["S-A1"], after["S-A1"])
++        self.assertEqual(before["S-A2"], after["S-A2"])
++        g, p = self.projections()
++        provenance = DEP.build_contract(g, p, "A1", "S-A1")["provenance"]
++        self.assertEqual(provenance["observedGraphRevision"], 2)
++        self.assertEqual(provenance["asOfMode"], "current-projection")
++        self.assertFalse(provenance["historicalSnapshotAvailable"])
++
++    def test_omitted_indirect_sequence_subscription_fails_closed(self):
++        g, p = self.projections()
++        contract = DEP.build_contract(g, p, "A1", "S-A1")
++        declared = [s for s in contract["subscriptions"] if not s[0].endswith("/sequence")]
++        with self.assertRaisesRegex(ValueError, "SUBSCRIPTIONS_INCOMPLETE.*sequence"):
++            DEP.assert_coverage(contract, declared)
++
++    def test_stale_or_missing_derived_context_fails_closed(self):
++        g, p = self.projections()
++        p["data"]["sequenceByPair"]["S-TRIAL->S-RESULT"]["minDelayDays"] += 1
++        with self.assertRaisesRegex(ValueError, "PLAN_PROJECTION_INCOMPLETE_OR_STALE"):
++            DEP.build_contract(g, p, "A1", "S-A1")
++        g, p = self.projections()
++        del p["data"]["reviewInputsByStep"]
++        with self.assertRaisesRegex(ValueError, "PLAN_PROJECTION_INCOMPLETE_OR_STALE"):
++            DEP.build_contract(g, p, "A1", "S-A1")
++
++    def test_unknown_coverage_version_fails_closed(self):
++        g, p = self.projections()
++        p["data"]["reviewCoverage"]["contract"] = "unknown/v99"
++        with self.assertRaisesRegex(ValueError, "PLAN_PROJECTION_INCOMPLETE_OR_STALE"):
++            DEP.build_contract(g, p, "A1", "S-A1")
++
++    def test_wrong_action_owner_fails_closed(self):
++        self.plan["steps"][2]["actionRef"]["identitySpace"] = "another-owner"
++        g, p = self.projections()
++        with self.assertRaisesRegex(ValueError, "ACTION_OWNER_MISMATCH"):
++            DEP.build_contract(g, p, "A1", "S-A1")
++
++    def test_multiple_branches_are_explicitly_uncovered(self):
++        self.plan["steps"] += [
++            {"id": "E2", "kind": "event", "title": "Second event", "state": "expected",
++             "outcomes": ["yes", "no"]},
++            *[{"id": s, "kind": "milestone", "title": s, "state": "possible"}
++              for s in ("M1", "M2")]]
++        self.plan["sequence"] += [{"before": "E2", "after": s} for s in ("M1", "M2")]
++        self.plan["branches"].append({"id": "B2", "eventStepId": "E2", "cases": [
++            {"outcome": "yes", "stepIds": ["M1"]}, {"outcome": "no", "stepIds": ["M2"]}]})
++        g, p = self.projections()
++        self.assertFalse(p["data"]["reviewCoverage"]["complete"])
++        with self.assertRaisesRegex(ValueError, "MULTI_BRANCH_NOT_COVERED"):
++            DEP.build_contract(g, p, "A1", "S-A1")
++
++    def test_real_engine_change_matrix_and_omission_guard(self):
++        self.assertTrue((ENGINE / "src/docengine/cli.py").is_file(), "Real engine required")
++        project = self.root / "engine-project"
++        docs = project / "docs"
++        (docs / "_structured/rdg").mkdir(parents=True)
++        (docs / "review").mkdir()
++        (project / "docengine_project").mkdir()
++        (project / "docengine.toml").write_text(
++            '[docengine]\nconfig_version = 1\ndocumentation_root = "docs"\n'
++            'structured_dir = "_structured"\ndependency_dir = "_dependency"\n'
++            'project_package = "docengine_project"\n')
++        config = project / "docengine_project/__init__.py"
++        original_config = DEP.project_config("_structured/rdg/graph.json",
++            "_structured/rdg/plan.json", [("A1", "S-A1"), ("A2", "S-A2")], "p0-review")
++        config.write_text(original_config)
++        for aid in ("A1", "A2"):
++            (docs / "review" / (aid + ".md")).write_text("Synthetic review; no user approval.\n")
++        prose = {f: f.read_bytes() for f in (docs / "review").glob("*.md")}
++        env = {**os.environ, "PYTHONPATH": str(ENGINE / "src"), "PYTHONDONTWRITEBYTECODE": "1"}
++
++        def project_sources():
++            g, p = self.projections()
++            for name, obj in (("graph", g), ("plan", p)):
++                (docs / "_structured/rdg" / (name + ".json")).write_text(json.dumps(obj))
++
++        def cli(*args):
++            proc = subprocess.run([sys.executable, "-m", "docengine.cli", *args,
++                "--project-root", str(project), "--json"], capture_output=True, text=True,
++                env=env, timeout=45)
++            return proc, json.loads(proc.stdout) if proc.stdout.strip() else {}
++
++        def renew():
++            for aid in ("A1", "A2"):
++                target = "file://review/" + aid + ".md"
++                proc, body = cli("explain", target)
++                self.assertTrue(body.get("ok"), proc.stderr + proc.stdout)
++                if body["data"]["computed_status"] == "valid":
++                    continue
++                proc, body = cli("validate", target, "--result", "still-valid",
++                    "--reason", "Synthetic baseline only", "--review-context",
++                    body["data"]["review_context_id"])
++                self.assertEqual(proc.returncode, 0, proc.stderr + proc.stdout)
++
++        results = {}
++        def expect(label, a1, a2):
++            proc, body = cli("check")
++            self.assertTrue(body.get("data", {}).get("results"), proc.stderr + proc.stdout)
++            actual = {r["target"].rsplit("/", 1)[-1][:-3]: r["status"]
++                      for r in body["data"]["results"]}
++            self.assertEqual(actual, {"A1": a1, "A2": a2}, label)
++            self.assertEqual({f: f.read_bytes() for f in prose}, prose)
++            results[label] = actual
++
++        project_sources()
++        cli("sync")
++        renew()
++        expect("baseline", "valid", "valid")
++        self.plan["steps"].reverse()
++        self.plan["sequence"].reverse()
++        self.plan["branches"][0]["cases"].reverse()
++        for step in self.plan["steps"]:
++            if step["kind"] == "event": step["outcomes"].reverse()
++        self.plan["revision"] += 1
++        self.graph["revision"] += 1
++        self.graph["nodes"].reverse()
++        project_sources()
++        expect("cosmetic_reorder", "valid", "valid")
++        cases = self.plan["branches"][0]["cases"]
++        cases[0]["stepIds"], cases[1]["stepIds"] = cases[1]["stepIds"], cases[0]["stepIds"]
++        project_sources()
++        expect("branch_swap", "review_required", "review_required")
++        renew()
++        self.plan["timeConstraints"].append({"stepId": "S-A2", "type": "notBefore",
++            "at": "2026-11-17", "strength": "soft", "basis": "Synthetic A2 only"})
++        project_sources()
++        expect("A2_only", "valid", "review_required")
++        renew()
++        edge = next(e for e in self.plan["sequence"] if e["before"] == "S-TRIAL")
++        edge["minDelayDays"] += 1
++        project_sources()
++        expect("indirect_sequence", "review_required", "review_required")
++        renew()
++        self.plan["timeConstraints"].append({"stepId": "S-RESULT", "type": "notBefore",
++            "at": "2026-11-18", "strength": "hard", "basis": "Synthetic indirect prerequisite"})
++        project_sources()
++        expect("first_indirect_constraint", "review_required", "review_required")
++        renew()
++        self.plan["steps"].append({"id": "S-NEW", "kind": "milestone",
++            "title": "New prerequisite", "state": "planned"})
++        self.plan["sequence"].append({"before": "S-NEW", "after": "S-TRIAL", "minDelayDays": 4})
++        project_sources()
++        expect("new_indirect_predecessor", "review_required", "review_required")
++        renew()
++        next(s for s in self.plan["steps"] if s["id"] == "S-A1")["actionRef"]["observedGraphRevision"] += 1
++        project_sources()
++        expect("A1_ref_revision", "review_required", "valid")
++        renew()
++        next(n for n in self.graph["nodes"] if n["id"] == "A2")["status"] = "selected"
++        project_sources()
++        expect("A2_status", "valid", "review_required")
++        renew()
++        node = next(n for n in self.graph["nodes"] if n["id"] == "A1")
++        node["canonBlock"]["recommended"][0]["text"] = "Synthetic changed canon"
++        project_sources()
++        expect("A1_canon", "review_required", "valid")
++        renew()
++        next(r for r in self.plan["timeConstraints"] if r["type"] == "deadline")["at"] = "2026-11-19"
++        project_sources()
++        expect("shared_deadline", "review_required", "review_required")
++        renew()
++        node["qrpe"].append({"id": "U1", "status": "open", "text": "Synthetic uncertainty"})
++        project_sources()
++        expect("A1_qrpe", "review_required", "valid")
++        renew()
++        receipts = {f: f.read_bytes() for f in (docs / "_dependency/receipts").glob("*.json")}
++        state = docs / "_dependency/state/dependency_state.json"
++        config.write_text(original_config.replace("sources = contract['subscriptions']",
++            "sources = [s for s in contract['subscriptions'] if not s[0].endswith('/sequence')]"))
++        for command in ("check", "validate"):
++            args = (command,) if command == "check" else (command, "file://review/A1.md",
++                "--result", "still-valid", "--reason", "Must reject missing coverage",
++                "--review-context", "stale-test-context")
++            proc, body = cli(*args)
++            self.assertNotEqual(proc.returncode, 0)
++            self.assertIn("SUBSCRIPTIONS_INCOMPLETE", proc.stdout + proc.stderr)
++            self.assertFalse(body.get("ok"))
++            if command == "check":
++                self.assertEqual(body["meta"]["status"], "current_project_code_unavailable")
++                after_check_state = state.read_bytes()
++            else:
++                self.assertEqual(state.read_bytes(), after_check_state)
++        self.assertEqual({f: f.read_bytes() for f in
++                          (docs / "_dependency/receipts").glob("*.json")}, receipts)
++        results["omitted_indirect_subscription"] = "fail-closed; check records unavailable-registry diagnostic; validate/state and receipts unchanged"
++        config.write_text(original_config)
++        renew()
++        expect("restored_complete_contract", "valid", "valid")
++        print("P0_REAL_ENGINE_MATRIX=" + json.dumps(results, sort_keys=True), flush=True)
++
++
++if __name__ == "__main__":
++    unittest.main()
+--- /dev/null
++++ b/docs/guides/RDG-GENDOCEN-DEPENDENCY-COVERAGE-P0.md
+@@ -0,0 +1,114 @@
++# RDG → Gendocen: покрытие зависимостей P0
++
++Статус: Candidate, локальный синтетический пилот. Контракт `rdg-temporal-review/v1`
++применяется к текущим проекциям и не более чем одной условной ветви. Он проверяет
++актуальность review, но не истинность Canon/Finding и не принятие Action.
++Stage 4 остаётся NOT ACCEPTED.
++
++## Что исправляет P0
++
++В исходной v4.1 смена `positive → S-A1 / negative → S-A2` на обратное
++соответствие не изменяла подписанные сроки, каноны и QRPE. Поэтому Gendocen
++оставлял обе оценки в `valid`. Теперь адаптер выдаёт адресный контекст каждого
++Action-step, а оба runtime runner используют один проверяемый регистратор.
++
++Владельцами остаются RDG и Temporal Plan. `reviewInputsByStep`, `reviewNodesById`
++и `reviewIdentity` — производные read-only поля, не второй источник записи.
++После изменения исходников надо заново построить проекции. Engine не следит за
++произвольными исходными JSON, которые не были перепроецированы.
++
++## Источники, реально читаемые контрактом
++
++| Область | Исходные поля проекции | Адресная подписка `exact` |
++|---|---|---|
++| Владелец RDG | identitySpace, graphFile, rootRequirementId, actionModel | graph#/reviewIdentity |
++| Action | id, kind, status, canonBlock, qrpe, selectionBasis | graph#/reviewNodesById/{action} |
++| Владелец Plan и ссылка | identitySpace, planId, planStatus, actionRefsByStep/{step}, включая observedGraphRevision | plan#/reviewInputsByStep/{step}/identity |
++| Условие и принадлежность | branchesById/*/eventStepId, cases/outcome/stepIds; stepsById/*/state и outcomes | plan#/reviewInputsByStep/{step}/branches |
++| Шаги контекста | id, kind, state, actionRef, outcomes у относящихся к оценке шагов | plan#/reviewInputsByStep/{step}/steps |
++| Порядок и косвенные предпосылки | sequenceByPair/*/before/after/minDelayDays | plan#/reviewInputsByStep/{step}/sequence |
++| Ограничения времени | timeConstraintsByStep/*/stepId/type/at/strength/basis | plan#/reviewInputsByStep/{step}/timeConstraints |
++| Полнота | Версия контракта, scope, sourceReads, graphReads, complete | plan#/reviewCoverage |
++
++Машинная матрица хранится в `READ_MATRIX` и `GRAPH_READS` модуля
++`tools/rdg-gendocen-dependencies.py` и выводится в `reviewCoverage`.
++Набор подписок содержит восемь адресов для одной оценки. Глобальный
++`semanticSHA256` в подписках не используется.
++
++## Как ограничивается контекст
++
++Для каждого Action-step строятся сценарии, в которых он присутствует.
++Активные шаги — общие шаги и шаги соответствующего case. В контекст входят
++предшественники Action, его потомки, все активные deadlines и их предшественники,
++а также условное событие. Это включает прежний общий delivery deadline.
++Косвенные и впервые добавленные предпосылки обнаруживаются при новом построении
++проекции; список зависимостей не замораживается по первоначальной топологии.
++
++Поле `branches` содержит ID ветви/события, outcome и относящихся к контексту
++участников case. `steps`, `sequence` и `timeConstraints` разделены по outcomes.
++Изменение ограничения у исключённой альтернативы A2 не меняет контекст A1.
++Общий deadline влияет на обе оценки. Все активные deadlines включены намеренно:
++это консервативная граница текущего пилота, а не доказанная оптимальность области
++влияния произвольного будущего semantic evaluator.
++
++Порядок cases, outcomes, stepIds, шагов, sequence и ограничений нормализуется
++адаптером. `revision` и заголовки Plan — метаданные для этого контракта.
++Изменение содержательного поля, в том числе `minDelayDays`, state, ActionRef,
++Action.status или selectionBasis, участвует в проверке.
++
++## Полнота и отказ
++
++Перед регистрацией модуль пересчитывает производные поля из исходных полей
++проекции, проверяет их совпадение, версию/scope и принадлежность ActionRef
++конкретному RDG owner/path/Action. `assert_coverage` сравнивает ожидаемый и
++заявленный набор подписок. Пропущенный, лишний или дублированный адрес блокирует
++регистрацию. Две и более условные ветви помечаются `complete=false`; guarded
++регистратор не позволяет подтвердить review для такого контекста.
++
++Это защита от ошибки конфигурации в доверенном локальном коде. Она не является
++OS sandbox и не защищает от намеренного обхода Python-регистратора или прямой
++записи файлов. Другие consumers обязаны использовать этот контракт отдельно;
++наличие нового поля в JSON само по себе не обновляет старые подписки.
++
++При намеренно удалённой подписке на косвенную последовательность Gendocen
++возвращает `current_project_code_unavailable` на `check`, а `validate` отклоняется.
++`check` может сохранить диагностическое состояние недоступного регистратора.
++Отклонённый `validate` не меняет это состояние и не создаёт receipt. После
++восстановления полного контракта проверка и необходимый новый review выполняются
++явно. Старый technical receipt не становится подтверждением полноты.
++
++## Owner, revision и as-of
++
++Resource IDs и graphFile/identitySpace квалифицируют owner. `build_contract`
++возвращает provenance с текущими graphRevision/planRevision и заявленным
++observedGraphRevision. Смена самой ссылки или observedGraphRevision вызывает
++пересмотр соответствующего Action-step.
++
++Режим — `current-projection`; `historicalSnapshotAvailable=false`. Изменение
++только номера текущей revision не вызывает review остальных Actions. Контракт
++не утверждает, что текущие данные были известны на T1, и не подтверждает
++достоверность заявленной исторической revision. Архивные RDG/Plan snapshots и
++полный owner/version lifecycle остаются отдельной работой P1/P2/P3.
++
++## Повторная проверка
++
++Из `/workspace/repos/rd-graphs`:
++
++```bash
++RDG_GENDOCEN_SOURCE=/workspace/repos/gendocen PYTHONDONTWRITEBYTECODE=1 \
++python3 tests/rdg-gendocen-dependencies.test.py -v
++
++RDG_GENDOCEN_SOURCE=/workspace/repos/gendocen PYTHONDONTWRITEBYTECODE=1 \
++python3 docs/handoffs/rdg-prework-v4.1-final-20261018/tests/rdg-gendocen-branch-membership.acceptance.test.py -v
++```
++
++Новые тесты проверяют реальный Gendocen: cosmetic reorder, смену ветви,
++A2-only constraint, косвенную sequence, первое ограничение предпосылки,
++нового предшественника, ActionRef revision, Action.status, Canon, QRPE, общий
++deadline и блокировку пропущенной подписки. Отдельные unit cases проверяют
++неполную/устаревшую проекцию, неизвестную версию, owner mismatch и multi-branch.
++Тесты создают только временные синтетические графы, Plan и review-файлы.
++
++Текущие результаты, хеши, выбранные изменения и обновлённый WR-ledger:
++`docs/handoffs/rdg-p0-dependencies-20261018/`. Исходный пакет v4.1 и его ZIP
++сохранены без изменений как историческая контрольная точка.

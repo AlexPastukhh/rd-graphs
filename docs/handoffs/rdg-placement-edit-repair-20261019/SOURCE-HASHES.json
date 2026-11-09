@@ -1,0 +1,16 @@
+{
+  "tools/rdg-workflow-helper.py": "3d90eb3253fee5f51d9ad0d0fe121a3d68a79ba03ee3aa5cfe6c017012f5b8d9",
+  "tools/rdg-workflow-ui.js": "394bd7303454ac89a293b9b5c56750b1404be7d55df849e0b1302fc2fed4acd2",
+  "tools/rd-graph-viewer.user.js": "6208ed3dbccd68621b98d0811c35180c758a400221402f8fa1a9a07a30c1342a",
+  "tests/rdg-workflow-ui.test.cjs": "f4231bfc30b4df11ac82e0c10d0f9501e784d88207e2021451a50b102be8c9a3",
+  "tests/rdg-placement-edit.acceptance.test.py": "513d554506e40917f1a24c077b047c8ae34fdba437e8e582c605ee8895193896",
+  "tools/rd-graph-viewer-smoke.test.cjs": "1ee6ed6ce8a3e35703b03a63be970b44ffc3f9fc3c538bb76d8d2607c9ba586b",
+  "tests/visual/rdg-full-detail-201.cjs": "5b3158f0f0237799463c80c8f82513d7ffc73caafd69f9454fca246decd3c16d",
+  "README.md": "ce5dc972e07f269af5e67c6ccbb783d38dbebc231b6cd06c7c9b9aa34850ee43",
+  "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md": "e88ef40dedee5cc879596606471c83d09b6b12208f25d546f22b8ee54ab40413",
+  "docs/guides/RDG-DEEP-ACTION-AND-HISTORY.md": "2c199608329fb7af9c60c6b5d26bb56fa604fef8e09db3d3f4416d1fbc5f34c5",
+  "docs/guides/RDG-V7-WORKING-GRAPHS.md": "9b4a9a390435d1ae6fa0bc59d5986fac7c1684338fda87b85b8b537a9ff850ee",
+  "docs/guides/VIEWER-EXPLORER.md": "7e10cadd0dc9e9a1035b7263459812c1d4593d992352531bb815dbe766f6af53",
+  "tests/rdg-workflow-helper.test.py": "b590aac4cb43dcd600b7e4039da28d334bbff6a8fa4415ec3b355eb3a132545c",
+  "tests/rdg-cross-file-completion.test.py": "36ccdfe84422cf4f857966453c95e694e38183ccdf78aae93a3c05abdcc69ba4"
+}

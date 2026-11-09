@@ -1,0 +1,41 @@
+{
+  "command": [
+    "/usr/bin/python3",
+    "tests/rdg-shared-action-occurrences.acceptance.test.py",
+    "-v"
+  ],
+  "exitCode": 0,
+  "tests": 2,
+  "runtime": {
+    "actionSelected": false,
+    "cliProcesses": 21,
+    "omittedOccurrence": "rejected",
+    "results": {
+      "S-A1_constraint": {
+        "A1": "review_required",
+        "A2": "valid"
+      },
+      "S-A2_constraint": {
+        "A1": "review_required",
+        "A2": "valid"
+      },
+      "baseline": {
+        "A1": "valid",
+        "A2": "valid"
+      },
+      "cosmetic": {
+        "A1": "valid",
+        "A2": "valid"
+      },
+      "membership_swap": {
+        "A1": "review_required",
+        "A2": "valid"
+      },
+      "restored": {
+        "A1": "valid",
+        "A2": "valid"
+      }
+    },
+    "sourceBytesUnchanged": true
+  }
+}

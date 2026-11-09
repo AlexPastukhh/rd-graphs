@@ -1,0 +1,47 @@
+{
+  "id": "R-RDG-PROGRESS-20261019/v1",
+  "reviewedAtUTC": "2026-10-18T18:03:51.473343+00:00",
+  "verdict": "ORDER-CORRECT-BUT-P0-COVERAGE-GATE-REOPENED",
+  "p2Ready": false,
+  "findings": {
+    "confirmedProblem": [
+      "F-P-PROGRESS-01"
+    ],
+    "risk": [
+      "F-R-PROGRESS-02"
+    ]
+  },
+  "freshTests": {
+    "originalBranchAcceptance": {
+      "tests": 2,
+      "failed": 0
+    },
+    "dependencies": {
+      "tests": 11,
+      "failed": 0
+    },
+    "coverageReviewAcceptance": {
+      "tests": 2,
+      "failed": 1,
+      "exitCode": 1
+    }
+  },
+  "diagnosticProbes": 3,
+  "fullRegressionRerun": false,
+  "runtimeSourceModified": false,
+  "schemaModified": false,
+  "codeFixedInThisReview": false,
+  "canonicalRdgGraphWritten": false,
+  "productionStage4Accepted": false,
+  "p1State": "CANDIDATE-CONTRACT-PREPARED",
+  "p2State": "PENDING-AFTER-P0.1",
+  "scope": "Same-environment limited source/evidence review; not independent production acceptance; declaration-level fault injection uses only memory/temp config.",
+  "next": "P0.1: independently validate computed/read source groups against declaration/subscriptions; keep scoped regression and clarify title semantics before lifecycle.",
+  "changedExistingProjectFiles": [
+    {
+      "path": "README.md",
+      "baselineSHA256": "cc35797b0fb8124f087a2ca74a956153ed21d2109484240aa5998bd9918b4338",
+      "sha256": "2c01d334946fc8173bca0116e4b34b72cfb57441b46e4fcbbd14e1a04ae7756e"
+    }
+  ]
+}

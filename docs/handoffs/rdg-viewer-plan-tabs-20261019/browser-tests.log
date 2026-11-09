@@ -1,0 +1,4 @@
+BROWSER_STAGE ready snapshot
+BROWSER_STAGE ready connect
+BROWSER_STAGE awaiting ready
+BROWSER_WORKFLOW_TABS_PASS: tabs, cancel, denied, expired, timeout, connected, mobile; pageerrors=0

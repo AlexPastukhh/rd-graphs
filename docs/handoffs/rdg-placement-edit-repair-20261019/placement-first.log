@@ -1,0 +1,68 @@
+test_cas_and_permission_denial_do_not_write (__main__.PlacementEdit.test_cas_and_permission_denial_do_not_write) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_change_and_clear_predecessor_preserve_unedited_minimum_delay (__main__.PlacementEdit.test_change_and_clear_predecessor_preserve_unedited_minimum_delay) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_clear_shown_fields_keeps_deadline_and_successor (__main__.PlacementEdit.test_clear_shown_fields_keeps_deadline_and_successor) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_complex_inputs_fail_without_partial_write (__main__.PlacementEdit.test_complex_inputs_fail_without_partial_write) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+
+  test_complex_inputs_fail_without_partial_write (__main__.PlacementEdit.test_complex_inputs_fail_without_partial_write) (changes={'timeConstraints': [{'stepId': 'S-A1', 'type': 'notBefore', 'at': '2026-10-20T12:00:00Z', 'strength': 'hard', 'basis': 'Precise time'}]}) ... FAIL
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+  test_complex_inputs_fail_without_partial_write (__main__.PlacementEdit.test_complex_inputs_fail_without_partial_write) (changes={'timeConstraints': [{'stepId': 'S-A1', 'type': 'notBefore', 'at': '2026-10-20', 'strength': 'hard', 'basis': 'Separate bound'}, {'stepId': 'S-A1', 'type': 'notBefore', 'at': '2026-10-21', 'strength': 'hard', 'basis': 'Separate bound'}]}) ... FAIL
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+  test_complex_inputs_fail_without_partial_write (__main__.PlacementEdit.test_complex_inputs_fail_without_partial_write) (changes={'sequence': [{'before': 'S-A1', 'after': 'S-A2'}, {'before': 'S-A3', 'after': 'S-A2'}]}) ... FAIL
+test_controller_round_trip_via_live_helper_and_writers (__main__.PlacementEdit.test_controller_round_trip_via_live_helper_and_writers) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_date_edit_keeps_deadline_strength_step_reference_and_graph (__main__.PlacementEdit.test_date_edit_keeps_deadline_strength_step_reference_and_graph) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_date_edit_preserves_successor_with_date_or_only_order (__main__.PlacementEdit.test_date_edit_preserves_successor_with_date_or_only_order) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+
+======================================================================
+FAIL: test_complex_inputs_fail_without_partial_write (__main__.PlacementEdit.test_complex_inputs_fail_without_partial_write) (changes={'timeConstraints': [{'stepId': 'S-A1', 'type': 'notBefore', 'at': '2026-10-20T12:00:00Z', 'strength': 'hard', 'basis': 'Precise time'}]})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/repos/rd-graphs/tests/rdg-placement-edit.acceptance.test.py", line 102, in test_complex_inputs_fail_without_partial_write
+    self.f.owner({'transactionId':'seed-complex-'+str(self.f.seq),'op':'edit',
+  File "/workspace/repos/rd-graphs/tests/rdg-workflow.acceptance.test.py", line 48, in owner
+    if ok:self.assertEqual(r.returncode,0,r.stderr)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : ERROR: PLAN_OWNER_NEXT_REVISION_REQUIRED
+
+
+======================================================================
+FAIL: test_complex_inputs_fail_without_partial_write (__main__.PlacementEdit.test_complex_inputs_fail_without_partial_write) (changes={'timeConstraints': [{'stepId': 'S-A1', 'type': 'notBefore', 'at': '2026-10-20', 'strength': 'hard', 'basis': 'Separate bound'}, {'stepId': 'S-A1', 'type': 'notBefore', 'at': '2026-10-21', 'strength': 'hard', 'basis': 'Separate bound'}]})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/repos/rd-graphs/tests/rdg-placement-edit.acceptance.test.py", line 102, in test_complex_inputs_fail_without_partial_write
+    self.f.owner({'transactionId':'seed-complex-'+str(self.f.seq),'op':'edit',
+  File "/workspace/repos/rd-graphs/tests/rdg-workflow.acceptance.test.py", line 48, in owner
+    if ok:self.assertEqual(r.returncode,0,r.stderr)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : ERROR: PLAN_OWNER_NEXT_REVISION_REQUIRED
+
+
+======================================================================
+FAIL: test_complex_inputs_fail_without_partial_write (__main__.PlacementEdit.test_complex_inputs_fail_without_partial_write) (changes={'sequence': [{'before': 'S-A1', 'after': 'S-A2'}, {'before': 'S-A3', 'after': 'S-A2'}]})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/repos/rd-graphs/tests/rdg-placement-edit.acceptance.test.py", line 102, in test_complex_inputs_fail_without_partial_write
+    self.f.owner({'transactionId':'seed-complex-'+str(self.f.seq),'op':'edit',
+  File "/workspace/repos/rd-graphs/tests/rdg-workflow.acceptance.test.py", line 48, in owner
+    if ok:self.assertEqual(r.returncode,0,r.stderr)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : ERROR: PLAN_OWNER_NEXT_REVISION_REQUIRED
+
+
+----------------------------------------------------------------------
+Ran 7 tests in 12.477s
+
+FAILED (failures=3)

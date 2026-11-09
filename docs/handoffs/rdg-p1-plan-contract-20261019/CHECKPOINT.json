@@ -1,0 +1,48 @@
+{
+  "id": "RDG-P1-PLAN-CONTRACT-20261019",
+  "preparedAtUTC": "2026-10-18T17:52:53.408666+00:00",
+  "userTimezone": "Asia/Bangkok",
+  "preparedAtUserLocal": "2026-10-19T00:52:53.408666+07:00",
+  "status": "CANDIDATE-CONTRACT-PREPARED",
+  "p1ContractPrepared": true,
+  "p1DesignCommitted": false,
+  "runtimeCodeChanged": false,
+  "runtimeTestsRunThisStep": false,
+  "documentConsistencyChecksPassed": 70,
+  "unchangedRuntimeAndFixtureSources": 32,
+  "invariants": 20,
+  "candidateProposals": 5,
+  "plannedAcceptanceCases": 20,
+  "newLifecycleCasesExecuted": 0,
+  "changedProjectDocuments": [
+    "README.md",
+    "docs/guides/RDG-TEMPORAL-PLAN-STAGE2P.md",
+    "docs/guides/RDG-TEMPORAL-PLAN-OWNER-CONTRACT-P1.md"
+  ],
+  "requirementsStatusesPromoted": false,
+  "planWriterImplemented": false,
+  "historicalAsOfResolverImplemented": false,
+  "realEventAttestationImplemented": false,
+  "productionStorageChosen": false,
+  "productionStage4Accepted": false,
+  "installedWindowsVerified": false,
+  "published": false,
+  "gitCommit": null,
+  "inheritedRuntimeEvidence": {
+    "checkpoint": "docs/handoffs/rdg-p0-dependencies-20261018/CHECKPOINT.json",
+    "scopedPythonTests": 88,
+    "nodeTests": 405,
+    "runtimeSmokes": 2,
+    "rerunThisStep": false
+  },
+  "sourceHashesFile": "SOURCE-HASHES.json",
+  "runtimeHashesFile": "INHERITED-RUNTIME-HASHES.json",
+  "patchFile": "CHANGES.patch",
+  "next": "P2: candidate-only guarded Plan writer on an explicit temporary synthetic root; owner/path, CAS, grants, history and recovery proof",
+  "decisionGates": [
+    "Production owner/root/remote actor before real persistent use.",
+    "Baseline acceptance rights and trusted path before real accepted future baseline.",
+    "Trusted event source/verification before real event attestation.",
+    "Separate approval and replacement proof before installed rollout/retirement."
+  ]
+}

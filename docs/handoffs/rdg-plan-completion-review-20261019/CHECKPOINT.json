@@ -1,0 +1,15 @@
+{
+  "id": "CPW-RDG-PLAN-COMPLETION-REVIEW-20261019/v1",
+  "target": "CPW-RDG-COMPLETION-REPAIR-20261019/v1 + candidate execution plan",
+  "status": "PASS-SCOPED-CANDIDATE",
+  "freshPythonTests": 59,
+  "freshNodeTests": 31,
+  "priorFullPythonTests": 213,
+  "priorFullNodeTests": 407,
+  "stage4": "NOT ACCEPTED",
+  "sourceFiles": {
+    "tools/rdg-v7-model.py": "4f4029b46547ef6810304a71a23f5d4f7dd8a3e8be839d2e8a5eb4efe6b6614a",
+    "tests/rdg-deep-action.acceptance.test.py": "fe7b183b343e4acfead636597809537216274f1411bb4fc2d1e54f14a16f7a02",
+    "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md": "fec5ecc4fe3fd41182850d18348341e11be4800b86af817e3cd70b2eb870e22a"
+  }
+}

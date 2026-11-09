@@ -1,0 +1,77 @@
+[
+  {
+    "path": "tools/graph-package.py",
+    "added": 14,
+    "removed": 8
+  },
+  {
+    "path": "tools/rdg-activity.py",
+    "added": 5,
+    "removed": 4
+  },
+  {
+    "path": "tools/rdg-workflow.py",
+    "added": 3,
+    "removed": 2
+  },
+  {
+    "path": "tools/rd-graph-viewer.user.js",
+    "added": 264,
+    "removed": 6
+  },
+  {
+    "path": "tools/rdg-workflow-helper.py",
+    "added": 423,
+    "removed": 0
+  },
+  {
+    "path": "tools/rdg-workflow-ui.js",
+    "added": 230,
+    "removed": 0
+  },
+  {
+    "path": "tests/rdg-workflow-helper.test.py",
+    "added": 252,
+    "removed": 0
+  },
+  {
+    "path": "tests/rdg-workflow-ui.test.cjs",
+    "added": 139,
+    "removed": 0
+  },
+  {
+    "path": "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md",
+    "added": 53,
+    "removed": 9
+  },
+  {
+    "path": "docs/guides/RDG-DEEP-ACTION-AND-HISTORY.md",
+    "added": 97,
+    "removed": 1
+  },
+  {
+    "path": "docs/guides/VIEWER-EXPLORER.md",
+    "added": 10,
+    "removed": 0
+  },
+  {
+    "path": "README.md",
+    "added": 8,
+    "removed": 5
+  },
+  {
+    "path": "tools/build-rdg-layout.py",
+    "added": 1,
+    "removed": 1
+  },
+  {
+    "path": "tools/rd-graph-viewer-smoke.test.cjs",
+    "added": 1,
+    "removed": 1
+  },
+  {
+    "path": "tests/visual/rdg-full-detail-201.cjs",
+    "added": 2,
+    "removed": 2
+  }
+]

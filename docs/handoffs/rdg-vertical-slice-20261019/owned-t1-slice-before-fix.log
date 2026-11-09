@@ -1,0 +1,16 @@
+
+Traceback (most recent call last):
+  File "/workspace/repos/rd-graphs/tools/rdg-gendocen-t1-history-smoke.py", line 509, in <module>
+    main()
+  File "/workspace/repos/rd-graphs/tools/rdg-gendocen-t1-history-smoke.py", line 504, in main
+    print(json.dumps(run(args.engine_source, use_plan_owner=args.plan_owner), ensure_ascii=False,
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/repos/rd-graphs/tools/rdg-gendocen-t1-history-smoke.py", line 190, in run
+    plan_author = admin("issue", owner, {
+                  ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/repos/rd-graphs/tools/rdg-gendocen-t1-history-smoke.py", line 69, in admin
+    require(response.returncode == 0,
+  File "/workspace/repos/rd-graphs/tools/rdg-gendocen-t1-history-smoke.py", line 32, in require
+    raise AssertionError("T1_HISTORY_" + code)
+AssertionError: T1_HISTORY_ADMIN_issue_ERROR: AUTH_DELEGATION_CEILING
+

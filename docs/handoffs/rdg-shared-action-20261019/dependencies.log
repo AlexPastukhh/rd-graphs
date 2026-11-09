@@ -1,0 +1,20 @@
+P0_REAL_ENGINE_MATRIX={"A1_canon": {"A1": "review_required", "A2": "valid"}, "A1_qrpe": {"A1": "review_required", "A2": "valid"}, "A1_ref_revision": {"A1": "review_required", "A2": "valid"}, "A2_only": {"A1": "valid", "A2": "review_required"}, "A2_status": {"A1": "valid", "A2": "review_required"}, "baseline": {"A1": "valid", "A2": "valid"}, "branch_swap": {"A1": "review_required", "A2": "review_required"}, "cosmetic_reorder": {"A1": "valid", "A2": "valid"}, "first_indirect_constraint": {"A1": "review_required", "A2": "review_required"}, "indirect_sequence": {"A1": "review_required", "A2": "review_required"}, "new_indirect_predecessor": {"A1": "review_required", "A2": "review_required"}, "omitted_indirect_subscription": "fail-closed; check records unavailable-registry diagnostic; validate/state and receipts unchanged", "restored_complete_contract": {"A1": "valid", "A2": "valid"}, "shared_deadline": {"A1": "review_required", "A2": "review_required"}}
+test_action_ref_revision_is_local_but_not_historical_truth (__main__.DependencyContractTest.test_action_ref_revision_is_local_but_not_historical_truth) ... ok
+test_alternative_only_constraint_stays_local (__main__.DependencyContractTest.test_alternative_only_constraint_stays_local) ... ok
+test_branch_reassignment_changes_both_action_contexts (__main__.DependencyContractTest.test_branch_reassignment_changes_both_action_contexts) ... ok
+test_cosmetic_reorder_and_revision_keep_contexts (__main__.DependencyContractTest.test_cosmetic_reorder_and_revision_keep_contexts) ... ok
+test_indirect_sequence_and_first_prerequisite_constraint_are_covered (__main__.DependencyContractTest.test_indirect_sequence_and_first_prerequisite_constraint_are_covered) ... ok
+test_multiple_branches_are_explicitly_uncovered (__main__.DependencyContractTest.test_multiple_branches_are_explicitly_uncovered) ... ok
+test_omitted_indirect_sequence_subscription_fails_closed (__main__.DependencyContractTest.test_omitted_indirect_sequence_subscription_fails_closed) ... ok
+test_producer_source_group_omission_fails_closed_before_baseline (__main__.DependencyContractTest.test_producer_source_group_omission_fails_closed_before_baseline) ... ok
+test_real_engine_change_matrix_and_omission_guard (__main__.DependencyContractTest.test_real_engine_change_matrix_and_omission_guard) ... ok
+test_stale_or_missing_derived_context_fails_closed (__main__.DependencyContractTest.test_stale_or_missing_derived_context_fails_closed) ... ok
+test_step_meaning_title_requires_review_context_change (__main__.DependencyContractTest.test_step_meaning_title_requires_review_context_change) ... ok
+test_unknown_coverage_version_fails_closed (__main__.DependencyContractTest.test_unknown_coverage_version_fails_closed) ... ok
+test_unknown_source_group_fails_closed (__main__.DependencyContractTest.test_unknown_source_group_fails_closed) ... ok
+test_wrong_action_owner_fails_closed (__main__.DependencyContractTest.test_wrong_action_owner_fails_closed) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 76.374s
+
+OK

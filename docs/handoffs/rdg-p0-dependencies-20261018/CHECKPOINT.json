@@ -1,0 +1,235 @@
+{
+  "id": "RDG-P0-DEPENDENCIES-20261018",
+  "verifiedAtUTC": "2026-10-18T17:38:01.335060+00:00",
+  "status": "PASS-SCOPED-CANDIDATE",
+  "engine": "Gendocen 0.1.0.dev25",
+  "repo": "/workspace/repos/rd-graphs",
+  "gitCommit": null,
+  "p0ScopedAcceptancePassed": true,
+  "productionStage4Accepted": false,
+  "fullDependencyCoverageForFutureEvaluatorsProven": false,
+  "historicalSnapshotAvailable": false,
+  "scope": "Read-only current projections; at most one conditional branch; temporary synthetic graphs and Plan",
+  "baselineObserved": {
+    "acceptanceTests": 2,
+    "failures": 1,
+    "actualAfterBranchSwap": {
+      "A1": "valid",
+      "A2": "valid"
+    }
+  },
+  "acceptanceAfterFix": {
+    "tests": 2,
+    "failures": 0
+  },
+  "scopedPythonTests": 88,
+  "fullNodeTests": 405,
+  "testRuns": {
+    "acceptance": {
+      "exitCode": 0,
+      "seconds": 6.01,
+      "command": [
+        "python3",
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/tests/rdg-gendocen-branch-membership.acceptance.test.py",
+        "-v"
+      ],
+      "log": "acceptance.log",
+      "tests": 2
+    },
+    "bearer-writer": {
+      "exitCode": 0,
+      "seconds": 10.48,
+      "command": [
+        "python3",
+        "tests/rdg-bearer-package.integration.test.py",
+        "-v"
+      ],
+      "log": "bearer-writer.log",
+      "tests": 13
+    },
+    "canon": {
+      "exitCode": 0,
+      "seconds": 0.53,
+      "command": [
+        "python3",
+        "tests/rdg-canon-context-review.test.py",
+        "-v"
+      ],
+      "log": "canon.log",
+      "tests": 13
+    },
+    "dependencies": {
+      "exitCode": 0,
+      "seconds": 46.88,
+      "command": [
+        "python3",
+        "tests/rdg-gendocen-dependencies.test.py",
+        "-v"
+      ],
+      "log": "dependencies.log",
+      "tests": 11
+    },
+    "fp-preflight": {
+      "exitCode": 0,
+      "seconds": 0.54,
+      "command": [
+        "python3",
+        "tests/rdg-problem-evidence-preflight.test.py",
+        "-v"
+      ],
+      "log": "fp-preflight.log",
+      "tests": 7
+    },
+    "impact": {
+      "exitCode": 0,
+      "seconds": 0.65,
+      "command": [
+        "python3",
+        "tests/rdg-temporal-impact.test.py",
+        "-v"
+      ],
+      "log": "impact.log",
+      "tests": 20
+    },
+    "node-full": {
+      "exitCode": 0,
+      "seconds": 90.53,
+      "command": [
+        "node",
+        "--test",
+        "--test-concurrency=2",
+        "tests/complete-reference-viewer.test.cjs",
+        "tests/complete-reference.test.cjs",
+        "tests/graph-2d-templates.test.cjs",
+        "tests/graph-apply.test.cjs",
+        "tests/graph-data.test.cjs",
+        "tests/graph-folder-map.test.cjs",
+        "tests/graph-folders.test.cjs",
+        "tests/graph-index-contract.test.cjs",
+        "tests/graph-scenarios.test.cjs",
+        "tests/graph-viewer-regression.test.cjs",
+        "tests/graph-viewer.test.cjs",
+        "tests/module-unit.test.cjs",
+        "tests/rdg-action-lens-semantic-probe.test.cjs",
+        "tests/rdg-autosave-explorer.test.cjs",
+        "tests/rdg-bearer-authority.test.cjs",
+        "tests/rdg-catalog-sources.test.cjs",
+        "tests/rdg-direct-migration.test.cjs",
+        "tests/rdg-example-consolidation.test.cjs",
+        "tests/rdg-example-navigation-ux.test.cjs",
+        "tests/rdg-full-detail-regressions.test.cjs",
+        "tests/rdg-full-root-navigation.test.cjs",
+        "tests/rdg-general-graph-api.test.cjs",
+        "tests/rdg-general-lens-research.test.cjs",
+        "tests/rdg-github-store.test.cjs",
+        "tests/rdg-layout-commands.test.cjs",
+        "tests/rdg-layout-fixes.test.cjs",
+        "tests/rdg-lens-cli.test.cjs",
+        "tests/rdg-remediation-202.test.cjs",
+        "tests/rdg-root-projection.test.cjs",
+        "tests/rdg-state-boundaries.test.cjs",
+        "tests/rdg-state-viewer.test.cjs",
+        "tests/rdg-state.test.cjs",
+        "tests/rdg-v6-action-reconsider-preflight.test.cjs",
+        "tests/rdg-v6-action-reconsider-writer.test.cjs",
+        "tests/rdg-v6-action-viewer.test.cjs",
+        "tests/rdg-v6-action-writer.test.cjs",
+        "tests/rdg-v6-lens-real-application.test.cjs",
+        "tests/rdg-v6-reviewed-integrity.test.cjs",
+        "tests/rdg-v6-stage3-comparison.test.cjs",
+        "tests/rdg-v7-authority.test.cjs",
+        "tests/rdg-v7-catalog-curation.test.cjs",
+        "tests/rdg-v7-examples-semantic.test.cjs",
+        "tests/rdg-v7-fix-regressions.test.cjs",
+        "tests/rdg-v7-graph-of-graphs.test.cjs",
+        "tests/rdg-v7-package.test.cjs",
+        "tests/rdg-v7-viewer-133-visibility.test.cjs",
+        "tests/rdg-v7-viewer-collections-canons.test.cjs",
+        "tests/rdg-v7-viewer-workspace.test.cjs",
+        "tests/rdg-v7.test.cjs",
+        "tests/rdg-viewer-170.test.cjs",
+        "tests/reference-examples.test.cjs",
+        "tests/reference-reuse.test.cjs",
+        "tests/review-fixes-viewer.test.cjs",
+        "tests/viewer-layout.test.cjs",
+        "tests/work-kit-delivery.test.cjs",
+        "tests/work-kit.test.cjs",
+        "tools/rd-graph-viewer-smoke.test.cjs"
+      ],
+      "log": "node-full.log",
+      "tests": 405,
+      "pass": 405,
+      "fail": 0,
+      "skipped": 0
+    },
+    "plan": {
+      "exitCode": 0,
+      "seconds": 0.41,
+      "command": [
+        "python3",
+        "tests/rdg-temporal-plan.test.py",
+        "-v"
+      ],
+      "log": "plan.log",
+      "tests": 12
+    },
+    "resources": {
+      "exitCode": 0,
+      "seconds": 0.72,
+      "command": [
+        "python3",
+        "tests/rdg-gendocen-resources.test.py",
+        "-v"
+      ],
+      "log": "resources.log",
+      "tests": 10
+    },
+    "runtime-smoke": {
+      "exitCode": 0,
+      "seconds": 26.57,
+      "command": [
+        "python3",
+        "tools/rdg-gendocen-runtime-smoke.py",
+        "--engine-source",
+        "/workspace/repos/gendocen"
+      ],
+      "log": "runtime-smoke.log"
+    },
+    "t1-history-smoke": {
+      "exitCode": 0,
+      "seconds": 23.81,
+      "command": [
+        "python3",
+        "tools/rdg-gendocen-t1-history-smoke.py",
+        "--engine-source",
+        "/workspace/repos/gendocen"
+      ],
+      "log": "t1-history-smoke.log"
+    }
+  },
+  "sourceHashesFile": "SOURCE-HASHES.json",
+  "patchFile": "CHANGES.patch",
+  "baselinePackageUnchanged": true,
+  "unchangedSnapshotSources": 27,
+  "changedProjectFiles": [
+    "README.md",
+    "tools/rdg-gendocen-adapter.py",
+    "tools/rdg-gendocen-runtime-smoke.py",
+    "tools/rdg-gendocen-t1-history-smoke.py",
+    "tools/rdg-gendocen-dependencies.py",
+    "tests/rdg-gendocen-dependencies.test.py",
+    "docs/guides/RDG-GENDOCEN-DEPENDENCY-COVERAGE-P0.md"
+  ],
+  "engineSourceModified": false,
+  "installedWindowsVerified": false,
+  "published": false,
+  "next": "P1: candidate minimal Temporal Plan owner/version/as-of contract; no Plan writer or user event attestation implemented",
+  "limitations": [
+    "Current-projection freshness only; no historical T1-as-of evidence.",
+    "Multiple conditional branches fail closed in the guarded registrar.",
+    "Consumers must use the common registrar; projection fields alone do not update old subscriptions.",
+    "All active deadlines are conservative shared review anchors.",
+    "Unknown project-code coverage check may persist diagnostics; rejected validation creates no receipt.",
+    "No full Canon/Finding truth evaluation, trusted human identity, production Plan storage or deployment acceptance."
+  ]
+}

@@ -1,0 +1,654 @@
+--- a/tools/rdg-workflow-helper.py
++++ b/tools/rdg-workflow-helper.py
+@@ -6,6 +6,7 @@
+ attribution; this is not verified human identity or protected-owner approval.
+ """
+ import argparse
++import copy
+ import hashlib
+ import hmac
+ from http.server import BaseHTTPRequestHandler, HTTPServer
+@@ -189,15 +190,33 @@
+                     existing=next((s for s in matches if s['id']==req.get('stepId')),None) if req.get('stepId') else next(iter(matches),None)
+                     require(not req.get('stepId') or existing, 'PLACEMENT_TARGET_MISMATCH')
+                     sid=existing['id'] if existing else 'S-'+node['id']
+-                    step={'id':sid,'title':node['title'],'kind':node['kind'],'state':'planned',
+-                          'actionRef' if node['kind']=='action' else 'requirementRef':ref}
+-                    operation={'op':'place','step':step,'timeConstraints':[],'sequence':[]}
+-                    if req.get('at'):
+-                        operation['timeConstraints']=[{'type':'notBefore','at':req['at'],
+-                            'strength':'soft','basis':req.get('note') or 'Manual placement'}]
+-                    if req.get('afterStepId'):
+-                        operation['sequence']=[{'before':req['afterStepId'],'after':sid}]
+-                    require(operation['timeConstraints'] or operation['sequence'],'EXPLICIT_TIME_OR_ORDER_REQUIRED')
++                    step=copy.deepcopy(existing) if existing else {
++                        'id':sid,'title':node['title'],'kind':node['kind'],'state':'planned',field:ref}
++                    rules=copy.deepcopy([r for r in plan.get('timeConstraints',[]) if r['stepId']==sid])
++                    incoming=copy.deepcopy([e for e in plan.get('sequence',[]) if e['after']==sid])
++                    outgoing=copy.deepcopy([e for e in plan.get('sequence',[]) if e['before']==sid])
++                    starts=[r for r in rules if r['type']=='notBefore']
++                    if 'at' in req:
++                        require(len(starts)<=1 and all(re.fullmatch(r'\d{4}-\d{2}-\d{2}',r['at'])
++                            for r in starts),'HELPER_COMPLEX_PLACEMENT_USE_FULL_API')
++                        require(not req['at'] or re.fullmatch(r'\d{4}-\d{2}-\d{2}',req['at']),
++                            'HELPER_DATE_ONLY_USE_FULL_API')
++                        if starts:
++                            if req['at']:starts[0]['at']=req['at']
++                            else:rules=[r for r in rules if r['type']!='notBefore']
++                        elif req['at']:
++                            rules.append({'type':'notBefore','at':req['at'],'strength':'soft',
++                                'basis':req.get('note') or 'Manual placement'})
++                    if 'afterStepId' in req:
++                        require(len(incoming)<=1,'HELPER_COMPLEX_PLACEMENT_USE_FULL_API')
++                        if req['afterStepId']:
++                            link=copy.deepcopy(incoming[0]) if incoming else {'after':sid}
++                            link['before']=req['afterStepId'];incoming=[link]
++                        else:incoming=[]
++                    operation={'op':'place','step':step,'timeConstraints':rules}
++                    if incoming!=[e for e in plan.get('sequence',[]) if e['after']==sid]:
++                        operation['sequence']=outgoing+incoming
++                    require(rules or outgoing or incoming,'EXPLICIT_TIME_OR_ORDER_REQUIRED')
+                     ops=[operation]
+                 request={'transactionId':tid,'op':'edit','file':self.plan_file,
+                     'expectedRevision':req['expectedPlanRevision'],'operations':ops}
+--- a/tools/rdg-workflow-ui.js
++++ b/tools/rdg-workflow-ui.js
+@@ -83,6 +83,7 @@
+     field('at','Дата начала не ранее','input','date');
+     field('after','После размещённой цели или Action','select');
+     field('placement','Сохранённое размещение','select');
++    const placementDetails=make('p',undefined,editor);
+     const childBox=make('div',undefined,editor);make('p','При отзыве укажите судьбу каждой введённой R. Изменения примет только штатный writer.',childBox);
+     const dispositionFields=[];
+     const controls=make('div',undefined,editor);
+@@ -119,9 +120,28 @@
+       buttons.complete.disabled=locked||policy||executed||n?.status==='superseded'||
+         !graphWrite(n?.kind==='action'?'record_action_execution':'record_requirement_achievement');
+       buttons.withdraw.disabled=locked||policy||n?.kind!=='action'||n.status!=='selected'||!executed||!graphWrite('withdraw_action');
+-      buttons.place.disabled=locked||!n||!perms.includes('plan.edit');
++      buttons.place.disabled=locked||!n||!perms.includes('plan.edit')||placementState().complex;
+       buttons.unplace.disabled=locked||!fields.placement.value||!perms.includes('plan.edit');
+       buttons.retry.disabled=busy||!pending;buttons.refresh.disabled=busy;
++    }
++    function placementState(){
++      const plan=view?.sources.plan,chosen=plan?.steps.find(s=>s.id===fields.placement.value);
++      const rules=chosen?(plan.timeConstraints||[]).filter(r=>r.stepId===chosen.id):[];
++      const starts=rules.filter(r=>r.type==='notBefore');
++      const incoming=chosen?(plan.sequence||[]).filter(e=>e.after===chosen.id):[];
++      return {chosen,rules,starts,incoming,complex:starts.length>1||incoming.length>1||
++        starts.some(r=>!/^\d{4}-\d{2}-\d{2}$/.test(r.at))};
++    }
++    function loadPlacement(){
++      const p=placementState();
++      fields.at.value=p.starts.length===1&&!p.complex?p.starts[0].at:'';
++      const steps=view.sources.plan.steps.filter(s=>s.id!==p.chosen?.id);
++      optionsFor(fields.after,[['','Без порядка'],...steps.map(s=>[s.id,s.title])],
++        p.incoming.length===1?p.incoming[0].before:'');
++      placementDetails.textContent=p.complex?'Сложное размещение: измените его через полный API. Сохранённые правила не будут обрезаны.':
++        p.rules.map(r=>(r.type==='deadline'?'Срок до ':'Начать не ранее ')+r.at+' ['+r.strength+']').join('; ')+
++        (p.incoming[0]?.minDelayDays!==undefined?' · Интервал после предшественника: '+p.incoming[0].minDelayDays+' дн.':'');
++      updateControls();
+     }
+     function focus(){
+       const n=selected();if(!n)return;activeId=n.id;
+@@ -134,14 +154,13 @@
+         (n.projectionOf&&completion?.ownerRef?' · владелец: '+completion.ownerRef.graphFile:'')+
+         (n.qrpe?.length?'\nQRPE: '+n.qrpe.map(q=>'['+q.status+'] '+q.text).join('; '):'')+
+         (n.reconsiderationPolicy?.mode==='protected'?' · защищено: ручная запись недоступна':'');
+-      const placements=view.sources.plan.steps.filter(s=>(s.actionRef||s.requirementRef)?.nodeId===n.id);
++      const placements=view.sources.plan.steps.filter(s=>{
++        const ref=s.actionRef||s.requirementRef;
++        return ref?.nodeId===n.id&&ref.graphFile===view.graphFile&&ref.identitySpace===graph().identitySpace;
++      });
+       optionsFor(fields.placement,[['','Выберите размещение'],...placements.map(s=>[s.id,s.title+' · '+s.id])],
+         placements.length===1?placements[0].id:'');
+-      const steps=view.sources.plan.steps.filter(s=>!placements.some(p=>p.id===s.id));
+-      optionsFor(fields.after,[['','Без порядка'],...steps.map(s=>[s.id,s.title])],fields.after.value);
+-      const chosen=placements.find(s=>s.id===fields.placement.value);
+-      fields.at.value=(view.sources.plan.timeConstraints||[]).find(r=>r.stepId===chosen?.id&&r.type==='notBefore')?.at||'';
+-      fields.after.value=(view.sources.plan.sequence||[]).find(e=>e.after===chosen?.id)?.before||'';
++      loadPlacement();
+       childBox.replaceChildren();dispositionFields.length=0;
+       for(const e of graph().edges.filter(e=>e.type==='INTRODUCES'&&e.from===n.id&&!e.archived)){
+         const row=make('label',graph().nodes.find(n=>n.id===e.to)?.title||e.to,childBox);
+@@ -150,7 +169,7 @@
+       }
+       updateControls();
+     }
+-    target.onchange=focus;fields.placement.onchange=()=>updateControls();
++    target.onchange=focus;fields.placement.onchange=loadPlacement;
+     function list(section,title,rows,empty){
+       section.replaceChildren();make('h3',title,section);
+       if(!rows.length){make('p',empty,section);return;}
+--- a/tools/rd-graph-viewer.user.js
++++ b/tools/rd-graph-viewer.user.js
+@@ -1,7 +1,7 @@
+ // ==UserScript==
+ // @name         R-D Graph Viewer
+ // @namespace    rdg.local
+-// @version      2.2.0
++// @version      2.2.1
+ // @description  Local Requirements-Decisions JSON graph viewer
+ // @match        https://chatgpt.com/*
+ // @match        https://chat.openai.com/*
+@@ -94,6 +94,7 @@
+     field('at','Дата начала не ранее','input','date');
+     field('after','После размещённой цели или Action','select');
+     field('placement','Сохранённое размещение','select');
++    const placementDetails=make('p',undefined,editor);
+     const childBox=make('div',undefined,editor);make('p','При отзыве укажите судьбу каждой введённой R. Изменения примет только штатный writer.',childBox);
+     const dispositionFields=[];
+     const controls=make('div',undefined,editor);
+@@ -130,9 +131,28 @@
+       buttons.complete.disabled=locked||policy||executed||n?.status==='superseded'||
+         !graphWrite(n?.kind==='action'?'record_action_execution':'record_requirement_achievement');
+       buttons.withdraw.disabled=locked||policy||n?.kind!=='action'||n.status!=='selected'||!executed||!graphWrite('withdraw_action');
+-      buttons.place.disabled=locked||!n||!perms.includes('plan.edit');
++      buttons.place.disabled=locked||!n||!perms.includes('plan.edit')||placementState().complex;
+       buttons.unplace.disabled=locked||!fields.placement.value||!perms.includes('plan.edit');
+       buttons.retry.disabled=busy||!pending;buttons.refresh.disabled=busy;
++    }
++    function placementState(){
++      const plan=view?.sources.plan,chosen=plan?.steps.find(s=>s.id===fields.placement.value);
++      const rules=chosen?(plan.timeConstraints||[]).filter(r=>r.stepId===chosen.id):[];
++      const starts=rules.filter(r=>r.type==='notBefore');
++      const incoming=chosen?(plan.sequence||[]).filter(e=>e.after===chosen.id):[];
++      return {chosen,rules,starts,incoming,complex:starts.length>1||incoming.length>1||
++        starts.some(r=>!/^\d{4}-\d{2}-\d{2}$/.test(r.at))};
++    }
++    function loadPlacement(){
++      const p=placementState();
++      fields.at.value=p.starts.length===1&&!p.complex?p.starts[0].at:'';
++      const steps=view.sources.plan.steps.filter(s=>s.id!==p.chosen?.id);
++      optionsFor(fields.after,[['','Без порядка'],...steps.map(s=>[s.id,s.title])],
++        p.incoming.length===1?p.incoming[0].before:'');
++      placementDetails.textContent=p.complex?'Сложное размещение: измените его через полный API. Сохранённые правила не будут обрезаны.':
++        p.rules.map(r=>(r.type==='deadline'?'Срок до ':'Начать не ранее ')+r.at+' ['+r.strength+']').join('; ')+
++        (p.incoming[0]?.minDelayDays!==undefined?' · Интервал после предшественника: '+p.incoming[0].minDelayDays+' дн.':'');
++      updateControls();
+     }
+     function focus(){
+       const n=selected();if(!n)return;activeId=n.id;
+@@ -145,14 +165,13 @@
+         (n.projectionOf&&completion?.ownerRef?' · владелец: '+completion.ownerRef.graphFile:'')+
+         (n.qrpe?.length?'\nQRPE: '+n.qrpe.map(q=>'['+q.status+'] '+q.text).join('; '):'')+
+         (n.reconsiderationPolicy?.mode==='protected'?' · защищено: ручная запись недоступна':'');
+-      const placements=view.sources.plan.steps.filter(s=>(s.actionRef||s.requirementRef)?.nodeId===n.id);
++      const placements=view.sources.plan.steps.filter(s=>{
++        const ref=s.actionRef||s.requirementRef;
++        return ref?.nodeId===n.id&&ref.graphFile===view.graphFile&&ref.identitySpace===graph().identitySpace;
++      });
+       optionsFor(fields.placement,[['','Выберите размещение'],...placements.map(s=>[s.id,s.title+' · '+s.id])],
+         placements.length===1?placements[0].id:'');
+-      const steps=view.sources.plan.steps.filter(s=>!placements.some(p=>p.id===s.id));
+-      optionsFor(fields.after,[['','Без порядка'],...steps.map(s=>[s.id,s.title])],fields.after.value);
+-      const chosen=placements.find(s=>s.id===fields.placement.value);
+-      fields.at.value=(view.sources.plan.timeConstraints||[]).find(r=>r.stepId===chosen?.id&&r.type==='notBefore')?.at||'';
+-      fields.after.value=(view.sources.plan.sequence||[]).find(e=>e.after===chosen?.id)?.before||'';
++      loadPlacement();
+       childBox.replaceChildren();dispositionFields.length=0;
+       for(const e of graph().edges.filter(e=>e.type==='INTRODUCES'&&e.from===n.id&&!e.archived)){
+         const row=make('label',graph().nodes.find(n=>n.id===e.to)?.title||e.to,childBox);
+@@ -161,7 +180,7 @@
+       }
+       updateControls();
+     }
+-    target.onchange=focus;fields.placement.onchange=()=>updateControls();
++    target.onchange=focus;fields.placement.onchange=loadPlacement;
+     function list(section,title,rows,empty){
+       section.replaceChildren();make('h3',title,section);
+       if(!rows.length){make('p',empty,section);return;}
+@@ -796,7 +815,7 @@
+   document.documentElement.appendChild(host);
+   Object.assign(host.style, {position:'fixed',right:'14px',bottom:'94px',
+     zIndex:'2147483600',display:'block'});
+-  host.dataset.rdgVersion = '2.2.0';
++  host.dataset.rdgVersion = '2.2.1';
+   const root = host.attachShadow({ mode: 'open' });
+   const ns = 'http://www.w3.org/2000/svg';
+   // Local Windows directory belonging to this viewer. No filesystem picker on startup.
+@@ -1190,7 +1209,7 @@
+   const message = text => { el('message').textContent = text; };
+   const launcher = el('launch');
+   if (!launcher) throw new Error('[RDG] Launcher was not created');
+-  console.info('[RDG Viewer] loaded v2.2.0');
++  console.info('[RDG Viewer] loaded v2.2.1');
+   const launcherPositionKey = 'rdg-viewer-launcher-position-v1';
+   let launcherDrag = null;
+   let suppressLauncherClickUntil = 0;
+--- a/tests/rdg-workflow-ui.test.cjs
++++ b/tests/rdg-workflow-ui.test.cjs
+@@ -166,3 +166,56 @@
+  assert(ui.view.history.some(r=>r.kind==='requirement_achieved'&&r.targetId==='R1'));
+  assert(viewer.root.querySelectorAll('.node').length>0);
+ });
++
++
++test('placement selection reloads shown fields and protects unsupported rules',async()=>{
++ const d=doc(),snapshot=minimal(),ref={graphFile:snapshot.graphFile,identitySpace:'test',nodeId:'R0'};
++ snapshot.sources.plan.steps=['P1','P2'].map(id=>({id,title:id,kind:'requirement',state:'planned',requirementRef:{...ref}}));
++ snapshot.sources.plan.steps.push({id:'OTHER',title:'Other owner',kind:'requirement',requirementRef:{...ref,graphFile:'workspaces/other/graph.json'}});
++ snapshot.sources.plan.timeConstraints=[
++   {stepId:'P1',type:'notBefore',at:'2026-10-20',strength:'hard'},
++   {stepId:'P1',type:'deadline',at:'2026-10-25',strength:'hard'},
++   {stepId:'P2',type:'notBefore',at:'2026-10-23',strength:'soft'}];
++ const ui=UI.mount(d.createElement('div'),{read:async()=>snapshot},{document:d});await ui.refresh();
++ assert(!ui.fields.placement.children.some(x=>x.value==='OTHER'));
++ ui.fields.placement.value='P1';ui.fields.placement.onchange();
++ assert.equal(ui.fields.at.value,'2026-10-20');assert(ui.text.includes('Срок до 2026-10-25 [hard]'));
++ ui.fields.placement.value='P2';ui.fields.placement.onchange();assert.equal(ui.fields.at.value,'2026-10-23');
++ snapshot.sources.plan.timeConstraints[2].at='2026-10-23T10:00:00Z';
++ ui.fields.placement.onchange();assert.equal(ui.buttons.place.disabled,true);assert(ui.text.includes('полный API'));
++ snapshot.sources.plan.timeConstraints[2].at='2026-10-23';
++ snapshot.sources.plan.sequence=[{before:'P1',after:'P2'}];
++ ui.fields.placement.onchange();assert.equal(ui.fields.after.value,'P1');
++ assert(ui.fields.after.children.some(x=>x.value==='P1'),'another placement of the same entity is a valid predecessor');
++ snapshot.sources.plan.sequence.push({before:'OTHER',after:'P2'});
++ ui.fields.placement.onchange();assert.equal(ui.buttons.place.disabled,true);
++ assert.equal(ui.buttons.unplace.disabled,false,'explicit unplace remains separate from editing');
++});
++
++test('manual date and order edits preserve successor, deadline and strength through real writers',
++ {skip:!process.env.RDG_PLACEMENT_TEST_URL},async()=>{
++ const base=new URL(process.env.RDG_PLACEMENT_TEST_URL),session=base.pathname.split('/').filter(Boolean).at(-1);
++ const request=async(path,body)=>{
++   const r=await fetch(new URL(path,base),{method:body?'POST':'GET',headers:{
++     'X-RDG-Session':session,...(body?{'Content-Type':'application/json','Origin':base.origin}:{})},
++     ...(body?{body:JSON.stringify(body)}:{})});
++   const value=await r.json();if(!r.ok){const error=Error(value.error);error.definite=true;throw error;}return value;
++ };
++ const d=doc(),ui=UI.mount(d.createElement('div'),{read:()=>request('state'),write:r=>request('command',r)},{document:d});
++ await ui.refresh();
++ const choose=id=>{ui.fields.target.value=id;ui.fields.target.onchange();};
++ const save=async()=>{assert.equal(ui.buttons.place.disabled,false);await ui.buttons.place.onclick();assert.match(ui.status,/Запись сохранена/,ui.status);};
++ const plan=()=>ui.view.sources.plan;
++ const deadline=structuredClone(plan().timeConstraints.find(r=>r.type==='deadline'));
++ const order=structuredClone(plan().sequence);
++ choose('A1');assert.equal(ui.fields.at.value,'2026-10-20');ui.fields.at.value='2026-10-21';await save();
++ assert.deepEqual(plan().sequence,order);assert.deepEqual(plan().timeConstraints.find(r=>r.type==='deadline'),deadline);
++ assert.equal(plan().timeConstraints.find(r=>r.stepId==='S-A1'&&r.type==='notBefore').strength,'hard');
++ choose('A2');assert.equal(ui.fields.after.value,'S-A1');
++ ui.fields.after.value='S-A3';await save();
++ assert.deepEqual(plan().sequence,[{before:'S-A3',after:'S-A2',minDelayDays:2}]);
++ ui.fields.after.value='';ui.fields.at.value='2026-10-23';await save();assert.deepEqual(plan().sequence,[]);
++ choose('A1');ui.fields.at.value='';await save();
++ assert.deepEqual(plan().timeConstraints.filter(r=>r.stepId==='S-A1'),[deadline]);
++ assert.equal(ui.pending,null);
++});
+--- /dev/null
++++ b/tests/rdg-placement-edit.acceptance.test.py
+@@ -0,0 +1,140 @@
++#!/usr/bin/env python3
++"""Safe manual placement edits through actual Plan/Graph owners, isolated sources."""
++from importlib.machinery import SourceFileLoader
++import copy
++import json
++import os
++from pathlib import Path
++import subprocess
++import threading
++import unittest
++
++ROOT=Path(__file__).resolve().parents[1]
++F=SourceFileLoader('placement_edit_fixture',str(ROOT/'tests/rdg-workflow.acceptance.test.py')).load_module()
++H=SourceFileLoader('placement_edit_helper',str(ROOT/'tools/rdg-workflow-helper.py')).load_module()
++
++class PlacementEdit(unittest.TestCase):
++    def setUp(self):
++        self.f=F.Workflow('test_whole_future_execution_withdrawal_new_variant_and_history')
++        self.f.setUp();self.addCleanup(self.f.doCleanups)
++        self.w=self.f.w;self.w.apply([self.w.add('A1'),self.w.add('A2'),self.w.add('A3')])
++        self.editor=H.Editor(self.f.root,self.f.rel,self.w.home/'graphs',self.w.rel,
++            self.w.store,self.w.token,tools=self.w.home/'tools')
++        self.seq=0
++
++    def plan(self):
++        return self.editor.snapshot()['sources']['plan']
++
++    def command(self,node='A1',**extra):
++        self.seq+=1;v=self.editor.snapshot()
++        return {'action':'place','transactionId':'safe-place-'+str(self.seq),'nodeId':node,
++            'expectedGraphRevision':v['sources']['graphs'][self.w.rel]['revision'],
++            'expectedPlanRevision':v['sources']['plan']['revision'],'note':'Synthetic date edit',**extra}
++
++    def place(self,node='A1',**extra):
++        return self.editor.dispatch(self.command(node,**extra))
++
++    def seed(self,*,date_b=False,delay=0,hard=False,deadline=False):
++        a=self.f.place('S-A1','A1');b=self.f.place('S-A2','A2',
++            sequence=[{'before':'S-A1','after':'S-A2','minDelayDays':delay}])
++        if hard:a['timeConstraints'][0]['strength']='hard'
++        if deadline:a['timeConstraints'].append({'type':'deadline','at':'2026-10-25',
++            'strength':'hard','basis':'Synthetic existing candidate deadline'})
++        a['step']['actionRef']['observedGraphRevision']=self.w.read()['revision']
++        if date_b:b['timeConstraints']=[{'type':'notBefore','at':'2026-10-21',
++            'strength':'soft','basis':'Synthetic second date'}]
++        self.f.owner(self.f.placement_request([a,b,self.f.place('S-A3','A3')]))
++
++    def test_date_edit_preserves_successor_with_date_or_only_order(self):
++        self.seed();before=self.plan()['sequence'];graph=self.w.sources()
++        self.place(at='2026-10-22',afterStepId='')
++        self.assertEqual(before,self.plan()['sequence']);self.assertEqual(graph,self.w.sources())
++        self.place('A2',at='2026-10-23',afterStepId='S-A1')
++        self.place(at='2026-10-21',afterStepId='')
++        self.assertEqual(before,self.plan()['sequence'])
++
++    def test_date_edit_keeps_deadline_strength_step_reference_and_graph(self):
++        self.seed(hard=True,deadline=True);before=copy.deepcopy(self.plan());graph=self.w.sources()
++        req=self.command(at='2026-10-21',afterStepId='')
++        self.editor.dispatch(req)
++        after=self.plan()
++        self.assertEqual(next(s for s in before['steps'] if s['id']=='S-A1'),
++                         next(s for s in after['steps'] if s['id']=='S-A1'))
++        old=[r for r in before['timeConstraints'] if r['stepId']=='S-A1']
++        new=[r for r in after['timeConstraints'] if r['stepId']=='S-A1']
++        expected=copy.deepcopy(old)
++        next(r for r in expected if r['type']=='notBefore')['at']='2026-10-21'
++        self.assertEqual(new,expected);self.assertEqual(graph,self.w.sources())
++        sources=self.f.plan_sources();result=self.editor.dispatch(req)
++        self.assertTrue(result['replayed']);self.assertEqual(sources,self.f.plan_sources())
++
++    def test_change_and_clear_predecessor_preserve_unedited_minimum_delay(self):
++        self.seed(delay=3)
++        self.place('A2',afterStepId='S-A3')
++        self.assertEqual(self.plan()['sequence'],[{'before':'S-A3','after':'S-A2','minDelayDays':3}])
++        self.place('A2',afterStepId='',at='2026-10-23')
++        self.assertEqual(self.plan()['sequence'],[])
++        self.assertTrue(any(r['stepId']=='S-A2' for r in self.plan()['timeConstraints']))
++
++    def test_clear_shown_fields_keeps_deadline_and_successor(self):
++        self.seed(hard=True,deadline=True);before=copy.deepcopy(self.plan())
++        self.place(at='',afterStepId='')
++        after=self.plan()
++        self.assertEqual(before['sequence'],after['sequence'])
++        self.assertEqual([r for r in after['timeConstraints'] if r['stepId']=='S-A1'],
++            [r for r in before['timeConstraints'] if r['stepId']=='S-A1' and r['type']=='deadline'])
++
++    def test_complex_inputs_fail_without_partial_write(self):
++        self.seed(date_b=True)
++        variants=[
++            {'timeConstraints':[{'stepId':'S-A1','type':'notBefore','at':'2026-10-20T12:00:00Z',
++                'strength':'hard','basis':'Precise time'}]},
++            {'timeConstraints':[{'stepId':'S-A1','type':'notBefore','at':'2026-10-'+day,
++                'strength':'hard','basis':'Separate bound'} for day in ['20','21']]},
++            {'sequence':[{'before':'S-A1','after':'S-A2'},{'before':'S-A3','after':'S-A2'}]}
++        ]
++        for changes in variants:
++            with self.subTest(changes=changes):
++                plan=self.plan()
++                for key,value in changes.items():
++                    plan[key]=([r for r in plan[key] if r['stepId']!='S-A1']+value
++                        if key=='timeConstraints' else value)
++                rev=plan['revision'];plan['revision']=rev+1
++                self.f.seq+=1
++                self.f.owner({'transactionId':'seed-complex-'+str(self.f.seq),'op':'edit',
++                    'file':self.f.rel,'expectedRevision':rev,'plan':plan})
++                before=self.f.plan_sources(),self.w.sources()
++                node='A2' if 'sequence' in changes else 'A1'
++                with self.assertRaisesRegex(ValueError,'HELPER_COMPLEX_PLACEMENT_USE_FULL_API'):
++                    self.place(node,at='2026-10-22',afterStepId='')
++                self.assertEqual(before,(self.f.plan_sources(),self.w.sources()))
++
++    def test_cas_and_permission_denial_do_not_write(self):
++        self.seed();stale=self.command(at='2026-10-22',afterStepId='')
++        self.place(at='2026-10-21',afterStepId='')
++        before=self.f.plan_sources(),self.w.sources()
++        with self.assertRaisesRegex(ValueError,'CAS_MISMATCH'):self.editor.dispatch(stale)
++        self.assertEqual(before,(self.f.plan_sources(),self.w.sources()))
++        token=self.w.grant(['graph.read','plan.read'],['workspaces/','plans/'])['token']
++        editor=H.Editor(self.f.root,self.f.rel,self.w.home/'graphs',self.w.rel,
++            self.w.store,token,tools=self.w.home/'tools')
++        req=self.command(at='2026-10-23',afterStepId='')
++        with self.assertRaisesRegex(ValueError,'plan.edit'):editor.dispatch(req)
++        self.assertEqual(before,(self.f.plan_sources(),self.w.sources()))
++
++    def test_controller_round_trip_via_live_helper_and_writers(self):
++        self.seed(hard=True,deadline=True,delay=2);graph=self.w.sources()
++        server=H.make_server(self.editor)
++        thread=threading.Thread(target=server.serve_forever,daemon=True);thread.start()
++        try:
++            env={**os.environ,'RDG_PLACEMENT_TEST_URL':server.session_url}
++            for key in ['RDG_WORKFLOW_TEST_URL','RDG_WORKFLOW_TEST_DIR','RDG_CROSS_TEST_URL']:env.pop(key,None)
++            run=subprocess.run(['node','--test','tests/rdg-workflow-ui.test.cjs'],cwd=ROOT,
++                env=env,text=True,capture_output=True,timeout=90)
++            self.assertEqual(run.returncode,0,run.stdout+'\n'+run.stderr)
++            out=os.environ.get('RDG_PLACEMENT_TEST_LOG')
++            if out:Path(out).write_text(run.stdout+run.stderr)
++            self.assertEqual(graph,self.w.sources())
++        finally:server.shutdown();server.server_close();thread.join(2)
++
++if __name__=='__main__':unittest.main()
+--- a/tools/rd-graph-viewer-smoke.test.cjs
++++ b/tools/rd-graph-viewer-smoke.test.cjs
+@@ -37,7 +37,7 @@
+     localStorage:{getItem:k=>storage.get(k)??null,setItem:(k,v)=>storage.set(k,v)},
+     console,Date,Math,JSON,Object,Number,Error};
+   vm.runInNewContext(script,context,{timeout:2000});
+-  assert.equal(host.dataset.rdgVersion,'2.2.0');
++  assert.equal(host.dataset.rdgVersion,'2.2.1');
+   assert(elements.launch,'launcher created');
+   return {host,elements};
+ }
+--- a/tests/visual/rdg-full-detail-201.cjs
++++ b/tests/visual/rdg-full-detail-201.cjs
+@@ -24,7 +24,7 @@
+   const countRefine=()=>page.evaluate(()=>[...document.getElementById('rdg-viewer-root').shadowRoot.querySelectorAll('#canvas path[data-relation-kind="refinement"]')].length);
+   const nodes=()=>page.evaluate(()=>[...document.getElementById('rdg-viewer-root').shadowRoot.querySelectorAll('#canvas .node')].map(n=>n.getAttribute('data-id')));
+   const screen=async(name)=>page.screenshot({path:path.join(output,name+'.png')});
+-  assert.equal(await page.evaluate(()=>document.getElementById('rdg-viewer-root').dataset.rdgVersion),'2.2.0');
++  assert.equal(await page.evaluate(()=>document.getElementById('rdg-viewer-root').dataset.rdgVersion),'2.2.1');
+   await open('reference-prepared-planning-tree');
+   assert((await nodes()).includes('RF-DEEP'),'complete prepared root covers grandchildren');
+   await button('edges-all');
+@@ -53,6 +53,6 @@
+   assert(!(await nodes()).some(n=>n.startsWith('__cause__')),'R-only hides D and O');
+   await screen('working-R-only-all-branches');
+   assert.deepEqual(errors,[],'no JavaScript page errors');
+-  console.log('BROWSER_FULL_DETAIL_202_PASS, screenshots: 4, version 2.2.0');
++  console.log('BROWSER_FULL_DETAIL_202_PASS, screenshots: 4, version 2.2.1');
+  } finally {await browser.close();}
+ })().catch(error=>{console.error(error);process.exitCode=1});
+--- a/README.md
++++ b/README.md
+@@ -1,6 +1,6 @@
+ # Requirements–Decisions Graphs — папки и полные Requirements-графы
+ 
+-Текущий исходный Viewer **2.2.0**, Local Loader **2.5.2**: папки → полные Requirements-графы от корневой R → локальный R-граф одной волны. Полный граф поддерживает независимые «Принятое/Все ветви» и «Только Requirements/Показать всё»; «Обновить» перечитывает текущие файлы и индекс, при недоступности оставляет явно помеченную встроенную копию. Расположение сохраняется отдельно и только с разрешённым доступом. [Актуальная инструкция](docs/guides/VIEWER-EXPLORER.md) · [граница R-графа и общий слой координат](docs/guides/VIEWER-LAYOUT.md) · [план и порядок реализации](docs/guides/VIEWER-EXPLORER-PLAN.md). Обновление исходника не подтверждает обновления установленного Tampermonkey.
++Текущий исходный Viewer **2.2.1**, Local Loader **2.5.2**: папки → полные Requirements-графы от корневой R → локальный R-граф одной волны. Полный граф поддерживает независимые «Принятое/Все ветви» и «Только Requirements/Показать всё»; «Обновить» перечитывает текущие файлы и индекс, при недоступности оставляет явно помеченную встроенную копию. Расположение сохраняется отдельно и только с разрешённым доступом. [Актуальная инструкция](docs/guides/VIEWER-EXPLORER.md) · [граница R-графа и общий слой координат](docs/guides/VIEWER-LAYOUT.md) · [план и порядок реализации](docs/guides/VIEWER-EXPLORER-PLAN.md). Обновление исходника не подтверждает обновления установленного Tampermonkey.
+ 
+ Отдельное экспериментальное хранилище графов. Не является канонической методологией OBS и не заменяет действующие документы.
+ 
+@@ -27,7 +27,7 @@
+ результатов узла. Однофайловой сквозной путь дополнен: один Action — один
+ экземпляр; доступны явный отзыв, place/unplace R и Actions, единые будущее/история
+ в JSON, Markdown и HTML. Выполненное исчезает из будущего при чтении без новой
+-записи Plan; исходные ID и история сохраняются. В исходнике Viewer 2.2.0 доступен ручной редактор и общая лента через явно
++записи Plan; исходные ID и история сохраняются. В исходнике Viewer 2.2.1 доступен ручной редактор и общая лента через явно
+ подключаемый локальный Helper: выбранная папка сессии на существующем mount,
+ те же Graph/Plan writers, права и история. Контроллер прошёл сквозные тесты с
+ реальными writers; браузерный DOM имитируется. Установленный Windows/G2 путь,
+--- a/docs/guides/RDG-CURRENT-EXECUTION-PLAN.md
++++ b/docs/guides/RDG-CURRENT-EXECUTION-PLAN.md
+@@ -1,6 +1,7 @@
+ # RDG + Temporal Plan — актуальный порядок исполнения
+ 
+-**Последний проверенный срез кода:** [межфайловое выполнение и история владельцев](../handoffs/rdg-cross-file-completion-20261019/CHECKPOINT.md).
++**Последний проверенный срез кода:** [безопасная ручная правка размещения](../handoffs/rdg-placement-edit-repair-20261019/CHECKPOINT.md).
++**Предыдущий межфайловой срез:** [межфайловое выполнение и история владельцев](../handoffs/rdg-cross-file-completion-20261019/CHECKPOINT.md).
+ **Предыдущий ручной срез:** [Viewer/Helper и общая лента](../handoffs/rdg-manual-workflow-20261019/CHECKPOINT.md).
+ **Предыдущий сквозной API-пакет:** [Action-instance / Plan API / будущее и история](../handoffs/rdg-instance-temporal-workflow-20261019/CHECKPOINT.md).
+ **Предыдущая сверка:** [контрольная точка](../handoffs/rdg-plan-completion-review-20261019/CHECKPOINT.md).
+@@ -80,6 +81,22 @@
+ План во времени не является планом функциональности приложения: приложение
+ или любой иной артефакт может быть результатом работы по графу.
+ 
++## Исправление ручной правки размещения — PR-01
++
++После [Final Review R-RDG-LARGE-STEPS-20261019-01/v1](https://github.com/AlexPastukhh/forfiles/blob/813be44ebb626ac126c5c47813c1695664657e16/artifacts/2026-10-19/final-review-rdg-large-steps-r-rdg-large-steps-20261019-01-v1.md)
++пользователь прямо поручил «исправь». PR-01 принят к исполнению этим указанием;
++это не Git commit и не acceptance всей версии. F-P-01/F-P-02 относятся к ручному
++адаптеру размещения, а не к модели выполнения графа.
++
++Helper сохраняет исходящие связи других шагов, deadline, strength, basis,
++минимальный интервал предшествования и прежний Graph ref размещения. Поля даты
++начала и предшественника меняются явно; пустое поле снимает только своё условие.
++Unplace остаётся отдельным удалением размещения с incident-связями. При нескольких
++notBefore/предшественниках или точном времени простой GUI направляет к полному API,
++сохраняя исходные данные. Смена выбранного размещения перечитывает его поля.
++Точный прогон и хеши — в [checkpoint исправления](../handoffs/rdg-placement-edit-repair-20261019/CHECKPOINT.md).
++Native Windows/G2 и весь новый Gendocen context этим не подтверждены.
++
+ ## Следующий результат и зависимости
+ 
+ Ранний сквозной путь на одном владельце уже проверен; межфайловой пакет
+@@ -93,7 +110,7 @@
+ | Локальный PASS, Candidate: экземпляр Action и история | Выполнен A1 → отозван A1 → выполнен A2 для той же R. Старое выполнение и отдельный отзыв сохранены; повторное выполнение A1 после правки отклоняется. | Проверены отдельное право отзыва, политики защищённых R, судьба дочерних R, snapshots, retry/recovery и финальный состав одного пакета. Новый прямой отзыв относится к уже выполненному Action; прежний reconsider_action сохраняет свои review-условия. |
+ | Локальный PASS, Candidate: размещение R и API | В существующем Plan owner доступны R/Action refs и place/unplace по времени или порядку, в том числе для предварительной ветви. | Проверены CAS, права, replay/recovery и снятие incident sequence/timeConstraints без правки графа. Нет скрытого выбора Action. Старые snapshots остаются читаемыми. |
+ | Локальный PASS, Candidate: однофайловое будущее и история | Новый read-only workflow-reader объединяет будущие размещения и историю графа в JSON, Markdown и HTML. Выполненное исключается из будущего, Plan не переписывается. | Проверены оба пути — с размещением и без него, исходные ID и owner refs, отказ при неверной ссылке/недостатке прав и отсутствие ложного успеха предварительной ветви. HTML — снимок, не живой редактор. |
+-| Локальная интеграция, Candidate: ручной Viewer/Helper 2.2.0 | Кнопки создания/правки, глубоких предварительных R/Actions с каноном/QRPE, размещения, выбора, результата и отзыва; общее будущее и история из действующих owners. | Сквозной controller → файловый/HTTP transport → настоящие writers проходит на временных источниках. DOM имитируется; это не native browser proof. CAS, отказ, retry и recovery сохранены. |
++| Локальная интеграция, Candidate: ручной Viewer/Helper 2.2.1 | Кнопки создания/правки, глубоких предварительных R/Actions с каноном/QRPE, размещения, выбора, результата и отзыва; общее будущее и история из действующих owners. | Сквозной controller → файловый/HTTP transport → настоящие writers проходит на временных источниках. DOM имитируется; это не native browser proof. CAS, отказ, retry и recovery сохранены. |
+ | Следующий пользовательский gate: установленный Windows/G2 путь | В обновлённом Viewer выбрать доступную папку явно запущенной локальной сессии и повторить тот же сценарий в настоящем браузере. | Проверить эффективный доступ к той же папке, native picker, читаемость и фактическую запись. Без новых mounts/ACL/туннелей и предположения о Docker-loopback. Установку и реальную пользовательскую запись этим срезом не объявлять. |
+ | Локальный PASS, Candidate: несколько владельцев в одном Graph root | Общий resolver projectionOf/expansionOf, две роли R, единый расчёт writer/reader, производные результаты и история в настоящих owners. | Прошли 19 новых межфайловых проверок: нет успеха при missing/ambiguous/cyclic/denied owner; проекции не дублируют исполнение; частичный journal блокирует read; read lock и source pins защищают состав. Нужны read scopes всех workspace-файлов identitySpace и права внешних производных записей. |
+ 
+@@ -159,7 +176,7 @@
+ 
+ ### Новый ручной пакет — фактический scope
+ 
+-Viewer 2.2.0 подключает общий `rdg-workflow-ui.js`, встроенный штатным builder.
++Viewer 2.2.1 подключает общий `rdg-workflow-ui.js`, встроенный штатным builder.
+ Без явной сессии предметные факты Viewer остаются read-only. Для Docker/Windows
+ основной путь — **папка сессии на уже разрешённом mount**, которую пользователь
+ явно выбирает picker. Helper запускается отдельной явной командой, использует
+@@ -383,6 +400,18 @@
+ [межфайловом checkpoint](../handoffs/rdg-cross-file-completion-20261019/CHECKPOINT.md).
+ Установленный браузер/Windows и полное новое Gendocen coverage этим не подтверждены.
+ 
++После PR-01 ручного размещения прошли **74 Python tests** в шести относящихся
++к изменению наборах; общий Node run: **417 cases, 414 PASS, 0 FAIL, 3 SKIP**.
++Три live-Helper случая отдельно исполнены Python acceptance: обычный manual путь
++через HTTP/файлы, межфайловой controller и безопасная правка даты/порядка.
++После последнего уточнения UI-селектора заново прошли **7 Python placement tests**
++с живым Helper/writer и UI **7 PASS, 3 SKIP**; общий широкий прогон после этого
++уточнения не повторялся. Независимые counterexamples review дали ожидаемую
++сохранность порядка, deadline и strength. F-P-01/F-P-02 **устранены и проверены
++локально в source 2.2.1**. Исторический Final Review v1 не переписан.
++Точные исходники и логи — в [checkpoint PR-01](../handoffs/rdg-placement-edit-repair-20261019/CHECKPOINT.md).
++Установленный Windows/G2 и acceptance версии остаются открытыми.
++
+ ## Сверка с P2-AC-01..20
+ 
+ Это техническая сверка ранее исследованной матрицы, а не список обязательных
+--- a/docs/guides/RDG-DEEP-ACTION-AND-HISTORY.md
++++ b/docs/guides/RDG-DEEP-ACTION-AND-HISTORY.md
+@@ -304,7 +304,7 @@
+ Выполненный Action и отозванный вариант не показываются как предстоящие. История
+ показывает выполнение A1, отзыв A1 и выполнение A2 в порядке событий, в том числе
+ внутри одного пакета. Неполная или неразрешённая R не получает успеха. Формат HTML
+-предназначен для чтения. Ручной редактор Viewer/Helper 2.2.0 описан ниже; его установленный Windows/G2 путь пока не проверен.
++предназначен для чтения. Ручной редактор Viewer/Helper 2.2.1 описан ниже; его установленный Windows/G2 путь пока не проверен.
+ 
+ Gendocen projection теперь учитывает actionType. Requirement steps пока явно
+ получают `REQUIREMENT_STEPS_NOT_COVERED`, а не ложное полное покрытие; произвольный
+@@ -341,12 +341,12 @@
+ 
+ ## Локальная ручная сессия Viewer/Helper 2.1.0
+ 
+-Статус: **Candidate, локальная интеграция**. Viewer 2.2.0 использует один настроенный
++Статус: **Candidate, локальная интеграция**. Viewer 2.2.1 использует один настроенный
+ файл ручной записи и существующий Plan; зависимости и производные результаты
+ разрешаются через остальных авторизованных владельцев композиции.
+ Контроллер Viewer проходит оба транспорта через настоящие writers в синтетическом
+ acceptance-прогоне. DOM в этом прогоне имитируется; это не установленный браузерный
+-или Windows/G2 proof. Исходник Viewer обновлён до 2.2.0; установленный Tampermonkey
++или Windows/G2 proof. Исходник Viewer обновлён до 2.2.1; установленный Tampermonkey
+ не обновлялся. Local Loader не получает новых grants или @require: общий UI-модуль
+ встраивается штатным `build-rdg-layout.py` из `rdg-workflow-ui.js`.
+ 
+@@ -368,6 +368,22 @@
+ с `HELPER_COMPLEX_CANON_USE_FULL_API`. Чтение таких материалов остаётся во Viewer,
+ а изменение — через полный API. Пустой выбранный decomposition, неизвестные роли,
+ неполная композиция и повторное выполнение экземпляра по-прежнему отклоняются writer.
++
++### Безопасная правка размещения — Viewer 2.2.1
++
++Изменение даты начала сохраняет deadline, strength и basis существующих правил,
++а также исходящие связи других шагов. Изменение предшественника сохраняет
++minDelayDays; он показан в интерфейсе. При переключении сохранённого размещения
++его дата и порядок загружаются заново. Пустая дата снимает только notBefore,
++пустой предшественник — входящую связь. Полное удаление размещения выполняется
++отдельной кнопкой «Снять размещение».
++
++Простой GUI поддерживает одну дату notBefore в формате YYYY-MM-DD и одного
++предшественника. Несколько таких правил, несколько предшественников либо точное/
++относительное время не обрезаются: редактирование через этот GUI блокируется,
++а Helper отклоняет такой запрос с HELPER_COMPLEX_PLACEMENT_USE_FULL_API.
++Deadline, в том числе заданный полным API, сохраняется и виден в описании правил.
++Полный Plan API сохраняет прежний явный replace-контракт sequence/timeConstraints.
+ 
+ ### Файловое подключение без нового сервера
+ 
+--- a/docs/guides/RDG-V7-WORKING-GRAPHS.md
++++ b/docs/guides/RDG-V7-WORKING-GRAPHS.md
+@@ -53,7 +53,7 @@
+ и события теперь читаются через `rdg-activity.py`: сохранения графа, выполнения
+ Actions, их отзыв и достижения R. Общая CLI-лента JSON/Markdown и HTML-снимок
+ будущего/истории доступны через rdg-workflow.py. Ручной раздел и общая лента
+-реализованы в исходнике Viewer 2.2.0; установленный Windows/G2 ещё не проверен.
++реализованы в исходнике Viewer 2.2.1; установленный Windows/G2 ещё не проверен.
+ Фильтры/приоритет истории второстепенны.
+ 
+ Предмет RDG — цели, способы их достижения, Requirements и работа с этой моделью.
+@@ -308,7 +308,7 @@
+ 
+ В Viewer «Показать все варианты» **независимо от** «Все связи»: если у данной R нет выбранного D, все её варианты видны по умолчанию; если выбран, в основном виде показывается принятый путь. При этом у дочерней R без выбора её варианты остаются видимы, даже если выбрано D её родителя. Для больших наборов раскрывай коллекции по запросу. Общая ситуация проекта доступна в инспекторе и определяется по реально проиндексированным R/D/C одного `identitySpace`. Если граф или внешняя категория не проиндексированы, полнота контекста неизвестна.
+ 
+-Основная SVG-проекция и инспектор Viewer читают граф. Подключаемый ручной раздел Viewer 2.2.0 записывает изменения через writer/Helper с проверкой прав и версии; native Windows/G2 путь пока не подтверждён.
++Основная SVG-проекция и инспектор Viewer читают граф. Подключаемый ручной раздел Viewer 2.2.1 записывает изменения через writer/Helper с проверкой прав и версии; native Windows/G2 путь пока не подтверждён.
+ 
+ ## 10. Что пока не следует обещать как уже реализованное
+ 
+--- a/docs/guides/VIEWER-EXPLORER.md
++++ b/docs/guides/VIEWER-EXPLORER.md
+@@ -1,4 +1,11 @@
+ # RDG Viewer 2.0.3 — папки и полный граф Requirements
++
++**Исходник Viewer 2.2.1 (2026-10-19):** исправлена ручная правка размещения:
++сохраняются порядок других шагов, deadline и параметры правил. Смена выбранного
++размещения перечитывает его поля; сложные правила требуют полного API.
++[Исправление F-P-01/F-P-02](../handoffs/rdg-placement-edit-repair-20261019/CHECKPOINT.md).
++Установленный Tampermonkey/Windows/G2 этой записью не подтверждён.
++
+ 
+ **Исходник Viewer 2.2.0 (2026-10-19):** ручной раздел читает общую авторизованную
+ композицию владельцев. В явном continuation-root можно создать принадлежащий
+--- a/tests/rdg-workflow-helper.test.py
++++ b/tests/rdg-workflow-helper.test.py
+@@ -62,7 +62,7 @@
+             text=True,capture_output=True,timeout=90,
+             env={**os.environ,'RDG_WORKFLOW_TEST_URL':self.base})
+         self.assertEqual(run.returncode,0,run.stdout+'\n'+run.stderr)
+-        out=ROOT/'docs/handoffs/rdg-manual-workflow-20261019/gui-controller.log'
++        out=Path(os.environ.get('RDG_WORKFLOW_TEST_LOG_DIR',str(ROOT/'docs/handoffs/rdg-manual-workflow-20261019')))/'gui-controller.log'
+         out.write_text(run.stdout+run.stderr)
+         events=self.w.read()['events']
+         actions=[e for e in events if e['type'] in ('action_executed','action_withdrawn')]
+@@ -82,7 +82,7 @@
+             run=subprocess.run(['node','--test','tests/rdg-workflow-ui.test.cjs'],cwd=ROOT,
+                 text=True,capture_output=True,timeout=90,env=env)
+             self.assertEqual(run.returncode,0,run.stdout+'\n'+run.stderr)
+-            (ROOT/'docs/handoffs/rdg-manual-workflow-20261019/gui-file-controller.log').write_text(run.stdout+run.stderr)
++            (Path(os.environ.get('RDG_WORKFLOW_TEST_LOG_DIR',str(ROOT/'docs/handoffs/rdg-manual-workflow-20261019')))/'gui-file-controller.log').write_text(run.stdout+run.stderr)
+             before=self.w.sources()
+             session.process_once();self.assertEqual(before,self.w.sources())
+         finally:
+--- a/tests/rdg-cross-file-completion.test.py
++++ b/tests/rdg-cross-file-completion.test.py
+@@ -419,7 +419,7 @@
+         try:
+             run=subprocess.run(['node','--test','tests/rdg-workflow-ui.test.cjs'],cwd=ROOT,text=True,capture_output=True,
+                 timeout=90,env={**os.environ,'RDG_CROSS_TEST_URL':server.session_url})
+-            (ROOT/'docs/handoffs/rdg-cross-file-completion-20261019/gui-cross.log').write_text(run.stdout+run.stderr)
++            (Path(os.environ.get('RDG_WORKFLOW_TEST_LOG_DIR',str(ROOT/'docs/handoffs/rdg-cross-file-completion-20261019')))/'gui-cross.log').write_text(run.stdout+run.stderr)
+             self.assertEqual(run.returncode,0,run.stdout+run.stderr)
+             self.assertTrue(self.context().evaluate()[self.parent]['R0']['complete'])
+         finally:server.shutdown();server.server_close();thread.join(2)

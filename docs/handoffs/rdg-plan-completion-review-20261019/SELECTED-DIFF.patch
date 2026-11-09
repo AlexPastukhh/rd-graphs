@@ -1,0 +1,140 @@
+--- before/tools/rdg-v7-model.py
++++ tools/rdg-v7-model.py
+@@ -358,7 +358,7 @@
+                      n.get("status") not in {"candidate", "potential"})
+         if not available:
+             complete, reason = False, "potential-inactive-or-unavailable-owner"
+-        elif n.get("actionType") == "decomposition" and not has_current_outputs(nid, nodes, edges):
++        elif n["kind"] == "action" and n.get("actionType") == "decomposition" and not has_current_outputs(nid, nodes, edges):
+             complete, reason = False, "decomposition-without-subgoals"
+         elif unknown_roles:
+             complete, reason = False, "unknown-required-child-role"
+@@ -428,7 +428,7 @@
+     ensure(not row["complete"], "completion already recorded or derived")
+     ensure(row["reason"] in {"result-not-recorded", "definition-changed-result-review"},
+            "required work must be completed first; unknown roles cannot be bypassed")
+-    if n.get("actionType") == "decomposition":
++    if n["kind"] == "action" and n.get("actionType") == "decomposition":
+         ensure(any(e["type"] == "INTRODUCES" and e["from"] == nid and
+                    e.get("childRole") == "subgoal" and e.get("archived") is not True
+                    for e in g["edges"]), "decomposition has no introduced subgoals")
+--- before/tests/rdg-deep-action.acceptance.test.py
++++ tests/rdg-deep-action.acceptance.test.py
+@@ -346,6 +346,19 @@
+         return self.edit("create_requirement", node={"id": rid, "kind": "requirement", "title": rid},
+                          parentRequirementId="R0", edgeId="refinement-"+rid)
+ 
++    def test_action_type_metadata_on_requirement_does_not_apply_action_rules(self):
++        self.apply([self.add("A"), self.prepare("A", "R1", "method_correctness"), self.choose("A")])
++        self.apply([self.edit("edit_node", nodeId="R1", changes={"actionType": "decomposition"})])
++        self.assertEqual(self.states()["R1"]["reason"], "result-not-recorded")
++        self.apply([self.result("R1")])
++        states = self.states()
++        self.assertTrue(states["R1"]["complete"])
++        self.assertTrue(states["A"]["complete"])
++        self.assertTrue(states["R0"]["complete"])
++        result = next(e for e in self.read()["events"] if e.get("targetId") == "R1" and e["type"] == "requirement_achieved")
++        self.assertEqual(result["type"], "requirement_achieved")
++        self.assertEqual(result["basis"]["node"]["kind"], "requirement")
++
+     def test_output_set_changes_result_scope_without_requiring_subgoal_achievement(self):
+         self.apply([self.add("D", action_type="decomposition"), self.prepare("D", "R1"), self.choose("D")])
+         self.apply([self.result("D", action=True), self.result("R1")])
+--- before/docs/guides/RDG-CURRENT-EXECUTION-PLAN.md
++++ docs/guides/RDG-CURRENT-EXECUTION-PLAN.md
+@@ -1,6 +1,7 @@
+ # RDG + Temporal Plan — актуальный порядок исполнения
+ 
+-**Последняя реализация:** [исправление завершённости и истории](../handoffs/rdg-completion-repair-20261019/CHECKPOINT.md).
++**Последняя адресная поправка и проверка:** [контрольная точка](../handoffs/rdg-plan-completion-review-20261019/CHECKPOINT.md).
++**Предшествующий ремонт:** [исправление завершённости и истории](../handoffs/rdg-completion-repair-20261019/CHECKPOINT.md).
+ **Предшествующий срез:** [CPW-RDG-DEEP-ACTION-20261019/v1](../handoffs/rdg-deep-action-model-20261019/CHECKPOINT.md).
+ **Независимое review этого среза:** [R-RDG-DEEP-ACTION-20261019-01/v1](https://github.com/AlexPastukhh/forfiles/blob/10eb118bcf894d425210c1a08fb248cbb3677e3f/artifacts/2026-10-19/final-review-rdg-deep-action-r-rdg-deep-action-20261019-01-v1.md).
+ **Предыдущая проверка сообщения и плана:** [REVIEW](../handoffs/rdg-temporal-review-fix-20261019/REVIEW.md).
+@@ -62,18 +63,41 @@
+ План во времени не является планом функциональности приложения: приложение
+ или любой иной артефакт может быть результатом работы по графу.
+ 
+-## Следующие зависимости
+-
+-После исправлений PR-DA-01/05 продолжить межфайловой расчёт через явных владельцев
+-и различение повторных исполнений. Затем завершить размещение R и удобные API
+-назначения/снятия времени или порядка; на этом основании связать конкретную
+-предстоящую работу с результатом и проверить оба сквозных пути.
+-
+-До расширения доверия Gendocen требуется PR-DA-03: включить новую Action-семантику
+-в явно поддерживаемый context и проверить адресную инвалидацию. Старый узкий valid
+-не подтверждает весь новый контекст. Полный Canon evaluator из этого не следует.
+-Общую GUI-ленту и читаемые описания сохранений объединить на этапе интерфейса;
+-скрытие/приоритет истории остаются второстепенными.
++## Следующий результат и зависимости
++
++Текущий рабочий выбор — раньше проверить полезный сквозной путь на одном
++владельце графа, сохранив остальной scope. Это уточнение Candidate-порядка,
++а не принятие нового Desired Scenario или сокращение обещанной версии.
++Межфайловой расчёт не является условием разработки размещения/API.
++
++| Этап | Проверяемый результат | Условие перехода |
++|---|---|---|
++| Следующий: размещение R и удобное API | Разместить предварительную R или Action по времени/порядку, изменить и снять размещение. Прочитать ту же версию через Plan owner. | Нет скрытого выбора Action; пустое будущее допустимо; CAS, права, история и старые snapshots/retries сохранены. При снятии размещения не остаются висячие sequence/timeConstraints. |
++| Затем: связь будущего с результатами в одном владельце | На тех же данных пройти оба пути: без размещения и с ним; результат остаётся в истории, выполненная работа не показывается как предстоящая. | Точная ссылка на владельца/узел и состав результата; неполная R, предварительная ветвь, неизвестный владелец и результат для прежнего определения не дают ложного закрытия. |
++| Первый ручной путь | Через существующий Viewer/Helper показать создание/правку, размещение, запись результата и общую историю. ИИ использует тот же API. | Источник и ручной интерфейс проходят один сценарий с одинаковыми статусами и правами. Проверка установленного Windows/G2 остаётся отдельным фактом. |
++| Расширение на несколько владельцев | Вычислить обязательную композицию через явные owning/projectionOf refs без копирования смысла. | Нет успеха при missing/ambiguous owner или denied read; нет циклов; согласованное чтение и запрет двойного учёта. Это нужно до заявления о полном межфайловом workflow, но не до первого однофайлового proof. |
++
++Для связи будущего с результатом предпочтителен **pending PR-PC-03**:
++вычисляемая проекция будущего поверх сохранённого Plan, без удаления исходных
++шагов и переписывания исторических версий. Альтернатива — записывать закрытие
++через существующий Plan owner с CAS/journal. Точный контракт ещё не реализован;
++это Proposal, а не уже принятое изменение поведения.
++
++Разные stepId с одной ActionRef сами по себе не доказывают разные физические
++исполнения. Для первого сквозного proof достаточно однозначной ссылки на одну
++работу. Перед автозакрытием неоднозначных повторов нужно установить, это разные
++размещения одной работы или отдельные исполнения. Автоматически закрывать другую
++работу нельзя. Универсальный движок повторений не назначен обязательным этапом.
++Этот вопрос не блокирует размещение R/API и однозначный первый путь.
++
++PR-DA-03 выполняется перед расширением claims Gendocen и при изменении поддержанного
++Plan/Action context. Новый вид шага для R и Action-семантика должны либо входить в явное
++покрытие, либо давать unsupported/incomplete. Старый узкий valid не подтверждает
++весь новый контекст. Полный Canon evaluator из этого не следует.
++
++Читаемые описания сохранений PR-DA-04 объединить с общей GUI-лентой;
++скрытие/приоритет истории остаются второстепенными. Старые knownAt/effectiveAt
++эксперименты, новый сервер и production owner не являются условиями этих этапов.
+ 
+ ## Ранее выполненные технические срезы
+ 
+@@ -146,7 +170,9 @@
+    снимок результата различает выходные наборы подцелей; выбранный decomposition
+    не теряет последнюю активную подцель; автоматические результаты рассчитываются
+    только на финальном составе пакета. Прежние явные результаты сохраняют свой
+-   scope. Межфайловой расчёт и scope повторных исполнений ещё открыты.
++   scope. Дополнительная проверка ограничила actionType правилами узлов Action:
++   одноимённые данные Requirement не меняют его тип. Межфайловой расчёт ещё открыт;
++   неоднозначные повторы требуют отдельного контракта только перед их автозакрытием.
+ 3. **PARTIAL:** довести явное размещение в плане во времени. Локальная граница уже
+    исправлена: пустое будущее разрешено; новая запись Action-шага требует
+    времени или sequence; старые snapshots и принятые retries читаются как
+@@ -184,11 +210,16 @@
+ условием этого пути. Installed Windows/G2 proof, remote owner, публикация
+ и legacy retirement остаются отдельными этапами.
+ 
+-В текущем срезе прошли **206 Python и 407 Node tests**. Новые проверки:
+-16 сценариев штатного bearer writer/истории и 3 Viewer-сценария с графами,
+-полученными этим writer. Полный прогон прошёл; после последнего исправления
+-согласованного чтения/NO_CHANGE заново прошли 16 затронутых acceptance-сценариев.
+-Это локальное proof в Repo, не установка Windows и не принятие Stage 4.
++## Доказательства по версиям
++
++В CPW-RDG-DEEP-ACTION-20261019/v1 прошли 206 Python и 407 Node tests,
++включая 16 deep-action и 3 Viewer-сценария. Это предшествующая версия.
++В CPW-RDG-COMPLETION-REPAIR-20261019/v1 заново прошли 213 Python и 407 Node,
++включая 23 deep-action tests. Полный прогон относится к его точным исходникам.
++Результаты текущей адресной перепроверки и её ограничение — в последней
++[контрольной точке](../handoffs/rdg-plan-completion-review-20261019/CHECKPOINT.md).
++Наборы пересекаются и не суммируются. Это локальное proof в Repo, не установка
++Windows и не принятие Stage 4.
+ 
+ ## Сверка с P2-AC-01..20
+ 

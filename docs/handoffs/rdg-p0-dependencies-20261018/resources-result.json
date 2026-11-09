@@ -1,0 +1,10 @@
+{
+  "exitCode": 0,
+  "seconds": 0.72,
+  "command": [
+    "python3",
+    "tests/rdg-gendocen-resources.test.py",
+    "-v"
+  ],
+  "log": "resources.log"
+}

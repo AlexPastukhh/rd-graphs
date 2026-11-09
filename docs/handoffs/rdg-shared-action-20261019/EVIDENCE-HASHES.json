@@ -1,0 +1,23 @@
+{
+  "BASELINE.json": "4200c7fdaa6a037b37aca40a13812771e177fb68b9c3e5c690adea898895b9f6",
+  "CHECKPOINT.json": "e498cdd45bdef00b01b0f732f0dd2fcebaa768465ccef56e5657dbd72fb25f5a",
+  "CHECKPOINT.md": "b3f6e35de0dd64fb18ac975af3951466fd35fe81f97c3e2d3990f7b0e75235c0",
+  "SELECTED-DIFF.patch": "2a0dd989a369ff41c90359e28235fa97d37edda6af693c7c248653deec0bafe6",
+  "SOURCE-HASHES.json": "4b22f54b1469734cbf7e18dfd372904a46ca4768d589d9d63fbcedb12c4f9cc3",
+  "WR-DELTA.md": "b63ae9195f66aa39edce89265ab71220fc83d94424804bb62f4f28864e7b4043",
+  "before-RDG-CURRENT-EXECUTION-PLAN.md": "339fd76664b8bece635da954c19bd8dcd1271f1aef428dde79c8ed07870f75c2",
+  "before-RDG-GENDOCEN-DEPENDENCY-COVERAGE-P0.md": "efb0f4ccaafbcdb644856ad37866a769d9e8d8dcd41b8dcea09ccb468741d610",
+  "before-README.md": "8272e1b6da952c345ccf74d63e6800063eaa6dbe2b411b79d513ee31f9e90e9c",
+  "before-fix-result.json": "a9b1395aee2051dc834ac68e24307573bf63322db9f7b243e88826512e51ade6",
+  "before-fix.log": "16f086ad88ea94c4b1c218459c2049cd46a7dad6295dc97b1b5b9f5f1bb45594",
+  "before-rdg-gendocen-dependencies.py": "661454cb83dc5afc06f8c54227cbf6745666dff4a8cffd7220a6f7638bcce8a9",
+  "coverage-guard.log": "925fd453d6ec08c294908da30131c5cc8885555fca216930b77d200e5a1048a3",
+  "dependencies.log": "412c5eeea67c8b8a27acca46338ef9bc763cbe30b6f34e3d21fa8972f683496c",
+  "joint-context.log": "fc0efa24f20a8166daa409cbc6d56671aa0769c99a535a4c5b9c4d3f639d6023",
+  "plan-owner.log": "fd5cc84e925e19db491bed442757686bcb223ac5cf0f6348687b00fde7c4d779",
+  "plan-reader.log": "2a73f2a55628b48b51ae9c274c7ac734e6ddba97a17ce10eccf442c7877b0715",
+  "regression-results.json": "7559ebdebd9ef551293980892c4f734aa739313887e3087f53a71488f4cbfd45",
+  "resources.log": "4813f15747dd0806232a59a67b8019283ed3d047ed6db765bfd09f27b718b101",
+  "shared-action-result.json": "02f01a9b7145ff6d2254cdb719d98e380c0d3335fd034b5e00e1000b86d34d66",
+  "shared-action.log": "db4605283d012dbc74649f02ddfe87c580a84d5d8bba8d738e6c491d1ef10fd8"
+}

@@ -1,0 +1,10 @@
+{
+  "command": [
+    "python3",
+    "tests/rdg-temporal-plan-owner.test.py",
+    "-v"
+  ],
+  "exitCode": 0,
+  "seconds": 2.64,
+  "log": "plan-owner.log"
+}

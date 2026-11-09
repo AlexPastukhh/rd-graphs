@@ -1,0 +1,768 @@
+{
+  "createdFor": "next-chat handoff 2026-10-20 Asia/Bangkok",
+  "liveProject": "/workspace/repos/rd-graphs",
+  "viewerVersion": "2.3.0",
+  "localLoaderVersion": "2.5.2",
+  "stage4Accepted": false,
+  "installedUserBrowserVerified": false,
+  "lastSessionActive": false,
+  "snapshotOnly": true,
+  "files": [
+    {
+      "path": "HANDOFF.md",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-next-chat-20261020/HANDOFF.md",
+      "bytes": 71845,
+      "sha256": "96bface4f82cbb5f8bba7de35d40e96cf6b44515dc6fca95cb7aca3f6d8e01aa"
+    },
+    {
+      "path": "foundation/rdg-prework-v4.1-final-20261018.zip",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-prework-v4.1-final-20261018.zip",
+      "bytes": 281917,
+      "sha256": "ab5ba0acf4a116eb24ac24340f151527786cf1e93c90aa7b38f52e50b92d5401"
+    },
+    {
+      "path": "reference/plan-before-handoff-update.md",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-next-chat-20261020/plan-before-handoff-update.md",
+      "bytes": 55367,
+      "sha256": "e88ef40dedee5cc879596606471c83d09b6b12208f25d546f22b8ee54ab40413"
+    },
+    {
+      "path": "reference/rd-graphs/README.md",
+      "source": "/workspace/repos/rd-graphs/README.md",
+      "bytes": 69110,
+      "sha256": "8d69790236a17257d695acd0618bbbc61febac061faf7e491ec638019b1ac9da"
+    },
+    {
+      "path": "reference/rd-graphs/docs/examples/ACTION-TIME-PLAN.md",
+      "source": "/workspace/repos/rd-graphs/docs/examples/ACTION-TIME-PLAN.md",
+      "bytes": 3116,
+      "sha256": "9b99d4aecd6eedf456d55a6c681588c47fb3b323ec8fe1c400793be5036ef598"
+    },
+    {
+      "path": "reference/rd-graphs/docs/examples/EXAMPLE-COVERAGE.md",
+      "source": "/workspace/repos/rd-graphs/docs/examples/EXAMPLE-COVERAGE.md",
+      "bytes": 36959,
+      "sha256": "a057bdd03e23c94e9415950b6579043bd25053451c4c0fd6f23552b14b49338b"
+    },
+    {
+      "path": "reference/rd-graphs/docs/examples/GRAPH-OF-GRAPHS-V7.md",
+      "source": "/workspace/repos/rd-graphs/docs/examples/GRAPH-OF-GRAPHS-V7.md",
+      "bytes": 9270,
+      "sha256": "e47798b215f5050b25d22569021291d004e5f0c83fe734b6d2e2652cae865746"
+    },
+    {
+      "path": "reference/rd-graphs/docs/guides/RDG-CURRENT-EXECUTION-PLAN.md",
+      "source": "/workspace/repos/rd-graphs/docs/guides/RDG-CURRENT-EXECUTION-PLAN.md",
+      "bytes": 58963,
+      "sha256": "ef13d5d3f510459dd1baa763bb8685e7b7d5dc938b461fa73842deb153d3d482"
+    },
+    {
+      "path": "reference/rd-graphs/docs/guides/RDG-DEEP-ACTION-AND-HISTORY.md",
+      "source": "/workspace/repos/rd-graphs/docs/guides/RDG-DEEP-ACTION-AND-HISTORY.md",
+      "bytes": 44340,
+      "sha256": "d1cf9fcb7f27b6a46b896ab5463b74a67c164a715657b6847137815d00221a8c"
+    },
+    {
+      "path": "reference/rd-graphs/docs/guides/RDG-GENDOCEN-T1-QRPE-PLAN-STAGE4.md",
+      "source": "/workspace/repos/rd-graphs/docs/guides/RDG-GENDOCEN-T1-QRPE-PLAN-STAGE4.md",
+      "bytes": 5371,
+      "sha256": "1c81e03373472e26bba23a17723df4b188858a8b891b9a78327593697520279e"
+    },
+    {
+      "path": "reference/rd-graphs/docs/guides/RDG-TEMPORAL-PLAN-OWNER-CONTRACT-P1.md",
+      "source": "/workspace/repos/rd-graphs/docs/guides/RDG-TEMPORAL-PLAN-OWNER-CONTRACT-P1.md",
+      "bytes": 24278,
+      "sha256": "e83c1ce10c8cec8f545b0400085582a204212b7e236bde1f1da6f4030dfb7896"
+    },
+    {
+      "path": "reference/rd-graphs/docs/guides/RDG-TEMPORAL-PLAN-OWNER-PILOT-P2.md",
+      "source": "/workspace/repos/rd-graphs/docs/guides/RDG-TEMPORAL-PLAN-OWNER-PILOT-P2.md",
+      "bytes": 8246,
+      "sha256": "5f76ce82b3778dded33b77dac3f340934e010633c3bdaca7ee440c594b24bf19"
+    },
+    {
+      "path": "reference/rd-graphs/docs/guides/RDG-TEMPORAL-PLAN-STAGE2P.md",
+      "source": "/workspace/repos/rd-graphs/docs/guides/RDG-TEMPORAL-PLAN-STAGE2P.md",
+      "bytes": 9818,
+      "sha256": "08173b168430a815a2e1cf013baa5f1fcc0824e284719d66065a381638070618"
+    },
+    {
+      "path": "reference/rd-graphs/docs/guides/RDG-V7-WORKING-GRAPHS.md",
+      "source": "/workspace/repos/rd-graphs/docs/guides/RDG-V7-WORKING-GRAPHS.md",
+      "bytes": 87200,
+      "sha256": "e4473c6406090d85109f7021f99050956da1049b82d47cb9f3692518f4af4d5e"
+    },
+    {
+      "path": "reference/rd-graphs/docs/guides/VIEWER-EXPLORER-PLAN.md",
+      "source": "/workspace/repos/rd-graphs/docs/guides/VIEWER-EXPLORER-PLAN.md",
+      "bytes": 52951,
+      "sha256": "7154fc4ae0f8679025d01c22a125a8e4f217b814449d255883f61a3a6aec9dc0"
+    },
+    {
+      "path": "reference/rd-graphs/docs/guides/VIEWER-EXPLORER.md",
+      "source": "/workspace/repos/rd-graphs/docs/guides/VIEWER-EXPLORER.md",
+      "bytes": 53482,
+      "sha256": "bf2fd545a2c29070ec60a317406b1a18d4886ef997ffa257fcba7927b2b4a4b8"
+    },
+    {
+      "path": "reference/rd-graphs/docs/guides/VIEWER-LAYOUT.md",
+      "source": "/workspace/repos/rd-graphs/docs/guides/VIEWER-LAYOUT.md",
+      "bytes": 18976,
+      "sha256": "d684948a0363eab017a3856fd59e4791eff6ae3a1b5f38bb9f4df20fe5b143a3"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-canon-above-action-20261019/CHECKPOINT.md",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-canon-above-action-20261019/CHECKPOINT.md",
+      "bytes": 2014,
+      "sha256": "99fca931758eb851d812ec8ad87dda7bea2077f7ec308daa31496b0230c56b80"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-canon-overlap-fix-20261019/CHECKPOINT.md",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-canon-overlap-fix-20261019/CHECKPOINT.md",
+      "bytes": 1992,
+      "sha256": "82fa42ce977c6e55d5a8feb53dc72d508131f4f0f16f10808db60776a4457012"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-completion-repair-20261019/CHECKPOINT.json",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-completion-repair-20261019/CHECKPOINT.json",
+      "bytes": 942,
+      "sha256": "518331443504e0b28a4239f916030ef3c6bf4a601b2df5a7b6c16b0384645722"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-completion-repair-20261019/CHECKPOINT.md",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-completion-repair-20261019/CHECKPOINT.md",
+      "bytes": 5782,
+      "sha256": "ebdad05f315f09a1c8da50cbbedfedafcbf7e98308ee7ebc1e178279f3f9bce3"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-cross-file-completion-20261019/CHECKPOINT.md",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-cross-file-completion-20261019/CHECKPOINT.md",
+      "bytes": 18410,
+      "sha256": "c67655f2dd12133e3a0ba33075f226ed267e1cc2ba47dac34fab74313cf3c638"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-cross-file-completion-20261019/SCOPE.md",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-cross-file-completion-20261019/SCOPE.md",
+      "bytes": 1229,
+      "sha256": "32d0cd580a34a8ea959248d6a7d8a5e6d0a7de17d11fb2cf6021656a2a501122"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-deep-action-model-20261019/CHECKPOINT.json",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-deep-action-model-20261019/CHECKPOINT.json",
+      "bytes": 3089,
+      "sha256": "1e7524e92b8372915d8528249a2846de9d586592b798dedd366c6eec7d1f0df6"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-deep-action-model-20261019/CHECKPOINT.md",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-deep-action-model-20261019/CHECKPOINT.md",
+      "bytes": 3188,
+      "sha256": "c09e22c7e022539fdca8b0e60d4804a8a2c80e85e1da7efbc21c6d9de43b6799"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-examples-audit-20261019/REVIEW.md",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-examples-audit-20261019/REVIEW.md",
+      "bytes": 16493,
+      "sha256": "3347de905949e2de344e3749d683a09fd40edb1953df0af3948243de136749d1"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-examples-audit-20261019/catalog-rebuild-check.json",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-examples-audit-20261019/catalog-rebuild-check.json",
+      "bytes": 140,
+      "sha256": "69087ad8fbf0205213857c82856f91a7cba96d84754a911bb9215dcf5bd5cb93"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-examples-audit-20261019/inventory.json",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-examples-audit-20261019/inventory.json",
+      "bytes": 51764,
+      "sha256": "619147904a9e03aeef05ba49f2f8446c274554b6b59884a71f98c14a83e96419"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-examples-audit-20261019/source-sha256-before.json",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-examples-audit-20261019/source-sha256-before.json",
+      "bytes": 14366,
+      "sha256": "984470d1e5a0b053e776e5721288afec644b316c58b66aa19f1d52aa8efb595e"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-examples-audit-20261019/source-unchanged-check.json",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-examples-audit-20261019/source-unchanged-check.json",
+      "bytes": 69,
+      "sha256": "4ce663bd99313654c39506f34c4d0a785e49d7c5cbac5fd5d5ca115eeaa6b656"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-examples-audit-20261019/validator-results.json",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-examples-audit-20261019/validator-results.json",
+      "bytes": 15572,
+      "sha256": "63a8075b7a62ccff4d0fdbf8afd5b15f66d9eaed30b778a75219af6eb1d578ff"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/FIXES.md",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/FIXES.md",
+      "bytes": 5615,
+      "sha256": "674916ca17a4e8dc91b4de40f3ffd51f529b8fbd1b23210fc524e3f0587d59c1"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/before-sha256.json",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/before-sha256.json",
+      "bytes": 30558,
+      "sha256": "27e9155a2949a15238f07671366141cf92c2bd154228aa198bb0c0e6cbda1d21"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/browser-all.log",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/browser-all.log",
+      "bytes": 165,
+      "sha256": "d366f64752bd178ca891bddf7152e3f89e90b1d9d3d4f2f12a2647c1e53792c5"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/browser-results.json",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/browser-results.json",
+      "bytes": 113213,
+      "sha256": "611de084f87bbbfd907fd54c5ebbeca8856eab68c40eec87a86ca9f78dc79381"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/browser-text.log",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/browser-text.log",
+      "bytes": 123,
+      "sha256": "74581dfc69827d4c65eefc83c6c6318358a8e464638e5ad632945d844c5e30a0"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/catalog-build.log",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/catalog-build.log",
+      "bytes": 25,
+      "sha256": "9694bc7d4be9df2e147e4e198a5487cac72939ddf9d126045aceb252fd6e0117"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/content-changes.json",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/content-changes.json",
+      "bytes": 7426,
+      "sha256": "39dc81490efa78219d727c49363f1644b41da28182bdf86b49715647fbd7498d"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/cross-file-tests.log",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/cross-file-tests.log",
+      "bytes": 3300,
+      "sha256": "6870a76f3e3571ba879d7946120e22c20fb005f6dda550bc9991be8f94f465ad"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/deep-action-tests.log",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/deep-action-tests.log",
+      "bytes": 124,
+      "sha256": "fc36614b23679c48c2f3ecb8cd1996a59ad2a18847a5e0beeed543e44adb764d"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/example-build.log",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/example-build.log",
+      "bytes": 144,
+      "sha256": "27b8f36d718899f8da7a8c0c481ec527792b00063ffea30da11d9482aa10ab56"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/helper-tests.log",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/helper-tests.log",
+      "bytes": 10131,
+      "sha256": "7c92c8e62e0393ca56347880323fd47ec2730f9728a817fcf31b5e9290838edb"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/integrity-check.json",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/integrity-check.json",
+      "bytes": 3156,
+      "sha256": "9c9f343da1b945fd901b4aebd8b561631f08529b707c7c4ea2d69045e9e00be8"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/native-checks.json",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/native-checks.json",
+      "bytes": 418,
+      "sha256": "8dce9c20832477ad14833f4ce5eea86bd7b0a4b27551f8991c97af50f4ad1e95"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/node-tests.log",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/node-tests.log",
+      "bytes": 42399,
+      "sha256": "951157304b081a10c92a557a3b2f7f62dfae692b8ac848e3192ca62d021ec36e"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/rdg-action-example.log",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/rdg-action-example.log",
+      "bytes": 108,
+      "sha256": "c6a7838e07ce45d260d246c2e29c55bfaf3e86807baf04635071e39c8a36f009"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/rdg-action-example/action-browser-results.json",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/rdg-action-example/action-browser-results.json",
+      "bytes": 5504,
+      "sha256": "0e675837330a1ab4eeb75ef7c59d4a19b61cd01271f1a7821a7f8f1a414d1f59"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/rdg-canon-above-action.log",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/rdg-canon-above-action.log",
+      "bytes": 163,
+      "sha256": "bdeae5abd674c8c0520e115cf764e4616dd1e9e64959cb85b0a1609c75721197"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/rdg-full-detail-201.log",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/rdg-full-detail-201.log",
+      "bytes": 60,
+      "sha256": "ed7d947701ecbc9e71b2e7d84d5978b2349aee30fadd6228621aa92b7e7f1788"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/rdg-session-remember.log",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/rdg-session-remember.log",
+      "bytes": 142,
+      "sha256": "477475cca363819acd58157aa969e469d823b3597a13bbe1ecaa4c079adf3712"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/rdg-workflow-tabs.log",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/rdg-workflow-tabs.log",
+      "bytes": 433,
+      "sha256": "6eecbaea9c84f6c58bd0d6b9398e87f32ae61e1fecbb9a53ac120185cbcb28af"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/text-browser-results.json",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/text-browser-results.json",
+      "bytes": 22111,
+      "sha256": "3c46acc24877bbe5dad33670baed6c390a7baf92368bfabb40c8cf101e20a6ce"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/workflow-tests.log",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-examples-remediation-20261019/workflow-tests.log",
+      "bytes": 2499,
+      "sha256": "f2430959509c521961cfa0a029e2ed2888ba92b74339697f6ca9a21f8ce12eb9"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-instance-temporal-workflow-20261019/CHECKPOINT.md",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-instance-temporal-workflow-20261019/CHECKPOINT.md",
+      "bytes": 9158,
+      "sha256": "f93aa459386153df62a1aeb1429e5339c91c8fd1af65fe0e1a315c3bec2485e4"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-instance-temporal-workflow-20261019/SCOPE.md",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-instance-temporal-workflow-20261019/SCOPE.md",
+      "bytes": 1382,
+      "sha256": "66a3afbcd86039899f603a715d4e80bbee9ba56894af332e27156871460d1d98"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-joint-context-20261019/CHECKPOINT.json",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-joint-context-20261019/CHECKPOINT.json",
+      "bytes": 6452,
+      "sha256": "ba12844f06dd47445734d8500ec853ca19217207d730db930f4000a1fd70ed86"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-joint-context-20261019/CHECKPOINT.md",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-joint-context-20261019/CHECKPOINT.md",
+      "bytes": 4580,
+      "sha256": "4e6e8be5a4971e8f5deeaa2b9354ebd561c3b15caf58e88ccac45d345d604518"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-manual-workflow-20261019/CHECKPOINT.md",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-manual-workflow-20261019/CHECKPOINT.md",
+      "bytes": 13259,
+      "sha256": "9691b9c47169badcc4ce13c87d7241816bd5c1b4a2dbe0b5d89318b7c2f7302d"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-manual-workflow-20261019/SCOPE.md",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-manual-workflow-20261019/SCOPE.md",
+      "bytes": 1713,
+      "sha256": "5494dbaf87e87b9634f052bc7835d97d85e88015b8e3fcfb00fd9590c7ea2f0c"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-p0-dependencies-20261018/CHECKPOINT.json",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-p0-dependencies-20261018/CHECKPOINT.json",
+      "bytes": 7415,
+      "sha256": "16539b320dbe48b76f3bb25d207243e5993b4d89bdb37d487f032fc6835b1a3c"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-placement-edit-repair-20261019/CHECKPOINT.md",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-placement-edit-repair-20261019/CHECKPOINT.md",
+      "bytes": 10285,
+      "sha256": "f34e237b6481cb49ef957c5d55002e68c8b8a9924dd98d22b0ce0d9740ac4a60"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-placement-edit-repair-20261019/SCOPE.md",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-placement-edit-repair-20261019/SCOPE.md",
+      "bytes": 644,
+      "sha256": "8e61b2cf83f59c4ea212ee9ae10fc36989d914c4cafecc272d201f2438446c75"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-plan-completion-review-20261019/CHECKPOINT.json",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-plan-completion-review-20261019/CHECKPOINT.json",
+      "bytes": 665,
+      "sha256": "21b8fda905d596001437485b3a2b1c0afa5b236859e6308b3402a907d5d4f709"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-plan-completion-review-20261019/CHECKPOINT.md",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-plan-completion-review-20261019/CHECKPOINT.md",
+      "bytes": 3291,
+      "sha256": "6434e61ed9ba1addb9d30053ea9a143f63c44ce8279c5e8d6cfac05563d497e8"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-plan-node-cards-20261019/CHECKPOINT.md",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-plan-node-cards-20261019/CHECKPOINT.md",
+      "bytes": 3127,
+      "sha256": "4040543061f5ef3c0cbfaa925d5edd3ad810fb841d7a5826d2f546c038b2ed0b"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-prework-v4.1-final-20261018/HANDOFF.md",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-prework-v4.1-final-20261018/HANDOFF.md",
+      "bytes": 27595,
+      "sha256": "b15ab78c4cae8e1eb3cc29f04b5fc47d965f036fa48dacc25284a9102bf5a235"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-prework-v4.1-final-20261018/MANIFEST.json",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-prework-v4.1-final-20261018/MANIFEST.json",
+      "bytes": 10456,
+      "sha256": "4a3539d1ac6708b4eb042f28eccd00d658de12e4ad9542dca170895c0bd9c14b"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-prework-v4.1-final-20261018/README-NEXT-CHAT.md",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-prework-v4.1-final-20261018/README-NEXT-CHAT.md",
+      "bytes": 4465,
+      "sha256": "1d6d346ebf970214b280168c12bd97400ac35154d1443979c93296a702f76fa2"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-prework-v4.1-final-20261018/WR-EVIDENCE-LEDGER.json",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-prework-v4.1-final-20261018/WR-EVIDENCE-LEDGER.json",
+      "bytes": 20585,
+      "sha256": "c12d22ade89a184aaf0ab998f3a4eea464dc786e6cee41941a3a369cd25a1f5f"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-prework-v4.1-final-20261018/WR-EVIDENCE-LEDGER.md",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-prework-v4.1-final-20261018/WR-EVIDENCE-LEDGER.md",
+      "bytes": 7894,
+      "sha256": "6b1b19b4fc88f86064a86b2f34656e223842addf099579276a40eae4f252b196"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-session-folder-memory-20261019/CHECKPOINT.md",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-session-folder-memory-20261019/CHECKPOINT.md",
+      "bytes": 1369,
+      "sha256": "698e58f0ac458b78ba795ea3f48e339f52ce71bbb905e4b81de1ab3044d000c5"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-shared-action-20261019/CHECKPOINT.json",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-shared-action-20261019/CHECKPOINT.json",
+      "bytes": 5265,
+      "sha256": "e498cdd45bdef00b01b0f732f0dd2fcebaa768465ccef56e5657dbd72fb25f5a"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-shared-action-20261019/CHECKPOINT.md",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-shared-action-20261019/CHECKPOINT.md",
+      "bytes": 4905,
+      "sha256": "b3f6e35de0dd64fb18ac975af3951466fd35fe81f97c3e2d3990f7b0e75235c0"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-temporal-review-fix-20261019/CHECKPOINT.json",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-temporal-review-fix-20261019/CHECKPOINT.json",
+      "bytes": 9787,
+      "sha256": "82de0f822d0ecf6a538956ea071f209975088879416ffb5347b53e6e5530106a"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-temporal-review-fix-20261019/CHECKPOINT.md",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-temporal-review-fix-20261019/CHECKPOINT.md",
+      "bytes": 2357,
+      "sha256": "812c9df275b4a09d9f25cf9c228f01c3d6e0f64a46c5aae82401579cd9e1c748"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-temporal-review-fix-20261019/REVIEW.md",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-temporal-review-fix-20261019/REVIEW.md",
+      "bytes": 10618,
+      "sha256": "9b04c9ecf0573f8fafd2a2ff15d78e923c54f0c77f377eecf19579a7ff4fbfc5"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-timeline-20261019/CHECKPOINT.md",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-timeline-20261019/CHECKPOINT.md",
+      "bytes": 2460,
+      "sha256": "a148f7aaaf9168aa48621e2c646c0d6547e65d3c83f72207b73af8d61aabde9a"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-viewer-compact-20261019/CHECKPOINT.md",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-viewer-compact-20261019/CHECKPOINT.md",
+      "bytes": 2371,
+      "sha256": "11d9f4bf3c60fc36613b4ea0ecadfd61d1191f32869c1ca177a9c885378c8e28"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-viewer-plan-tabs-20261019/CHECKPOINT.md",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-viewer-plan-tabs-20261019/CHECKPOINT.md",
+      "bytes": 2467,
+      "sha256": "0f8e5e8367558ca2dedeb71417fe8621a4ea180777f0b2b6cf91ab8329bce055"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-windows-manual-session-20261019-150658/CLOSED.json",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-windows-manual-session-20261019-150658/CLOSED.json",
+      "bytes": 41,
+      "sha256": "5929021cfedba42c5eccaed69c66dbf5f5eb8e097e599d2f8c1c192509defa2b"
+    },
+    {
+      "path": "reference/rd-graphs/docs/handoffs/rdg-windows-manual-session-20261019-150658/run-session.py",
+      "source": "/workspace/repos/rd-graphs/docs/handoffs/rdg-windows-manual-session-20261019-150658/run-session.py",
+      "bytes": 2239,
+      "sha256": "462b7cb8a9e4e9e44dfe31dc0efbe41b50a3b49ee31f55a822833ba6bbef219f"
+    },
+    {
+      "path": "reference/rd-graphs/work-kit/modules/rdg.work.examples.module.md",
+      "source": "/workspace/repos/rd-graphs/work-kit/modules/rdg.work.examples.module.md",
+      "bytes": 16421,
+      "sha256": "5fc37fa6f1200aec39b187a71f7fabb3a759206a1a9635ea61157e5c489da93e"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/graphs/catalog.json",
+      "source": "/workspace/repos/rd-graphs/graphs/catalog.json",
+      "bytes": 26171,
+      "sha256": "54ece6dd5dd0c44c363114410bd5e4ac2a9c37ae8155ff8a4e7e3c4c710cb242"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/graphs/examples/reference-action-time-plan/graph.json",
+      "source": "/workspace/repos/rd-graphs/graphs/examples/reference-action-time-plan/graph.json",
+      "bytes": 77827,
+      "sha256": "1c213e10115f74b9b53a072c2388115816cf56958fc6350d3d1d71b5b78ef71c"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/graphs/index.json",
+      "source": "/workspace/repos/rd-graphs/graphs/index.json",
+      "bytes": 415462,
+      "sha256": "62d4a400996b9f697090d577517c502b2f7084a6b2a0933522c6211b7aaac720"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/tests/rdg-action-example.test.cjs",
+      "source": "/workspace/repos/rd-graphs/tests/rdg-action-example.test.cjs",
+      "bytes": 3454,
+      "sha256": "8013ed8152dee8b317e3758d7a8b723111d3860c1451967733675e1c241f7639"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/tests/rdg-canon-attachment.test.cjs",
+      "source": "/workspace/repos/rd-graphs/tests/rdg-canon-attachment.test.cjs",
+      "bytes": 8321,
+      "sha256": "3018ad8ed2a0d9aa6b46886521889dc0ccad0ef81627571256b4a7e743c59024"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/tests/rdg-cross-file-completion.test.py",
+      "source": "/workspace/repos/rd-graphs/tests/rdg-cross-file-completion.test.py",
+      "bytes": 28946,
+      "sha256": "6a401a6ceffb659d45287c9e281519cdd4abd1c102e530d1ec09c54ac6321212"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/tests/rdg-deep-action.acceptance.test.py",
+      "source": "/workspace/repos/rd-graphs/tests/rdg-deep-action.acceptance.test.py",
+      "bytes": 31797,
+      "sha256": "5d619dc88c87a1d31fa33da33219a1822617b61bafd9bde1fcf7e9f9f8014937"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/tests/rdg-full-root-navigation.test.cjs",
+      "source": "/workspace/repos/rd-graphs/tests/rdg-full-root-navigation.test.cjs",
+      "bytes": 3672,
+      "sha256": "c1b0761cc2d146bba56331f311d10476dca83ddee938c3bc3c2ce62c4afa79d5"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/tests/rdg-v7-graph-of-graphs.test.cjs",
+      "source": "/workspace/repos/rd-graphs/tests/rdg-v7-graph-of-graphs.test.cjs",
+      "bytes": 14609,
+      "sha256": "20a57724724c00ee170402ff6a12f9158d8160e78d873cffc9dbe63ad4d1f73d"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/tests/rdg-workflow-helper.test.py",
+      "source": "/workspace/repos/rd-graphs/tests/rdg-workflow-helper.test.py",
+      "bytes": 15737,
+      "sha256": "5a120ad2161c13b38437d9f5e2b2d07c6657758d1f35d7476c945404e8ebde72"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/tests/rdg-workflow-ui.test.cjs",
+      "source": "/workspace/repos/rd-graphs/tests/rdg-workflow-ui.test.cjs",
+      "bytes": 36535,
+      "sha256": "488f1efefff1c81fc0aadb1b71d8d11e03f3d5026738218b91ef65f44cec9176"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/tests/rdg-workflow.acceptance.test.py",
+      "source": "/workspace/repos/rd-graphs/tests/rdg-workflow.acceptance.test.py",
+      "bytes": 17957,
+      "sha256": "1a37f0bc2ddd513f8feded45db82d55b87498bd9b99f29d8c211be8d5a10a0e3"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/tests/viewer-test-helper.cjs",
+      "source": "/workspace/repos/rd-graphs/tests/viewer-test-helper.cjs",
+      "bytes": 6391,
+      "sha256": "3a211d6451c4db2a8beb6118dd0e741330f73d45f40fc6e9adc03c92ad3c8b3c"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/tests/visual/rdg-action-example.cjs",
+      "source": "/workspace/repos/rd-graphs/tests/visual/rdg-action-example.cjs",
+      "bytes": 5838,
+      "sha256": "ec7272483877bf762b1d425e5c3a525b63df0200226845c9aff0cca24606c554"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/tests/visual/rdg-canon-above-action.cjs",
+      "source": "/workspace/repos/rd-graphs/tests/visual/rdg-canon-above-action.cjs",
+      "bytes": 8231,
+      "sha256": "31a5ea66925f11031062957d0a3dcad39bc2ecfef568e3395c7b222447690eda"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/tests/visual/rdg-full-detail-201.cjs",
+      "source": "/workspace/repos/rd-graphs/tests/visual/rdg-full-detail-201.cjs",
+      "bytes": 3737,
+      "sha256": "6aa4ed82c7e7a81463341b5ff22311f79b4e3143f9db5c885a3fdeb99de8a2c4"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/tests/visual/rdg-session-remember.cjs",
+      "source": "/workspace/repos/rd-graphs/tests/visual/rdg-session-remember.cjs",
+      "bytes": 9088,
+      "sha256": "7095ff0cf88a6e61d6dbc8d70ec7bf3c8c4576a285c641513c35833f90ca60f2"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/tests/visual/rdg-viewer.html",
+      "source": "/workspace/repos/rd-graphs/tests/visual/rdg-viewer.html",
+      "bytes": 561,
+      "sha256": "888c2a010c90b6c305994ceeb7a8e029f63476c31992d0cac21d1e6fb6864738"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/tests/visual/rdg-workflow-tabs.cjs",
+      "source": "/workspace/repos/rd-graphs/tests/visual/rdg-workflow-tabs.cjs",
+      "bytes": 21568,
+      "sha256": "2f17a39c0ac83ced7f83732f5ae6b83c2ba93bed3e7ed81a3be70768cc07fa2f"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/tools/build-rdg-action-example.py",
+      "source": "/workspace/repos/rd-graphs/tools/build-rdg-action-example.py",
+      "bytes": 11800,
+      "sha256": "ed0c0555ccf28e9c32758cb6e1e4adc62aad6d19d02674230ca47f5d34ba96a0"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/tools/build-rdg-layout.py",
+      "source": "/workspace/repos/rd-graphs/tools/build-rdg-layout.py",
+      "bytes": 902,
+      "sha256": "16f11a49055c5a62f486309bfd0d35cc4eac13b9a016bbce0290c422f5d0754a"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/tools/graph-apply.py",
+      "source": "/workspace/repos/rd-graphs/tools/graph-apply.py",
+      "bytes": 38102,
+      "sha256": "7d7a432b739a88fa9a6b6f4aa2e53708032bd3635418e05faeb60fd5b38abb49"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/tools/graph-index.py",
+      "source": "/workspace/repos/rd-graphs/tools/graph-index.py",
+      "bytes": 34981,
+      "sha256": "43785401987540572d7913026e077834bd6133e8a97e5c1fa914e504685bf365"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/tools/graph-package.py",
+      "source": "/workspace/repos/rd-graphs/tools/graph-package.py",
+      "bytes": 29873,
+      "sha256": "4189dbc1ea187ee021acde1d580741543403dea1154337207cdc58627dacb1fd"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/tools/rd-graph-data.js",
+      "source": "/workspace/repos/rd-graphs/tools/rd-graph-data.js",
+      "bytes": 1211184,
+      "sha256": "595d0a5560189afed446a7f1fd38e32def9e8245e7c56d38907ddbd3ed78f7c8"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/tools/rd-graph-viewer.user.js",
+      "source": "/workspace/repos/rd-graphs/tools/rd-graph-viewer.user.js",
+      "bytes": 277914,
+      "sha256": "9d37f42f3645a52bf1e70ccf634881105eb0e0ea4ecc58b8d2ee5c536495c49c"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/tools/rdg-activity.py",
+      "source": "/workspace/repos/rd-graphs/tools/rdg-activity.py",
+      "bytes": 10883,
+      "sha256": "87cfe47f1b04cc5820316b7942c8c2212b8d0b8dc219ea8f1cf72fe1b72eec53"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/tools/rdg-authority.py",
+      "source": "/workspace/repos/rd-graphs/tools/rdg-authority.py",
+      "bytes": 15056,
+      "sha256": "6c4806913135c24d4472bf510dd06692e4ab20f46fdb84b89db77ffc0461efd8"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/tools/rdg-catalog.js",
+      "source": "/workspace/repos/rd-graphs/tools/rdg-catalog.js",
+      "bytes": 3466,
+      "sha256": "ab074dde2cb33e20abd1ffe67254ec0976a9ef95d86bd3c27136ef271d554f8f"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/tools/rdg-catalog.py",
+      "source": "/workspace/repos/rd-graphs/tools/rdg-catalog.py",
+      "bytes": 5892,
+      "sha256": "1df40b8736ea9c60a695925c52d86246edf30cae3fb556c3e52731b38444c461"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/tools/rdg-completion-context.py",
+      "source": "/workspace/repos/rd-graphs/tools/rdg-completion-context.py",
+      "bytes": 10606,
+      "sha256": "e32d9f4928699fa57b29949f15ab0e8239094f40dd278b9cc25aa9d6a9d7f2fe"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/tools/rdg-gendocen-adapter.py",
+      "source": "/workspace/repos/rd-graphs/tools/rdg-gendocen-adapter.py",
+      "bytes": 7885,
+      "sha256": "8233ea7d50e7931706dc6157cdca8ec9cf89fa122c518243d969ab463a489be2"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/tools/rdg-gendocen-dependencies.py",
+      "source": "/workspace/repos/rd-graphs/tools/rdg-gendocen-dependencies.py",
+      "bytes": 10774,
+      "sha256": "109d1818183ade0d1716f1685ceb504d74f2ce4d32a510cee3577c78abe9c688"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/tools/rdg-graph-api.py",
+      "source": "/workspace/repos/rd-graphs/tools/rdg-graph-api.py",
+      "bytes": 14260,
+      "sha256": "e90ddd89c648c36e6d857b8d52ca8b1d8477cbe4d26d2c6760911a2147707de4"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/tools/rdg-layout-core.js",
+      "source": "/workspace/repos/rd-graphs/tools/rdg-layout-core.js",
+      "bytes": 2937,
+      "sha256": "b69bbff95115f6d3a1f79a1f77dd2734742fab8b5178af233c883d171fd42185"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/tools/rdg-root-projection.js",
+      "source": "/workspace/repos/rd-graphs/tools/rdg-root-projection.js",
+      "bytes": 11375,
+      "sha256": "4bfd5cbdaf401ef0e1476a0f98d72f3c4e0a9a3bdc8aa84ab4c25ae5c829a80d"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/tools/rdg-temporal-plan-owner.py",
+      "source": "/workspace/repos/rd-graphs/tools/rdg-temporal-plan-owner.py",
+      "bytes": 20937,
+      "sha256": "eb41c2ad9d72640818d0ab3443239af0c71eaca4cc895063d719554ce6c44d9c"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/tools/rdg-temporal-plan.py",
+      "source": "/workspace/repos/rd-graphs/tools/rdg-temporal-plan.py",
+      "bytes": 15820,
+      "sha256": "bd5d0c4bbf41b20a07e9c49c10ab3f4ecc9faafbc27077c2c7638a4737109fe5"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/tools/rdg-v6-action-reconsider.py",
+      "source": "/workspace/repos/rd-graphs/tools/rdg-v6-action-reconsider.py",
+      "bytes": 15523,
+      "sha256": "f5880fc836a355bfe123a09e11bba4cbc2b7782ac82e2c198d8cb0a257a97f51"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/tools/rdg-v6-action-trust.py",
+      "source": "/workspace/repos/rd-graphs/tools/rdg-v6-action-trust.py",
+      "bytes": 5345,
+      "sha256": "3d208741751f640089d700a04cfc2f09f32af017b4b6cc48a6350e9fae0bb541"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/tools/rdg-v7-model.py",
+      "source": "/workspace/repos/rd-graphs/tools/rdg-v7-model.py",
+      "bytes": 49379,
+      "sha256": "fb97c97b5ec5f67e30b4dd0818606b7cfa96eeb8efbdabcb8c3ac751cbe2a687"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/tools/rdg-workflow-helper.py",
+      "source": "/workspace/repos/rd-graphs/tools/rdg-workflow-helper.py",
+      "bytes": 28226,
+      "sha256": "22788417921c0bc0bcc47ceedbbcfa45b41cd96fc9b627ae57bfed2e5dfafba1"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/tools/rdg-workflow-ui.js",
+      "source": "/workspace/repos/rd-graphs/tools/rdg-workflow-ui.js",
+      "bytes": 41313,
+      "sha256": "2f23a979bd155719f5efb5ebb03fcd0eece3e831292e9cc2f12d028ec7c9dbab"
+    },
+    {
+      "path": "source-snapshot/rd-graphs/tools/rdg-workflow.py",
+      "source": "/workspace/repos/rd-graphs/tools/rdg-workflow.py",
+      "bytes": 8847,
+      "sha256": "d5019f09114c43f46e1673aad557cc18e5e5927da62cd1de7204141b64686215"
+    }
+  ]
+}

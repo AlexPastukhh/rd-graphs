@@ -1,0 +1,142 @@
+test_api_bearer_keeps_user_and_forged_manual_proof_denial (__main__.Manual.test_api_bearer_keeps_user_and_forged_manual_proof_denial) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_deep_candidate_canon_qrpe_requirement_placement_and_unplace (__main__.Manual.test_deep_candidate_canon_qrpe_requirement_placement_and_unplace) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_exact_retry_after_lost_response_and_later_mutation (__main__.Manual.test_exact_retry_after_lost_response_and_later_mutation) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_gui_controller_whole_path_through_http_and_real_writers (__main__.Manual.test_gui_controller_whole_path_through_http_and_real_writers) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+FAIL
+test_pending_graph_journal_blocks_gui_until_existing_recovery (__main__.Manual.test_pending_graph_journal_blocks_gui_until_existing_recovery) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_read_only_snapshot_static_assets_and_no_bearer_exposure (__main__.Manual.test_read_only_snapshot_static_assets_and_no_bearer_exposure) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_session_origin_host_content_and_request_guards (__main__.Manual.test_session_origin_host_content_and_request_guards) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_stale_view_and_second_execution_are_denied_without_writes (__main__.Manual.test_stale_view_and_second_execution_are_denied_without_writes) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_unscheduled_execution_and_protected_graph_denial (__main__.Manual.test_unscheduled_execution_and_protected_graph_denial) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_write_permissions_and_revocation_apply_to_session_and_cached_retry (__main__.Manual.test_write_permissions_and_revocation_apply_to_session_and_cached_retry) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+<frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+
+======================================================================
+FAIL: test_gui_controller_whole_path_through_http_and_real_writers (__main__.Manual.test_gui_controller_whole_path_through_http_and_real_writers)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/repos/rd-graphs/tests/rdg-workflow-helper.test.py", line 64, in test_gui_controller_whole_path_through_http_and_real_writers
+    self.assertEqual(run.returncode,0,run.stdout+'\n'+run.stderr)
+AssertionError: 1 != 0 : TAP version 13
+# Subtest: lost response retains exact request, blocks a new action and permits safe retry
+ok 1 - lost response retains exact request, blocks a new action and permits safe retry
+  ---
+  duration_ms: 11.136142
+  type: 'test'
+  ...
+# Subtest: known rejection preserves source state and clears uncertain request
+ok 2 - known rejection preserves source state and clears uncertain request
+  ---
+  duration_ms: 2.80995
+  type: 'test'
+  ...
+# Subtest: a render failure after save reports saved, rather than an unknown writer outcome
+not ok 3 - a render failure after save reports saved, rather than an unknown writer outcome
+  ---
+  duration_ms: 3.513263
+  type: 'test'
+  location: '/workspace/repos/rd-graphs/tests/rdg-workflow-ui.test.cjs:46:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /Запись сохранена/. Input:
+    
+    'Исход запроса не подтверждён; обновите данные и повторите тот же запрос: render failed'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: 'Исход запроса не подтверждён; обновите данные и повторите тот же запрос: render failed'
+  operator: 'match'
+  stack: |-
+    TestContext.<anonymous> (/workspace/repos/rd-graphs/tests/rdg-workflow-ui.test.cjs:51:39)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: read-only and protected sessions disable writes, source text is rendered as text
+ok 4 - read-only and protected sessions disable writes, source text is rendered as text
+  ---
+  duration_ms: 0.854233
+  type: 'test'
+  ...
+# Subtest: Viewer keeps manual controls detached until explicit local attachment
+not ok 5 - Viewer keeps manual controls detached until explicit local attachment
+  ---
+  duration_ms: 30.138185
+  type: 'test'
+  location: '/workspace/repos/rd-graphs/tests/rdg-workflow-ui.test.cjs:62:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    false !== true
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/workspace/repos/rd-graphs/tests/rdg-workflow-ui.test.cjs:63:54)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: manual controls traverse real HTTP, writers and Viewer: A1 -> withdraw -> A2
+ok 6 - manual controls traverse real HTTP, writers and Viewer: A1 -> withdraw -> A2
+  ---
+  duration_ms: 5431.853897
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 4
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5787.969136
+
+
+
+----------------------------------------------------------------------
+Ran 10 tests in 41.141s
+
+FAILED (failures=1)

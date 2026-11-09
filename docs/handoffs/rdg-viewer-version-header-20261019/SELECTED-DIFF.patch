@@ -1,0 +1,118 @@
+--- a/tools/rd-graph-viewer.user.js
++++ b/tools/rd-graph-viewer.user.js
+@@ -1,7 +1,7 @@
+ // ==UserScript==
+ // @name         R-D Graph Viewer
+ // @namespace    rdg.local
+-// @version      2.2.1
++// @version      2.2.2
+ // @description  Local Requirements-Decisions JSON graph viewer
+ // @match        https://chatgpt.com/*
+ // @match        https://chat.openai.com/*
+@@ -815,7 +815,8 @@
+   document.documentElement.appendChild(host);
+   Object.assign(host.style, {position:'fixed',right:'14px',bottom:'94px',
+     zIndex:'2147483600',display:'block'});
+-  host.dataset.rdgVersion = '2.2.1';
++  const VIEWER_VERSION = '2.2.2';
++  host.dataset.rdgVersion = VIEWER_VERSION;
+   const root = host.attachShadow({ mode: 'open' });
+   const ns = 'http://www.w3.org/2000/svg';
+   // Local Windows directory belonging to this viewer. No filesystem picker on startup.
+@@ -1146,7 +1147,7 @@
+     'button,input,select{font:inherit}button{cursor:pointer;border:1px solid #506681;border-radius:6px;background:#263b52;color:white;padding:7px}',
+     '#launch{background:#295779;cursor:grab;touch-action:none;user-select:none}#launch:active{cursor:grabbing}#panel{display:none;position:fixed;inset:20px;background:#101b29;border:1px solid #45596c;border-radius:10px;box-shadow:0 12px 35px #0009;flex-direction:column}',
+     '#panel.open{display:flex}#bar{position:relative;display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:9px 49px 9px 9px;background:#1a2a3d}#bar #close{position:absolute;top:9px;right:9px}',
+-    '#bar strong{margin-right:auto;font-size:16px}#bar input,#bar select{background:#102235;border:1px solid #526680;color:white;padding:7px;min-width:150px}',
++    '#bar strong{margin-right:auto;font-size:16px}#viewer-version{font-size:12px;color:#b8c9da;white-space:nowrap}#bar input,#bar select{background:#102235;border:1px solid #526680;color:white;padding:7px;min-width:150px}',
+     '#message{padding:8px;color:#b8c9da}#content{display:flex;flex:1;min-height:0}svg{width:100%;height:100%;background:#111d2a;touch-action:none;cursor:grab}',
+     '#canvas-wrap{flex:1;min-width:0;min-height:0;position:relative;overflow:hidden}#canvas{position:absolute;inset:0;display:block}#inspector-toggle{display:block;position:absolute;right:8px;top:8px;z-index:1;background:#263b52}#pan-hint{display:none;position:absolute;left:8px;right:8px;bottom:7px;text-align:center;pointer-events:none;font-size:12px;color:#ddedf9;background:#0e2030d9;border:1px solid #4a657a;border-radius:6px;padding:5px 7px}#content.info-open #info{display:block}#info{display:none;width:355px;max-width:38%;overflow:auto;border-left:1px solid #42546a;padding:16px;font-size:14px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}',
+     '#catalog{flex:1;min-height:0;overflow:auto;padding:26px 34px;background:linear-gradient(180deg,#142437,#101b29 45%)}',
+@@ -1181,7 +1182,7 @@
+     '@media(max-width:650px){#panel{inset:4px}#bar{gap:6px;padding:7px 48px 7px 7px;flex-shrink:0}#bar strong{font-size:14px}#message{max-height:58px;overflow:auto;flex-shrink:0}#content{flex-direction:column}#canvas-wrap{min-height:0}#info{display:none;width:auto;max-width:none;min-height:0;max-height:38%;box-sizing:border-box;flex:0 0 auto;border-left:none;border-top:1px solid #42546a;padding:12px;font-size:13px;line-height:1.4}#content.info-open #info{display:block}#inspector-toggle{display:block}#edge-toolbar{gap:5px;flex-shrink:0;max-height:92px}#edge-label-hint,#edge-legend{display:none}#pan-hint{display:block}}',
+     '@media(max-width:650px) and (max-height:650px){#bar{max-height:28vh;overflow:auto}#message{max-height:40px}#edge-toolbar{max-height:70px}}</style>',
+     '<button id="launch">Граф R–D</button><section id="panel"><div id="bar">',
+-    '<button id="back" hidden>← Назад</button><button id="level-up" hidden>← Уровень выше</button><button id="example-set-map" hidden>Карта набора графов</button><strong id="bar-title">Графы R–D</strong>',
++    '<button id="back" hidden>← Назад</button><button id="level-up" hidden>← Уровень выше</button><button id="example-set-map" hidden>Карта набора графов</button><strong id="bar-title">Графы R–D</strong><span id="viewer-version" title="Версия скрипта R-D Graph Viewer" aria-label="Версия Viewer"></span>',
+     '<button id="workflow-toggle" hidden>План и история</button><button id="file">Другой JSON</button><button id="source" hidden>Исходный модуль</button><button id="reload" hidden>Обновить</button><button id="fit" hidden title="Показывает всю схему; не меняет координаты блоков">Показать всю схему</button>',
+     '<input type="search" id="search" hidden placeholder="Найти узел"><button id="close" aria-label="Закрыть">×</button></div>',
+     '<div id="breadcrumbs" aria-label="Путь"></div><div id="layout-indicator"><span id="layout-status" role="status" aria-live="polite"></span><button id="layout-connect">Подключить файл расположений</button></div><div id="message">Загрузка локальных графов…</div>',
+@@ -1196,6 +1197,7 @@
+     '<input type="file" id="picker" accept=".json,application/json" hidden>'
+   ].join('');
+   const el = id => root.getElementById(id);
++  el('viewer-version').textContent='Viewer v'+VIEWER_VERSION;
+   const svg = el('canvas'), info = el('info');
+   function setInspector(open){
+     el('content').classList.toggle('info-open',open);
+@@ -1209,7 +1211,7 @@
+   const message = text => { el('message').textContent = text; };
+   const launcher = el('launch');
+   if (!launcher) throw new Error('[RDG] Launcher was not created');
+-  console.info('[RDG Viewer] loaded v2.2.1');
++  console.info('[RDG Viewer] loaded v'+VIEWER_VERSION);
+   const launcherPositionKey = 'rdg-viewer-launcher-position-v1';
+   let launcherDrag = null;
+   let suppressLauncherClickUntil = 0;
+--- a/tools/rd-graph-viewer-smoke.test.cjs
++++ b/tools/rd-graph-viewer-smoke.test.cjs
+@@ -37,7 +37,9 @@
+     localStorage:{getItem:k=>storage.get(k)??null,setItem:(k,v)=>storage.set(k,v)},
+     console,Date,Math,JSON,Object,Number,Error};
+   vm.runInNewContext(script,context,{timeout:2000});
+-  assert.equal(host.dataset.rdgVersion,'2.2.1');
++  assert.equal(host.dataset.rdgVersion,script.match(/^\/\/ @version\s+(\S+)/m)[1]);
++  assert.equal(elements['viewer-version'].textContent,'Viewer v'+host.dataset.rdgVersion);
++  assert.equal(elements['viewer-version'].hidden,false);
+   assert(elements.launch,'launcher created');
+   return {host,elements};
+ }
+@@ -66,5 +68,6 @@
+   await third.elements.picker.onchange({target:{files:[source],value:''}});
+   assert.match(third.elements.message.textContent,/revision 1/);
+   assert.match(third.elements.info.textContent,/5 узлов/);
++  assert.equal(third.elements['viewer-version'].textContent,'Viewer v'+third.host.dataset.rdgVersion,'graph navigation keeps the version visible');
+   console.log('SMOKE_OK: JSON validation, SVG rendering, graph summary');
+ })().catch(e=>{console.error(e);process.exitCode=1;});
+--- a/tests/visual/rdg-full-detail-201.cjs
++++ b/tests/visual/rdg-full-detail-201.cjs
+@@ -24,7 +24,7 @@
+   const countRefine=()=>page.evaluate(()=>[...document.getElementById('rdg-viewer-root').shadowRoot.querySelectorAll('#canvas path[data-relation-kind="refinement"]')].length);
+   const nodes=()=>page.evaluate(()=>[...document.getElementById('rdg-viewer-root').shadowRoot.querySelectorAll('#canvas .node')].map(n=>n.getAttribute('data-id')));
+   const screen=async(name)=>page.screenshot({path:path.join(output,name+'.png')});
+-  assert.equal(await page.evaluate(()=>document.getElementById('rdg-viewer-root').dataset.rdgVersion),'2.2.1');
++  assert.equal(await page.evaluate(()=>document.getElementById('rdg-viewer-root').dataset.rdgVersion),'2.2.2');
+   await open('reference-prepared-planning-tree');
+   assert((await nodes()).includes('RF-DEEP'),'complete prepared root covers grandchildren');
+   await button('edges-all');
+@@ -53,6 +53,6 @@
+   assert(!(await nodes()).some(n=>n.startsWith('__cause__')),'R-only hides D and O');
+   await screen('working-R-only-all-branches');
+   assert.deepEqual(errors,[],'no JavaScript page errors');
+-  console.log('BROWSER_FULL_DETAIL_202_PASS, screenshots: 4, version 2.2.1');
++  console.log('BROWSER_FULL_DETAIL_202_PASS, screenshots: 4, version 2.2.2');
+  } finally {await browser.close();}
+ })().catch(error=>{console.error(error);process.exitCode=1});
+--- a/README.md
++++ b/README.md
+@@ -1,6 +1,6 @@
+ # Requirements–Decisions Graphs — папки и полные Requirements-графы
+ 
+-Текущий исходный Viewer **2.2.1**, Local Loader **2.5.2**: папки → полные Requirements-графы от корневой R → локальный R-граф одной волны. Полный граф поддерживает независимые «Принятое/Все ветви» и «Только Requirements/Показать всё»; «Обновить» перечитывает текущие файлы и индекс, при недоступности оставляет явно помеченную встроенную копию. Расположение сохраняется отдельно и только с разрешённым доступом. [Актуальная инструкция](docs/guides/VIEWER-EXPLORER.md) · [граница R-графа и общий слой координат](docs/guides/VIEWER-LAYOUT.md) · [план и порядок реализации](docs/guides/VIEWER-EXPLORER-PLAN.md). Обновление исходника не подтверждает обновления установленного Tampermonkey.
++Текущий исходный Viewer **2.2.2**, Local Loader **2.5.2**: папки → полные Requirements-графы от корневой R → локальный R-граф одной волны. Полный граф поддерживает независимые «Принятое/Все ветви» и «Только Requirements/Показать всё»; «Обновить» перечитывает текущие файлы и индекс, при недоступности оставляет явно помеченную встроенную копию. Расположение сохраняется отдельно и только с разрешённым доступом. [Актуальная инструкция](docs/guides/VIEWER-EXPLORER.md) · [граница R-графа и общий слой координат](docs/guides/VIEWER-LAYOUT.md) · [план и порядок реализации](docs/guides/VIEWER-EXPLORER-PLAN.md). В заголовке Viewer постоянно видна его версия. Обновление исходника не подтверждает обновления установленного Tampermonkey.
+ 
+ Отдельное экспериментальное хранилище графов. Не является канонической методологией OBS и не заменяет действующие документы.
+ 
+--- a/docs/guides/VIEWER-EXPLORER.md
++++ b/docs/guides/VIEWER-EXPLORER.md
+@@ -1,4 +1,10 @@
+ # RDG Viewer 2.0.3 — папки и полный граф Requirements
++
++**Исходник Viewer 2.2.2 (2026-10-19):** в заголовке окна рядом с названием
++показывается Viewer v2.2.2. Версия остаётся видна при переходах между папками,
++графами и ручным разделом. Это версия Viewer, а не отдельного Local Loader.
++Установленный Tampermonkey обновляется отдельно.
++
+ 
+ **Исходник Viewer 2.2.1 (2026-10-19):** исправлена ручная правка размещения:
+ сохраняются порядок других шагов, deadline и параметры правил. Смена выбранного

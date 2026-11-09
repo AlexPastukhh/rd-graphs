@@ -1,0 +1,44 @@
+[
+  {
+    "path": "README.md",
+    "bytes": 54801,
+    "sha256": "165bbab35d910e146818d8c0fb0a20b7c4b174f3b6181f3f375efcec54494648",
+    "baselineSHA256": "318798b543f42403573392bbdbf14f8c1c84a41d07e25fd217360e687e8dc291"
+  },
+  {
+    "path": "tools/rdg-gendocen-adapter.py",
+    "bytes": 6622,
+    "sha256": "d5ff1d241dbcf960b59abd9757d853f69711c30c1d2536137e56b3271d87567f",
+    "baselineSHA256": "bc35ede7cc39a5425758192a68e7405b273edd1e663c0d1c4c2fa7a0beb124cf"
+  },
+  {
+    "path": "tools/rdg-gendocen-runtime-smoke.py",
+    "bytes": 19299,
+    "sha256": "ede12c7232c2230b051eaaedae3092c791904f467823d98545c93d6e374e5f2f",
+    "baselineSHA256": "bcfd09fda9b008a0005059f77bc6537122277c0cfddf9370cc4ddd978091bdf4"
+  },
+  {
+    "path": "tools/rdg-gendocen-t1-history-smoke.py",
+    "bytes": 21006,
+    "sha256": "092b623fdf49bf5d0928d12418fae89cac419eb73674127746a4a1b2f789130e",
+    "baselineSHA256": "b65276404d16196cf574192f26344460e1789709fa51ae3b2daf82b194622bef"
+  },
+  {
+    "path": "tools/rdg-gendocen-dependencies.py",
+    "bytes": 8536,
+    "sha256": "7ba606a32c9c6832cca86d78d65a115b551268930cc7bb86920e27e303288e86",
+    "baselineSHA256": null
+  },
+  {
+    "path": "tests/rdg-gendocen-dependencies.test.py",
+    "bytes": 14528,
+    "sha256": "6b3e798e0f279988bf046689bdeb07827978ff1799c21b2d334f91834b1b5fce",
+    "baselineSHA256": null
+  },
+  {
+    "path": "docs/guides/RDG-GENDOCEN-DEPENDENCY-COVERAGE-P0.md",
+    "bytes": 9686,
+    "sha256": "cb1f40ed431cf4e26875206c489783d73351bf8fd094bbd8a650c0848de72f72",
+    "baselineSHA256": null
+  }
+]

@@ -1,0 +1,14 @@
+test_accept_right_is_distinct_and_revocation_blocks_commit (__main__.FutureBaselineTest.test_accept_right_is_distinct_and_revocation_blocks_commit) ... ok
+test_concurrent_accept_has_one_cas_winner (__main__.FutureBaselineTest.test_concurrent_accept_has_one_cas_winner) ... ok
+test_crash_after_receipt_preserves_availability (__main__.FutureBaselineTest.test_crash_after_receipt_preserves_availability) ... ok
+test_crash_after_store_recover (__main__.FutureBaselineTest.test_crash_after_store_recover) ... ok
+test_crash_prepared_then_recover_is_idempotent (__main__.FutureBaselineTest.test_crash_prepared_then_recover_is_idempotent) ... ok
+test_forged_pin_and_reader_revoke_fail_closed (__main__.FutureBaselineTest.test_forged_pin_and_reader_revoke_fail_closed) ... ok
+test_known_at_preserves_old_baseline_and_withdrawal_history (__main__.FutureBaselineTest.test_known_at_preserves_old_baseline_and_withdrawal_history) ... ok
+test_new_candidate_does_not_replace_accepted_exact_baseline (__main__.FutureBaselineTest.test_new_candidate_does_not_replace_accepted_exact_baseline) ... ok
+test_replace_requires_explicit_operation_and_preserves_old_baseline (__main__.FutureBaselineTest.test_replace_requires_explicit_operation_and_preserves_old_baseline) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 4.057s
+
+OK

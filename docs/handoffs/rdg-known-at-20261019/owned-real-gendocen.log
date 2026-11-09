@@ -1,0 +1,62 @@
+{
+  "A2AlternativeAfterSelectedT1": {
+    "A1": "valid",
+    "A2": "review_required"
+  },
+  "T1Event": "EV-T1",
+  "T1GraphRevision": 3,
+  "T1RecordedBy": "assistant bearer",
+  "T2FindingReview": {
+    "A1": "review_required",
+    "A2": "valid"
+  },
+  "T3TransitionReview": {
+    "A1": "review_required",
+    "A2": "valid"
+  },
+  "actualExternalT2T3EventsAttested": false,
+  "actualRealWorldProblemVerified": false,
+  "afterFindingRevision": 4,
+  "afterQrpeTransitionRevision": 5,
+  "authorCannotSelect": true,
+  "engine": "Gendocen 0.1.0.dev25",
+  "genericSelectionEventInjectionDenied": true,
+  "historyA1ReceiptsBeforeCrash": 2,
+  "injectedCrashCode": 91,
+  "laterFinding": "F-R (research risk), not F-P",
+  "laterQrpeTransition": "resolved (technical bearer receipt)",
+  "originalSelectionBasisPreserved": true,
+  "originalSelectionEventPreserved": true,
+  "postCrashReviewRequired": {
+    "A1": "review_required",
+    "A2": "valid"
+  },
+  "productionStage4Accepted": false,
+  "realUserIdentityVerified": false,
+  "recoveredPreCrashHistory": true,
+  "recoveryPreservedHistoricalT1": true,
+  "sharedDeadlineReview": {
+    "A1": "review_required",
+    "A2": "review_required"
+  },
+  "staleT2ReviewAfterT3Rejected": true,
+  "status": "PASS",
+  "syntheticWriter": "real isolated graph-apply.py bearer package",
+  "temporarySourcesOnly": true,
+  "versionedPlanOwner": {
+    "branchSwapRequiresBothReviews": true,
+    "candidateConflictDrafts": 2,
+    "currentRevision": 5,
+    "draftTypes": [
+      "F-R"
+    ],
+    "eventRemainsExpected": true,
+    "exactHistoricalPlanAndRdg": true,
+    "exactRevision1Preserved": true,
+    "historicalGendocenAsOfResolved": false,
+    "noAutomaticFindingOrAction": true,
+    "planEditorCannotSelectGraphAction": true,
+    "recordingCutoffVerified": true,
+    "twoTimeAsOfResolved": false
+  }
+}

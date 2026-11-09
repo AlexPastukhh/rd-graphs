@@ -1,0 +1,9 @@
+SHARED_ACTION_REAL_ENGINE={"actionSelected": false, "cliProcesses": 21, "omittedOccurrence": "rejected", "results": {"S-A1_constraint": {"A1": "review_required", "A2": "valid"}, "S-A2_constraint": {"A1": "review_required", "A2": "valid"}, "baseline": {"A1": "valid", "A2": "valid"}, "cosmetic": {"A1": "valid", "A2": "valid"}, "membership_swap": {"A1": "review_required", "A2": "valid"}, "restored": {"A1": "valid", "A2": "valid"}}, "sourceBytesUnchanged": true}
+test_real_engine_reviews_action_once_and_covers_both_occurrences (__main__.SharedActionAcceptance.test_real_engine_reviews_action_once_and_covers_both_occurrences) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_writer_reader_keep_one_action_and_distinct_case_membership (__main__.SharedActionAcceptance.test_writer_reader_keep_one_action_and_distinct_case_membership) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 29.760s
+
+OK

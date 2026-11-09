@@ -1,0 +1,23 @@
+test_accepted_and_actual_event_claims_fail_unchanged (__main__.PlanOwnerTest.test_accepted_and_actual_event_claims_fail_unchanged) ... ok
+test_branch_permission_and_graph_permissions_remain_separate (__main__.PlanOwnerTest.test_branch_permission_and_graph_permissions_remain_separate) ... ok
+test_corrupt_availability_receipt_fails_closed (__main__.PlanOwnerTest.test_corrupt_availability_receipt_fails_closed) ... ok
+test_corrupt_journal_does_not_overwrite_source (__main__.PlanOwnerTest.test_corrupt_journal_does_not_overwrite_source) ... ok
+test_cosmetic_case_reorder_does_not_require_branch_permission (__main__.PlanOwnerTest.test_cosmetic_case_reorder_does_not_require_branch_permission) ... ok
+test_crash_after_prepare_recover_after_revoke_is_idempotent (__main__.PlanOwnerTest.test_crash_after_prepare_recover_after_revoke_is_idempotent) ... ok
+test_crash_after_source_write_blocks_projection_until_recover (__main__.PlanOwnerTest.test_crash_after_source_write_blocks_projection_until_recover) ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_create_edit_history_exact_snapshot_and_idempotency (__main__.PlanOwnerTest.test_create_edit_history_exact_snapshot_and_idempotency) ... ok
+test_identity_change_and_stale_cas_fail_without_writes (__main__.PlanOwnerTest.test_identity_change_and_stale_cas_fail_without_writes) ... ok
+test_latest_plan_has_post_write_availability_receipt (__main__.PlanOwnerTest.test_latest_plan_has_post_write_availability_receipt) ... ok
+test_owned_projection_requires_explicit_root_and_detects_corrupt_history (__main__.PlanOwnerTest.test_owned_projection_requires_explicit_root_and_detects_corrupt_history) ... ok
+test_owner_binding_collision_paths_and_symlinks (__main__.PlanOwnerTest.test_owner_binding_collision_paths_and_symlinks) ... ok
+test_recovery_after_availability_receipt_preserves_its_time (__main__.PlanOwnerTest.test_recovery_after_availability_receipt_preserves_its_time) ... ok
+test_recovery_conflict_preserves_unexpected_bytes (__main__.PlanOwnerTest.test_recovery_conflict_preserves_unexpected_bytes) ... ok
+test_revoke_before_durable_prepare_denies_real_process (__main__.PlanOwnerTest.test_revoke_before_durable_prepare_denies_real_process) ... ok
+test_two_real_processes_have_one_cas_winner (__main__.PlanOwnerTest.test_two_real_processes_have_one_cas_winner) ... ok
+test_unexpected_source_edit_during_prepare_is_not_overwritten (__main__.PlanOwnerTest.test_unexpected_source_edit_during_prepare_is_not_overwritten) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 2.265s
+
+OK

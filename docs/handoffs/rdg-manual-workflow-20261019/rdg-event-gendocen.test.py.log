@@ -1,0 +1,11 @@
+test_equivalent_cutoff_offsets_share_resource_identity (__main__.EventProjectionTest.test_equivalent_cutoff_offsets_share_resource_identity) ... ok
+test_late_attestation_changes_current_only_and_preserves_fixed_cutoff (__main__.EventProjectionTest.test_late_attestation_changes_current_only_and_preserves_fixed_cutoff) ... ok
+test_missing_subscription_and_mutable_declaration_cannot_hide_group (__main__.EventProjectionTest.test_missing_subscription_and_mutable_declaration_cannot_hide_group) ... ok
+test_read_only_resource_has_complete_event_scope_and_false_factual_flags (__main__.EventProjectionTest.test_read_only_resource_has_complete_event_scope_and_false_factual_flags) ... ok
+test_review_correction_and_conflict_are_semantic (__main__.EventProjectionTest.test_review_correction_and_conflict_are_semantic) ... ok
+test_stale_projection_unknown_fields_and_factual_flag_rejected (__main__.EventProjectionTest.test_stale_projection_unknown_fields_and_factual_flag_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.464s
+
+OK

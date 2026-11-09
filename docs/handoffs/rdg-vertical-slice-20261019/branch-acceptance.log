@@ -1,0 +1,11 @@
+
+test_cosmetic_case_and_outcome_reordering_keeps_plan_semantic_hash (__main__.BranchDependencyAcceptance.test_cosmetic_case_and_outcome_reordering_keeps_plan_semantic_hash)
+Projection-level invariant; additionally retest real engine after fix. ... <frozen importlib._bootstrap>:283: DeprecationWarning: the load_module() method is deprecated and slated for removal in Python 3.12; use exec_module() instead
+ok
+test_meaningful_branch_reassignment_must_invalidate_affected_reviews (__main__.BranchDependencyAcceptance.test_meaningful_branch_reassignment_must_invalidate_affected_reviews)
+Currently FAILS: engine incorrectly returns valid/valid. ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 10.826s
+
+OK

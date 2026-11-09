@@ -1,0 +1,357 @@
+{
+  "schemaVersion": 1,
+  "planId": "demo",
+  "title": "План во времени",
+  "planProvenance": {
+    "identitySpace": "demo",
+    "planId": "demo",
+    "sourcePath": "plans/demo/plan.json",
+    "revision": 2,
+    "recordedAt": "2026-10-19T12:53:17.350644+00:00",
+    "recordDigest": "25037060685693ebe6bd60a6709abb5d79e1e66e6310763ebf665f6b89e5bde4",
+    "snapshotSHA256": "fcd673476c25c79fde2f1c7402ecdd7950b7e2ad5996573c1748ebcc5cdc47d3",
+    "exactPlanSnapshotResolved": true,
+    "historicalRdgSnapshotResolved": false,
+    "acceptanceVerified": false,
+    "eventsAttested": false
+  },
+  "graphOwners": {
+    "workspaces/demo/graph.json": {
+      "identitySpace": "demo",
+      "revision": 2
+    }
+  },
+  "sources": {
+    "plan": {
+      "branches": [],
+      "id": "demo",
+      "identitySpace": "demo",
+      "kind": "temporalPlan",
+      "revision": 2,
+      "schemaVersion": 1,
+      "sequence": [
+        {
+          "after": "S-A2",
+          "before": "S-A1"
+        }
+      ],
+      "status": "candidate",
+      "steps": [
+        {
+          "actionRef": {
+            "graphFile": "workspaces/demo/graph.json",
+            "identitySpace": "demo",
+            "nodeId": "A1"
+          },
+          "id": "S-A1",
+          "kind": "action",
+          "state": "planned",
+          "title": "Разместить A1"
+        },
+        {
+          "actionRef": {
+            "graphFile": "workspaces/demo/graph.json",
+            "identitySpace": "demo",
+            "nodeId": "A2"
+          },
+          "id": "S-A2",
+          "kind": "action",
+          "state": "planned",
+          "title": "Разместить A2"
+        }
+      ],
+      "timeConstraints": [
+        {
+          "at": "2026-10-21",
+          "basis": "Тестовая дата начала",
+          "stepId": "S-A1",
+          "strength": "hard",
+          "type": "notBefore"
+        },
+        {
+          "at": "2026-10-25",
+          "basis": "Тестовый срок, не обязательство проекта",
+          "stepId": "S-A1",
+          "strength": "hard",
+          "type": "deadline"
+        },
+        {
+          "at": "2026-10-23",
+          "basis": "Synthetic placement",
+          "stepId": "S-A2",
+          "strength": "soft",
+          "type": "notBefore"
+        }
+      ],
+      "title": "План во времени"
+    },
+    "graphs": {
+      "workspaces/demo/graph.json": {
+        "schemaVersion": 1,
+        "revision": 2,
+        "id": "demo",
+        "title": "Demo",
+        "planningScale": "module",
+        "identitySpace": "demo",
+        "rootRequirementId": "R0",
+        "actionModel": "candidate-v6",
+        "nodes": [
+          {
+            "id": "R0",
+            "kind": "requirement",
+            "title": "Root",
+            "status": "active"
+          },
+          {
+            "id": "A1",
+            "kind": "action",
+            "title": "Первый тестовый Action",
+            "status": "candidate",
+            "actionType": "general",
+            "canonBlock": {
+              "recommended": [
+                {
+                  "id": "C-A1",
+                  "text": "Applicable case"
+                }
+              ],
+              "contraindicated": []
+            },
+            "qrpe": [
+              {
+                "id": "Q-A1",
+                "text": "Check the case",
+                "status": "open"
+              }
+            ]
+          },
+          {
+            "id": "A2",
+            "kind": "action",
+            "title": "Второй тестовый Action",
+            "status": "candidate",
+            "actionType": "general",
+            "canonBlock": {
+              "recommended": [
+                {
+                  "id": "C-A2",
+                  "text": "Applicable case"
+                }
+              ],
+              "contraindicated": []
+            },
+            "qrpe": [
+              {
+                "id": "Q-A2",
+                "text": "Check the case",
+                "status": "open"
+              }
+            ]
+          }
+        ],
+        "edges": [
+          {
+            "id": "action-drive-A1",
+            "type": "DRIVES",
+            "from": "R0",
+            "to": "A1"
+          },
+          {
+            "id": "action-drive-A2",
+            "type": "DRIVES",
+            "from": "R0",
+            "to": "A2"
+          }
+        ],
+        "events": []
+      }
+    },
+    "completion": {
+      "workspaces/demo/graph.json": {
+        "R0": {
+          "nodeId": "R0",
+          "kind": "requirement",
+          "title": "Root",
+          "status": "active",
+          "complete": false,
+          "currentScopeComplete": false,
+          "reason": "result-not-recorded",
+          "basisSHA256": "73cdb9a10aba535a7e6b6ea2d1dec5cc7a2dd123c70046c226313974242b31dc",
+          "dependencyIds": [],
+          "eventId": null
+        },
+        "A1": {
+          "nodeId": "A1",
+          "kind": "action",
+          "title": "Первый тестовый Action",
+          "status": "candidate",
+          "complete": false,
+          "currentScopeComplete": false,
+          "reason": "potential-inactive-or-unavailable-owner",
+          "basisSHA256": "d4259f25a40791efd5757c124251700f2589f542d6dafe2830790161a72253c8",
+          "dependencyIds": [],
+          "eventId": null
+        },
+        "A2": {
+          "nodeId": "A2",
+          "kind": "action",
+          "title": "Второй тестовый Action",
+          "status": "candidate",
+          "complete": false,
+          "currentScopeComplete": false,
+          "reason": "potential-inactive-or-unavailable-owner",
+          "basisSHA256": "800d54a2f8ed8ef55823cf425693e47170cff291c0fe1d618db2389ee3419c44",
+          "dependencyIds": [],
+          "eventId": null
+        }
+      }
+    }
+  },
+  "future": [
+    {
+      "stepId": "S-A1",
+      "kind": "action",
+      "graphRef": {
+        "graphFile": "workspaces/demo/graph.json",
+        "identitySpace": "demo",
+        "nodeId": "A1"
+      },
+      "nodeId": "A1",
+      "title": "Первый тестовый Action",
+      "plannedTitle": "Разместить A1",
+      "state": "planned",
+      "graphRevision": 2,
+      "ownerRef": {
+        "graphFile": "workspaces/demo/graph.json",
+        "identitySpace": "demo",
+        "nodeId": "A1"
+      },
+      "timeConstraints": [
+        {
+          "at": "2026-10-21",
+          "basis": "Тестовая дата начала",
+          "stepId": "S-A1",
+          "strength": "hard",
+          "type": "notBefore"
+        },
+        {
+          "at": "2026-10-25",
+          "basis": "Тестовый срок, не обязательство проекта",
+          "stepId": "S-A1",
+          "strength": "hard",
+          "type": "deadline"
+        }
+      ],
+      "sequence": [
+        {
+          "after": "S-A2",
+          "before": "S-A1"
+        }
+      ]
+    },
+    {
+      "stepId": "S-A2",
+      "kind": "action",
+      "graphRef": {
+        "graphFile": "workspaces/demo/graph.json",
+        "identitySpace": "demo",
+        "nodeId": "A2"
+      },
+      "nodeId": "A2",
+      "title": "Второй тестовый Action",
+      "plannedTitle": "Разместить A2",
+      "state": "planned",
+      "graphRevision": 2,
+      "ownerRef": {
+        "graphFile": "workspaces/demo/graph.json",
+        "identitySpace": "demo",
+        "nodeId": "A2"
+      },
+      "timeConstraints": [
+        {
+          "at": "2026-10-23",
+          "basis": "Synthetic placement",
+          "stepId": "S-A2",
+          "strength": "soft",
+          "type": "notBefore"
+        }
+      ],
+      "sequence": [
+        {
+          "after": "S-A2",
+          "before": "S-A1"
+        }
+      ]
+    }
+  ],
+  "history": [
+    {
+      "id": "create::workspaces/demo/graph.json::saved",
+      "graphFile": "workspaces/demo/graph.json",
+      "kind": "graph_saved",
+      "recordedAt": "2026-10-19T12:53:16.885893+00:00",
+      "transactionId": "create",
+      "revision": 1,
+      "previousRevision": null,
+      "changed": {
+        "nodes": [
+          "R0"
+        ],
+        "edges": []
+      },
+      "authorityPrincipals": [
+        "bearer:g_554e269168a7c3af3ef4"
+      ],
+      "summary": "Изменены: Root",
+      "operations": []
+    },
+    {
+      "id": "tx-1::workspaces/demo/graph.json::saved",
+      "graphFile": "workspaces/demo/graph.json",
+      "kind": "graph_saved",
+      "recordedAt": "2026-10-19T12:53:17.263012+00:00",
+      "transactionId": "tx-1",
+      "revision": 2,
+      "previousRevision": 1,
+      "changed": {
+        "nodes": [
+          "A1",
+          "A2"
+        ],
+        "edges": [
+          "action-drive-A1",
+          "action-drive-A2"
+        ]
+      },
+      "authorityPrincipals": [
+        "bearer:g_492716e4891e12a9f8ad"
+      ],
+      "summary": "Изменены: Первый тестовый Action, Второй тестовый Action",
+      "operations": []
+    }
+  ],
+  "unresolved": [],
+  "excludedPlacements": [],
+  "sourcesChanged": false,
+  "completionProvenance": {
+    "sources": [
+      {
+        "file": "workspaces/demo/graph.json",
+        "sha256": "150c7347c4774bc385f05213ab65c18c8e5c7daaea1e67d5f3cb2287165cd762"
+      }
+    ],
+    "catalogSHA256": "3ffac2c7b9ddbc131d473e2f358eda741d1f4a3e162b587bffcc7ea58a87889f"
+  },
+  "coverage": "current explicit Plan and authorized published owning composition",
+  "continuationRootId": null,
+  "permissions": [
+    "graph.write",
+    "graph.read",
+    "plan.create",
+    "plan.edit",
+    "plan.read",
+    "plan.branch"
+  ],
+  "graphFile": "workspaces/demo/graph.json",
+  "planFile": "plans/demo/plan.json"
+}

@@ -1,0 +1,8 @@
+{
+  "exitCode": 0,
+  "seconds": 0.88,
+  "command": [
+    "/usr/bin/python3",
+    "tests/rdg-problem-evidence-preflight.test.py"
+  ]
+}

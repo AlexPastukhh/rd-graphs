@@ -1,0 +1,435 @@
+--- before/README.md
++++ after/README.md
+@@ -63,8 +63,11 @@
+ **Stage 4 NOT ACCEPTED**.
+ 
+ [Проверка плана и продвижения v2](docs/handoffs/rdg-plan-progress-review-20261019-v2/REVIEW.md)
+-подтвердила сохранность последних исходников и evidence. Ближайший порядок:
+-P2-AC-04 → lifecycle applicability → совместные recovery/race проверки →
++подтвердила сохранность последних исходников и evidence. P2-AC-04 теперь закрыт локально: один Action review объединяет зависимости
++разных Plan steps и отклоняет пропуск вхождения. Новый acceptance прошёл
++21 CLI-запуск реального Gendocen; общая адресная регрессия — 71 тест.
++[Контрольная точка](docs/handoffs/rdg-shared-action-20261019/CHECKPOINT.md).
++Ближайший порядок: lifecycle applicability → совместные recovery/race проверки →
+ один локальный сквозной сценарий с сохранением прежних joint bundles → P3.
+ Полный многособытийный scope, P4/P5 и установленный Windows rollout открыты.
+ 
+--- before/docs/guides/RDG-CURRENT-EXECUTION-PLAN.md
++++ after/docs/guides/RDG-CURRENT-EXECUTION-PLAN.md
+@@ -1,6 +1,6 @@
+ # RDG + Temporal Plan — актуальный порядок исполнения
+ 
+-**Последняя реализация:** CPW-RDG-JOINT-CONTEXT-20261019/v1.
++**Последняя реализация:** [CPW-RDG-SHARED-ACTION-20261019/v1](../handoffs/rdg-shared-action-20261019/CHECKPOINT.md).
+ **Проверка плана и продвижения:** [R-RDG-PLAN-PROGRESS-20261019/v2](../handoffs/rdg-plan-progress-review-20261019-v2/REVIEW.md).
+ **Статус:** рабочий план
+ для Candidate-пилота. **Stage 4 NOT ACCEPTED.** Этот документ обновляет
+@@ -26,7 +26,7 @@
+ | P5 | Есть исходники Viewer и синтетический Gendocen runtime proof. | Helper grants, Plan editor/timeline, читаемая Markdown-проекция, внешний consumer и отдельная проверка установки в Windows/G2. |
+ | P6–P7 | Удалённая запись и вывод legacy из эксплуатации не начинались. | Canonical GitHub owner/branch/writer, multi-file CAS/failure proof, проверка лицензии движка; затем доказанное замещение legacy. |
+ 
+-В последнем срезе прошли 49 адресных тестов и совместный реальный Gendocen
++В предшествующем joint-срезе прошли 49 адресных тестов и совместный реальный Gendocen
+ smoke из 15 CLI-запусков со штатным Graph writer. Ранние candidate и точный
+ baseline context сохранились после поздних Plan/RDG/applicability/event
+ записей; новая реконструкция потребовала review. Проверены stale context,
+@@ -40,6 +40,13 @@
+ хеши совпали с checkpoint до правки документации. Joint smoke 15 CLI
+ здесь не повторялся; его лог проверен. Наборы 35 и 49 пересекаются.
+ 
++В последнем срезе закрыт P2-AC-04: два вхождения одного Action сохраняют
++раздельный step/case context. Исправлена повторная регистрация review для
++одного Action: регистратор объединяет зависимости всех его вхождений и
++отклоняет неполный список. Прошёл 71 тест, включая новый acceptance из
++21 CLI-запуска реального Gendocen. RDG не меняется; область — candidate
++Plan и current-projection. Итог P2: 8 локальных PASS, 12 PARTIAL, 0 OPEN.
++
+ ## Ближайший результат и порядок
+ 
+ Ближайший результат — один воспроизводимый локальный сценарий S-TEMP →
+@@ -51,7 +58,7 @@
+ 
+ | Порядок | Работа | Условие завершения |
+ |---|---|---|
+-| 1 | Закрыть пробел доказательства P2-AC-04: разные steps в разных cases ссылаются на один Action. | Отдельный acceptance-test проходит через Plan writer и reader; step membership различается, Action имеет одного owner, RDG bytes/status/T1 не меняются. Проверить адресные зависимости обоих вхождений. |
++| 1 — выполнен локально | P2-AC-04: разные steps в разных cases ссылаются на один Action. | Writer/reader и реальный Gendocen подтверждают один Action owner, раздельную membership, адресные зависимости обоих вхождений и неизменность RDG. Пропуск вхождения отклоняется. [Evidence](../handoffs/rdg-shared-action-20261019/CHECKPOINT.md). |
+ | 2 | Определить Candidate-контракт lifecycle applicability, затем реализовать его в существующем scope. | Явно заданы связь baseline с applicability, effective-границы, replace/withdraw и два времени. Тесты выбирают прежний baseline при раннем knownAt, новый только в допустимой области; gap/конфликт/неподдержанная precision отклоняются. Exact-state чтение сохраняется. P2-AC-08/15/16/19 остаются PARTIAL до полного proof. |
+ | 3 | Проверить совместную безопасность существующих owners. | Гонки write/read/revoke и подготовленные journals не дают смешанный bundle; recover дважды сохраняет исходные snapshots и историю. Существующие per-owner tests дополняются совместными сценариями. Это не обещание новой атомарной транзакции между owners. P2-AC-05/06/14 — регрессия; P2-AC-17 — новый scope. |
+ | 4 | Собрать один локальный путь Plan → joint context → Gendocen review → читаемый результат. | Обычный запуск вне smoke-runner хранит прежние resource IDs и bundles для старых receipts. Повтор, сбой при сохранении и новая реконструкция не теряют старое основание; новая реконструкция требует review, stale context отклоняется. Результат показывает pins, два времени, evidence gaps и запрет автоматического выбора Action/F-P. |
+@@ -91,7 +98,7 @@
+ | 01 | Локальный PASS | Конфликт writable owner отклоняется в тесте Plan owner. |
+ | 02 | Локальный PASS | Traversal и symlink отклоняются без записи. |
+ | 03 | Локальный PASS | Candidate Plan write и сквозной smoke не выбирают и не переписывают RDG Action. |
+-| 04 | OPEN | Нужен сценарий двух Plan steps с одним Action и разных cases. |
++| 04 | Локальный PASS | Два разных steps разных cases ссылаются на один Action; writer/reader сохраняют RDG bytes/status/events. Один Action review покрывает оба вхождения; срок каждого и смена membership требуют review A1, контрольный A2 остаётся valid; пропуск вхождения отклоняется. |
+ | 05 | Локальный PASS | Два процесса: один победитель CAS. |
+ | 06 | Локальный PASS | Revoke до durable prepared journal отклоняет запись. |
+ | 07 | Локальный PASS | Подстановка `accepted` или вызов `accept` через edit отклоняется; само принятие относится к 08. |
+@@ -119,7 +126,8 @@
+ [технический будущий baseline](../handoffs/rdg-future-baseline-20261019/CHECKPOINT.json),
+ [технические стадии события](../handoffs/rdg-event-lifecycle-20261019/CHECKPOINT.json),
+ [event context → Gendocen v1](../handoffs/rdg-event-gendocen-20261019/CHECKPOINT.json),
+-[joint context v1](../handoffs/rdg-joint-context-20261019/CHECKPOINT.json).
++[joint context v1](../handoffs/rdg-joint-context-20261019/CHECKPOINT.json),
++[два вхождения одного Action](../handoffs/rdg-shared-action-20261019/CHECKPOINT.json).
+ Полные статусы WR-01..53 сохраняются в [v4.1 ledger](../handoffs/rdg-prework-v4.1-final-20261018/WR-EVIDENCE-LEDGER.md);
+ новые checkpoints меняют только названный scope. При следующем срезе обновлять
+ эту таблицу вместе с доказательством, не повышая PARTIAL до общего PASS.
+--- before/tools/rdg-gendocen-dependencies.py
++++ after/tools/rdg-gendocen-dependencies.py
+@@ -150,6 +150,27 @@
+                            "historicalSnapshotAvailable": False}}
+ 
+ 
++def build_action_contract(graph, plan, action_id, step_ids):
++    """One Action review must cover every occurrence in this Plan/graph scope."""
++    require(isinstance(step_ids, (list, tuple)) and step_ids and
++            all(isinstance(sid, str) for sid in step_ids) and
++            len(step_ids) == len(set(step_ids)), "ACTION_OCCURRENCES_INVALID")
++    contracts = {sid: build_contract(graph, plan, action_id, sid)
++                 for sid in sorted(step_ids)}
++    gd, pd = graph["data"], plan["data"]
++    expected = {sid for sid, ref in pd["actionRefsByStep"].items()
++                if ref["identitySpace"] == gd["identitySpace"] and
++                   ref["graphFile"] == gd["graphFile"] and
++                   ref["nodeId"] == action_id}
++    require(set(step_ids) == expected, "ACTION_OCCURRENCES_INCOMPLETE")
++    return {"contract": VERSION, "complete": True,
++            "subscriptions": sorted({tuple(source) for contract in contracts.values()
++                                     for source in contract["subscriptions"]}),
++            "provenance": {"actionId": action_id, "stepIds": sorted(step_ids),
++                           "occurrences": {sid: contract["provenance"]
++                                           for sid, contract in contracts.items()}}}
++
++
+ def assert_coverage(contract, declared):
+     require(contract.get("contract") == VERSION and contract.get("complete"),
+             "UNKNOWN_CONTRACT")
+@@ -172,8 +193,11 @@
+         "    docs = Path(__file__).resolve().parents[1] / 'docs'\n"
+         f"    graph = json.loads((docs / {graph_relative!r}).read_text(encoding='utf8'))\n"
+         f"    plan = json.loads((docs / {plan_relative!r}).read_text(encoding='utf8'))\n"
++        "    by_action = {}\n"
+         f"    for aid, sid in {targets!r}:\n"
+-        "        contract = dependency.build_contract(graph, plan, aid, sid)\n"
++        "        by_action.setdefault(aid, []).append(sid)\n"
++        "    for aid, sids in sorted(by_action.items()):\n"
++        "        contract = dependency.build_action_contract(graph, plan, aid, sids)\n"
+         "        sources = contract['subscriptions']\n"
+         "        dependency.assert_coverage(contract, sources)\n"
+         "        registry.register(f'file://review/{aid}.md', sources,\n"
+--- before/docs/guides/RDG-GENDOCEN-DEPENDENCY-COVERAGE-P0.md
++++ after/docs/guides/RDG-GENDOCEN-DEPENDENCY-COVERAGE-P0.md
+@@ -67,6 +67,24 @@
+ Изменение содержательного поля, в том числе `minDelayDays`, state, ActionRef,
+ Action.status или selectionBasis, участвует в проверке.
+ 
++## Несколько вхождений одного Action
++
++Разные Plan step IDs могут ссылаться на один RDG Action, в том числе в разных
++cases. Membership принадлежит шагу. Action остаётся одним смысловым объектом
++в RDG. Для одного Action review регистратор объединяет подписки всех его
++вхождений в данном Plan/RDG scope и регистрирует ровно одно правило.
++
++В targets указываются все пары, например
++`[("A1", "S-A1"), ("A1", "S-A2"), ("A2", "S-CONTROL")]`.
++`build_action_contract` сверяет полный набор step IDs с ActionRef этого
++graph owner/path/Action. Пропуск вхождения даёт
++`ACTION_OCCURRENCES_INCOMPLETE`; повтор одной пары отклоняется.
++`build_contract` остаётся низкоуровневым контрактом одного вхождения.
++
++Новый срок любого из двух вхождений и смена их case membership требуют review
++общего Action. Косметическая перестановка не требует review. Контрольный
++Action вне этих cases сохраняет valid. [Acceptance и границы](../handoffs/rdg-shared-action-20261019/CHECKPOINT.md).
++
+ ## Полнота и отказ
+ 
+ Перед регистрацией модуль пересчитывает производные поля из исходных полей
+@@ -110,6 +128,9 @@
+ python3 tests/rdg-gendocen-dependencies.test.py -v
+ 
+ RDG_GENDOCEN_SOURCE=/workspace/repos/gendocen PYTHONDONTWRITEBYTECODE=1 \
++python3 tests/rdg-shared-action-occurrences.acceptance.test.py -v
++
++RDG_GENDOCEN_SOURCE=/workspace/repos/gendocen PYTHONDONTWRITEBYTECODE=1 \
+ python3 docs/handoffs/rdg-prework-v4.1-final-20261018/tests/rdg-gendocen-branch-membership.acceptance.test.py -v
+ ```
+ 
+--- /dev/null
++++ after/tests/rdg-shared-action-occurrences.acceptance.test.py
+@@ -0,0 +1,197 @@
++#!/usr/bin/env python3
++"""P2-AC-04: one Action, two Plan occurrences, real writer and Gendocen."""
++import copy
++from importlib.machinery import SourceFileLoader
++import json
++import os
++from pathlib import Path
++import subprocess
++import sys
++import unittest
++
++ROOT = Path(__file__).resolve().parents[1]
++FIXTURE = SourceFileLoader("shared_plan_fixture",
++    str(ROOT/"tests/rdg-temporal-plan-owner.test.py")).load_module()
++ADAPTER = FIXTURE.ADAPTER
++DEP = ADAPTER.DEPENDENCIES
++ENGINE = Path(os.environ.get("RDG_GENDOCEN_SOURCE", "/workspace/repos/gendocen"))
++REL = FIXTURE.REL
++GRAPH = "workspaces/temporal-fixture/graph.json"
++
++
++class SharedActionAcceptance(unittest.TestCase):
++    def setUp(self):
++        self.owner = FIXTURE.PlanOwnerTest(
++            "test_create_edit_history_exact_snapshot_and_idempotency")
++        self.owner.setUp()
++        self.addCleanup(self.owner.doCleanups)
++        self.graphs = self.owner.base/"graphs"
++        self.graphfile = self.graphs/GRAPH
++        self.graphfile.parent.mkdir(parents=True)
++        self.graph = {"schemaVersion":1,"id":"shared-action","revision":1,
++            "identitySpace":"temporal-demo","rootRequirementId":"R0",
++            "actionModel":"candidate-v6","edges":[],"events":[],
++            "nodes":[{"id":"R0","kind":"requirement","title":"Root"}]+[
++                {"id":aid,"kind":"action","title":aid,"status":"candidate",
++                 "qrpe":[],"canonBlock":{"recommended":[],"contraindicated":[]}}
++                for aid in ("A1","A2")]}
++        self.graphfile.write_text(json.dumps(self.graph))
++        self.graph_bytes = self.graphfile.read_bytes()
++        for step in self.owner.plan["steps"]:
++            if step["id"] == "S-A2":
++                step["actionRef"]["nodeId"] = "A1"
++                step["title"] = "Possible reconsideration of A1 after negative result"
++        self.owner.plan["steps"].append({"id":"S-CONTROL","kind":"action",
++            "title":"Unrelated A2 occurrence","state":"planned",
++            "actionRef":{"graphFile":GRAPH,"identitySpace":"temporal-demo",
++                         "nodeId":"A2","observedGraphRevision":1}})
++        self.owner.apply(self.owner.request())
++        self.original = FIXTURE.OWNER.read_snapshot(self.owner.root,REL,1)
++
++    def saved(self):
++        return FIXTURE.OWNER.read_snapshot(self.owner.root,REL)["plan"]
++
++    def edit(self, mutate, op="edit"):
++        plan = self.saved()
++        expected = plan["revision"]
++        plan["revision"] += 1
++        mutate(plan)
++        self.owner.apply(self.owner.request(op,expected,plan))
++
++    def projections(self):
++        return (ADAPTER.graph_resource(self.graphfile,graph_ref=GRAPH),
++                ADAPTER.plan_resource(self.owner.root/REL,plan_root=self.owner.root))
++
++    def assert_graph_unchanged(self):
++        self.assertEqual(self.graphfile.read_bytes(),self.graph_bytes)
++        graph = json.loads(self.graphfile.read_text())
++        self.assertEqual(sum(n["id"]=="A1" for n in graph["nodes"]),1)
++        self.assertEqual([n["status"] for n in graph["nodes"]
++                          if n["kind"]=="action"],["candidate","candidate"])
++        self.assertEqual(graph["events"],[])
++
++    def test_writer_reader_keep_one_action_and_distinct_case_membership(self):
++        plan = self.saved()
++        report = FIXTURE.OWNER.PLAN.inspect(plan,self.graphs)
++        shared = [r for r in report["actionReferences"] if r["nodeId"]=="A1"]
++        self.assertEqual({r["stepId"] for r in shared},{"S-A1","S-A2"})
++        self.assertEqual({r["verification"] for r in shared},{"resolved"})
++        self.assertFalse(report["decisionCommitted"])
++        self.assertFalse(report["eventsAttested"])
++        graph, resource = self.projections()
++        before = resource["data"]["reviewInputsByStep"]
++        self.assertEqual(set(before["S-A1"]["branches"]),{"positive"})
++        self.assertEqual(set(before["S-A2"]["branches"]),{"negative"})
++        for sid in ("S-A1","S-A2"):
++            DEP.build_contract(graph,resource,"A1",sid)
++        self.edit(lambda p:p["branches"][0]["cases"].reverse())
++        self.assertEqual(before,self.projections()[1]["data"]["reviewInputsByStep"])
++        def swap(p):
++            cases = p["branches"][0]["cases"]
++            cases[0]["stepIds"],cases[1]["stepIds"] = cases[1]["stepIds"],cases[0]["stepIds"]
++        self.edit(swap,"branch")
++        after = self.projections()[1]["data"]["reviewInputsByStep"]
++        self.assertNotEqual(before["S-A1"]["branches"],after["S-A1"]["branches"])
++        self.assertNotEqual(before["S-A2"]["branches"],after["S-A2"]["branches"])
++        self.assertEqual(before["S-CONTROL"],after["S-CONTROL"])
++        unchanged = self.owner.source_bytes()
++        def reuse(p):
++            p["branches"][0]["cases"][1]["stepIds"] = list(
++                p["branches"][0]["cases"][0]["stepIds"])
++        with self.assertRaisesRegex(ValueError,"BRANCH_STEP_NOT_POSSIBLE_OR_REUSED"):
++            self.edit(reuse,"branch")
++        self.assertEqual(unchanged,self.owner.source_bytes())
++        self.assertEqual(FIXTURE.OWNER.read_snapshot(self.owner.root,REL,1),self.original)
++        self.assert_graph_unchanged()
++
++    def test_real_engine_reviews_action_once_and_covers_both_occurrences(self):
++        self.assertTrue((ENGINE/"src/docengine/cli.py").is_file())
++        project = self.owner.base/"consumer"
++        docs = project/"docs"
++        for rel in ("_structured","review"):
++            (docs/rel).mkdir(parents=True)
++        (project/"docengine_project").mkdir()
++        (project/"docengine.toml").write_text(
++            '[docengine]\nconfig_version = 1\ndocumentation_root = "docs"\n'
++            'structured_dir = "_structured"\ndependency_dir = "_dependency"\n'
++            'project_package = "docengine_project"\n')
++        config = project/"docengine_project/__init__.py"
++        targets = [("A1","S-A1"),("A1","S-A2"),("A2","S-CONTROL")]
++        complete = DEP.project_config("_structured/graph.json",
++            "_structured/plan.json",targets,"shared-review")
++        config.write_text(complete)
++        for aid in ("A1","A2"):
++            (docs/"review"/(aid+".md")).write_text("Synthetic review "+aid+"\n")
++        prose = {p:p.read_bytes() for p in (docs/"review").iterdir()}
++        calls = 0
++        def cli(*args):
++            nonlocal calls
++            calls += 1
++            run = subprocess.run([sys.executable,"-m","docengine.cli",*args,
++                "--project-root",str(project),"--json"],capture_output=True,
++                text=True,timeout=45,env={**os.environ,
++                "PYTHONPATH":str(ENGINE/"src"),"PYTHONDONTWRITEBYTECODE":"1"})
++            return run,json.loads(run.stdout) if run.stdout.strip() else {}
++        def project_sources():
++            for name,obj in zip(("graph","plan"),self.projections()):
++                (docs/"_structured"/(name+".json")).write_text(json.dumps(obj))
++        def renew():
++            for aid in ("A1","A2"):
++                target = "file://review/"+aid+".md"
++                run,body = cli("explain",target)
++                self.assertTrue(body.get("ok"),run.stdout+run.stderr)
++                if body["data"]["computed_status"] != "valid":
++                    run,body = cli("validate",target,"--result","still-valid",
++                        "--reason","Synthetic shared Action only","--review-context",
++                        body["data"]["review_context_id"])
++                    self.assertEqual(run.returncode,0,run.stdout+run.stderr)
++        results = {}
++        def expect(label,a1,a2):
++            run,body = cli("check")
++            self.assertTrue(body.get("data",{}).get("results"),run.stdout+run.stderr)
++            actual = {r["target"].rsplit("/",1)[-1][:-3]:r["status"]
++                      for r in body["data"]["results"]}
++            self.assertEqual(actual,{"A1":a1,"A2":a2},label)
++            results[label] = actual
++            self.assertEqual({p:p.read_bytes() for p in prose},prose)
++            self.assert_graph_unchanged()
++        project_sources()
++        run,body = cli("sync")
++        self.assertTrue(body.get("ok"),run.stdout+run.stderr)
++        renew()
++        expect("baseline","valid","valid")
++        self.edit(lambda p:p["branches"][0]["cases"].reverse())
++        project_sources()
++        expect("cosmetic","valid","valid")
++        for sid in ("S-A1","S-A2"):
++            self.edit(lambda p:p["timeConstraints"].append({"stepId":sid,
++                "type":"notBefore","at":"2026-11-15","strength":"hypothetical",
++                "basis":"Synthetic occurrence constraint"}))
++            project_sources()
++            expect(sid+"_constraint","review_required","valid")
++            renew()
++        def swap(p):
++            cases = p["branches"][0]["cases"]
++            cases[0]["stepIds"],cases[1]["stepIds"] = cases[1]["stepIds"],cases[0]["stepIds"]
++        self.edit(swap,"branch")
++        project_sources()
++        expect("membership_swap","review_required","valid")
++        renew()
++        receipts = {p:p.read_bytes() for p in (docs/"_dependency/receipts").glob("*.json")}
++        config.write_text(DEP.project_config("_structured/graph.json",
++            "_structured/plan.json",[targets[0],targets[2]],"shared-review"))
++        run,body = cli("check")
++        self.assertNotEqual(run.returncode,0)
++        self.assertIn("ACTION_OCCURRENCES_INCOMPLETE",run.stdout+run.stderr)
++        self.assertFalse(body.get("ok"))
++        self.assertEqual({p:p.read_bytes() for p in
++                          (docs/"_dependency/receipts").glob("*.json")},receipts)
++        config.write_text(complete)
++        expect("restored","valid","valid")
++        print("SHARED_ACTION_REAL_ENGINE="+json.dumps(
++            {"cliProcesses":calls,"results":results,"omittedOccurrence":"rejected",
++             "actionSelected":False,"sourceBytesUnchanged":True},sort_keys=True),flush=True)
++
++
++if __name__=="__main__":
++    unittest.main()
+--- /dev/null
++++ after/docs/handoffs/rdg-shared-action-20261019/CHECKPOINT.md
+@@ -0,0 +1,60 @@
++# Два вхождения одного Action — контрольная точка
++
++**ID:** CPW-RDG-SHARED-ACTION-20261019/v1. **Статус:** CANDIDATE.
++**Stage 4 NOT ACCEPTED.** Изменено в Fortis Repo на Windows RW 9p mount
++`/workspace/repos/rd-graphs`. В проекте нет .git и AGENTS.md.
++Все записи тестов выполнялись во временных синтетических roots.
++
++## Результат и границы
++
++Закрыт локальный P2-AC-04: разные Plan steps разных cases могут ссылаться на
++один RDG Action. Plan writer и reader сохраняют разные step IDs и membership;
++в RDG остаётся один Action. Байты RDG, candidate statuses и events не меняются.
++Повторное использование одного step ID в двух cases отклоняется без записи;
++точный исходный Plan snapshot сохраняется после последующих edits.
++
++Новый acceptance обнаружил дефект общего регистратора: прежняя конфигурация
++дважды регистрировала review одного Action. Реальный Gendocen отказал на sync:
++`semantic rule already registered for target file://review/A1.md`.
++[До исправления](before-fix.log) — 1 PASS, 1 FAIL; exit 1 означает дефект,
++а не успешное выполнение acceptance.
++
++`build_action_contract` объединяет подписки всех вхождений Action в одном
++Plan/graph scope. `project_config` регистрирует одно правило на Action.
++Набор step IDs сверяется с полным набором ActionRef этого graph owner/path/ID;
++пропуск вхождения даёт `ACTION_OCCURRENCES_INCOMPLETE`, повтор пары отклоняется.
++Низкоуровневый `build_contract` одного вхождения сохранён.
++Текущий контракт — `rdg-temporal-review/v2`; новый lifecycle в него не добавлен.
++[Обновлённое руководство](../../guides/RDG-GENDOCEN-DEPENDENCY-COVERAGE-P0.md).
++
++## Проверки
++
++**71 тест PASS:** новый acceptance — 2; dependencies — 14; coverage guard — 4;
++Plan owner — 17; Plan reader — 12; resources — 10; joint context — 12.
++[Новый acceptance](shared-action-result.json) выполнил **21 запуск реального
++Gendocen 0.1.0.dev25**. Срок первого или второго вхождения и смена membership
++требуют review A1; контрольный A2 сохраняет valid. Косметическая перестановка
++сохраняет valid. Неполная конфигурация отклоняется без новой receipt.
++После восстановления полного контракта сохранённый review снова valid.
++Sources RDG и review Markdown не меняются consumer.
++[Регрессия](regression-results.json); её реальные engine-запуски входят в
++соответствующие tests и не прибавляются к числу 21 этого acceptance.
++
++Scope — один candidate Plan, одна условная ветвь и один RDG graph.
++Current-projection proof не закрывает accepted lifecycle applicability,
++многособытийную полноту, trusted event source или фактический пользовательский T1.
++Joint smoke 15 CLI, все 53 WR и полная Node regression здесь не повторялись.
++Новые проверки не означают independent production acceptance.
++
++## Передача
++
++P2: **8 локальных PASS / 12 PARTIAL / 0 OPEN**. P2-AC-04 повышен только для
++указанного scope; остальные строки не повышены. PR-P1-01..05 остаются CANDIDATE.
++Следующий исполняемый шаг — Candidate-контракт и реализация lifecycle
++applicability по двум временам; затем совместная безопасность owners и обычный
++локальный consumer с сохранением bundles. [План](../../guides/RDG-CURRENT-EXECUTION-PLAN.md).
++
++[Выбранный diff](SELECTED-DIFF.patch) построен по before-копиям; это не Git diff
++всего проекта. [Хеши и metadata](CHECKPOINT.json). Runtime-код, тест и три
++документа изменены; прежние checkpoints и v4.1 ZIP сохранены.
++Установку Windows/G2, пользовательские графы, commit/push и публикацию не выполняли.
+--- /dev/null
++++ after/docs/handoffs/rdg-shared-action-20261019/WR-DELTA.md
+@@ -0,0 +1,12 @@
++# WR delta — разные вхождения одного Action
++
++Владелец WR-01..53 и их определений — v4.1. Этот срез не переписывает ledger
++и не переводит PR-P1-01..05 в committed. **Stage 4 NOT ACCEPTED.**
++
++| WR | Текущий общий статус | Новое локальное доказательство | Открытая граница |
++|---|---|---|---|
++| WR-29 | PARTIAL | Один Action review подписан на все его вхождения; пропуск вхождения отклоняется | Полная coverage других scopes и lifecycle |
++| WR-48 | PARTIAL | Разные steps/cases ссылаются на один Action без копии, selection или изменения RDG | Полный Plan/RDG lifecycle и trusted applicability |
++| WR-50 | PARTIAL | Реальный engine требует review общего Action при изменении любого вхождения; контрольный Action сохраняет valid | Полная семантика Finding/Canon и расширенный контекст |
++
++P2-AC-04: локальный PASS. Это не общий PASS перечисленных WR.

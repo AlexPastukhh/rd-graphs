@@ -1,0 +1,8 @@
+{
+  "exitCode": 0,
+  "seconds": 2.23,
+  "command": [
+    "/usr/bin/python3",
+    "tests/rdg-temporal-plan-owner.test.py"
+  ]
+}

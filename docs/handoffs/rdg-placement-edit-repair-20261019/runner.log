@@ -1,0 +1,52 @@
+[
+  {
+    "name": "rdg-placement-edit.acceptance.test.py",
+    "exitCode": 0,
+    "log": "rdg-placement-edit.acceptance.test.py.log"
+  },
+  {
+    "name": "rdg-workflow-helper.test.py",
+    "exitCode": 0,
+    "log": "rdg-workflow-helper.test.py.log"
+  },
+  {
+    "name": "rdg-workflow.acceptance.test.py",
+    "exitCode": 0,
+    "log": "rdg-workflow.acceptance.test.py.log"
+  },
+  {
+    "name": "rdg-cross-file-completion.test.py",
+    "exitCode": 0,
+    "log": "rdg-cross-file-completion.test.py.log"
+  },
+  {
+    "name": "rdg-temporal-placement.acceptance.test.py",
+    "exitCode": 0,
+    "log": "rdg-temporal-placement.acceptance.test.py.log"
+  },
+  {
+    "name": "rdg-temporal-plan-owner.test.py",
+    "exitCode": 0,
+    "log": "rdg-temporal-plan-owner.test.py.log"
+  },
+  {
+    "name": "node-all",
+    "exitCode": 0,
+    "log": "node-all.log"
+  },
+  {
+    "name": "probe-placement-fixed",
+    "exitCode": 0,
+    "log": "probe-placement-fixed.log"
+  },
+  {
+    "name": "probe-constraints-fixed",
+    "exitCode": 0,
+    "log": "probe-constraints-fixed.log"
+  },
+  {
+    "name": "viewer-smoke",
+    "exitCode": 0,
+    "log": "viewer-smoke.log"
+  }
+]

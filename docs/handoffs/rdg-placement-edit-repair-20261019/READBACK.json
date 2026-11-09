@@ -1,0 +1,17 @@
+{
+  "sourceHashesMatched": 14,
+  "checkpointSHA256": "f34e237b6481cb49ef957c5d55002e68c8b8a9924dd98d22b0ce0d9740ac4a60",
+  "missingLocalTargets": [],
+  "pythonTests": 74,
+  "nodeBroad": {
+    "tests": 417,
+    "pass": 414,
+    "fail": 0,
+    "skipped": 3
+  },
+  "lastUiTests": {
+    "pass": 7,
+    "skipped": 3
+  },
+  "lastPythonPlacementTests": 7
+}

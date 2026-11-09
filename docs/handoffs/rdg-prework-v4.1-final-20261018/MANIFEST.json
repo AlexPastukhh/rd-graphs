@@ -1,0 +1,277 @@
+{
+  "asOf": "2026-10-18",
+  "bearerCredentialsIncluded": false,
+  "canonicalGitCommit": null,
+  "diagnosticExitCodeZeroMeaning": "BUG_REPRODUCED_NOT_PRODUCT_PASS",
+  "directAcceptanceWRCount": 0,
+  "engineRequiredForRealRuntime": "Gendocen docengine 0.1.0.dev25; independent checkout required",
+  "engineSourceIncluded": false,
+  "files": [
+    {
+      "bytes": 27595,
+      "path": "HANDOFF.md",
+      "sha256": "b15ab78c4cae8e1eb3cc29f04b5fc47d965f036fa48dacc25284a9102bf5a235"
+    },
+    {
+      "bytes": 4465,
+      "path": "README-NEXT-CHAT.md",
+      "sha256": "1d6d346ebf970214b280168c12bd97400ac35154d1443979c93296a702f76fa2"
+    },
+    {
+      "bytes": 20585,
+      "path": "WR-EVIDENCE-LEDGER.json",
+      "sha256": "c12d22ade89a184aaf0ab998f3a4eea464dc786e6cee41941a3a369cd25a1f5f"
+    },
+    {
+      "bytes": 7894,
+      "path": "WR-EVIDENCE-LEDGER.md",
+      "sha256": "6b1b19b4fc88f86064a86b2f34656e223842addf099579276a40eae4f252b196"
+    },
+    {
+      "bytes": 1781,
+      "path": "branch-acceptance-expected-fail-20261018.log",
+      "sha256": "88ac8ca7d5aabaa4d7017655a12d05edc8f78790d1f26506714569988db25d42"
+    },
+    {
+      "bytes": 148,
+      "path": "branch-membership-gap-observed-20261018.log",
+      "sha256": "d2e7dd94be6c711a02c9251fb7aeb9f43be95db6d2cf50caa1a81ad8ed3ac880"
+    },
+    {
+      "bytes": 180987,
+      "path": "candidate-prework-v4.1-execution-reconciled.md",
+      "sha256": "0adc42820b679acddb74e5af95466f4a5345599571dd1bc5f4922fa1a8f3e6f3"
+    },
+    {
+      "bytes": 8168,
+      "path": "evidence/RDG-CANON-CONTEXT-REVIEW-STAGE2.md",
+      "sha256": "d6965ed90f5e343f76f5b96f765094715a5a676b455a39e87bdc5b982181b04f"
+    },
+    {
+      "bytes": 1825,
+      "path": "evidence/RDG-GENDOCEN-COLOCATED-RUNTIME-CHECKPOINT-20261018.json",
+      "sha256": "44b19fb27f3887909fcfd22ba2ae2980259029af2d562f2dbcc87a77c9ce8aa6"
+    },
+    {
+      "bytes": 2454,
+      "path": "evidence/RDG-GENDOCEN-CRASH-HISTORY-CHECKPOINT-20261018.json",
+      "sha256": "d742c9727de25c1c5b9dc920c3b14a1ffa6228b32dad6ffd7bf52fa2fcf9271c"
+    },
+    {
+      "bytes": 3871,
+      "path": "evidence/RDG-GENDOCEN-CRASH-HISTORY-STAGE4.md",
+      "sha256": "a29bc885615e6e7db46ddb40b1fb139705d4aacdc479990ecbc5b975fcd7519a"
+    },
+    {
+      "bytes": 2656,
+      "path": "evidence/RDG-GENDOCEN-T1-QRPE-PLAN-STAGE4-20261018.json",
+      "sha256": "77e421bcabcaa93320846d7988c672ac9a21cc7212b839256287d1dc08c52876"
+    },
+    {
+      "bytes": 5371,
+      "path": "evidence/RDG-GENDOCEN-T1-QRPE-PLAN-STAGE4.md",
+      "sha256": "1c81e03373472e26bba23a17723df4b188858a8b891b9a78327593697520279e"
+    },
+    {
+      "bytes": 9849,
+      "path": "evidence/RDG-TEMPORAL-IMPACT-STAGE3P.md",
+      "sha256": "404c3d7c26555adf9bd54ae0f94505a7aa131e06bb37839752edecc707b858bd"
+    },
+    {
+      "bytes": 7417,
+      "path": "evidence/RDG-TEMPORAL-PLAN-STAGE2P.md",
+      "sha256": "f1a1c00f944a6164e698f8e15325904a460e1bae3b8aecddf224816612668430"
+    },
+    {
+      "bytes": 7502,
+      "path": "evidence/RDG-TYPED-FINDINGS-STAGE2-PILOT.md",
+      "sha256": "585ac7bdf05bed89598605b639ee4dd507f7093a8f82241ad3be2178d4c4c356"
+    },
+    {
+      "bytes": 2670,
+      "path": "evidence/temporal-plan-candidate-v1.json",
+      "sha256": "8ea7def804338b3c1eede415b75da639c56fa4c825882e32782408a2395f54c0"
+    },
+    {
+      "bytes": 2661,
+      "path": "repro-branch-membership-gap.py",
+      "sha256": "c5bc6edd94f5bce5f2fbb8d7b8260ba7253079d0fb16fd742749bf1fe4e2eff7"
+    },
+    {
+      "bytes": 156851,
+      "path": "source-candidate-prework-v3-reading-copy.md",
+      "sha256": "6dafff8d76021b4a2e9699b96c3d401c4d70b9195374ced77144cc74445ff8c7"
+    },
+    {
+      "bytes": 46778,
+      "path": "source-independent-review-v1-reading-copy.md",
+      "sha256": "d80a8f6dd53cb3a7d9e9ffe475c9cf9cc425508084a69e79df87548c30a802f4"
+    },
+    {
+      "bytes": 2670,
+      "path": "source-snapshot/rd-graphs/docs/examples/temporal-plan-candidate-v1.json",
+      "sha256": "8ea7def804338b3c1eede415b75da639c56fa4c825882e32782408a2395f54c0"
+    },
+    {
+      "bytes": 2425,
+      "path": "source-snapshot/rd-graphs/tests/rdg-bearer-authority.test.cjs",
+      "sha256": "9d1aec3705d195a1e9c2679928c882e20af27c072312883c1b734a6ab57d2bb6"
+    },
+    {
+      "bytes": 20670,
+      "path": "source-snapshot/rd-graphs/tests/rdg-bearer-package.integration.test.py",
+      "sha256": "387ec8bbc172c13f1daef923f27daf34c9f4f3eab75d2aac7c7b450d4db89c86"
+    },
+    {
+      "bytes": 12885,
+      "path": "source-snapshot/rd-graphs/tests/rdg-canon-context-review.test.py",
+      "sha256": "1258e67762b26a4bce56d55aefaa3f5ccfcb919bed791324aa075ac50e443f58"
+    },
+    {
+      "bytes": 8403,
+      "path": "source-snapshot/rd-graphs/tests/rdg-gendocen-resources.test.py",
+      "sha256": "c3cef6d9c97d2aafc32f56d5b0f6ad5e7fd99f8a4d38e67f68af37b7c6073e94"
+    },
+    {
+      "bytes": 6422,
+      "path": "source-snapshot/rd-graphs/tests/rdg-problem-evidence-preflight.test.py",
+      "sha256": "b75a75a47473304b6bee301095af85ca7fe723f5e39caf5dfad1681bc27674e4"
+    },
+    {
+      "bytes": 15985,
+      "path": "source-snapshot/rd-graphs/tests/rdg-temporal-impact.test.py",
+      "sha256": "993b790589d7a39f6f68334244014f92c6d1e8a1e0f9c29a3bb4149cac73b11f"
+    },
+    {
+      "bytes": 9106,
+      "path": "source-snapshot/rd-graphs/tests/rdg-temporal-plan.test.py",
+      "sha256": "5ebb99edfb35444bca8dcaddc828048de2f0a5c7ed357c546a0e7378114c2f27"
+    },
+    {
+      "bytes": 5584,
+      "path": "source-snapshot/rd-graphs/tests/rdg-v7-authority.test.cjs",
+      "sha256": "b2afe542dee2753be4f955c4ecb6699ff48e6604dfba94b1db1553611d962163"
+    },
+    {
+      "bytes": 32835,
+      "path": "source-snapshot/rd-graphs/tools/graph-apply.py",
+      "sha256": "dd5e3ea3b7f460363e97683b8c6494b853ddf31bf098b53ec04a449e647444c7"
+    },
+    {
+      "bytes": 34716,
+      "path": "source-snapshot/rd-graphs/tools/graph-index.py",
+      "sha256": "8c4b233e6346db6b4f8d90800b3263e90112b9dc781ce27c8b649d9a2e6c0e09"
+    },
+    {
+      "bytes": 20047,
+      "path": "source-snapshot/rd-graphs/tools/graph-package.py",
+      "sha256": "690218b9fc301dd4279b15f47f3a33f0ee5963b4e18c17c787a3ba54b3fe2d48"
+    },
+    {
+      "bytes": 11320,
+      "path": "source-snapshot/rd-graphs/tools/rdg-authority.py",
+      "sha256": "184b618ca907e842c7199c65df07a0e0a7aff5b5f0645b23b74b9298b44c1803"
+    },
+    {
+      "bytes": 11384,
+      "path": "source-snapshot/rd-graphs/tools/rdg-canon-context-review.py",
+      "sha256": "be4d272ea58162d3c4ca504e8229cba95b0d2e36e3d744528d2f9de64bce624d"
+    },
+    {
+      "bytes": 3466,
+      "path": "source-snapshot/rd-graphs/tools/rdg-catalog.js",
+      "sha256": "ab074dde2cb33e20abd1ffe67254ec0976a9ef95d86bd3c27136ef271d554f8f"
+    },
+    {
+      "bytes": 5892,
+      "path": "source-snapshot/rd-graphs/tools/rdg-catalog.py",
+      "sha256": "1df40b8736ea9c60a695925c52d86246edf30cae3fb556c3e52731b38444c461"
+    },
+    {
+      "bytes": 5186,
+      "path": "source-snapshot/rd-graphs/tools/rdg-finding-drafts.py",
+      "sha256": "2c3bfd6515583304ab03999d2d671101b44cc2150b3c60549da20e052716e64b"
+    },
+    {
+      "bytes": 6418,
+      "path": "source-snapshot/rd-graphs/tools/rdg-gendocen-adapter.py",
+      "sha256": "bc35ede7cc39a5425758192a68e7405b273edd1e663c0d1c4c2fa7a0beb124cf"
+    },
+    {
+      "bytes": 19719,
+      "path": "source-snapshot/rd-graphs/tools/rdg-gendocen-runtime-smoke.py",
+      "sha256": "bcfd09fda9b008a0005059f77bc6537122277c0cfddf9370cc4ddd978091bdf4"
+    },
+    {
+      "bytes": 21597,
+      "path": "source-snapshot/rd-graphs/tools/rdg-gendocen-t1-history-smoke.py",
+      "sha256": "b65276404d16196cf574192f26344460e1789709fa51ae3b2daf82b194622bef"
+    },
+    {
+      "bytes": 11495,
+      "path": "source-snapshot/rd-graphs/tools/rdg-graph-api.py",
+      "sha256": "e02350e2a385cca0e18020e955e3db31002c378bcf1f247f8b41c8f88a913039"
+    },
+    {
+      "bytes": 5552,
+      "path": "source-snapshot/rd-graphs/tools/rdg-problem-evidence-preflight.py",
+      "sha256": "f767f7f389cfbe2264038d5165f3805e81e40577d932b8075f1629bcd23ab6db"
+    },
+    {
+      "bytes": 376,
+      "path": "source-snapshot/rd-graphs/tools/rdg-state-cli.cjs",
+      "sha256": "0eb4ccf2d918d783fbf440c936790e0ab1ad02e1d08bd0343f0d6473bd61688b"
+    },
+    {
+      "bytes": 12598,
+      "path": "source-snapshot/rd-graphs/tools/rdg-state.js",
+      "sha256": "6d77706b91d05ea914a340b51c7b3c3b44feba0572ad40b9e241d37dc5cb1f69"
+    },
+    {
+      "bytes": 1249,
+      "path": "source-snapshot/rd-graphs/tools/rdg-state.py",
+      "sha256": "7c503674e381080b8fdb55a8456c03c08c13d28ab7254e2fa8e4e60cf8ee7b2f"
+    },
+    {
+      "bytes": 11956,
+      "path": "source-snapshot/rd-graphs/tools/rdg-temporal-impact.py",
+      "sha256": "70f3d85fe05090d3385ec2e03cca66c17b215d7b61f9b06b286ff4e1b71f6198"
+    },
+    {
+      "bytes": 11900,
+      "path": "source-snapshot/rd-graphs/tools/rdg-temporal-plan.py",
+      "sha256": "a72b037a21740eec5d7ece9af29aa91f3fdf9fd59eb8a4b1da65faf62a8e9179"
+    },
+    {
+      "bytes": 13219,
+      "path": "source-snapshot/rd-graphs/tools/rdg-v6-action-reconsider.py",
+      "sha256": "521c8027cbc2dea86f1b6e495aa515d9c273195bc5da40f1d2ea75e92206df9f"
+    },
+    {
+      "bytes": 5265,
+      "path": "source-snapshot/rd-graphs/tools/rdg-v6-action-trust.py",
+      "sha256": "e3ed745a3921a0757bb6cee0559711eb2089d70ad7cc40b9848a671c997ef829"
+    },
+    {
+      "bytes": 33352,
+      "path": "source-snapshot/rd-graphs/tools/rdg-v7-model.py",
+      "sha256": "b80af6d28482d20fd47184c6785cd96154e8faffb3725d0970323d3f65541d47"
+    },
+    {
+      "bytes": 3519,
+      "path": "tests/rdg-gendocen-branch-membership.acceptance.test.py",
+      "sha256": "d83320c5e044e67b312c397c0551ad87107387c31150af13514c4423adc0b6de"
+    }
+  ],
+  "independentReviewGitHubBlobSHA1": "5eb5267ac4a2fd626ff840b9c26b8816e2c96373",
+  "nextPriority": "P0 dependency source coverage for branchesById/cases/actionRefs/sequence",
+  "normalAcceptanceCurrentlyExpected": "2 tests; 1 PASS (cosmetic), 1 FAIL (meaningful branch change)",
+  "originalV3GitHubBlobSHA1": "6da1a3648528c01179bcc792b636f56d6b823901",
+  "packageId": "RDG-PREWORK-V4.1-FINAL-HANDOFF-20261018-01",
+  "reproducedOpenDefect": "case outcome Action membership changed but A1/A2 remain valid",
+  "sourceSnapshotsRDGCount": 30,
+  "status": "CANDIDATE-NOT-PRODUCTION",
+  "v41ContainsOriginalV3VerbatimInAppendix": true,
+  "workRequirementCount": 53,
+  "workingUserGraphsIncluded": false
+}

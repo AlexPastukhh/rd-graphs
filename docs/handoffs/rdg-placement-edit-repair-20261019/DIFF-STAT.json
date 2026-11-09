@@ -1,0 +1,72 @@
+[
+  {
+    "file": "tools/rdg-workflow-helper.py",
+    "added": 28,
+    "removed": 9
+  },
+  {
+    "file": "tools/rdg-workflow-ui.js",
+    "added": 27,
+    "removed": 8
+  },
+  {
+    "file": "tools/rd-graph-viewer.user.js",
+    "added": 30,
+    "removed": 11
+  },
+  {
+    "file": "tests/rdg-workflow-ui.test.cjs",
+    "added": 53,
+    "removed": 0
+  },
+  {
+    "file": "tests/rdg-placement-edit.acceptance.test.py",
+    "added": 140,
+    "removed": 0
+  },
+  {
+    "file": "tools/rd-graph-viewer-smoke.test.cjs",
+    "added": 1,
+    "removed": 1
+  },
+  {
+    "file": "tests/visual/rdg-full-detail-201.cjs",
+    "added": 2,
+    "removed": 2
+  },
+  {
+    "file": "README.md",
+    "added": 2,
+    "removed": 2
+  },
+  {
+    "file": "docs/guides/RDG-CURRENT-EXECUTION-PLAN.md",
+    "added": 32,
+    "removed": 3
+  },
+  {
+    "file": "docs/guides/RDG-DEEP-ACTION-AND-HISTORY.md",
+    "added": 19,
+    "removed": 3
+  },
+  {
+    "file": "docs/guides/RDG-V7-WORKING-GRAPHS.md",
+    "added": 2,
+    "removed": 2
+  },
+  {
+    "file": "docs/guides/VIEWER-EXPLORER.md",
+    "added": 7,
+    "removed": 0
+  },
+  {
+    "file": "tests/rdg-workflow-helper.test.py",
+    "added": 2,
+    "removed": 2
+  },
+  {
+    "file": "tests/rdg-cross-file-completion.test.py",
+    "added": 1,
+    "removed": 1
+  }
+]

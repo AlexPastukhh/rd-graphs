@@ -1,0 +1,323 @@
+{
+  "status": "PASS-DOCUMENT-CONSISTENCY",
+  "runtimeTestsRunThisStep": false,
+  "checks": [
+    {
+      "check": "20 unique rules agree with the human definition owner",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "5 Proposals remain Candidate, none committed",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "20 planned cases use existing invariant IDs",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "planned scenarios are not reported as executed",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "all WR references preserve original IDs",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "existing partial test resolves: tests/rdg-temporal-plan.test.py::test_two_branches_keep_candidate_actions_and_graph_file_unchanged",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "existing partial test resolves: tests/rdg-temporal-plan.test.py::test_relative_time_and_deadline_do_not_create_dates_or_requirements",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "existing partial test resolves: tests/rdg-temporal-plan.test.py::test_time_zone_date_validation_and_basis",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "existing partial test resolves: tests/rdg-temporal-plan.test.py::test_no_invented_accepted_action_or_observed_event",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "existing partial test resolves: tests/rdg-gendocen-dependencies.test.py::test_multiple_branches_are_explicitly_uncovered",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "existing partial test resolves: tests/rdg-gendocen-dependencies.test.py::test_action_ref_revision_is_local_but_not_historical_truth",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "existing partial test resolves: tests/rdg-temporal-plan.test.py::test_unrecognized_fields_cannot_smuggle_execution_claims",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "runtime and fixture files unchanged since P0",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "immutable v4.1 package still matches its manifest",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "immutable P0 checkpoint still matches its manifest",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "no implied production capabilities in the descriptor",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "lifecycle and historical query separation are explicit",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> docs/guides/VIEWER-EXPLORER.md",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> docs/guides/VIEWER-LAYOUT.md",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> docs/guides/VIEWER-EXPLORER-PLAN.md",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> docs/guides/RDG-GENDOCEN-DEPENDENCY-COVERAGE-P0.md",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> docs/guides/RDG-TEMPORAL-PLAN-OWNER-CONTRACT-P1.md",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> docs/guides/RDG-TEMPORAL-PLAN-STAGE2P.md",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> docs/guides/RDG-TEMPORAL-IMPACT-STAGE3P.md",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> docs/guides/RDG-TYPED-FINDINGS-STAGE2-PILOT.md",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> docs/guides/RDG-CANON-CONTEXT-REVIEW-STAGE2.md",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> docs/guides/RDG-PROBLEM-EVIDENCE-PREFLIGHT-STAGE2.md",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> docs/guides/RDG-GENDOCEN-RESOURCES-STAGE1B.md",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> docs/guides/RDG-GENDOCEN-RUNTIME-SMOKE-STAGE1B.md",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> docs/examples/RDG-GENDOCEN-OWNER-PROJECTIONS-REAL-RUNTIME-20261018.json",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> docs/examples/RDG-GENDOCEN-COLOCATED-RUNTIME-CHECKPOINT-20261018.json",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> docs/guides/RDG-GENDOCEN-RUNTIME-SMOKE-STAGE1B.md",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> docs/examples/RDG-GENDOCEN-CRASH-HISTORY-CHECKPOINT-20261018.json",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> docs/guides/RDG-GENDOCEN-CRASH-HISTORY-STAGE4.md",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> docs/guides/RDG-GENDOCEN-T1-QRPE-PLAN-STAGE4.md",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> docs/examples/RDG-GENDOCEN-T1-QRPE-PLAN-STAGE4-20261018.json",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> docs/handoffs/rdg-prework-v4-20261018/HANDOFF.md",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> docs/handoffs/rdg-prework-v4-20261018/candidate-prework-v4-execution-reconciled.md",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> docs/handoffs/rdg-prework-v4-20261018/README-NEXT-CHAT.md",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> docs/handoffs/rdg-prework-v4.1-final-20261018/HANDOFF.md",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> docs/handoffs/rdg-prework-v4.1-final-20261018/candidate-prework-v4.1-execution-reconciled.md",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> docs/handoffs/rdg-prework-v4.1-final-20261018/WR-EVIDENCE-LEDGER.md",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> docs/examples/GRAPH-OF-GRAPHS-V7.md",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> docs/guides/RDG-V7-WORKING-GRAPHS.md",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> docs/guides/VIEWER-EXPLORER.md",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> docs/guides/VIEWER-EXPLORER.md",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> docs/guides/RDG-V7-WORKING-GRAPHS.md",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> graphs/examples/reference-prepared-planning-tree/graph.json",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> graphs/examples/reference-mixed-active-work/graph.json",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> docs/examples/RDG-ACTION-LENS-SEMANTIC-PILOT.md",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> docs/examples/RDG-V6-ACTION-IDENTITY-CANON-COMPARISON.md",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> docs/examples/RDG-V6-ACTION-WRITER-READER-OPTIN.md",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> tests/fixtures/rdg-v6-action-optin/graph.json",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> docs/examples/RDG-V6-INTEGRITY-REMEDIATION-20261017.md",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> docs/examples/RDG-V6-GENERAL-GRAPH-API-AND-SELECTIVE-LENS-20261017.md",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> docs/examples/RDG-V6-CROSSPLAN-REMEDIATION-20261017.md",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> docs/examples/RDG-V6-LENS-TRUSTED-PACKAGE-PILOT.md",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> tests/fixtures/rdg-v6-lens-dry-target/graph.json",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> tests/fixtures/rdg-v6-lens-maintenance-target/graph.json",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> docs/examples/RDG-V6-ACTION-RECONSIDERATION-WRITER.md",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> tests/fixtures/rdg-v6-action-reconsidered/graph.json",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> docs/examples/RDG-V6-ACTION-VIEWER-RECONSIDER-PREFLIGHT.md",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: README.md -> docs/guides/RDG-V7-WORKING-GRAPHS.md",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "relative documentation link: docs/guides/RDG-TEMPORAL-PLAN-STAGE2P.md -> RDG-TEMPORAL-PLAN-OWNER-CONTRACT-P1.md",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "current implementation source: tools/rdg-temporal-plan.py::validate",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "current implementation source: tools/rdg-temporal-plan.py::temporal_literal",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "current implementation source: tools/rdg-temporal-plan.py::inspect",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "current implementation source: tools/rdg-temporal-impact.py::earliest_bounds",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "current implementation source: tools/rdg-temporal-impact.py::scope_action",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    },
+    {
+      "check": "current implementation source: tools/rdg-gendocen-dependencies.py::build_contract",
+      "result": "PASS-DOCUMENT-CONSISTENCY"
+    }
+  ],
+  "sourceEvidence": [
+    {
+      "path": "tools/rdg-temporal-plan.py",
+      "function": "validate",
+      "observation": "schema v1 is candidate-only and rejects unknown/actual fields"
+    },
+    {
+      "path": "tools/rdg-temporal-plan.py",
+      "function": "temporal_literal",
+      "observation": "date-only or timezone-aware instant; no naive instant"
+    },
+    {
+      "path": "tools/rdg-temporal-plan.py",
+      "function": "inspect",
+      "observation": "observedGraphRevision compares with current graph; not historical snapshot resolution"
+    },
+    {
+      "path": "tools/rdg-temporal-impact.py",
+      "function": "earliest_bounds",
+      "observation": "date and instant lanes; dt.timedelta(days) for minDelayDays"
+    },
+    {
+      "path": "tools/rdg-temporal-impact.py",
+      "function": "scope_action",
+      "observation": "current graph owner/ref and action status resolution"
+    },
+    {
+      "path": "tools/rdg-gendocen-dependencies.py",
+      "function": "build_contract",
+      "observation": "current-projection provenance; historicalSnapshotAvailable=false"
+    }
+  ],
+  "unchangedRuntimeAndFixtureSources": 32,
+  "inheritedRuntimeEvidence": "docs/handoffs/rdg-p0-dependencies-20261018/CHECKPOINT.json",
+  "limitations": [
+    "Checks cover document IDs/links, source references and unchanged bytes; they do not execute a Plan owner, writer, attestation or historical resolver."
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "createdAt": "2026-10-18T21:20:33.574625+00:00",
+  "previousCheckpoint": "../rdg-known-at-20261019/CHECKPOINT.json",
+  "files": {
+    "tools/rdg-temporal-plan-owner.py": "8891846a0134ce044a405ca72492fa900878e04ccbdbb7dfa776360d101aab71",
+    "tools/rdg-exact-history.py": "ec5381b9b190fb6324effae63bd1e9c17327248a77e18167a2b93beacd354c04",
+    "tools/rdg-gendocen-t1-history-smoke.py": "190e03d4cd04bd3df7d1e32a5c4698f3365238fdf575ad5adbfaa74b9bd4ca67",
+    "tests/rdg-temporal-plan-owner.test.py": "0e482e66978270c79b677de01dceab338dbebdab04e97c7121fa256079be1f2a",
+    "tests/rdg-exact-history.test.py": "8e0b52eb8f66ecba61e1204633c209c1d7f4853e42613f523401b0ee71a0c6a3",
+    "README.md": "cc1c579b02640f92556011025091c2563963d3c64a56feb370e193e591904ea6",
+    "docs/guides/RDG-EXACT-HISTORY-PILOT-P2.md": "9fa46abd676d5698d8d26a428e75255f87f7b643f27808bb67dfc322025c17f2",
+    "docs/guides/RDG-TEMPORAL-PLAN-OWNER-PILOT-P2.md": "e958fca8b8154dadd2ce4f682ebaf88d49767ea599a082b0757f38ad84db00b7",
+    "tests/rdg-writer-recording.test.py": "a1a41fcfd876181dc66de5d9ed0d237f1c7946addb06785e4b7faaf8dea9894b"
+  }
+}
