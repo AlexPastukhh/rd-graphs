@@ -26,8 +26,8 @@ jobs:
         shell: bash
         run: |
           python -m pip install -r tools/requirements-server.txt
-          npm install --prefix "$RUNNER_TEMP/rdg-node" puppeteer@25.13.0
-          printf 'RDG_PUPPETEER_PACKAGE=%s/rdg-node/node_modules/puppeteer\n' "$RUNNER_TEMP" >> "$GITHUB_ENV"
+          npm install --prefix "$RUNNER_TEMP/rdg-node" puppeteer@25.13.0 ajv@8.17.1
+          printf 'RDG_PUPPETEER_PACKAGE=%s/rdg-node/node_modules/puppeteer\nRDG_AJV_PACKAGE=%s/rdg-node/node_modules/ajv/dist/2020.js\n' "$RUNNER_TEMP" "$RUNNER_TEMP" >> "$GITHUB_ENV"
           printf 'RDG_CHROME_PATH=%s\n' "$(node -e 'process.stdout.write(require(process.argv[1]).executablePath())' "$RUNNER_TEMP/rdg-node/node_modules/puppeteer")" >> "$GITHUB_ENV"
           mkdir -p "$RUNNER_TEMP/rdg-workfiles" "$RUNNER_TEMP/rdg-caddy"
           curl --fail --location --retry 2 https://github.com/caddyserver/caddy/releases/download/v2.11.7/caddy_2.11.7_linux_amd64.tar.gz -o "$RUNNER_TEMP/caddy.tar.gz"
