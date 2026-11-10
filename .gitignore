@@ -1,0 +1,33 @@
+# Local caches and installed dependencies.
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+node_modules/
+
+# Temporary editor files, writer locks, and OS metadata.
+*.lock
+*.tmp
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Credentials must stay outside the project root.
+.env
+.env.*
+!.env.example
+!.env.sample
+*.pem
+*.key
+.rdg-auth*/
+.rdg-session*/
+
+# Temporary Chromium profiles and private manual Helper sessions.
+headless-profile/
+docs/handoffs/rdg-windows-manual-session-*/session/
+docs/handoffs/rdg-windows-manual-session-*/session.log
+docs/handoffs/rdg-windows-manual-session-*/run-session.py
+
+# Graph/Plan journals, Gendocen state, and historical evidence are versioned.

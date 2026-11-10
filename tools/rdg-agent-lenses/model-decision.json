@@ -1,0 +1,460 @@
+{
+  "schemaVersion": 1,
+  "actionModel": "candidate-v6",
+  "coreModel": "rdg-decision-v1",
+  "id": "rdg-fundamental-model-decision",
+  "title": "Фундаментальная модель RDG · Decision v1",
+  "identitySpace": "c76a8cc6-d9ac-5441-92df-a57bc9a25aee",
+  "revision": 1,
+  "rootRequirementId": "R-MODEL",
+  "rootCauses": [
+    {
+      "id": "RC-MODEL",
+      "requirementId": "R-MODEL",
+      "reason": "Paper-only fundamental instruction",
+      "enabled": true
+    }
+  ],
+  "nodes": [
+    {
+      "id": "R-MODEL",
+      "kind": "requirement",
+      "title": "Правильно понимать сущности, отношения и источники истины RDG",
+      "description": "Учебная цель готового графа. Открытие не означает достижения или исполнения.",
+      "revision": 1,
+      "scope": "Фундаментальное объяснение RDG · rdg-decision-v1",
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "R-MODEL-TYPES",
+      "kind": "requirement",
+      "title": "Сущности различаются по назначению",
+      "description": "Сущности различаются по назначению. Учебный критерий, не подтверждённое достижение.",
+      "revision": 1,
+      "scope": "Ориентиры корректного применения RDG",
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "D-MODEL-TYPES",
+      "kind": "decision",
+      "title": "Классифицировать смысловое содержание",
+      "description": "Отличать цели от способов, реальные операции от описаний, условия от результатов.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "selectionState": "discovered"
+    },
+    {
+      "id": "R-MODEL-IDENTITY",
+      "kind": "requirement",
+      "title": "Используется одна предметная identity",
+      "description": "Используется одна предметная identity. Учебный критерий, не подтверждённое достижение.",
+      "revision": 1,
+      "scope": "Ориентиры корректного применения RDG",
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "D-MODEL-IDENTITY",
+      "kind": "decision",
+      "title": "Проверять владельца и существующий блок",
+      "description": "Не создавать дубль при повторном упоминании и визуальном повторе.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "selectionState": "discovered"
+    },
+    {
+      "id": "R-MODEL-EDGES",
+      "kind": "requirement",
+      "title": "Связи выражают допустимую семантику",
+      "description": "Связи выражают допустимую семантику. Учебный критерий, не подтверждённое достижение.",
+      "revision": 1,
+      "scope": "Ориентиры корректного применения RDG",
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "D-MODEL-EDGES",
+      "kind": "decision",
+      "title": "Выбирать типизированное отношение",
+      "description": "Соблюдать пары endpoints; D→D запрещено даже для DEPENDS_ON.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "selectionState": "discovered"
+    },
+    {
+      "id": "R-MODEL-OWNERS",
+      "kind": "requirement",
+      "title": "Процесс и представления не перепутаны",
+      "description": "Процесс и представления не перепутаны. Учебный критерий, не подтверждённое достижение.",
+      "revision": 1,
+      "scope": "Ориентиры корректного применения RDG",
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "D-MODEL-OWNERS",
+      "kind": "decision",
+      "title": "Разделять owner, WG, фокус и layout",
+      "description": "Процесс владеет данными; WG выбирает ссылки; экран и occurrence не создают новых сущностей.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "selectionState": "discovered"
+    },
+    {
+      "id": "R-MODEL-TIME",
+      "kind": "requirement",
+      "title": "Время отделено от Graph-семантики",
+      "description": "Время отделено от Graph-семантики. Учебный критерий, не подтверждённое достижение.",
+      "revision": 1,
+      "scope": "Ориентиры корректного применения RDG",
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "D-MODEL-TIME",
+      "kind": "decision",
+      "title": "Не выводить события из размещений",
+      "description": "Выбор, placement, исполнение и достижение являются разными фактами.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "selectionState": "discovered"
+    },
+    {
+      "id": "R-MODEL-LENSES",
+      "kind": "requirement",
+      "title": "Готовые шаблоны и линзы различаются",
+      "description": "Готовые шаблоны и линзы различаются. Учебный критерий, не подтверждённое достижение.",
+      "revision": 1,
+      "scope": "Ориентиры корректного применения RDG",
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "D-MODEL-LENSES",
+      "kind": "decision",
+      "title": "Выбрать маршрут повторного использования",
+      "description": "Template вставляется с remap; lens читается в своём namespace и открывается вручную.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "selectionState": "discovered"
+    }
+  ],
+  "objects": [
+    {
+      "id": "I-MODEL-REQUIREMENT",
+      "kind": "info",
+      "title": "Requirement / R",
+      "description": "Нормативное объяснение; точную форму операций сверяйте с действующей schema/API.",
+      "revision": 1,
+      "value": "Requirement — цель или проверяемое необходимое состояние. Корневая причина (rootCause) объясняет независимое основание существования цели. R не равна автоматически завершённому результату."
+    },
+    {
+      "id": "I-MODEL-DECISION",
+      "kind": "info",
+      "title": "Decision / D",
+      "description": "Нормативное объяснение; точную форму операций сверяйте с действующей schema/API.",
+      "revision": 1,
+      "value": "Decision — рассматриваемый способ достижения R, а не действие. discovered/unselected/selected; завершённость и результат отдельно. DRIVES: R→D; INTRODUCES: D→R; direct D→D запрещено."
+    },
+    {
+      "id": "I-MODEL-ACTION",
+      "kind": "info",
+      "title": "Action: два слоя",
+      "description": "Нормативное объяснение; точную форму операций сверяйте с действующей schema/API.",
+      "revision": 1,
+      "value": "Graph Action — явное обязательное действие с REQUIRES_ACTION от R/D. External task и low-level authoring operation находятся вне canvas/WG; Plan может ссылаться на существующие Action. Создание и placement не исполняют действие."
+    },
+    {
+      "id": "I-MODEL-OBJECTS",
+      "kind": "info",
+      "title": "Canon, Context и Info",
+      "description": "Нормативное объяснение; точную форму операций сверяйте с действующей schema/API.",
+      "revision": 1,
+      "value": "Canon — свободный критерий/принцип, Context — данные процесса, включая наблюдения и подтверждения с возможным artifact pin, Info — определение и техническая справка. Новый отдельный kind Evidence не создаётся; подтверждения — обычные Context в выбранных группах. Ни один из этих объектов автоматически не становится обязательной R."
+    },
+    {
+      "id": "I-MODEL-RELATIONS",
+      "kind": "info",
+      "title": "Типизированные связи",
+      "description": "Нормативное объяснение; точную форму операций сверяйте с действующей schema/API.",
+      "revision": 1,
+      "value": "DERIVES R→R; INTRODUCES D→R; DRIVES R→D; REQUIRES_ACTION R/D→Graph Action; CANON_FOR, CONTEXT_FOR, INFO_FOR, EVIDENCE_FOR; DEPENDS_ON с разрешёнными типами endpoints. Decision Group хранит members отдельно от edges."
+    },
+    {
+      "id": "I-MODEL-NAMESPACES",
+      "kind": "info",
+      "title": "Общая identity и namespace",
+      "description": "Нормативное объяснение; точную форму операций сверяйте с действующей schema/API.",
+      "revision": 1,
+      "value": "ID сущности разрешается внутри process/package/identitySpace. Shared R/D может иметь несколько действующих источников; повторное изображение occurrence меняет только вид. Не путать image ID, entity ID, Plan placement ID и recommendation definition ID."
+    },
+    {
+      "id": "I-MODEL-OWNERSHIP",
+      "kind": "info",
+      "title": "Process Graph, WG, focus, view",
+      "description": "Нормативное объяснение; точную форму операций сверяйте с действующей schema/API.",
+      "revision": 1,
+      "value": "Процесс владеет nodes/objects/externalActions, Plan/History. Working Graph хранит subset ссылок на них, может перекрываться с другими WG и не имеет отдельной правды. Focus, screen, layout/occurrence — проекции."
+    },
+    {
+      "id": "I-MODEL-REUSE",
+      "kind": "info",
+      "title": "Template против lens",
+      "description": "Нормативное объяснение; точную форму операций сверяйте с действующей schema/API.",
+      "revision": 1,
+      "value": "Ready template вставляется с новыми IDs и нормализованными состояниями. Граф линзы — readonly paper guidance; открытие не копирует его nodes и не создаёт выполненных событий."
+    },
+    {
+      "id": "K-MODEL-NO-DUP",
+      "kind": "canon",
+      "title": "Повтор ≠ новая сущность",
+      "description": "Принцип предметной корректности, не обязательная подцель.",
+      "revision": 1,
+      "guidance": "При визуальном повторении или нескольких основаниях не дублировать entity и её историю; readback по исходной identity."
+    },
+    {
+      "id": "K-MODEL-NO-FALSE",
+      "kind": "canon",
+      "title": "Нельзя приписывать достигнутый результат",
+      "description": "Принцип предметной корректности, не обязательная подцель.",
+      "revision": 1,
+      "guidance": "Описание, создание, выбор способа, планирование и чтение линзы не означают execution/completion; факты требуют отдельных событий и проверки."
+    },
+    {
+      "id": "K-MODEL-TYPED",
+      "kind": "canon",
+      "title": "Не создавать новые kinds без контракта",
+      "description": "Принцип предметной корректности, не обязательная подцель.",
+      "revision": 1,
+      "guidance": "Новая модель закрыта; произвольный kind и D→D недопустимы. Сначала использовать текущую схему и валидатор."
+    },
+    {
+      "id": "C-MODEL-PAPER",
+      "kind": "context",
+      "title": "Бумажное определение",
+      "description": "Условия применимости объяснения.",
+      "revision": 1,
+      "value": "Этот готовый Graph объясняет семантику RDG. Его D находятся в discovered; completion/evidence/история реальной работы здесь не записываются."
+    }
+  ],
+  "externalActions": [],
+  "edges": [
+    {
+      "id": "E-1",
+      "type": "DERIVES",
+      "from": "R-MODEL",
+      "to": "R-MODEL-TYPES"
+    },
+    {
+      "id": "E-2",
+      "type": "DRIVES",
+      "from": "R-MODEL-TYPES",
+      "to": "D-MODEL-TYPES"
+    },
+    {
+      "id": "E-3",
+      "type": "DERIVES",
+      "from": "R-MODEL",
+      "to": "R-MODEL-IDENTITY"
+    },
+    {
+      "id": "E-4",
+      "type": "DRIVES",
+      "from": "R-MODEL-IDENTITY",
+      "to": "D-MODEL-IDENTITY"
+    },
+    {
+      "id": "E-5",
+      "type": "DERIVES",
+      "from": "R-MODEL",
+      "to": "R-MODEL-EDGES"
+    },
+    {
+      "id": "E-6",
+      "type": "DRIVES",
+      "from": "R-MODEL-EDGES",
+      "to": "D-MODEL-EDGES"
+    },
+    {
+      "id": "E-7",
+      "type": "DERIVES",
+      "from": "R-MODEL",
+      "to": "R-MODEL-OWNERS"
+    },
+    {
+      "id": "E-8",
+      "type": "DRIVES",
+      "from": "R-MODEL-OWNERS",
+      "to": "D-MODEL-OWNERS"
+    },
+    {
+      "id": "E-9",
+      "type": "DERIVES",
+      "from": "R-MODEL",
+      "to": "R-MODEL-TIME"
+    },
+    {
+      "id": "E-10",
+      "type": "DRIVES",
+      "from": "R-MODEL-TIME",
+      "to": "D-MODEL-TIME"
+    },
+    {
+      "id": "E-11",
+      "type": "DERIVES",
+      "from": "R-MODEL",
+      "to": "R-MODEL-LENSES"
+    },
+    {
+      "id": "E-12",
+      "type": "DRIVES",
+      "from": "R-MODEL-LENSES",
+      "to": "D-MODEL-LENSES"
+    },
+    {
+      "id": "E-13",
+      "type": "INFO_FOR",
+      "from": "I-MODEL-REQUIREMENT",
+      "to": "R-MODEL-TYPES"
+    },
+    {
+      "id": "E-14",
+      "type": "INFO_FOR",
+      "from": "I-MODEL-DECISION",
+      "to": "R-MODEL-TYPES"
+    },
+    {
+      "id": "E-15",
+      "type": "INFO_FOR",
+      "from": "I-MODEL-ACTION",
+      "to": "R-MODEL-TYPES"
+    },
+    {
+      "id": "E-16",
+      "type": "INFO_FOR",
+      "from": "I-MODEL-OBJECTS",
+      "to": "R-MODEL-TYPES"
+    },
+    {
+      "id": "E-17",
+      "type": "INFO_FOR",
+      "from": "I-MODEL-RELATIONS",
+      "to": "R-MODEL-EDGES"
+    },
+    {
+      "id": "E-18",
+      "type": "INFO_FOR",
+      "from": "I-MODEL-NAMESPACES",
+      "to": "R-MODEL-IDENTITY"
+    },
+    {
+      "id": "E-19",
+      "type": "INFO_FOR",
+      "from": "I-MODEL-OWNERSHIP",
+      "to": "R-MODEL-OWNERS"
+    },
+    {
+      "id": "E-20",
+      "type": "INFO_FOR",
+      "from": "I-MODEL-REUSE",
+      "to": "R-MODEL-LENSES"
+    },
+    {
+      "id": "E-21",
+      "type": "CANON_FOR",
+      "from": "K-MODEL-NO-DUP",
+      "to": "D-MODEL-IDENTITY"
+    },
+    {
+      "id": "E-22",
+      "type": "CANON_FOR",
+      "from": "K-MODEL-NO-FALSE",
+      "to": "D-MODEL-TIME"
+    },
+    {
+      "id": "E-23",
+      "type": "CANON_FOR",
+      "from": "K-MODEL-TYPED",
+      "to": "D-MODEL-EDGES"
+    },
+    {
+      "id": "E-24",
+      "type": "CONTEXT_FOR",
+      "from": "C-MODEL-PAPER",
+      "to": "R-MODEL"
+    }
+  ],
+  "decisionGroups": [],
+  "workGraphs": [
+    {
+      "id": "WG-MODEL",
+      "title": "Объясняющая структура",
+      "rootIds": [
+        "R-MODEL"
+      ],
+      "memberIds": [
+        "R-MODEL",
+        "R-MODEL-TYPES",
+        "D-MODEL-TYPES",
+        "R-MODEL-IDENTITY",
+        "D-MODEL-IDENTITY",
+        "R-MODEL-EDGES",
+        "D-MODEL-EDGES",
+        "R-MODEL-OWNERS",
+        "D-MODEL-OWNERS",
+        "R-MODEL-TIME",
+        "D-MODEL-TIME",
+        "R-MODEL-LENSES",
+        "D-MODEL-LENSES",
+        "I-MODEL-REQUIREMENT",
+        "I-MODEL-DECISION",
+        "I-MODEL-ACTION",
+        "I-MODEL-OBJECTS",
+        "I-MODEL-RELATIONS",
+        "I-MODEL-NAMESPACES",
+        "I-MODEL-OWNERSHIP",
+        "I-MODEL-REUSE",
+        "K-MODEL-NO-DUP",
+        "K-MODEL-NO-FALSE",
+        "K-MODEL-TYPED",
+        "C-MODEL-PAPER"
+      ]
+    }
+  ],
+  "events": [],
+  "recommendationPackageIds": []
+}

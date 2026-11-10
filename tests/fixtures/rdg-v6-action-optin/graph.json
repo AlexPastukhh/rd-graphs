@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "revision": 2,
+  "id": "v6-action-optin-fixture",
+  "title": "Action — учебный рабочий граф",
+  "planningScale": "module",
+  "identitySpace": "v6-action-optin-fixture",
+  "rootRequirementId": "R0",
+  "actionModel": "candidate-v6",
+  "nodes": [
+    {
+      "id": "R0",
+      "kind": "requirement",
+      "title": "Подготовить часть приложения",
+      "status": "active"
+    },
+    {
+      "id": "A1",
+      "kind": "action",
+      "title": "Разделить работу на независимые части",
+      "status": "selected",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "C1",
+            "text": "Части могут разрабатываться отдельно"
+          }
+        ],
+        "contraindicated": []
+      },
+      "qrpe": [
+        {
+          "id": "Q1",
+          "text": "Есть ли скрытая сквозная зависимость?",
+          "status": "open"
+        }
+      ],
+      "selectionBasis": {
+        "driverSnapshot": {
+          "id": "R0",
+          "kind": "requirement",
+          "title": "Подготовить часть приложения",
+          "status": "active"
+        },
+        "actionSnapshot": {
+          "id": "A1",
+          "kind": "action",
+          "title": "Разделить работу на независимые части",
+          "status": "candidate",
+          "canonBlock": {
+            "recommended": [
+              {
+                "id": "C1",
+                "text": "Части могут разрабатываться отдельно"
+              }
+            ],
+            "contraindicated": []
+          },
+          "qrpe": [
+            {
+              "id": "Q1",
+              "text": "Есть ли скрытая сквозная зависимость?",
+              "status": "open"
+            }
+          ]
+        },
+        "note": "Синтетический тест writer; не решение пользователя о проекте"
+      }
+    },
+    {
+      "id": "R1",
+      "kind": "requirement",
+      "title": "Проработать первую часть",
+      "status": "active"
+    },
+    {
+      "id": "R2",
+      "kind": "requirement",
+      "title": "Проработать вторую часть",
+      "status": "active"
+    }
+  ],
+  "edges": [
+    {
+      "id": "action-drive-A1",
+      "type": "DRIVES",
+      "from": "R0",
+      "to": "A1"
+    },
+    {
+      "id": "action-introduces-A1-R1",
+      "type": "INTRODUCES",
+      "from": "A1",
+      "to": "R1",
+      "parent": "R0",
+      "childRole": "subgoal"
+    },
+    {
+      "id": "action-introduces-A1-R2",
+      "type": "INTRODUCES",
+      "from": "A1",
+      "to": "R2",
+      "parent": "R0",
+      "childRole": "subgoal"
+    }
+  ],
+  "events": [
+    {
+      "id": "EV1",
+      "type": "action_selected",
+      "actionId": "A1",
+      "driverRequirementId": "R0",
+      "by": "assistant",
+      "note": "Синтетический тест writer; не решение пользователя о проекте"
+    }
+  ]
+}

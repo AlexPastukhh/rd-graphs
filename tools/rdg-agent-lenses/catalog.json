@@ -1,0 +1,390 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "key": "orient",
+      "title": "Войти в работу через RDG",
+      "purpose": "Получить проверенный контекст и выбрать подходящие инструкции",
+      "appliesWhen": "Перед содержательным этапом, при смене задачи, owner или после потери контекста.",
+      "definition": "orient.json",
+      "paperOnly": true,
+      "companions": [
+        "clarify",
+        "shape"
+      ],
+      "profileDefinitions": {
+        "rdg-decision-v1": "orient-decision.json"
+      }
+    },
+    {
+      "key": "clarify",
+      "title": "Уточнить цели и контекст",
+      "purpose": "Иметь достаточно уточнённые требования и данные для следующего содержательного шага",
+      "appliesWhen": "Перед построением способов, при неоднозначной задаче или изменении исходных условий.",
+      "definition": "clarify.json",
+      "paperOnly": true,
+      "companions": [
+        "shape",
+        "explore"
+      ],
+      "profileDefinitions": {
+        "rdg-decision-v1": "clarify-decision.json"
+      }
+    },
+    {
+      "key": "explore",
+      "title": "Исследовать способы на бумаге",
+      "purpose": "Построить пространство вариантов и оснований выбора до принятия и исполнения",
+      "appliesWhen": "При поиске способа, разбиения на подцели и при необходимости пересмотреть upstream.",
+      "definition": "explore.json",
+      "paperOnly": true,
+      "companions": [
+        "clarify",
+        "shape",
+        "review"
+      ],
+      "profileDefinitions": {
+        "rdg-decision-v1": "explore-decision.json"
+      }
+    },
+    {
+      "key": "shape",
+      "title": "Решить, какие блоки создавать",
+      "purpose": "Выделять оправданные R/A без дублирования и произвольного дробления",
+      "appliesWhen": "При добавлении блока, разбиении цели или сохранении исследования.",
+      "definition": "shape.json",
+      "paperOnly": true,
+      "companions": [
+        "clarify",
+        "explore",
+        "preserve"
+      ],
+      "profileDefinitions": {
+        "rdg-decision-v1": "shape-decision.json"
+      }
+    },
+    {
+      "key": "preserve",
+      "title": "Обосновать сохранение: (C1 OR C2) AND C3",
+      "purpose": "Обосновать сохранение смыслового блока: содержательное решение либо ценная декомпозиция вместе с оправданной будущей ценностью.",
+      "appliesWhen": "Перед решением, наносить ли конкретный содержательный фрагмент на бумагу вообще.",
+      "definition": "preserve.json",
+      "paperOnly": true,
+      "companions": [
+        "shape",
+        "explore"
+      ],
+      "sourceRefs": [
+        "Текущее пользовательское уточнение C1/C2/C3",
+        "docs/handoffs/rdg-prework-v4.1-final-20261018/source-candidate-prework-v3-reading-copy.md"
+      ],
+      "sourceRequirement": "WR-22",
+      "profileDefinitions": {
+        "rdg-decision-v1": "preserve-decision.json"
+      }
+    },
+    {
+      "key": "work",
+      "title": "Выбрать и выполнить разрешённую работу",
+      "purpose": "Перейти от рассмотренного способа к проверенному результату с настоящей историей",
+      "appliesWhen": "Когда задача требует выбора, планирования или фактического выполнения; не для одного построения на бумаге.",
+      "definition": "work.json",
+      "paperOnly": false,
+      "companions": [
+        "clarify",
+        "explore",
+        "review",
+        "handoff"
+      ],
+      "profileDefinitions": {
+        "rdg-decision-v1": "work-decision.json"
+      }
+    },
+    {
+      "key": "review",
+      "title": "Проверить решение, зависимости и слабые места",
+      "purpose": "Найти содержательные пробелы и проверить последствия изменений без ложных verdicts",
+      "appliesWhen": "Перед принятием способа, после изменения upstream, при проверке результата и итоговом аудите.",
+      "definition": "review.json",
+      "paperOnly": true,
+      "companions": [
+        "clarify",
+        "explore",
+        "handoff"
+      ],
+      "profileDefinitions": {
+        "rdg-decision-v1": "review-decision.json"
+      }
+    },
+    {
+      "key": "handoff",
+      "title": "Продолжить и передать работу",
+      "purpose": "Передать проверенное состояние, неопределённости и ближайшее действие следующему исполнителю",
+      "appliesWhen": "При передаче другому чату, после обрыва или неопределённого исхода записи.",
+      "definition": "handoff.json",
+      "paperOnly": true,
+      "companions": [
+        "orient",
+        "work"
+      ],
+      "profileDefinitions": {
+        "rdg-decision-v1": "handoff-decision.json"
+      }
+    },
+    {
+      "key": "operate",
+      "title": "Обслужить подготовленную среду",
+      "purpose": "Выполнить разрешённую эксплуатационную процедуру с проверкой границ",
+      "appliesWhen": "Только для задач подготовки, подключения, публикации или явно запрошенной исключительной процедуры.",
+      "definition": "operate.json",
+      "paperOnly": false,
+      "companions": [
+        "orient",
+        "review",
+        "handoff"
+      ],
+      "profileDefinitions": {
+        "rdg-decision-v1": "operate-decision.json"
+      }
+    },
+    {
+      "key": "develop",
+      "title": "Разрабатывать RDG в согласованном охвате",
+      "purpose": "Изменить систему с сохранением модели, границ модулей и проверяемых контрактов",
+      "appliesWhen": "Для разработки самого RDG; не обязательна оператору прикладной задачи.",
+      "definition": "develop.json",
+      "paperOnly": false,
+      "companions": [
+        "orient",
+        "shape",
+        "review"
+      ],
+      "profileDefinitions": {
+        "rdg-decision-v1": "develop-decision.json"
+      }
+    },
+    {
+      "key": "checkpoint",
+      "title": "Соразмерно пересмотреть принятое решение",
+      "purpose": "Соразмерный checkpoint собственного содержательного пересмотра с выбором законного маршрута",
+      "appliesWhen": "При собственном намерении содержательно пересмотреть принятое решение; точные условия, исключения и пять компонуемых маршрутов — в определении.",
+      "definition": "checkpoint.json",
+      "paperOnly": true,
+      "companions": [
+        "review",
+        "preserve",
+        "explore",
+        "clarify"
+      ],
+      "sourceRefs": [
+        "docs/handoffs/candidate-prework-rdg-context-checkpoints-dependencies-approval-v9.md"
+      ],
+      "profileDefinitions": {
+        "rdg-decision-v1": "checkpoint-decision.json"
+      }
+    },
+    {
+      "key": "model",
+      "title": "Понять модель RDG",
+      "purpose": "Объяснить типы сущностей, связи, identity и владельцев данных",
+      "appliesWhen": "Перед построением графов и при сомнении о смысле сущности.",
+      "paperOnly": true,
+      "companions": [
+        "shape",
+        "decision-logic",
+        "plan-history",
+        "lens-system"
+      ],
+      "profileDefinitions": {
+        "rdg-decision-v1": "model-decision.json"
+      }
+    },
+    {
+      "key": "decision-logic",
+      "title": "Понять решения и обязательства",
+      "purpose": "Объяснить выбор, группы, несколько оснований, отмену и завершение",
+      "appliesWhen": "При выборе, отказе, пересмотре и закрытии R/D/Action.",
+      "paperOnly": true,
+      "companions": [
+        "explore",
+        "review",
+        "model",
+        "plan-history"
+      ],
+      "profileDefinitions": {
+        "rdg-decision-v1": "decision-logic-decision.json"
+      }
+    },
+    {
+      "key": "plan-history",
+      "title": "Понять Plan и History",
+      "purpose": "Отделить планирование от выбора, фактов исполнения и Evidence",
+      "appliesWhen": "При размещении, исполнении и разборе истории.",
+      "paperOnly": true,
+      "companions": [
+        "work",
+        "review",
+        "model"
+      ],
+      "profileDefinitions": {
+        "rdg-decision-v1": "plan-history-decision.json"
+      }
+    },
+    {
+      "key": "lens-system",
+      "title": "Понять линзы и вложенные рекомендации",
+      "purpose": "Объяснить реестр рекомендаций, переходы между линзами и факты применения",
+      "appliesWhen": "При выборе, настройке и использовании вложенных линз.",
+      "paperOnly": true,
+      "companions": [
+        "orient",
+        "model",
+        "review"
+      ],
+      "profileDefinitions": {
+        "rdg-decision-v1": "lens-system-decision.json"
+      }
+    }
+  ],
+  "instructionCoverage": [
+    {
+      "source": "AGENTS.md",
+      "lens": "orient",
+      "nodeId": "A-ORIENT-SOURCE",
+      "role": "navigation"
+    },
+    {
+      "source": "README.md",
+      "lens": "orient",
+      "nodeId": "R-LENS-ORIENT",
+      "role": "navigation"
+    },
+    {
+      "source": "docs/README.md",
+      "lens": "orient",
+      "nodeId": "A-ORIENT-SOURCE",
+      "role": "navigation"
+    },
+    {
+      "source": "graphs/README.md",
+      "lens": "shape",
+      "nodeId": "A-SHAPE-REUSE",
+      "role": "technical-reference"
+    },
+    {
+      "source": "tests/visual/README.md",
+      "lens": "review",
+      "nodeId": "A-REVIEW-CHECKS",
+      "role": "technical-reference"
+    },
+    {
+      "source": "docs/guides/RDG-CURRENT-STATE.md",
+      "lens": "orient",
+      "nodeId": "A-ORIENT-SOURCE",
+      "role": "navigation"
+    },
+    {
+      "source": "docs/guides/RDG-ACTIVE-CONTRACT.md",
+      "lens": "shape",
+      "nodeId": "A-SHAPE-MODEL",
+      "role": "technical-reference"
+    },
+    {
+      "source": "docs/guides/RDG-OPERATIONS.md",
+      "lens": "operate",
+      "nodeId": "R-LENS-OPERATE",
+      "role": "technical-reference"
+    },
+    {
+      "source": "docs/guides/RDG-DEVELOPMENT-PLAN.md",
+      "lens": "develop",
+      "nodeId": "R-LENS-DEVELOP",
+      "role": "development-scope"
+    },
+    {
+      "source": "docs/guides/VIEWER-EXPLORER.md",
+      "lens": "develop",
+      "nodeId": "A-DEVELOP-UI",
+      "role": "technical-reference"
+    },
+    {
+      "source": "docs/guides/RDG-GENDOCEN-REQUIREMENT-DEPENDENCIES.md",
+      "lens": "review",
+      "nodeId": "A-REVIEW-DEPENDENCIES",
+      "role": "technical-reference"
+    },
+    {
+      "source": "docs/guides/RDG-LIVE-TEACHING-WORKSPACE.md",
+      "lens": "review",
+      "nodeId": "A-REVIEW-CHECKS",
+      "role": "example-facts"
+    },
+    {
+      "source": "docs/guides/RDG-TEACHING-EXAMPLE-RESET.md",
+      "lens": "operate",
+      "nodeId": "A-OPERATE-RESET",
+      "role": "exception-reference"
+    },
+    {
+      "source": "docs/guides/RDG-MODULES.md",
+      "lens": "develop",
+      "nodeId": "A-DEVELOP-MODULES",
+      "role": "technical-reference"
+    },
+    {
+      "source": "docs/guides/RDG-AGENT-BOOTSTRAP.md",
+      "lens": "orient",
+      "nodeId": "R-LENS-ORIENT",
+      "role": "client-reference"
+    },
+    {
+      "source": "docs/guides/RDG-LENSES.md",
+      "lens": "orient",
+      "nodeId": "A-ORIENT-CATALOG",
+      "role": "catalog-reference"
+    },
+    {
+      "source": "docs/guides/RDG-DECISION-V1-CONTRACT.md",
+      "lens": "develop",
+      "nodeId": "R-LENS-DEVELOP",
+      "role": "technical-reference"
+    },
+    {
+      "source": "docs/guides/FORTIS-APPROVALS-SECURE-DEVELOPMENT.md",
+      "lens": "develop",
+      "nodeId": "R-LENS-DEVELOP",
+      "role": "development-scope"
+    },
+    {
+      "source": "docs/guides/RDG-FUNCTIONS-AND-TESTS.md",
+      "lens": "orient",
+      "nodeId": "A-ORIENT-SOURCE",
+      "role": "navigation"
+    },
+    {
+      "source": "fortis_approvals/README.md",
+      "lens": "develop",
+      "nodeId": "R-LENS-DEVELOP",
+      "role": "development-scope"
+    },
+    {
+      "source": "fortis_approvals/deploy/README.md",
+      "lens": "operate",
+      "nodeId": "R-LENS-OPERATE",
+      "role": "technical-reference"
+    }
+  ],
+  "limitations": [
+    {
+      "id": "assessment-execution",
+      "status": "explicit-boundary",
+      "text": "Определения пересобраны по закрытому core-профилю. Открытие линзы не выполняет её. Смысловое сопоставление обосновывает исполнитель; автоматического доказательства реальной пользы, истинности и пользовательской UI-acceptance нет."
+    }
+  ],
+  "rules": [
+    "Каталог нужен перед содержательным этапом; выбор линз делает исполнитель по задаче или пользователь.",
+    "Определение, применение к конкретной версии Graph и долговременное сохранение исследования — разные вещи.",
+    "Рабочие инструкции описаны графами; схемы writers, точные команды, права и изменяемые факты остаются у технических владельцев.",
+    "При собственном содержательном пересмотре используйте checkpoint; его определение задаёт trigger, соразмерность, исключения и маршруты. Открытие lens не доказывает её применение."
+  ]
+}

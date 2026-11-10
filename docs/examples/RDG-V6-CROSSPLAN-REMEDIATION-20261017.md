@@ -1,0 +1,29 @@
+> **СТАТУС: АРХИВНЫЙ ПРИМЕР — НЕ АКТИВНАЯ МОДЕЛЬ.** `Decision/Option`, старые каталоги и команды ниже относятся к историческому корпусу, их нельзя выполнять как текущий `candidate-v6`. Новый чат: [текущая спецификация](../guides/RDG-CURRENT-STATE.md).
+
+# RDG Candidate v6 — адресные исправления после независимой проверки старого и нового планов
+
+**Дата:** 2026-10-17. **Статус:** implementation pilot; НЕ committed architecture, НЕ live GitHub/Helper cutover. **Основание:** [Final Review R-RDG-CROSSPLAN-20261017-01/v1](https://github.com/AlexPastukhh/forfiles/blob/main/artifacts/2026-10-17/final-review-rdg-old-new-plans-consistency-r-rdg-crossplan-20261017-01-v1.md), старый CPW-RDG-ACT-20261016-01/v6 и новый CPW-RDG-API-LENS-20261017-01/v1. ID исторического review не перенумерованы; статусы PR там не изменены автоматически.
+
+## Подтверждённые исправления (в коде)
+
+- **F-P-01 protected-parent bypass.** `tools/rdg-graph-api.py` теперь проверяет политику **обоих существенных концов** при material edge change, родительской R при `create_requirement` и old/new parent при `reparent_requirement`. `tools/graph-apply.py` запрещает `select_action` с новыми дочерними R, `link_action_requirement` и изменение selected A через `reconsider_action`, если затронута защищённая R без подходящего user-attributed issuer receipt. Проверки авторизованных owner-изменений и запретов для другого actor — `tests/rdg-general-graph-api.test.cjs`. **Граница:** matching issuer и HMAC ещё не удостоверяют реальную личность человека; точная семантика scope защиты — pending user decision.
+- **F-P-03 ordinary Lens validation.** `tools/rdg-lens-session.cjs` требует успешного `graph-apply.validate` для полноценного `actionModel:candidate-v6` source. Исторические semantic fixture проходят отдельный ограниченный parser. Generic assessments сохраняются как входные утверждения, root `achieved` и `blocked` не объявляются проверенным outcome без независимой проверки. Negative selected-no-T1 test добавлен в `rdg-general-lens-research.test.cjs`.
+- **F-P-02 valuable completed pending research.** `tools/rdg-lens-research.cjs` позволяет явно сохранить costly assessed canon/Requirement с evidence, если target Action ещё не выбран, даже когда QRPE закрыты; требует совпадения конкретного `pendingDecisionForActionId` с session target, `pendingDecisionState:'unselected'`, реальной оценки с evidence и остальных шести conservative условий. No-write default сохранён. Третий общий persistence criterion **не принят автоматически**, боевое решение о реальной ценности всё ещё декларативно.
+- **F-P-04 partial Graph API extension.** Добавлено `graph_edit/reparent_requirement` (только non-root с единственным активным DERIVES, без Action INTRODUCES). Старая связь архивируется, новая создаётся, priorEdges остаётся в подписанном событии; общий DAG validator отклоняет цикл и опасное изменение. Existing standalone `append_qrpe`, `transition_qrpe`, `reconsider_action` не стали операциями Lens. **Нельзя** пока объявлять полный произвольный API для всех видов Action/QRPE/graph-owner migrations.
+- **F-P-05 metadata-only Git archive lookup.** `tools/rdg-github-store.py` записывает маленькую `.metadata.json` рядом с редким saved Lens snapshot, предоставляет `list_research_metadata()` (читает только metadata) и `load_research(metadata)` (строгая привязка имени и Git SHA). `tools/rdg-github-research-cli.py` читает Git по **явно** предоставленным env repo/branch/token, не изменяя ничего. `tools/rdg-lens-session-cli.cjs --github-metadata [--open-previous]` запускает metadata lookup + lastRelevant matching и **только по opt-in** читает полный saved graph. По удалённому Git пользовательских данных здесь **не проводилось** проб: используется только isolated fake transport (`rdg-github-store-smoke.py`).
+
+## Что не объявляется устранённым и почему
+
+`F-R-01` issuer identity/higher authority, `F-R-02` multi-graph Git/partial commit/outside effect, `F-R-03` semantic evidence staleness и `F-U-01..05` (user stable/protected policy, третий критерий, GitHub canonical owner, O/D→Action migration/evaluator, full-graph vs checkpoint) остаются незакрытыми до соответствующих authority decisions и actual E2E evidence. **Metadata sidecars — не вторая база версий**: Git остаётся владельцем версий файлов, но два GitHub Contents writes не атомарны. Если первый snapshot PUT прошёл, а второй metadata PUT не прошёл, останется snapshot, не найденный metadata-only lookup. Это явно ограниченный transport pilot, **не гарантированный Git transaction**.
+
+**Инструкции для ИИ:** просмотр Lens не даёт разрешения на материальные действия. Любая material mutation проходит общий подписанный package; stable/protected scope не пересматривается при обычном анализе; не переносите истину канона из устаревшего сохранённого run без обновления evidence; не смешивайте O/D legacy и new Action pilot; не копируйте application graph в основной graph.json без отдельного основания; не добавляйте обязательный LensRun/External Dependencies блок. CLI только читает и печатает JSON, не делает Git writes.
+
+## Проверка и безопасный gate
+
+```bash
+node --test tests/rdg-general-graph-api.test.cjs tests/rdg-general-lens-research.test.cjs tests/rdg-lens-cli.test.cjs tests/rdg-github-store.test.cjs
+node --test tests/rdg-v6-action-reconsider-writer.test.cjs tests/rdg-v6-lens-real-application.test.cjs
+node --test tests/*.test.cjs
+```
+
+В legacy `work-kit/modules/rdg.work.semantics.module.md` ещё R/D/Option, и установленный Helper/Viewer не переключён на pilot. Ни одна пользовательская R/Graph не мигрирована и не изменялась. В дереве `/workspace/repos/rd-graphs` нет `.git`, поэтому не заявлять git commit/push. Следующий gate: подтвердить пользователя/issuer и owner + проверить полный реальный GitHub round-trip и независимый actual value/staleness assessment, прежде чем сделать изолированные изменения production default.

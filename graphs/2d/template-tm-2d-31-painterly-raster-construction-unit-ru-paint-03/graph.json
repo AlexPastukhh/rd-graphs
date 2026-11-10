@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "id": "template-tm-2d-31-painterly-raster-construction-unit-ru-paint-03",
+  "title": "Unit · Painterly Appearance And Edge System",
+  "revision": 1,
+  "planningScale": "unit",
+  "identitySpace": "prepared:TM-2D-31-PAINTERLY-RASTER-CONSTRUCTION",
+  "rootRequirementId": "RU-PAINT-03",
+  "readOnly": true,
+  "templateOnly": true,
+  "selected": false,
+  "catalogHidden": true,
+  "preparedModule": {
+    "id": "TEMPLATE-D-RU-PAINT-03",
+    "version": "0498e2e7d05fb2015a80b85c4eebd75d5d39270946cb0d95fe376b06290b4fa3",
+    "goalRequirementId": "RU-PAINT-03",
+    "methodDecisionId": "TEMPLATE-D-RU-PAINT-03",
+    "childRequirementIds": [],
+    "applicability": "actual color/light/material/brush/edge relationships that define the painterly appearance",
+    "successCriteria": "Достаточно выполнить применимую Unit-specific Guidance и её checkpoints; инструкция не доказывает результат."
+  },
+  "sourceDocument": "/workspace/repos/obs-planning-docs/planning/documentation/idtspe-methodology/active/profiles/visual-production-2d/target-modules/TM-2D-31-PAINTERLY-RASTER-CONSTRUCTION.md#ru-paint-03",
+  "sourceContentSHA256": "0498e2e7d05fb2015a80b85c4eebd75d5d39270946cb0d95fe376b06290b4fa3",
+  "sourceOwnerGraphSlug": "template-tm-2d-31-painterly-raster-construction",
+  "sourceAnchor": "ru-paint-03",
+  "coverage": "Готовый способ одного узкого R; без выдуманных под-R и без выбора проекта.",
+  "nodes": [
+    {
+      "id": "RU-PAINT-03",
+      "kind": "requirement",
+      "title": "Painterly Appearance And Edge System",
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "template-tm-2d-31-painterly-raster-construction",
+        "nodeId": "RU-PAINT-03"
+      }
+    },
+    {
+      "id": "TEMPLATE-D-RU-PAINT-03",
+      "kind": "decision",
+      "status": "reusable-unselected",
+      "templateRole": "unit-prepared-guidance",
+      "selected": false,
+      "title": "Готовый способ проработки: Painterly Appearance And Edge System",
+      "description": "<a id=\"ru-paint-03\"></a>\n### Painterly Appearance And Edge System\n\n`RU-PAINT-03`\n\nTreat brush/edge/material/light/color as one painterly appearance system when they are inseparable in the chosen method.",
+      "source": "/workspace/repos/obs-planning-docs/planning/documentation/idtspe-methodology/active/profiles/visual-production-2d/target-modules/TM-2D-31-PAINTERLY-RASTER-CONSTRUCTION.md#ru-paint-03",
+      "sourceUnitId": "RU-PAINT-03",
+      "explicitSubrequirements": false,
+      "note": "Source defines Unit guidance; no explicit nested R inventory is declared here."
+    }
+  ],
+  "edges": [
+    {
+      "id": "UNIT-E-DRIVE",
+      "type": "DRIVES",
+      "from": "RU-PAINT-03",
+      "to": "TEMPLATE-D-RU-PAINT-03",
+      "templateOnly": true,
+      "meaning": "Готовый ответ на узкую задачу; пока не выбран."
+    }
+  ],
+  "events": []
+}

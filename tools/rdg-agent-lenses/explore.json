@@ -1,0 +1,583 @@
+{
+  "schemaVersion": 1,
+  "actionModel": "candidate-v6",
+  "coreModel": "rdg-core-v1",
+  "id": "rdg-agent-explore-lens",
+  "title": "Исследовать способы на бумаге",
+  "identitySpace": "rdg-prepared-explore-lens",
+  "revision": 2,
+  "rootRequirementId": "R-LENS-EXPLORE",
+  "planningScale": "module",
+  "nodes": [
+    {
+      "id": "R-LENS-EXPLORE",
+      "kind": "requirement",
+      "title": "Построить пространство вариантов и оснований выбора до принятия и исполнения",
+      "status": "active",
+      "qrpe": [],
+      "revision": 2,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "description": "Построить пространство вариантов и оснований выбора до принятия и исполнения",
+      "scope": "Применение explore к задаче и её текущей версии"
+    },
+    {
+      "id": "A-EXPLORE-BUILD",
+      "kind": "action",
+      "title": "Исследовать способы на бумаге",
+      "status": "candidate",
+      "description": "Рассмотреть состав подцелей и доступные способы. Порядок массива не задаёт время; присутствие ветви не означает выбор или исполнение.",
+      "qrpe": [],
+      "revision": 2,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "R-EXPLORE-VARIANTS",
+      "kind": "requirement",
+      "title": "Рассмотрены разные семейства способов",
+      "status": "potential",
+      "qrpe": [],
+      "revision": 2,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "description": "Рассмотрены разные семейства способов",
+      "scope": "Применение explore к задаче и её текущей версии"
+    },
+    {
+      "id": "A-EXPLORE-REUSE",
+      "kind": "action",
+      "title": "Изучить подходящие готовые способы",
+      "description": "Найти применимые подготовленные графы и существующие способы, проверить источник, версию, условия и bindings к текущей цели. Сохранить каноны и provenance.",
+      "status": "candidate",
+      "qrpe": [],
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "A-EXPLORE-SITUATIONAL",
+      "kind": "action",
+      "title": "Построить ситуационные варианты",
+      "description": "Рассмотреть иные подходы, альтернативные разбиения и потенциальные рабочие состояния. Разворачивать нужную глубину R/A через существующие потенциальные отношения.",
+      "status": "candidate",
+      "qrpe": [],
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "R-EXPLORE-ASSESSMENT",
+      "kind": "requirement",
+      "title": "Варианты оценены по канонам и ограничениям",
+      "status": "potential",
+      "qrpe": [],
+      "revision": 2,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "description": "Варианты оценены по канонам и ограничениям",
+      "scope": "Применение explore к задаче и её текущей версии"
+    },
+    {
+      "id": "A-EXPLORE-CANONS",
+      "kind": "action",
+      "title": "Сопоставить основания за и против",
+      "description": "В собственном графе A проверить все реализуемые, затрагиваемые и ограничивающие R и Context. Сопоставить их с локальными показательными R/Context канона по смыслу, группе, свойствам и области. AND/OR явны; OR включающее. Partial/unknown не равны полному совпадению. Hard исключает A при доказанном полном условии; soft сохраняется как минус при обоснованном выборе.",
+      "status": "candidate",
+      "qrpe": [],
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "R-EXPLORE-UPSTREAM",
+      "kind": "requirement",
+      "title": "Сильные конфликтующие варианты не потеряны",
+      "status": "potential",
+      "qrpe": [],
+      "revision": 2,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "description": "Сильные конфликтующие варианты не потеряны",
+      "scope": "Применение explore к задаче и её текущей версии"
+    },
+    {
+      "id": "A-EXPLORE-REFRAME",
+      "kind": "action",
+      "title": "Рассмотреть пересмотр исходных условий",
+      "description": "Показать ценный способ, даже если он требует пересмотра исходной R или других upstream оснований. Такой вариант обсуждается как предложение с последствиями; выбранный ранее путь не меняется молча. При изменении общей ситуации проверить оставшиеся R и Context.",
+      "status": "candidate",
+      "qrpe": [],
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "R-EXPLORE-PAPER",
+      "kind": "requirement",
+      "title": "Построение остаётся предварительным",
+      "status": "potential",
+      "qrpe": [],
+      "revision": 2,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "description": "Построение остаётся предварительным",
+      "scope": "Применение explore к задаче и её текущей версии"
+    },
+    {
+      "id": "A-EXPLORE-COMPARE",
+      "kind": "action",
+      "title": "Сравнить ветви и обозначить границы поиска",
+      "description": "Показать различия и открытые вопросы. Любую нарисованную ветвь можно переработать; candidate A и potential R сохраняют предварительный смысл. Сохранение Graph описывает рисунок, не выполнение предметной работы.",
+      "status": "candidate",
+      "qrpe": [],
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    }
+  ],
+  "objects": [
+    {
+      "id": "K-A-EXPLORE-BUILD",
+      "kind": "canon",
+      "title": "Применимость: Исследовать способы на бумаге",
+      "revision": 1,
+      "arguments": [
+        {
+          "id": "ARG-A-EXPLORE-BUILD",
+          "text": "Ситуация оправдывает этот способ в пределах его вклада",
+          "polarity": "for",
+          "strength": "soft",
+          "condition": {
+            "all": [
+              {
+                "id": "NEED-A-EXPLORE-BUILD",
+                "kind": "requirement",
+                "text": "Построить пространство вариантов и оснований выбора до принятия и исполнения",
+                "scope": "Иллюстративное применение процедуры в соответствующей задаче"
+              },
+              {
+                "id": "LOCAL-A-EXPLORE-BUILD",
+                "kind": "context",
+                "text": "Выбор способа ещё открыт; разные подходы или пересмотр upstream способны существенно изменить путь."
+              }
+            ]
+          }
+        },
+        {
+          "id": "COST-A-EXPLORE-BUILD",
+          "text": "Лишнее действие при уже достаточном состоянии",
+          "polarity": "against",
+          "strength": "soft",
+          "condition": {
+            "id": "ENOUGH-A-EXPLORE-BUILD",
+            "kind": "context",
+            "text": "Достаточное evidence уже есть; повтор не даст существенного нового знания, и текущая задача не требует независимой повторной проверки."
+          }
+        }
+      ]
+    },
+    {
+      "id": "K-A-EXPLORE-REUSE",
+      "kind": "canon",
+      "title": "Применимость: Изучить подходящие готовые способы",
+      "revision": 1,
+      "arguments": [
+        {
+          "id": "ARG-A-EXPLORE-REUSE",
+          "text": "Ситуация оправдывает этот способ в пределах его вклада",
+          "polarity": "for",
+          "strength": "soft",
+          "condition": {
+            "all": [
+              {
+                "id": "NEED-A-EXPLORE-REUSE",
+                "kind": "requirement",
+                "text": "Рассмотрены разные семейства способов",
+                "scope": "Иллюстративное применение процедуры в соответствующей задаче"
+              },
+              {
+                "id": "LOCAL-A-EXPLORE-REUSE",
+                "kind": "context",
+                "text": "Выбор способа ещё открыт; разные подходы или пересмотр upstream способны существенно изменить путь."
+              }
+            ]
+          }
+        },
+        {
+          "id": "COST-A-EXPLORE-REUSE",
+          "text": "Лишнее действие при уже достаточном состоянии",
+          "polarity": "against",
+          "strength": "soft",
+          "condition": {
+            "id": "ENOUGH-A-EXPLORE-REUSE",
+            "kind": "context",
+            "text": "Достаточное evidence уже есть; повтор не даст существенного нового знания, и текущая задача не требует независимой повторной проверки."
+          }
+        }
+      ]
+    },
+    {
+      "id": "K-A-EXPLORE-SITUATIONAL",
+      "kind": "canon",
+      "title": "Применимость: Построить ситуационные варианты",
+      "revision": 1,
+      "arguments": [
+        {
+          "id": "ARG-A-EXPLORE-SITUATIONAL",
+          "text": "Ситуация оправдывает этот способ в пределах его вклада",
+          "polarity": "for",
+          "strength": "soft",
+          "condition": {
+            "all": [
+              {
+                "id": "NEED-A-EXPLORE-SITUATIONAL",
+                "kind": "requirement",
+                "text": "Рассмотрены разные семейства способов",
+                "scope": "Иллюстративное применение процедуры в соответствующей задаче"
+              },
+              {
+                "id": "LOCAL-A-EXPLORE-SITUATIONAL",
+                "kind": "context",
+                "text": "Выбор способа ещё открыт; разные подходы или пересмотр upstream способны существенно изменить путь."
+              }
+            ]
+          }
+        },
+        {
+          "id": "COST-A-EXPLORE-SITUATIONAL",
+          "text": "Лишнее действие при уже достаточном состоянии",
+          "polarity": "against",
+          "strength": "soft",
+          "condition": {
+            "id": "ENOUGH-A-EXPLORE-SITUATIONAL",
+            "kind": "context",
+            "text": "Достаточное evidence уже есть; повтор не даст существенного нового знания, и текущая задача не требует независимой повторной проверки."
+          }
+        }
+      ]
+    },
+    {
+      "id": "K-A-EXPLORE-CANONS",
+      "kind": "canon",
+      "title": "Применимость: Сопоставить основания за и против",
+      "revision": 1,
+      "arguments": [
+        {
+          "id": "ARG-A-EXPLORE-CANONS",
+          "text": "Ситуация оправдывает этот способ в пределах его вклада",
+          "polarity": "for",
+          "strength": "soft",
+          "condition": {
+            "all": [
+              {
+                "id": "NEED-A-EXPLORE-CANONS",
+                "kind": "requirement",
+                "text": "Варианты оценены по канонам и ограничениям",
+                "scope": "Иллюстративное применение процедуры в соответствующей задаче"
+              },
+              {
+                "id": "LOCAL-A-EXPLORE-CANONS",
+                "kind": "context",
+                "text": "Выбор способа ещё открыт; разные подходы или пересмотр upstream способны существенно изменить путь."
+              }
+            ]
+          }
+        },
+        {
+          "id": "COST-A-EXPLORE-CANONS",
+          "text": "Лишнее действие при уже достаточном состоянии",
+          "polarity": "against",
+          "strength": "soft",
+          "condition": {
+            "id": "ENOUGH-A-EXPLORE-CANONS",
+            "kind": "context",
+            "text": "Достаточное evidence уже есть; повтор не даст существенного нового знания, и текущая задача не требует независимой повторной проверки."
+          }
+        }
+      ]
+    },
+    {
+      "id": "K-A-EXPLORE-REFRAME",
+      "kind": "canon",
+      "title": "Применимость: Рассмотреть пересмотр исходных условий",
+      "revision": 1,
+      "arguments": [
+        {
+          "id": "ARG-A-EXPLORE-REFRAME",
+          "text": "Ситуация оправдывает этот способ в пределах его вклада",
+          "polarity": "for",
+          "strength": "soft",
+          "condition": {
+            "all": [
+              {
+                "id": "NEED-A-EXPLORE-REFRAME",
+                "kind": "requirement",
+                "text": "Сильные конфликтующие варианты не потеряны",
+                "scope": "Иллюстративное применение процедуры в соответствующей задаче"
+              },
+              {
+                "id": "LOCAL-A-EXPLORE-REFRAME",
+                "kind": "context",
+                "text": "Выбор способа ещё открыт; разные подходы или пересмотр upstream способны существенно изменить путь."
+              }
+            ]
+          }
+        },
+        {
+          "id": "COST-A-EXPLORE-REFRAME",
+          "text": "Лишнее действие при уже достаточном состоянии",
+          "polarity": "against",
+          "strength": "soft",
+          "condition": {
+            "id": "ENOUGH-A-EXPLORE-REFRAME",
+            "kind": "context",
+            "text": "Достаточное evidence уже есть; повтор не даст существенного нового знания, и текущая задача не требует независимой повторной проверки."
+          }
+        }
+      ]
+    },
+    {
+      "id": "K-A-EXPLORE-COMPARE",
+      "kind": "canon",
+      "title": "Применимость: Сравнить ветви и обозначить границы поиска",
+      "revision": 1,
+      "arguments": [
+        {
+          "id": "ARG-A-EXPLORE-COMPARE",
+          "text": "Ситуация оправдывает этот способ в пределах его вклада",
+          "polarity": "for",
+          "strength": "soft",
+          "condition": {
+            "all": [
+              {
+                "id": "NEED-A-EXPLORE-COMPARE",
+                "kind": "requirement",
+                "text": "Построение остаётся предварительным",
+                "scope": "Иллюстративное применение процедуры в соответствующей задаче"
+              },
+              {
+                "id": "LOCAL-A-EXPLORE-COMPARE",
+                "kind": "context",
+                "text": "Выбор способа ещё открыт; разные подходы или пересмотр upstream способны существенно изменить путь."
+              }
+            ]
+          }
+        },
+        {
+          "id": "COST-A-EXPLORE-COMPARE",
+          "text": "Лишнее действие при уже достаточном состоянии",
+          "polarity": "against",
+          "strength": "soft",
+          "condition": {
+            "id": "ENOUGH-A-EXPLORE-COMPARE",
+            "kind": "context",
+            "text": "Достаточное evidence уже есть; повтор не даст существенного нового знания, и текущая задача не требует независимой повторной проверки."
+          }
+        }
+      ]
+    },
+    {
+      "id": "I-LENS-EXPLORE",
+      "kind": "info",
+      "title": "Применение и границы линзы",
+      "description": "Определение линзы — бумага для исследования. Чтение, выбор линзы, применение к конкретной версии, выбор предметного A, Plan, исполнение и результат различаются. Рассматривать только применимые части. Условия канона показательны; реальные факты находятся в R/Context рабочей ситуации. Порядок в JSON не задаёт расписание. Точные команды и права остаются у технических владельцев.",
+      "revision": 1
+    }
+  ],
+  "edges": [
+    {
+      "id": "D-A-EXPLORE-BUILD",
+      "type": "DRIVES",
+      "from": "R-LENS-EXPLORE",
+      "to": "A-EXPLORE-BUILD"
+    },
+    {
+      "id": "O-R-EXPLORE-VARIANTS",
+      "type": "INTRODUCES",
+      "from": "A-EXPLORE-BUILD",
+      "to": "R-EXPLORE-VARIANTS",
+      "parent": "R-LENS-EXPLORE",
+      "childRole": "subgoal",
+      "origin": {
+        "role": "subgoal",
+        "requirementIds": [
+          "R-LENS-EXPLORE"
+        ]
+      }
+    },
+    {
+      "id": "D-A-EXPLORE-REUSE",
+      "type": "DRIVES",
+      "from": "R-EXPLORE-VARIANTS",
+      "to": "A-EXPLORE-REUSE"
+    },
+    {
+      "id": "D-A-EXPLORE-SITUATIONAL",
+      "type": "DRIVES",
+      "from": "R-EXPLORE-VARIANTS",
+      "to": "A-EXPLORE-SITUATIONAL"
+    },
+    {
+      "id": "O-R-EXPLORE-ASSESSMENT",
+      "type": "INTRODUCES",
+      "from": "A-EXPLORE-BUILD",
+      "to": "R-EXPLORE-ASSESSMENT",
+      "parent": "R-LENS-EXPLORE",
+      "childRole": "subgoal",
+      "origin": {
+        "role": "subgoal",
+        "requirementIds": [
+          "R-LENS-EXPLORE"
+        ]
+      }
+    },
+    {
+      "id": "D-A-EXPLORE-CANONS",
+      "type": "DRIVES",
+      "from": "R-EXPLORE-ASSESSMENT",
+      "to": "A-EXPLORE-CANONS"
+    },
+    {
+      "id": "O-R-EXPLORE-UPSTREAM",
+      "type": "INTRODUCES",
+      "from": "A-EXPLORE-BUILD",
+      "to": "R-EXPLORE-UPSTREAM",
+      "parent": "R-LENS-EXPLORE",
+      "childRole": "subgoal",
+      "origin": {
+        "role": "subgoal",
+        "requirementIds": [
+          "R-LENS-EXPLORE"
+        ]
+      }
+    },
+    {
+      "id": "D-A-EXPLORE-REFRAME",
+      "type": "DRIVES",
+      "from": "R-EXPLORE-UPSTREAM",
+      "to": "A-EXPLORE-REFRAME"
+    },
+    {
+      "id": "O-R-EXPLORE-PAPER",
+      "type": "INTRODUCES",
+      "from": "A-EXPLORE-BUILD",
+      "to": "R-EXPLORE-PAPER",
+      "parent": "R-LENS-EXPLORE",
+      "childRole": "subgoal",
+      "origin": {
+        "role": "subgoal",
+        "requirementIds": [
+          "R-LENS-EXPLORE"
+        ]
+      }
+    },
+    {
+      "id": "D-A-EXPLORE-COMPARE",
+      "type": "DRIVES",
+      "from": "R-EXPLORE-PAPER",
+      "to": "A-EXPLORE-COMPARE"
+    },
+    {
+      "id": "CANON-A-EXPLORE-BUILD",
+      "type": "CANON_FOR",
+      "from": "K-A-EXPLORE-BUILD",
+      "to": "A-EXPLORE-BUILD"
+    },
+    {
+      "id": "CANON-A-EXPLORE-REUSE",
+      "type": "CANON_FOR",
+      "from": "K-A-EXPLORE-REUSE",
+      "to": "A-EXPLORE-REUSE"
+    },
+    {
+      "id": "CANON-A-EXPLORE-SITUATIONAL",
+      "type": "CANON_FOR",
+      "from": "K-A-EXPLORE-SITUATIONAL",
+      "to": "A-EXPLORE-SITUATIONAL"
+    },
+    {
+      "id": "CANON-A-EXPLORE-CANONS",
+      "type": "CANON_FOR",
+      "from": "K-A-EXPLORE-CANONS",
+      "to": "A-EXPLORE-CANONS"
+    },
+    {
+      "id": "CANON-A-EXPLORE-REFRAME",
+      "type": "CANON_FOR",
+      "from": "K-A-EXPLORE-REFRAME",
+      "to": "A-EXPLORE-REFRAME"
+    },
+    {
+      "id": "CANON-A-EXPLORE-COMPARE",
+      "type": "CANON_FOR",
+      "from": "K-A-EXPLORE-COMPARE",
+      "to": "A-EXPLORE-COMPARE"
+    },
+    {
+      "id": "INFO-explore",
+      "type": "INFO_FOR",
+      "from": "I-LENS-EXPLORE",
+      "to": "R-LENS-EXPLORE"
+    }
+  ],
+  "events": [],
+  "collections": [],
+  "workGraphs": [
+    {
+      "id": "WG-main",
+      "title": "Исследовать способы на бумаге",
+      "rootIds": [
+        "R-LENS-EXPLORE"
+      ],
+      "memberIds": [
+        "R-LENS-EXPLORE",
+        "A-EXPLORE-BUILD",
+        "R-EXPLORE-VARIANTS",
+        "A-EXPLORE-REUSE",
+        "A-EXPLORE-SITUATIONAL",
+        "R-EXPLORE-ASSESSMENT",
+        "A-EXPLORE-CANONS",
+        "R-EXPLORE-UPSTREAM",
+        "A-EXPLORE-REFRAME",
+        "R-EXPLORE-PAPER",
+        "A-EXPLORE-COMPARE",
+        "K-A-EXPLORE-BUILD",
+        "K-A-EXPLORE-REUSE",
+        "K-A-EXPLORE-SITUATIONAL",
+        "K-A-EXPLORE-CANONS",
+        "K-A-EXPLORE-REFRAME",
+        "K-A-EXPLORE-COMPARE",
+        "I-LENS-EXPLORE"
+      ]
+    }
+  ],
+  "workGraphLinks": [],
+  "exclusionGroups": [],
+  "readOnly": true,
+  "templateOnly": true,
+  "sourceVersion": "explicit-output-origins-20261022-v2",
+  "preparationRole": "lens-definition"
+}

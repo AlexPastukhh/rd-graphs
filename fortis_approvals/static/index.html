@@ -1,0 +1,9 @@
+<!doctype html><html lang="ru"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fortis Approvals</title><link rel="stylesheet" href="/style.css"><body>
+<header><h1>Fortis Approvals</h1><p>Подтверждение действий — отдельная доверенная сессия владельца</p></header>
+<main>
+<section id="registration" hidden><h2>Первоначальная регистрация ключа</h2><p>Приглашение выдаётся оператором вне браузерного API.</p><form id="enroll"><label>Одноразовое приглашение <input type="password" id="invitation" autocomplete="off" required></label><button>Зарегистрировать ключ</button></form></section>
+<section id="signin"><h2>Вход владельца</h2><button id="login">Войти с ключом / PIN</button><button id="show-enroll" type="button">Зарегистрировать ключ по приглашению</button></section>
+<section id="workspace" hidden><nav><button id="pending-tab">Ожидают<span id="pending-count"></span></button><button id="history-tab">История</button><button id="refresh">Обновить</button><button id="notifications" type="button">Включить уведомления</button></nav><p class="small">Очередь обновляется автоматически каждые 5 секунд. Сервис работает и при закрытой вкладке; уведомления браузера приходят, пока страница открыта.</p><div class="layout"><div id="requests" aria-label="Заявки"></div><article id="detail"><p>Выберите заявку.</p></article></div></section>
+<p id="status" role="status" aria-live="polite"></p>
+</main><script src="/app.js" defer></script></body></html>

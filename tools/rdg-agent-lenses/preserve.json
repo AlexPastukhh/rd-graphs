@@ -1,0 +1,158 @@
+{
+  "schemaVersion": 1,
+  "actionModel": "candidate-v6",
+  "coreModel": "rdg-core-v1",
+  "id": "rdg-agent-preserve-lens",
+  "title": "Обосновать сохранение: (C1 OR C2) AND C3",
+  "identitySpace": "rdg-prepared-preserve-lens",
+  "revision": 1,
+  "rootRequirementId": "R-LENS-PRESERVE",
+  "planningScale": "module",
+  "nodes": [
+    {
+      "id": "R-LENS-PRESERVE",
+      "kind": "requirement",
+      "title": "Обосновано решение, наносить ли содержание на бумагу",
+      "description": "Оценка касается рисунка вообще. Временное и постоянное хранение не являются двумя альтернативами этой линзы.",
+      "scope": "Применение линзы к конкретным задаче, scope и версии",
+      "status": "active",
+      "revision": 1,
+      "qrpe": [],
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "A-PRESERVE-DRAW",
+      "kind": "action",
+      "title": "Нанести содержание на бумагу",
+      "description": "Нанести оправданный фрагмент. Полезные сложные подробности преимущественно раскрыть настоящими под-R; подробная R допустима без искусственного дробления.",
+      "status": "candidate",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "qrpe": []
+    },
+    {
+      "id": "A-PRESERVE-SKIP",
+      "kind": "action",
+      "title": "Не наносить содержание на бумагу",
+      "description": "Продолжить работу без лишнего фрагмента. Отказ от рисунка не отменяет запрошенную предметную работу.",
+      "status": "candidate",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "qrpe": []
+    }
+  ],
+  "objects": [
+    {
+      "id": "K-PRESERVE",
+      "kind": "canon",
+      "title": "Ценность нанесения: (C1 OR C2) AND C3",
+      "revision": 1,
+      "arguments": [
+        {
+          "id": "ARG-PRESERVE",
+          "text": "Достаточное основание нанести содержание",
+          "polarity": "for",
+          "strength": "soft",
+          "condition": {
+            "all": [
+              {
+                "any": [
+                  {
+                    "id": "C1",
+                    "kind": "context",
+                    "text": "Есть содержательное решение с основаниями"
+                  },
+                  {
+                    "id": "C2",
+                    "kind": "context",
+                    "text": "Есть ценная декомпозиция"
+                  }
+                ]
+              },
+              {
+                "id": "C3",
+                "kind": "context",
+                "text": "Будущая ценность сохранения оправдывает хранение, поддержку и переделку"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "I-LENS-PRESERVE",
+      "kind": "info",
+      "title": "Применение и границы линзы",
+      "description": "C1 OR C2 включающее: обе причины могут быть истинны. C3 обязательно для положительного вывода. Неизвестная или частичная оценка не даёт установленного достаточного основания. При полном подтверждении формулы рекомендуется нанести; при подтверждённом отсутствии основания — не наносить; при неизвестности сначала получить существенное недостающее знание. C1/C2/C3 — локальные условия, не рабочие подцели.",
+      "revision": 1
+    }
+  ],
+  "edges": [
+    {
+      "id": "D-A-PRESERVE-DRAW",
+      "type": "DRIVES",
+      "from": "R-LENS-PRESERVE",
+      "to": "A-PRESERVE-DRAW"
+    },
+    {
+      "id": "D-A-PRESERVE-SKIP",
+      "type": "DRIVES",
+      "from": "R-LENS-PRESERVE",
+      "to": "A-PRESERVE-SKIP"
+    },
+    {
+      "id": "K-FOR-DRAW",
+      "type": "CANON_FOR",
+      "from": "K-PRESERVE",
+      "to": "A-PRESERVE-DRAW"
+    },
+    {
+      "id": "INFO-preserve",
+      "type": "INFO_FOR",
+      "from": "I-LENS-PRESERVE",
+      "to": "R-LENS-PRESERVE"
+    }
+  ],
+  "events": [],
+  "collections": [],
+  "workGraphs": [
+    {
+      "id": "WG-main",
+      "title": "Обосновать сохранение: (C1 OR C2) AND C3",
+      "rootIds": [
+        "R-LENS-PRESERVE"
+      ],
+      "memberIds": [
+        "R-LENS-PRESERVE",
+        "A-PRESERVE-DRAW",
+        "A-PRESERVE-SKIP",
+        "K-PRESERVE",
+        "I-LENS-PRESERVE"
+      ]
+    }
+  ],
+  "workGraphLinks": [],
+  "exclusionGroups": [
+    {
+      "id": "PG-DRAW-OR-SKIP",
+      "actionIds": [
+        "A-PRESERVE-DRAW",
+        "A-PRESERVE-SKIP"
+      ],
+      "reason": "Один и тот же фрагмент либо наносится, либо не наносится в данном решении."
+    }
+  ],
+  "readOnly": true,
+  "templateOnly": true,
+  "sourceVersion": "clarifications-20261022-v1",
+  "preparationRole": "lens-definition"
+}

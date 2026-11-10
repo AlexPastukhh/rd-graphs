@@ -1,0 +1,15 @@
+# A3 disposable candidate: ONE Fortis runtime with owner HTTP and Repo HTTPS.
+# Only synthetic adapter; no Sonar/G4 modules or token integrations copied.
+FROM python:3.11-slim
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
+WORKDIR /opt/fortis
+COPY fortis_approvals/requirements-owner.txt /opt/requirements-owner.txt
+RUN python -m pip install --disable-pip-version-check --no-cache-dir -r /opt/requirements-owner.txt && \
+    groupadd -g 10001 fortis && \
+    useradd --no-log-init -u 10001 -g 10001 -M -s /usr/sbin/nologin fortis
+RUN mkdir -p /opt/fortis/fortis_approvals/static /state /run/a3-identity /run/a3-grant
+COPY fortis_approvals/__init__.py fortis_approvals/core.py fortis_approvals/owner_auth.py fortis_approvals/owner_portal.py fortis_approvals/repo_action_contract.py fortis_approvals/repo_ingress.py fortis_approvals/repo_synthetic_candidate.py fortis_approvals/synthetic.py fortis_approvals/runtime.py fortis_approvals/server.py fortis_approvals/a3_operator.py fortis_approvals/a3_server.py /opt/fortis/fortis_approvals/
+COPY fortis_approvals/static /opt/fortis/fortis_approvals/static
+USER 10001:10001
+EXPOSE 19093 19094
+CMD ["python","-m","fortis_approvals.a3_server"]

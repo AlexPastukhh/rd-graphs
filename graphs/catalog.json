@@ -1,0 +1,811 @@
+{
+  "schemaVersion": 1,
+  "entries": {
+    "2d/template-tm-2d-10-visual-requirements/graph.json": {
+      "slug": "template-tm-2d-10-visual-requirements",
+      "presentation": {
+        "archived": false,
+        "usage": "ready",
+        "title": "Заготовка 2D · Visual Requirements"
+      },
+      "folder": "2d"
+    },
+    "2d/template-tm-2d-10-visual-requirements-unit-ru-req-01/graph.json": {
+      "slug": "template-tm-2d-10-visual-requirements-unit-ru-req-01",
+      "presentation": {
+        "archived": false,
+        "usage": "ready"
+      }
+    },
+    "2d/template-tm-2d-10-visual-requirements-unit-ru-req-02/graph.json": {
+      "slug": "template-tm-2d-10-visual-requirements-unit-ru-req-02",
+      "presentation": {
+        "archived": false,
+        "usage": "ready"
+      }
+    },
+    "2d/template-tm-2d-10-visual-requirements-unit-ru-req-03/graph.json": {
+      "slug": "template-tm-2d-10-visual-requirements-unit-ru-req-03",
+      "presentation": {
+        "archived": false,
+        "usage": "ready"
+      }
+    },
+    "2d/template-tm-2d-15-prepared-visual-material-set/graph.json": {
+      "slug": "template-tm-2d-15-prepared-visual-material-set",
+      "presentation": {
+        "archived": false,
+        "usage": "ready",
+        "title": "Заготовка 2D · Prepared Visual Material Set"
+      },
+      "folder": "2d"
+    },
+    "2d/template-tm-2d-15-prepared-visual-material-set-unit-ru-mat-01/graph.json": {
+      "slug": "template-tm-2d-15-prepared-visual-material-set-unit-ru-mat-01",
+      "presentation": {
+        "archived": false,
+        "usage": "ready"
+      }
+    },
+    "2d/template-tm-2d-15-prepared-visual-material-set-unit-ru-mat-02/graph.json": {
+      "slug": "template-tm-2d-15-prepared-visual-material-set-unit-ru-mat-02",
+      "presentation": {
+        "archived": false,
+        "usage": "ready"
+      }
+    },
+    "2d/template-tm-2d-15-prepared-visual-material-set-unit-ru-mat-03/graph.json": {
+      "slug": "template-tm-2d-15-prepared-visual-material-set-unit-ru-mat-03",
+      "presentation": {
+        "archived": false,
+        "usage": "ready"
+      }
+    },
+    "2d/template-tm-2d-20-whole-visual-design/graph.json": {
+      "slug": "template-tm-2d-20-whole-visual-design",
+      "presentation": {
+        "archived": false,
+        "usage": "ready",
+        "title": "Заготовка 2D · Whole Visual Design"
+      },
+      "folder": "2d"
+    },
+    "2d/template-tm-2d-20-whole-visual-design-unit-ru-wvd-01/graph.json": {
+      "slug": "template-tm-2d-20-whole-visual-design-unit-ru-wvd-01",
+      "presentation": {
+        "archived": false,
+        "usage": "ready"
+      }
+    },
+    "2d/template-tm-2d-20-whole-visual-design-unit-ru-wvd-02/graph.json": {
+      "slug": "template-tm-2d-20-whole-visual-design-unit-ru-wvd-02",
+      "presentation": {
+        "archived": false,
+        "usage": "ready"
+      }
+    },
+    "2d/template-tm-2d-20-whole-visual-design-unit-ru-wvd-03/graph.json": {
+      "slug": "template-tm-2d-20-whole-visual-design-unit-ru-wvd-03",
+      "presentation": {
+        "archived": false,
+        "usage": "ready"
+      }
+    },
+    "2d/template-tm-2d-30-visual-construction/graph.json": {
+      "slug": "template-tm-2d-30-visual-construction",
+      "presentation": {
+        "archived": false,
+        "usage": "ready",
+        "title": "Заготовка 2D · Multi-route Visual Construction"
+      },
+      "folder": "2d"
+    },
+    "2d/template-tm-2d-30-visual-construction-unit-ru-vc-01/graph.json": {
+      "slug": "template-tm-2d-30-visual-construction-unit-ru-vc-01",
+      "presentation": {
+        "archived": false,
+        "usage": "ready"
+      }
+    },
+    "2d/template-tm-2d-30-visual-construction-unit-ru-vc-02/graph.json": {
+      "slug": "template-tm-2d-30-visual-construction-unit-ru-vc-02",
+      "presentation": {
+        "archived": false,
+        "usage": "ready"
+      }
+    },
+    "2d/template-tm-2d-31-editable-raster-construction/graph.json": {
+      "slug": "template-tm-2d-31-editable-raster-construction",
+      "presentation": {
+        "archived": false,
+        "usage": "ready",
+        "title": "Заготовка 2D · Editable Raster Construction"
+      },
+      "folder": "2d"
+    },
+    "2d/template-tm-2d-31-editable-raster-construction-unit-ru-ras-01/graph.json": {
+      "slug": "template-tm-2d-31-editable-raster-construction-unit-ru-ras-01",
+      "presentation": {
+        "archived": false,
+        "usage": "ready"
+      }
+    },
+    "2d/template-tm-2d-31-editable-raster-construction-unit-ru-ras-02/graph.json": {
+      "slug": "template-tm-2d-31-editable-raster-construction-unit-ru-ras-02",
+      "presentation": {
+        "archived": false,
+        "usage": "ready"
+      }
+    },
+    "2d/template-tm-2d-31-editable-raster-construction-unit-ru-ras-03/graph.json": {
+      "slug": "template-tm-2d-31-editable-raster-construction-unit-ru-ras-03",
+      "presentation": {
+        "archived": false,
+        "usage": "ready"
+      }
+    },
+    "2d/template-tm-2d-31-editable-raster-construction-unit-ru-ras-04/graph.json": {
+      "slug": "template-tm-2d-31-editable-raster-construction-unit-ru-ras-04",
+      "presentation": {
+        "archived": false,
+        "usage": "ready"
+      }
+    },
+    "2d/template-tm-2d-31-editable-raster-construction-unit-ru-ras-05/graph.json": {
+      "slug": "template-tm-2d-31-editable-raster-construction-unit-ru-ras-05",
+      "presentation": {
+        "archived": false,
+        "usage": "ready"
+      }
+    },
+    "2d/template-tm-2d-31-painterly-raster-construction/graph.json": {
+      "slug": "template-tm-2d-31-painterly-raster-construction",
+      "presentation": {
+        "archived": false,
+        "usage": "ready",
+        "title": "Заготовка 2D · Painterly Raster Construction"
+      },
+      "folder": "2d"
+    },
+    "2d/template-tm-2d-31-painterly-raster-construction-unit-ru-paint-01/graph.json": {
+      "slug": "template-tm-2d-31-painterly-raster-construction-unit-ru-paint-01",
+      "presentation": {
+        "archived": false,
+        "usage": "ready"
+      }
+    },
+    "2d/template-tm-2d-31-painterly-raster-construction-unit-ru-paint-02/graph.json": {
+      "slug": "template-tm-2d-31-painterly-raster-construction-unit-ru-paint-02",
+      "presentation": {
+        "archived": false,
+        "usage": "ready"
+      }
+    },
+    "2d/template-tm-2d-31-painterly-raster-construction-unit-ru-paint-03/graph.json": {
+      "slug": "template-tm-2d-31-painterly-raster-construction-unit-ru-paint-03",
+      "presentation": {
+        "archived": false,
+        "usage": "ready"
+      }
+    },
+    "2d/template-tm-2d-31-painterly-raster-construction-unit-ru-paint-04/graph.json": {
+      "slug": "template-tm-2d-31-painterly-raster-construction-unit-ru-paint-04",
+      "presentation": {
+        "archived": false,
+        "usage": "ready"
+      }
+    },
+    "2d/template-tm-2d-31-pixel-art-construction/graph.json": {
+      "slug": "template-tm-2d-31-pixel-art-construction",
+      "presentation": {
+        "archived": false,
+        "usage": "ready",
+        "title": "Заготовка 2D · Pixel Art Construction"
+      },
+      "folder": "2d"
+    },
+    "2d/template-tm-2d-31-pixel-art-construction-unit-ru-px-01/graph.json": {
+      "slug": "template-tm-2d-31-pixel-art-construction-unit-ru-px-01",
+      "presentation": {
+        "archived": false,
+        "usage": "ready"
+      }
+    },
+    "2d/template-tm-2d-31-pixel-art-construction-unit-ru-px-02/graph.json": {
+      "slug": "template-tm-2d-31-pixel-art-construction-unit-ru-px-02",
+      "presentation": {
+        "archived": false,
+        "usage": "ready"
+      }
+    },
+    "2d/template-tm-2d-31-pixel-art-construction-unit-ru-px-03/graph.json": {
+      "slug": "template-tm-2d-31-pixel-art-construction-unit-ru-px-03",
+      "presentation": {
+        "archived": false,
+        "usage": "ready"
+      }
+    },
+    "2d/template-tm-2d-31-pixel-art-construction-unit-ru-px-04/graph.json": {
+      "slug": "template-tm-2d-31-pixel-art-construction-unit-ru-px-04",
+      "presentation": {
+        "archived": false,
+        "usage": "ready"
+      }
+    },
+    "2d/template-tm-2d-31-pixel-art-construction-unit-ru-px-05/graph.json": {
+      "slug": "template-tm-2d-31-pixel-art-construction-unit-ru-px-05",
+      "presentation": {
+        "archived": false,
+        "usage": "ready"
+      }
+    },
+    "2d/template-tm-2d-31-procedural-construction/graph.json": {
+      "slug": "template-tm-2d-31-procedural-construction",
+      "presentation": {
+        "archived": false,
+        "usage": "ready",
+        "title": "Заготовка 2D · Procedural Construction"
+      },
+      "folder": "2d"
+    },
+    "2d/template-tm-2d-31-procedural-construction-unit-ru-proc-01/graph.json": {
+      "slug": "template-tm-2d-31-procedural-construction-unit-ru-proc-01",
+      "presentation": {
+        "archived": false,
+        "usage": "ready"
+      }
+    },
+    "2d/template-tm-2d-31-procedural-construction-unit-ru-proc-02/graph.json": {
+      "slug": "template-tm-2d-31-procedural-construction-unit-ru-proc-02",
+      "presentation": {
+        "archived": false,
+        "usage": "ready"
+      }
+    },
+    "2d/template-tm-2d-31-procedural-construction-unit-ru-proc-03/graph.json": {
+      "slug": "template-tm-2d-31-procedural-construction-unit-ru-proc-03",
+      "presentation": {
+        "archived": false,
+        "usage": "ready"
+      }
+    },
+    "2d/template-tm-2d-31-procedural-construction-unit-ru-proc-04/graph.json": {
+      "slug": "template-tm-2d-31-procedural-construction-unit-ru-proc-04",
+      "presentation": {
+        "archived": false,
+        "usage": "ready"
+      }
+    },
+    "2d/template-tm-2d-31-procedural-construction-unit-ru-proc-05/graph.json": {
+      "slug": "template-tm-2d-31-procedural-construction-unit-ru-proc-05",
+      "presentation": {
+        "archived": false,
+        "usage": "ready"
+      }
+    },
+    "2d/template-tm-2d-31-vector-construction/graph.json": {
+      "slug": "template-tm-2d-31-vector-construction",
+      "presentation": {
+        "archived": false,
+        "usage": "ready",
+        "title": "Заготовка 2D · Vector Construction"
+      },
+      "folder": "2d"
+    },
+    "2d/template-tm-2d-31-vector-construction-unit-ru-vec-01/graph.json": {
+      "slug": "template-tm-2d-31-vector-construction-unit-ru-vec-01",
+      "presentation": {
+        "archived": false,
+        "usage": "ready"
+      }
+    },
+    "2d/template-tm-2d-31-vector-construction-unit-ru-vec-02/graph.json": {
+      "slug": "template-tm-2d-31-vector-construction-unit-ru-vec-02",
+      "presentation": {
+        "archived": false,
+        "usage": "ready"
+      }
+    },
+    "2d/template-tm-2d-31-vector-construction-unit-ru-vec-03/graph.json": {
+      "slug": "template-tm-2d-31-vector-construction-unit-ru-vec-03",
+      "presentation": {
+        "archived": false,
+        "usage": "ready"
+      }
+    },
+    "2d/template-tm-2d-31-vector-construction-unit-ru-vec-04/graph.json": {
+      "slug": "template-tm-2d-31-vector-construction-unit-ru-vec-04",
+      "presentation": {
+        "archived": false,
+        "usage": "ready"
+      }
+    },
+    "2d/template-tm-2d-31-vector-construction-unit-ru-vec-05/graph.json": {
+      "slug": "template-tm-2d-31-vector-construction-unit-ru-vec-05",
+      "presentation": {
+        "archived": false,
+        "usage": "ready"
+      }
+    },
+    "2d/template-tm-2d-50-delivery-adaptation/graph.json": {
+      "slug": "template-tm-2d-50-delivery-adaptation",
+      "presentation": {
+        "archived": false,
+        "usage": "ready",
+        "title": "Заготовка 2D · Delivery Adaptation"
+      },
+      "folder": "2d"
+    },
+    "2d/template-tm-2d-50-delivery-adaptation-unit-ru-del-01/graph.json": {
+      "slug": "template-tm-2d-50-delivery-adaptation-unit-ru-del-01",
+      "presentation": {
+        "archived": false,
+        "usage": "ready"
+      }
+    },
+    "2d/template-tm-2d-50-delivery-adaptation-unit-ru-del-02/graph.json": {
+      "slug": "template-tm-2d-50-delivery-adaptation-unit-ru-del-02",
+      "presentation": {
+        "archived": false,
+        "usage": "ready"
+      }
+    },
+    "2d/template-tm-2d-50-delivery-adaptation-unit-ru-del-03/graph.json": {
+      "slug": "template-tm-2d-50-delivery-adaptation-unit-ru-del-03",
+      "presentation": {
+        "archived": false,
+        "usage": "ready"
+      }
+    },
+    "examples/example/graph.json": {
+      "slug": "example",
+      "presentation": {
+        "archived": true
+      },
+      "folder": "examples/archive"
+    },
+    "examples/reference-app-definition/graph.json": {
+      "slug": "reference-app-definition",
+      "presentation": {
+        "archived": true,
+        "exampleOnly": true
+      },
+      "folder": "examples/archive"
+    },
+    "examples/reference-behavior-review/graph.json": {
+      "slug": "reference-behavior-review",
+      "presentation": {
+        "archived": true,
+        "exampleOnly": true
+      },
+      "folder": "examples/archive"
+    },
+    "examples/reference-complete-app/graph.json": {
+      "slug": "reference-complete-app",
+      "presentation": {
+        "archived": true,
+        "usage": "working",
+        "exampleOnly": true,
+        "title": "Пример бронирования — все отношения"
+      },
+      "folder": "examples/archive"
+    },
+    "examples/reference-complete-availability/graph.json": {
+      "slug": "reference-complete-availability",
+      "presentation": {
+        "archived": true,
+        "usage": "working",
+        "exampleOnly": true
+      },
+      "folder": "examples/archive"
+    },
+    "examples/reference-complete-functionality/graph.json": {
+      "slug": "reference-complete-functionality",
+      "presentation": {
+        "archived": true,
+        "usage": "working",
+        "exampleOnly": true
+      },
+      "folder": "examples/archive"
+    },
+    "examples/reference-complete-realization/graph.json": {
+      "slug": "reference-complete-realization",
+      "presentation": {
+        "archived": true,
+        "usage": "working",
+        "exampleOnly": true
+      },
+      "folder": "examples/archive"
+    },
+    "examples/reference-complete-reservation/graph.json": {
+      "slug": "reference-complete-reservation",
+      "presentation": {
+        "archived": true,
+        "usage": "working",
+        "exampleOnly": true
+      },
+      "folder": "examples/archive"
+    },
+    "examples/reference-complete-scenario-create/graph.json": {
+      "slug": "reference-complete-scenario-create",
+      "presentation": {
+        "archived": true,
+        "usage": "working",
+        "exampleOnly": true
+      },
+      "folder": "examples/archive"
+    },
+    "examples/reference-complete-scenarios/graph.json": {
+      "slug": "reference-complete-scenarios",
+      "presentation": {
+        "archived": true,
+        "usage": "working",
+        "exampleOnly": true
+      },
+      "folder": "examples/archive"
+    },
+    "examples/reference-complete-unit-r-boundary/graph.json": {
+      "slug": "reference-complete-unit-r-boundary",
+      "presentation": {
+        "archived": true,
+        "usage": "working",
+        "exampleOnly": true
+      },
+      "folder": "examples/archive"
+    },
+    "examples/reference-complete-unit-r-errors/graph.json": {
+      "slug": "reference-complete-unit-r-errors",
+      "presentation": {
+        "archived": true,
+        "usage": "working",
+        "exampleOnly": true
+      },
+      "folder": "examples/archive"
+    },
+    "examples/reference-complete-unit-r-feedback/graph.json": {
+      "slug": "reference-complete-unit-r-feedback",
+      "presentation": {
+        "archived": true,
+        "usage": "working",
+        "exampleOnly": true
+      },
+      "folder": "examples/archive"
+    },
+    "examples/reference-complete-unit-r-result/graph.json": {
+      "slug": "reference-complete-unit-r-result",
+      "presentation": {
+        "archived": true,
+        "usage": "working",
+        "exampleOnly": true
+      },
+      "folder": "examples/archive"
+    },
+    "examples/reference-complete-unit-r-scancel/graph.json": {
+      "slug": "reference-complete-unit-r-scancel",
+      "presentation": {
+        "archived": true,
+        "usage": "working",
+        "exampleOnly": true
+      },
+      "folder": "examples/archive"
+    },
+    "examples/reference-complete-unit-r-state-reservation/graph.json": {
+      "slug": "reference-complete-unit-r-state-reservation",
+      "presentation": {
+        "archived": true,
+        "usage": "working",
+        "exampleOnly": true
+      },
+      "folder": "examples/archive"
+    },
+    "examples/reference-complete-unit-r-state-selection/graph.json": {
+      "slug": "reference-complete-unit-r-state-selection",
+      "presentation": {
+        "archived": true,
+        "usage": "working",
+        "exampleOnly": true
+      },
+      "folder": "examples/archive"
+    },
+    "examples/reference-delegation-status/graph.json": {
+      "slug": "reference-delegation-status",
+      "presentation": {
+        "archived": true,
+        "exampleOnly": true
+      },
+      "folder": "examples/archive"
+    },
+    "examples/reference-feature-auth/graph.json": {
+      "slug": "reference-feature-auth",
+      "presentation": {
+        "archived": true,
+        "usage": "working",
+        "exampleOnly": true
+      },
+      "folder": "examples/archive"
+    },
+    "examples/reference-feature-cart/graph.json": {
+      "slug": "reference-feature-cart",
+      "presentation": {
+        "archived": true,
+        "usage": "working",
+        "exampleOnly": true
+      },
+      "folder": "examples/archive"
+    },
+    "examples/reference-feature-catalog/graph.json": {
+      "slug": "reference-feature-catalog",
+      "presentation": {
+        "archived": true,
+        "usage": "working",
+        "exampleOnly": true
+      },
+      "folder": "examples/archive"
+    },
+    "examples/reference-feature-payment/graph.json": {
+      "slug": "reference-feature-payment",
+      "presentation": {
+        "archived": true,
+        "usage": "working",
+        "exampleOnly": true
+      },
+      "folder": "examples/archive"
+    },
+    "examples/reference-feature-root/graph.json": {
+      "slug": "reference-feature-root",
+      "presentation": {
+        "archived": true,
+        "usage": "working",
+        "exampleOnly": true,
+        "title": "Пример разбиения на Features"
+      },
+      "folder": "examples/archive"
+    },
+    "examples/reference-mixed-active-work/graph.json": {
+      "slug": "reference-mixed-active-work",
+      "presentation": {
+        "archived": false,
+        "usage": "working",
+        "exampleOnly": true,
+        "title": "Рабочий пример разбиения функциональности",
+        "description": "Учебный набор; не является текущим проектом пользователя."
+      },
+      "folder": "examples"
+    },
+    "examples/reference-mixed-change-log/graph.json": {
+      "slug": "reference-mixed-change-log",
+      "presentation": {
+        "archived": false,
+        "usage": "working",
+        "exampleOnly": true
+      }
+    },
+    "examples/reference-mixed-contextual-split/graph.json": {
+      "slug": "reference-mixed-contextual-split",
+      "presentation": {
+        "archived": false,
+        "usage": "working",
+        "exampleOnly": true
+      }
+    },
+    "examples/reference-mixed-feature-availability/graph.json": {
+      "slug": "reference-mixed-feature-availability",
+      "presentation": {
+        "archived": false,
+        "usage": "working",
+        "exampleOnly": true
+      }
+    },
+    "examples/reference-mixed-feature-consistency/graph.json": {
+      "slug": "reference-mixed-feature-consistency",
+      "presentation": {
+        "archived": false,
+        "usage": "working",
+        "exampleOnly": true
+      }
+    },
+    "examples/reference-mixed-planned-feature/graph.json": {
+      "slug": "reference-mixed-planned-feature",
+      "presentation": {
+        "archived": false,
+        "usage": "working",
+        "exampleOnly": true
+      }
+    },
+    "examples/reference-mixed-planned-feature-consistency/graph.json": {
+      "slug": "reference-mixed-planned-feature-consistency",
+      "presentation": {
+        "archived": false,
+        "usage": "working",
+        "exampleOnly": true
+      }
+    },
+    "examples/reference-mixed-planned-feature-depth/graph.json": {
+      "slug": "reference-mixed-planned-feature-depth",
+      "presentation": {
+        "archived": false,
+        "usage": "working",
+        "exampleOnly": true
+      }
+    },
+    "examples/reference-mixed-planned-scenario/graph.json": {
+      "slug": "reference-mixed-planned-scenario",
+      "presentation": {
+        "archived": false,
+        "usage": "working",
+        "exampleOnly": true
+      }
+    },
+    "examples/reference-mixed-planned-scenario-consistency/graph.json": {
+      "slug": "reference-mixed-planned-scenario-consistency",
+      "presentation": {
+        "archived": false,
+        "usage": "working",
+        "exampleOnly": true
+      }
+    },
+    "examples/reference-module-units/graph.json": {
+      "slug": "reference-module-units",
+      "presentation": {
+        "archived": true
+      },
+      "folder": "examples/archive"
+    },
+    "examples/reference-prepared-feature-consistency/graph.json": {
+      "slug": "reference-prepared-feature-consistency",
+      "presentation": {
+        "archived": false,
+        "usage": "ready",
+        "exampleOnly": true
+      }
+    },
+    "examples/reference-prepared-feature-depth/graph.json": {
+      "slug": "reference-prepared-feature-depth",
+      "presentation": {
+        "archived": false,
+        "usage": "ready",
+        "exampleOnly": true
+      }
+    },
+    "examples/reference-prepared-feature-path/graph.json": {
+      "slug": "reference-prepared-feature-path",
+      "presentation": {
+        "archived": false,
+        "usage": "ready",
+        "exampleOnly": true
+      }
+    },
+    "examples/reference-prepared-planning-tree/graph.json": {
+      "slug": "reference-prepared-planning-tree",
+      "presentation": {
+        "archived": false,
+        "usage": "ready",
+        "exampleOnly": true,
+        "title": "Готовый пример разбиения функциональности",
+        "description": "Учебный набор; не является текущим проектом пользователя."
+      },
+      "folder": "examples"
+    },
+    "examples/reference-prepared-scenario-consistency/graph.json": {
+      "slug": "reference-prepared-scenario-consistency",
+      "presentation": {
+        "archived": false,
+        "usage": "ready",
+        "exampleOnly": true
+      }
+    },
+    "examples/reference-prepared-scenario-path/graph.json": {
+      "slug": "reference-prepared-scenario-path",
+      "presentation": {
+        "archived": false,
+        "usage": "ready",
+        "exampleOnly": true
+      }
+    },
+    "examples/reference-reusable-vs-concrete/graph.json": {
+      "slug": "reference-reusable-vs-concrete",
+      "presentation": {
+        "archived": true,
+        "usage": "working",
+        "exampleOnly": true
+      },
+      "folder": "examples/archive"
+    },
+    "examples/reference-unit-direct/graph.json": {
+      "slug": "reference-unit-direct",
+      "presentation": {
+        "archived": true
+      },
+      "folder": "examples/archive"
+    },
+    "examples/reference-unit-split/graph.json": {
+      "slug": "reference-unit-split",
+      "presentation": {
+        "archived": true
+      },
+      "folder": "examples/archive"
+    },
+    "examples/reference-unit-states/graph.json": {
+      "slug": "reference-unit-states",
+      "presentation": {
+        "archived": true
+      },
+      "folder": "examples/archive"
+    },
+    "examples/reference-unit-transitions/graph.json": {
+      "slug": "reference-unit-transitions",
+      "presentation": {
+        "archived": true
+      },
+      "folder": "examples/archive"
+    },
+    "workspaces/try-it/graph.json": {
+      "slug": "try-it",
+      "presentation": {
+        "archived": false,
+        "usage": "working"
+      }
+    },
+    "examples/archive/context-prepared-root/graph.json": {
+      "slug": "context-prepared-root",
+      "presentation": {
+        "usage": "ready",
+        "exampleOnly": true,
+        "title": "Контекст: готовый пример",
+        "description": "Объяснения с источниками, общий ранний ответ и вопросы после выбора ветки.",
+        "archived": true
+      },
+      "folder": "examples/archive"
+    },
+    "examples/archive/context-prepared-current/graph.json": {
+      "slug": "context-prepared-current",
+      "presentation": {
+        "usage": "ready",
+        "exampleOnly": true,
+        "archived": true
+      },
+      "folder": "examples/archive"
+    },
+    "examples/archive/context-prepared-alternative/graph.json": {
+      "slug": "context-prepared-alternative",
+      "presentation": {
+        "usage": "ready",
+        "exampleOnly": true,
+        "archived": true
+      },
+      "folder": "examples/archive"
+    },
+    "examples/archive/context-working-root/graph.json": {
+      "slug": "context-working-root",
+      "presentation": {
+        "usage": "working",
+        "exampleOnly": true,
+        "title": "Контекст: рабочий пример",
+        "description": "Объяснения с источниками, общий ранний ответ и вопросы после выбора ветки.",
+        "archived": true
+      },
+      "folder": "examples/archive"
+    },
+    "examples/archive/context-working-current/graph.json": {
+      "slug": "context-working-current",
+      "presentation": {
+        "usage": "working",
+        "exampleOnly": true,
+        "archived": true
+      },
+      "folder": "examples/archive"
+    },
+    "examples/archive/context-working-alternative/graph.json": {
+      "slug": "context-working-alternative",
+      "presentation": {
+        "usage": "working",
+        "exampleOnly": true,
+        "archived": true
+      },
+      "folder": "examples/archive"
+    },
+    "workspaces/requirements-dependencies-demo/graph.json": {
+      "folder": "examples"
+    }
+  }
+}

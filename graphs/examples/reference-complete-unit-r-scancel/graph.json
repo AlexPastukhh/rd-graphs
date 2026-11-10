@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "id": "reference-complete-unit-r-scancel",
+  "title": "Unit · Описать сценарий отмены бронирования",
+  "revision": 1,
+  "identitySpace": "showcase:booking-example-v1",
+  "rootRequirementId": "SH-R-SCANCEL",
+  "planningScale": "unit",
+  "readOnly": true,
+  "exampleOnly": true,
+  "hypothetical": true,
+  "selectedInProject": false,
+  "catalogHidden": true,
+  "demonstrationGroup": "complete-booking-showcase",
+  "canonicality": "ILLUSTRATION_ONLY",
+  "expansionOf": {
+    "graphSlug": "reference-complete-scenarios",
+    "nodeId": "SH-R-SCANCEL"
+  },
+  "sourceDocument": "docs/examples/COMPLETE-REFERENCE-GUIDE.md",
+  "coverage": "Отдельный граф узкой задачи; R/D ссылаются на прежних владельцев. Нового выбора нет.",
+  "nodes": [
+    {
+      "id": "SH-R-SCANCEL",
+      "kind": "requirement",
+      "title": "Описать сценарий отмены бронирования",
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "reference-complete-scenarios",
+        "nodeId": "SH-R-SCANCEL"
+      },
+      "description": "Ссылка на ту же смысловую запись. Полный ответ и основания находятся в указанном источнике."
+    },
+    {
+      "id": "SH-D-CANCEL",
+      "kind": "decision",
+      "title": "Описание отмены и её результата",
+      "status": "selected-in-example-only",
+      "scope": "Scenario отмены бронирования",
+      "selectedInExample": true,
+      "selectedInProject": false,
+      "evidenceStatus": "unverified",
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "reference-complete-scenarios",
+        "nodeId": "SH-D-CANCEL"
+      },
+      "description": "Ссылка на ту же смысловую запись. Полный ответ и основания находятся в указанном источнике."
+    }
+  ],
+  "edges": [
+    {
+      "id": "SH-E-SC-04",
+      "type": "DRIVES",
+      "from": "SH-R-SCANCEL",
+      "to": "SH-D-CANCEL",
+      "meaning": "Конкретный ответ на описание отмены, не исполнение отмены."
+    }
+  ],
+  "events": []
+}

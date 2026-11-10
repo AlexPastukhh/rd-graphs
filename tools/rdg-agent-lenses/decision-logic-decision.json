@@ -1,0 +1,392 @@
+{
+  "schemaVersion": 1,
+  "actionModel": "candidate-v6",
+  "coreModel": "rdg-decision-v1",
+  "id": "rdg-fundamental-decision-logic-decision",
+  "title": "Решения и обязательства RDG · Decision v1",
+  "identitySpace": "c7897944-b5d8-509a-a12c-84f3c5002e77",
+  "revision": 1,
+  "rootRequirementId": "R-DECISION-LOGIC",
+  "rootCauses": [
+    {
+      "id": "RC-DECISION-LOGIC",
+      "requirementId": "R-DECISION-LOGIC",
+      "reason": "Paper-only fundamental instruction",
+      "enabled": true
+    }
+  ],
+  "nodes": [
+    {
+      "id": "R-DECISION-LOGIC",
+      "kind": "requirement",
+      "title": "Понимать выбор, причины, альтернативы и проверяемое завершение в RDG",
+      "description": "Учебная цель готового графа. Открытие не означает достижения или исполнения.",
+      "revision": 1,
+      "scope": "Фундаментальное объяснение RDG · rdg-decision-v1",
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "R-DECISION-LOGIC-CHOICE",
+      "kind": "requirement",
+      "title": "Выбор отличён от обнаружения и плана",
+      "description": "Выбор отличён от обнаружения и плана. Учебный критерий, не подтверждённое достижение.",
+      "revision": 1,
+      "scope": "Ориентиры корректного применения RDG",
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "D-DECISION-LOGIC-CHOICE",
+      "kind": "decision",
+      "title": "Выбирать или отзывать D явно",
+      "description": "Проверить действующее основание и конфликтующие группы перед select/withdraw.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "selectionState": "discovered"
+    },
+    {
+      "id": "R-DECISION-LOGIC-GROUPS",
+      "kind": "requirement",
+      "title": "Состав и свойства Decision Group корректны",
+      "description": "Состав и свойства Decision Group корректны. Учебный критерий, не подтверждённое достижение.",
+      "revision": 1,
+      "scope": "Ориентиры корректного применения RDG",
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "D-DECISION-LOGIC-GROUPS",
+      "kind": "decision",
+      "title": "Проверять required/exclusive отдельно",
+      "description": "Одна D может состоять в нескольких группах с независимыми правилами.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "selectionState": "discovered"
+    },
+    {
+      "id": "R-DECISION-LOGIC-SUPPORT",
+      "kind": "requirement",
+      "title": "Актуальность следует действующим основаниям",
+      "description": "Актуальность следует действующим основаниям. Учебный критерий, не подтверждённое достижение.",
+      "revision": 1,
+      "scope": "Ориентиры корректного применения RDG",
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "D-DECISION-LOGIC-SUPPORT",
+      "kind": "decision",
+      "title": "Пересчитывать поддержку от rootCauses",
+      "description": "Shared R остаётся актуальной при другом независимом основании; цикл сам себя не активирует.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "selectionState": "discovered"
+    },
+    {
+      "id": "R-DECISION-LOGIC-CANCEL",
+      "kind": "requirement",
+      "title": "Отказ не стирает варианты и историю",
+      "description": "Отказ не стирает варианты и историю. Учебный критерий, не подтверждённое достижение.",
+      "revision": 1,
+      "scope": "Ориентиры корректного применения RDG",
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "D-DECISION-LOGIC-CANCEL",
+      "kind": "decision",
+      "title": "Различать каскад и удаление",
+      "description": "Withdraw снимает не поддержанные ветви, но не удаляет entities/placements/evidence.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "selectionState": "discovered"
+    },
+    {
+      "id": "R-DECISION-LOGIC-COMPLETE",
+      "kind": "requirement",
+      "title": "Completion подтверждается отдельно",
+      "description": "Completion подтверждается отдельно. Учебный критерий, не подтверждённое достижение.",
+      "revision": 1,
+      "scope": "Ориентиры корректного применения RDG",
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "D-DECISION-LOGIC-COMPLETE",
+      "kind": "decision",
+      "title": "Проверять обязательства и Evidence",
+      "description": "Выбор/Plan не завершают D; закрытие R имеет отдельное наблюдение и событие.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "selectionState": "discovered"
+    }
+  ],
+  "objects": [
+    {
+      "id": "I-DECISION-LOGIC-STATES",
+      "kind": "info",
+      "title": "Состояния выбора и результата",
+      "description": "Нормативное объяснение; точную форму операций сверяйте с действующей schema/API.",
+      "revision": 1,
+      "value": "Доступность D: discovered/unselected/selected. Result open/unknown отдельно от confirmed/true. UI completed вычисляется, это не четвёртое значение selectionState."
+    },
+    {
+      "id": "I-DECISION-LOGIC-GROUP",
+      "kind": "info",
+      "title": "Решения в группах",
+      "description": "Нормативное объяснение; точную форму операций сверяйте с действующей schema/API.",
+      "revision": 1,
+      "value": "decisionGroups[].members — единственный источник membership R→D. selectionRequired и mutuallyExclusive независимы. Пересечение групп допустимо; D→D запрещено."
+    },
+    {
+      "id": "I-DECISION-LOGIC-SUPPORT",
+      "kind": "info",
+      "title": "Расчёт актуальности",
+      "description": "Нормативное объяснение; точную форму операций сверяйте с действующей schema/API.",
+      "revision": 1,
+      "value": "Корни enabled rootCauses → DERIVES/REQUIRES_ACTION → selected DRIVES/DECISION_MEMBER → INTRODUCES/REQUIRES_ACTION, до наименьшей неподвижной точки. Без корня цикл не поддерживается."
+    },
+    {
+      "id": "I-DECISION-LOGIC-VISIBILITY",
+      "kind": "info",
+      "title": "Скрытие вариантов",
+      "description": "Нормативное объяснение; точную форму операций сверяйте с действующей schema/API.",
+      "revision": 1,
+      "value": "Скрываются конфликтующие альтернативы лишь у выбранного участника mutuallyExclusive группы. selectionRequired и прежний withdraw сами по себе не скрывают. showExcludedAlternatives — вид, не выбор."
+    },
+    {
+      "id": "I-DECISION-LOGIC-HISTORY",
+      "kind": "info",
+      "title": "Отмена и сохранение фактов",
+      "description": "Нормативное объяснение; точную форму операций сверяйте с действующей schema/API.",
+      "revision": 1,
+      "value": "При withdraw не имеющие иных оснований потомки теряют актуальность; общие сохраняются. История исполнения, Evidence, placement и layout не переписываются. Повторный выбор отдельный."
+    },
+    {
+      "id": "I-DECISION-LOGIC-FINISH",
+      "kind": "info",
+      "title": "Условия завершения",
+      "description": "Нормативное объяснение; точную форму операций сверяйте с действующей schema/API.",
+      "revision": 1,
+      "value": "Requirement требует актуальности, необходимых выходов, завершённых выбранных D, обязательных групп, наблюдения и Evidence. Decision требует selected, завершённых выходов и Evidence. Action требует реального исполнения и доказательств."
+    },
+    {
+      "id": "K-DECISION-LOGIC-REQUIRED",
+      "kind": "canon",
+      "title": "Required не равно exclusive",
+      "description": "Принцип предметной корректности, не обязательная подцель.",
+      "revision": 1,
+      "guidance": "selectionRequired требует выбора/завершения для родителя; mutuallyExclusive запрещает одновременный выбор конфликтующих участников. Не использовать одно свойство вместо другого."
+    },
+    {
+      "id": "K-DECISION-LOGIC-CAUSAL",
+      "kind": "canon",
+      "title": "Не стирать без независимой проверки",
+      "description": "Принцип предметной корректности, не обязательная подцель.",
+      "revision": 1,
+      "guidance": "Withdraw пересчитывает активность, но не удаляет Graph, History или Plan; независимое основание сохраняет общий узел."
+    },
+    {
+      "id": "K-DECISION-LOGIC-COMPLETE",
+      "kind": "canon",
+      "title": "Недостаточное evidence не даёт completion",
+      "description": "Принцип предметной корректности, не обязательная подцель.",
+      "revision": 1,
+      "guidance": "Сначала проверить CAS, guards, актуальность, review, обязательные выходы и наблюдение результата. Readback/receipt отличает принятую запись от намерения."
+    },
+    {
+      "id": "C-DECISION-LOGIC-ALTERNATIVE",
+      "kind": "context",
+      "title": "Невыбранная ветвь",
+      "description": "Условия применимости объяснения.",
+      "revision": 1,
+      "value": "Невыбранная D остаётся вариантом. Её можно включать в Plan заранее, но обязательство/selected при этом не возникает."
+    }
+  ],
+  "externalActions": [],
+  "edges": [
+    {
+      "id": "E-1",
+      "type": "DERIVES",
+      "from": "R-DECISION-LOGIC",
+      "to": "R-DECISION-LOGIC-CHOICE"
+    },
+    {
+      "id": "E-2",
+      "type": "DRIVES",
+      "from": "R-DECISION-LOGIC-CHOICE",
+      "to": "D-DECISION-LOGIC-CHOICE"
+    },
+    {
+      "id": "E-3",
+      "type": "DERIVES",
+      "from": "R-DECISION-LOGIC",
+      "to": "R-DECISION-LOGIC-GROUPS"
+    },
+    {
+      "id": "E-4",
+      "type": "DRIVES",
+      "from": "R-DECISION-LOGIC-GROUPS",
+      "to": "D-DECISION-LOGIC-GROUPS"
+    },
+    {
+      "id": "E-5",
+      "type": "DERIVES",
+      "from": "R-DECISION-LOGIC",
+      "to": "R-DECISION-LOGIC-SUPPORT"
+    },
+    {
+      "id": "E-6",
+      "type": "DRIVES",
+      "from": "R-DECISION-LOGIC-SUPPORT",
+      "to": "D-DECISION-LOGIC-SUPPORT"
+    },
+    {
+      "id": "E-7",
+      "type": "DERIVES",
+      "from": "R-DECISION-LOGIC",
+      "to": "R-DECISION-LOGIC-CANCEL"
+    },
+    {
+      "id": "E-8",
+      "type": "DRIVES",
+      "from": "R-DECISION-LOGIC-CANCEL",
+      "to": "D-DECISION-LOGIC-CANCEL"
+    },
+    {
+      "id": "E-9",
+      "type": "DERIVES",
+      "from": "R-DECISION-LOGIC",
+      "to": "R-DECISION-LOGIC-COMPLETE"
+    },
+    {
+      "id": "E-10",
+      "type": "DRIVES",
+      "from": "R-DECISION-LOGIC-COMPLETE",
+      "to": "D-DECISION-LOGIC-COMPLETE"
+    },
+    {
+      "id": "E-11",
+      "type": "INFO_FOR",
+      "from": "I-DECISION-LOGIC-STATES",
+      "to": "R-DECISION-LOGIC-CHOICE"
+    },
+    {
+      "id": "E-12",
+      "type": "INFO_FOR",
+      "from": "I-DECISION-LOGIC-GROUP",
+      "to": "R-DECISION-LOGIC-GROUPS"
+    },
+    {
+      "id": "E-13",
+      "type": "INFO_FOR",
+      "from": "I-DECISION-LOGIC-SUPPORT",
+      "to": "R-DECISION-LOGIC-SUPPORT"
+    },
+    {
+      "id": "E-14",
+      "type": "INFO_FOR",
+      "from": "I-DECISION-LOGIC-VISIBILITY",
+      "to": "R-DECISION-LOGIC-CANCEL"
+    },
+    {
+      "id": "E-15",
+      "type": "INFO_FOR",
+      "from": "I-DECISION-LOGIC-HISTORY",
+      "to": "R-DECISION-LOGIC-CANCEL"
+    },
+    {
+      "id": "E-16",
+      "type": "INFO_FOR",
+      "from": "I-DECISION-LOGIC-FINISH",
+      "to": "R-DECISION-LOGIC-COMPLETE"
+    },
+    {
+      "id": "E-17",
+      "type": "CANON_FOR",
+      "from": "K-DECISION-LOGIC-REQUIRED",
+      "to": "D-DECISION-LOGIC-GROUPS"
+    },
+    {
+      "id": "E-18",
+      "type": "CANON_FOR",
+      "from": "K-DECISION-LOGIC-CAUSAL",
+      "to": "D-DECISION-LOGIC-CANCEL"
+    },
+    {
+      "id": "E-19",
+      "type": "CANON_FOR",
+      "from": "K-DECISION-LOGIC-COMPLETE",
+      "to": "D-DECISION-LOGIC-COMPLETE"
+    },
+    {
+      "id": "E-20",
+      "type": "CONTEXT_FOR",
+      "from": "C-DECISION-LOGIC-ALTERNATIVE",
+      "to": "R-DECISION-LOGIC-CHOICE"
+    }
+  ],
+  "decisionGroups": [],
+  "workGraphs": [
+    {
+      "id": "WG-DECISION-LOGIC",
+      "title": "Объясняющая структура",
+      "rootIds": [
+        "R-DECISION-LOGIC"
+      ],
+      "memberIds": [
+        "R-DECISION-LOGIC",
+        "R-DECISION-LOGIC-CHOICE",
+        "D-DECISION-LOGIC-CHOICE",
+        "R-DECISION-LOGIC-GROUPS",
+        "D-DECISION-LOGIC-GROUPS",
+        "R-DECISION-LOGIC-SUPPORT",
+        "D-DECISION-LOGIC-SUPPORT",
+        "R-DECISION-LOGIC-CANCEL",
+        "D-DECISION-LOGIC-CANCEL",
+        "R-DECISION-LOGIC-COMPLETE",
+        "D-DECISION-LOGIC-COMPLETE",
+        "I-DECISION-LOGIC-STATES",
+        "I-DECISION-LOGIC-GROUP",
+        "I-DECISION-LOGIC-SUPPORT",
+        "I-DECISION-LOGIC-VISIBILITY",
+        "I-DECISION-LOGIC-HISTORY",
+        "I-DECISION-LOGIC-FINISH",
+        "K-DECISION-LOGIC-REQUIRED",
+        "K-DECISION-LOGIC-CAUSAL",
+        "K-DECISION-LOGIC-COMPLETE",
+        "C-DECISION-LOGIC-ALTERNATIVE"
+      ]
+    }
+  ],
+  "events": [],
+  "recommendationPackageIds": []
+}

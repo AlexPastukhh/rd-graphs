@@ -1,0 +1,32 @@
+{
+  "audit_complete": true,
+  "dependencies": [
+    {
+      "baseline_hash": "sha256:ad76151fd55e716e13719dffb7ff170b7c0fa46ca6445077ff0c13e1e3f006c7",
+      "comparator": "exact",
+      "granularity": "field",
+      "observed_version": "ddbd68c3ef52f2b2f13efa44e722566e2ca733e7a9c8d090f3a420f863efba67",
+      "snapshot_ref": "baseline://sha256/ad76151fd55e716e13719dffb7ff170b7c0fa46ca6445077ff0c13e1e3f006c7",
+      "source": "resource://rdg/graph.workflow-v1.74b90cb9d1b181ddf0eaf80a#/nodesById/R-CANON",
+      "source_kind": "raw"
+    },
+    {
+      "baseline_hash": "sha256:ceb30c045c282f5efd5d47d98a5dd7f076239d842961318f65528c68db616b3c",
+      "comparator": "exact",
+      "granularity": "field",
+      "observed_version": "d0196ee5b6e848ad6a969a8da87a535b88400f76e91803012ab8adb0285b060c",
+      "snapshot_ref": "baseline://sha256/ceb30c045c282f5efd5d47d98a5dd7f076239d842961318f65528c68db616b3c",
+      "source": "resource://rdg/graph.workflow-v1.74b90cb9d1b181ddf0eaf80a#/nodesById/R0",
+      "source_kind": "raw"
+    }
+  ],
+  "dependency_type": "semantic_review",
+  "receipt_hash": "sha256:5071dfa0e4a05d9824950903d42f9383e913c4f901c73336c5def2069c6331f1",
+  "receipt_id": "receipt-1a63e5a6ad41ee06f88a314335f997dfc95b1422bb22159425d82d835e684891",
+  "semantic_rule_id": "rdg-requirement.9b3e555d66ac4c9911355ccf",
+  "semantic_rule_revision": "sha256:efd26dac8451c2730f5114567e531e69d61b301b73e2ac69516421e5e50906e2",
+  "state_schema_version": "1.0.0",
+  "target": "file://review/06de591a45780247a7c732fa.md",
+  "target_revision": "76e84c14c6df9337cdfc2a416ed7df3a72785011280ad0a208d78d7b8a90f5cc",
+  "validated_at": "2026-10-21T02:03:17.032453Z"
+}

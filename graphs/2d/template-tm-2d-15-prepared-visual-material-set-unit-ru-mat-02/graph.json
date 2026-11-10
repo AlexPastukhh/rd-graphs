@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "id": "template-tm-2d-15-prepared-visual-material-set-unit-ru-mat-02",
+  "title": "Unit · Qualified Material Membership",
+  "revision": 1,
+  "planningScale": "unit",
+  "identitySpace": "prepared:TM-2D-15-PREPARED-VISUAL-MATERIAL-SET",
+  "rootRequirementId": "RU-MAT-02",
+  "readOnly": true,
+  "templateOnly": true,
+  "selected": false,
+  "catalogHidden": true,
+  "preparedModule": {
+    "id": "TEMPLATE-D-RU-MAT-02",
+    "version": "a25e6999b1d7efa5641c89f4225a9553f18316e303f0cb48b67d4bf65e785032",
+    "goalRequirementId": "RU-MAT-02",
+    "methodDecisionId": "TEMPLATE-D-RU-MAT-02",
+    "childRequirementIds": [],
+    "applicability": "retained material identities with intrinsic provenance, derivation, observability and limitations",
+    "successCriteria": "Достаточно выполнить применимую Unit-specific Guidance и её checkpoints; инструкция не доказывает результат."
+  },
+  "sourceDocument": "/workspace/repos/obs-planning-docs/planning/documentation/idtspe-methodology/active/profiles/visual-production-2d/target-modules/TM-2D-15-PREPARED-VISUAL-MATERIAL-SET.md#ru-mat-02",
+  "sourceContentSHA256": "a25e6999b1d7efa5641c89f4225a9553f18316e303f0cb48b67d4bf65e785032",
+  "sourceOwnerGraphSlug": "template-tm-2d-15-prepared-visual-material-set",
+  "sourceAnchor": "ru-mat-02",
+  "coverage": "Готовый способ одного узкого R; без выдуманных под-R и без выбора проекта.",
+  "nodes": [
+    {
+      "id": "RU-MAT-02",
+      "kind": "requirement",
+      "title": "Qualified Material Membership",
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "template-tm-2d-15-prepared-visual-material-set",
+        "nodeId": "RU-MAT-02"
+      }
+    },
+    {
+      "id": "TEMPLATE-D-RU-MAT-02",
+      "kind": "decision",
+      "status": "reusable-unselected",
+      "templateRole": "unit-prepared-guidance",
+      "selected": false,
+      "title": "Готовый способ проработки: Qualified Material Membership",
+      "description": "<a id=\"ru-mat-02\"></a>\n### Qualified Material Membership\n\n`RU-MAT-02`\n\nOwn intrinsic retained facts: material identity/locator, origin/provenance, observed vs derived/synthetic status, derivation lineage, what the material directly shows and known intrinsic limitations/conflicts. Do not assign universal consumer authority.",
+      "source": "/workspace/repos/obs-planning-docs/planning/documentation/idtspe-methodology/active/profiles/visual-production-2d/target-modules/TM-2D-15-PREPARED-VISUAL-MATERIAL-SET.md#ru-mat-02",
+      "sourceUnitId": "RU-MAT-02",
+      "explicitSubrequirements": false,
+      "note": "Source defines Unit guidance; no explicit nested R inventory is declared here."
+    }
+  ],
+  "edges": [
+    {
+      "id": "UNIT-E-DRIVE",
+      "type": "DRIVES",
+      "from": "RU-MAT-02",
+      "to": "TEMPLATE-D-RU-MAT-02",
+      "templateOnly": true,
+      "meaning": "Готовый ответ на узкую задачу; пока не выбран."
+    }
+  ],
+  "events": []
+}

@@ -1,0 +1,328 @@
+{
+  "schemaVersion": 1,
+  "actionModel": "candidate-v6",
+  "coreModel": "rdg-decision-v1",
+  "id": "rdg-agent-clarify-decision-lens",
+  "title": "Уточнить цели и контекст — Decision v1",
+  "identitySpace": "90ec17b4-62f6-5e02-a32c-520724de2f7b",
+  "revision": 1,
+  "rootRequirementId": "R-LENS-CLARIFY",
+  "rootCauses": [
+    {
+      "id": "RC-clarify",
+      "requirementId": "R-LENS-CLARIFY",
+      "reason": "Fundamental clarify instruction entry",
+      "enabled": true
+    }
+  ],
+  "nodes": [
+    {
+      "id": "R-LENS-CLARIFY",
+      "kind": "requirement",
+      "title": "Иметь достаточно уточнённые требования и данные для следующего содержательного шага",
+      "description": "Clarify Requirement scope, success criteria, real Context and Canon guidance using core/add/edit/link. Use atomic initialRelations and the current Working Graph membership. Unknown observations remain unknown; no selection or completion follows from clarification.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "scope": "Fundamental RDG clarify instructions"
+    },
+    {
+      "id": "A-CLARIFY-BUILD",
+      "kind": "decision",
+      "title": "Уточнить цели и контекст",
+      "description": "Clarify Requirement scope, success criteria, real Context and Canon guidance using core/add/edit/link. Use atomic initialRelations and the current Working Graph membership. Unknown observations remain unknown; no selection or completion follows from clarification.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "selectionState": "discovered"
+    },
+    {
+      "id": "R-CLARIFY-GOAL",
+      "kind": "requirement",
+      "title": "Ясны желаемый результат и его смысл",
+      "description": "Clarify Requirement scope, success criteria, real Context and Canon guidance using core/add/edit/link. Use atomic initialRelations and the current Working Graph membership. Unknown observations remain unknown; no selection or completion follows from clarification.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "scope": "Fundamental RDG clarify instructions"
+    },
+    {
+      "id": "A-CLARIFY-INTENT",
+      "kind": "decision",
+      "title": "Уточнить цель и upstream",
+      "description": "Clarify Requirement scope, success criteria, real Context and Canon guidance using core/add/edit/link. Use atomic initialRelations and the current Working Graph membership. Unknown observations remain unknown; no selection or completion follows from clarification.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "selectionState": "discovered"
+    },
+    {
+      "id": "R-CLARIFY-CRITERIA",
+      "kind": "requirement",
+      "title": "Понятно, как проверить результат",
+      "description": "Clarify Requirement scope, success criteria, real Context and Canon guidance using core/add/edit/link. Use atomic initialRelations and the current Working Graph membership. Unknown observations remain unknown; no selection or completion follows from clarification.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "scope": "Fundamental RDG clarify instructions"
+    },
+    {
+      "id": "A-CLARIFY-SUCCESS",
+      "kind": "decision",
+      "title": "Сформулировать критерии достаточности",
+      "description": "Clarify Requirement scope, success criteria, real Context and Canon guidance using core/add/edit/link. Use atomic initialRelations and the current Working Graph membership. Unknown observations remain unknown; no selection or completion follows from clarification.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "selectionState": "discovered"
+    },
+    {
+      "id": "R-CLARIFY-CONTEXT",
+      "kind": "requirement",
+      "title": "Собраны значимые факты и ограничения",
+      "description": "Clarify Requirement scope, success criteria, real Context and Canon guidance using core/add/edit/link. Use atomic initialRelations and the current Working Graph membership. Unknown observations remain unknown; no selection or completion follows from clarification.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "scope": "Fundamental RDG clarify instructions"
+    },
+    {
+      "id": "A-CLARIFY-INPUTS",
+      "kind": "decision",
+      "title": "Проверить данные задачи",
+      "description": "Clarify Requirement scope, success criteria, real Context and Canon guidance using core/add/edit/link. Use atomic initialRelations and the current Working Graph membership. Unknown observations remain unknown; no selection or completion follows from clarification.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "selectionState": "discovered"
+    },
+    {
+      "id": "R-CLARIFY-UNKNOWNS",
+      "kind": "requirement",
+      "title": "Неизвестные управляются явно",
+      "description": "Clarify Requirement scope, success criteria, real Context and Canon guidance using core/add/edit/link. Use atomic initialRelations and the current Working Graph membership. Unknown observations remain unknown; no selection or completion follows from clarification.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "scope": "Fundamental RDG clarify instructions"
+    },
+    {
+      "id": "A-CLARIFY-QUESTIONS",
+      "kind": "decision",
+      "title": "Разрешить вопросы, меняющие следующий шаг",
+      "description": "Clarify Requirement scope, success criteria, real Context and Canon guidance using core/add/edit/link. Use atomic initialRelations and the current Working Graph membership. Unknown observations remain unknown; no selection or completion follows from clarification.",
+      "revision": 1,
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      },
+      "selectionState": "discovered"
+    }
+  ],
+  "objects": [
+    {
+      "id": "K-A-CLARIFY-BUILD",
+      "kind": "canon",
+      "title": "Применимость: Уточнить цели и контекст",
+      "description": "",
+      "revision": 1,
+      "guidance": "Clarify Requirement scope, success criteria, real Context and Canon guidance using core/add/edit/link. Use atomic initialRelations and the current Working Graph membership. Unknown observations remain unknown; no selection or completion follows from clarification.  Ситуация оправдывает этот способ в пределах его вклада Лишнее действие при уже достаточном состоянии"
+    },
+    {
+      "id": "K-A-CLARIFY-INTENT",
+      "kind": "canon",
+      "title": "Применимость: Уточнить цель и upstream",
+      "description": "",
+      "revision": 1,
+      "guidance": "Clarify Requirement scope, success criteria, real Context and Canon guidance using core/add/edit/link. Use atomic initialRelations and the current Working Graph membership. Unknown observations remain unknown; no selection or completion follows from clarification.  Ситуация оправдывает этот способ в пределах его вклада Лишнее действие при уже достаточном состоянии"
+    },
+    {
+      "id": "K-A-CLARIFY-SUCCESS",
+      "kind": "canon",
+      "title": "Применимость: Сформулировать критерии достаточности",
+      "description": "",
+      "revision": 1,
+      "guidance": "Clarify Requirement scope, success criteria, real Context and Canon guidance using core/add/edit/link. Use atomic initialRelations and the current Working Graph membership. Unknown observations remain unknown; no selection or completion follows from clarification.  Ситуация оправдывает этот способ в пределах его вклада Лишнее действие при уже достаточном состоянии"
+    },
+    {
+      "id": "K-A-CLARIFY-INPUTS",
+      "kind": "canon",
+      "title": "Применимость: Проверить данные задачи",
+      "description": "",
+      "revision": 1,
+      "guidance": "Clarify Requirement scope, success criteria, real Context and Canon guidance using core/add/edit/link. Use atomic initialRelations and the current Working Graph membership. Unknown observations remain unknown; no selection or completion follows from clarification.  Ситуация оправдывает этот способ в пределах его вклада Лишнее действие при уже достаточном состоянии"
+    },
+    {
+      "id": "K-A-CLARIFY-QUESTIONS",
+      "kind": "canon",
+      "title": "Применимость: Разрешить вопросы, меняющие следующий шаг",
+      "description": "",
+      "revision": 1,
+      "guidance": "Clarify Requirement scope, success criteria, real Context and Canon guidance using core/add/edit/link. Use atomic initialRelations and the current Working Graph membership. Unknown observations remain unknown; no selection or completion follows from clarification.  Ситуация оправдывает этот способ в пределах его вклада Лишнее действие при уже достаточном состоянии"
+    },
+    {
+      "id": "I-LENS-CLARIFY",
+      "kind": "info",
+      "title": "Применение и границы линзы",
+      "description": "Определение линзы — бумага для исследования. Чтение, выбор линзы, применение к конкретной версии, выбор предметного A, Plan, исполнение и результат различаются. Рассматривать только применимые части. Условия канона показательны; реальные факты находятся в R/Context рабочей ситуации. Порядок в JSON не задаёт расписание. Точные команды и права остаются у технических владельцев.",
+      "revision": 1,
+      "value": "Определение линзы — бумага для исследования. Чтение, выбор линзы, применение к конкретной версии, выбор предметного A, Plan, исполнение и результат различаются. Рассматривать только применимые части. Условия канона показательны; реальные факты находятся в R/Context рабочей ситуации. Порядок в JSON не задаёт расписание. Точные команды и права остаются у технических владельцев."
+    },
+    {
+      "id": "INFO-DECISION-API-CLARIFY",
+      "kind": "info",
+      "title": "Проверенный маршрут API · clarify",
+      "description": "Контракт поддержанного Decision runtime; читать вместе с актуальной schema",
+      "revision": 1,
+      "value": "Общий протокол: catalog → read → schema → preflight(request) → apply(request, expectedInputBinding=preview.inputBinding) → receipt/readback. Новый логический запрос получает новый UUID transactionId; точный retry сохраняет его и весь request. Не подменяйте entity ID ключом occurrence. Версии и права проверяются общим Application. Получите schema(op=core, packageId, nodeId, command=edit). changes задаёт title/description/tags и поле вида: scope у R, guidance у Canon, value у Context/Info и необязательные scope/version/source/artifact у Context; отдельный Evidence не создаётся. cosmetic=true допускает только title. Для создания используйте core/add с entity и initialRelations в одном запросе; workGraphId задаёт членство нового Graph блока. Сначала проверьте реальные endpoint kinds."
+    }
+  ],
+  "externalActions": [],
+  "edges": [
+    {
+      "id": "D-A-CLARIFY-BUILD",
+      "type": "DRIVES",
+      "from": "R-LENS-CLARIFY",
+      "to": "A-CLARIFY-BUILD"
+    },
+    {
+      "id": "O-R-CLARIFY-GOAL",
+      "type": "INTRODUCES",
+      "from": "A-CLARIFY-BUILD",
+      "to": "R-CLARIFY-GOAL"
+    },
+    {
+      "id": "D-A-CLARIFY-INTENT",
+      "type": "DRIVES",
+      "from": "R-CLARIFY-GOAL",
+      "to": "A-CLARIFY-INTENT"
+    },
+    {
+      "id": "O-R-CLARIFY-CRITERIA",
+      "type": "INTRODUCES",
+      "from": "A-CLARIFY-BUILD",
+      "to": "R-CLARIFY-CRITERIA"
+    },
+    {
+      "id": "D-A-CLARIFY-SUCCESS",
+      "type": "DRIVES",
+      "from": "R-CLARIFY-CRITERIA",
+      "to": "A-CLARIFY-SUCCESS"
+    },
+    {
+      "id": "O-R-CLARIFY-CONTEXT",
+      "type": "INTRODUCES",
+      "from": "A-CLARIFY-BUILD",
+      "to": "R-CLARIFY-CONTEXT"
+    },
+    {
+      "id": "D-A-CLARIFY-INPUTS",
+      "type": "DRIVES",
+      "from": "R-CLARIFY-CONTEXT",
+      "to": "A-CLARIFY-INPUTS"
+    },
+    {
+      "id": "O-R-CLARIFY-UNKNOWNS",
+      "type": "INTRODUCES",
+      "from": "A-CLARIFY-BUILD",
+      "to": "R-CLARIFY-UNKNOWNS"
+    },
+    {
+      "id": "D-A-CLARIFY-QUESTIONS",
+      "type": "DRIVES",
+      "from": "R-CLARIFY-UNKNOWNS",
+      "to": "A-CLARIFY-QUESTIONS"
+    },
+    {
+      "id": "CANON-A-CLARIFY-BUILD",
+      "type": "CANON_FOR",
+      "from": "K-A-CLARIFY-BUILD",
+      "to": "A-CLARIFY-BUILD"
+    },
+    {
+      "id": "CANON-A-CLARIFY-INTENT",
+      "type": "CANON_FOR",
+      "from": "K-A-CLARIFY-INTENT",
+      "to": "A-CLARIFY-INTENT"
+    },
+    {
+      "id": "CANON-A-CLARIFY-SUCCESS",
+      "type": "CANON_FOR",
+      "from": "K-A-CLARIFY-SUCCESS",
+      "to": "A-CLARIFY-SUCCESS"
+    },
+    {
+      "id": "CANON-A-CLARIFY-INPUTS",
+      "type": "CANON_FOR",
+      "from": "K-A-CLARIFY-INPUTS",
+      "to": "A-CLARIFY-INPUTS"
+    },
+    {
+      "id": "CANON-A-CLARIFY-QUESTIONS",
+      "type": "CANON_FOR",
+      "from": "K-A-CLARIFY-QUESTIONS",
+      "to": "A-CLARIFY-QUESTIONS"
+    },
+    {
+      "id": "INFO-clarify",
+      "type": "INFO_FOR",
+      "from": "I-LENS-CLARIFY",
+      "to": "R-LENS-CLARIFY"
+    },
+    {
+      "id": "INFO-DECISION-API-TO-ROOT-CLARIFY",
+      "type": "INFO_FOR",
+      "from": "INFO-DECISION-API-CLARIFY",
+      "to": "R-LENS-CLARIFY"
+    }
+  ],
+  "decisionGroups": [],
+  "workGraphs": [
+    {
+      "id": "WG-clarify",
+      "title": "Уточнить цели и контекст",
+      "rootIds": [
+        "R-LENS-CLARIFY"
+      ],
+      "memberIds": [
+        "R-LENS-CLARIFY",
+        "A-CLARIFY-BUILD",
+        "R-CLARIFY-GOAL",
+        "A-CLARIFY-INTENT",
+        "R-CLARIFY-CRITERIA",
+        "A-CLARIFY-SUCCESS",
+        "R-CLARIFY-CONTEXT",
+        "A-CLARIFY-INPUTS",
+        "R-CLARIFY-UNKNOWNS",
+        "A-CLARIFY-QUESTIONS",
+        "K-A-CLARIFY-BUILD",
+        "K-A-CLARIFY-INTENT",
+        "K-A-CLARIFY-SUCCESS",
+        "K-A-CLARIFY-INPUTS",
+        "K-A-CLARIFY-QUESTIONS",
+        "I-LENS-CLARIFY",
+        "INFO-DECISION-API-CLARIFY"
+      ]
+    }
+  ],
+  "events": [],
+  "recommendationPackageIds": []
+}

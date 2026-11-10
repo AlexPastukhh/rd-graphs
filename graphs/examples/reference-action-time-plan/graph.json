@@ -1,0 +1,2091 @@
+{
+  "schemaVersion": 1,
+  "revision": 10,
+  "id": "reference-action-time-plan",
+  "title": "Actions · заявка, история и план",
+  "planningScale": "module",
+  "identitySpace": "demo",
+  "rootRequirementId": "R0",
+  "actionModel": "candidate-v6",
+  "nodes": [
+    {
+      "id": "R0",
+      "kind": "requirement",
+      "title": "Обеспечить надёжное оформление заявки",
+      "status": "active"
+    },
+    {
+      "id": "A-SPLIT",
+      "kind": "action",
+      "title": "Разделить оформление на ввод и подтверждение",
+      "status": "selected",
+      "actionType": "decomposition",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "C-A-SPLIT-PLUS",
+            "text": "Ввод можно сохранять отдельно, а отправку подтверждает сервер; границы двух результатов известны."
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "C-A-SPLIT-MINUS",
+            "text": "Ввод и подтверждение должны совершаться одной неделимой операцией; такое разбиение не обеспечит атомарность."
+          }
+        ]
+      },
+      "qrpe": [
+        {
+          "id": "Q-A-SPLIT",
+          "text": "Подтверждены ли условия применения способа в этом учебном контексте?",
+          "status": "open"
+        }
+      ],
+      "selectionBasis": {
+        "driverSnapshot": {
+          "id": "R0",
+          "kind": "requirement",
+          "title": "Обеспечить надёжное оформление заявки",
+          "status": "active"
+        },
+        "actionSnapshot": {
+          "id": "A-SPLIT",
+          "kind": "action",
+          "title": "Разделить оформление на ввод и подтверждение",
+          "status": "candidate",
+          "actionType": "decomposition",
+          "canonBlock": {
+            "recommended": [
+              {
+                "id": "C-A-SPLIT-PLUS",
+                "text": "Ввод можно сохранять отдельно, а отправку подтверждает сервер; границы двух результатов известны."
+              }
+            ],
+            "contraindicated": [
+              {
+                "id": "C-A-SPLIT-MINUS",
+                "text": "Ввод и подтверждение должны совершаться одной неделимой операцией; такое разбиение не обеспечит атомарность."
+              }
+            ]
+          },
+          "qrpe": [
+            {
+              "id": "Q-A-SPLIT",
+              "text": "Подтверждены ли условия применения способа в этом учебном контексте?",
+              "status": "open"
+            }
+          ]
+        },
+        "note": "Учебный выбор способа для существующей цели"
+      }
+    },
+    {
+      "id": "R-INPUT",
+      "kind": "requirement",
+      "title": "Сохранить введённую заявку при разрыве связи",
+      "status": "active"
+    },
+    {
+      "id": "R-SEND",
+      "kind": "requirement",
+      "title": "Подтвердить приём заявки ровно один раз",
+      "status": "active"
+    },
+    {
+      "id": "R-CHECK",
+      "kind": "requirement",
+      "title": "Проверить полноту границ ввода и подтверждения",
+      "status": "active"
+    },
+    {
+      "id": "A-ATOMIC",
+      "kind": "action",
+      "title": "Оформлять заявку одной серверной транзакцией",
+      "status": "candidate",
+      "actionType": "general",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "C-A-ATOMIC-PLUS",
+            "text": "Постоянная связь гарантирована, и сервер может атомарно принять все данные."
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "C-A-ATOMIC-MINUS",
+            "text": "Пользователь работает без устойчивой связи; потеря формы недопустима."
+          }
+        ]
+      },
+      "qrpe": [
+        {
+          "id": "Q-A-ATOMIC",
+          "text": "Подтверждены ли условия применения способа в этом учебном контексте?",
+          "status": "open"
+        }
+      ]
+    },
+    {
+      "id": "A-LOCAL",
+      "kind": "action",
+      "title": "Сохранять черновик в локальном хранилище",
+      "status": "superseded",
+      "actionType": "general",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "C-A-LOCAL-PLUS",
+            "text": "После проверки политики: разрешено только на личном устройстве с явным выходом из аккаунта."
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "C-A-LOCAL-MINUS",
+            "text": "Общее устройство: локальный черновик сохранять нельзя."
+          }
+        ]
+      },
+      "qrpe": [
+        {
+          "id": "Q-A-LOCAL",
+          "text": "Подтверждены ли условия применения способа в этом учебном контексте?",
+          "status": "open"
+        },
+        {
+          "id": "Q-SHARED-DEVICE",
+          "text": "В учебный контекст добавлено общее устройство; прежний способ нужно пересмотреть.",
+          "status": "open"
+        }
+      ],
+      "selectionBasis": {
+        "driverSnapshot": {
+          "id": "R-INPUT",
+          "kind": "requirement",
+          "title": "Сохранить введённую заявку при разрыве связи",
+          "status": "active"
+        },
+        "actionSnapshot": {
+          "id": "A-LOCAL",
+          "kind": "action",
+          "title": "Сохранять черновик в локальном хранилище",
+          "status": "candidate",
+          "actionType": "general",
+          "canonBlock": {
+            "recommended": [
+              {
+                "id": "C-A-LOCAL-PLUS",
+                "text": "Устройство личное, объём небольшой, локальное хранение разрешено политикой данных."
+              }
+            ],
+            "contraindicated": [
+              {
+                "id": "C-A-LOCAL-MINUS",
+                "text": "Устройство общее или локальное хранение чувствительных данных запрещено."
+              }
+            ]
+          },
+          "qrpe": [
+            {
+              "id": "Q-A-LOCAL",
+              "text": "Подтверждены ли условия применения способа в этом учебном контексте?",
+              "status": "open"
+            }
+          ]
+        },
+        "note": "Учебный выбор способа для существующей цели"
+      },
+      "reconsiderationEventId": "EV-10"
+    },
+    {
+      "id": "A-SERVER",
+      "kind": "action",
+      "title": "Сохранять черновик на сервере по мере ввода",
+      "status": "selected",
+      "actionType": "general",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "C-A-SERVER-PLUS",
+            "text": "Связь доступна хотя бы периодически; черновик нужен на нескольких устройствах."
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "C-A-SERVER-MINUS",
+            "text": "Связи нет до завершения ввода, а ввод нельзя потерять даже при закрытии страницы."
+          }
+        ]
+      },
+      "qrpe": [
+        {
+          "id": "Q-A-SERVER",
+          "text": "Подтверждены ли условия применения способа в этом учебном контексте?",
+          "status": "open"
+        }
+      ],
+      "selectionBasis": {
+        "driverSnapshot": {
+          "id": "R-INPUT",
+          "kind": "requirement",
+          "title": "Сохранить введённую заявку при разрыве связи",
+          "status": "active"
+        },
+        "actionSnapshot": {
+          "id": "A-SERVER",
+          "kind": "action",
+          "title": "Сохранять черновик на сервере по мере ввода",
+          "status": "candidate",
+          "actionType": "general",
+          "canonBlock": {
+            "recommended": [
+              {
+                "id": "C-A-SERVER-PLUS",
+                "text": "Связь доступна хотя бы периодически; черновик нужен на нескольких устройствах."
+              }
+            ],
+            "contraindicated": [
+              {
+                "id": "C-A-SERVER-MINUS",
+                "text": "Связи нет до завершения ввода, а ввод нельзя потерять даже при закрытии страницы."
+              }
+            ]
+          },
+          "qrpe": [
+            {
+              "id": "Q-A-SERVER",
+              "text": "Подтверждены ли условия применения способа в этом учебном контексте?",
+              "status": "open"
+            }
+          ]
+        },
+        "note": "Учебный выбор способа для существующей цели"
+      }
+    },
+    {
+      "id": "A-IDEMPOTENT",
+      "kind": "action",
+      "title": "Отправлять заявку с ключом идемпотентности",
+      "status": "selected",
+      "actionType": "general",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "C-A-IDEMPOTENT-PLUS",
+            "text": "Сервер хранит результат по ключу и возвращает то же подтверждение при повторе."
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "C-A-IDEMPOTENT-MINUS",
+            "text": "Ключ меняется при каждом повторе или срок хранения короче возможного повтора; дубликат не исключён."
+          }
+        ]
+      },
+      "qrpe": [
+        {
+          "id": "Q-A-IDEMPOTENT",
+          "text": "Подтверждены ли условия применения способа в этом учебном контексте?",
+          "status": "open"
+        }
+      ],
+      "selectionBasis": {
+        "driverSnapshot": {
+          "id": "R-SEND",
+          "kind": "requirement",
+          "title": "Подтвердить приём заявки ровно один раз",
+          "status": "active"
+        },
+        "actionSnapshot": {
+          "id": "A-IDEMPOTENT",
+          "kind": "action",
+          "title": "Отправлять заявку с ключом идемпотентности",
+          "status": "candidate",
+          "actionType": "general",
+          "canonBlock": {
+            "recommended": [
+              {
+                "id": "C-A-IDEMPOTENT-PLUS",
+                "text": "Сервер хранит результат по ключу и возвращает то же подтверждение при повторе."
+              }
+            ],
+            "contraindicated": [
+              {
+                "id": "C-A-IDEMPOTENT-MINUS",
+                "text": "Ключ меняется при каждом повторе или срок хранения короче возможного повтора; дубликат не исключён."
+              }
+            ]
+          },
+          "qrpe": [
+            {
+              "id": "Q-A-IDEMPOTENT",
+              "text": "Подтверждены ли условия применения способа в этом учебном контексте?",
+              "status": "open"
+            }
+          ]
+        },
+        "note": "Учебный выбор способа для существующей цели"
+      }
+    },
+    {
+      "id": "A-QUERY",
+      "kind": "action",
+      "title": "После тайм-аута проверять приём по номеру заявки",
+      "status": "candidate",
+      "actionType": "general",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "C-A-QUERY-PLUS",
+            "text": "До отправки выделяется устойчивый номер; сервер позволяет однозначно узнать факт приёма."
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "C-A-QUERY-MINUS",
+            "text": "Номер появляется только после успешного ответа; проверить потерянный ответ невозможно."
+          }
+        ]
+      },
+      "qrpe": [
+        {
+          "id": "Q-A-QUERY",
+          "text": "Подтверждены ли условия применения способа в этом учебном контексте?",
+          "status": "open"
+        }
+      ]
+    },
+    {
+      "id": "R-RETRY",
+      "kind": "requirement",
+      "title": "Проверить повторную отправку после потери ответа",
+      "status": "active"
+    },
+    {
+      "id": "A-RETRY-TEST",
+      "kind": "action",
+      "title": "Воспроизвести потерю ответа после записи на сервере",
+      "status": "candidate",
+      "actionType": "general",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "C-A-RETRY-TEST-PLUS",
+            "text": "В тестовой среде можно оборвать ответ после фиксации записи."
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "C-A-RETRY-TEST-MINUS",
+            "text": "Среда не позволяет отличить потерю запроса от потери ответа; вывод о дубликатах будет ненадёжен."
+          }
+        ]
+      },
+      "qrpe": [
+        {
+          "id": "Q-A-RETRY-TEST",
+          "text": "Подтверждены ли условия применения способа в этом учебном контексте?",
+          "status": "open"
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "action-drive-A-SPLIT",
+      "type": "DRIVES",
+      "from": "R0",
+      "to": "A-SPLIT"
+    },
+    {
+      "id": "potential-A-SPLIT-R-INPUT",
+      "type": "INTRODUCES",
+      "from": "A-SPLIT",
+      "to": "R-INPUT",
+      "parent": "R0",
+      "childRole": "subgoal"
+    },
+    {
+      "id": "potential-A-SPLIT-R-SEND",
+      "type": "INTRODUCES",
+      "from": "A-SPLIT",
+      "to": "R-SEND",
+      "parent": "R0",
+      "childRole": "subgoal"
+    },
+    {
+      "id": "potential-A-SPLIT-R-CHECK",
+      "type": "INTRODUCES",
+      "from": "A-SPLIT",
+      "to": "R-CHECK",
+      "parent": "R0",
+      "childRole": "method_correctness"
+    },
+    {
+      "id": "action-drive-A-ATOMIC",
+      "type": "DRIVES",
+      "from": "R0",
+      "to": "A-ATOMIC"
+    },
+    {
+      "id": "action-drive-A-LOCAL",
+      "type": "DRIVES",
+      "from": "R-INPUT",
+      "to": "A-LOCAL"
+    },
+    {
+      "id": "action-drive-A-SERVER",
+      "type": "DRIVES",
+      "from": "R-INPUT",
+      "to": "A-SERVER"
+    },
+    {
+      "id": "action-drive-A-IDEMPOTENT",
+      "type": "DRIVES",
+      "from": "R-SEND",
+      "to": "A-IDEMPOTENT"
+    },
+    {
+      "id": "action-drive-A-QUERY",
+      "type": "DRIVES",
+      "from": "R-SEND",
+      "to": "A-QUERY"
+    },
+    {
+      "id": "potential-A-IDEMPOTENT-R-RETRY",
+      "type": "INTRODUCES",
+      "from": "A-IDEMPOTENT",
+      "to": "R-RETRY",
+      "parent": "R-SEND",
+      "childRole": "method_correctness"
+    },
+    {
+      "id": "action-drive-A-RETRY-TEST",
+      "type": "DRIVES",
+      "from": "R-RETRY",
+      "to": "A-RETRY-TEST"
+    }
+  ],
+  "events": [
+    {
+      "id": "EV-1",
+      "type": "graph_changed",
+      "by": "assistant",
+      "note": "Учебное изменение структуры или материала графа",
+      "operation": "prepare_action_requirement",
+      "authorityPrincipal": "bearer:g_0958c99dd773723ae97f",
+      "verifiedTrustReceipt": {
+        "mode": "bearer",
+        "principal": "bearer:g_0958c99dd773723ae97f",
+        "grantId": "g_0958c99dd773723ae97f",
+        "grantRevision": 3,
+        "transactionId": "tx-1",
+        "changesSHA256": "bea86423cb8a92647858c0922c0efbc6f8208ebe2271c46d98d081db3784639a"
+      },
+      "actionId": "A-SPLIT",
+      "targetId": "R-INPUT",
+      "priorNodeSnapshot": null,
+      "priorEdges": [],
+      "edgeIds": [
+        "potential-A-SPLIT-R-INPUT"
+      ],
+      "targetDeleted": false,
+      "recordedAt": "2026-10-19T16:49:16.973389+00:00"
+    },
+    {
+      "id": "EV-2",
+      "type": "graph_changed",
+      "by": "assistant",
+      "note": "Учебное изменение структуры или материала графа",
+      "operation": "prepare_action_requirement",
+      "authorityPrincipal": "bearer:g_0958c99dd773723ae97f",
+      "verifiedTrustReceipt": {
+        "mode": "bearer",
+        "principal": "bearer:g_0958c99dd773723ae97f",
+        "grantId": "g_0958c99dd773723ae97f",
+        "grantRevision": 3,
+        "transactionId": "tx-1",
+        "changesSHA256": "bea86423cb8a92647858c0922c0efbc6f8208ebe2271c46d98d081db3784639a"
+      },
+      "actionId": "A-SPLIT",
+      "targetId": "R-SEND",
+      "priorNodeSnapshot": null,
+      "priorEdges": [],
+      "edgeIds": [
+        "potential-A-SPLIT-R-SEND"
+      ],
+      "targetDeleted": false,
+      "recordedAt": "2026-10-19T16:49:16.978490+00:00"
+    },
+    {
+      "id": "EV-3",
+      "type": "graph_changed",
+      "by": "assistant",
+      "note": "Учебное изменение структуры или материала графа",
+      "operation": "prepare_action_requirement",
+      "authorityPrincipal": "bearer:g_0958c99dd773723ae97f",
+      "verifiedTrustReceipt": {
+        "mode": "bearer",
+        "principal": "bearer:g_0958c99dd773723ae97f",
+        "grantId": "g_0958c99dd773723ae97f",
+        "grantRevision": 3,
+        "transactionId": "tx-1",
+        "changesSHA256": "bea86423cb8a92647858c0922c0efbc6f8208ebe2271c46d98d081db3784639a"
+      },
+      "actionId": "A-SPLIT",
+      "targetId": "R-CHECK",
+      "priorNodeSnapshot": null,
+      "priorEdges": [],
+      "edgeIds": [
+        "potential-A-SPLIT-R-CHECK"
+      ],
+      "targetDeleted": false,
+      "recordedAt": "2026-10-19T16:49:16.982112+00:00"
+    },
+    {
+      "id": "EV-4",
+      "type": "action_selected",
+      "by": "assistant",
+      "note": "Учебный выбор способа для существующей цели",
+      "actionId": "A-SPLIT",
+      "driverRequirementId": "R0",
+      "authorityPrincipal": "bearer:g_0958c99dd773723ae97f",
+      "verifiedTrustReceipt": {
+        "mode": "bearer",
+        "principal": "bearer:g_0958c99dd773723ae97f",
+        "grantId": "g_0958c99dd773723ae97f",
+        "grantRevision": 3,
+        "transactionId": "tx-2",
+        "changesSHA256": "6fca81e20ef4d9a53a25a22606d94ff78ec7093e7efcd514d24a14fa8d1578e6"
+      },
+      "preparedChildrenSnapshot": [
+        {
+          "id": "potential-A-SPLIT-R-INPUT",
+          "type": "OUTCOME_OF",
+          "from": "A-SPLIT",
+          "to": "R-INPUT",
+          "parent": "R0",
+          "childRole": "subgoal"
+        },
+        {
+          "id": "potential-A-SPLIT-R-SEND",
+          "type": "OUTCOME_OF",
+          "from": "A-SPLIT",
+          "to": "R-SEND",
+          "parent": "R0",
+          "childRole": "subgoal"
+        },
+        {
+          "id": "potential-A-SPLIT-R-CHECK",
+          "type": "OUTCOME_OF",
+          "from": "A-SPLIT",
+          "to": "R-CHECK",
+          "parent": "R0",
+          "childRole": "method_correctness"
+        }
+      ],
+      "recordedAt": "2026-10-19T16:49:17.186527+00:00"
+    },
+    {
+      "id": "EV-5",
+      "type": "requirement_achieved",
+      "by": "assistant",
+      "note": "На учебных сценариях проверены сохранение ввода, повтор отправки и получение подтверждения. Границы разбиения согласованы.",
+      "targetId": "R-CHECK",
+      "authorityPrincipal": "bearer:g_0958c99dd773723ae97f",
+      "verifiedTrustReceipt": {
+        "mode": "bearer",
+        "principal": "bearer:g_0958c99dd773723ae97f",
+        "grantId": "g_0958c99dd773723ae97f",
+        "grantRevision": 3,
+        "transactionId": "tx-3",
+        "changesSHA256": "8fddeee8f7c0dcb73812b416223650e69e46da11122250990dc783867839aca8"
+      },
+      "basis": {
+        "node": {
+          "id": "R-CHECK",
+          "kind": "requirement",
+          "title": "Проверить полноту границ ввода и подтверждения",
+          "status": "active"
+        },
+        "dependencies": []
+      },
+      "basisSHA256": "c89b023e2d149b8aae32217da1c706ae51148b1c6317b396740ada7782da2c74",
+      "completionMode": "explicit",
+      "recordedAt": "2026-10-19T16:49:17.405253+00:00",
+      "viewSnapshot": {
+        "id": "R-CHECK",
+        "kind": "requirement",
+        "title": "Проверить полноту границ ввода и подтверждения",
+        "status": "active",
+        "canonBlock": null,
+        "qrpe": []
+      },
+      "viewSnapshotSHA256": "67f8eb1b25bb31319604144680a330db907509cdfaa31b61a81953efd8c9c392"
+    },
+    {
+      "id": "completion-d8c02d064fb26d060103cb3aed67a30f",
+      "type": "action_executed",
+      "targetId": "A-SPLIT",
+      "completionMode": "derived",
+      "basis": {
+        "node": {
+          "id": "A-SPLIT",
+          "kind": "action",
+          "title": "Разделить оформление на ввод и подтверждение",
+          "status": "selected",
+          "actionType": "decomposition"
+        },
+        "dependencies": [
+          {
+            "edge": {
+              "id": "potential-A-SPLIT-R-CHECK",
+              "type": "INTRODUCES",
+              "from": "A-SPLIT",
+              "to": "R-CHECK",
+              "parent": "R0",
+              "childRole": "method_correctness"
+            },
+            "basisSHA256": "c89b023e2d149b8aae32217da1c706ae51148b1c6317b396740ada7782da2c74"
+          }
+        ],
+        "outputs": [
+          {
+            "edge": {
+              "id": "potential-A-SPLIT-R-INPUT",
+              "type": "INTRODUCES",
+              "from": "A-SPLIT",
+              "to": "R-INPUT",
+              "parent": "R0",
+              "childRole": "subgoal"
+            },
+            "node": {
+              "id": "R-INPUT",
+              "kind": "requirement",
+              "title": "Сохранить введённую заявку при разрыве связи",
+              "status": "active"
+            }
+          },
+          {
+            "edge": {
+              "id": "potential-A-SPLIT-R-SEND",
+              "type": "INTRODUCES",
+              "from": "A-SPLIT",
+              "to": "R-SEND",
+              "parent": "R0",
+              "childRole": "subgoal"
+            },
+            "node": {
+              "id": "R-SEND",
+              "kind": "requirement",
+              "title": "Подтвердить приём заявки ровно один раз",
+              "status": "active"
+            }
+          }
+        ]
+      },
+      "basisSHA256": "0042100bf3114780f20772f075720a44287833e44db084d147d4402d897d9fda",
+      "by": "assistant",
+      "note": "Обязательная работа выбранной композиции выполнена",
+      "authorityPrincipal": "bearer:g_0958c99dd773723ae97f",
+      "recordedAt": "2026-10-19T16:49:17.405253+00:00",
+      "triggerEventId": "EV-5",
+      "viewSnapshot": {
+        "id": "A-SPLIT",
+        "kind": "action",
+        "title": "Разделить оформление на ввод и подтверждение",
+        "status": "selected",
+        "actionType": "decomposition",
+        "canonBlock": {
+          "recommended": [
+            {
+              "id": "C-A-SPLIT-PLUS",
+              "text": "Ввод можно сохранять отдельно, а отправку подтверждает сервер; границы двух результатов известны."
+            }
+          ],
+          "contraindicated": [
+            {
+              "id": "C-A-SPLIT-MINUS",
+              "text": "Ввод и подтверждение должны совершаться одной неделимой операцией; такое разбиение не обеспечит атомарность."
+            }
+          ]
+        },
+        "qrpe": [
+          {
+            "id": "Q-A-SPLIT",
+            "text": "Подтверждены ли условия применения способа в этом учебном контексте?",
+            "status": "open"
+          }
+        ]
+      },
+      "viewSnapshotSHA256": "d4f80c19c2d0f4ec9e87bc07608a5325c584c13b1c2cdcf55fa6b44dc7b6012d",
+      "verifiedTrustReceipt": {
+        "mode": "bearer",
+        "principal": "bearer:g_0958c99dd773723ae97f",
+        "grantId": "g_0958c99dd773723ae97f",
+        "grantRevision": 3,
+        "transactionId": "tx-3",
+        "changesSHA256": "8fddeee8f7c0dcb73812b416223650e69e46da11122250990dc783867839aca8"
+      }
+    },
+    {
+      "id": "EV-6",
+      "type": "graph_changed",
+      "by": "assistant",
+      "note": "Учебное изменение структуры или материала графа",
+      "operation": "prepare_action_requirement",
+      "authorityPrincipal": "bearer:g_0958c99dd773723ae97f",
+      "verifiedTrustReceipt": {
+        "mode": "bearer",
+        "principal": "bearer:g_0958c99dd773723ae97f",
+        "grantId": "g_0958c99dd773723ae97f",
+        "grantRevision": 3,
+        "transactionId": "tx-4",
+        "changesSHA256": "4bb63e04482b6e8387e46d371fc5ff7aa7fa1e7ed5c599fe97753a7f1ff1a78f"
+      },
+      "actionId": "A-IDEMPOTENT",
+      "targetId": "R-RETRY",
+      "priorNodeSnapshot": null,
+      "priorEdges": [],
+      "edgeIds": [
+        "potential-A-IDEMPOTENT-R-RETRY"
+      ],
+      "targetDeleted": false,
+      "recordedAt": "2026-10-19T16:49:17.610563+00:00"
+    },
+    {
+      "id": "EV-7",
+      "type": "action_selected",
+      "by": "assistant",
+      "note": "Учебный выбор способа для существующей цели",
+      "actionId": "A-LOCAL",
+      "driverRequirementId": "R-INPUT",
+      "authorityPrincipal": "bearer:g_0958c99dd773723ae97f",
+      "verifiedTrustReceipt": {
+        "mode": "bearer",
+        "principal": "bearer:g_0958c99dd773723ae97f",
+        "grantId": "g_0958c99dd773723ae97f",
+        "grantRevision": 3,
+        "transactionId": "tx-5",
+        "changesSHA256": "0beaf05dce54dbf858e11703b3009eb76656408be322c332512de53c37d19317"
+      },
+      "recordedAt": "2026-10-19T16:49:17.924207+00:00"
+    },
+    {
+      "id": "EV-8",
+      "type": "action_executed",
+      "by": "assistant",
+      "note": "Учебная проверка: черновик восстановлен после перезагрузки без сети.",
+      "targetId": "A-LOCAL",
+      "authorityPrincipal": "bearer:g_0958c99dd773723ae97f",
+      "verifiedTrustReceipt": {
+        "mode": "bearer",
+        "principal": "bearer:g_0958c99dd773723ae97f",
+        "grantId": "g_0958c99dd773723ae97f",
+        "grantRevision": 3,
+        "transactionId": "tx-6",
+        "changesSHA256": "befc2af006267b3c2e6b2d6f4a78b08b96ecaf591fd45ea008d496ed3435bea7"
+      },
+      "basis": {
+        "node": {
+          "id": "A-LOCAL",
+          "kind": "action",
+          "title": "Сохранять черновик в локальном хранилище",
+          "status": "selected",
+          "actionType": "general"
+        },
+        "dependencies": []
+      },
+      "basisSHA256": "6d166233f01d72d67ed3bdddcc9780f0284ade7841df4f53b39194a53cb3b11a",
+      "completionMode": "explicit",
+      "recordedAt": "2026-10-19T16:49:18.143652+00:00",
+      "viewSnapshot": {
+        "id": "A-LOCAL",
+        "kind": "action",
+        "title": "Сохранять черновик в локальном хранилище",
+        "status": "selected",
+        "actionType": "general",
+        "canonBlock": {
+          "recommended": [
+            {
+              "id": "C-A-LOCAL-PLUS",
+              "text": "Устройство личное, объём небольшой, локальное хранение разрешено политикой данных."
+            }
+          ],
+          "contraindicated": [
+            {
+              "id": "C-A-LOCAL-MINUS",
+              "text": "Устройство общее или локальное хранение чувствительных данных запрещено."
+            }
+          ]
+        },
+        "qrpe": [
+          {
+            "id": "Q-A-LOCAL",
+            "text": "Подтверждены ли условия применения способа в этом учебном контексте?",
+            "status": "open"
+          }
+        ]
+      },
+      "viewSnapshotSHA256": "4294585c06054537dc2a2093ff8747ace6fa42a248cfbd9cfc3816a606be38c9"
+    },
+    {
+      "id": "completion-038099853fb9898eb13c357e6485eea0",
+      "type": "requirement_achieved",
+      "targetId": "R-INPUT",
+      "completionMode": "derived",
+      "basis": {
+        "node": {
+          "id": "R-INPUT",
+          "kind": "requirement",
+          "title": "Сохранить введённую заявку при разрыве связи",
+          "status": "active"
+        },
+        "dependencies": [
+          {
+            "edge": {
+              "id": "action-drive-A-LOCAL",
+              "type": "DRIVES",
+              "from": "R-INPUT",
+              "to": "A-LOCAL"
+            },
+            "basisSHA256": "6d166233f01d72d67ed3bdddcc9780f0284ade7841df4f53b39194a53cb3b11a"
+          }
+        ]
+      },
+      "basisSHA256": "909c45ff80a632ff2884c43a76630bae994ea5663cb66085ff2431b1c0095f39",
+      "by": "assistant",
+      "note": "Обязательная работа выбранной композиции выполнена",
+      "authorityPrincipal": "bearer:g_0958c99dd773723ae97f",
+      "recordedAt": "2026-10-19T16:49:18.143652+00:00",
+      "triggerEventId": "EV-8",
+      "viewSnapshot": {
+        "id": "R-INPUT",
+        "kind": "requirement",
+        "title": "Сохранить введённую заявку при разрыве связи",
+        "status": "active",
+        "canonBlock": null,
+        "qrpe": []
+      },
+      "viewSnapshotSHA256": "f07acdd906a92dd3b213602403ea16215ee1efb4863ce92974120cb6986feeb7",
+      "verifiedTrustReceipt": {
+        "mode": "bearer",
+        "principal": "bearer:g_0958c99dd773723ae97f",
+        "grantId": "g_0958c99dd773723ae97f",
+        "grantRevision": 3,
+        "transactionId": "tx-6",
+        "changesSHA256": "befc2af006267b3c2e6b2d6f4a78b08b96ecaf591fd45ea008d496ed3435bea7"
+      }
+    },
+    {
+      "id": "EV-9",
+      "type": "graph_changed",
+      "by": "assistant",
+      "note": "Учебное изменение структуры или материала графа",
+      "operation": "edit_node",
+      "authorityPrincipal": "bearer:g_0958c99dd773723ae97f",
+      "verifiedTrustReceipt": {
+        "mode": "bearer",
+        "principal": "bearer:g_0958c99dd773723ae97f",
+        "grantId": "g_0958c99dd773723ae97f",
+        "grantRevision": 3,
+        "transactionId": "tx-7",
+        "changesSHA256": "440da18a429d48c9bae7f6e7e620b1aceac3c559296d9b1bbb2499b6480eccae"
+      },
+      "targetId": "A-LOCAL",
+      "priorNodeSnapshot": {
+        "id": "A-LOCAL",
+        "kind": "action",
+        "title": "Сохранять черновик в локальном хранилище",
+        "status": "selected",
+        "actionType": "general",
+        "canonBlock": {
+          "recommended": [
+            {
+              "id": "C-A-LOCAL-PLUS",
+              "text": "Устройство личное, объём небольшой, локальное хранение разрешено политикой данных."
+            }
+          ],
+          "contraindicated": [
+            {
+              "id": "C-A-LOCAL-MINUS",
+              "text": "Устройство общее или локальное хранение чувствительных данных запрещено."
+            }
+          ]
+        },
+        "qrpe": [
+          {
+            "id": "Q-A-LOCAL",
+            "text": "Подтверждены ли условия применения способа в этом учебном контексте?",
+            "status": "open"
+          }
+        ],
+        "selectionBasis": {
+          "driverSnapshot": {
+            "id": "R-INPUT",
+            "kind": "requirement",
+            "title": "Сохранить введённую заявку при разрыве связи",
+            "status": "active"
+          },
+          "actionSnapshot": {
+            "id": "A-LOCAL",
+            "kind": "action",
+            "title": "Сохранять черновик в локальном хранилище",
+            "status": "candidate",
+            "actionType": "general",
+            "canonBlock": {
+              "recommended": [
+                {
+                  "id": "C-A-LOCAL-PLUS",
+                  "text": "Устройство личное, объём небольшой, локальное хранение разрешено политикой данных."
+                }
+              ],
+              "contraindicated": [
+                {
+                  "id": "C-A-LOCAL-MINUS",
+                  "text": "Устройство общее или локальное хранение чувствительных данных запрещено."
+                }
+              ]
+            },
+            "qrpe": [
+              {
+                "id": "Q-A-LOCAL",
+                "text": "Подтверждены ли условия применения способа в этом учебном контексте?",
+                "status": "open"
+              }
+            ]
+          },
+          "note": "Учебный выбор способа для существующей цели"
+        }
+      },
+      "priorEdges": [],
+      "edgeIds": [],
+      "targetDeleted": false,
+      "recordedAt": "2026-10-19T16:49:18.366637+00:00"
+    },
+    {
+      "id": "EV-10",
+      "type": "action_withdrawn",
+      "by": "assistant",
+      "note": "Появилось требование общего устройства. Прежнее выполнение сохранено, текущий выбор отозван.",
+      "actionId": "A-LOCAL",
+      "driverRequirementId": "R-INPUT",
+      "authorityPrincipal": "bearer:g_0958c99dd773723ae97f",
+      "verifiedTrustReceipt": {
+        "mode": "bearer",
+        "principal": "bearer:g_0958c99dd773723ae97f",
+        "grantId": "g_0958c99dd773723ae97f",
+        "grantRevision": 3,
+        "transactionId": "tx-8",
+        "changesSHA256": "a871a1f247d71dc8e503faa1cb0c92141d11c4fa88c31709523a2b8a0af9870a"
+      },
+      "priorActionSnapshot": {
+        "id": "A-LOCAL",
+        "kind": "action",
+        "title": "Сохранять черновик в локальном хранилище",
+        "status": "selected",
+        "actionType": "general",
+        "canonBlock": {
+          "recommended": [
+            {
+              "id": "C-A-LOCAL-PLUS",
+              "text": "После проверки политики: разрешено только на личном устройстве с явным выходом из аккаунта."
+            }
+          ],
+          "contraindicated": [
+            {
+              "id": "C-A-LOCAL-MINUS",
+              "text": "Общее устройство: локальный черновик сохранять нельзя."
+            }
+          ]
+        },
+        "qrpe": [
+          {
+            "id": "Q-A-LOCAL",
+            "text": "Подтверждены ли условия применения способа в этом учебном контексте?",
+            "status": "open"
+          },
+          {
+            "id": "Q-SHARED-DEVICE",
+            "text": "В учебный контекст добавлено общее устройство; прежний способ нужно пересмотреть.",
+            "status": "open"
+          }
+        ],
+        "selectionBasis": {
+          "driverSnapshot": {
+            "id": "R-INPUT",
+            "kind": "requirement",
+            "title": "Сохранить введённую заявку при разрыве связи",
+            "status": "active"
+          },
+          "actionSnapshot": {
+            "id": "A-LOCAL",
+            "kind": "action",
+            "title": "Сохранять черновик в локальном хранилище",
+            "status": "candidate",
+            "actionType": "general",
+            "canonBlock": {
+              "recommended": [
+                {
+                  "id": "C-A-LOCAL-PLUS",
+                  "text": "Устройство личное, объём небольшой, локальное хранение разрешено политикой данных."
+                }
+              ],
+              "contraindicated": [
+                {
+                  "id": "C-A-LOCAL-MINUS",
+                  "text": "Устройство общее или локальное хранение чувствительных данных запрещено."
+                }
+              ]
+            },
+            "qrpe": [
+              {
+                "id": "Q-A-LOCAL",
+                "text": "Подтверждены ли условия применения способа в этом учебном контексте?",
+                "status": "open"
+              }
+            ]
+          },
+          "note": "Учебный выбор способа для существующей цели"
+        }
+      },
+      "priorIntroductionEdges": [],
+      "childDispositions": [],
+      "recordedAt": "2026-10-19T16:49:18.588243+00:00"
+    },
+    {
+      "id": "EV-11",
+      "type": "action_selected",
+      "by": "assistant",
+      "note": "Учебный выбор способа для существующей цели",
+      "actionId": "A-SERVER",
+      "driverRequirementId": "R-INPUT",
+      "authorityPrincipal": "bearer:g_0958c99dd773723ae97f",
+      "verifiedTrustReceipt": {
+        "mode": "bearer",
+        "principal": "bearer:g_0958c99dd773723ae97f",
+        "grantId": "g_0958c99dd773723ae97f",
+        "grantRevision": 3,
+        "transactionId": "tx-9",
+        "changesSHA256": "250230ed9740de516b83593e942ef10460a2a61f7975615701ae54ccc07c44f6"
+      },
+      "recordedAt": "2026-10-19T16:49:18.825233+00:00"
+    },
+    {
+      "id": "EV-12",
+      "type": "action_selected",
+      "by": "assistant",
+      "note": "Учебный выбор способа для существующей цели",
+      "actionId": "A-IDEMPOTENT",
+      "driverRequirementId": "R-SEND",
+      "authorityPrincipal": "bearer:g_0958c99dd773723ae97f",
+      "verifiedTrustReceipt": {
+        "mode": "bearer",
+        "principal": "bearer:g_0958c99dd773723ae97f",
+        "grantId": "g_0958c99dd773723ae97f",
+        "grantRevision": 3,
+        "transactionId": "tx-9",
+        "changesSHA256": "250230ed9740de516b83593e942ef10460a2a61f7975615701ae54ccc07c44f6"
+      },
+      "preparedChildrenSnapshot": [
+        {
+          "id": "potential-A-IDEMPOTENT-R-RETRY",
+          "type": "OUTCOME_OF",
+          "from": "A-IDEMPOTENT",
+          "to": "R-RETRY",
+          "parent": "R-SEND",
+          "childRole": "method_correctness"
+        }
+      ],
+      "recordedAt": "2026-10-19T16:49:18.825364+00:00"
+    }
+  ],
+  "readOnly": true,
+  "exampleOnly": true,
+  "hypothetical": true,
+  "selectedInProject": false,
+  "presentation": {
+    "usage": "working",
+    "archived": false,
+    "title": "Actions · история и план во времени",
+    "description": "Текущая модель: варианты, каноны, QRPE, две роли R, выполнение, отзыв и явное размещение."
+  },
+  "coverage": "Учебные факты из изолированного writer. Выбранный decomposition выполнен, его подцели ещё не достигнуты. Локальный черновик выполнен и затем отозван; новый способ выбран, но ещё не выполнен.",
+  "workflowExample": {
+    "schemaVersion": 1,
+    "planId": "demo",
+    "title": "Учебный план · надёжная заявка",
+    "sources": {
+      "plan": {
+        "branches": [],
+        "id": "demo",
+        "identitySpace": "demo",
+        "kind": "temporalPlan",
+        "revision": 3,
+        "schemaVersion": 1,
+        "sequence": [
+          {
+            "after": "S-SEND",
+            "before": "S-IDEMPOTENT"
+          }
+        ],
+        "status": "candidate",
+        "steps": [
+          {
+            "actionRef": {
+              "graphFile": "examples/reference-action-time-plan/graph.json",
+              "identitySpace": "demo",
+              "nodeId": "A-SPLIT"
+            },
+            "id": "S-SPLIT",
+            "kind": "action",
+            "state": "planned",
+            "title": "Разместить A-SPLIT"
+          },
+          {
+            "actionRef": {
+              "graphFile": "examples/reference-action-time-plan/graph.json",
+              "identitySpace": "demo",
+              "nodeId": "A-LOCAL"
+            },
+            "id": "S-LOCAL",
+            "kind": "action",
+            "state": "planned",
+            "title": "Разместить A-LOCAL"
+          },
+          {
+            "id": "S-INPUT",
+            "kind": "requirement",
+            "requirementRef": {
+              "graphFile": "examples/reference-action-time-plan/graph.json",
+              "identitySpace": "demo",
+              "nodeId": "R-INPUT"
+            },
+            "state": "planned",
+            "title": "Разместить R-INPUT"
+          },
+          {
+            "actionRef": {
+              "graphFile": "examples/reference-action-time-plan/graph.json",
+              "identitySpace": "demo",
+              "nodeId": "A-IDEMPOTENT"
+            },
+            "id": "S-IDEMPOTENT",
+            "kind": "action",
+            "state": "planned",
+            "title": "Разместить A-IDEMPOTENT"
+          },
+          {
+            "id": "S-SEND",
+            "kind": "requirement",
+            "requirementRef": {
+              "graphFile": "examples/reference-action-time-plan/graph.json",
+              "identitySpace": "demo",
+              "nodeId": "R-SEND"
+            },
+            "state": "planned",
+            "title": "Разместить R-SEND"
+          },
+          {
+            "actionRef": {
+              "graphFile": "examples/reference-action-time-plan/graph.json",
+              "identitySpace": "demo",
+              "nodeId": "A-SERVER"
+            },
+            "id": "S-SERVER",
+            "kind": "action",
+            "state": "planned",
+            "title": "Разместить A-SERVER"
+          }
+        ],
+        "timeConstraints": [
+          {
+            "at": "2026-10-20",
+            "basis": "Synthetic placement",
+            "stepId": "S-SPLIT",
+            "strength": "soft",
+            "type": "notBefore"
+          },
+          {
+            "at": "2026-10-20",
+            "basis": "Synthetic placement",
+            "stepId": "S-LOCAL",
+            "strength": "soft",
+            "type": "notBefore"
+          },
+          {
+            "at": "2026-10-20",
+            "basis": "Synthetic placement",
+            "stepId": "S-INPUT",
+            "strength": "soft",
+            "type": "notBefore"
+          },
+          {
+            "at": "2026-10-20",
+            "basis": "Synthetic placement",
+            "stepId": "S-IDEMPOTENT",
+            "strength": "soft",
+            "type": "notBefore"
+          },
+          {
+            "at": "2026-10-20",
+            "basis": "Synthetic placement",
+            "stepId": "S-SERVER",
+            "strength": "soft",
+            "type": "notBefore"
+          }
+        ],
+        "title": "Учебный план · надёжная заявка"
+      },
+      "completion": {
+        "examples/reference-action-time-plan/graph.json": {
+          "R-CHECK": {
+            "nodeId": "R-CHECK",
+            "kind": "requirement",
+            "title": "Проверить полноту границ ввода и подтверждения",
+            "status": "active",
+            "complete": true,
+            "currentScopeComplete": true,
+            "reason": "recorded-result",
+            "basisSHA256": "c89b023e2d149b8aae32217da1c706ae51148b1c6317b396740ada7782da2c74",
+            "dependencyIds": [],
+            "eventId": "EV-5"
+          },
+          "A-SPLIT": {
+            "nodeId": "A-SPLIT",
+            "kind": "action",
+            "title": "Разделить оформление на ввод и подтверждение",
+            "status": "selected",
+            "complete": true,
+            "currentScopeComplete": true,
+            "reason": "executed-instance",
+            "basisSHA256": "0042100bf3114780f20772f075720a44287833e44db084d147d4402d897d9fda",
+            "dependencyIds": [
+              "R-CHECK"
+            ],
+            "eventId": "completion-d8c02d064fb26d060103cb3aed67a30f"
+          },
+          "A-SERVER": {
+            "nodeId": "A-SERVER",
+            "kind": "action",
+            "title": "Сохранять черновик на сервере по мере ввода",
+            "status": "selected",
+            "complete": false,
+            "currentScopeComplete": false,
+            "reason": "result-not-recorded",
+            "basisSHA256": "d699cba78e3a8b3783aba6ea80587752e10ecd1498710a56924ebf6f1516a823",
+            "dependencyIds": [],
+            "eventId": null
+          },
+          "R-INPUT": {
+            "nodeId": "R-INPUT",
+            "kind": "requirement",
+            "title": "Сохранить введённую заявку при разрыве связи",
+            "status": "active",
+            "complete": false,
+            "currentScopeComplete": false,
+            "reason": "required-work-incomplete",
+            "basisSHA256": "60546adf3f1499ee41906ec861772dcd0a6ad8d3cf6b608cd5bb019d4fa45920",
+            "dependencyIds": [
+              "A-SERVER"
+            ],
+            "eventId": null
+          },
+          "R-RETRY": {
+            "nodeId": "R-RETRY",
+            "kind": "requirement",
+            "title": "Проверить повторную отправку после потери ответа",
+            "status": "active",
+            "complete": false,
+            "currentScopeComplete": false,
+            "reason": "result-not-recorded",
+            "basisSHA256": "5c1c562d6e493b748858f8933beeb2debb8c012b2cfe3c24c4abd93e4c1d7198",
+            "dependencyIds": [],
+            "eventId": null
+          },
+          "A-IDEMPOTENT": {
+            "nodeId": "A-IDEMPOTENT",
+            "kind": "action",
+            "title": "Отправлять заявку с ключом идемпотентности",
+            "status": "selected",
+            "complete": false,
+            "currentScopeComplete": false,
+            "reason": "required-work-incomplete",
+            "basisSHA256": "25cebc7c87803e89c4272e254f62d6db00c558c534afe905763f60737e86c046",
+            "dependencyIds": [
+              "R-RETRY"
+            ],
+            "eventId": null
+          },
+          "R-SEND": {
+            "nodeId": "R-SEND",
+            "kind": "requirement",
+            "title": "Подтвердить приём заявки ровно один раз",
+            "status": "active",
+            "complete": false,
+            "currentScopeComplete": false,
+            "reason": "required-work-incomplete",
+            "basisSHA256": "ee676731dc573878f71d2b30ce65503a56ab6934a9650cf253c7a79546b08ef4",
+            "dependencyIds": [
+              "A-IDEMPOTENT"
+            ],
+            "eventId": null
+          },
+          "R0": {
+            "nodeId": "R0",
+            "kind": "requirement",
+            "title": "Обеспечить надёжное оформление заявки",
+            "status": "active",
+            "complete": false,
+            "currentScopeComplete": false,
+            "reason": "required-work-incomplete",
+            "basisSHA256": "7c810b66d73cb78ed16cd32df9ab4da401d39521b446047286adb00436f2866d",
+            "dependencyIds": [
+              "A-SPLIT",
+              "R-INPUT",
+              "R-SEND"
+            ],
+            "eventId": null
+          },
+          "A-ATOMIC": {
+            "nodeId": "A-ATOMIC",
+            "kind": "action",
+            "title": "Оформлять заявку одной серверной транзакцией",
+            "status": "candidate",
+            "complete": false,
+            "currentScopeComplete": false,
+            "reason": "potential-inactive-or-unavailable-owner",
+            "basisSHA256": "c32be49fdbb5eda555ba31d86cfff0bb6b725d0716bbe334ad87d2f2401586ae",
+            "dependencyIds": [],
+            "eventId": null
+          },
+          "A-LOCAL": {
+            "nodeId": "A-LOCAL",
+            "kind": "action",
+            "title": "Сохранять черновик в локальном хранилище",
+            "status": "superseded",
+            "complete": true,
+            "currentScopeComplete": false,
+            "reason": "executed-historical-scope",
+            "basisSHA256": "48f35dd400f8613eb293439a251d8c8fde87b793d3ffdedf8c6f79b8a59682b8",
+            "dependencyIds": [],
+            "eventId": "EV-8"
+          },
+          "A-QUERY": {
+            "nodeId": "A-QUERY",
+            "kind": "action",
+            "title": "После тайм-аута проверять приём по номеру заявки",
+            "status": "candidate",
+            "complete": false,
+            "currentScopeComplete": false,
+            "reason": "potential-inactive-or-unavailable-owner",
+            "basisSHA256": "92b939c6a2a8e42c6e9dcad4a59e93433675a9a0a0515e1300a1a6b76ec7f44e",
+            "dependencyIds": [],
+            "eventId": null
+          },
+          "A-RETRY-TEST": {
+            "nodeId": "A-RETRY-TEST",
+            "kind": "action",
+            "title": "Воспроизвести потерю ответа после записи на сервере",
+            "status": "candidate",
+            "complete": false,
+            "currentScopeComplete": false,
+            "reason": "potential-inactive-or-unavailable-owner",
+            "basisSHA256": "9a7cd14d64dac30f08f9b19088957f6f67f0ad2257d9cf9a993f5f122e21d70e",
+            "dependencyIds": [],
+            "eventId": null
+          }
+        }
+      }
+    },
+    "future": [
+      {
+        "stepId": "S-INPUT",
+        "kind": "requirement",
+        "graphRef": {
+          "graphFile": "examples/reference-action-time-plan/graph.json",
+          "identitySpace": "demo",
+          "nodeId": "R-INPUT"
+        },
+        "nodeId": "R-INPUT",
+        "title": "Сохранить введённую заявку при разрыве связи",
+        "plannedTitle": "Разместить R-INPUT",
+        "state": "planned",
+        "graphRevision": 10,
+        "ownerRef": {
+          "graphFile": "examples/reference-action-time-plan/graph.json",
+          "identitySpace": "demo",
+          "nodeId": "R-INPUT"
+        },
+        "timeConstraints": [
+          {
+            "at": "2026-10-20",
+            "basis": "Synthetic placement",
+            "stepId": "S-INPUT",
+            "strength": "soft",
+            "type": "notBefore"
+          }
+        ],
+        "sequence": []
+      },
+      {
+        "stepId": "S-IDEMPOTENT",
+        "kind": "action",
+        "graphRef": {
+          "graphFile": "examples/reference-action-time-plan/graph.json",
+          "identitySpace": "demo",
+          "nodeId": "A-IDEMPOTENT"
+        },
+        "nodeId": "A-IDEMPOTENT",
+        "title": "Отправлять заявку с ключом идемпотентности",
+        "plannedTitle": "Разместить A-IDEMPOTENT",
+        "state": "planned",
+        "graphRevision": 10,
+        "ownerRef": {
+          "graphFile": "examples/reference-action-time-plan/graph.json",
+          "identitySpace": "demo",
+          "nodeId": "A-IDEMPOTENT"
+        },
+        "timeConstraints": [
+          {
+            "at": "2026-10-20",
+            "basis": "Synthetic placement",
+            "stepId": "S-IDEMPOTENT",
+            "strength": "soft",
+            "type": "notBefore"
+          }
+        ],
+        "sequence": [
+          {
+            "after": "S-SEND",
+            "before": "S-IDEMPOTENT"
+          }
+        ]
+      },
+      {
+        "stepId": "S-SERVER",
+        "kind": "action",
+        "graphRef": {
+          "graphFile": "examples/reference-action-time-plan/graph.json",
+          "identitySpace": "demo",
+          "nodeId": "A-SERVER"
+        },
+        "nodeId": "A-SERVER",
+        "title": "Сохранять черновик на сервере по мере ввода",
+        "plannedTitle": "Разместить A-SERVER",
+        "state": "planned",
+        "graphRevision": 10,
+        "ownerRef": {
+          "graphFile": "examples/reference-action-time-plan/graph.json",
+          "identitySpace": "demo",
+          "nodeId": "A-SERVER"
+        },
+        "timeConstraints": [
+          {
+            "at": "2026-10-20",
+            "basis": "Synthetic placement",
+            "stepId": "S-SERVER",
+            "strength": "soft",
+            "type": "notBefore"
+          }
+        ],
+        "sequence": []
+      },
+      {
+        "stepId": "S-SEND",
+        "kind": "requirement",
+        "graphRef": {
+          "graphFile": "examples/reference-action-time-plan/graph.json",
+          "identitySpace": "demo",
+          "nodeId": "R-SEND"
+        },
+        "nodeId": "R-SEND",
+        "title": "Подтвердить приём заявки ровно один раз",
+        "plannedTitle": "Разместить R-SEND",
+        "state": "planned",
+        "graphRevision": 10,
+        "ownerRef": {
+          "graphFile": "examples/reference-action-time-plan/graph.json",
+          "identitySpace": "demo",
+          "nodeId": "R-SEND"
+        },
+        "timeConstraints": [],
+        "sequence": [
+          {
+            "after": "S-SEND",
+            "before": "S-IDEMPOTENT"
+          }
+        ]
+      }
+    ],
+    "history": [
+      {
+        "id": "create::workspaces/demo/graph.json::saved",
+        "graphFile": "examples/reference-action-time-plan/graph.json",
+        "kind": "graph_saved",
+        "recordedAt": "2026-10-19T16:49:16.497869+00:00",
+        "transactionId": "create",
+        "revision": 1,
+        "previousRevision": null,
+        "changed": {
+          "nodes": [
+            "R0"
+          ],
+          "edges": []
+        },
+        "authorityPrincipals": [
+          "bearer:g_27d72be48b47580efe7a"
+        ],
+        "summary": "Изменены: Обеспечить надёжное оформление заявки",
+        "operations": []
+      },
+      {
+        "id": "tx-1::workspaces/demo/graph.json::saved",
+        "graphFile": "examples/reference-action-time-plan/graph.json",
+        "kind": "graph_saved",
+        "recordedAt": "2026-10-19T16:49:17.010546+00:00",
+        "transactionId": "tx-1",
+        "revision": 2,
+        "previousRevision": 1,
+        "changed": {
+          "nodes": [
+            "A-ATOMIC",
+            "A-SPLIT",
+            "R-CHECK",
+            "R-INPUT",
+            "R-SEND"
+          ],
+          "edges": [
+            "action-drive-A-ATOMIC",
+            "action-drive-A-SPLIT",
+            "potential-A-SPLIT-R-CHECK",
+            "potential-A-SPLIT-R-INPUT",
+            "potential-A-SPLIT-R-SEND"
+          ]
+        },
+        "authorityPrincipals": [
+          "bearer:g_0958c99dd773723ae97f"
+        ],
+        "summary": "Учебное изменение структуры или материала графа",
+        "operations": [
+          "prepare_action_requirement",
+          "prepare_action_requirement",
+          "prepare_action_requirement"
+        ]
+      },
+      {
+        "id": "tx-2::workspaces/demo/graph.json::saved",
+        "graphFile": "examples/reference-action-time-plan/graph.json",
+        "kind": "graph_saved",
+        "recordedAt": "2026-10-19T16:49:17.215945+00:00",
+        "transactionId": "tx-2",
+        "revision": 3,
+        "previousRevision": 2,
+        "changed": {
+          "nodes": [
+            "A-SPLIT",
+            "R-CHECK",
+            "R-INPUT",
+            "R-SEND"
+          ],
+          "edges": [
+            "potential-A-SPLIT-R-CHECK",
+            "potential-A-SPLIT-R-INPUT",
+            "potential-A-SPLIT-R-SEND"
+          ]
+        },
+        "authorityPrincipals": [
+          "bearer:g_0958c99dd773723ae97f"
+        ],
+        "summary": "Учебный выбор способа для существующей цели",
+        "operations": [
+          "action_selected"
+        ]
+      },
+      {
+        "id": "tx-3::workspaces/demo/graph.json::saved",
+        "graphFile": "examples/reference-action-time-plan/graph.json",
+        "kind": "graph_saved",
+        "recordedAt": "2026-10-19T16:49:17.432200+00:00",
+        "transactionId": "tx-3",
+        "revision": 4,
+        "previousRevision": 3,
+        "changed": {
+          "nodes": [],
+          "edges": []
+        },
+        "authorityPrincipals": [
+          "bearer:g_0958c99dd773723ae97f"
+        ],
+        "summary": "Изменены: ",
+        "operations": []
+      },
+      {
+        "id": "workspaces/demo/graph.json::EV-5",
+        "graphFile": "examples/reference-action-time-plan/graph.json",
+        "kind": "requirement_achieved",
+        "sourceEventType": "requirement_achieved",
+        "targetId": "R-CHECK",
+        "title": "Проверить полноту границ ввода и подтверждения",
+        "nodeSnapshot": {
+          "id": "R-CHECK",
+          "kind": "requirement",
+          "title": "Проверить полноту границ ввода и подтверждения",
+          "status": "active",
+          "canonBlock": null,
+          "qrpe": []
+        },
+        "materialSnapshotAvailable": true,
+        "snapshotProvenance": "event-view-snapshot",
+        "viewSnapshotSHA256": "67f8eb1b25bb31319604144680a330db907509cdfaa31b61a81953efd8c9c392",
+        "eventOrder": 4,
+        "compositionOrder": null,
+        "recordedAt": "2026-10-19T16:49:17.432200+00:00",
+        "occurredAt": null,
+        "by": "assistant",
+        "authorityPrincipal": "bearer:g_0958c99dd773723ae97f",
+        "completionMode": "explicit",
+        "basisSHA256": "c89b023e2d149b8aae32217da1c706ae51148b1c6317b396740ada7782da2c74",
+        "note": "На учебных сценариях проверены сохранение ввода, повтор отправки и получение подтверждения. Границы разбиения согласованы.",
+        "transactionId": "tx-3"
+      },
+      {
+        "id": "workspaces/demo/graph.json::completion-d8c02d064fb26d060103cb3aed67a30f",
+        "graphFile": "examples/reference-action-time-plan/graph.json",
+        "kind": "action_executed",
+        "sourceEventType": "action_executed",
+        "targetId": "A-SPLIT",
+        "title": "Разделить оформление на ввод и подтверждение",
+        "nodeSnapshot": {
+          "id": "A-SPLIT",
+          "kind": "action",
+          "title": "Разделить оформление на ввод и подтверждение",
+          "status": "selected",
+          "actionType": "decomposition",
+          "canonBlock": {
+            "recommended": [
+              {
+                "id": "C-A-SPLIT-PLUS",
+                "text": "Ввод можно сохранять отдельно, а отправку подтверждает сервер; границы двух результатов известны."
+              }
+            ],
+            "contraindicated": [
+              {
+                "id": "C-A-SPLIT-MINUS",
+                "text": "Ввод и подтверждение должны совершаться одной неделимой операцией; такое разбиение не обеспечит атомарность."
+              }
+            ]
+          },
+          "qrpe": [
+            {
+              "id": "Q-A-SPLIT",
+              "text": "Подтверждены ли условия применения способа в этом учебном контексте?",
+              "status": "open"
+            }
+          ]
+        },
+        "materialSnapshotAvailable": true,
+        "snapshotProvenance": "event-view-snapshot",
+        "viewSnapshotSHA256": "d4f80c19c2d0f4ec9e87bc07608a5325c584c13b1c2cdcf55fa6b44dc7b6012d",
+        "eventOrder": 5,
+        "compositionOrder": null,
+        "recordedAt": "2026-10-19T16:49:17.432200+00:00",
+        "occurredAt": null,
+        "by": "assistant",
+        "authorityPrincipal": "bearer:g_0958c99dd773723ae97f",
+        "completionMode": "derived",
+        "basisSHA256": "0042100bf3114780f20772f075720a44287833e44db084d147d4402d897d9fda",
+        "note": "Обязательная работа выбранной композиции выполнена",
+        "transactionId": "tx-3"
+      },
+      {
+        "id": "tx-4::workspaces/demo/graph.json::saved",
+        "graphFile": "examples/reference-action-time-plan/graph.json",
+        "kind": "graph_saved",
+        "recordedAt": "2026-10-19T16:49:17.642910+00:00",
+        "transactionId": "tx-4",
+        "revision": 5,
+        "previousRevision": 4,
+        "changed": {
+          "nodes": [
+            "A-IDEMPOTENT",
+            "A-LOCAL",
+            "A-QUERY",
+            "A-RETRY-TEST",
+            "A-SERVER",
+            "R-RETRY"
+          ],
+          "edges": [
+            "action-drive-A-IDEMPOTENT",
+            "action-drive-A-LOCAL",
+            "action-drive-A-QUERY",
+            "action-drive-A-RETRY-TEST",
+            "action-drive-A-SERVER",
+            "potential-A-IDEMPOTENT-R-RETRY"
+          ]
+        },
+        "authorityPrincipals": [
+          "bearer:g_0958c99dd773723ae97f"
+        ],
+        "summary": "Учебное изменение структуры или материала графа",
+        "operations": [
+          "prepare_action_requirement"
+        ]
+      },
+      {
+        "id": "tx-5::workspaces/demo/graph.json::saved",
+        "graphFile": "examples/reference-action-time-plan/graph.json",
+        "kind": "graph_saved",
+        "recordedAt": "2026-10-19T16:49:17.954451+00:00",
+        "transactionId": "tx-5",
+        "revision": 6,
+        "previousRevision": 5,
+        "changed": {
+          "nodes": [
+            "A-LOCAL"
+          ],
+          "edges": []
+        },
+        "authorityPrincipals": [
+          "bearer:g_0958c99dd773723ae97f"
+        ],
+        "summary": "Учебный выбор способа для существующей цели",
+        "operations": [
+          "action_selected"
+        ]
+      },
+      {
+        "id": "tx-6::workspaces/demo/graph.json::saved",
+        "graphFile": "examples/reference-action-time-plan/graph.json",
+        "kind": "graph_saved",
+        "recordedAt": "2026-10-19T16:49:18.176634+00:00",
+        "transactionId": "tx-6",
+        "revision": 7,
+        "previousRevision": 6,
+        "changed": {
+          "nodes": [],
+          "edges": []
+        },
+        "authorityPrincipals": [
+          "bearer:g_0958c99dd773723ae97f"
+        ],
+        "summary": "Изменены: ",
+        "operations": []
+      },
+      {
+        "id": "workspaces/demo/graph.json::EV-8",
+        "graphFile": "examples/reference-action-time-plan/graph.json",
+        "kind": "action_executed",
+        "sourceEventType": "action_executed",
+        "targetId": "A-LOCAL",
+        "title": "Сохранять черновик в локальном хранилище",
+        "nodeSnapshot": {
+          "id": "A-LOCAL",
+          "kind": "action",
+          "title": "Сохранять черновик в локальном хранилище",
+          "status": "selected",
+          "actionType": "general",
+          "canonBlock": {
+            "recommended": [
+              {
+                "id": "C-A-LOCAL-PLUS",
+                "text": "Устройство личное, объём небольшой, локальное хранение разрешено политикой данных."
+              }
+            ],
+            "contraindicated": [
+              {
+                "id": "C-A-LOCAL-MINUS",
+                "text": "Устройство общее или локальное хранение чувствительных данных запрещено."
+              }
+            ]
+          },
+          "qrpe": [
+            {
+              "id": "Q-A-LOCAL",
+              "text": "Подтверждены ли условия применения способа в этом учебном контексте?",
+              "status": "open"
+            }
+          ]
+        },
+        "materialSnapshotAvailable": true,
+        "snapshotProvenance": "event-view-snapshot",
+        "viewSnapshotSHA256": "4294585c06054537dc2a2093ff8747ace6fa42a248cfbd9cfc3816a606be38c9",
+        "eventOrder": 8,
+        "compositionOrder": null,
+        "recordedAt": "2026-10-19T16:49:18.176634+00:00",
+        "occurredAt": null,
+        "by": "assistant",
+        "authorityPrincipal": "bearer:g_0958c99dd773723ae97f",
+        "completionMode": "explicit",
+        "basisSHA256": "6d166233f01d72d67ed3bdddcc9780f0284ade7841df4f53b39194a53cb3b11a",
+        "note": "Учебная проверка: черновик восстановлен после перезагрузки без сети.",
+        "transactionId": "tx-6"
+      },
+      {
+        "id": "workspaces/demo/graph.json::completion-038099853fb9898eb13c357e6485eea0",
+        "graphFile": "examples/reference-action-time-plan/graph.json",
+        "kind": "requirement_achieved",
+        "sourceEventType": "requirement_achieved",
+        "targetId": "R-INPUT",
+        "title": "Сохранить введённую заявку при разрыве связи",
+        "nodeSnapshot": {
+          "id": "R-INPUT",
+          "kind": "requirement",
+          "title": "Сохранить введённую заявку при разрыве связи",
+          "status": "active",
+          "canonBlock": null,
+          "qrpe": []
+        },
+        "materialSnapshotAvailable": true,
+        "snapshotProvenance": "event-view-snapshot",
+        "viewSnapshotSHA256": "f07acdd906a92dd3b213602403ea16215ee1efb4863ce92974120cb6986feeb7",
+        "eventOrder": 9,
+        "compositionOrder": null,
+        "recordedAt": "2026-10-19T16:49:18.176634+00:00",
+        "occurredAt": null,
+        "by": "assistant",
+        "authorityPrincipal": "bearer:g_0958c99dd773723ae97f",
+        "completionMode": "derived",
+        "basisSHA256": "909c45ff80a632ff2884c43a76630bae994ea5663cb66085ff2431b1c0095f39",
+        "note": "Обязательная работа выбранной композиции выполнена",
+        "transactionId": "tx-6"
+      },
+      {
+        "id": "tx-7::workspaces/demo/graph.json::saved",
+        "graphFile": "examples/reference-action-time-plan/graph.json",
+        "kind": "graph_saved",
+        "recordedAt": "2026-10-19T16:49:18.399683+00:00",
+        "transactionId": "tx-7",
+        "revision": 8,
+        "previousRevision": 7,
+        "changed": {
+          "nodes": [
+            "A-LOCAL"
+          ],
+          "edges": []
+        },
+        "authorityPrincipals": [
+          "bearer:g_0958c99dd773723ae97f"
+        ],
+        "summary": "Учебное изменение структуры или материала графа",
+        "operations": [
+          "edit_node"
+        ]
+      },
+      {
+        "id": "tx-8::workspaces/demo/graph.json::saved",
+        "graphFile": "examples/reference-action-time-plan/graph.json",
+        "kind": "graph_saved",
+        "recordedAt": "2026-10-19T16:49:18.627012+00:00",
+        "transactionId": "tx-8",
+        "revision": 9,
+        "previousRevision": 8,
+        "changed": {
+          "nodes": [
+            "A-LOCAL"
+          ],
+          "edges": []
+        },
+        "authorityPrincipals": [
+          "bearer:g_0958c99dd773723ae97f"
+        ],
+        "summary": "Появилось требование общего устройства. Прежнее выполнение сохранено, текущий выбор отозван.",
+        "operations": [
+          "action_withdrawn"
+        ]
+      },
+      {
+        "id": "workspaces/demo/graph.json::EV-10",
+        "graphFile": "examples/reference-action-time-plan/graph.json",
+        "kind": "action_withdrawn",
+        "sourceEventType": "action_withdrawn",
+        "targetId": "A-LOCAL",
+        "title": "Сохранять черновик в локальном хранилище",
+        "nodeSnapshot": {
+          "id": "A-LOCAL",
+          "kind": "action",
+          "title": "Сохранять черновик в локальном хранилище",
+          "status": "selected",
+          "actionType": "general",
+          "canonBlock": {
+            "recommended": [
+              {
+                "id": "C-A-LOCAL-PLUS",
+                "text": "После проверки политики: разрешено только на личном устройстве с явным выходом из аккаунта."
+              }
+            ],
+            "contraindicated": [
+              {
+                "id": "C-A-LOCAL-MINUS",
+                "text": "Общее устройство: локальный черновик сохранять нельзя."
+              }
+            ]
+          },
+          "qrpe": [
+            {
+              "id": "Q-A-LOCAL",
+              "text": "Подтверждены ли условия применения способа в этом учебном контексте?",
+              "status": "open"
+            },
+            {
+              "id": "Q-SHARED-DEVICE",
+              "text": "В учебный контекст добавлено общее устройство; прежний способ нужно пересмотреть.",
+              "status": "open"
+            }
+          ],
+          "selectionBasis": {
+            "driverSnapshot": {
+              "id": "R-INPUT",
+              "kind": "requirement",
+              "title": "Сохранить введённую заявку при разрыве связи",
+              "status": "active"
+            },
+            "actionSnapshot": {
+              "id": "A-LOCAL",
+              "kind": "action",
+              "title": "Сохранять черновик в локальном хранилище",
+              "status": "candidate",
+              "actionType": "general",
+              "canonBlock": {
+                "recommended": [
+                  {
+                    "id": "C-A-LOCAL-PLUS",
+                    "text": "Устройство личное, объём небольшой, локальное хранение разрешено политикой данных."
+                  }
+                ],
+                "contraindicated": [
+                  {
+                    "id": "C-A-LOCAL-MINUS",
+                    "text": "Устройство общее или локальное хранение чувствительных данных запрещено."
+                  }
+                ]
+              },
+              "qrpe": [
+                {
+                  "id": "Q-A-LOCAL",
+                  "text": "Подтверждены ли условия применения способа в этом учебном контексте?",
+                  "status": "open"
+                }
+              ]
+            },
+            "note": "Учебный выбор способа для существующей цели"
+          }
+        },
+        "materialSnapshotAvailable": true,
+        "snapshotProvenance": "prior-action-snapshot",
+        "viewSnapshotSHA256": null,
+        "eventOrder": 11,
+        "compositionOrder": null,
+        "recordedAt": "2026-10-19T16:49:18.627012+00:00",
+        "occurredAt": null,
+        "by": "assistant",
+        "authorityPrincipal": "bearer:g_0958c99dd773723ae97f",
+        "completionMode": null,
+        "basisSHA256": null,
+        "note": "Появилось требование общего устройства. Прежнее выполнение сохранено, текущий выбор отозван.",
+        "transactionId": "tx-8"
+      },
+      {
+        "id": "tx-9::workspaces/demo/graph.json::saved",
+        "graphFile": "examples/reference-action-time-plan/graph.json",
+        "kind": "graph_saved",
+        "recordedAt": "2026-10-19T16:49:18.863779+00:00",
+        "transactionId": "tx-9",
+        "revision": 10,
+        "previousRevision": 9,
+        "changed": {
+          "nodes": [
+            "A-IDEMPOTENT",
+            "A-SERVER",
+            "R-RETRY"
+          ],
+          "edges": [
+            "potential-A-IDEMPOTENT-R-RETRY"
+          ]
+        },
+        "authorityPrincipals": [
+          "bearer:g_0958c99dd773723ae97f"
+        ],
+        "summary": "Учебный выбор способа для существующей цели",
+        "operations": [
+          "action_selected",
+          "action_selected"
+        ]
+      }
+    ],
+    "unresolved": [],
+    "excludedPlacements": [
+      {
+        "stepId": "S-SPLIT",
+        "kind": "action",
+        "graphRef": {
+          "graphFile": "examples/reference-action-time-plan/graph.json",
+          "identitySpace": "demo",
+          "nodeId": "A-SPLIT"
+        },
+        "nodeId": "A-SPLIT",
+        "title": "Разделить оформление на ввод и подтверждение",
+        "plannedTitle": "Разместить A-SPLIT",
+        "state": "planned",
+        "graphRevision": 10,
+        "ownerRef": {
+          "graphFile": "examples/reference-action-time-plan/graph.json",
+          "identitySpace": "demo",
+          "nodeId": "A-SPLIT"
+        },
+        "timeConstraints": [
+          {
+            "at": "2026-10-20",
+            "basis": "Synthetic placement",
+            "stepId": "S-SPLIT",
+            "strength": "soft",
+            "type": "notBefore"
+          }
+        ],
+        "sequence": [],
+        "reason": "completed",
+        "eventId": "completion-d8c02d064fb26d060103cb3aed67a30f"
+      },
+      {
+        "stepId": "S-LOCAL",
+        "kind": "action",
+        "graphRef": {
+          "graphFile": "examples/reference-action-time-plan/graph.json",
+          "identitySpace": "demo",
+          "nodeId": "A-LOCAL"
+        },
+        "nodeId": "A-LOCAL",
+        "title": "Сохранять черновик в локальном хранилище",
+        "plannedTitle": "Разместить A-LOCAL",
+        "state": "planned",
+        "graphRevision": 10,
+        "ownerRef": {
+          "graphFile": "examples/reference-action-time-plan/graph.json",
+          "identitySpace": "demo",
+          "nodeId": "A-LOCAL"
+        },
+        "timeConstraints": [
+          {
+            "at": "2026-10-20",
+            "basis": "Synthetic placement",
+            "stepId": "S-LOCAL",
+            "strength": "soft",
+            "type": "notBefore"
+          }
+        ],
+        "sequence": [],
+        "reason": "completed",
+        "eventId": "EV-8"
+      }
+    ],
+    "sourcesChanged": false,
+    "coverage": "current explicit Plan and authorized published owning composition",
+    "graphFile": "examples/reference-action-time-plan/graph.json",
+    "planFile": "example://action-time-plan",
+    "permissions": [
+      "graph.read",
+      "plan.read"
+    ],
+    "capabilities": [],
+    "exampleOnly": true
+  }
+}

@@ -1,0 +1,6 @@
+[docengine]
+config_version = 1
+documentation_root = "docs"
+structured_dir = "_structured"
+dependency_dir = "_dependency"
+project_package = "docengine_project"

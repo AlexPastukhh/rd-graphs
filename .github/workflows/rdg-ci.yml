@@ -1,0 +1,58 @@
+name: RDG CI
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: rdg-ci-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  check-and-package:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+      - name: Prepare isolated runtime and Chromium
+        shell: bash
+        run: |
+          python -m pip install -r tools/requirements-server.txt
+          npm install --prefix "$RUNNER_TEMP/rdg-node" puppeteer@25.13.0 ajv@8.17.1
+          printf 'RDG_PUPPETEER_PACKAGE=%s/rdg-node/node_modules/puppeteer\nRDG_AJV_PACKAGE=%s/rdg-node/node_modules/ajv/dist/2020.js\n' "$RUNNER_TEMP" "$RUNNER_TEMP" >> "$GITHUB_ENV"
+          CHROME_PATH="$("$RUNNER_TEMP/rdg-node/node_modules/.bin/puppeteer" browsers install chrome-headless-shell --format '{{path}}')"
+          test -x "$CHROME_PATH"
+          printf 'RDG_CHROME_PATH=%s\n' "$CHROME_PATH" >> "$GITHUB_ENV"
+          mkdir -p "$RUNNER_TEMP/rdg-workfiles" "$RUNNER_TEMP/rdg-caddy"
+          curl --fail --location --retry 2 https://github.com/caddyserver/caddy/releases/download/v2.11.7/caddy_2.11.7_linux_amd64.tar.gz -o "$RUNNER_TEMP/caddy.tar.gz"
+          printf '727b91701a392de6ebc5027509f548bf39979e5216340d0faed8fa5e69c84f8b  %s/caddy.tar.gz\n' "$RUNNER_TEMP" | sha256sum --check
+          tar -xzf "$RUNNER_TEMP/caddy.tar.gz" -C "$RUNNER_TEMP/rdg-caddy" caddy
+          printf 'RDG_WORKFILES=%s/rdg-workfiles\nRDG_SERVER_CADDY=%s/rdg-caddy/caddy\n' "$RUNNER_TEMP" "$RUNNER_TEMP" >> "$GITHUB_ENV"
+      - name: Isolated tests and frozen release
+        run: python -B tools/rdg-ci.py --outbox "$RUNNER_TEMP/rdg-ci"
+      - name: Build runtime image
+        shell: bash
+        run: |
+          python -c 'import json,os,pathlib,zipfile; p=pathlib.Path(os.environ["RUNNER_TEMP"])/"rdg-ci"; r=json.loads((p/"ready.json").read_text()); zipfile.ZipFile(p/r["artifact"]).extractall(p/"docker-build")'
+          docker build "$RUNNER_TEMP/rdg-ci/docker-build/RDG-Server" -t rdg-ci:verified
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: rdg-server-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/rdg-ci/ready.json
+            ${{ runner.temp }}/rdg-ci/RDG-Server-*.zip
+          retention-days: 7
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: failure()
+        with:
+          name: rdg-ci-logs-${{ github.run_id }}
+          path: ${{ runner.temp }}/rdg-ci/run-*/
+          retention-days: 7

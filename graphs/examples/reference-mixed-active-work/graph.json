@@ -1,0 +1,2119 @@
+{
+  "schemaVersion": 1,
+  "id": "reference-mixed-active-work",
+  "title": "Смешанный рабочий граф — условная история",
+  "revision": 8,
+  "readOnly": true,
+  "exampleOnly": true,
+  "planningScale": "module",
+  "identitySpace": "rdg-example-mixed-v7",
+  "rootRequirementId": "R0",
+  "description": "УЧЕБНЫЙ read-only рабочий ГРАФ ГРАФОВ для той же цели R, что у подготовленного шаблона. Все 18 исходных семантических узлов/17 отношений подготовленного parent представлены здесь с явным сопоставлением, будущие ветви можно открыть в отдельных дочерних графах. Плюс контекстный O-C и 30 ситуационных предварительных R. D-A/D-OTHER — только selected-in-example-only; QRPE, композит и T1/T2/T3 остаются гипотетической историей. Физического импорта готового graph-set НЕ было.  Контекстные поля, материал источника и веточно-зависимые вопросы встроены в этот полный пример, а не вынесены в отдельный маленький пример.",
+  "nodes": [
+    {
+      "id": "R0",
+      "kind": "requirement",
+      "title": "Разбить функциональность приложения",
+      "qrpe": []
+    },
+    {
+      "id": "R-TECH",
+      "kind": "requirement",
+      "title": "Соблюсти техническое ограничение",
+      "status": "active",
+      "qrpe": [],
+      "effectiveAt": "T0",
+      "knownAt": "T1",
+      "sourceRef": "example:technical-assessment"
+    },
+    {
+      "id": "R-DEADLINE",
+      "kind": "requirement",
+      "title": "Уложиться в согласованный срок",
+      "status": "active",
+      "qrpe": [],
+      "effectiveAt": "T0",
+      "knownAt": "T1",
+      "sourceRef": "example:project-deadline"
+    },
+    {
+      "id": "C-PLATFORM",
+      "kind": "context",
+      "title": "Текущая архитектура требует общей схемы данных",
+      "effectiveAt": "T0",
+      "knownAt": "T1",
+      "sourceRef": "example:platform-inventory"
+    },
+    {
+      "id": "O-A",
+      "kind": "option",
+      "title": "По Features",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "O-FEATURE-plus-1",
+            "text": "Нужна независимая проработка частей",
+            "checkCategories": [
+              "согласованность"
+            ]
+          },
+          {
+            "id": "O-FEATURE-plus-2",
+            "text": "Есть команды для отдельных функциональных областей",
+            "checkCategories": [
+              "согласованность"
+            ]
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "O-FEATURE-minus-1",
+            "text": "Критичны сквозные зависимости",
+            "checkCategories": [
+              "согласованность"
+            ]
+          },
+          {
+            "id": "O-FEATURE-minus-2",
+            "text": "Трудно поддерживать единые правила",
+            "checkCategories": [
+              "согласованность"
+            ]
+          }
+        ]
+      },
+      "qrpe": [
+        {
+          "id": "QR-A",
+          "text": "Не нарушится ли согласованность сквозных процессов?",
+          "status": "open",
+          "recordedAt": "T1",
+          "sourceRefs": [
+            "R-TECH"
+          ],
+          "knownAt": "T1"
+        },
+        {
+          "id": "QR-A-RES",
+          "text": "Нужно ли делать отдельный согласующий Unit для каждой Feature?",
+          "status": "resolved",
+          "recordedAt": "T0",
+          "sourceRefs": [
+            "R0"
+          ],
+          "statusHistory": [
+            {
+              "id": "QAR-OPEN",
+              "status": "open",
+              "recordedAt": "T0"
+            },
+            {
+              "id": "QAR-RESOLVED",
+              "status": "resolved",
+              "recordedAt": "T1",
+              "note": "Условный план допускает общий R-ACT-2 вместо автоматического Unit на каждую Feature."
+            }
+          ]
+        }
+      ],
+      "preparedSource": {
+        "graphSlug": "reference-prepared-planning-tree",
+        "sourceOptionId": "O-FEATURE",
+        "version": "6",
+        "canonHash": "8b05b0b36badf8621345a12dffda73fb3ab6a81ea359c4481f00641911de417e"
+      },
+      "compositeRequirementId": "R-COMP",
+      "contextAssessment": "Оба подготовленных варианта рассматриваются относительно общего R-COMP; канонические ситуации не утверждаются автоматически.",
+      "contextChecks": [
+        {
+          "canonCaseId": "O-FEATURE-plus-1",
+          "requirementId": "R0",
+          "state": "checked-present",
+          "knownAt": "T1",
+          "sourceRef": "R0"
+        },
+        {
+          "canonCaseId": "O-FEATURE-minus-1",
+          "requirementId": "R-TECH",
+          "state": "checked-present",
+          "knownAt": "T1",
+          "sourceRef": "R-TECH",
+          "impact": "contraindication-open"
+        }
+      ],
+      "contextUses": [
+        {
+          "fieldRef": {
+            "graphSlug": "reference-mixed-active-work",
+            "fieldId": "accessibility"
+          },
+          "purpose": "Проверить доступность интерфейса и клавиатурную навигацию при разбиении Features"
+        }
+      ]
+    },
+    {
+      "id": "O-B",
+      "kind": "option",
+      "title": "По сценариям",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "O-SCENARIO-plus-1",
+            "text": "Ценность состоит в сквозных пользовательских путях",
+            "checkCategories": [
+              "сквозные процессы"
+            ]
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "O-SCENARIO-minus-1",
+            "text": "Нужно переиспользовать общие единицы функциональности",
+            "checkCategories": [
+              "сквозные процессы"
+            ]
+          }
+        ]
+      },
+      "qrpe": [
+        {
+          "id": "QR-B",
+          "text": "Как избежать дублирования общих функций?",
+          "status": "resolved",
+          "recordedAt": "T1",
+          "statusHistory": [
+            {
+              "id": "QB-OPEN",
+              "status": "open",
+              "recordedAt": "T0"
+            },
+            {
+              "id": "QB-RESOLVED",
+              "status": "resolved",
+              "recordedAt": "T1",
+              "note": "В учебном варианте B общие функции вынесены в единый контракт."
+            }
+          ]
+        }
+      ],
+      "preparedSource": {
+        "graphSlug": "reference-prepared-planning-tree",
+        "sourceOptionId": "O-SCENARIO",
+        "version": "6",
+        "canonHash": "486d2d0cd8bffef3c4571fc9e978ae315792eb2e9aa9fca763bd1532a4e6bd63"
+      },
+      "compositeRequirementId": "R-COMP",
+      "contextAssessment": "Оба подготовленных варианта рассматриваются относительно общего R-COMP; канонические ситуации не утверждаются автоматически.",
+      "contextChecks": [
+        {
+          "canonCaseId": "O-SCENARIO-plus-1",
+          "requirementId": "R0",
+          "state": "unknown",
+          "knownAt": "T1",
+          "sourceRef": "R0"
+        },
+        {
+          "canonCaseId": "O-SCENARIO-minus-1",
+          "requirementId": "R-TECH",
+          "state": "checked-present",
+          "knownAt": "T1",
+          "sourceRef": "R-TECH"
+        }
+      ],
+      "contextUses": [
+        {
+          "fieldRef": {
+            "graphSlug": "reference-mixed-active-work",
+            "fieldId": "alternative-details"
+          },
+          "purpose": "Условный вопрос при выборе сценарного способа",
+          "when": {
+            "allSelected": [
+              {
+                "graphSlug": "reference-mixed-active-work",
+                "optionId": "O-B"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "O-C",
+      "kind": "option",
+      "title": "Новый ситуативный комбинированный способ",
+      "origin": "situational",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "O-C-plus-1",
+            "text": "И Features, и сценарии самостоятельны",
+            "checkCategories": [
+              "архитектура"
+            ],
+            "checkCollections": [
+              "COL-ROOT-TECH"
+            ]
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "O-C-minus-1",
+            "text": "Сложнее координировать ответственность",
+            "checkCategories": [
+              "архитектура"
+            ],
+            "checkRequirements": [
+              "R-TECH"
+            ]
+          }
+        ]
+      },
+      "qrpe": [],
+      "compositeRequirementId": "R-COMP",
+      "contextAssessment": "Ситуативный третий способ оценивается вместе с подготовленными; он не включён в reusable library."
+    },
+    {
+      "id": "R-COMP",
+      "kind": "requirement",
+      "title": "Сохранить разбиение, учитывая новые требования к совместной проверке",
+      "compositeOf": "R0",
+      "status": "active",
+      "history": [
+        {
+          "id": "T1",
+          "recordedAt": "T1",
+          "knownAt": "T1",
+          "effectiveAt": "T1",
+          "statement": "Проработать Features параллельно, сохранив согласованность сквозных процессов",
+          "facts": [
+            {
+              "ref": "R0",
+              "state": "checked-present"
+            },
+            {
+              "ref": "R-TECH",
+              "state": "checked-present"
+            },
+            {
+              "ref": "C-PLATFORM",
+              "state": "checked-present"
+            }
+          ],
+          "sourceRef": "example:preselection-review-T1"
+        },
+        {
+          "id": "T2",
+          "recordedAt": "T2",
+          "knownAt": "T2",
+          "effectiveAt": "T0",
+          "statement": "Сохранить параллельность, учитывая ранее не найденную совместимость старого обмена данными",
+          "facts": [
+            {
+              "ref": "R-LEGACY-API",
+              "state": "checked-present"
+            }
+          ],
+          "reason": "Требование фактически действовало в T1, но стало известно только в T2; T1 остаётся неизменным.",
+          "sourceRef": "example:legacy-integration-notice"
+        },
+        {
+          "id": "T3",
+          "recordedAt": "T3",
+          "knownAt": "T3",
+          "effectiveAt": "T3",
+          "statement": "Сохранить согласованность Features при новом общем журнале изменений",
+          "facts": [
+            {
+              "ref": "D-OTHER",
+              "state": "checked-present"
+            },
+            {
+              "ref": "R-AUDIT-CONSISTENCY",
+              "state": "checked-present"
+            }
+          ],
+          "reason": "Только после условного D-OTHER в T3 появилось новое требование к общей проверке журнала.",
+          "sourceRef": "EX-EV-OTHER"
+        }
+      ],
+      "qrpe": [
+        {
+          "id": "Q-COMP",
+          "text": "Достаточно ли учтены требования из соседних областей?",
+          "status": "open",
+          "recordedAt": "T2",
+          "sourceRefs": [
+            "R-LEGACY-API"
+          ],
+          "knownAt": "T2"
+        }
+      ],
+      "currentStatement": "Сохранить согласованность Features при новом общем журнале изменений"
+    },
+    {
+      "id": "D-A",
+      "kind": "decision",
+      "status": "selected-in-example-only",
+      "title": "В примере принято разбиение по Features",
+      "selectedOptionId": "O-A",
+      "selectedInExampleOnly": true,
+      "selectionBasis": {
+        "compositeSnapshot": {
+          "id": "R-COMP",
+          "history": [
+            {
+              "id": "T1",
+              "recordedAt": "T1",
+              "knownAt": "T1",
+              "effectiveAt": "T1",
+              "statement": "Проработать Features параллельно, сохранив согласованность сквозных процессов",
+              "facts": [
+                {
+                  "ref": "R0",
+                  "state": "checked-present"
+                },
+                {
+                  "ref": "R-TECH",
+                  "state": "checked-present"
+                },
+                {
+                  "ref": "C-PLATFORM",
+                  "state": "checked-present"
+                }
+              ],
+              "sourceRef": "example:preselection-review-T1"
+            }
+          ]
+        },
+        "optionSnapshot": {
+          "id": "O-A",
+          "canonBlock": {
+            "recommended": [
+              {
+                "id": "O-FEATURE-plus-1",
+                "text": "Нужна независимая проработка частей",
+                "checkCategories": [
+                  "согласованность"
+                ]
+              },
+              {
+                "id": "O-FEATURE-plus-2",
+                "text": "Есть команды для отдельных функциональных областей",
+                "checkCategories": [
+                  "согласованность"
+                ]
+              }
+            ],
+            "contraindicated": [
+              {
+                "id": "O-FEATURE-minus-1",
+                "text": "Критичны сквозные зависимости",
+                "checkCategories": [
+                  "согласованность"
+                ]
+              },
+              {
+                "id": "O-FEATURE-minus-2",
+                "text": "Трудно поддерживать единые правила",
+                "checkCategories": [
+                  "согласованность"
+                ]
+              }
+            ]
+          },
+          "preparedSource": {
+            "graphSlug": "reference-prepared-planning-tree",
+            "sourceOptionId": "O-FEATURE",
+            "version": "3",
+            "canonHash": "8b05b0b36badf8621345a12dffda73fb3ab6a81ea359c4481f00641911de417e"
+          }
+        },
+        "note": "Только учебное принятие; реальной санкции пользователя нет.",
+        "knownAt": "T1",
+        "recordedAt": "T1",
+        "rationale": "Иллюстративно предпочли параллельную независимую разработку Features; сильный риск сквозной несогласованности признан, а не компенсирован плюсами. До реализации обязательно проверить контракты в R-ACT-2; QR-A остаётся открытым, выбор пересмотреть при провале проверки.",
+        "acceptedContraindicationCaseIds": [
+          "O-FEATURE-minus-1"
+        ],
+        "outstandingRiskIssueIds": [
+          "QR-A"
+        ]
+      },
+      "qrpe": [
+        {
+          "id": "QR-A",
+          "text": "Не нарушится ли согласованность сквозных процессов?",
+          "status": "open",
+          "recordedAt": "T1",
+          "sourceRefs": [
+            "R-TECH",
+            "O-A"
+          ],
+          "knownAt": "T1"
+        },
+        {
+          "id": "QR-T2",
+          "text": "Требование существовало в T1, но было замечено позже",
+          "status": "open",
+          "recordedAt": "T2",
+          "effectiveAt": "before-T1",
+          "sourceRefs": [
+            "R-LEGACY-API"
+          ],
+          "knownAt": "T2"
+        },
+        {
+          "id": "QR-A-RES",
+          "text": "Нужно ли делать отдельный согласующий Unit для каждой Feature?",
+          "status": "resolved",
+          "recordedAt": "T0",
+          "sourceRefs": [
+            "R0"
+          ],
+          "statusHistory": [
+            {
+              "id": "QAR-OPEN",
+              "status": "open",
+              "recordedAt": "T0"
+            },
+            {
+              "id": "QAR-RESOLVED",
+              "status": "resolved",
+              "recordedAt": "T1",
+              "note": "Условный план допускает общий R-ACT-2 вместо автоматического Unit на каждую Feature."
+            }
+          ]
+        }
+      ],
+      "implementationStatus": "not-demonstrated",
+      "goalAchievementStatus": "unverified"
+    },
+    {
+      "id": "R-ACT-1",
+      "kind": "requirement",
+      "title": "Проработать Feature Availability",
+      "status": "active",
+      "qrpe": []
+    },
+    {
+      "id": "R-ACT-2",
+      "kind": "requirement",
+      "title": "Обеспечить согласованность Features",
+      "status": "active",
+      "qrpe": []
+    },
+    {
+      "id": "R-OTHER",
+      "kind": "requirement",
+      "title": "Обеспечить единый учёт изменений",
+      "qrpe": [],
+      "effectiveAt": "T0",
+      "knownAt": "T1",
+      "sourceRef": "example:change-log-need"
+    },
+    {
+      "id": "D-OTHER",
+      "kind": "decision",
+      "title": "В примере принято использовать общий журнал изменений",
+      "status": "selected-in-example-only",
+      "selectedInExampleOnly": true,
+      "qrpe": [],
+      "implementationStatus": "not-demonstrated",
+      "goalAchievementStatus": "unverified",
+      "effectiveAt": "T3",
+      "knownAt": "T3",
+      "recordedAt": "T3"
+    },
+    {
+      "id": "R-PREV-FEATURE-1",
+      "kind": "requirement",
+      "title": "Потенциальная единица Feature 1",
+      "status": "candidate",
+      "candidateOnly": true,
+      "qrpe": []
+    },
+    {
+      "id": "R-PREV-FEATURE-2",
+      "kind": "requirement",
+      "title": "Потенциальная единица Feature 2",
+      "status": "candidate",
+      "candidateOnly": true,
+      "qrpe": []
+    },
+    {
+      "id": "R-PREV-FEATURE-3",
+      "kind": "requirement",
+      "title": "Потенциальная единица Feature 3",
+      "status": "candidate",
+      "candidateOnly": true,
+      "qrpe": []
+    },
+    {
+      "id": "R-PREV-FEATURE-4",
+      "kind": "requirement",
+      "title": "Потенциальная единица Feature 4",
+      "status": "candidate",
+      "candidateOnly": true,
+      "qrpe": []
+    },
+    {
+      "id": "R-PREV-FEATURE-5",
+      "kind": "requirement",
+      "title": "Потенциальная единица Feature 5",
+      "status": "candidate",
+      "candidateOnly": true,
+      "qrpe": []
+    },
+    {
+      "id": "R-PREV-FEATURE-6",
+      "kind": "requirement",
+      "title": "Потенциальная единица Feature 6",
+      "status": "candidate",
+      "candidateOnly": true,
+      "qrpe": []
+    },
+    {
+      "id": "R-PREV-FEATURE-7",
+      "kind": "requirement",
+      "title": "Потенциальная единица Feature 7",
+      "status": "candidate",
+      "candidateOnly": true,
+      "qrpe": []
+    },
+    {
+      "id": "R-PREV-FEATURE-8",
+      "kind": "requirement",
+      "title": "Потенциальная единица Feature 8",
+      "status": "candidate",
+      "candidateOnly": true,
+      "qrpe": []
+    },
+    {
+      "id": "R-PREV-FEATURE-9",
+      "kind": "requirement",
+      "title": "Потенциальная единица Feature 9",
+      "status": "candidate",
+      "candidateOnly": true,
+      "qrpe": []
+    },
+    {
+      "id": "R-PREV-FEATURE-10",
+      "kind": "requirement",
+      "title": "Потенциальная единица Feature 10",
+      "status": "candidate",
+      "candidateOnly": true,
+      "qrpe": []
+    },
+    {
+      "id": "R-PREV-SCENARIO-1",
+      "kind": "requirement",
+      "title": "Потенциальная единица Scenario 1",
+      "status": "candidate",
+      "candidateOnly": true,
+      "qrpe": []
+    },
+    {
+      "id": "R-PREV-SCENARIO-2",
+      "kind": "requirement",
+      "title": "Потенциальная единица Scenario 2",
+      "status": "candidate",
+      "candidateOnly": true,
+      "qrpe": []
+    },
+    {
+      "id": "R-PREV-SCENARIO-3",
+      "kind": "requirement",
+      "title": "Потенциальная единица Scenario 3",
+      "status": "candidate",
+      "candidateOnly": true,
+      "qrpe": []
+    },
+    {
+      "id": "R-PREV-SCENARIO-4",
+      "kind": "requirement",
+      "title": "Потенциальная единица Scenario 4",
+      "status": "candidate",
+      "candidateOnly": true,
+      "qrpe": []
+    },
+    {
+      "id": "R-PREV-SCENARIO-5",
+      "kind": "requirement",
+      "title": "Потенциальная единица Scenario 5",
+      "status": "candidate",
+      "candidateOnly": true,
+      "qrpe": []
+    },
+    {
+      "id": "R-PREV-SCENARIO-6",
+      "kind": "requirement",
+      "title": "Потенциальная единица Scenario 6",
+      "status": "candidate",
+      "candidateOnly": true,
+      "qrpe": []
+    },
+    {
+      "id": "R-PREV-SCENARIO-7",
+      "kind": "requirement",
+      "title": "Потенциальная единица Scenario 7",
+      "status": "candidate",
+      "candidateOnly": true,
+      "qrpe": []
+    },
+    {
+      "id": "R-PREV-SCENARIO-8",
+      "kind": "requirement",
+      "title": "Потенциальная единица Scenario 8",
+      "status": "candidate",
+      "candidateOnly": true,
+      "qrpe": []
+    },
+    {
+      "id": "R-PREV-SCENARIO-9",
+      "kind": "requirement",
+      "title": "Потенциальная единица Scenario 9",
+      "status": "candidate",
+      "candidateOnly": true,
+      "qrpe": []
+    },
+    {
+      "id": "R-PREV-SCENARIO-10",
+      "kind": "requirement",
+      "title": "Потенциальная единица Scenario 10",
+      "status": "candidate",
+      "candidateOnly": true,
+      "qrpe": []
+    },
+    {
+      "id": "R-PREV-HYBRID-1",
+      "kind": "requirement",
+      "title": "Потенциальная единица Hybrid 1",
+      "status": "candidate",
+      "candidateOnly": true,
+      "qrpe": []
+    },
+    {
+      "id": "R-PREV-HYBRID-2",
+      "kind": "requirement",
+      "title": "Потенциальная единица Hybrid 2",
+      "status": "candidate",
+      "candidateOnly": true,
+      "qrpe": []
+    },
+    {
+      "id": "R-PREV-HYBRID-3",
+      "kind": "requirement",
+      "title": "Потенциальная единица Hybrid 3",
+      "status": "candidate",
+      "candidateOnly": true,
+      "qrpe": []
+    },
+    {
+      "id": "R-PREV-HYBRID-4",
+      "kind": "requirement",
+      "title": "Потенциальная единица Hybrid 4",
+      "status": "candidate",
+      "candidateOnly": true,
+      "qrpe": []
+    },
+    {
+      "id": "R-PREV-HYBRID-5",
+      "kind": "requirement",
+      "title": "Потенциальная единица Hybrid 5",
+      "status": "candidate",
+      "candidateOnly": true,
+      "qrpe": []
+    },
+    {
+      "id": "R-PREV-HYBRID-6",
+      "kind": "requirement",
+      "title": "Потенциальная единица Hybrid 6",
+      "status": "candidate",
+      "candidateOnly": true,
+      "qrpe": []
+    },
+    {
+      "id": "R-PREV-HYBRID-7",
+      "kind": "requirement",
+      "title": "Потенциальная единица Hybrid 7",
+      "status": "candidate",
+      "candidateOnly": true,
+      "qrpe": []
+    },
+    {
+      "id": "R-PREV-HYBRID-8",
+      "kind": "requirement",
+      "title": "Потенциальная единица Hybrid 8",
+      "status": "candidate",
+      "candidateOnly": true,
+      "qrpe": []
+    },
+    {
+      "id": "R-PREV-HYBRID-9",
+      "kind": "requirement",
+      "title": "Потенциальная единица Hybrid 9",
+      "status": "candidate",
+      "candidateOnly": true,
+      "qrpe": []
+    },
+    {
+      "id": "R-PREV-HYBRID-10",
+      "kind": "requirement",
+      "title": "Потенциальная единица Hybrid 10",
+      "status": "candidate",
+      "candidateOnly": true,
+      "qrpe": []
+    },
+    {
+      "id": "R-LEGACY-API",
+      "kind": "requirement",
+      "title": "Сохранить совместимость существующего обмена данными",
+      "status": "active",
+      "effectiveAt": "T0",
+      "knownAt": "T2",
+      "recordedAt": "T2",
+      "sourceRef": "example:legacy-integration-notice",
+      "qrpe": []
+    },
+    {
+      "id": "R-AUDIT-CONSISTENCY",
+      "kind": "requirement",
+      "title": "Проверять согласованность нового общего журнала изменений",
+      "status": "active",
+      "effectiveAt": "T3",
+      "knownAt": "T3",
+      "recordedAt": "T3",
+      "sourceRef": "EX-EV-OTHER",
+      "qrpe": []
+    },
+    {
+      "id": "R-RELINK",
+      "kind": "requirement",
+      "title": "Проверить непротиворечивость интеграционных контрактов",
+      "status": "active",
+      "qrpe": [
+        {
+          "id": "Q-R-RELINK",
+          "text": "От какого D зависит проверка контрактов?",
+          "status": "resolved",
+          "recordedAt": "T3",
+          "statusHistory": [
+            {
+              "id": "QRR-OPEN",
+              "status": "open",
+              "recordedAt": "T3"
+            },
+            {
+              "id": "QRR-RESOLVED",
+              "status": "resolved",
+              "recordedAt": "T4",
+              "note": "Перенесено к D-A с сохранением старой связи."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "R-INACTIVE",
+      "kind": "requirement",
+      "title": "Создать отдельный служебный справочник для каждого изменения",
+      "status": "inactive",
+      "active": false,
+      "qrpe": [
+        {
+          "id": "Q-R-INACTIVE",
+          "text": "Нужен ли отдельный справочник помимо единого журнала?",
+          "status": "resolved",
+          "recordedAt": "T3",
+          "statusHistory": [
+            {
+              "id": "QRI-OPEN",
+              "status": "open",
+              "recordedAt": "T3"
+            },
+            {
+              "id": "QRI-RESOLVED",
+              "status": "resolved",
+              "recordedAt": "T4",
+              "note": "Дублирование признано ненужным."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "P-RF-1",
+      "kind": "requirement",
+      "status": "candidate",
+      "title": "Проработать выбранную Feature",
+      "qrpe": [],
+      "sourcePreparedNodeId": "RF-1"
+    },
+    {
+      "id": "P-RF-1-O1",
+      "kind": "option",
+      "title": "Описать операции Feature с предусловиями и результатами",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RF-1-O1-plus-1",
+            "text": "Набор операций невелик, границы Feature известны; достаточно явно задать вход, результат и отказ каждой операции.",
+            "checkCategories": []
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RF-1-O1-minus-1",
+            "text": "Промежуточные состояния влияют на доступность операций; одних входов и выходов недостаточно.",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": [],
+      "directAnswer": true,
+      "description": "Результат: спецификация операций Feature с проверяемыми примерами; прямой ответ без искусственной дочерней R.",
+      "sourcePreparedNodeId": "RF-1-O1",
+      "preparedSource": {
+        "graphSlug": "reference-prepared-planning-tree",
+        "sourceOptionId": "RF-1-O1",
+        "version": "6",
+        "canonHash": "cf90accb99882328ea3610d9672dc1d9b01c994294a6838704e421cd3d8e325d"
+      }
+    },
+    {
+      "id": "P-RF-1-O2",
+      "kind": "option",
+      "title": "Построить модель состояний Feature",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RF-1-O2-plus-1",
+            "text": "Доступные операции зависят от состояния объекта; переходы можно перечислить и проверить.",
+            "checkCategories": []
+          },
+          {
+            "id": "RF-1-O2-advice-research",
+            "text": "Перед выбором этого содержательного способа: Если канон зависит от дальнейшей архитектуры, нарисовать альтернативные следующие R-графы и сопоставить последствия ДО выбора.",
+            "evidence": "Это только условная учебная рекомендация; фактического эксперимента нет."
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RF-1-O2-minus-1",
+            "text": "Поведение почти не зависит от состояния или его границы пока меняются; модель создаст лишнюю работу.",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": [],
+      "sourcePreparedNodeId": "RF-1-O2",
+      "preparedSource": {
+        "graphSlug": "reference-prepared-planning-tree",
+        "sourceOptionId": "RF-1-O2",
+        "version": "6",
+        "canonHash": "07e17b65461cc3eabebf8911d19a32566cb5594da8768f64910b2d0969e147b7"
+      },
+      "description": "Результат: состояния и переходы Feature; дочерняя R проверяет допустимость переходов."
+    },
+    {
+      "id": "P-RF-2",
+      "kind": "requirement",
+      "status": "candidate",
+      "title": "Обеспечить согласованность Features",
+      "qrpe": [],
+      "sourcePreparedNodeId": "RF-2"
+    },
+    {
+      "id": "P-RF-2-O1",
+      "kind": "option",
+      "title": "Зафиксировать единый контракт общих данных",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RF-2-O1-plus-1",
+            "text": "Features разделяют одну модель данных и могут согласованно принять общие типы, правила обновления и ошибки.",
+            "checkCategories": []
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RF-2-O1-minus-1",
+            "text": "Features выпускаются независимо с разными версиями протокола; единый контракт без совместимости ограничит выпуск.",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": [],
+      "sourcePreparedNodeId": "RF-2-O1",
+      "preparedSource": {
+        "graphSlug": "reference-prepared-planning-tree",
+        "sourceOptionId": "RF-2-O1",
+        "version": "6",
+        "canonHash": "9152b732d3e41ca3b0c43ebe9db0a8df53d5fd0aaebf02b751188bb4d3662346"
+      },
+      "description": "Результат: общий контракт и проверка совместимости потребителей, включая правила ошибок и версий."
+    },
+    {
+      "id": "P-RF-2-O2",
+      "kind": "option",
+      "title": "Проверять парные взаимодействия Features",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RF-2-O2-plus-1",
+            "text": "Features независимо поставляются, а границы взаимодействия и ожидаемые сообщения перечислимы.",
+            "checkCategories": []
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RF-2-O2-minus-1",
+            "text": "Число связей слишком велико или общий инвариант нельзя доказать парными проверками; требуется единая модель.",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": [],
+      "sourcePreparedNodeId": "RF-2-O2",
+      "preparedSource": {
+        "graphSlug": "reference-prepared-planning-tree",
+        "sourceOptionId": "RF-2-O2",
+        "version": "6",
+        "canonHash": "562cf47178b5b52d81a57797ade2e9d3c253a91337074e4f0f9a121220bb95e9"
+      },
+      "description": "Результат: матрица взаимодействий и проверки контрактов на каждой границе."
+    },
+    {
+      "id": "P-RS-1",
+      "kind": "requirement",
+      "status": "candidate",
+      "title": "Проработать пользовательский сценарий",
+      "qrpe": [],
+      "sourcePreparedNodeId": "RS-1"
+    },
+    {
+      "id": "P-RS-1-O1",
+      "kind": "option",
+      "title": "Описать основной путь и исключения сценария",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RS-1-O1-plus-1",
+            "text": "Порядок шагов устойчив, роли и наблюдаемый результат известны; исключения можно перечислить рядом с шагами.",
+            "checkCategories": []
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RS-1-O1-minus-1",
+            "text": "Есть длительные паузы, параллельные роли или возвраты; линейное описание скрывает допустимые продолжения.",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": [],
+      "sourcePreparedNodeId": "RS-1-O1",
+      "preparedSource": {
+        "graphSlug": "reference-prepared-planning-tree",
+        "sourceOptionId": "RS-1-O1",
+        "version": "6",
+        "canonHash": "a128a2459a0a48cee18a877f8545866ab3f3ed8b5cfb56ec2e73e1976e88c866"
+      },
+      "description": "Результат: основной путь, исключения и критерии завершения пользовательского сценария."
+    },
+    {
+      "id": "P-RS-1-O2",
+      "kind": "option",
+      "title": "Смоделировать состояния участника сценария",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RS-1-O2-plus-1",
+            "text": "Сценарий прерывается и возобновляется, доступные шаги зависят от накопленного состояния.",
+            "checkCategories": []
+          },
+          {
+            "id": "RS-1-O2-advice-research",
+            "text": "Перед выбором этого содержательного способа: Если анализ и плановые каноны недостаточны, предложить изолированные испытания A и B с одинаковым критерием сравнения и последующим одним итоговым выбором.",
+            "evidence": "Это только условная учебная рекомендация; фактического эксперимента нет."
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RS-1-O2-minus-1",
+            "text": "Сценарий короткий и однопроходный; отдельная модель состояний не добавит проверяемых различий.",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": [],
+      "sourcePreparedNodeId": "RS-1-O2",
+      "preparedSource": {
+        "graphSlug": "reference-prepared-planning-tree",
+        "sourceOptionId": "RS-1-O2",
+        "version": "6",
+        "canonHash": "dd5cc17fa9961174867d9f0c5e58fb274c7f16e9937e9d6bde5fd92b04d8ca34"
+      },
+      "description": "Результат: состояния участника, разрешённые переходы, отмена и возобновление сценария."
+    },
+    {
+      "id": "P-RS-2",
+      "kind": "requirement",
+      "status": "candidate",
+      "title": "Согласовать пересекающиеся сценарии",
+      "qrpe": [],
+      "sourcePreparedNodeId": "RS-2"
+    },
+    {
+      "id": "P-RS-2-O1",
+      "kind": "option",
+      "title": "Согласовать общие шаги в одной спецификации",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RS-2-O1-plus-1",
+            "text": "Пересекающиеся сценарии используют одинаковые шаги и правила; есть общий владелец этих правил.",
+            "checkCategories": []
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RS-2-O1-minus-1",
+            "text": "Совпадение шагов только внешнее, а права, данные или правила результата различаются; унификация исказит поведение.",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": [],
+      "sourcePreparedNodeId": "RS-2-O1",
+      "preparedSource": {
+        "graphSlug": "reference-prepared-planning-tree",
+        "sourceOptionId": "RS-2-O1",
+        "version": "6",
+        "canonHash": "cdb470abd7c5d3954685673051f892ee28cf2ee83a979145ac7d9bcdb2d376af"
+      },
+      "description": "Результат: общие шаги с едиными условиями и явными отличиями каждого сценария."
+    },
+    {
+      "id": "P-RS-2-O2",
+      "kind": "option",
+      "title": "Проверять пересечения сквозными тестами",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RS-2-O2-plus-1",
+            "text": "Сценарии принадлежат разным командам; общие данные и конфликты можно наблюдать через конечный результат.",
+            "checkCategories": []
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RS-2-O2-minus-1",
+            "text": "Нет воспроизводимой среды и наблюдаемого результата; сквозные тесты дадут неоднозначную диагностику.",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": [],
+      "sourcePreparedNodeId": "RS-2-O2",
+      "preparedSource": {
+        "graphSlug": "reference-prepared-planning-tree",
+        "sourceOptionId": "RS-2-O2",
+        "version": "6",
+        "canonHash": "0baacab8a52c06d7665b1727074f2ce782c6f12245f9a9697e3ee34422ab1e80"
+      },
+      "description": "Результат: совместные сценарии с конфликтами обновления, повтором и согласованным ожидаемым результатом."
+    },
+    {
+      "id": "P-RF-DEEP",
+      "kind": "requirement",
+      "status": "candidate",
+      "title": "Проверить переходы внутри Feature",
+      "qrpe": [],
+      "sourcePreparedNodeId": "RF-DEEP"
+    },
+    {
+      "id": "P-RF-DEEP-O1",
+      "kind": "option",
+      "title": "Проверить таблицу допустимых переходов",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RF-DEEP-O1-plus-1",
+            "text": "Состояния конечны, и для каждой операции можно задать допустимые начальное и конечное состояния.",
+            "checkCategories": []
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RF-DEEP-O1-minus-1",
+            "text": "Состояния непрерывны или комбинаций слишком много; полное перечисление переходов непрактично.",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": [],
+      "sourcePreparedNodeId": "RF-DEEP-O1",
+      "preparedSource": {
+        "graphSlug": "reference-prepared-planning-tree",
+        "sourceOptionId": "RF-DEEP-O1",
+        "version": "6",
+        "canonHash": "bbea92e55077ff7fa9d9e1fe58d7634531a2dc0198f982d804a34040b2696f36"
+      },
+      "description": "Результат: таблица разрешённых и запрещённых переходов с проверками каждого класса."
+    },
+    {
+      "id": "P-RF-DEEP-O2",
+      "kind": "option",
+      "title": "Проверить инварианты после каждой операции",
+      "origin": "prepared",
+      "status": "candidate",
+      "canonBlock": {
+        "recommended": [
+          {
+            "id": "RF-DEEP-O2-plus-1",
+            "text": "Важны общие ограничения данных, сохраняемые при любом допустимом порядке операций.",
+            "checkCategories": []
+          }
+        ],
+        "contraindicated": [
+          {
+            "id": "RF-DEEP-O2-minus-1",
+            "text": "Критичен конкретный порядок видимых пользователю состояний; инварианты сами по себе не проверяют этот порядок.",
+            "checkCategories": []
+          }
+        ]
+      },
+      "qrpe": [],
+      "sourcePreparedNodeId": "RF-DEEP-O2",
+      "preparedSource": {
+        "graphSlug": "reference-prepared-planning-tree",
+        "sourceOptionId": "RF-DEEP-O2",
+        "version": "6",
+        "canonHash": "c6891e22fe7536e2c4c14f9ee37ae05afb88095f39a1041b414334f1f2c6e68a"
+      },
+      "description": "Результат: инварианты, генерация последовательностей операций и проверка сохранения ограничений."
+    },
+    {
+      "id": "C-ACCESS-RECORDED",
+      "kind": "context",
+      "title": "Учебное текущее значение доступности, полученное до разбора дочерних Features",
+      "contextFieldRef": {
+        "graphSlug": "reference-mixed-active-work",
+        "fieldId": "accessibility"
+      },
+      "contextValue": {
+        "value": "Интерфейс должен поддерживать работу с клавиатуры; уточнения аудитории ещё возможны.",
+        "source": "Учебный ответ, полученный ранее",
+        "scope": "project"
+      }
+    },
+    {
+      "id": "C-DEADLINE-UNMAPPED",
+      "kind": "context",
+      "title": "Срок из свободной записи; обязательность ещё не подтверждена",
+      "description": "Результат нужен к концу ноября; статус жёсткости срока ещё уточнить."
+    }
+  ],
+  "edges": [
+    {
+      "id": "OPT-O-A",
+      "type": "OPTION_FOR",
+      "from": "R0",
+      "to": "O-A"
+    },
+    {
+      "id": "OPT-O-B",
+      "type": "OPTION_FOR",
+      "from": "R0",
+      "to": "O-B"
+    },
+    {
+      "id": "OPT-O-C",
+      "type": "OPTION_FOR",
+      "from": "R0",
+      "to": "O-C"
+    },
+    {
+      "id": "DER-COMP",
+      "type": "DERIVES",
+      "from": "R0",
+      "to": "R-COMP"
+    },
+    {
+      "id": "DRV-A",
+      "type": "DRIVES",
+      "from": "R-COMP",
+      "to": "D-A"
+    },
+    {
+      "id": "INT-R-ACT-1",
+      "type": "INTRODUCES",
+      "from": "D-A",
+      "to": "R-ACT-1",
+      "parent": "R-COMP",
+      "childRole": "subgoal"
+    },
+    {
+      "id": "INT-R-ACT-2",
+      "type": "INTRODUCES",
+      "from": "D-A",
+      "to": "R-ACT-2",
+      "parent": "R-COMP",
+      "childRole": "method_correctness"
+    },
+    {
+      "id": "DRV-OTHER",
+      "type": "DRIVES",
+      "from": "R-OTHER",
+      "to": "D-OTHER"
+    },
+    {
+      "id": "POT-R-PREV-FEATURE-1",
+      "type": "OUTCOME_OF",
+      "from": "O-A",
+      "to": "R-PREV-FEATURE-1"
+    },
+    {
+      "id": "POT-R-PREV-FEATURE-2",
+      "type": "OUTCOME_OF",
+      "from": "O-A",
+      "to": "R-PREV-FEATURE-2"
+    },
+    {
+      "id": "POT-R-PREV-FEATURE-3",
+      "type": "OUTCOME_OF",
+      "from": "O-A",
+      "to": "R-PREV-FEATURE-3"
+    },
+    {
+      "id": "POT-R-PREV-FEATURE-4",
+      "type": "OUTCOME_OF",
+      "from": "O-A",
+      "to": "R-PREV-FEATURE-4"
+    },
+    {
+      "id": "POT-R-PREV-FEATURE-5",
+      "type": "OUTCOME_OF",
+      "from": "O-A",
+      "to": "R-PREV-FEATURE-5"
+    },
+    {
+      "id": "POT-R-PREV-FEATURE-6",
+      "type": "OUTCOME_OF",
+      "from": "O-A",
+      "to": "R-PREV-FEATURE-6"
+    },
+    {
+      "id": "POT-R-PREV-FEATURE-7",
+      "type": "OUTCOME_OF",
+      "from": "O-A",
+      "to": "R-PREV-FEATURE-7"
+    },
+    {
+      "id": "POT-R-PREV-FEATURE-8",
+      "type": "OUTCOME_OF",
+      "from": "O-A",
+      "to": "R-PREV-FEATURE-8"
+    },
+    {
+      "id": "POT-R-PREV-FEATURE-9",
+      "type": "OUTCOME_OF",
+      "from": "O-A",
+      "to": "R-PREV-FEATURE-9"
+    },
+    {
+      "id": "POT-R-PREV-FEATURE-10",
+      "type": "OUTCOME_OF",
+      "from": "O-A",
+      "to": "R-PREV-FEATURE-10"
+    },
+    {
+      "id": "POT-R-PREV-SCENARIO-1",
+      "type": "OUTCOME_OF",
+      "from": "O-B",
+      "to": "R-PREV-SCENARIO-1"
+    },
+    {
+      "id": "POT-R-PREV-SCENARIO-2",
+      "type": "OUTCOME_OF",
+      "from": "O-B",
+      "to": "R-PREV-SCENARIO-2"
+    },
+    {
+      "id": "POT-R-PREV-SCENARIO-3",
+      "type": "OUTCOME_OF",
+      "from": "O-B",
+      "to": "R-PREV-SCENARIO-3"
+    },
+    {
+      "id": "POT-R-PREV-SCENARIO-4",
+      "type": "OUTCOME_OF",
+      "from": "O-B",
+      "to": "R-PREV-SCENARIO-4"
+    },
+    {
+      "id": "POT-R-PREV-SCENARIO-5",
+      "type": "OUTCOME_OF",
+      "from": "O-B",
+      "to": "R-PREV-SCENARIO-5"
+    },
+    {
+      "id": "POT-R-PREV-SCENARIO-6",
+      "type": "OUTCOME_OF",
+      "from": "O-B",
+      "to": "R-PREV-SCENARIO-6"
+    },
+    {
+      "id": "POT-R-PREV-SCENARIO-7",
+      "type": "OUTCOME_OF",
+      "from": "O-B",
+      "to": "R-PREV-SCENARIO-7"
+    },
+    {
+      "id": "POT-R-PREV-SCENARIO-8",
+      "type": "OUTCOME_OF",
+      "from": "O-B",
+      "to": "R-PREV-SCENARIO-8"
+    },
+    {
+      "id": "POT-R-PREV-SCENARIO-9",
+      "type": "OUTCOME_OF",
+      "from": "O-B",
+      "to": "R-PREV-SCENARIO-9"
+    },
+    {
+      "id": "POT-R-PREV-SCENARIO-10",
+      "type": "OUTCOME_OF",
+      "from": "O-B",
+      "to": "R-PREV-SCENARIO-10"
+    },
+    {
+      "id": "POT-R-PREV-HYBRID-1",
+      "type": "OUTCOME_OF",
+      "from": "O-C",
+      "to": "R-PREV-HYBRID-1"
+    },
+    {
+      "id": "POT-R-PREV-HYBRID-2",
+      "type": "OUTCOME_OF",
+      "from": "O-C",
+      "to": "R-PREV-HYBRID-2"
+    },
+    {
+      "id": "POT-R-PREV-HYBRID-3",
+      "type": "OUTCOME_OF",
+      "from": "O-C",
+      "to": "R-PREV-HYBRID-3"
+    },
+    {
+      "id": "POT-R-PREV-HYBRID-4",
+      "type": "OUTCOME_OF",
+      "from": "O-C",
+      "to": "R-PREV-HYBRID-4"
+    },
+    {
+      "id": "POT-R-PREV-HYBRID-5",
+      "type": "OUTCOME_OF",
+      "from": "O-C",
+      "to": "R-PREV-HYBRID-5"
+    },
+    {
+      "id": "POT-R-PREV-HYBRID-6",
+      "type": "OUTCOME_OF",
+      "from": "O-C",
+      "to": "R-PREV-HYBRID-6"
+    },
+    {
+      "id": "POT-R-PREV-HYBRID-7",
+      "type": "OUTCOME_OF",
+      "from": "O-C",
+      "to": "R-PREV-HYBRID-7"
+    },
+    {
+      "id": "POT-R-PREV-HYBRID-8",
+      "type": "OUTCOME_OF",
+      "from": "O-C",
+      "to": "R-PREV-HYBRID-8"
+    },
+    {
+      "id": "POT-R-PREV-HYBRID-9",
+      "type": "OUTCOME_OF",
+      "from": "O-C",
+      "to": "R-PREV-HYBRID-9"
+    },
+    {
+      "id": "POT-R-PREV-HYBRID-10",
+      "type": "OUTCOME_OF",
+      "from": "O-C",
+      "to": "R-PREV-HYBRID-10"
+    },
+    {
+      "id": "INTRO-AUDIT",
+      "type": "INTRODUCES",
+      "from": "D-OTHER",
+      "to": "R-AUDIT-CONSISTENCY",
+      "parent": "R-OTHER",
+      "childRole": "method_correctness"
+    },
+    {
+      "id": "INTRO-RELINK-WRONG",
+      "type": "INTRODUCES",
+      "from": "D-OTHER",
+      "to": "R-RELINK",
+      "parent": "R-OTHER",
+      "childRole": "subgoal",
+      "archived": true
+    },
+    {
+      "id": "INTRO-RELINK-CORRECT",
+      "type": "INTRODUCES",
+      "from": "D-A",
+      "to": "R-RELINK",
+      "parent": "R-COMP",
+      "childRole": "method_correctness"
+    },
+    {
+      "id": "INTRO-INACTIVE",
+      "type": "INTRODUCES",
+      "from": "D-OTHER",
+      "to": "R-INACTIVE",
+      "parent": "R-OTHER",
+      "childRole": "subgoal",
+      "archived": true
+    },
+    {
+      "id": "PREP-POT-RF-1",
+      "type": "OUTCOME_OF",
+      "from": "O-A",
+      "to": "P-RF-1"
+    },
+    {
+      "id": "PREP-OPT-RF-1-O1",
+      "type": "OPTION_FOR",
+      "from": "P-RF-1",
+      "to": "P-RF-1-O1"
+    },
+    {
+      "id": "PREP-OPT-RF-1-O2",
+      "type": "OPTION_FOR",
+      "from": "P-RF-1",
+      "to": "P-RF-1-O2"
+    },
+    {
+      "id": "PREP-POT-RF-2",
+      "type": "OUTCOME_OF",
+      "from": "O-A",
+      "to": "P-RF-2"
+    },
+    {
+      "id": "PREP-OPT-RF-2-O1",
+      "type": "OPTION_FOR",
+      "from": "P-RF-2",
+      "to": "P-RF-2-O1"
+    },
+    {
+      "id": "PREP-OPT-RF-2-O2",
+      "type": "OPTION_FOR",
+      "from": "P-RF-2",
+      "to": "P-RF-2-O2"
+    },
+    {
+      "id": "PREP-POT-RS-1",
+      "type": "OUTCOME_OF",
+      "from": "O-B",
+      "to": "P-RS-1"
+    },
+    {
+      "id": "PREP-OPT-RS-1-O1",
+      "type": "OPTION_FOR",
+      "from": "P-RS-1",
+      "to": "P-RS-1-O1"
+    },
+    {
+      "id": "PREP-OPT-RS-1-O2",
+      "type": "OPTION_FOR",
+      "from": "P-RS-1",
+      "to": "P-RS-1-O2"
+    },
+    {
+      "id": "PREP-POT-RS-2",
+      "type": "OUTCOME_OF",
+      "from": "O-B",
+      "to": "P-RS-2"
+    },
+    {
+      "id": "PREP-OPT-RS-2-O1",
+      "type": "OPTION_FOR",
+      "from": "P-RS-2",
+      "to": "P-RS-2-O1"
+    },
+    {
+      "id": "PREP-OPT-RS-2-O2",
+      "type": "OPTION_FOR",
+      "from": "P-RS-2",
+      "to": "P-RS-2-O2"
+    },
+    {
+      "id": "PREP-POT-RF-DEEP",
+      "type": "OUTCOME_OF",
+      "from": "P-RF-1-O2",
+      "to": "P-RF-DEEP"
+    },
+    {
+      "id": "PREP-OPT-RF-DEEP-O1",
+      "type": "OPTION_FOR",
+      "from": "P-RF-DEEP",
+      "to": "P-RF-DEEP-O1"
+    },
+    {
+      "id": "PREP-OPT-RF-DEEP-O2",
+      "type": "OPTION_FOR",
+      "from": "P-RF-DEEP",
+      "to": "P-RF-DEEP-O2"
+    }
+  ],
+  "events": [
+    {
+      "id": "EX-EV-A",
+      "type": "decision_selected",
+      "decisionId": "D-A",
+      "by": "example",
+      "exampleOnly": true,
+      "note": "Учебный выбор A — QR-A не закрыт",
+      "recordedAt": "T1",
+      "hypothetical": true
+    },
+    {
+      "id": "EX-EV-OTHER",
+      "type": "decision_selected",
+      "decisionId": "D-OTHER",
+      "by": "example",
+      "exampleOnly": true,
+      "note": "Учебное соседнее решение T3",
+      "recordedAt": "T3",
+      "hypothetical": true
+    },
+    {
+      "id": "EX-EV-T2",
+      "type": "context_discovered",
+      "exampleOnly": true,
+      "by": "example",
+      "requirementId": "R-LEGACY-API",
+      "recordedAt": "T2",
+      "effectiveAt": "T0",
+      "note": "Существовало в T1, но открыто только в T2."
+    },
+    {
+      "id": "EX-EV-RELINK",
+      "type": "requirement_reparented",
+      "exampleOnly": true,
+      "by": "example",
+      "requirementId": "R-RELINK",
+      "recordedAt": "T4",
+      "newParentId": "R-COMP",
+      "newDecisionId": "D-A",
+      "previousEdges": [
+        {
+          "id": "INTRO-RELINK-WRONG",
+          "type": "INTRODUCES",
+          "from": "D-OTHER",
+          "to": "R-RELINK",
+          "parent": "R-OTHER"
+        }
+      ],
+      "note": "Нужное R прежде неверно привязывали к D-OTHER; теперь корректно к D-A."
+    },
+    {
+      "id": "EX-EV-INACTIVE",
+      "type": "requirement_deactivated",
+      "exampleOnly": true,
+      "by": "example",
+      "requirementId": "R-INACTIVE",
+      "recordedAt": "T4",
+      "note": "Отдельный справочник больше не нужен; R и исходная связь сохранены как история."
+    }
+  ],
+  "collections": [
+    {
+      "id": "COL-ROOT-TECH",
+      "title": "Технические требования",
+      "anchor": "R0",
+      "memberRefs": [
+        "R-TECH"
+      ]
+    },
+    {
+      "id": "COL-ROOT-DEADLINE",
+      "title": "Сроки",
+      "anchor": "R0",
+      "memberRefs": [
+        "R-DEADLINE"
+      ]
+    },
+    {
+      "id": "COL-FEATURE",
+      "title": "Потенциальные единицы Feature",
+      "anchor": "O-A",
+      "memberRefs": [
+        "R-PREV-FEATURE-1",
+        "R-PREV-FEATURE-2",
+        "R-PREV-FEATURE-3",
+        "R-PREV-FEATURE-4",
+        "R-PREV-FEATURE-5",
+        "R-PREV-FEATURE-6",
+        "R-PREV-FEATURE-7",
+        "R-PREV-FEATURE-8",
+        "R-PREV-FEATURE-9",
+        "R-PREV-FEATURE-10"
+      ]
+    },
+    {
+      "id": "COL-SCENARIO",
+      "title": "Потенциальные единицы Scenario",
+      "anchor": "O-B",
+      "memberRefs": [
+        "R-PREV-SCENARIO-1",
+        "R-PREV-SCENARIO-2",
+        "R-PREV-SCENARIO-3",
+        "R-PREV-SCENARIO-4",
+        "R-PREV-SCENARIO-5",
+        "R-PREV-SCENARIO-6",
+        "R-PREV-SCENARIO-7",
+        "R-PREV-SCENARIO-8",
+        "R-PREV-SCENARIO-9",
+        "R-PREV-SCENARIO-10"
+      ]
+    },
+    {
+      "id": "COL-HYBRID",
+      "title": "Потенциальные единицы Hybrid",
+      "anchor": "O-C",
+      "memberRefs": [
+        "R-PREV-HYBRID-1",
+        "R-PREV-HYBRID-2",
+        "R-PREV-HYBRID-3",
+        "R-PREV-HYBRID-4",
+        "R-PREV-HYBRID-5",
+        "R-PREV-HYBRID-6",
+        "R-PREV-HYBRID-7",
+        "R-PREV-HYBRID-8",
+        "R-PREV-HYBRID-9",
+        "R-PREV-HYBRID-10"
+      ]
+    },
+    {
+      "id": "COL-ROOT-INTEGRATION",
+      "title": "Действующие ограничения интеграции",
+      "anchor": "R0",
+      "memberRefs": [
+        "R-LEGACY-API"
+      ]
+    },
+    {
+      "id": "PREP-FEATURE-POTENTIAL",
+      "title": "Потенциальные Requirements разбиения по Features",
+      "anchor": "O-A",
+      "memberRefs": [
+        "P-RF-1",
+        "P-RF-2"
+      ]
+    },
+    {
+      "id": "PREP-SCENARIO-POTENTIAL",
+      "title": "Потенциальные Requirements сценариев",
+      "anchor": "O-B",
+      "memberRefs": [
+        "P-RS-1",
+        "P-RS-2"
+      ]
+    }
+  ],
+  "hypothetical": true,
+  "selectedInProject": false,
+  "preparedGraphSetReference": {
+    "sourceRootGraphSlug": "reference-prepared-planning-tree",
+    "sourceRootRevision": 6,
+    "sourceIdentitySpace": "rdg-example-prepared-v7",
+    "sourceGraphSlugs": [
+      "reference-prepared-planning-tree",
+      "reference-prepared-feature-path",
+      "reference-prepared-scenario-path",
+      "reference-prepared-feature-depth"
+    ],
+    "illustrativeTargetGraphSlugs": [
+      "reference-mixed-active-work",
+      "reference-mixed-planned-feature",
+      "reference-mixed-planned-scenario",
+      "reference-mixed-planned-feature-depth"
+    ],
+    "goalRequirementIdMap": {
+      "R-PLAN": "R0"
+    },
+    "nodeIdMap": {
+      "R-PLAN": "R0",
+      "O-FEATURE": "O-A",
+      "O-SCENARIO": "O-B",
+      "RF-1": "P-RF-1",
+      "RF-1-O1": "P-RF-1-O1",
+      "RF-1-O2": "P-RF-1-O2",
+      "RF-2": "P-RF-2",
+      "RF-2-O1": "P-RF-2-O1",
+      "RF-2-O2": "P-RF-2-O2",
+      "RS-1": "P-RS-1",
+      "RS-1-O1": "P-RS-1-O1",
+      "RS-1-O2": "P-RS-1-O2",
+      "RS-2": "P-RS-2",
+      "RS-2-O1": "P-RS-2-O1",
+      "RS-2-O2": "P-RS-2-O2",
+      "RF-DEEP": "P-RF-DEEP",
+      "RF-DEEP-O1": "P-RF-DEEP-O1",
+      "RF-DEEP-O2": "P-RF-DEEP-O2"
+    },
+    "edgeIdMap": {
+      "OPT-O-FEATURE": "OPT-O-A",
+      "OPT-O-SCENARIO": "OPT-O-B",
+      "POT-RF-1": "PREP-POT-RF-1",
+      "OPT-RF-1-O1": "PREP-OPT-RF-1-O1",
+      "OPT-RF-1-O2": "PREP-OPT-RF-1-O2",
+      "POT-RF-2": "PREP-POT-RF-2",
+      "OPT-RF-2-O1": "PREP-OPT-RF-2-O1",
+      "OPT-RF-2-O2": "PREP-OPT-RF-2-O2",
+      "POT-RS-1": "PREP-POT-RS-1",
+      "OPT-RS-1-O1": "PREP-OPT-RS-1-O1",
+      "OPT-RS-1-O2": "PREP-OPT-RS-1-O2",
+      "POT-RS-2": "PREP-POT-RS-2",
+      "OPT-RS-2-O1": "PREP-OPT-RS-2-O1",
+      "OPT-RS-2-O2": "PREP-OPT-RS-2-O2",
+      "POT-RF-DEEP": "PREP-POT-RF-DEEP",
+      "OPT-RF-DEEP-O1": "PREP-OPT-RF-DEEP-O1",
+      "OPT-RF-DEEP-O2": "PREP-OPT-RF-DEEP-O2"
+    },
+    "sourceChildOwnedNodeIdMap": {},
+    "sourceChildGraphSlugMap": {
+      "reference-prepared-feature-path": "reference-mixed-planned-feature",
+      "reference-prepared-scenario-path": "reference-mixed-planned-scenario",
+      "reference-prepared-feature-depth": "reference-mixed-planned-feature-depth"
+    },
+    "copyStatus": "illustrative-equivalent-not-executed",
+    "applicability": "Учебный сценарий предполагает общую цель R0/R-PLAN; совпадение названий НЕ доказывает нормативную эквивалентность, scope и применимость. Исторический T1 не переосмыслен; реальное переиспользование требует отдельной проверки.",
+    "retention": "Все 18 исходных parent R/option и 17 edges сохранены; подготовленные советы о дополнительных проверках перенесены в каноны содержательных способов дочерних графов; не стали отдельными методами достижения R. Примерные selected D и T1 оставлены без переписывания.",
+    "sourceChildGraphRevisions": {
+      "reference-prepared-feature-path": 2,
+      "reference-prepared-scenario-path": 2,
+      "reference-prepared-feature-depth": 1
+    },
+    "applicabilityStatus": "candidate-unverified"
+  },
+  "rootTitleNormalizationNote": "Название R0 ранее было «Спланировать функциональность приложения». Для нового учебного сравнения выровнено до «Разбить функциональность приложения»; эквивалентность нормативного scope не доказана, исторический T1 не менялся.",
+  "contextFieldsComplete": true,
+  "knowledgeSources": [
+    {
+      "id": "wai-planning",
+      "title": "W3C WAI: планирование доступности",
+      "url": "https://www.w3.org/WAI/planning/"
+    }
+  ],
+  "contextFields": [
+    {
+      "id": "accessibility",
+      "title": "Доступность интерфейса при разбиении на Features/сценарии",
+      "explanation": "Какие функции и сквозные сценарии должны поддерживать доступную работу с интерфейсом (включая клавиатуру); W3C WAI — источник критериев проверки, не подтверждение нашего состояния.",
+      "sourceRefs": [
+        {
+          "graphSlug": "reference-mixed-active-work",
+          "sourceId": "wai-planning"
+        }
+      ]
+    },
+    {
+      "id": "delivery",
+      "title": "Срок готовности разбиения",
+      "explanation": "К какому сроку нужны проработанные Features и сквозные интеграции, насколько срок обязателен; свободная запись не равна подтверждённому ответу."
+    },
+    {
+      "id": "alternative-details",
+      "title": "Условия альтернативного разбиения по сценариям",
+      "explanation": "Какие шаги и условия реализации потребуются, только если будет выбран сценарный способ. Не спрашивать это как актуальную обязанность при выборе Features."
+    }
+  ],
+  "contextUses": [
+    {
+      "fieldRef": {
+        "graphSlug": "reference-mixed-active-work",
+        "fieldId": "delivery"
+      },
+      "purpose": "Проверить реальный срок, прежде чем сравнивать разбиение на Features и сценарии"
+    }
+  ],
+  "workflowExample": {
+    "schemaVersion": 1,
+    "planId": "reference-mixed-active-work",
+    "title": "Учебный план · Разбиение функциональности",
+    "graphFile": "examples/reference-mixed-active-work/graph.json",
+    "planFile": null,
+    "sources": {
+      "plan": {
+        "schemaVersion": 1,
+        "kind": "temporalPlan",
+        "id": "reference-mixed-active-work",
+        "title": "Учебный план · Разбиение функциональности",
+        "identitySpace": "rdg-example-mixed-v7",
+        "revision": 1,
+        "status": "candidate",
+        "steps": [
+          {
+            "id": "S-R-ACT-1",
+            "kind": "requirement",
+            "title": "Учебное размещение · Проработать Feature Availability",
+            "state": "planned",
+            "requirementRef": {
+              "graphFile": "examples/reference-mixed-active-work/graph.json",
+              "identitySpace": "rdg-example-mixed-v7",
+              "nodeId": "R-ACT-1"
+            }
+          },
+          {
+            "id": "S-R-ACT-2",
+            "kind": "requirement",
+            "title": "Учебное размещение · Обеспечить согласованность Features",
+            "state": "planned",
+            "requirementRef": {
+              "graphFile": "examples/reference-mixed-active-work/graph.json",
+              "identitySpace": "rdg-example-mixed-v7",
+              "nodeId": "R-ACT-2"
+            }
+          },
+          {
+            "id": "S-R-TECH",
+            "kind": "requirement",
+            "title": "Учебное размещение · Соблюсти техническое ограничение",
+            "state": "planned",
+            "requirementRef": {
+              "graphFile": "examples/reference-mixed-active-work/graph.json",
+              "identitySpace": "rdg-example-mixed-v7",
+              "nodeId": "R-TECH"
+            }
+          }
+        ],
+        "sequence": [
+          {
+            "before": "S-R-ACT-1",
+            "after": "S-R-ACT-2"
+          }
+        ],
+        "branches": [],
+        "timeConstraints": [
+          {
+            "stepId": "S-R-TECH",
+            "type": "notBefore",
+            "at": "2026-10-28",
+            "strength": "hypothetical",
+            "basis": "Только учебное условие; не срок пользователя"
+          }
+        ]
+      },
+      "completion": {}
+    },
+    "future": [
+      {
+        "stepId": "S-R-ACT-1",
+        "kind": "requirement",
+        "graphRef": {
+          "graphFile": "examples/reference-mixed-active-work/graph.json",
+          "identitySpace": "rdg-example-mixed-v7",
+          "nodeId": "R-ACT-1"
+        },
+        "nodeId": "R-ACT-1",
+        "title": "Проработать Feature Availability",
+        "plannedTitle": "Учебное размещение · Проработать Feature Availability",
+        "state": "planned",
+        "graphRevision": 8,
+        "ownerRef": {
+          "graphFile": "examples/reference-mixed-active-work/graph.json",
+          "identitySpace": "rdg-example-mixed-v7",
+          "nodeId": "R-ACT-1"
+        },
+        "timeConstraints": [],
+        "sequence": [
+          {
+            "before": "S-R-ACT-1",
+            "after": "S-R-ACT-2"
+          }
+        ]
+      },
+      {
+        "stepId": "S-R-ACT-2",
+        "kind": "requirement",
+        "graphRef": {
+          "graphFile": "examples/reference-mixed-active-work/graph.json",
+          "identitySpace": "rdg-example-mixed-v7",
+          "nodeId": "R-ACT-2"
+        },
+        "nodeId": "R-ACT-2",
+        "title": "Обеспечить согласованность Features",
+        "plannedTitle": "Учебное размещение · Обеспечить согласованность Features",
+        "state": "planned",
+        "graphRevision": 8,
+        "ownerRef": {
+          "graphFile": "examples/reference-mixed-active-work/graph.json",
+          "identitySpace": "rdg-example-mixed-v7",
+          "nodeId": "R-ACT-2"
+        },
+        "timeConstraints": [],
+        "sequence": [
+          {
+            "before": "S-R-ACT-1",
+            "after": "S-R-ACT-2"
+          }
+        ]
+      },
+      {
+        "stepId": "S-R-TECH",
+        "kind": "requirement",
+        "graphRef": {
+          "graphFile": "examples/reference-mixed-active-work/graph.json",
+          "identitySpace": "rdg-example-mixed-v7",
+          "nodeId": "R-TECH"
+        },
+        "nodeId": "R-TECH",
+        "title": "Соблюсти техническое ограничение",
+        "plannedTitle": "Учебное размещение · Соблюсти техническое ограничение",
+        "state": "planned",
+        "graphRevision": 8,
+        "ownerRef": {
+          "graphFile": "examples/reference-mixed-active-work/graph.json",
+          "identitySpace": "rdg-example-mixed-v7",
+          "nodeId": "R-TECH"
+        },
+        "timeConstraints": [
+          {
+            "stepId": "S-R-TECH",
+            "type": "notBefore",
+            "at": "2026-10-28",
+            "strength": "hypothetical",
+            "basis": "Только учебное условие; не срок пользователя"
+          }
+        ],
+        "sequence": []
+      }
+    ],
+    "history": [
+      {
+        "id": "examples/reference-mixed-active-work/graph.json::EX-EV-A",
+        "graphFile": "examples/reference-mixed-active-work/graph.json",
+        "kind": "decision_selected",
+        "sourceEventType": "decision_selected",
+        "recordedAt": null,
+        "title": "Учебное изменение графа",
+        "summary": "T1 · Учебный выбор варианта решения (не выполнение Action): Учебный выбор A — QR-A не закрыт",
+        "note": null,
+        "exampleOnly": true,
+        "notAnExecution": true,
+        "symbolicTime": "T1"
+      },
+      {
+        "id": "examples/reference-mixed-active-work/graph.json::EX-EV-T2",
+        "graphFile": "examples/reference-mixed-active-work/graph.json",
+        "kind": "context_discovered",
+        "sourceEventType": "context_discovered",
+        "recordedAt": null,
+        "title": "Учебное изменение графа",
+        "summary": "T2 · Обнаружен дополнительный контекст: Существовало в T1, но открыто только в T2.",
+        "note": null,
+        "exampleOnly": true,
+        "notAnExecution": true,
+        "targetId": "R-LEGACY-API",
+        "changed": {
+          "nodes": [
+            "R-LEGACY-API"
+          ]
+        },
+        "symbolicTime": "T2"
+      },
+      {
+        "id": "examples/reference-mixed-active-work/graph.json::EX-EV-OTHER",
+        "graphFile": "examples/reference-mixed-active-work/graph.json",
+        "kind": "decision_selected",
+        "sourceEventType": "decision_selected",
+        "recordedAt": null,
+        "title": "Учебное изменение графа",
+        "summary": "T3 · Учебный выбор варианта решения (не выполнение Action): Учебное соседнее решение T3",
+        "note": null,
+        "exampleOnly": true,
+        "notAnExecution": true,
+        "symbolicTime": "T3"
+      },
+      {
+        "id": "examples/reference-mixed-active-work/graph.json::EX-EV-INACTIVE",
+        "graphFile": "examples/reference-mixed-active-work/graph.json",
+        "kind": "requirement_deactivated",
+        "sourceEventType": "requirement_deactivated",
+        "recordedAt": null,
+        "title": "Учебное изменение графа",
+        "summary": "T4 · Requirement стала неактуальной: Отдельный справочник больше не нужен; R и исходная связь сохранены как история.",
+        "note": null,
+        "exampleOnly": true,
+        "notAnExecution": true,
+        "targetId": "R-INACTIVE",
+        "changed": {
+          "nodes": [
+            "R-INACTIVE"
+          ]
+        },
+        "symbolicTime": "T4"
+      },
+      {
+        "id": "examples/reference-mixed-active-work/graph.json::EX-EV-RELINK",
+        "graphFile": "examples/reference-mixed-active-work/graph.json",
+        "kind": "requirement_reparented",
+        "sourceEventType": "requirement_reparented",
+        "recordedAt": null,
+        "title": "Учебное изменение графа",
+        "summary": "T4 · Уточнена принадлежность Requirement: Нужное R прежде неверно привязывали к D-OTHER; теперь корректно к D-A.",
+        "note": null,
+        "exampleOnly": true,
+        "notAnExecution": true,
+        "targetId": "R-RELINK",
+        "changed": {
+          "nodes": [
+            "R-RELINK"
+          ]
+        },
+        "symbolicTime": "T4"
+      }
+    ],
+    "unresolved": [],
+    "excludedPlacements": [],
+    "permissions": [],
+    "capabilities": [],
+    "exampleOnly": true,
+    "sourcesChanged": false,
+    "coverage": "Only educational graph changes; no Action execution or Requirement achievement evidenced; hypothetical placements are not commitments.",
+    "relatedActionExampleSlug": "reference-action-time-plan"
+  }
+}

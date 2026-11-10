@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "id": "reference-module-units",
+  "title": "TM · Проработать функцию",
+  "revision": 1,
+  "planningScale": "module",
+  "identitySpace": "example:module-unit-v1",
+  "rootRequirementId": "UD-R-FEATURE",
+  "readOnly": true,
+  "templateOnly": true,
+  "catalogHidden": false,
+  "sourceDocument": "docs/examples/MODULE-UNIT-GUIDE.md",
+  "sourceContentSHA256": "e98eecb98f3f28589e803ece81bcb5069a4db07b1b4c63436bdebc83944da7d0",
+  "preparedModule": {
+    "id": "UD-D-FEATURE",
+    "version": "e98eecb98f3f28589e803ece81bcb5069a4db07b1b4c63436bdebc83944da7d0",
+    "goalRequirementId": "UD-R-FEATURE",
+    "methodDecisionId": "UD-D-FEATURE",
+    "childRequirementIds": [
+      "UD-R-RESULT",
+      "UD-R-STATE-PATH"
+    ],
+    "applicability": "Проработать функцию",
+    "successCriteria": "Описать результат и проработать состояние/переходы"
+  },
+  "nodes": [
+    {
+      "id": "UD-R-FEATURE",
+      "kind": "requirement",
+      "title": "Проработать функцию"
+    },
+    {
+      "id": "UD-D-FEATURE",
+      "kind": "decision",
+      "title": "Описать результат и проработать состояние/переходы",
+      "status": "reusable-unselected",
+      "selected": false
+    },
+    {
+      "id": "UD-R-RESULT",
+      "kind": "requirement",
+      "title": "Описать наблюдаемый результат"
+    },
+    {
+      "id": "UD-R-STATE-PATH",
+      "kind": "requirement",
+      "title": "Проработать состояние и переходы"
+    }
+  ],
+  "edges": [
+    {
+      "id": "UD-D-FEATURE-drive",
+      "type": "DRIVES",
+      "from": "UD-R-FEATURE",
+      "to": "UD-D-FEATURE",
+      "templateOnly": true,
+      "meaning": "Подготовленный способ ответа на R; реального выбора нет."
+    },
+    {
+      "id": "UD-D-FEATURE-UD-R-RESULT",
+      "type": "INTRODUCES",
+      "from": "UD-D-FEATURE",
+      "to": "UD-R-RESULT",
+      "parent": "UD-R-FEATURE",
+      "templateOnly": true,
+      "meaning": "Потенциальный под-R этого способа; не принятый план."
+    },
+    {
+      "id": "UD-D-FEATURE-UD-R-STATE-PATH",
+      "type": "INTRODUCES",
+      "from": "UD-D-FEATURE",
+      "to": "UD-R-STATE-PATH",
+      "parent": "UD-R-FEATURE",
+      "templateOnly": true,
+      "meaning": "Потенциальный под-R этого способа; не принятый план."
+    }
+  ],
+  "events": [],
+  "sourceMarkdown": "# Модуль и Unit: графы по одному Requirement\n\nTarget Module — целый план для своей цели R: конкретный способ D и необходимые под-R.\nUnit использует ту же механику, но решает более узкую задачу. Размер файла и число узлов не определяют масштаб.\n\nОткройте graphs/examples/reference-module-units/graph.json.\nНа общей карте это широкий TM. Его R «Описать наблюдаемый результат» открывает reference-unit-direct:\nпрямой способ D, без искусственного дальнейшего разбиения.\nR «Проработать состояние и переходы» открывает reference-unit-split:\nразбиение полезно, потому что состояния и переходы требуют самостоятельных ответов.\nИз него открываются reference-unit-states и reference-unit-transitions; «Уровень выше» возвращает назад.\n\nВсе пять графов — подготовленные учебные способы. Ни одно D не принято в реальном проекте.\nСтрелки готового состава означают «может ввести под-R при выборе этого способа», а не выполненный план.\nUnit-графы скрыты на общей карте и доступны по соответствующим R. Режим «Показать все графы» отсутствует.\n\nПолный источник хранится один раз в широком графе; Unit-графы используют ссылку на него.\nЦель Unit имеет тот же ID и ссылку на владельца R в родительском графе.\n"
+}

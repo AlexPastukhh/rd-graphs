@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "id": "reference-complete-unit-r-state-reservation",
+  "title": "Unit · Описать состояние бронирования",
+  "revision": 1,
+  "identitySpace": "showcase:booking-example-v1",
+  "rootRequirementId": "SH-R-STATE-RESERVATION",
+  "planningScale": "unit",
+  "readOnly": true,
+  "exampleOnly": true,
+  "hypothetical": true,
+  "selectedInProject": false,
+  "catalogHidden": true,
+  "demonstrationGroup": "complete-booking-showcase",
+  "canonicality": "ILLUSTRATION_ONLY",
+  "expansionOf": {
+    "graphSlug": "reference-complete-reservation",
+    "nodeId": "SH-R-STATE-RESERVATION"
+  },
+  "sourceDocument": "docs/examples/COMPLETE-REFERENCE-GUIDE.md",
+  "coverage": "Отдельный граф узкой задачи; R/D ссылаются на прежних владельцев. Нового выбора нет.",
+  "nodes": [
+    {
+      "id": "SH-R-STATE-RESERVATION",
+      "kind": "requirement",
+      "title": "Описать состояние бронирования",
+      "scope": "Описать состояние бронирования",
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "reference-complete-reservation",
+        "nodeId": "SH-R-STATE-RESERVATION"
+      },
+      "description": "Ссылка на ту же смысловую запись. Полный ответ и основания находятся в указанном источнике."
+    },
+    {
+      "id": "SH-D-STATE-RESERVATION",
+      "kind": "decision",
+      "title": "Локальный ответ: таблица состояний",
+      "status": "selected-in-example-only",
+      "scope": "Описать состояние бронирования",
+      "selectedInExample": true,
+      "selectedInProject": false,
+      "evidenceStatus": "unverified",
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "reference-complete-reservation",
+        "nodeId": "SH-D-STATE-RESERVATION"
+      },
+      "description": "Ссылка на ту же смысловую запись. Полный ответ и основания находятся в указанном источнике."
+    }
+  ],
+  "edges": [
+    {
+      "id": "SH-E-STATE-RESERVATION-02",
+      "type": "DRIVES",
+      "from": "SH-R-STATE-RESERVATION",
+      "to": "SH-D-STATE-RESERVATION",
+      "meaning": "Разные локальные R получают разные D, общий выбор Behavior не изменяется."
+    }
+  ],
+  "events": []
+}

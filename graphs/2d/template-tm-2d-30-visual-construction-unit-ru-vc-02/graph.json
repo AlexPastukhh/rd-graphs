@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "id": "template-tm-2d-30-visual-construction-unit-ru-vc-02",
+  "title": "Unit · Cross-route Integration",
+  "revision": 1,
+  "planningScale": "unit",
+  "identitySpace": "prepared:TM-2D-30-VISUAL-CONSTRUCTION",
+  "rootRequirementId": "RU-VC-02",
+  "readOnly": true,
+  "templateOnly": true,
+  "selected": false,
+  "catalogHidden": true,
+  "preparedModule": {
+    "id": "TEMPLATE-D-RU-VC-02",
+    "version": "4d5aebac622c23b0857cbe490c9def40658cc93a47faff2d08e091e2311e8f53",
+    "goalRequirementId": "RU-VC-02",
+    "methodDecisionId": "TEMPLATE-D-RU-VC-02",
+    "childRequirementIds": [],
+    "applicability": "actual visual integration meaning that belongs to no single route, such as cross-route occlusion/color/edge/layout relationships",
+    "successCriteria": "Достаточно выполнить применимую Unit-specific Guidance и её checkpoints; инструкция не доказывает результат."
+  },
+  "sourceDocument": "/workspace/repos/obs-planning-docs/planning/documentation/idtspe-methodology/active/profiles/visual-production-2d/target-modules/TM-2D-30-VISUAL-CONSTRUCTION.md#ru-vc-02",
+  "sourceContentSHA256": "4d5aebac622c23b0857cbe490c9def40658cc93a47faff2d08e091e2311e8f53",
+  "sourceOwnerGraphSlug": "template-tm-2d-30-visual-construction",
+  "sourceAnchor": "ru-vc-02",
+  "coverage": "Готовый способ одного узкого R; без выдуманных под-R и без выбора проекта.",
+  "nodes": [
+    {
+      "id": "RU-VC-02",
+      "kind": "requirement",
+      "title": "Cross-route Integration",
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "template-tm-2d-30-visual-construction",
+        "nodeId": "RU-VC-02"
+      }
+    },
+    {
+      "id": "TEMPLATE-D-RU-VC-02",
+      "kind": "decision",
+      "status": "reusable-unselected",
+      "templateRole": "unit-prepared-guidance",
+      "selected": false,
+      "title": "Готовый способ проработки: Cross-route Integration",
+      "description": "<a id=\"ru-vc-02\"></a>\n### Cross-route Integration\n\n`RU-VC-02`\n\nOwn only relationships that cannot naturally remain with one route owner. Do not copy route-local geometry/appearance authority into the integration Unit.",
+      "source": "/workspace/repos/obs-planning-docs/planning/documentation/idtspe-methodology/active/profiles/visual-production-2d/target-modules/TM-2D-30-VISUAL-CONSTRUCTION.md#ru-vc-02",
+      "sourceUnitId": "RU-VC-02",
+      "explicitSubrequirements": false,
+      "note": "Source defines Unit guidance; no explicit nested R inventory is declared here."
+    }
+  ],
+  "edges": [
+    {
+      "id": "UNIT-E-DRIVE",
+      "type": "DRIVES",
+      "from": "RU-VC-02",
+      "to": "TEMPLATE-D-RU-VC-02",
+      "templateOnly": true,
+      "meaning": "Готовый ответ на узкую задачу; пока не выбран."
+    }
+  ],
+  "events": []
+}

@@ -1,0 +1,410 @@
+{
+  "schemaVersion": 1,
+  "id": "reference-complete-reservation",
+  "revision": 4,
+  "title": "R · Проработать Feature Reservation",
+  "identitySpace": "showcase:booking-example-v1",
+  "rootRequirementId": "SH-R-FEAT-RES",
+  "readOnly": true,
+  "exampleOnly": true,
+  "hypothetical": true,
+  "selectedInProject": false,
+  "catalogHidden": true,
+  "canonicality": "ILLUSTRATION_ONLY",
+  "demonstrationGroup": "complete-booking-showcase",
+  "origin": "New complete hypothetical illustration, NOT original EX-* and NOT a real project.",
+  "sourceDocument": "docs/examples/COMPLETE-REFERENCE-GUIDE.md",
+  "coverage": "Готовые варианты vs выбранное D, локальное INTRODUCES, QRPE и невыбранный RECONSIDERS. События меняют хронологию, но не делают pending Proposal принятой.",
+  "nodes": [
+    {
+      "id": "SH-R-FEAT-RES",
+      "kind": "requirement",
+      "title": "Проработать Feature Reservation",
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "reference-complete-functionality",
+        "nodeId": "SH-R-FEAT-RES"
+      },
+      "description": "Ссылка на ту же смысловую запись. Полный ответ и основания находятся в указанном источнике."
+    },
+    {
+      "id": "SH-V-BEHAVIOR-PATH",
+      "kind": "variant",
+      "title": "Готовый Behavior Path",
+      "status": "reusable-unselected",
+      "templateOnly": true,
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "reference-complete-functionality",
+        "nodeId": "SH-V-BEHAVIOR-PATH"
+      },
+      "description": "Ссылка на ту же смысловую запись. Полный ответ и основания находятся в указанном источнике."
+    },
+    {
+      "id": "SH-V-STATES",
+      "kind": "variant",
+      "title": "Готовые State Transitions",
+      "status": "reusable-unselected",
+      "templateOnly": true,
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "reference-complete-functionality",
+        "nodeId": "SH-V-STATES"
+      },
+      "description": "Ссылка на ту же смысловую запись. Полный ответ и основания находятся в указанном источнике."
+    },
+    {
+      "id": "SH-C-INTERACTION",
+      "kind": "context",
+      "title": "В исходном контексте удобна последовательность шагов",
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "reference-complete-functionality",
+        "nodeId": "SH-C-INTERACTION"
+      },
+      "description": "Ссылка на ту же смысловую запись. Полный ответ и основания находятся в указанном источнике."
+    },
+    {
+      "id": "SH-D-BEHAVIOR",
+      "kind": "decision",
+      "title": "Локальный Behavior подтверждения Reservation",
+      "status": "selected-in-example-only",
+      "selectedInExample": true,
+      "selectedInProject": false,
+      "scope": "Behavior Feature Reservation условного приложения",
+      "description": "Конкретное содержание Reservation: подтверждение, отказ занятого слота и обработка потери ответа. Форму не выбирает заново: использует общий SH-D-BEHAVIOR-SHARED. Реализация не подтверждена.",
+      "usesSharedDecisionRef": "SH-D-BEHAVIOR-SHARED",
+      "evidenceStatus": "unverified"
+    },
+    {
+      "id": "SH-R-ERRORS",
+      "kind": "requirement",
+      "title": "Описать ошибки и потерю ответа",
+      "description": "Локальный R из слота ошибок общего Behavior Path. D-STATUS отвечает только части о потере ответа; занятый слот описан отдельным D-BUSY. Полнота всех ошибок не подтверждена.",
+      "scope": "Ошибки подтверждения в Reservation"
+    },
+    {
+      "id": "SH-C-STATE-NEW",
+      "kind": "context",
+      "title": "Появились внешние события, зависящие от состояния",
+      "description": "Новый условный контекст; не событие пересмотра D."
+    },
+    {
+      "id": "SH-Q-BEHAVIOR",
+      "kind": "question",
+      "title": "Достаточен ли Behavior Path при новых событиях?",
+      "status": "open",
+      "description": "QRPE обоснованности действующего D.",
+      "blocking": "partially-blocking",
+      "blocks": "утверждение достаточности общего способа в новом контексте",
+      "closesWith": "сравнение форм на одном фрагменте внешнего события"
+    },
+    {
+      "id": "SH-PR-STATE",
+      "kind": "proposal",
+      "title": "Предложение: пересмотреть выбор в пользу State Transitions",
+      "status": "pending",
+      "description": "Pending предложение пересмотра общего SH-D-BEHAVIOR-SHARED, не новое принятое D."
+    },
+    {
+      "id": "SH-R-BEHAVIOR",
+      "kind": "requirement",
+      "title": "Описать Behavior обеих Features",
+      "scope": "Behavior Availability и Reservation",
+      "crosscutting": true,
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "reference-complete-functionality",
+        "nodeId": "SH-R-BEHAVIOR"
+      },
+      "description": "Ссылка на ту же смысловую запись. Полный ответ и основания находятся в указанном источнике."
+    },
+    {
+      "id": "SH-D-BEHAVIOR-SHARED",
+      "kind": "decision",
+      "title": "Общий выбор: Behavior Path для обеих Features",
+      "status": "selected-in-example-only",
+      "scope": "Behavior Availability и Reservation",
+      "selectedInExample": true,
+      "selectedInProject": false,
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "reference-complete-functionality",
+        "nodeId": "SH-D-BEHAVIOR-SHARED"
+      },
+      "description": "Ссылка на ту же смысловую запись. Полный ответ и основания находятся в указанном источнике."
+    },
+    {
+      "id": "SH-R-RESULT",
+      "kind": "requirement",
+      "title": "Пользователь должен узнать итог подтверждения без дублирования",
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "reference-complete-scenario-create",
+        "nodeId": "SH-R-RESULT"
+      },
+      "description": "Ссылка на ту же смысловую запись. Полный ответ и основания находятся в указанном источнике."
+    },
+    {
+      "id": "SH-R-FEEDBACK",
+      "kind": "requirement",
+      "title": "Уточнить обратную связь при неопределённом результате",
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "reference-complete-scenario-create",
+        "nodeId": "SH-R-FEEDBACK"
+      },
+      "description": "Ссылка на ту же смысловую запись. Полный ответ и основания находятся в указанном источнике."
+    },
+    {
+      "id": "SH-C-STATUS",
+      "kind": "context",
+      "title": "В условной системе есть средство проверки статуса",
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "reference-complete-scenario-create",
+        "nodeId": "SH-C-STATUS"
+      },
+      "description": "Ссылка на ту же смысловую запись. Полный ответ и основания находятся в указанном источнике."
+    },
+    {
+      "id": "SH-D-STATUS",
+      "kind": "decision",
+      "title": "Условный локальный ответ: проверить статус и показать итог",
+      "status": "selected-in-example-only",
+      "scope": "Локальная обработка потери ответа подтверждения в Reservation",
+      "selectedInExample": true,
+      "selectedInProject": false,
+      "evidenceStatus": "unverified",
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "reference-complete-scenario-create",
+        "nodeId": "SH-D-STATUS"
+      },
+      "description": "Ссылка на ту же смысловую запись. Полный ответ и основания находятся в указанном источнике."
+    },
+    {
+      "id": "SH-Q-STATUS",
+      "kind": "question",
+      "title": "Может ли статус достоверно установить результат?",
+      "status": "open",
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "reference-complete-scenario-create",
+        "nodeId": "SH-Q-STATUS"
+      },
+      "description": "Ссылка на ту же смысловую запись. Полный ответ и основания находятся в указанном источнике."
+    },
+    {
+      "id": "SH-D-BUSY",
+      "kind": "decision",
+      "title": "При занятом слоте показать отказ и предложить другой",
+      "status": "selected-in-example-only",
+      "selectedInExample": true,
+      "selectedInProject": false,
+      "scope": "Обработка занятого слота в Reservation",
+      "description": "Ответ только на часть R-ERRORS о занятом слоте. Не закрывает все ошибки и не заменяет D-STATUS.",
+      "evidenceStatus": "unverified"
+    },
+    {
+      "id": "SH-R-STATE-RESERVATION",
+      "kind": "requirement",
+      "title": "Описать состояние бронирования",
+      "scope": "Описать состояние бронирования",
+      "description": "Самостоятельный локальный предмет, уточнённый из Feature R; не новый Scenario."
+    },
+    {
+      "id": "SH-D-STATE-RESERVATION",
+      "kind": "decision",
+      "title": "Локальный ответ: таблица состояний",
+      "status": "selected-in-example-only",
+      "selectedInExample": true,
+      "selectedInProject": false,
+      "scope": "Описать состояние бронирования",
+      "description": "Таблица состояний бронирования; неизвестность ответа клиента не равна отказу бронирования.",
+      "evidenceStatus": "unverified"
+    }
+  ],
+  "edges": [
+    {
+      "id": "SH-E-RS-01",
+      "type": "OPTION_FOR",
+      "from": "SH-R-FEAT-RES",
+      "to": "SH-V-BEHAVIOR-PATH",
+      "meaning": "Готовый вариант для этого R до конкретного выбора."
+    },
+    {
+      "id": "SH-E-RS-02",
+      "type": "OPTION_FOR",
+      "from": "SH-R-FEAT-RES",
+      "to": "SH-V-STATES",
+      "meaning": "Другой готовый вариант, остаётся доступным."
+    },
+    {
+      "id": "SH-E-RS-03",
+      "type": "DRIVES",
+      "from": "SH-R-FEAT-RES",
+      "to": "SH-D-BEHAVIOR",
+      "meaning": "R драйвер конкретного ответа в выбранном scope."
+    },
+    {
+      "id": "SH-E-RS-04",
+      "type": "CONTEXT_FOR",
+      "from": "SH-C-INTERACTION",
+      "to": "SH-D-BEHAVIOR",
+      "meaning": "Почему Behavior Path был удобен."
+    },
+    {
+      "id": "SH-E-RS-05",
+      "type": "USES_VARIANT",
+      "from": "SH-D-BEHAVIOR",
+      "to": "SH-V-BEHAVIOR-PATH",
+      "meaning": "Конкретное D выбирает переиспользуемую заготовку."
+    },
+    {
+      "id": "SH-E-RS-06",
+      "type": "INTRODUCES",
+      "from": "SH-D-BEHAVIOR-SHARED",
+      "to": "SH-R-ERRORS",
+      "meaning": "Общий выбранный формат вводит локальный R ошибок Reservation; parent — тот же общий R Behavior.",
+      "parent": "SH-R-BEHAVIOR"
+    },
+    {
+      "id": "SH-E-RS-07",
+      "type": "CONTEXT_FOR",
+      "from": "SH-C-STATE-NEW",
+      "to": "SH-D-BEHAVIOR-SHARED",
+      "meaning": "Новый контекст для оценки действующего выбора; сам его не отменяет."
+    },
+    {
+      "id": "SH-E-RS-08",
+      "type": "QRPE_FOR",
+      "from": "SH-Q-BEHAVIOR",
+      "to": "SH-D-BEHAVIOR-SHARED",
+      "meaning": "Открытый вопрос обоснованности D."
+    },
+    {
+      "id": "SH-E-RS-09",
+      "type": "RECONSIDERS",
+      "from": "SH-PR-STATE",
+      "to": "SH-D-BEHAVIOR-SHARED",
+      "meaning": "Предлагает пересмотр; пока решение НЕ пересмотрено."
+    },
+    {
+      "id": "SH-E-RS-10",
+      "type": "USES_VARIANT",
+      "from": "SH-PR-STATE",
+      "to": "SH-V-STATES",
+      "meaning": "Кандидат предлагает другую готовую модель, не выбрана."
+    },
+    {
+      "id": "SH-E-RS-11",
+      "type": "DRIVES",
+      "from": "SH-R-BEHAVIOR",
+      "to": "SH-D-BEHAVIOR-SHARED",
+      "meaning": "Тот же R остаётся драйвером общего D."
+    },
+    {
+      "id": "SH-E-RS-12",
+      "type": "GOVERNED_BY_SHARED_CHOICE",
+      "from": "SH-D-BEHAVIOR-SHARED",
+      "to": "SH-D-BEHAVIOR",
+      "meaning": "Общая форма управляет локальным ответом, не копируется как новый выбор."
+    },
+    {
+      "id": "SH-E-RS-13",
+      "type": "DRIVES",
+      "from": "SH-R-ERRORS",
+      "to": "SH-D-STATUS",
+      "meaning": "Часть ответа на локальный R ошибок: потеря ответа; не весь список ошибок.",
+      "usedParts": [
+        "SH-STATUS-UNKNOWN",
+        "SH-STATUS-CORRELATE",
+        "SH-STATUS-FINAL"
+      ]
+    },
+    {
+      "id": "SH-E-RS-14",
+      "type": "DRIVES",
+      "from": "SH-R-RESULT",
+      "to": "SH-D-STATUS",
+      "meaning": "Тот же D одновременно отвечает функциональной потребности без дублирования."
+    },
+    {
+      "id": "SH-E-RS-15",
+      "type": "CONTEXT_FOR",
+      "from": "SH-C-STATUS",
+      "to": "SH-D-STATUS",
+      "meaning": "Основания того же локального способа."
+    },
+    {
+      "id": "SH-E-RS-16",
+      "type": "QRPE_FOR",
+      "from": "SH-Q-STATUS",
+      "to": "SH-D-STATUS",
+      "meaning": "Тот же вопрос достаточности, не копия вопроса."
+    },
+    {
+      "id": "SH-E-RS-17",
+      "type": "DRIVES",
+      "from": "SH-R-ERRORS",
+      "to": "SH-D-BUSY",
+      "meaning": "Другая конкретная часть ответа R-ERRORS; не второй D-STATUS."
+    },
+    {
+      "id": "SH-E-STATE-RESERVATION-01",
+      "type": "DERIVES",
+      "from": "SH-R-FEAT-RES",
+      "to": "SH-R-STATE-RESERVATION",
+      "meaning": "Содержательное уточнение предмета локального состояния, не введение задачи общим D."
+    },
+    {
+      "id": "SH-E-STATE-RESERVATION-02",
+      "type": "DRIVES",
+      "from": "SH-R-STATE-RESERVATION",
+      "to": "SH-D-STATE-RESERVATION",
+      "meaning": "Разные локальные R получают разные D, общий выбор Behavior не изменяется."
+    }
+  ],
+  "events": [
+    {
+      "id": "SH-EVENT-RS-SELECT",
+      "type": "decision_selected",
+      "decisionId": "SH-D-BEHAVIOR",
+      "by": "example-only",
+      "note": "В условном сюжете выбран локальный ответ Reservation; общий формат задан отдельно.",
+      "exampleOnly": true
+    },
+    {
+      "id": "SH-EVENT-RS-NEW-CONTEXT",
+      "type": "context_changed",
+      "by": "example-only",
+      "note": "Появился условный контекст; прежнее D ещё не изменено.",
+      "exampleOnly": true
+    },
+    {
+      "id": "SH-EVENT-RS-PROPOSAL",
+      "type": "proposal_considered",
+      "by": "example-only",
+      "note": "Предложение на рассмотрении; не decision_revised.",
+      "exampleOnly": true
+    },
+    {
+      "id": "SH-EVENT-SELECT-D-BUSY",
+      "type": "decision_selected",
+      "decisionId": "SH-D-BUSY",
+      "by": "example-only",
+      "note": "Выбор только в вымышленном сюжете; не решение реального пользователя.",
+      "exampleOnly": true
+    },
+    {
+      "id": "SH-EVENT-SELECT-D-STATE-RESERVATION",
+      "type": "decision_selected",
+      "decisionId": "SH-D-STATE-RESERVATION",
+      "by": "example-only",
+      "note": "Выбор только в вымышленном сюжете; не решение реального пользователя.",
+      "exampleOnly": true
+    }
+  ],
+  "planningScale": "module"
+}

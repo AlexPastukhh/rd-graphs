@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "id": "template-tm-2d-31-pixel-art-construction-unit-ru-px-02",
+  "title": "Unit · Silhouette And Major Clusters",
+  "revision": 1,
+  "planningScale": "unit",
+  "identitySpace": "prepared:TM-2D-31-PIXEL-ART-CONSTRUCTION",
+  "rootRequirementId": "RU-PX-02",
+  "readOnly": true,
+  "templateOnly": true,
+  "selected": false,
+  "catalogHidden": true,
+  "preparedModule": {
+    "id": "TEMPLATE-D-RU-PX-02",
+    "version": "752e205cf5f797709211836e548b1aa980b10e4d74cd90dedaba4b130851df63",
+    "goalRequirementId": "RU-PX-02",
+    "methodDecisionId": "TEMPLATE-D-RU-PX-02",
+    "childRequirementIds": [],
+    "applicability": "actual target-grid silhouette, major masses, principal negative spaces and coarse proportions",
+    "successCriteria": "Достаточно выполнить применимую Unit-specific Guidance и её checkpoints; инструкция не доказывает результат."
+  },
+  "sourceDocument": "/workspace/repos/obs-planning-docs/planning/documentation/idtspe-methodology/active/profiles/visual-production-2d/target-modules/TM-2D-31-PIXEL-ART-CONSTRUCTION.md#ru-px-02",
+  "sourceContentSHA256": "752e205cf5f797709211836e548b1aa980b10e4d74cd90dedaba4b130851df63",
+  "sourceOwnerGraphSlug": "template-tm-2d-31-pixel-art-construction",
+  "sourceAnchor": "ru-px-02",
+  "coverage": "Готовый способ одного узкого R; без выдуманных под-R и без выбора проекта.",
+  "nodes": [
+    {
+      "id": "RU-PX-02",
+      "kind": "requirement",
+      "title": "Silhouette And Major Clusters",
+      "referenceOnly": true,
+      "projectionOf": {
+        "graphSlug": "template-tm-2d-31-pixel-art-construction",
+        "nodeId": "RU-PX-02"
+      }
+    },
+    {
+      "id": "TEMPLATE-D-RU-PX-02",
+      "kind": "decision",
+      "status": "reusable-unselected",
+      "templateRole": "unit-prepared-guidance",
+      "selected": false,
+      "title": "Готовый способ проработки: Silhouette And Major Clusters",
+      "description": "<a id=\"ru-px-02\"></a>\n### Silhouette And Major Clusters\n\n`RU-PX-02`\n\nWork in major clusters before internal detail and inspect at target size. Route pose/composition failures upstream when they are not pixel-realization defects.",
+      "source": "/workspace/repos/obs-planning-docs/planning/documentation/idtspe-methodology/active/profiles/visual-production-2d/target-modules/TM-2D-31-PIXEL-ART-CONSTRUCTION.md#ru-px-02",
+      "sourceUnitId": "RU-PX-02",
+      "explicitSubrequirements": false,
+      "note": "Source defines Unit guidance; no explicit nested R inventory is declared here."
+    }
+  ],
+  "edges": [
+    {
+      "id": "UNIT-E-DRIVE",
+      "type": "DRIVES",
+      "from": "RU-PX-02",
+      "to": "TEMPLATE-D-RU-PX-02",
+      "templateOnly": true,
+      "meaning": "Готовый ответ на узкую задачу; пока не выбран."
+    }
+  ],
+  "events": []
+}

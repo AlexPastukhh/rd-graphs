@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "id": "reference-unit-direct",
+  "title": "Unit · Описать наблюдаемый результат",
+  "revision": 1,
+  "planningScale": "unit",
+  "identitySpace": "example:module-unit-v1",
+  "rootRequirementId": "UD-R-RESULT",
+  "readOnly": true,
+  "templateOnly": true,
+  "catalogHidden": true,
+  "sourceDocument": "docs/examples/MODULE-UNIT-GUIDE.md",
+  "sourceContentSHA256": "e98eecb98f3f28589e803ece81bcb5069a4db07b1b4c63436bdebc83944da7d0",
+  "preparedModule": {
+    "id": "UD-D-RESULT",
+    "version": "e98eecb98f3f28589e803ece81bcb5069a4db07b1b4c63436bdebc83944da7d0",
+    "goalRequirementId": "UD-R-RESULT",
+    "methodDecisionId": "UD-D-RESULT",
+    "childRequirementIds": [],
+    "applicability": "Описать наблюдаемый результат",
+    "successCriteria": "Записать наблюдаемый результат и критерий его проверки"
+  },
+  "nodes": [
+    {
+      "id": "UD-R-RESULT",
+      "kind": "requirement",
+      "title": "Описать наблюдаемый результат",
+      "projectionOf": {
+        "graphSlug": "reference-module-units",
+        "nodeId": "UD-R-RESULT"
+      },
+      "referenceOnly": true
+    },
+    {
+      "id": "UD-D-RESULT",
+      "kind": "decision",
+      "title": "Записать наблюдаемый результат и критерий его проверки",
+      "status": "reusable-unselected",
+      "selected": false
+    }
+  ],
+  "edges": [
+    {
+      "id": "UD-D-RESULT-drive",
+      "type": "DRIVES",
+      "from": "UD-R-RESULT",
+      "to": "UD-D-RESULT",
+      "templateOnly": true,
+      "meaning": "Подготовленный способ ответа на R; реального выбора нет."
+    }
+  ],
+  "events": [],
+  "sourceOwnerGraphSlug": "reference-module-units"
+}
