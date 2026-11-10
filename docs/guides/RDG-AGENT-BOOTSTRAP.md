@@ -37,6 +37,20 @@ python3 -B tools/rdg-agent.py open --context /workspace/repo/Workfiles/rdg-gatew
 
 IDs выбирает оператор из реального catalog/summary, а не запрашивает внутренние поля у пользователя. Без --all-pages ответ показывает продолжения в reading.continuations; страницы одной секции запрашиваются с include этой секции и её cursor. loaded=false и bodyState=notRequested/pendingPage не означают отсутствия данных. --all-pages подтверждает pagesComplete только после сборки всех запрошенных записей одного снимка; при stale/conflict перечитать область с начала. --include выбирает секции из schema; Plan только по явному --include plan, History остаётся отдельным процессным чтением. Нет скрытого fallback к full. Подробности и приёмка — [B03A](RDG-DECISION-V1-CONTRACT.md#read-focus-branch-b03a).
 
+### Структурный Markdown и поиск
+
+Проверьте в `schema --action read` наличие формата `markdown`, а в `schema --action search` доступность поиска. Замените `ID` и `NODE_ID` на значения из каталога и `ref` совпадения.
+
+~~~sh
+python3 -B tools/rdg-agent.py open --context /workspace/repo/Workfiles/rdg-gateway-context.json --package-id ID --format markdown --all-pages
+python3 -B tools/rdg-agent.py open --context /workspace/repo/Workfiles/rdg-gateway-context.json --package-id ID --node NODE_ID --detail focus --format markdown --all-pages
+python3 -B tools/rdg-agent.py lens --context /workspace/repo/Workfiles/rdg-gateway-context.json --lens model --format markdown --all-pages
+python3 -B tools/rdg-agent.py search --context /workspace/repo/Workfiles/rdg-gateway-context.json --package-id ID --query p95
+python3 -B tools/rdg-agent.py search --context /workspace/repo/Workfiles/rdg-gateway-context.json --search-scope catalog --query p95
+~~~
+
+В Agent Markdown выводится обычным текстом. С `--all-pages` Agent собирает полный документ одного снимка. В API текст находится в поле `markdown`, состояние страниц в `reading`. Для чтения ветви используйте `--detail branch`, для области `--work-graph WORK_GRAPH_ID`, для явного добавления Plan `--include-plan`. Поиск возвращает JSON со ссылками `ref`, совпавшими полями и фрагментами. Совпадение открывается по `ref.packageId` и `ref.nodeId`. Запрос действует на открытый пакет или явно выбранный доступный каталог.
+
 ## Разговорное намерение и самостоятельное исполнение
 
 **Операционное правило для ИИ при уже подготовленном доступе (не обещание автономного runner).** Пользователь может дать цель/контекст словами «начинаем работу», «исследуй», «выбери», «продолжай», «отчитайся». Целый граф выполнения работы называем **процесс-графом** (пакет `working`/`copy`), логическую область внутри него — **WorkGraph/воркграфом** (`workGraphs` в JSON). Фокусные графы R/A/Canon — представления этих же данных. ИИ самостоятельно выбирает подходящие существующие операции, линзы и разрешённые инструменты; не запрашивает у пользователя внутренние JSON, IDs, transactionId, ревизии или команды. Для нового проекта проверяет каталог и действующие разрешения на создание package/Graph и при наличии права создаёт working Graph через portable schema/preflight/apply. Подготовку grants, authStore и bearer это не заменяет; при отсутствии доступа возвращает точный blocker без фиктивного создания.

@@ -56,6 +56,19 @@ class GatewayTests(BASE.Server):
         return result['packages'][0]['packageId'], request, preview
 
 
+    def test_gateway_markdown_and_literal_search_are_read_only(self):
+        pid,_,_=self.gateway_create()
+        before=self.files()
+        schema=self.private_call({'method':'schema','op':'read'})
+        self.assertIn('markdown',schema['read']['format'])
+        md=self.private_call({'method':'read','format':'markdown','packageId':pid,
+                              'detail':'focus','nodeId':'R1'})
+        self.assertTrue(md['reading']['pagesComplete'])
+        self.assertTrue(md['markdown'].startswith('# Gateway process'))
+        hits=self.private_call({'method':'search','packageId':pid,'query':'R1'})['items']
+        self.assertEqual(hits[0]['target']['ref']['nodeId'],'R1')
+        self.assertEqual(before,self.files())
+
     def test_gateway_scoped_focus_branch_http_pages_and_stale_retry(self):
         pid,_,_=self.gateway_create()
         request=self.private_call({'method':'schema','op':'batch','packageId':pid})['request']

@@ -106,15 +106,19 @@ def walk(root, links, available):
     return order, rows
 
 
-def project(app, ident, row, detail, include, node_id, limit, token, compact):
-    selected, origin = options(app, detail, include, node_id, limit, token)
+def project(app, ident, row, detail, include, node_id, limit, token, compact, *,
+            document=False, document_view=None):
+    if document:
+        selected = origin = list(include or DEFAULTS)
+    else:
+        selected, origin = options(app, detail, include, node_id, limit, token)
     graph = row['graph']
     check(app, graph.get('coreModel') == 'rdg-decision-v1', 'PROFILE_UNSUPPORTED')
     K = app.kernel.for_graph(graph)
     ns = K.entities(graph)
     # Only this read-only Application path opts in. Writers never seed this key.
     K.ANALYSIS.active_read_cache(graph)['scopedImmutableEntities'] = ns
-    check(app, node_id in ns, 'NODE_NOT_FOUND')
+    check(app, detail == 'full' or node_id in ns, 'NODE_NOT_FOUND')
     check(app, detail != 'branch' or ns[node_id]['kind'] in ('requirement', 'decision'), 'ROOT_KIND')
     sha = app.model.digest(graph)
     refs = {}
@@ -142,10 +146,21 @@ def project(app, ident, row, detail, include, node_id, limit, token, compact):
             unique.append(e)
     links = unique
     focus = None
-    if detail == 'focus':
+    if detail == 'full':
+        structural = {n['id'] for n in document_view['entities']}
+        if document_view['spec']['kind'] == 'graph' and not document_view['spec'].get('groupIds'):
+            structural.update(a['id'] for a in graph.get('externalActions', []))
+        order, outline, parents = [], [], []
+        subject_ids = structural
+        scoped_edges = [e for e in edges if e['from'] in structural or e['to'] in structural]
+        scoped_members = [e for e in memberships if e['from'] in structural or e['to'] in structural]
+        groups = document_view['decisionGroups']
+    elif detail == 'focus':
         if node_id in {a['id'] for a in graph.get('externalActions', [])}:
             focus = {'entities': [ns[node_id]], 'edges': [], 'decisionMemberships': [],
                      'decisionGroups': []}
+        elif document_view is not None and document_view['spec'].get('groupIds'):
+            focus = document_view
         else:
             focus = K.focused_view(graph, node_id, include_completion=False)
         chosen = {n['id'] for n in focus['entities']}
@@ -206,7 +221,7 @@ def project(app, ident, row, detail, include, node_id, limit, token, compact):
     finding_ids.update(p['findingId'] for c in contexts for p in c.get('provenance', []))
     included.update(finding_ids)
     finding_rows = []
-    descriptors = K.FINDINGS.describe(graph, K, node_id) if finding_ids else []
+    descriptors = K.FINDINGS.describe(graph, K, node_id or graph.get('rootRequirementId')) if finding_ids else []
     for f in descriptors:
         if f['findingId'] in finding_ids:
             f = copy.deepcopy(f)
@@ -230,7 +245,7 @@ def project(app, ident, row, detail, include, node_id, limit, token, compact):
         for q in ns.get(i, {}).get('questions', []):
             question_rows.append({'legacy': True, 'ownerRef': ref(i), 'question': copy.deepcopy(q)})
     # Canon selected as the focus itself also exposes its direct Info.
-    if ns[node_id]['kind'] == 'canon' and not canons:
+    if ns.get(node_id, {}).get('kind') == 'canon' and not canons:
         info = [r for r in attached[node_id] if r['type'] == 'INFO_FOR']
         included.update(r['from'] for r in info)
         canons.append({'subjectRef': ref(node_id), 'source': brief(node_id), 'via': None,
@@ -291,6 +306,8 @@ def project(app, ident, row, detail, include, node_id, limit, token, compact):
                         and s['ref'].get('identitySpace') == graph['identitySpace']
                         and s['ref'].get('nodeId') in structural
                         and ns[s['ref']['nodeId']]['kind'] == 'action']
+    if document and 'plan' in origin and detail == 'full' and document_view['spec']['kind'] == 'graph':
+        data['plan'] = [row['plan']] if row['plan'] is not None else []
     snapshot['sources'] = {pid: {'graphRevision': r['graph']['revision'],
                                 'graphSHA256': app.model.digest(r['graph'])}
                            for pid, r in sorted(registered.items()) if pid != ident}
@@ -336,6 +353,9 @@ def project(app, ident, row, detail, include, node_id, limit, token, compact):
                     value['resolved']['targetSummary'] = {k: body.get(k) for k in ('id','kind','title','revision')}
                 data['dependencyApplications'].append({'id': boundary['referenceId'], 'kind': 'external-reference', **value})
             app._scoped_cache.put(cache_key, data['dependencyApplications'])
+    if document:
+        return {'data': {f: data.get(f, []) for f in selected}, 'snapshot': snapshot,
+                'recommendationAvailable': rec['available'] if 'recommendations' in origin else None}
     result = {'schemaVersion': 1,
               'package': {k: row['head'][k] for k in ('packageId', 'role', 'identitySpace', 'revision')},
               'graph': {k: graph.get(k) for k in ('id', 'title', 'coreModel', 'revision', 'identitySpace', 'rootRequirementId')},

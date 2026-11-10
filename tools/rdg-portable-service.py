@@ -14,6 +14,8 @@ from zoneinfo import ZoneInfo
 
 COMPACT = SourceFileLoader('rdg_compact_read', str(Path(__file__).with_name('rdg-compact-read.py'))).load_module()
 SCOPED = COMPACT.SCOPED
+MARKDOWN = SourceFileLoader('rdg_structured_markdown', str(Path(__file__).with_name('rdg-structured-markdown.py'))).load_module()
+SEARCH = SourceFileLoader('rdg_text_search', str(Path(__file__).with_name('rdg-text-search.py'))).load_module()
 BATCH = SourceFileLoader('rdg_batch', str(Path(__file__).with_name('rdg-batch.py'))).load_module()
 CACHE = SourceFileLoader('rdg_projection_cache', str(Path(__file__).with_name('rdg-projection-cache.py'))).load_module()
 
@@ -235,7 +237,7 @@ class Application:
                 presentation=screen.get('presentation',{})
                 self.check(isinstance(presentation,dict) and set(presentation)<=
                     {'mode','expandedPaths','collapsedPaths','query','dependencyTab','selectedPolicyId','selectedPolicyVersion','selectedPolicyRuleId','questionId'} and
-                    presentation.get('mode','graph') in ('graph','structure','dependencies','questions') and
+                    presentation.get('mode','graph') in ('graph','structure','markdown','dependencies','questions') and
                     (presentation.get('questionId') is None or
                      isinstance(presentation['questionId'],str) and 0<len(presentation['questionId'])<=180) and
                     presentation.get('dependencyTab','stale') in ('stale','policies') and
@@ -277,7 +279,7 @@ class Application:
                     self.model.validate_view_spec(item['spec'])
                 self.check(isinstance(screen['trail'],list) and len(screen['trail'])<=32,'VIEW_TRAIL_SCHEMA')
                 for trail in screen['trail']:
-                    self.check({'packageId','spec','inspector'}<=set(trail) and set(trail)<= {'packageId','spec','inspector','draft','mode','inspectorTab'} and trail.get('mode','graph') in ('graph','structure','dependencies','questions') and isinstance(trail.get('inspectorTab',''),str),'VIEW_TRAIL_SCHEMA');self.metadata(trail['packageId'],['graph.read']);self.model.validate_view_spec(trail['spec'])
+                    self.check({'packageId','spec','inspector'}<=set(trail) and set(trail)<= {'packageId','spec','inspector','draft','mode','inspectorTab'} and trail.get('mode','graph') in ('graph','structure','markdown','dependencies','questions') and isinstance(trail.get('inspectorTab',''),str),'VIEW_TRAIL_SCHEMA');self.metadata(trail['packageId'],['graph.read']);self.model.validate_view_spec(trail['spec'])
             self.check(value['activeScreenId'] in ids if ids else value['activeScreenId'] is None,'VIEW_ACTIVE_SCREEN')
             old={**old,**value,'revision':old['revision']+1};self.view_sessions[sid]=old
         for screen in old['screens']:
@@ -525,7 +527,13 @@ class Application:
                         'sourceId':edge['from'],'targetId':edge['to'],'enabled':True,'status':'active'}})
         return result
 
-    def read(self, ident, include_plan=False, view=None, *, detail=None, include=None, node_id=None, record_id=None, limit=25, cursor=None):
+    def read(self, ident, include_plan=False, view=None, *, detail=None, include=None, node_id=None, record_id=None, limit=25, cursor=None, output_format=None):
+        self.check(output_format in (None, 'json', 'markdown'), 'READ_FORMAT')
+        if output_format == 'markdown':
+            self.check(record_id is None and limit == 25, 'MARKDOWN_OPTIONS')
+            return MARKDOWN.read(self, ident, detail=detail, view=view, node_id=node_id,
+                                 include=include, include_plan=include_plan, cursor=cursor,
+                                 compact=COMPACT, scoped=SCOPED)
         self.check(detail in (None,'full','summary','item','focus','branch'), 'READ_DETAIL')
         if detail in ('focus','branch'):
             self.check(view is None and not include_plan, 'READ_VIEW_FILTER_UNAVAILABLE')
@@ -633,10 +641,17 @@ class Application:
         with self.store.lock(False,create=False):return self._schema(op,ident,node_id,source_id,command,source_path,source_key,core_model=core_model,role=role,entity_kind=entity_kind)
 
     def _schema(self,op,ident=None,node_id=None,source_id=None,command=None,source_path=None,source_key=None,*,core_model=None,role=None,entity_kind=None):
+        if op == 'search':
+            self.check(all(v is None for v in (ident,node_id,source_id,command,source_path,source_key,core_model,role,entity_kind)), 'SEARCH_SCHEMA_SELECTORS')
+            return SEARCH.schema()
         if op in ('read','history'):
             self.check(core_model is None and role is None and entity_kind is None and command is None and source_id is None and source_path is None and source_key is None, 'READ_SCHEMA_SELECTORS')
             if ident:self.snapshot(ident,layouts=False)
-            return COMPACT.schema()
+            result = COMPACT.schema()
+            if op == 'read':
+                result['read']['format'] = ['json','markdown']
+                result['markdown'] = MARKDOWN.schema()
+            return result
         self.check(op in self.OPERATIONS,'UNKNOWN_OPERATION')
         self.check((core_model is None and role is None) or op=='create','CREATE_SELECTOR_ONLY')
         self.check(entity_kind is None or op in ('core','paper_edit') and command=='add','ENTITY_KIND_ONLY_FOR_ADD')
@@ -809,7 +824,7 @@ class Application:
         """Closed shared transport contract for CLI, Agent and manual sessions."""
         self.check(isinstance(message,dict),'MESSAGE')
         method=message.get('method')
-        fields={'catalog':set(),'read':{'packageId','includePlan','view','detail','include','nodeId','recordId','limit','cursor'},'history':{'packageId','view','detail','include','eventId','limit','cursor'},
+        fields={'catalog':set(),'search':{'query','scope','packageId','limit','cursor'},'read':{'packageId','includePlan','view','detail','include','nodeId','recordId','limit','cursor','format'},'history':{'packageId','view','detail','include','eventId','limit','cursor'},
                 'resolve':{'packageId','reference'},'source_snapshot':{'packageId','pin','view'},
                 'schema':{'op','packageId','nodeId','sourcePackageId','command','sourcePath','sourceKey','coreModel','role','entityKind'},
                 'migration_sources':set(),'migration_inspect':{'sourceKey'},
@@ -822,12 +837,15 @@ class Application:
         self.check(method in fields and set(message)<={'method'}|fields[method],'MESSAGE_FIELDS')
         if method=='view_session':return self.view_session(message)
         if method=='catalog':return self.catalog()
+        if method=='search':
+            return SEARCH.search(self,message.get('query'),message.get('scope','package'),
+                                 message.get('packageId'),message.get('limit',25),message.get('cursor'))
         if method=='recommendation_catalog':return self.recommendation_catalog(message.get('query',''),message.get('offset',0),message.get('limit',50),message.get('revision'),message.get('packageId'))
         if method=='approval_request':return self.approval_request(message['request'],message['rationale'])
         if method=='approval_read':return self.approval_read(message['requestId'])
         if method=='migration_sources':return self.migration.sources()
         if method=='migration_inspect':return self.migration.inspect(message['sourceKey'])
-        if method=='read':return self.read(message['packageId'],message.get('includePlan',False),message.get('view'),detail=message.get('detail'),include=message.get('include'),node_id=message.get('nodeId'),record_id=message.get('recordId'),limit=message.get('limit',25),cursor=message.get('cursor'))
+        if method=='read':return self.read(message['packageId'],message.get('includePlan',False),message.get('view'),detail=message.get('detail'),include=message.get('include'),node_id=message.get('nodeId'),record_id=message.get('recordId'),limit=message.get('limit',25),cursor=message.get('cursor'),output_format=message.get('format'))
         if method=='history':return self.history(message['packageId'],message.get('view'),detail=message.get('detail'),include=message.get('include'),event_id=message.get('eventId'),limit=message.get('limit',25),cursor=message.get('cursor'))
         if method=='resolve':return self.resolve(message['packageId'],message['reference'])
         if method=='source_snapshot':return self.source_snapshot(message['packageId'],message['pin'],message.get('view'))

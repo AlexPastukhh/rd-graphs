@@ -7,6 +7,7 @@ function main(){
  if(args.includes('--transform-stdin')){
   const req=JSON.parse(fs.readFileSync(0,'utf8'));let result;
   if(req.op==='project'){const graphKey=core.graphKey(req.graph.identitySpace,req.graph.id);result=require('./rdg-visual-projection.js').decisionProject(req.graph,req.view,req.document?.layouts?.[graphKey]||{});}
+  else if(req.op==='outline')result=require('./rdg-visual-projection.js').decisionOutline(req.graph,req.view,{...req.options,document:true});
   else if(req.op==='empty')result=core.empty();
   else if(req.op==='validate')result=core.validate(req.document);
   else if(req.op==='remap')result=core.remap(req.document,req.spec);
