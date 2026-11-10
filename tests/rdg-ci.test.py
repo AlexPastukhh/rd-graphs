@@ -19,6 +19,14 @@ SERVER = load('rdg_ci_server_test_target', ROOT / 'tools/rdg-server.py')
 
 
 class Pipeline(unittest.TestCase):
+    def test_runner_explicitly_installs_pinned_headless_chromium(self):
+        workflow = (ROOT / '.github/workflows/rdg-ci.yml').read_text(encoding='utf8')
+        self.assertIn('puppeteer@25.13.0 ajv@8.17.1', workflow)
+        self.assertIn('browsers install chrome-headless-shell', workflow)
+        self.assertIn('test -x "$CHROME_PATH"', workflow)
+        self.assertIn("printf 'RDG_CHROME_PATH=%s\\n' \"$CHROME_PATH\"", workflow)
+        self.assertNotIn("require(process.argv[1]).executablePath()", workflow)
+
     def test_core_integration_and_legacy_guards_are_mandatory_gates(self):
         self.assertEqual(len(CI.PYTHON_TESTS),len(set(CI.PYTHON_TESTS)))
         for name in ('rdg-decision-integration.test.py','rdg-native-dependencies.test.py','rdg-locks.test.py'):
