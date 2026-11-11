@@ -9,7 +9,7 @@ import zipfile
 
 ROOT=Path(__file__).resolve().parents[1]
 PYTHON_FILES=('rdg-preview','rdg-windows-lock','rdg-authority','rdg-transaction-io','rdg-portable',
-    'rdg-portable-model','rdg-portable-store','rdg-portable-service','rdg-projection-cache','rdg-compact-read','rdg-scoped-read','rdg-batch','rdg-model-profiles','rdg-core-model',
+    'rdg-portable-model','rdg-portable-store','rdg-portable-service','rdg-projection-cache','rdg-compact-read','rdg-scoped-read','rdg-structured-markdown','rdg-text-search','rdg-batch','rdg-model-profiles','rdg-core-model',
     'rdg-decision-model','rdg-history-view','rdg-analysis','rdg-findings','rdg-questions','rdg-dependency-policies','rdg-recommendations','rdg-package-transfer','rdg-legacy-migration',
     'rdg-workflow-commands','rdg-loopback-helper')
 ENTRY='RDG-Decision-Preview'

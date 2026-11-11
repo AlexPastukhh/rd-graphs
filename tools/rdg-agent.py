@@ -467,6 +467,7 @@ def portable_view_session(c,message):
 def portable_command(args,c):
     if args.command=='view_session' and c.get('profile') not in ('remote','gateway'):return portable_view_session(c,json.load(sys.stdin))
     app=portable_application(c);ident=args.package_id or c.get('packageId')
+    output_format = getattr(args, 'format', 'json')
     if args.command=='view_session':return app.call(json.load(sys.stdin))
     require(not args.expected_input_binding or args.command in ('command','preflight'),
             'INPUT_BINDING_ONLY_FOR_PREFLIGHT_COMMAND')
@@ -474,6 +475,10 @@ def portable_command(args,c):
         catalog=app.catalog()
         return {'ready':True,'profile':c['profile'],'namespaceId':catalog['namespaceId'],'catalog':catalog,'writes':0}
     if args.command=='catalog':return app.call({'method':'catalog'})
+    if args.command=='search':
+        return app.call({'method':'search','query':args.query,'scope':args.search_scope,
+                         **({'packageId':ident} if args.search_scope=='package' else {}),
+                         'limit':args.limit,'cursor':args.cursor})
     if args.command=='recommendation_catalog':return app.call({'method':'recommendation_catalog',**json.load(sys.stdin)})
     if args.command=='approval_request':
         body=json.load(sys.stdin)
@@ -491,13 +496,17 @@ def portable_command(args,c):
         require(args.lens and len(args.lens)==1,'ONE_LENS_REQUIRED')
         rows=[r for r in app.catalog()['packages'] if r.get('role')=='lens' and r.get('lensKey')==args.lens[0] and (not args.model_profile or r.get('coreModel')==args.model_profile)]
         require(len(rows)==1,'LENS_KEY_MISSING_OR_AMBIGUOUS')
-        return app.call({'method':'read','packageId':rows[0]['packageId']})
+        message = {'method':'read','packageId':rows[0]['packageId']}
+        if output_format == 'markdown':
+            message.update(format='markdown',detail='full',cursor=args.cursor)
+            return PORTABLE.module('rdg-structured-markdown').read_pages(app,message,args.all_pages)
+        return app.call(message)
     if args.command in ('command','preflight'):
         message={'method':'apply' if args.command=='command' else 'preflight','request':json.load(sys.stdin)}
         if args.expected_input_binding:message['expectedInputBinding']=json.loads(Path(args.expected_input_binding).read_text())
         result=app.call(message)
         return {**result,'saved':result.get('published') is True} if args.command=='command' else result
-    require(ident or args.command=='schema' and args.action in ('create','folder_create','folder_move','migrate'),'PACKAGE_ID_REQUIRED')
+    require(ident or args.command=='schema' and args.action in ('create','folder_create','folder_move','migrate','read','search','history'),'PACKAGE_ID_REQUIRED')
     if args.command=='schema':
         require(args.action,'ACTION_REQUIRED');op=args.action
         command=op[5:] if op.startswith('core_') else args.core_command
@@ -509,7 +518,7 @@ def portable_command(args,c):
             if args.role is not None:selectors['role']=args.role
         else:require(args.role is None and args.model_profile is None,'CREATE_SELECTORS_ONLY')
         if args.entity_kind is not None:selectors['entityKind']=args.entity_kind
-        return app.call({'method':'schema','op':op,'packageId':ident,'nodeId':args.node,
+        return app.call({'method':'schema','op':op,'packageId':None if op=='search' else ident,'nodeId':args.node,
                           'sourcePackageId':args.source_package_id,'command':command,'sourcePath':args.source_folder,'sourceKey':args.source_key,**selectors})
     if args.command=='receipt':return app.call({'method':'receipt','packageId':ident,'transactionId':args.transaction_id})
     if args.command=='resolve':return app.call({'method':'resolve','packageId':ident,'reference':json.load(sys.stdin)})
@@ -529,6 +538,20 @@ def portable_command(args,c):
     if args.show_excluded_alternatives:
         view_spec['showExcludedAlternatives']=True
     require(args.command=='open','PORTABLE_COMMAND')
+    if output_format == 'markdown':
+        detail = args.detail or ('focus' if args.node else 'full')
+        require(not args.record_id and args.limit == 25,'MARKDOWN_OPTIONS')
+        message = {'method':'read','packageId':ident,'format':'markdown','detail':detail,
+                   'include':args.include,'cursor':args.cursor,'includePlan':args.include_plan}
+        if detail == 'full':
+            if args.work_graph:
+                require(not args.node,'MARKDOWN_SCOPE')
+                view_spec.update(kind='workGraph',id=args.work_graph)
+            message['view'] = view_spec
+        else:
+            require(not args.work_graph and not args.show_excluded_alternatives,'MARKDOWN_SCOPE')
+            message['nodeId'] = args.node
+        return PORTABLE.module('rdg-structured-markdown').read_pages(app,message,args.all_pages)
     detail=getattr(args,'detail',None) or ('item' if args.node else 'summary')
     require(detail in ('summary','item','full','focus','branch'),'READ_DETAIL')
     require(not getattr(args,'all_pages',False) or detail in ('focus','branch'),'READ_ALL_PAGES_REQUIRES_FOCUS_OR_BRANCH')
@@ -587,10 +610,15 @@ def core_request_data(graph,command,node_id):
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('command',choices=['doctor','catalog','lenses','lens','open','schema','command','receipt','dependencies','locks','preflight','history','resolve','source_snapshot','migration_sources','migration_inspect','recover','cancel_migration','approval_request','approval_read','view_session','recommendation_catalog'])
+    p.add_argument('command',choices=['doctor','catalog','lenses','lens','open','schema','command','receipt','dependencies','locks','preflight','history','resolve','source_snapshot','migration_sources','migration_inspect','recover','cancel_migration','approval_request','approval_read','view_session','recommendation_catalog','search'])
     p.add_argument('--context',default=os.environ.get('RDG_AGENT_CONTEXT'))
     p.add_argument('--lens',action='append',help='Registered lens key; repeat for several lenses')
     p.add_argument('--node')
+    p.add_argument('--format',choices=['json','markdown'],default='json')
+    p.add_argument('--query',help='Literal text for search')
+    p.add_argument('--search-scope',choices=['package','catalog'],default='package')
+    p.add_argument('--work-graph',help='Working Graph ID for a full Markdown read')
+    p.add_argument('--include-plan',action='store_true',help='Include Plan in a full Markdown read')
     p.add_argument('--model-profile',choices=['rdg-core-v1','rdg-decision-v1'],help='Lens profile or create-schema profile; new processes default to rdg-decision-v1')
     p.add_argument('--role',choices=['working','ready','lens'],help='Role for schema --action create')
     p.add_argument('--entity-kind',choices=['requirement','decision','action','canon','context','info','finding','question'],help='Entity type for schema core/add')
@@ -618,17 +646,29 @@ def main():
     require(a.role is None and a.entity_kind is None or a.command=='schema','SCHEMA_SELECTORS_ONLY')
     require(a.history_mode is None or a.command=='history','HISTORY_MODE_ONLY')
     require((a.detail is None and a.include is None and a.limit==25 and a.cursor is None)
-            or a.command in ('open','history'),'READ_OPTIONS_ONLY')
-    require(not a.all_pages or a.command=='open' and a.detail in ('focus','branch'),'READ_ALL_PAGES_ONLY')
+            or a.command in ('open','history','search') or a.command=='lens' and a.format=='markdown' and a.detail is None and a.include is None and a.limit==25,'READ_OPTIONS_ONLY')
+    require(not a.all_pages or a.command=='open' and a.detail in ('focus','branch') or
+            a.command in ('open','lens') and a.format=='markdown','READ_ALL_PAGES_ONLY')
+    require(a.format=='json' or a.command in ('open','lens'),'MARKDOWN_COMMAND')
+    require(a.query is None and a.search_scope=='package' or a.command=='search','SEARCH_OPTIONS_ONLY')
+    require(a.command!='search' or a.query is not None and a.detail is None and a.include is None,
+            'SEARCH_OPTIONS')
+    require(not (a.work_graph or a.include_plan) or a.command=='open' and a.format=='markdown',
+            'MARKDOWN_OPTIONS_ONLY')
     require(a.record_id is None or a.command=='open','READ_RECORD_ID_ONLY')
     require(a.event_id is None or a.command=='history','READ_EVENT_ID_ONLY')
     selected=config(a.context) if a.context else None
     if selected and selected.get('profile') in ('portable','remote','gateway'):
         out=portable_command(a,selected)
-        print(json.dumps(out,ensure_ascii=False,indent=2,default=str))
+        if a.format=='markdown':
+            sys.stdout.write(out['markdown'])
+            if out['page']['nextCursor'] is not None:
+                print('Markdown continuation: '+out['page']['nextCursor'],file=sys.stderr)
+        else:
+            print(json.dumps(out,ensure_ascii=False,indent=2,default=str))
         if a.command=='command' and out.get('saved') is not True:sys.exit(2)
         return
-    require(a.detail not in ('focus','branch') and not a.all_pages,'PORTABLE_CONTEXT_REQUIRED')
+    require(a.detail not in ('focus','branch') and not a.all_pages and a.format=='json' and a.command!='search','PORTABLE_CONTEXT_REQUIRED')
     require(not a.expected_input_binding,'PORTABLE_CONTEXT_REQUIRED')
     require(a.command not in ('preflight','history','locks','resolve','source_snapshot','migration_sources','migration_inspect','recover','cancel_migration','approval_request','approval_read'),'PORTABLE_CONTEXT_REQUIRED')
     require(a.role is None and a.entity_kind is None,'PORTABLE_CONTEXT_REQUIRED')

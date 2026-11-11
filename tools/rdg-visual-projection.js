@@ -504,6 +504,36 @@
           outsideParents.get(m.decisionId).add(group.parentId);
         }
     }
+    if(options.document){
+      const documentRows=[],seen=new Set(),active=new Set();
+      for(const {id,relations,groups} of focusParents.values()){
+        documentRows.push({entityId:id,parentRef:true,entityDepth:0,
+          parentRelations:[...relations].sort(),parentGroups:[...groups].sort()});
+      }
+      const order=options.documentRootId&&structural.has(options.documentRootId)?
+        [options.documentRootId,...roots.filter(id=>id!==options.documentRootId)]:roots;
+      for(const root of order){
+        if(seen.has(root))continue;
+        const stack=[{id:root,depth:0,relation:'root'}];
+        while(stack.length){
+          const row=stack.pop();
+          if(row.exit){active.delete(row.id);continue;}
+          const cycle=active.has(row.id),shared=seen.has(row.id);
+          documentRows.push({entityId:row.id,entityDepth:row.depth,relation:row.relation,
+            via:row.via,parentId:row.parentId,cycle,shared,
+            outsideParentIds:[...(outsideParents.get(row.id)||[])],
+            groupMemberships:membershipsByDecision.get(row.id)||[]});
+          if(shared)continue;
+          seen.add(row.id);active.add(row.id);
+          stack.push({id:row.id,exit:true});
+          const b=bucket(row.id);
+          for(const child of [...b.requirements,...b.decisions,...b.actions].reverse())
+            stack.push({id:child.id,depth:row.depth+1,relation:child.relation,
+              via:child.via,parentId:row.id});
+        }
+      }
+      return {rows:documentRows};
+    }
     const extras=new Map([['context',[]],['info',[]],['evidence',[]],['finding',[]]]);
     for(const entity of visible.values())if(extras.has(entity.kind)&&
         (!query||(entity.title+' '+entity.id+' '+(entity.description||'')).toLocaleLowerCase().includes(query)))
