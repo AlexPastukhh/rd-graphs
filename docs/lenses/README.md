@@ -25,7 +25,9 @@
 | Ключ | Текст | Главная ответственность |
 | --- | --- | --- |
 | clarify | [Достаточно уточнить задачу](methods/clarify.md) | Результат, ограничения, существенные неизвестные |
+| research | [Получить проверенные сведения](methods/research.md) | Вопрос исследования, источники, проверка, достаточность и границы вывода |
 | explore | [Исследовать пространство способов](methods/explore.md) | Разные варианты и последствия до выбора |
+| specify | [Собрать проверяемую постановку](methods/specify.md) | Согласованность scope, сценариев, решений и критериев приёмки |
 | shape | [Построить полезную декомпозицию](methods/shape.md) | Границы, масштаб и существующие identities |
 | preserve | [Сохранить полезный фрагмент работы](methods/preserve.md) | Практическая оценка ценности и объёма записи |
 | decision-analysis | [Разобрать конкретный способ](methods/decision-analysis.md) | Canon, контекст, Findings и Questions |
@@ -37,9 +39,13 @@
 
 Operate и develop остаются специализированными линзами эксплуатации и разработки. Их содержание описано в [общем плане линз](../guides/RDG-LENSES.md). Этот набор охватывает запрошенные первую и вторую фундаментальные группы.
 
+Всего в текущем проекте 19 фундаментальных линз: семь бутстрепа и двенадцать методик. Research и specify добавлены по результату анализа источников и поручению пользователя 2026-11-11; структурные definitions и установленные owners ещё имеют собственные версии.
+
 ## Границы ответственности
 
 Model объясняет смысл типов и критериев сохранения. Preserve помогает применить эти критерии к текущему фрагменту, а shape выбирает полезную структуру. Decision-logic объясняет состояния и отношения, decision-analysis исследует конкретный способ, review проверяет достаточность результата и продолжения работы. Work содержит общий маршрут записи и восстановления, handoff передаёт незавершённую задачу следующей сессии.
+
+Research получает достаточные проверенные сведения, explore сравнивает способы, decision-analysis оценивает один способ. Specify собирает согласованную постановку, shape выбирает масштаб исполняемых задач. Preserve оценивает пользу сохраняемой части и не заменяет содержательную проверку постановки.
 
 DRY оценивает согласованность знания, KISS — оправданность сложности, YAGNI — необходимость работы. Переход между ними определяется обнаруженной проблемой.
 
@@ -54,6 +60,8 @@ DRY оценивает согласованность знания, KISS — о�
 | Две исходные цели RDG, общий результат model и 11 способов | [model](bootstrap/model.md) | [preserve](methods/preserve.md), [shape](methods/shape.md) | [Целевое содержание model](../guides/RDG-LENSES.md#полное-целевое-содержание-model) |
 | C1/C2/C3, цена и масштаб сохранения | [model](bootstrap/model.md#оценить-ценность-фрагмента) | [preserve](methods/preserve.md), [shape](methods/shape.md) | [Критерии ценности](../guides/RDG-ACTIVE-CONTRACT.md#ценность-сохранения-и-масштаб-описания) |
 | Identity, материалы, Context, Findings и Questions | [model](bootstrap/model.md#разобрать-материалы-и-утверждения) | [clarify](methods/clarify.md), [decision-analysis](methods/decision-analysis.md) | [Контекст](../guides/RDG-ACTIVE-CONTRACT.md#контекст-и-canon), [банк](../guides/RDG-ACTIVE-CONTRACT.md#банк-контекстов-процесса), [Findings](../guides/RDG-ACTIVE-CONTRACT.md#файндинги), [Questions](../guides/RDG-ACTIVE-CONTRACT.md#вопросы) |
+| Проверяемое исследование и изменение рекомендации | [orient](bootstrap/orient.md), [model](bootstrap/model.md) | [research](methods/research.md), [explore](methods/explore.md), [decision-analysis](methods/decision-analysis.md) | [Контекст и Canon](../guides/RDG-ACTIVE-CONTRACT.md#контекст-и-canon), [цена работы](../guides/RDG-ACTIVE-CONTRACT.md#цена-работы-и-глубина-планирования) |
+| Согласованная постановка и исполняемые срезы | [model](bootstrap/model.md), [work](bootstrap/work.md) | [specify](methods/specify.md), [shape](methods/shape.md), [clarify](methods/clarify.md) | [Масштаб](../guides/RDG-ACTIVE-CONTRACT.md#ценность-сохранения-и-масштаб-описания), [границы](../guides/RDG-ACTIVE-CONTRACT.md#границы-процесса-и-фундаментальные-требования) |
 | Выбор, completion, актуальность, review и disabled | [decision-logic](bootstrap/decision-logic.md) | [explore](methods/explore.md), [review](methods/review.md) | [Структура и результат](../guides/RDG-ACTIVE-CONTRACT.md#структура-актуальность-и-выполнение), [политики](../guides/RDG-ACTIVE-CONTRACT.md#политики-зависимостей) |
 | Подтверждённый ответ, формальный вопрос и разрешение | [checkpoint](bootstrap/checkpoint.md) | [clarify](methods/clarify.md) | [Questions](../guides/RDG-ACTIVE-CONTRACT.md#вопросы), [checkpoint](../guides/RDG-ACTIVE-CONTRACT.md#checkpoint-перед-существенным-действием) |
 | Вход, публичное API, полнота чтения, запись и recovery | [orient](bootstrap/orient.md), [work](bootstrap/work.md) | [handoff](methods/handoff.md) | [Владельцы и запись](../guides/RDG-ACTIVE-CONTRACT.md#владельцы-и-запись), [вход ИИ](../guides/RDG-AGENT-BOOTSTRAP.md) |
@@ -70,6 +78,24 @@ DRY оценивает согласованность знания, KISS — о�
 Для каждого текста проверить назначение, понятность применения, границы с соседними линзами, полноту существенных правил и соответствие примеров контракту. Собственные предположения исполнителя и фактические ответы пользователя различаются на всех этапах.
 
 После согласования выполняется перевод в граф с сохранением полного текста и адресной карты соответствия. Порядок и требования раскрывает [lens-system](bootstrap/lens-system.md#сохранить-полный-источник-и-карту-соответствия).
+
+## Проверка маршрута и происхождение расширения
+
+[Сквозной разбор текущей задачи](examples/planning-and-solving.md) связывает запрос, исследование, выбор объёма, постановку, реальные изменения и проверки. Он содержит матрицу требований и пограничные случаи. Это проверка применения текстов на одном документальном сценарии; B05 с самостоятельной работой через RDG API остаётся отдельной приёмкой.
+
+Входами расширения стали два предоставленных пользователем транскрипта: transkript_dialoga.md о Ponytail и «Вставленный текст(20261025-161107).txt» о проектировании с агентом. Первый является пересказом, второй не содержит исходника адаптированных автором skills. Их утверждения сопоставлены с первичными [Ponytail](https://github.com/DietrichGebert/ponytail/blob/main/skills/ponytail/SKILL.md), [review](https://github.com/DietrichGebert/ponytail/blob/main/skills/ponytail-review/SKILL.md), [audit](https://github.com/DietrichGebert/ponytail/blob/main/skills/ponytail-audit/SKILL.md) и [debt](https://github.com/DietrichGebert/ponytail/blob/main/skills/ponytail-debt/SKILL.md), просмотренными 2026-11-11. Ссылки main изменяемы; это дата сверки, а не неизменяемый pin.
+
+| Смысл источника | Ответственный текст |
+| --- | --- |
+| Зависимое обсуждение, варианты с основаниями, достаточность вопросов | [clarify](methods/clarify.md#вести-обсуждение-по-зависимостям-вопросов) |
+| Факты из документов, реализаций и экспериментов | [research](methods/research.md) |
+| Связная постановка, единый смысл и проверка сценария | [specify](methods/specify.md) |
+| Сквозной результат и пригодность задачи для исполнения | [shape](methods/shape.md#подготовить-исполняемые-задачи) |
+| Минимальное полное изменение и существующие средства | [kiss](methods/kiss.md#проверить-существующие-средства-до-создания-нового) |
+| Конкретные последствия и доказательства замечаний | [review](methods/review.md#обосновать-существенное-замечание) |
+| Ограничение и повод возврата к trade-off | [yagni](methods/yagni.md#сохранить-сознательное-ограничение) |
+
+Это карта происхождения редакторских расширений. Адресная source-map к будущим Graph IDs строится при переносе по lens-system. Общие принципы не копируются в отдельную ponytail-линзу; новая таксономия Findings, метрика качества по числу строк и обязательный «гриллинг» перед каждой задачей не вводятся.
 
 ## Источники
 
