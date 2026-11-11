@@ -47,7 +47,8 @@
     "docs/lenses/methods/yagni.md",
     "docs/lenses/methods/research.md",
     "docs/lenses/methods/specify.md",
-    "docs/lenses/examples/planning-and-solving.md"
+    "docs/lenses/examples/planning-and-solving.md",
+    "docs/lenses/requirements.md"
   ],
   "immutableArchives": [
     "docs/handoffs/**",
