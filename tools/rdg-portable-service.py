@@ -151,6 +151,30 @@ class Application:
     def catalog(self):
         with self.store.lock(False,create=False):return self._catalog_locked()
 
+    def _lens_catalog_card(self, value):
+        """Project owned Info from this exact visible definition; never a key lookup."""
+        graph, head = value['graph'], value['head']
+        source = {'packageId':head['packageId'], 'identitySpace':graph['identitySpace'],
+                  'packageRevision':head['revision'], 'graphRevision':graph['revision'],
+                  'graphSHA256':self.model.digest(graph)}
+        infos = [n for n in self.kernel.entities(graph).values() if n['kind']=='info']
+        cards = [n for n in infos if 'rdg:lens-catalog' in n.get('tags',[])]
+        contexts = [n for n in infos if 'rdg:lens-workflow' in n.get('tags',[])]
+        result = {'status':'missing', 'purpose':None, 'appliesWhen':None,
+                  'workflow':None, 'source':source}
+        if not cards:return result
+        if len(cards)!=1 or len(contexts)>1 or not cards[0]['description'].strip() or (contexts and (contexts[0]['id']==cards[0]['id'] or not contexts[0]['description'].strip())):
+            result['status']='invalid'
+            return result
+        card=cards[0]
+        result.update(status='available',purpose=card['description'],appliesWhen=card['value'],
+                      sourceRef=self.model.reference(head['packageId'],graph,card['id']))
+        if contexts:
+            context=contexts[0]
+            result['workflow']={'text':context['value'],'explanation':context['description'],
+                'sourceRef':self.model.reference(head['packageId'],graph,context['id'])}
+        return result
+
     def _catalog_locked(self):
         """Read the catalog while the caller holds the namespace barrier."""
         rows=[]
@@ -159,10 +183,13 @@ class Application:
             except ValueError:continue
             result={k:row[k] for k in ('path','packageId','health')}
             if row.get('head'):result.update({k:row['head'].get(k) for k in ('role','identitySpace','revision','lensKey')})
+            if row.get('head',{}).get('role')=='lens':
+                result['lensCard']={'status':'unavailable','purpose':None,'appliesWhen':None,'workflow':None,'source':None}
             try:
                 if row['health']=='metadata-verified':
                     value=self.store.read(row['packageId'],include_plan=False,include_layouts=False)
                     self.kernel.validate_role(value['graph'],value['head']['role'])
+                    if value['head']['role']=='lens':result['lensCard']=self._lens_catalog_card(value)
                     result.update(title=value['graph']['title'],coreModel=value['graph']['coreModel'],recommendationPackageIds=value['graph'].get('recommendationPackageIds',[]),workGraphs=value['graph'].get('workGraphs',[]),detached=self.kernel.detached_components(value['graph']))
             except (ValueError,OSError) as exc:result.update(health='unhealthy',error=str(exc))
             rows.append(result)
@@ -172,7 +199,9 @@ class Application:
             try:self.authorize(None,['folder.write'],relative);manageable=True
             except ValueError:manageable=False
             if manageable or any(p==relative or p.startswith(relative+'/') for p in visible):folders.append({'path':relative,'manageable':manageable})
-        return {'schemaVersion':1,'namespaceId':self.store.namespace_id,'packages':rows,'folders':folders,'locationSource':'filesystem'}
+        result={'schemaVersion':1,'namespaceId':self.store.namespace_id,'packages':rows,'folders':folders,'locationSource':'filesystem','complete':True}
+        result['catalogSHA256']=self.model.digest(result)
+        return result
 
     def dependencies(self, ident):
         row = self.snapshot(ident, layouts=False)
@@ -641,6 +670,17 @@ class Application:
         with self.store.lock(False,create=False):return self._schema(op,ident,node_id,source_id,command,source_path,source_key,core_model=core_model,role=role,entity_kind=entity_kind)
 
     def _schema(self,op,ident=None,node_id=None,source_id=None,command=None,source_path=None,source_key=None,*,core_model=None,role=None,entity_kind=None):
+        if op == 'catalog':
+            self.check(all(v is None for v in (ident,node_id,source_id,command,source_path,source_key,core_model,role,entity_kind)), 'CATALOG_SCHEMA_SELECTORS')
+            return {'method':'catalog','schemaVersion':1,'pagination':False,'complete':True,
+                'snapshot':'catalogSHA256 binds the complete visible response under the namespace read barrier',
+                'lensCard':{'status':['available','missing','invalid','unavailable'],
+                    'source':'exact package and graph revisions/SHA256; sourceRef identifies the owning Info',
+                    'authoring':{'kind':'info','tags':['rdg:lens-catalog'],
+                        'description':'purpose','value':'free-text applicability triggers'},
+                    'workflowAuthoring':{'kind':'info','tags':['rdg:lens-workflow'],
+                        'description':'when/how explanation','value':'workflow context text'},
+                    'rules':'At most one Info per role. Use existing add/edit operations. No automatic execution or draft-key fallback.'}}
         if op == 'search':
             self.check(all(v is None for v in (ident,node_id,source_id,command,source_path,source_key,core_model,role,entity_kind)), 'SEARCH_SCHEMA_SELECTORS')
             return SEARCH.schema()

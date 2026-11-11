@@ -37,6 +37,96 @@ class APIDiscovery(unittest.TestCase):
     def form(self,ident,command,node='R1',**selectors):
         return self.app().call({'method':'schema','op':'core','packageId':ident,'command':command,'nodeId':node,**selectors})
 
+
+    def catalog_info(self, ident, purpose='Choose a useful method', triggers='When a fact is unknown', tags=None):
+        request=self.app().call({'method':'schema','op':'paper_edit','packageId':ident,
+            'command':'add','nodeId':'R1','entityKind':'info'})['request']
+        entity=request['data']['entity']
+        entity.update(title='Catalog guidance',description=purpose,value=triggers,
+                      tags=tags or ['rdg:lens-catalog'])
+        request['note']='Author catalog content in the owning definition'
+        before=self.sources()
+        preview=self.app().call({'method':'preflight','request':request})
+        self.assertEqual(before,self.sources())
+        self.app().call({'method':'apply','request':request,'expectedInputBinding':preview['inputBinding']})
+        return entity['id']
+
+    def test_lens_catalog_returns_owned_card_and_complete_snapshot_without_writes(self):
+        ident=self.create('lens');app=self.app()
+        node=self.catalog_info(ident)
+        self.catalog_info(ident,'Before choosing a method','Research stage of work',['rdg:lens-workflow'])
+        before=self.sources();catalog=app.call({'method':'catalog'})
+        self.assertTrue(catalog['complete']);self.assertEqual(len(catalog['catalogSHA256']),64)
+        row=next(x for x in catalog['packages'] if x['packageId']==ident)
+        card=row['lensCard'];self.assertEqual(card['status'],'available')
+        self.assertEqual(card['purpose'],'Choose a useful method')
+        self.assertEqual(card['appliesWhen'],'When a fact is unknown')
+        graph=app.read(ident)['graph']
+        self.assertEqual(card['source']['graphSHA256'],T.P.digest(graph))
+        self.assertEqual(card['source']['graphRevision'],graph['revision'])
+        self.assertEqual(card['sourceRef']['nodeId'],node)
+        self.assertEqual(card['workflow']['text'],'Research stage of work')
+        with patch.object(A,'portable_application',return_value=app):
+            listed=A.portable_command(SimpleNamespace(command='lenses',package_id=None,
+                expected_input_binding=None,format='json'),{'profile':'portable'})
+        self.assertEqual(listed['lenses'][0]['lensCard'],card)
+        self.assertEqual(listed['catalogSHA256'],catalog['catalogSHA256'])
+        self.assertEqual(self.sources(),before)
+
+    def test_lens_catalog_missing_and_ambiguous_metadata_never_borrows_drafts(self):
+        ident=self.create('lens');app=self.app()
+        before=self.sources()
+        card=app.call({'method':'catalog'})['packages'][0]['lensCard']
+        self.assertEqual(card['status'],'missing');self.assertIsNone(card['purpose'])
+        self.assertEqual(self.sources(),before)
+        self.catalog_info(ident);self.catalog_info(ident,'Another purpose','Different conditions')
+        before=self.sources();card=app.call({'method':'catalog'})['packages'][0]['lensCard']
+        self.assertEqual(card['status'],'invalid');self.assertIsNone(card['purpose'])
+        self.assertEqual(self.sources(),before)
+
+    def test_lens_catalog_schema_and_changed_revision_are_readable(self):
+        ident=self.create('lens');app=self.app()
+        form=app.call({'method':'schema','op':'catalog'})
+        self.assertFalse(form['pagination'])
+        self.assertEqual(form['lensCard']['authoring']['tags'],['rdg:lens-catalog'])
+        with self.assertRaisesRegex(ValueError,'CATALOG_SCHEMA_SELECTORS'):
+            app.call({'method':'schema','op':'catalog','packageId':ident})
+        old=app.call({'method':'catalog'})
+        self.catalog_info(ident,'Explain intent','When intent is unclear')
+        new=app.call({'method':'catalog'})
+        self.assertNotEqual(old['catalogSHA256'],new['catalogSHA256'])
+        self.assertGreater(new['packages'][0]['lensCard']['source']['graphRevision'],
+                           old['packages'][0]['lensCard']['source']['graphRevision'])
+
+
+    def test_catalog_authorization_precedes_card_projection_and_working_owners_stay_unchanged(self):
+        ident=self.create('lens');app=self.app()
+        self.catalog_info(ident,'Private purpose','Private trigger')
+        original=app.authorize
+        def authorize(package,permissions,path=None):
+            if package==ident:raise ValueError('Denied by fixture grant')
+            return original(package,permissions,path)
+        before=self.sources()
+        with patch.object(app,'authorize',side_effect=authorize), patch.object(app,'_lens_catalog_card',wraps=app._lens_catalog_card) as project:
+            listed=app.call({'method':'catalog'})
+            self.assertEqual(listed['packages'],[])
+            project.assert_not_called()
+        self.assertEqual(self.sources(),before)
+        working=self.create()
+        row=next(r for r in app.call({'method':'catalog'})['packages'] if r['packageId']==working)
+        self.assertNotIn('lensCard',row)
+
+    def test_legacy_lens_with_a_known_key_reports_missing_without_importing_source_catalog(self):
+        app=self.app()
+        request=self.req('create',path='lens/legacy-catalog',role='lens',lensKey='work',
+            title='Legacy work definition',graph=T.PortableApplication.graph(self,'legacy-catalog',paper=True))
+        ident=app.request(request)['packages'][0]['packageId']
+        before=self.sources()
+        row=next(r for r in app.call({'method':'catalog'})['packages'] if r['packageId']==ident)
+        self.assertEqual(row['lensCard']['status'],'missing')
+        self.assertIsNone(row['lensCard']['purpose'])
+        self.assertEqual(self.sources(),before)
+
     def test_create_selectors_are_explicit_and_legacy_schema_is_preserved(self):
         app=self.app();before=self.sources()
         legacy=app.call({'method':'schema','op':'create'})

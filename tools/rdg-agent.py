@@ -491,7 +491,9 @@ def portable_command(args,c):
     if args.command=='migration_inspect':
         require(args.source_key,'SOURCE_KEY_REQUIRED');return app.call({'method':'migration_inspect','sourceKey':args.source_key})
     if args.command=='lenses':
-        return {'lenses':[r for r in app.catalog()['packages'] if r.get('role')=='lens'],'writes':0}
+        catalog=app.catalog()
+        return {'lenses':[r for r in catalog['packages'] if r.get('role')=='lens'],'writes':0,
+                **{k:catalog[k] for k in ('namespaceId','complete','catalogSHA256') if k in catalog}}
     if args.command=='lens':
         require(args.lens and len(args.lens)==1,'ONE_LENS_REQUIRED')
         rows=[r for r in app.catalog()['packages'] if r.get('role')=='lens' and r.get('lensKey')==args.lens[0] and (not args.model_profile or r.get('coreModel')==args.model_profile)]
