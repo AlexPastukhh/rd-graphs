@@ -1,5 +1,5 @@
 # Owner-reviewed source-only shared Release Impact check.
-# Central validator comes from an immutable accepted fortis-container commit.
+# Shared public validator pinned to a reviewed immutable commit; Fortis contract remains in fortis-container.
 name: Fortis Release Impact
 on:
   pull_request:
@@ -26,4 +26,4 @@ jobs:
         with:
           python-version: "3.11"
       - name: Validate catalog and PR Release Impact
-        uses: AlexPastukhh/fortis-container/.github/actions/release-impact-v1@6bde4c84b9625719bc7f87b1397758636d6c85c2
+        uses: AlexPastukhh/fortis-release-impact-action@8c9abefdfbe4699aae97b9363a2a66c596680e62
