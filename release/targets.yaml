@@ -1,0 +1,98 @@
+# Release planning source catalog v1. Not evidence of any live deployment.
+schemaVersion: 1
+repository: rd-graphs
+buildUnits:
+  - id: rdg-personal-server-image
+    artifactType: docker-image
+    recipe: deploy/rdg-server/Dockerfile
+    inputs:
+      - tools/rdg-windows-lock.py
+      - tools/rdg-authority.py
+      - tools/rdg-transaction-io.py
+      - tools/rdg-portable.py
+      - tools/rdg-portable-model.py
+      - tools/rdg-portable-store.py
+      - tools/rdg-portable-service.py
+      - tools/rdg-projection-cache.py
+      - tools/rdg-compact-read.py
+      - tools/rdg-scoped-read.py
+      - tools/rdg-structured-markdown.py
+      - tools/rdg-text-search.py
+      - tools/rdg-batch.py
+      - tools/rdg-model-profiles.py
+      - tools/rdg-core-model.py
+      - tools/rdg-decision-model.py
+      - tools/rdg-history-view.py
+      - tools/rdg-analysis.py
+      - tools/rdg-findings.py
+      - tools/rdg-questions.py
+      - tools/rdg-dependency-policies.py
+      - tools/rdg-recommendations.py
+      - tools/rdg-package-transfer.py
+      - tools/rdg-legacy-migration.py
+      - tools/rdg-workflow-commands.py
+      - tools/rdg-loopback-helper.py
+      - tools/rdg-server.py
+      - tools/rdg_server_entry.py
+      - tools/rdg-remote-client.py
+      - tools/rdg-gateway.py
+      - tools/rdg_gateway_entry.py
+      - tools/rdg-server-setup.py
+      - tools/requirements-server.txt
+      - tools/rd-graph-viewer.user.js
+      - tools/rdg-layout-cli.cjs
+      - tools/rdg-layout-core.js
+      - tools/rdg-visual-projection.js
+      - tools/rdg-server-package.py
+      - tools/rdg-preview-package.py
+      - tools/rdg-ci.py
+      - tools/contracts/**
+      - deploy/rdg-server/**
+      - docs/guides/RDG-OPERATIONS.md
+targets:
+  - id: rdg-server
+    deployment:
+      kind: docker-compose-service
+      procedure: docs/guides/RDG-OPERATIONS.md
+      environments:
+        - production
+    verification:
+      - rdg-ci-package-ready
+      - image-digest-proof
+      - rdg-healthz
+    buildUnit: rdg-personal-server-image
+  - id: rdg-api-gateway
+    deployment:
+      kind: docker-compose-service
+      procedure: docs/guides/RDG-OPERATIONS.md
+      environments:
+        - production
+    verification:
+      - rdg-ci-package-ready
+      - image-digest-proof
+      - rdg-gateway-healthz
+    buildUnit: rdg-personal-server-image
+  - id: rdg-windows-operators
+    deployment:
+      kind: windows-source
+      procedure: docs/guides/RDG-OPERATIONS.md
+      environments:
+        - windows-owner
+    verification:
+      - owner-exact-sha-mirror
+      - powershell-operator-validation
+    inputs:
+      - deploy/rdg-server/*.ps1
+noDeploymentPaths:
+  - tests/**
+  - docs/**
+  - graphs/**
+  - kit/**
+  - plans/**
+  - AGENTS.md
+  - README.md
+  - .github/**
+  - .gitignore
+  - .gitattributes
+  - BACKLOG-IMPROVEMENTS.md
+  - POTENTIAL-IMPROVEMENTS.md
