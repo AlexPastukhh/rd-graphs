@@ -3,40 +3,208 @@
   "entries": [
     {
       "key": "orient",
-      "title": "Войти в работу через RDG",
-      "purpose": "Получить проверенный контекст и выбрать подходящие инструкции",
-      "appliesWhen": "Перед содержательным этапом, при смене задачи, owner или после потери контекста.",
-      "definition": "orient.json",
+      "title": "Orient — войти в реальную работу",
+      "purpose": "Исполнитель располагает проверенным контекстом и может обоснованно начать или продолжить текущую работу",
+      "appliesWhen": "## Когда оценить применение\n\n- Начинается содержательная работа или нужно продолжить её после потери контекста.\n- Изменились задача, процесс, профиль, область или существенные источники.\n- Непонятно, откуда начать чтение и какие инструкции сейчас действуют.\n\nOrient подготавливает вход в [цикл work](work.md#общий-цикл-решения-задачи). После восстановления контекста методики выбираются уже относительно конкретной ближайшей работы.",
+      "definition": "orient-decision.json",
       "paperOnly": true,
       "companions": [
         "clarify",
         "shape"
       ],
       "profileDefinitions": {
-        "rdg-decision-v1": "orient-decision.json"
-      }
+        "rdg-decision-v1": "orient-decision.json",
+        "rdg-core-v1": "orient.json"
+      },
+      "sourceRef": {
+        "path": "docs/lenses/bootstrap/orient.md",
+        "sha256": "1fb21b4bd652f2541d425fddb15db09844f442fc45081a51db9e2086d1f60617",
+        "gitCommit": "9f81f1e987b65cdc79326497d05c78a23d7fef91"
+      },
+      "sourceMapInfoId": "LS-MAP-ORIENT"
+    },
+    {
+      "key": "model",
+      "title": "Model — выбрать форму сохранения и понять устройство RDG",
+      "purpose": "Информация корректно сохранена в RDG либо обоснованно оставлена вне RDG",
+      "appliesWhen": "## Когда оценить применение\n\n- Неясно, какую роль имеет информация и в какой форме её уместно сохранить.\n- Нужно проверить identity, основания, границы области или смысл сущностей и связей.\n- Возникло сомнение, полезна ли новая запись либо достаточно существующего содержания.\n\nОбъяснение модели поддерживает [сохранение и продолжение в work](work.md#сохранить-полезное-и-выбрать-продолжение); практическую оценку сохранения даёт preserve. При первом бутстрепе изучается весь текст.",
+      "paperOnly": true,
+      "companions": [
+        "shape",
+        "decision-logic",
+        "plan-history",
+        "lens-system"
+      ],
+      "profileDefinitions": {
+        "rdg-decision-v1": "model-decision.json"
+      },
+      "sourceRef": {
+        "path": "docs/lenses/bootstrap/model.md",
+        "sha256": "932f733ed8d7f5c5a56ae6f37d9b5ef14fa017c28bd4de01a3439789a8be447c",
+        "gitCommit": "9f81f1e987b65cdc79326497d05c78a23d7fef91"
+      },
+      "sourceMapInfoId": "LS-MAP-MODEL"
+    },
+    {
+      "key": "decision-logic",
+      "title": "Decision-logic — понять выбор, результат и актуальность",
+      "purpose": "Основания, выбор, обязательства, результат и актуальность решений понимаются и изменяются с правильным смыслом",
+      "appliesWhen": "## Когда оценить применение\n\n- Предстоит выбрать, отменить или пересмотреть способ и понять последствия для продолжения.\n- Нужно различить обязательную работу, бумажный вариант, подтверждённый результат, review и disabled.\n- Общая сущность имеет несколько оснований или меняется действительность одного из них.\n\nКонтекст применения — [выражение метода в work](work.md#выразить-метод-обычными-r-decisions-и-actions) и проверка действующих обязательств перед исполнением. Методика анализа конкретного способа находится в decision-analysis.",
+      "paperOnly": true,
+      "companions": [
+        "explore",
+        "review",
+        "model",
+        "plan-history"
+      ],
+      "profileDefinitions": {
+        "rdg-decision-v1": "decision-logic-decision.json"
+      },
+      "sourceRef": {
+        "path": "docs/lenses/bootstrap/decision-logic.md",
+        "sha256": "e2e1b3d32445085f33b599bec6dc16b86e32bca52190e1aa8fee7714de0be137",
+        "gitCommit": "0f5889d3143b0fbc90e8c86371bfb713452fb704"
+      },
+      "sourceMapInfoId": "LS-MAP-DECISION-LOGIC"
+    },
+    {
+      "key": "plan-history",
+      "title": "Plan-history — различить предполагаемый порядок и совершившиеся события",
+      "purpose": "Предполагаемый порядок и действительные события работы представлены и поняты без смешения их смысла",
+      "appliesWhen": "## Когда оценить применение\n\n- Полезно определить порядок, даты, развилки или общую часть предполагаемой работы.\n- Нужно организовать задачу над самим процессом либо понять роль внешнего Action.\n- Требуется восстановить реальные события и отличить их от намерений и текущего состояния.\n\nПланирование поддерживает [подготовку ближайшей работы](work.md#подготовить-постановку-и-ближайшую-работу), а History — проверку произошедшего. Поиск этой линзы не означает, что каждой задаче обязательно нужен временной Plan.",
+      "paperOnly": true,
+      "companions": [
+        "work",
+        "review",
+        "model"
+      ],
+      "profileDefinitions": {
+        "rdg-decision-v1": "plan-history-decision.json"
+      },
+      "sourceRef": {
+        "path": "docs/lenses/bootstrap/plan-history.md",
+        "sha256": "3072eee8c8b265a571bf00b691abb0b19e361f2b8c3ff50a023bc9af84869831",
+        "gitCommit": "381145fca1b7843f4c2b4380c39208e2c0900b17"
+      },
+      "sourceMapInfoId": "LS-MAP-PLAN-HISTORY"
+    },
+    {
+      "key": "work",
+      "title": "Work — выбрать метод и довести задачу до проверенного результата",
+      "purpose": "В оговорённой области получен проверенный полезный результат обоснованным способом и определено достаточное продолжение",
+      "appliesWhen": "## Когда оценить применение\n\n- Нужно понять подходящий способ решения задачи и следующий полезный шаг.\n- Работа перешла от обсуждения к исследованию, постановке, исполнению или проверке.\n- Появились новые основания, проблема либо дорогое продолжение, и прежнюю стратегию следует оценить заново.\n\nWork даёт общий контекст выбора других линз. К нему можно вернуться при неясном продолжении; известную подходящую методику допускается использовать сразу.",
+      "definition": "work-decision.json",
+      "paperOnly": false,
+      "companions": [
+        "clarify",
+        "explore",
+        "review",
+        "handoff"
+      ],
+      "profileDefinitions": {
+        "rdg-decision-v1": "work-decision.json",
+        "rdg-core-v1": "work.json"
+      },
+      "sourceRef": {
+        "path": "docs/lenses/bootstrap/work.md",
+        "sha256": "3892aed1a6b2a5bca3e153e13863eaa9d2411d74ab2412bb55cd10b2a6d0e527",
+        "gitCommit": "8f0ad5be997afde088f9d6fbb8e3cd27f8220c0d"
+      },
+      "sourceMapInfoId": "LS-MAP-WORK"
+    },
+    {
+      "key": "checkpoint",
+      "title": "Checkpoint — провести соразмерную самопроверку",
+      "purpose": "Существенное намерение проверено по основаниям и последствиям, а допустимый следующий шаг понятен",
+      "appliesWhen": "## Когда оценить применение\n\n- Предстоит существенный самостоятельный пересмотр или есть серьёзная неясность перед действием.\n- Готовится формальный запрос ответов пользователя.\n- Требуется запрос разрешения на конкретное защищённое исполнение.\n\nПроверка соразмерна последствиям и применяется по действующему контракту в [исполнении и пересмотре work](work.md#выполнить-и-проверить-результат). Обычный разговор не превращается в цепочку обязательных checkpoint.",
+      "definition": "checkpoint-decision.json",
+      "paperOnly": true,
+      "companions": [
+        "review",
+        "preserve",
+        "explore",
+        "clarify"
+      ],
+      "sourceRefs": [
+        "docs/handoffs/candidate-prework-rdg-context-checkpoints-dependencies-approval-v9.md"
+      ],
+      "profileDefinitions": {
+        "rdg-decision-v1": "checkpoint-decision.json",
+        "rdg-core-v1": "checkpoint.json"
+      },
+      "sourceRef": {
+        "path": "docs/lenses/bootstrap/checkpoint.md",
+        "sha256": "c142bc3677a6558c67e44ac7828886988154320441cdf592463cf33c81087499",
+        "gitCommit": "381145fca1b7843f4c2b4380c39208e2c0900b17"
+      },
+      "sourceMapInfoId": "LS-MAP-CHECKPOINT"
+    },
+    {
+      "key": "lens-system",
+      "title": "Lens-system — понимать, создавать и использовать линзы",
+      "purpose": "Исполнитель понимает назначение и устройство линз и может обоснованно найти, использовать, создать или проверить нужную линзу в текущей задаче, сохраняя её смысл, происхождение и рабочий контекст",
+      "appliesWhen": "## Когда оценить применение\n\n- Нужно обнаружить подходящую линзу, понять её триггеры, источник, версию или объём использования.\n- Получена рекомендация, указание пользователя либо шаг метода требует обращения к другой линзе.\n- Требуется перейти между namespaces, вернуться к задаче или разобраться с недоступным определением.\n- Нужно создать или пересмотреть линзу, проверить её качество либо преобразовать skill, инструкцию или другую методику в представление RDG.\n\nЭта линза объясняет семантику линз и работу с их определениями. Содержательный выбор методики для предметной задачи опирается на [общую стратегию work](work.md#общий-цикл-решения-задачи) и реальные условия текущего процесса.",
+      "paperOnly": true,
+      "companions": [
+        "orient",
+        "model",
+        "review"
+      ],
+      "profileDefinitions": {
+        "rdg-decision-v1": "lens-system-decision.json"
+      },
+      "sourceRef": {
+        "path": "docs/lenses/bootstrap/lens-system.md",
+        "sha256": "233bd55ccc50b9c9d5d000e5bd5f0450efe7e8d39f8b863ee2689e3b86800f03",
+        "gitCommit": "8f0ad5be997afde088f9d6fbb8e3cd27f8220c0d"
+      },
+      "sourceMapInfoId": "LS-MAP-LENS-SYSTEM"
     },
     {
       "key": "clarify",
-      "title": "Уточнить цели и контекст",
-      "purpose": "Иметь достаточно уточнённые требования и данные для следующего содержательного шага",
-      "appliesWhen": "Перед построением способов, при неоднозначной задаче или изменении исходных условий.",
-      "definition": "clarify.json",
+      "title": "Clarify — достаточно уточнить задачу для полезного следующего шага",
+      "purpose": "Задача и её существенные условия поняты достаточно для следующего полезного шага, а влияние неизвестных явно",
+      "appliesWhen": "## Когда оценить применение\n\n- Ожидаемый результат, получатель пользы, ограничения или достаточность задачи ещё неясны.\n- Ответ на корневой вопрос меняет следующие решения; полезно углубляющее обсуждение с вариантами и основаниями.\n- Есть несовместимые ожидания или существенный выбор, для которого нужен источник пользовательского намерения.\n\nЭто уместно на шаге [уточнения результата в work](../bootstrap/work.md#уточнить-результат-и-существенные-вопросы). Проверяемый неизвестный факт может направить в research вместо дополнительного опроса пользователя.",
+      "definition": "clarify-decision.json",
       "paperOnly": true,
       "companions": [
         "shape",
         "explore"
       ],
       "profileDefinitions": {
-        "rdg-decision-v1": "clarify-decision.json"
-      }
+        "rdg-decision-v1": "clarify-decision.json",
+        "rdg-core-v1": "clarify.json"
+      },
+      "sourceRef": {
+        "path": "docs/lenses/methods/clarify.md",
+        "sha256": "0d92968ef3d689ae94a3d5f48b4c3e16e39bdd308ec5b3f0101bcea69fafdd19",
+        "gitCommit": "8f0ad5be997afde088f9d6fbb8e3cd27f8220c0d"
+      },
+      "sourceMapInfoId": "LS-MAP-CLARIFY"
+    },
+    {
+      "key": "research",
+      "title": "Research — получить достаточные проверенные сведения",
+      "purpose": "Для существенного вопроса получен достаточный обоснованный ответ либо установлен допускаемый исходной целью предел знания с влиянием на продолжение",
+      "appliesWhen": "## Когда оценить применение\n\n- Существенный вывод зависит от непроверенного факта, обещанной возможности или поведения реализации.\n- Документы, наблюдения или версии источников противоречат друг другу.\n- Нужны сведения из реального примера или эксперимента, способные изменить решение.\n\nКонтекст — [получение оснований в work](../bootstrap/work.md#получить-основания-и-сравнить-способы). Если достаточный проверенный ответ уже доступен, его можно использовать без нового исследования.",
+      "paperOnly": true,
+      "companions": [],
+      "profileDefinitions": {
+        "rdg-decision-v1": "research-decision.json"
+      },
+      "sourceRef": {
+        "path": "docs/lenses/methods/research.md",
+        "sha256": "c58041b308b9dfa8de53eb4cfb8ffa2b89898b31f1df9dc51e653483787fb718",
+        "gitCommit": "0082baffb6eb7c58f3052b3135a3761b4a84bf35"
+      },
+      "sourceMapInfoId": "LS-MAP-RESEARCH"
     },
     {
       "key": "explore",
-      "title": "Исследовать способы на бумаге",
-      "purpose": "Построить пространство вариантов и оснований выбора до принятия и исполнения",
-      "appliesWhen": "При поиске способа, разбиения на подцели и при необходимости пересмотреть upstream.",
-      "definition": "explore.json",
+      "title": "Explore — исследовать пространство способов до выбора",
+      "purpose": "Существенно разные способы и их последствия исследованы достаточно для обоснованного выбора или следующей проверки",
+      "appliesWhen": "## Когда оценить применение\n\n- Есть существенно разные способы и ещё недостаточно оснований для выбора.\n- Нужно понять последствия перспективного варианта, включая ещё не раскрытое продолжение.\n- Прежний подход перестал устраивать либо сильный вариант требует пересмотра исходных условий.\n- Общий R или Decision поддерживает несколько целей и локальное сравнение может исказить пользу или цену изменения.\n\nExplore помогает на шаге [сравнения способов в work](../bootstrap/work.md#получить-основания-и-сравнить-способы). Один неизвестный факт можно сначала разрешить через research; анализ уже определённого Decision раскрывает decision-analysis.",
+      "definition": "explore-decision.json",
       "paperOnly": true,
       "companions": [
         "clarify",
@@ -44,15 +212,39 @@
         "review"
       ],
       "profileDefinitions": {
-        "rdg-decision-v1": "explore-decision.json"
-      }
+        "rdg-decision-v1": "explore-decision.json",
+        "rdg-core-v1": "explore.json"
+      },
+      "sourceRef": {
+        "path": "docs/lenses/methods/explore.md",
+        "sha256": "48f2f78b43914e1621f1668da82083673ab2107a2fb37ec5266aafe0d45346d4",
+        "gitCommit": "381145fca1b7843f4c2b4380c39208e2c0900b17"
+      },
+      "sourceMapInfoId": "LS-MAP-EXPLORE"
+    },
+    {
+      "key": "specify",
+      "title": "Specify — собрать согласованную проверяемую постановку",
+      "purpose": "Постановка соответствует действующей задаче, внутренне согласована и достаточна для исполнения и проверки в своём scope",
+      "appliesWhen": "## Когда оценить применение\n\n- Цели, ответы и решения уже есть, но остаются разрозненными или противоречивыми.\n- Исполнитель вынужден угадывать существенное поведение, границу этапа или приёмку.\n- Нужно подготовить задачу, этап либо эксперимент с достаточными входами, выходами и условиями.\n\nЭто часть [подготовки постановки в work](../bootstrap/work.md#подготовить-постановку-и-ближайшую-работу). Достаточное существующее ТЗ используется адресно; объём определяется текущей работой.",
+      "paperOnly": true,
+      "companions": [],
+      "profileDefinitions": {
+        "rdg-decision-v1": "specify-decision.json"
+      },
+      "sourceRef": {
+        "path": "docs/lenses/methods/specify.md",
+        "sha256": "1745d4c96b76ac095bead55982812501a5629d715df2821a1b25f4c6c0ae2bc1",
+        "gitCommit": "8f0ad5be997afde088f9d6fbb8e3cd27f8220c0d"
+      },
+      "sourceMapInfoId": "LS-MAP-SPECIFY"
     },
     {
       "key": "shape",
-      "title": "Решить, какие блоки создавать",
-      "purpose": "Выделять оправданные R/A без дублирования и произвольного дробления",
-      "appliesWhen": "При добавлении блока, разбиении цели или сохранении исследования.",
-      "definition": "shape.json",
+      "title": "Shape — построить полезную декомпозицию",
+      "purpose": "Границы и масштаб структуры работы помогают рассуждать, исполнять, проверять и продолжать задачу с достаточным контекстом",
+      "appliesWhen": "## Когда оценить применение\n\n- Нужно выбрать границы процесса и полезную глубину декомпозиции.\n- Неясно, достаточно ли одного Action или нужны самостоятельные требования, способы и задачи.\n- Требуется выделить проверяемый сквозной результат и сохранить общие элементы без копий.\n\nShape поддерживает [подготовку ближайшей работы в work](../bootstrap/work.md#подготовить-постановку-и-ближайшую-работу). Затруднение в самой потребности возвращает к clarify, а непроверенный факт — к research.",
+      "definition": "shape-decision.json",
       "paperOnly": true,
       "companions": [
         "clarify",
@@ -60,15 +252,22 @@
         "preserve"
       ],
       "profileDefinitions": {
-        "rdg-decision-v1": "shape-decision.json"
-      }
+        "rdg-decision-v1": "shape-decision.json",
+        "rdg-core-v1": "shape.json"
+      },
+      "sourceRef": {
+        "path": "docs/lenses/methods/shape.md",
+        "sha256": "a1f756ee7ceff840f87be39527f4c5710a4680810dbd4af8216087d2b2d6364e",
+        "gitCommit": "0f5889d3143b0fbc90e8c86371bfb713452fb704"
+      },
+      "sourceMapInfoId": "LS-MAP-SHAPE"
     },
     {
       "key": "preserve",
-      "title": "Обосновать сохранение: (C1 OR C2) AND C3",
-      "purpose": "Обосновать сохранение смыслового блока: содержательное решение либо ценная декомпозиция вместе с оправданной будущей ценностью.",
-      "appliesWhen": "Перед решением, наносить ли конкретный содержательный фрагмент на бумагу вообще.",
-      "definition": "preserve.json",
+      "title": "Preserve — сохранить полезный фрагмент работы",
+      "purpose": "Объём сохраняемого фрагмента обоснован его будущей пользой и достаточностью для продолжения",
+      "appliesWhen": "## Когда оценить применение\n\n- Получен вывод или фрагмент работы, который может понадобиться при продолжении.\n- Нужно выбрать объём новой записи, дополнения, ссылки или обоснованного пропуска.\n- Сохранение и поддержка сведений начинают стоить больше ожидаемой пользы.\n\nPreserve применяется при [сохранении результата в work](../bootstrap/work.md#сохранить-полезное-и-выбрать-продолжение). Вопрос о необходимости предметной функции относится к YAGNI, а смысл типов — к model.",
+      "definition": "preserve-decision.json",
       "paperOnly": true,
       "companions": [
         "shape",
@@ -80,32 +279,39 @@
       ],
       "sourceRequirement": "WR-22",
       "profileDefinitions": {
-        "rdg-decision-v1": "preserve-decision.json"
-      }
+        "rdg-decision-v1": "preserve-decision.json",
+        "rdg-core-v1": "preserve.json"
+      },
+      "sourceRef": {
+        "path": "docs/lenses/methods/preserve.md",
+        "sha256": "703147332f4dbde1e039232f6ab1bb854f1bbb5c5fbdf6b922399db968cf3c7c",
+        "gitCommit": "0f5889d3143b0fbc90e8c86371bfb713452fb704"
+      },
+      "sourceMapInfoId": "LS-MAP-PRESERVE"
     },
     {
-      "key": "work",
-      "title": "Выбрать и выполнить разрешённую работу",
-      "purpose": "Перейти от рассмотренного способа к проверенному результату с настоящей историей",
-      "appliesWhen": "Когда задача требует выбора, планирования или фактического выполнения; не для одного построения на бумаге.",
-      "definition": "work.json",
-      "paperOnly": false,
-      "companions": [
-        "clarify",
-        "explore",
-        "review",
-        "handoff"
-      ],
+      "key": "decision-analysis",
+      "title": "Decision-analysis — оценить конкретный способ по его основаниям",
+      "purpose": "Конкретный способ оценён по существенным основаниям, а выводы и пределы доказанного понятны",
+      "appliesWhen": "## Когда оценить применение\n\n- Требуется содержательно оценить конкретный непринятый или выбранный Decision.\n- Нужно сопоставить теорию, факты, основания за и против, Findings и существенные Questions.\n- Способ поддерживает несколько R либо пересматривается необходимость требования и нужно понять общий эффект изменения.\n- Новый источник или условие способны изменить жизнеспособность определённого способа.\n\nМесто в стратегии — [оценка способов в work](../bootstrap/work.md#получить-основания-и-сравнить-способы). Если сначала нужно найти сами варианты, уместен explore; для недостающего факта — research.",
+      "paperOnly": true,
+      "companions": [],
       "profileDefinitions": {
-        "rdg-decision-v1": "work-decision.json"
-      }
+        "rdg-decision-v1": "decision-analysis-decision.json"
+      },
+      "sourceRef": {
+        "path": "docs/lenses/methods/decision-analysis.md",
+        "sha256": "86cb0912f50f7935256dcf3f3744190db68ea8acf9b649b588e9853d9ebfac7d",
+        "gitCommit": "8f0ad5be997afde088f9d6fbb8e3cd27f8220c0d"
+      },
+      "sourceMapInfoId": "LS-MAP-DECISION-ANALYSIS"
     },
     {
       "key": "review",
-      "title": "Проверить решение, зависимости и слабые места",
-      "purpose": "Найти содержательные пробелы и проверить последствия изменений без ложных verdicts",
-      "appliesWhen": "Перед принятием способа, после изменения upstream, при проверке результата и итоговом аудите.",
-      "definition": "review.json",
+      "title": "Review — проверить решение, результат и дальнейшую пользу",
+      "purpose": "Достаточность результата и обоснованность продолжения проверены в реальном scope с известными свидетельствами и ограничениями",
+      "appliesWhen": "## Когда оценить применение\n\n- Получен существенный результат или предстоит принять работу в определённом scope.\n- Изменились основания, возникла проблема или нужно проверить последствия перед дорогим продолжением.\n- Неясно, достаточно ли свидетельств и соответствует ли продолжение исходным целям.\n- Нужно подготовить проверку, оценить её охват либо перепроверить существенные выводы другого review.\n\nReview поддерживает [проверку результата в work](../bootstrap/work.md#выполнить-и-проверить-результат). Он может вернуть работу к уточнению, исследованию или выбору другого способа.",
+      "definition": "review-decision.json",
       "paperOnly": true,
       "companions": [
         "clarify",
@@ -113,23 +319,88 @@
         "handoff"
       ],
       "profileDefinitions": {
-        "rdg-decision-v1": "review-decision.json"
-      }
+        "rdg-decision-v1": "review-decision.json",
+        "rdg-core-v1": "review.json"
+      },
+      "sourceRef": {
+        "path": "docs/lenses/methods/review.md",
+        "sha256": "09eabcf23c272c4832efa0fd4d7822974150aebf1034b9ecf8a3ae1cd7768233",
+        "gitCommit": "8f0ad5be997afde088f9d6fbb8e3cd27f8220c0d"
+      },
+      "sourceMapInfoId": "LS-MAP-REVIEW"
     },
     {
       "key": "handoff",
-      "title": "Продолжить и передать работу",
-      "purpose": "Передать проверенное состояние, неопределённости и ближайшее действие следующему исполнителю",
-      "appliesWhen": "При передаче другому чату, после обрыва или неопределённого исхода записи.",
-      "definition": "handoff.json",
+      "title": "Handoff — передать работу для содержательного продолжения",
+      "purpose": "Работа может быть осмысленно продолжена другой сессией по доступному проверенному контексту",
+      "appliesWhen": "## Когда оценить применение\n\n- Пользователь просит передать работу, меняется сессия либо нужен вход для другого исполнителя.\n- Этап остаётся незавершённым, а следующий шаг должен опираться на сохранённое состояние.\n- Есть операция с неизвестным исходом, которую получатель не должен повторить вслепую.\n\nHandoff помогает [продолжению work](../bootstrap/work.md#сохранить-полезное-и-выбрать-продолжение). Передача возможна в текущей точке; завершение всего этапа не становится её предварительным условием.",
+      "definition": "handoff-decision.json",
       "paperOnly": true,
       "companions": [
         "orient",
         "work"
       ],
       "profileDefinitions": {
-        "rdg-decision-v1": "handoff-decision.json"
-      }
+        "rdg-decision-v1": "handoff-decision.json",
+        "rdg-core-v1": "handoff.json"
+      },
+      "sourceRef": {
+        "path": "docs/lenses/methods/handoff.md",
+        "sha256": "6b90a100f3315638aa027559e0369245252d743a206a9f87938b8a00fa3289bf",
+        "gitCommit": "0f5889d3143b0fbc90e8c86371bfb713452fb704"
+      },
+      "sourceMapInfoId": "LS-MAP-HANDOFF"
+    },
+    {
+      "key": "dry",
+      "title": "DRY — согласовать повторяющееся знание и его владельцев",
+      "purpose": "Повторяющееся изменяемое знание согласовано, имеет понятного владельца и оправданный способ поддержки при сохранённых существенных различиях",
+      "appliesWhen": "## Когда оценить применение\n\n- Одно изменяемое знание поддерживается в нескольких местах и может расходиться.\n- Обнаружены похожие сущности, правила или реализации, для которых нужно проверить реальную общность.\n- Планируется обобщение, перенос потребителей или обновление связанных представлений.\n\nВ [выборе и проверке способа work](../bootstrap/work.md#получить-основания-и-сравнить-способы) DRY оценивает владельца знания и согласованное изменение. Допустимое повторение и независимые случаи могут сохраняться.",
+      "paperOnly": true,
+      "companions": [],
+      "profileDefinitions": {
+        "rdg-decision-v1": "dry-decision.json"
+      },
+      "sourceRef": {
+        "path": "docs/lenses/methods/dry.md",
+        "sha256": "abdb962d7986563b406faa8bb63c8380753c8bb8b93dc7b771b526c5521ee50a",
+        "gitCommit": "0082baffb6eb7c58f3052b3135a3761b4a84bf35"
+      },
+      "sourceMapInfoId": "LS-MAP-DRY"
+    },
+    {
+      "key": "kiss",
+      "title": "KISS — выбрать достаточную простоту с оправданной сложностью",
+      "purpose": "Для актуальных требований выбран понятный достаточный способ с обоснованной сложностью",
+      "appliesWhen": "## Когда оценить применение\n\n- Способ кажется сложнее, чем требуют актуальные условия, либо есть несколько достаточных решений.\n- Есть возможность использовать существующий механизм или убрать случайную сложность.\n- Короткая локальная форма скрывает дорогую настройку, особые случаи или последствия для системы.\n\nKISS дополняет [сравнение способов в work](../bootstrap/work.md#получить-основания-и-сравнить-способы). Сначала должна быть понятна актуальная потребность; её необходимость отдельно оценивает YAGNI.",
+      "paperOnly": true,
+      "companions": [],
+      "profileDefinitions": {
+        "rdg-decision-v1": "kiss-decision.json"
+      },
+      "sourceRef": {
+        "path": "docs/lenses/methods/kiss.md",
+        "sha256": "6196bc70907790c901377f1c5af41277bc7719737616edebd467e499992605dc",
+        "gitCommit": "8f0ad5be997afde088f9d6fbb8e3cd27f8220c0d"
+      },
+      "sourceMapInfoId": "LS-MAP-KISS"
+    },
+    {
+      "key": "yagni",
+      "title": "YAGNI — обосновать необходимость работы сейчас",
+      "purpose": "Работа сейчас и будущий задел имеют достаточные основания в потребности, полезном исследовании или цене позднего изменения",
+      "appliesWhen": "## Когда оценить применение\n\n- Предлагается функция, гибкость, абстракция или будущий задел с неясной текущей пользой.\n- Нужно выбрать между реализацией, экспериментом и отсрочкой.\n- Изменились условия сознательного ограничения или достигнут сигнал возврата к отложенному.\n\nYAGNI помогает выбрать [оправданное продолжение work](../bootstrap/work.md#сохранить-полезное-и-выбрать-продолжение). Принятые обязательства и необходимость требуемого поведения сохраняются в своей области.",
+      "paperOnly": true,
+      "companions": [],
+      "profileDefinitions": {
+        "rdg-decision-v1": "yagni-decision.json"
+      },
+      "sourceRef": {
+        "path": "docs/lenses/methods/yagni.md",
+        "sha256": "dcf7b53d8120498dcd97329c0b65eb2e522ed89a3dbb02176ea4093379fe4a23",
+        "gitCommit": "0f5889d3143b0fbc90e8c86371bfb713452fb704"
+      },
+      "sourceMapInfoId": "LS-MAP-YAGNI"
     },
     {
       "key": "operate",
@@ -161,88 +432,6 @@
       ],
       "profileDefinitions": {
         "rdg-decision-v1": "develop-decision.json"
-      }
-    },
-    {
-      "key": "checkpoint",
-      "title": "Соразмерно пересмотреть принятое решение",
-      "purpose": "Соразмерный checkpoint собственного содержательного пересмотра с выбором законного маршрута",
-      "appliesWhen": "При собственном намерении содержательно пересмотреть принятое решение; точные условия, исключения и пять компонуемых маршрутов — в определении.",
-      "definition": "checkpoint.json",
-      "paperOnly": true,
-      "companions": [
-        "review",
-        "preserve",
-        "explore",
-        "clarify"
-      ],
-      "sourceRefs": [
-        "docs/handoffs/candidate-prework-rdg-context-checkpoints-dependencies-approval-v9.md"
-      ],
-      "profileDefinitions": {
-        "rdg-decision-v1": "checkpoint-decision.json"
-      }
-    },
-    {
-      "key": "model",
-      "title": "Понять модель RDG",
-      "purpose": "Объяснить типы сущностей, связи, identity и владельцев данных",
-      "appliesWhen": "Перед построением графов и при сомнении о смысле сущности.",
-      "paperOnly": true,
-      "companions": [
-        "shape",
-        "decision-logic",
-        "plan-history",
-        "lens-system"
-      ],
-      "profileDefinitions": {
-        "rdg-decision-v1": "model-decision.json"
-      }
-    },
-    {
-      "key": "decision-logic",
-      "title": "Понять решения и обязательства",
-      "purpose": "Объяснить выбор, группы, несколько оснований, отмену и завершение",
-      "appliesWhen": "При выборе, отказе, пересмотре и закрытии R/D/Action.",
-      "paperOnly": true,
-      "companions": [
-        "explore",
-        "review",
-        "model",
-        "plan-history"
-      ],
-      "profileDefinitions": {
-        "rdg-decision-v1": "decision-logic-decision.json"
-      }
-    },
-    {
-      "key": "plan-history",
-      "title": "Понять Plan и History",
-      "purpose": "Отделить планирование от выбора, фактов исполнения и Evidence",
-      "appliesWhen": "При размещении, исполнении и разборе истории.",
-      "paperOnly": true,
-      "companions": [
-        "work",
-        "review",
-        "model"
-      ],
-      "profileDefinitions": {
-        "rdg-decision-v1": "plan-history-decision.json"
-      }
-    },
-    {
-      "key": "lens-system",
-      "title": "Понять линзы и вложенные рекомендации",
-      "purpose": "Объяснить реестр рекомендаций, переходы между линзами и факты применения",
-      "appliesWhen": "При выборе, настройке и использовании вложенных линз.",
-      "paperOnly": true,
-      "companions": [
-        "orient",
-        "model",
-        "review"
-      ],
-      "profileDefinitions": {
-        "rdg-decision-v1": "lens-system-decision.json"
       }
     }
   ],
@@ -372,17 +561,179 @@
       "lens": "operate",
       "nodeId": "R-LENS-OPERATE",
       "role": "technical-reference"
+    },
+    {
+      "source": "docs/lenses/bootstrap/orient.md",
+      "lens": "orient",
+      "nodeId": "R-LENS-ORIENT",
+      "role": "full-theory-source"
+    },
+    {
+      "source": "docs/lenses/bootstrap/model.md",
+      "lens": "model",
+      "nodeId": "R-MODEL",
+      "role": "full-theory-source"
+    },
+    {
+      "source": "docs/lenses/bootstrap/decision-logic.md",
+      "lens": "decision-logic",
+      "nodeId": "R-DECISION-LOGIC",
+      "role": "full-theory-source"
+    },
+    {
+      "source": "docs/lenses/bootstrap/plan-history.md",
+      "lens": "plan-history",
+      "nodeId": "R-PLAN-HISTORY",
+      "role": "full-theory-source"
+    },
+    {
+      "source": "docs/lenses/bootstrap/work.md",
+      "lens": "work",
+      "nodeId": "R-LENS-WORK",
+      "role": "full-theory-source"
+    },
+    {
+      "source": "docs/lenses/bootstrap/checkpoint.md",
+      "lens": "checkpoint",
+      "nodeId": "R-LENS-CHECKPOINT",
+      "role": "full-theory-source"
+    },
+    {
+      "source": "docs/lenses/bootstrap/lens-system.md",
+      "lens": "lens-system",
+      "nodeId": "R-LENS-SYSTEM",
+      "role": "full-theory-source"
+    },
+    {
+      "source": "docs/lenses/methods/clarify.md",
+      "lens": "clarify",
+      "nodeId": "R-LENS-CLARIFY",
+      "role": "full-theory-source"
+    },
+    {
+      "source": "docs/lenses/methods/research.md",
+      "lens": "research",
+      "nodeId": "R-LENS-RESEARCH",
+      "role": "full-theory-source"
+    },
+    {
+      "source": "docs/lenses/methods/explore.md",
+      "lens": "explore",
+      "nodeId": "R-LENS-EXPLORE",
+      "role": "full-theory-source"
+    },
+    {
+      "source": "docs/lenses/methods/specify.md",
+      "lens": "specify",
+      "nodeId": "R-LENS-SPECIFY",
+      "role": "full-theory-source"
+    },
+    {
+      "source": "docs/lenses/methods/shape.md",
+      "lens": "shape",
+      "nodeId": "R-LENS-SHAPE",
+      "role": "full-theory-source"
+    },
+    {
+      "source": "docs/lenses/methods/preserve.md",
+      "lens": "preserve",
+      "nodeId": "R-LENS-PRESERVE",
+      "role": "full-theory-source"
+    },
+    {
+      "source": "docs/lenses/methods/decision-analysis.md",
+      "lens": "decision-analysis",
+      "nodeId": "R-LENS-DECISION-ANALYSIS",
+      "role": "full-theory-source"
+    },
+    {
+      "source": "docs/lenses/methods/review.md",
+      "lens": "review",
+      "nodeId": "R-LENS-REVIEW",
+      "role": "full-theory-source"
+    },
+    {
+      "source": "docs/lenses/methods/handoff.md",
+      "lens": "handoff",
+      "nodeId": "R-LENS-HANDOFF",
+      "role": "full-theory-source"
+    },
+    {
+      "source": "docs/lenses/methods/dry.md",
+      "lens": "dry",
+      "nodeId": "R-LENS-DRY",
+      "role": "full-theory-source"
+    },
+    {
+      "source": "docs/lenses/methods/kiss.md",
+      "lens": "kiss",
+      "nodeId": "R-LENS-KISS",
+      "role": "full-theory-source"
+    },
+    {
+      "source": "docs/lenses/methods/yagni.md",
+      "lens": "yagni",
+      "nodeId": "R-LENS-YAGNI",
+      "role": "full-theory-source"
+    },
+    {
+      "source": "docs/lenses/requirements.md",
+      "lens": "model",
+      "nodeId": "R-MODEL",
+      "role": "shared-requirements"
+    },
+    {
+      "source": "docs/lenses/README.md",
+      "lens": "lens-system",
+      "nodeId": "R-LENS-SYSTEM",
+      "role": "catalogue-navigation"
+    },
+    {
+      "source": "docs/lenses/examples/planning-and-solving.md",
+      "lens": "work",
+      "nodeId": "R-LENS-WORK",
+      "role": "example-facts"
+    },
+    {
+      "source": "docs/use-cases/README.md",
+      "lens": "orient",
+      "nodeId": "R-LENS-ORIENT",
+      "role": "navigation"
+    },
+    {
+      "source": "docs/use-cases/getting-started.md",
+      "lens": "orient",
+      "nodeId": "R-LENS-ORIENT",
+      "role": "client-reference"
+    },
+    {
+      "source": "docs/use-cases/ai-work.md",
+      "lens": "work",
+      "nodeId": "R-LENS-WORK",
+      "role": "client-reference"
+    },
+    {
+      "source": "docs/use-cases/development.md",
+      "lens": "develop",
+      "nodeId": "R-LENS-DEVELOP",
+      "role": "development-scope"
+    },
+    {
+      "source": "BACKLOG-IMPROVEMENTS.md",
+      "lens": "develop",
+      "nodeId": "R-LENS-DEVELOP",
+      "role": "development-scope"
     }
   ],
   "limitations": [
     {
       "id": "assessment-execution",
       "status": "explicit-boundary",
-      "text": "Определения пересобраны по закрытому core-профилю. Открытие линзы не выполняет её. Смысловое сопоставление обосновывает исполнитель; автоматического доказательства реальной пользы, истинности и пользовательской UI-acceptance нет."
+      "text": "Текущие 19 фундаментальных определений представлены в rdg-decision-v1; прежние legacy-варианты сохраняются по явному выбору профиля. Чтение не выполняет методику; готовность конкретного результата подтверждается в реальной задаче."
     }
   ],
   "rules": [
-    "Каталог нужен перед содержательным этапом; выбор линз делает исполнитель по задаче или пользователь.",
+    "Линзы выбираются по задаче, известной стратегии, триггерам, адресной рекомендации или указанию пользователя. Достаточные усвоенные принципы допускают работу без повторного чтения каталога.",
     "Определение, применение к конкретной версии Graph и долговременное сохранение исследования — разные вещи.",
     "Рабочие инструкции описаны графами; схемы writers, точные команды, права и изменяемые факты остаются у технических владельцев.",
     "При собственном содержательном пересмотре используйте checkpoint; его определение задаёт trigger, соразмерность, исключения и маршруты. Открытие lens не доказывает её применение."

@@ -3,9 +3,9 @@
   "actionModel": "candidate-v6",
   "coreModel": "rdg-decision-v1",
   "id": "rdg-agent-explore-decision-lens",
-  "title": "Исследовать способы на бумаге — Decision v1",
+  "title": "Explore — исследовать пространство способов до выбора",
   "identitySpace": "fe3a5c84-9181-5faf-b506-d89a15b9b59f",
-  "revision": 1,
+  "revision": 2,
   "rootRequirementId": "R-LENS-EXPLORE",
   "rootCauses": [
     {
@@ -19,20 +19,20 @@
     {
       "id": "R-LENS-EXPLORE",
       "kind": "requirement",
-      "title": "Построить пространство вариантов и оснований выбора до принятия и исполнения",
-      "description": "Create discovered Decisions with DRIVES or decision_group membership from Requirements. INTRODUCES describes potential child Requirements; REQUIRES_ACTION describes explicit obligations. D to D is forbidden. Overlapping groups enforce independent required/exclusive rules. Paper exploration creates no chosen or executed work.",
+      "title": "Существенно разные способы и их последствия исследованы достаточно для обоснованного выбора или следующей проверки",
+      "description": "## Требуемый результат и основания\n\n**R-LENS-EXPLORE:** «Существенно разные способы и их последствия исследованы достаточно для обоснованного выбора или следующей проверки».\n\nОбласть: указанная развилка и оправданная глубина её продолжения. Родительские основания: [R-USEFUL-RESULT](../requirements.md#r-useful-result), [R-JUSTIFIED-EFFORT](../requirements.md#r-justified-effort). Отношение при переносе определяется по [правилу оснований](../requirements.md#как-выразить-родительские-основания-в-графе).\n\nМетодика снижает риск ранней фиксации неподходящего пути и помогает выбрать полезный эксперимент. Перечень всех мыслимых альтернатив и максимальная глубина рисунка не требуются.\n\nПроверка: [достаточность результата](#завершить-исследование-в-подходящий-момент).\n\n",
       "revision": 1,
       "result": {
         "state": "open",
         "truth": "unknown"
       },
-      "scope": "Fundamental RDG explore instructions"
+      "scope": "Область: указанная развилка и оправданная глубина её продолжения."
     },
     {
       "id": "A-EXPLORE-BUILD",
       "kind": "decision",
       "title": "Исследовать способы на бумаге",
-      "description": "Create discovered Decisions with DRIVES or decision_group membership from Requirements. INTRODUCES describes potential child Requirements; REQUIRES_ACTION describes explicit obligations. D to D is forbidden. Overlapping groups enforce independent required/exclusive rules. Paper exploration creates no chosen or executed work.",
+      "description": "Способ работы в оговорённом scope. Применимые принципы, условия, действия и достаточность раскрыты в связанных Canon. Открытие определения не исполняет метод.",
       "revision": 1,
       "result": {
         "state": "open",
@@ -44,19 +44,19 @@
       "id": "R-EXPLORE-VARIANTS",
       "kind": "requirement",
       "title": "Рассмотрены разные семейства способов",
-      "description": "Create discovered Decisions with DRIVES or decision_group membership from Requirements. INTRODUCES describes potential child Requirements; REQUIRES_ACTION describes explicit obligations. D to D is forbidden. Overlapping groups enforce independent required/exclusive rules. Paper exploration creates no chosen or executed work.",
+      "description": "Версия источника 48f2f78b43914e1621f1668da82083673ab2107a2fb37ec5266aafe0d45346d4; docs/lenses/methods/explore.md#открыть-пространство-вариантов. Содержание раскрыто в LS-TEXT-EXPLORE-416019825b.",
       "revision": 1,
       "result": {
         "state": "open",
         "truth": "unknown"
       },
-      "scope": "Fundamental RDG explore instructions"
+      "scope": "Область: указанная развилка и оправданная глубина её продолжения. Применяется к своей части выбранного метода и условиям текущей задачи."
     },
     {
       "id": "A-EXPLORE-REUSE",
       "kind": "decision",
       "title": "Изучить подходящие готовые способы",
-      "description": "Create discovered Decisions with DRIVES or decision_group membership from Requirements. INTRODUCES describes potential child Requirements; REQUIRES_ACTION describes explicit obligations. D to D is forbidden. Overlapping groups enforce independent required/exclusive rules. Paper exploration creates no chosen or executed work.",
+      "description": "Версия источника 48f2f78b43914e1621f1668da82083673ab2107a2fb37ec5266aafe0d45346d4; docs/lenses/methods/explore.md#открыть-пространство-вариантов. Содержание раскрыто в LS-TEXT-EXPLORE-416019825b.",
       "revision": 1,
       "result": {
         "state": "open",
@@ -68,7 +68,7 @@
       "id": "A-EXPLORE-SITUATIONAL",
       "kind": "decision",
       "title": "Построить ситуационные варианты",
-      "description": "Create discovered Decisions with DRIVES or decision_group membership from Requirements. INTRODUCES describes potential child Requirements; REQUIRES_ACTION describes explicit obligations. D to D is forbidden. Overlapping groups enforce independent required/exclusive rules. Paper exploration creates no chosen or executed work.",
+      "description": "Версия источника 48f2f78b43914e1621f1668da82083673ab2107a2fb37ec5266aafe0d45346d4; docs/lenses/methods/explore.md#открыть-пространство-вариантов. Содержание раскрыто в LS-TEXT-EXPLORE-416019825b.",
       "revision": 1,
       "result": {
         "state": "open",
@@ -80,19 +80,19 @@
       "id": "R-EXPLORE-ASSESSMENT",
       "kind": "requirement",
       "title": "Варианты оценены по канонам и ограничениям",
-      "description": "Create discovered Decisions with DRIVES or decision_group membership from Requirements. INTRODUCES describes potential child Requirements; REQUIRES_ACTION describes explicit obligations. D to D is forbidden. Overlapping groups enforce independent required/exclusive rules. Paper exploration creates no chosen or executed work.",
+      "description": "Версия источника 48f2f78b43914e1621f1668da82083673ab2107a2fb37ec5266aafe0d45346d4; docs/lenses/methods/explore.md#сопоставить-основания-и-последствия. Содержание раскрыто в LS-TEXT-EXPLORE-0d28579e06.",
       "revision": 1,
       "result": {
         "state": "open",
         "truth": "unknown"
       },
-      "scope": "Fundamental RDG explore instructions"
+      "scope": "Область: указанная развилка и оправданная глубина её продолжения. Применяется к своей части выбранного метода и условиям текущей задачи."
     },
     {
       "id": "A-EXPLORE-CANONS",
       "kind": "decision",
       "title": "Сопоставить основания за и против",
-      "description": "Create discovered Decisions with DRIVES or decision_group membership from Requirements. INTRODUCES describes potential child Requirements; REQUIRES_ACTION describes explicit obligations. D to D is forbidden. Overlapping groups enforce independent required/exclusive rules. Paper exploration creates no chosen or executed work.",
+      "description": "Версия источника 48f2f78b43914e1621f1668da82083673ab2107a2fb37ec5266aafe0d45346d4; docs/lenses/methods/explore.md#сопоставить-основания-и-последствия. Содержание раскрыто в LS-TEXT-EXPLORE-0d28579e06.",
       "revision": 1,
       "result": {
         "state": "open",
@@ -104,19 +104,19 @@
       "id": "R-EXPLORE-UPSTREAM",
       "kind": "requirement",
       "title": "Сильные конфликтующие варианты не потеряны",
-      "description": "Create discovered Decisions with DRIVES or decision_group membership from Requirements. INTRODUCES describes potential child Requirements; REQUIRES_ACTION describes explicit obligations. D to D is forbidden. Overlapping groups enforce independent required/exclusive rules. Paper exploration creates no chosen or executed work.",
+      "description": "Версия источника 48f2f78b43914e1621f1668da82083673ab2107a2fb37ec5266aafe0d45346d4; docs/lenses/methods/explore.md#удержать-сильный-вариант-требующий-пересмотра-upstream. Содержание раскрыто в LS-TEXT-EXPLORE-83ebb62bed.",
       "revision": 1,
       "result": {
         "state": "open",
         "truth": "unknown"
       },
-      "scope": "Fundamental RDG explore instructions"
+      "scope": "Область: указанная развилка и оправданная глубина её продолжения. Применяется к своей части выбранного метода и условиям текущей задачи."
     },
     {
       "id": "A-EXPLORE-REFRAME",
       "kind": "decision",
       "title": "Рассмотреть пересмотр исходных условий",
-      "description": "Create discovered Decisions with DRIVES or decision_group membership from Requirements. INTRODUCES describes potential child Requirements; REQUIRES_ACTION describes explicit obligations. D to D is forbidden. Overlapping groups enforce independent required/exclusive rules. Paper exploration creates no chosen or executed work.",
+      "description": "Версия источника 48f2f78b43914e1621f1668da82083673ab2107a2fb37ec5266aafe0d45346d4; docs/lenses/methods/explore.md#удержать-сильный-вариант-требующий-пересмотра-upstream. Содержание раскрыто в LS-TEXT-EXPLORE-83ebb62bed.",
       "revision": 1,
       "result": {
         "state": "open",
@@ -128,25 +128,85 @@
       "id": "R-EXPLORE-PAPER",
       "kind": "requirement",
       "title": "Построение остаётся предварительным",
-      "description": "Create discovered Decisions with DRIVES or decision_group membership from Requirements. INTRODUCES describes potential child Requirements; REQUIRES_ACTION describes explicit obligations. D to D is forbidden. Overlapping groups enforce independent required/exclusive rules. Paper exploration creates no chosen or executed work.",
+      "description": "Версия источника 48f2f78b43914e1621f1668da82083673ab2107a2fb37ec5266aafe0d45346d4; docs/lenses/methods/explore.md#завершить-исследование-в-подходящий-момент. Содержание раскрыто в LS-TEXT-EXPLORE-0d4fc8ebdf.",
       "revision": 1,
       "result": {
         "state": "open",
         "truth": "unknown"
       },
-      "scope": "Fundamental RDG explore instructions"
+      "scope": "Область: указанная развилка и оправданная глубина её продолжения. Применяется к своей части выбранного метода и условиям текущей задачи."
     },
     {
       "id": "A-EXPLORE-COMPARE",
       "kind": "decision",
       "title": "Сравнить ветви и обозначить границы поиска",
-      "description": "Create discovered Decisions with DRIVES or decision_group membership from Requirements. INTRODUCES describes potential child Requirements; REQUIRES_ACTION describes explicit obligations. D to D is forbidden. Overlapping groups enforce independent required/exclusive rules. Paper exploration creates no chosen or executed work.",
+      "description": "Версия источника 48f2f78b43914e1621f1668da82083673ab2107a2fb37ec5266aafe0d45346d4; docs/lenses/methods/explore.md#завершить-исследование-в-подходящий-момент. Содержание раскрыто в LS-TEXT-EXPLORE-0d4fc8ebdf.",
       "revision": 1,
       "result": {
         "state": "open",
         "truth": "unknown"
       },
       "selectionState": "discovered"
+    },
+    {
+      "id": "LS-STEP-EXPLORE-VARIANTS",
+      "kind": "action",
+      "title": "Найти существенно разные способы и полезное продолжение",
+      "description": "Выполнить содержательно для текущего поручения и применимых условий. Методика: LS-TEXT-EXPLORE-416019825b; docs/lenses/methods/explore.md#открыть-пространство-вариантов",
+      "revision": 1,
+      "actionType": "task",
+      "lowLevel": false,
+      "targetIds": [],
+      "groupIds": [],
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "LS-STEP-EXPLORE-TRADEOFF",
+      "kind": "action",
+      "title": "Сравнить вклад, основания и реальную совокупную цену",
+      "description": "Выполнить содержательно для текущего поручения и применимых условий. Методика: LS-TEXT-EXPLORE-809845c278; docs/lenses/methods/explore.md#оценить-общий-вклад-и-фактическую-разницу",
+      "revision": 1,
+      "actionType": "task",
+      "lowLevel": false,
+      "targetIds": [],
+      "groupIds": [],
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "LS-STEP-EXPLORE-UPSTREAM",
+      "kind": "action",
+      "title": "Сохранить сильную upstream-альтернативу и условия её принятия",
+      "description": "Выполнить содержательно для текущего поручения и применимых условий. Методика: LS-TEXT-EXPLORE-83ebb62bed; docs/lenses/methods/explore.md#удержать-сильный-вариант-требующий-пересмотра-upstream",
+      "revision": 1,
+      "actionType": "task",
+      "lowLevel": false,
+      "targetIds": [],
+      "groupIds": [],
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "LS-STEP-EXPLORE-STOP",
+      "kind": "action",
+      "title": "Определить достаточность исследования и следующий шаг",
+      "description": "Выполнить содержательно для текущего поручения и применимых условий. Методика: LS-TEXT-EXPLORE-0d4fc8ebdf; docs/lenses/methods/explore.md#завершить-исследование-в-подходящий-момент",
+      "revision": 1,
+      "actionType": "task",
+      "lowLevel": false,
+      "targetIds": [],
+      "groupIds": [],
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
     }
   ],
   "objects": [
@@ -154,65 +214,201 @@
       "id": "K-A-EXPLORE-BUILD",
       "kind": "canon",
       "title": "Применимость: Исследовать способы на бумаге",
-      "description": "",
+      "description": "Версия источника 48f2f78b43914e1621f1668da82083673ab2107a2fb37ec5266aafe0d45346d4; docs/lenses/methods/explore.md#развернуть-полезное-продолжение. Содержание раскрыто в LS-TEXT-EXPLORE-f602884522.",
       "revision": 1,
-      "guidance": "Create discovered Decisions with DRIVES or decision_group membership from Requirements. INTRODUCES describes potential child Requirements; REQUIRES_ACTION describes explicit obligations. D to D is forbidden. Overlapping groups enforce independent required/exclusive rules. Paper exploration creates no chosen or executed work.  Ситуация оправдывает этот способ в пределах его вклада Лишнее действие при уже достаточном состоянии"
+      "guidance": "## Развернуть полезное продолжение\n\nДля перспективных способов исследовать вводимые требования, последующие решения и действия. Допустимо заранее построить длинную ветвь на бумаге и использовать её анализ для оценки начального Decision.\n\nВыделять узлы в полезном масштабе по [shape](shape.md). Общие элементы сохраняют один ID. Визуальные повторения общей части не считаются самостоятельной работой.\n\nГлубина продолжения зависит от неопределённости и стоимости ошибки. При ясной задаче подробное планирование может окупиться. При неизвестном поведении или потребности полезнее сначала получить ранний сквозной результат и обратную связь.\n\n",
+      "canons": "",
+      "knownErrors": []
     },
     {
       "id": "K-A-EXPLORE-REUSE",
       "kind": "canon",
       "title": "Применимость: Изучить подходящие готовые способы",
-      "description": "",
+      "description": "Версия источника 48f2f78b43914e1621f1668da82083673ab2107a2fb37ec5266aafe0d45346d4; docs/lenses/methods/explore.md#открыть-пространство-вариантов. Содержание раскрыто в LS-TEXT-EXPLORE-416019825b.",
       "revision": 1,
-      "guidance": "Create discovered Decisions with DRIVES or decision_group membership from Requirements. INTRODUCES describes potential child Requirements; REQUIRES_ACTION describes explicit obligations. D to D is forbidden. Overlapping groups enforce independent required/exclusive rules. Paper exploration creates no chosen or executed work.  Ситуация оправдывает этот способ в пределах его вклада Лишнее действие при уже достаточном состоянии"
+      "guidance": "## Открыть пространство вариантов\n\nУточнить исходные R, ограничения, известные данные и область выбора. Если цель недостаточно ясна для сравнения, обратиться к [clarify](clarify.md).\n\nПроверить существующие способы, прежние решения, готовые графы и уместные методики. Оценить их происхождение, версию и условия. Затем рассмотреть ситуационные варианты, другие разбиения и возможность изменить саму постановку задачи.\n\nРазличие вариантов должно затрагивать существенный механизм, цену, ограничения или последствия. Переименование одного способа не создаёт содержательного разнообразия.\n\nДля существенного неизвестного использовать [research](research.md): получить проверяемые сведения и условия применимости источника. Исследование вопроса может закончиться достаточным ответом без построения новых вариантов. Подготовленную согласованную постановку собирает [specify](specify.md).\n\n",
+      "canons": "",
+      "knownErrors": []
     },
     {
       "id": "K-A-EXPLORE-SITUATIONAL",
       "kind": "canon",
       "title": "Применимость: Построить ситуационные варианты",
-      "description": "",
+      "description": "Версия источника 48f2f78b43914e1621f1668da82083673ab2107a2fb37ec5266aafe0d45346d4; docs/lenses/methods/explore.md#открыть-пространство-вариантов. Содержание раскрыто в LS-TEXT-EXPLORE-416019825b.",
       "revision": 1,
-      "guidance": "Create discovered Decisions with DRIVES or decision_group membership from Requirements. INTRODUCES describes potential child Requirements; REQUIRES_ACTION describes explicit obligations. D to D is forbidden. Overlapping groups enforce independent required/exclusive rules. Paper exploration creates no chosen or executed work.  Ситуация оправдывает этот способ в пределах его вклада Лишнее действие при уже достаточном состоянии"
+      "guidance": "## Открыть пространство вариантов\n\nУточнить исходные R, ограничения, известные данные и область выбора. Если цель недостаточно ясна для сравнения, обратиться к [clarify](clarify.md).\n\nПроверить существующие способы, прежние решения, готовые графы и уместные методики. Оценить их происхождение, версию и условия. Затем рассмотреть ситуационные варианты, другие разбиения и возможность изменить саму постановку задачи.\n\nРазличие вариантов должно затрагивать существенный механизм, цену, ограничения или последствия. Переименование одного способа не создаёт содержательного разнообразия.\n\nДля существенного неизвестного использовать [research](research.md): получить проверяемые сведения и условия применимости источника. Исследование вопроса может закончиться достаточным ответом без построения новых вариантов. Подготовленную согласованную постановку собирает [specify](specify.md).\n\n",
+      "canons": "",
+      "knownErrors": []
     },
     {
       "id": "K-A-EXPLORE-CANONS",
       "kind": "canon",
       "title": "Применимость: Сопоставить основания за и против",
-      "description": "",
+      "description": "Версия источника 48f2f78b43914e1621f1668da82083673ab2107a2fb37ec5266aafe0d45346d4; docs/lenses/methods/explore.md#сопоставить-основания-и-последствия. Содержание раскрыто в LS-TEXT-EXPLORE-0d28579e06.",
       "revision": 1,
-      "guidance": "Create discovered Decisions with DRIVES or decision_group membership from Requirements. INTRODUCES describes potential child Requirements; REQUIRES_ACTION describes explicit obligations. D to D is forbidden. Overlapping groups enforce independent required/exclusive rules. Paper exploration creates no chosen or executed work.  Ситуация оправдывает этот способ в пределах его вклада Лишнее действие при уже достаточном состоянии"
+      "guidance": "## Сопоставить основания и последствия\n\nДля каждого серьёзного способа рассмотреть действующие R, существенный контекст, уместный Canon, известные Findings и Questions. Подробный анализ одного способа можно выполнить через [decision-analysis](decision-analysis.md).\n\nСравнить ожидаемую пользу, затраты исполнения и сопровождения, обратимость, риск, требуемые эксперименты и оставшиеся неизвестные решения. Оценку времени и сложности обозначить в её реальной области.\n\nРазмер ещё не раскрытой ветви неизвестен. Меньшее число показанных узлов само по себе не доказывает меньшую сложность. Для ориентиров сравниваются уникальные downstream-элементы, масштаб работы и ещё необходимые выборы.\n\nЕсли варианты различаются ненужной работой, обратиться к [yagni](yagni.md). При сравнении достаточных решений по простоте использовать [kiss](kiss.md).\n\n",
+      "canons": "",
+      "knownErrors": []
     },
     {
       "id": "K-A-EXPLORE-REFRAME",
       "kind": "canon",
       "title": "Применимость: Рассмотреть пересмотр исходных условий",
-      "description": "",
+      "description": "Версия источника 48f2f78b43914e1621f1668da82083673ab2107a2fb37ec5266aafe0d45346d4; docs/lenses/methods/explore.md#удержать-сильный-вариант-требующий-пересмотра-upstream. Содержание раскрыто в LS-TEXT-EXPLORE-83ebb62bed.",
       "revision": 1,
-      "guidance": "Create discovered Decisions with DRIVES or decision_group membership from Requirements. INTRODUCES describes potential child Requirements; REQUIRES_ACTION describes explicit obligations. D to D is forbidden. Overlapping groups enforce independent required/exclusive rules. Paper exploration creates no chosen or executed work.  Ситуация оправдывает этот способ в пределах его вклада Лишнее действие при уже достаточном состоянии"
+      "guidance": "## Удержать сильный вариант, требующий пересмотра upstream\n\nИногда полезный способ конфликтует с прежним решением или ограничением. Сохранить сам вариант, объяснить конфликт и показать, что потребуется изменить и какие требования это затронет.\n\nТакой анализ может обосновать предложение пересмотра. Большое число зависимостей не запрещает менять неудачный способ: его замена может отменить лишнюю работу и лучше сохранить исходный результат. Сопоставить действительные последствия для всех существенных поддерживаемых целей, оставшиеся основания и проверку нового состояния.\n\nФактическое изменение upstream выполняется явно с учётом полномочий и [checkpoint](../bootstrap/checkpoint.md). Ранее принятые факты и история сохраняются.\n\n",
+      "canons": "",
+      "knownErrors": []
     },
     {
       "id": "K-A-EXPLORE-COMPARE",
       "kind": "canon",
       "title": "Применимость: Сравнить ветви и обозначить границы поиска",
-      "description": "",
+      "description": "Версия источника 48f2f78b43914e1621f1668da82083673ab2107a2fb37ec5266aafe0d45346d4; docs/lenses/methods/explore.md#завершить-исследование-в-подходящий-момент. Содержание раскрыто в LS-TEXT-EXPLORE-0d4fc8ebdf.",
       "revision": 1,
-      "guidance": "Create discovered Decisions with DRIVES or decision_group membership from Requirements. INTRODUCES describes potential child Requirements; REQUIRES_ACTION describes explicit obligations. D to D is forbidden. Overlapping groups enforce independent required/exclusive rules. Paper exploration creates no chosen or executed work.  Ситуация оправдывает этот способ в пределах его вклада Лишнее действие при уже достаточном состоянии"
+      "guidance": "## Завершить исследование в подходящий момент\n\nРезультатом может стать подготовленный выбор, обоснованный короткий эксперимент, уточнение задачи, отсрочка с условием возврата либо выявленная необходимость новых данных.\n\nГраницы поиска должны быть понятны. Указать, какие семейства способов рассмотрены, какие отличия существенны и какие неизвестные могут изменить оценку. Дальнейшее исследование оправдано, если ожидаемая информация способна существенно повлиять на работу.\n\n",
+      "canons": "",
+      "knownErrors": []
     },
     {
       "id": "I-LENS-EXPLORE",
       "kind": "info",
       "title": "Применение и границы линзы",
-      "description": "Определение линзы — бумага для исследования. Чтение, выбор линзы, применение к конкретной версии, выбор предметного A, Plan, исполнение и результат различаются. Рассматривать только применимые части. Условия канона показательны; реальные факты находятся в R/Context рабочей ситуации. Порядок в JSON не задаёт расписание. Точные команды и права остаются у технических владельцев.",
+      "description": "Существенно разные способы и их последствия исследованы достаточно для обоснованного выбора или следующей проверки",
       "revision": 1,
-      "value": "Определение линзы — бумага для исследования. Чтение, выбор линзы, применение к конкретной версии, выбор предметного A, Plan, исполнение и результат различаются. Рассматривать только применимые части. Условия канона показательны; реальные факты находятся в R/Context рабочей ситуации. Порядок в JSON не задаёт расписание. Точные команды и права остаются у технических владельцев."
+      "value": "## Когда оценить применение\n\n- Есть существенно разные способы и ещё недостаточно оснований для выбора.\n- Нужно понять последствия перспективного варианта, включая ещё не раскрытое продолжение.\n- Прежний подход перестал устраивать либо сильный вариант требует пересмотра исходных условий.\n- Общий R или Decision поддерживает несколько целей и локальное сравнение может исказить пользу или цену изменения.\n\nExplore помогает на шаге [сравнения способов в work](../bootstrap/work.md#получить-основания-и-сравнить-способы). Один неизвестный факт можно сначала разрешить через research; анализ уже определённого Decision раскрывает decision-analysis.",
+      "tags": [
+        "rdg:lens-catalog"
+      ]
     },
     {
       "id": "INFO-DECISION-API-EXPLORE",
       "kind": "info",
       "title": "Проверенный маршрут API · explore",
-      "description": "Контракт поддержанного Decision runtime; читать вместе с актуальной schema",
+      "description": "Версия источника 48f2f78b43914e1621f1668da82083673ab2107a2fb37ec5266aafe0d45346d4; docs/lenses/methods/explore.md. Содержание раскрыто в LS-TEXT-EXPLORE-e3b0c44298.",
       "revision": 1,
-      "value": "Общий протокол: catalog → read → schema → preflight(request) → apply(request, expectedInputBinding=preview.inputBinding) → receipt/readback. Новый логический запрос получает новый UUID transactionId; точный retry сохраняет его и весь request. Не подменяйте entity ID ключом occurrence. Версии и права проверяются общим Application. Создавайте discovered Decisions через core/add с DRIVES R→D или core/decision_group. group содержит id,title,parentId,selectionRequired,mutuallyExclusive,members[{id,decisionId}]. Нужны независимые required/exclusive, реальные membership IDs и проверка пересечений. INTRODUCES D→R описывает потенциальный выход, REQUIRES_ACTION R/D→Action — обязательное действие. DEPENDS_ON связывает допустимые endpoints с dependencyLevel L1/L2; D→D запрещено. Наличие альтернативы не выбирает её."
+      "value": "# Explore — исследовать пространство способов до выбора\n\n> **СТАТУС: АКТУАЛЬНЫЙ ПРОЕКТ СЕМАНТИКИ ДЛЯ СОГЛАСОВАНИЯ.** Вторая группа, методики эффективной работы. Редакция 2026-11-11.\n\nExplore помогает найти существенно разные способы достижения результата и понять их последствия. Она полезна при неочевидном выборе, дорогом продолжении и существенной неопределённости.\n\n"
+    },
+    {
+      "id": "LS-TEXT-EXPLORE-e3b0c44298",
+      "kind": "info",
+      "title": "Введение",
+      "description": "docs/lenses/methods/explore.md · SHA256 48f2f78b43914e1621f1668da82083673ab2107a2fb37ec5266aafe0d45346d4",
+      "revision": 1,
+      "value": "# Explore — исследовать пространство способов до выбора\n\n> **СТАТУС: АКТУАЛЬНЫЙ ПРОЕКТ СЕМАНТИКИ ДЛЯ СОГЛАСОВАНИЯ.** Вторая группа, методики эффективной работы. Редакция 2026-11-11.\n\nExplore помогает найти существенно разные способы достижения результата и понять их последствия. Она полезна при неочевидном выборе, дорогом продолжении и существенной неопределённости."
+    },
+    {
+      "id": "LS-TEXT-EXPLORE-2f197f40fd",
+      "kind": "canon",
+      "title": "Требуемый результат и основания",
+      "description": "docs/lenses/methods/explore.md#требуемый-результат-и-основания · SHA256 48f2f78b43914e1621f1668da82083673ab2107a2fb37ec5266aafe0d45346d4",
+      "revision": 1,
+      "guidance": "## Требуемый результат и основания\n\n**R-LENS-EXPLORE:** «Существенно разные способы и их последствия исследованы достаточно для обоснованного выбора или следующей проверки».\n\nОбласть: указанная развилка и оправданная глубина её продолжения. Родительские основания: [R-USEFUL-RESULT](../requirements.md#r-useful-result), [R-JUSTIFIED-EFFORT](../requirements.md#r-justified-effort). Отношение при переносе определяется по [правилу оснований](../requirements.md#как-выразить-родительские-основания-в-графе).\n\nМетодика снижает риск ранней фиксации неподходящего пути и помогает выбрать полезный эксперимент. Перечень всех мыслимых альтернатив и максимальная глубина рисунка не требуются.\n\nПроверка: [достаточность результата](#завершить-исследование-в-подходящий-момент)."
+    },
+    {
+      "id": "LS-TEXT-EXPLORE-0b40816ee4",
+      "kind": "canon",
+      "title": "Когда оценить применение",
+      "description": "docs/lenses/methods/explore.md#когда-оценить-применение · SHA256 48f2f78b43914e1621f1668da82083673ab2107a2fb37ec5266aafe0d45346d4",
+      "revision": 1,
+      "guidance": "## Когда оценить применение\n\n- Есть существенно разные способы и ещё недостаточно оснований для выбора.\n- Нужно понять последствия перспективного варианта, включая ещё не раскрытое продолжение.\n- Прежний подход перестал устраивать либо сильный вариант требует пересмотра исходных условий.\n- Общий R или Decision поддерживает несколько целей и локальное сравнение может исказить пользу или цену изменения.\n\nExplore помогает на шаге [сравнения способов в work](../bootstrap/work.md#получить-основания-и-сравнить-способы). Один неизвестный факт можно сначала разрешить через research; анализ уже определённого Decision раскрывает decision-analysis."
+    },
+    {
+      "id": "LS-TEXT-EXPLORE-416019825b",
+      "kind": "canon",
+      "title": "Открыть пространство вариантов",
+      "description": "docs/lenses/methods/explore.md#открыть-пространство-вариантов · SHA256 48f2f78b43914e1621f1668da82083673ab2107a2fb37ec5266aafe0d45346d4",
+      "revision": 1,
+      "guidance": "## Открыть пространство вариантов\n\nУточнить исходные R, ограничения, известные данные и область выбора. Если цель недостаточно ясна для сравнения, обратиться к [clarify](clarify.md).\n\nПроверить существующие способы, прежние решения, готовые графы и уместные методики. Оценить их происхождение, версию и условия. Затем рассмотреть ситуационные варианты, другие разбиения и возможность изменить саму постановку задачи.\n\nРазличие вариантов должно затрагивать существенный механизм, цену, ограничения или последствия. Переименование одного способа не создаёт содержательного разнообразия.\n\nДля существенного неизвестного использовать [research](research.md): получить проверяемые сведения и условия применимости источника. Исследование вопроса может закончиться достаточным ответом без построения новых вариантов. Подготовленную согласованную постановку собирает [specify](specify.md)."
+    },
+    {
+      "id": "LS-TEXT-EXPLORE-f602884522",
+      "kind": "canon",
+      "title": "Развернуть полезное продолжение",
+      "description": "docs/lenses/methods/explore.md#развернуть-полезное-продолжение · SHA256 48f2f78b43914e1621f1668da82083673ab2107a2fb37ec5266aafe0d45346d4",
+      "revision": 1,
+      "guidance": "## Развернуть полезное продолжение\n\nДля перспективных способов исследовать вводимые требования, последующие решения и действия. Допустимо заранее построить длинную ветвь на бумаге и использовать её анализ для оценки начального Decision.\n\nВыделять узлы в полезном масштабе по [shape](shape.md). Общие элементы сохраняют один ID. Визуальные повторения общей части не считаются самостоятельной работой.\n\nГлубина продолжения зависит от неопределённости и стоимости ошибки. При ясной задаче подробное планирование может окупиться. При неизвестном поведении или потребности полезнее сначала получить ранний сквозной результат и обратную связь."
+    },
+    {
+      "id": "LS-TEXT-EXPLORE-0d28579e06",
+      "kind": "canon",
+      "title": "Сопоставить основания и последствия",
+      "description": "docs/lenses/methods/explore.md#сопоставить-основания-и-последствия · SHA256 48f2f78b43914e1621f1668da82083673ab2107a2fb37ec5266aafe0d45346d4",
+      "revision": 1,
+      "guidance": "## Сопоставить основания и последствия\n\nДля каждого серьёзного способа рассмотреть действующие R, существенный контекст, уместный Canon, известные Findings и Questions. Подробный анализ одного способа можно выполнить через [decision-analysis](decision-analysis.md).\n\nСравнить ожидаемую пользу, затраты исполнения и сопровождения, обратимость, риск, требуемые эксперименты и оставшиеся неизвестные решения. Оценку времени и сложности обозначить в её реальной области.\n\nРазмер ещё не раскрытой ветви неизвестен. Меньшее число показанных узлов само по себе не доказывает меньшую сложность. Для ориентиров сравниваются уникальные downstream-элементы, масштаб работы и ещё необходимые выборы.\n\nЕсли варианты различаются ненужной работой, обратиться к [yagni](yagni.md). При сравнении достаточных решений по простоте использовать [kiss](kiss.md)."
+    },
+    {
+      "id": "LS-TEXT-EXPLORE-809845c278",
+      "kind": "canon",
+      "title": "Оценить общий вклад и фактическую разницу",
+      "description": "docs/lenses/methods/explore.md#оценить-общий-вклад-и-фактическую-разницу · SHA256 48f2f78b43914e1621f1668da82083673ab2107a2fb37ec5266aafe0d45346d4",
+      "revision": 1,
+      "guidance": "## Оценить общий вклад и фактическую разницу\n\nУстановить все существенные основания и потребителей рассматриваемых R и Decisions в разрешённом scope. Различить исходный требуемый результат, его необходимые части и условия выбранных способов по [model](../bootstrap/model.md#объяснить-основания-и-сохранить-identity). После отказа от одной ветви учитывать оставшиеся действующие основания: общий R может сохранить актуальность, а общий Decision — быть по-прежнему нужен другим целям. Если существенные основания или потребители недоступны либо выходят за явно ограниченный scope, обозначить ограничения вывода о совместной пользе, совместимости и экономии; не расширять поручение молча.\n\nОдин результат или способ может обеспечивать вклад сразу в несколько целей. Это потенциальный выигрыш: необходимая для одной цели работа может сделать достижение другой сравнительно дешёвым. Проверить условия и критерии каждого вклада, совместимость применений и дополнительную связанность. Похожее название и желание переиспользовать ещё не доказывают общую identity или преимущество общего способа.\n\nСравнивать, что действительно сохранится, отменится, добавится или потребует переделки. Если общий R всё равно нужен по независимому основанию, удаление одной родительской связи не экономит всю стоимость его обеспечения. Общую работу учитывать один раз; стоимость parent не складывать с уже включённой стоимостью child. Удаление участия в одной цели оценивать отдельно от изменения или отмены общего R/Decision.\n\nДля связанных вариантов проверить совместимость всего существенного набора, включая рекомендации из разных Findings. Зависимость принятия варианта, временной порядок исполнения и условия получения evidence/разрешения имеют разный смысл. Предлагать обоснованный совместимый набор и порядок только там, где связи действительно установлены; не выдавать бумажное продолжение за уже принятые Decisions.\n\n### Учесть виды затрат и выполнимость\n\nДетализировать только то, что способно изменить выбор, обещанную версию или следующий шаг. Различать затраты прохождения готового процесса, затраты его реализации и затраты сопровождения/будущего изменения. Исследование и работа помощника также имеют свою цену; их нельзя подменять временем пользователя в готовом процессе.\n\nСравнивать с установленным исходным вариантом в сопоставимых условиях. Для существенной разницы назвать затронутые результаты и версию, действия и ожидания участников, необходимую работу, зависимости, поддержку и обратимость. При неполных данных дать обоснованное качественное сравнение либо диапазон и обозначить неизвестное; не придумывать даты, часы или проценты.\n\nТрудозатраты не равны календарному сроку. Для существенного срока учитывать последовательность, реальную доступность исполнителей и ресурсов, внешние ожидания и определяющие готовность зависимости. Отличать обязательный дедлайн от предпочтения, а измерение — от оценки и условного предположения. Для жёсткого дедлайна проверить необходимый scope и обоснованный запас времени; если запаса или выполнимости установить нельзя, оставить это явно неподтверждённым. Plan не выполняет автоматический расчёт ресурсов по [plan-history](../bootstrap/plan-history.md).\n\nПри настоящей развилке сопоставить полную реализацию сейчас, достаточную версию и раннюю проверку с последующим продолжением. Учесть цену и ожидания самого эксперимента: он не всегда помогает уложиться в срок. Изменение обещанного результата или scope является предложением пересмотра с действующими полномочиями."
+    },
+    {
+      "id": "LS-TEXT-EXPLORE-83ebb62bed",
+      "kind": "canon",
+      "title": "Удержать сильный вариант, требующий пересмотра upstream",
+      "description": "docs/lenses/methods/explore.md#удержать-сильный-вариант-требующий-пересмотра-upstream · SHA256 48f2f78b43914e1621f1668da82083673ab2107a2fb37ec5266aafe0d45346d4",
+      "revision": 1,
+      "guidance": "## Удержать сильный вариант, требующий пересмотра upstream\n\nИногда полезный способ конфликтует с прежним решением или ограничением. Сохранить сам вариант, объяснить конфликт и показать, что потребуется изменить и какие требования это затронет.\n\nТакой анализ может обосновать предложение пересмотра. Большое число зависимостей не запрещает менять неудачный способ: его замена может отменить лишнюю работу и лучше сохранить исходный результат. Сопоставить действительные последствия для всех существенных поддерживаемых целей, оставшиеся основания и проверку нового состояния.\n\nФактическое изменение upstream выполняется явно с учётом полномочий и [checkpoint](../bootstrap/checkpoint.md). Ранее принятые факты и история сохраняются."
+    },
+    {
+      "id": "LS-TEXT-EXPLORE-0d4fc8ebdf",
+      "kind": "canon",
+      "title": "Завершить исследование в подходящий момент",
+      "description": "docs/lenses/methods/explore.md#завершить-исследование-в-подходящий-момент · SHA256 48f2f78b43914e1621f1668da82083673ab2107a2fb37ec5266aafe0d45346d4",
+      "revision": 1,
+      "guidance": "## Завершить исследование в подходящий момент\n\nРезультатом может стать подготовленный выбор, обоснованный короткий эксперимент, уточнение задачи, отсрочка с условием возврата либо выявленная необходимость новых данных.\n\nГраницы поиска должны быть понятны. Указать, какие семейства способов рассмотрены, какие отличия существенны и какие неизвестные могут изменить оценку. Дальнейшее исследование оправдано, если ожидаемая информация способна существенно повлиять на работу."
+    },
+    {
+      "id": "LS-TEXT-EXPLORE-266f263f02",
+      "kind": "canon",
+      "title": "Пример",
+      "description": "docs/lenses/methods/explore.md#пример · SHA256 48f2f78b43914e1621f1668da82083673ab2107a2fb37ec5266aafe0d45346d4",
+      "revision": 1,
+      "guidance": "## Пример\n\nДля поиска рассматриваются индекс, кеширование и изменение формы запроса. У индекса есть затраты обновления, у кеша — требования свежести, у переработки запроса — ограничение функциональности. Нагрузочная проверка может быть общей частью нескольких ветвей.\n\nЕсли кеширование уместно только при изменении согласованной свежести, explore сохраняет предложение с этим условием. Выбор и разрешение изменить исходное требование остаются отдельными действиями.\n\nПолезные варианты и основания сохраняются по [preserve](preserve.md). Семантику бумажных ветвей и выбора объясняет [decision-logic](../bootstrap/decision-logic.md)."
+    },
+    {
+      "id": "LS-TEXT-EXPLORE-c954c2cbf6",
+      "kind": "info",
+      "title": "Нормативные источники",
+      "description": "docs/lenses/methods/explore.md#нормативные-источники · SHA256 48f2f78b43914e1621f1668da82083673ab2107a2fb37ec5266aafe0d45346d4",
+      "revision": 1,
+      "value": "## Нормативные источники\n\n- [Граф на бумаге](../../guides/RDG-ACTIVE-CONTRACT.md#граф-на-бумаге)\n- [Цена работы и глубина планирования](../../guides/RDG-ACTIVE-CONTRACT.md#цена-работы-и-глубина-планирования)\n- [Контекст и Canon](../../guides/RDG-ACTIVE-CONTRACT.md#контекст-и-canon)"
+    },
+    {
+      "id": "LS-WORKFLOW-EXPLORE",
+      "kind": "info",
+      "title": "Место методики в работе",
+      "description": "Контекст выбора; не автоматическое исполнение и не обязательный вызов соседней линзы.",
+      "revision": 1,
+      "tags": [
+        "rdg:lens-workflow"
+      ],
+      "value": "Методика explore выбирается по текущей задаче и условиям из собственного определения, после бутстрепа. Общую стратегию раскрывает work; переход к соседней методике не означает обязательного полного прохождения или исполнения."
+    },
+    {
+      "id": "LS-SOURCE-EXPLORE",
+      "kind": "info",
+      "title": "Полный Markdown-источник · explore",
+      "description": "docs/lenses/methods/explore.md · 381145fca1b7843f4c2b4380c39208e2c0900b17 · SHA256 48f2f78b43914e1621f1668da82083673ab2107a2fb37ec5266aafe0d45346d4",
+      "revision": 1,
+      "tags": [
+        "rdg:lens-source"
+      ],
+      "value": "# Explore — исследовать пространство способов до выбора\n\n> **СТАТУС: АКТУАЛЬНЫЙ ПРОЕКТ СЕМАНТИКИ ДЛЯ СОГЛАСОВАНИЯ.** Вторая группа, методики эффективной работы. Редакция 2026-11-11.\n\nExplore помогает найти существенно разные способы достижения результата и понять их последствия. Она полезна при неочевидном выборе, дорогом продолжении и существенной неопределённости.\n\n## Требуемый результат и основания\n\n**R-LENS-EXPLORE:** «Существенно разные способы и их последствия исследованы достаточно для обоснованного выбора или следующей проверки».\n\nОбласть: указанная развилка и оправданная глубина её продолжения. Родительские основания: [R-USEFUL-RESULT](../requirements.md#r-useful-result), [R-JUSTIFIED-EFFORT](../requirements.md#r-justified-effort). Отношение при переносе определяется по [правилу оснований](../requirements.md#как-выразить-родительские-основания-в-графе).\n\nМетодика снижает риск ранней фиксации неподходящего пути и помогает выбрать полезный эксперимент. Перечень всех мыслимых альтернатив и максимальная глубина рисунка не требуются.\n\nПроверка: [достаточность результата](#завершить-исследование-в-подходящий-момент).\n\n## Когда оценить применение\n\n- Есть существенно разные способы и ещё недостаточно оснований для выбора.\n- Нужно понять последствия перспективного варианта, включая ещё не раскрытое продолжение.\n- Прежний подход перестал устраивать либо сильный вариант требует пересмотра исходных условий.\n- Общий R или Decision поддерживает несколько целей и локальное сравнение может исказить пользу или цену изменения.\n\nExplore помогает на шаге [сравнения способов в work](../bootstrap/work.md#получить-основания-и-сравнить-способы). Один неизвестный факт можно сначала разрешить через research; анализ уже определённого Decision раскрывает decision-analysis.\n\n## Открыть пространство вариантов\n\nУточнить исходные R, ограничения, известные данные и область выбора. Если цель недостаточно ясна для сравнения, обратиться к [clarify](clarify.md).\n\nПроверить существующие способы, прежние решения, готовые графы и уместные методики. Оценить их происхождение, версию и условия. Затем рассмотреть ситуационные варианты, другие разбиения и возможность изменить саму постановку задачи.\n\nРазличие вариантов должно затрагивать существенный механизм, цену, ограничения или последствия. Переименование одного способа не создаёт содержательного разнообразия.\n\nДля существенного неизвестного использовать [research](research.md): получить проверяемые сведения и условия применимости источника. Исследование вопроса может закончиться достаточным ответом без построения новых вариантов. Подготовленную согласованную постановку собирает [specify](specify.md).\n\n## Развернуть полезное продолжение\n\nДля перспективных способов исследовать вводимые требования, последующие решения и действия. Допустимо заранее построить длинную ветвь на бумаге и использовать её анализ для оценки начального Decision.\n\nВыделять узлы в полезном масштабе по [shape](shape.md). Общие элементы сохраняют один ID. Визуальные повторения общей части не считаются самостоятельной работой.\n\nГлубина продолжения зависит от неопределённости и стоимости ошибки. При ясной задаче подробное планирование может окупиться. При неизвестном поведении или потребности полезнее сначала получить ранний сквозной результат и обратную связь.\n\n## Сопоставить основания и последствия\n\nДля каждого серьёзного способа рассмотреть действующие R, существенный контекст, уместный Canon, известные Findings и Questions. Подробный анализ одного способа можно выполнить через [decision-analysis](decision-analysis.md).\n\nСравнить ожидаемую пользу, затраты исполнения и сопровождения, обратимость, риск, требуемые эксперименты и оставшиеся неизвестные решения. Оценку времени и сложности обозначить в её реальной области.\n\nРазмер ещё не раскрытой ветви неизвестен. Меньшее число показанных узлов само по себе не доказывает меньшую сложность. Для ориентиров сравниваются уникальные downstream-элементы, масштаб работы и ещё необходимые выборы.\n\nЕсли варианты различаются ненужной работой, обратиться к [yagni](yagni.md). При сравнении достаточных решений по простоте использовать [kiss](kiss.md).\n\n## Оценить общий вклад и фактическую разницу\n\nУстановить все существенные основания и потребителей рассматриваемых R и Decisions в разрешённом scope. Различить исходный требуемый результат, его необходимые части и условия выбранных способов по [model](../bootstrap/model.md#объяснить-основания-и-сохранить-identity). После отказа от одной ветви учитывать оставшиеся действующие основания: общий R может сохранить актуальность, а общий Decision — быть по-прежнему нужен другим целям. Если существенные основания или потребители недоступны либо выходят за явно ограниченный scope, обозначить ограничения вывода о совместной пользе, совместимости и экономии; не расширять поручение молча.\n\nОдин результат или способ может обеспечивать вклад сразу в несколько целей. Это потенциальный выигрыш: необходимая для одной цели работа может сделать достижение другой сравнительно дешёвым. Проверить условия и критерии каждого вклада, совместимость применений и дополнительную связанность. Похожее название и желание переиспользовать ещё не доказывают общую identity или преимущество общего способа.\n\nСравнивать, что действительно сохранится, отменится, добавится или потребует переделки. Если общий R всё равно нужен по независимому основанию, удаление одной родительской связи не экономит всю стоимость его обеспечения. Общую работу учитывать один раз; стоимость parent не складывать с уже включённой стоимостью child. Удаление участия в одной цели оценивать отдельно от изменения или отмены общего R/Decision.\n\nДля связанных вариантов проверить совместимость всего существенного набора, включая рекомендации из разных Findings. Зависимость принятия варианта, временной порядок исполнения и условия получения evidence/разрешения имеют разный смысл. Предлагать обоснованный совместимый набор и порядок только там, где связи действительно установлены; не выдавать бумажное продолжение за уже принятые Decisions.\n\n### Учесть виды затрат и выполнимость\n\nДетализировать только то, что способно изменить выбор, обещанную версию или следующий шаг. Различать затраты прохождения готового процесса, затраты его реализации и затраты сопровождения/будущего изменения. Исследование и работа помощника также имеют свою цену; их нельзя подменять временем пользователя в готовом процессе.\n\nСравнивать с установленным исходным вариантом в сопоставимых условиях. Для существенной разницы назвать затронутые результаты и версию, действия и ожидания участников, необходимую работу, зависимости, поддержку и обратимость. При неполных данных дать обоснованное качественное сравнение либо диапазон и обозначить неизвестное; не придумывать даты, часы или проценты.\n\nТрудозатраты не равны календарному сроку. Для существенного срока учитывать последовательность, реальную доступность исполнителей и ресурсов, внешние ожидания и определяющие готовность зависимости. Отличать обязательный дедлайн от предпочтения, а измерение — от оценки и условного предположения. Для жёсткого дедлайна проверить необходимый scope и обоснованный запас времени; если запаса или выполнимости установить нельзя, оставить это явно неподтверждённым. Plan не выполняет автоматический расчёт ресурсов по [plan-history](../bootstrap/plan-history.md).\n\nПри настоящей развилке сопоставить полную реализацию сейчас, достаточную версию и раннюю проверку с последующим продолжением. Учесть цену и ожидания самого эксперимента: он не всегда помогает уложиться в срок. Изменение обещанного результата или scope является предложением пересмотра с действующими полномочиями.\n\n## Удержать сильный вариант, требующий пересмотра upstream\n\nИногда полезный способ конфликтует с прежним решением или ограничением. Сохранить сам вариант, объяснить конфликт и показать, что потребуется изменить и какие требования это затронет.\n\nТакой анализ может обосновать предложение пересмотра. Большое число зависимостей не запрещает менять неудачный способ: его замена может отменить лишнюю работу и лучше сохранить исходный результат. Сопоставить действительные последствия для всех существенных поддерживаемых целей, оставшиеся основания и проверку нового состояния.\n\nФактическое изменение upstream выполняется явно с учётом полномочий и [checkpoint](../bootstrap/checkpoint.md). Ранее принятые факты и история сохраняются.\n\n## Завершить исследование в подходящий момент\n\nРезультатом может стать подготовленный выбор, обоснованный короткий эксперимент, уточнение задачи, отсрочка с условием возврата либо выявленная необходимость новых данных.\n\nГраницы поиска должны быть понятны. Указать, какие семейства способов рассмотрены, какие отличия существенны и какие неизвестные могут изменить оценку. Дальнейшее исследование оправдано, если ожидаемая информация способна существенно повлиять на работу.\n\n## Пример\n\nДля поиска рассматриваются индекс, кеширование и изменение формы запроса. У индекса есть затраты обновления, у кеша — требования свежести, у переработки запроса — ограничение функциональности. Нагрузочная проверка может быть общей частью нескольких ветвей.\n\nЕсли кеширование уместно только при изменении согласованной свежести, explore сохраняет предложение с этим условием. Выбор и разрешение изменить исходное требование остаются отдельными действиями.\n\nПолезные варианты и основания сохраняются по [preserve](preserve.md). Семантику бумажных ветвей и выбора объясняет [decision-logic](../bootstrap/decision-logic.md).\n\n## Нормативные источники\n\n- [Граф на бумаге](../../guides/RDG-ACTIVE-CONTRACT.md#граф-на-бумаге)\n- [Цена работы и глубина планирования](../../guides/RDG-ACTIVE-CONTRACT.md#цена-работы-и-глубина-планирования)\n- [Контекст и Canon](../../guides/RDG-ACTIVE-CONTRACT.md#контекст-и-canon)\n"
+    },
+    {
+      "id": "LS-MAP-EXPLORE",
+      "kind": "info",
+      "title": "Карта соответствия Markdown и структуры",
+      "description": "Двустороннее соответствие разделов, сущностей и существенных отношений.",
+      "revision": 1,
+      "tags": [
+        "rdg:lens-source-map"
+      ],
+      "value": "{\n  \"schemaVersion\": 1,\n  \"lensKey\": \"explore\",\n  \"source\": {\n    \"path\": \"docs/lenses/methods/explore.md\",\n    \"sha256\": \"48f2f78b43914e1621f1668da82083673ab2107a2fb37ec5266aafe0d45346d4\",\n    \"gitCommit\": \"381145fca1b7843f4c2b4380c39208e2c0900b17\"\n  },\n  \"fullTextInfoId\": \"LS-SOURCE-EXPLORE\",\n  \"rows\": [\n    {\n      \"anchor\": \"\",\n      \"title\": \"Введение\",\n      \"startLine\": 1,\n      \"endLine\": 6,\n      \"sectionSHA256\": \"386eda5c762b6393b8876b172ab85a2c922133f447ebd7a5d77b557f7b0b54c6\",\n      \"nestedAnchors\": [],\n      \"entityIds\": [\n        \"A-EXPLORE-BUILD\",\n        \"LS-TEXT-EXPLORE-e3b0c44298\",\n        \"LS-SOURCE-EXPLORE\"\n      ],\n      \"edgeIds\": [\n        \"D-A-EXPLORE-BUILD\",\n        \"O-R-EXPLORE-VARIANTS\",\n        \"O-R-EXPLORE-ASSESSMENT\",\n        \"O-R-EXPLORE-UPSTREAM\",\n        \"O-R-EXPLORE-PAPER\",\n        \"CANON-A-EXPLORE-BUILD\",\n        \"LS-EDGE-46350e1706c1862da4e9\",\n        \"LS-EDGE-f4739cacbad73c011f19\",\n        \"LS-EDGE-0174fbc581330c5308b6\",\n        \"LS-EDGE-710bfe0ef5f749345fea\",\n        \"LS-EDGE-ffecc18f5ec727aca991\",\n        \"LS-EDGE-e1e3165fd838b298e536\",\n        \"LS-EDGE-d3b2452023c3ca4205a2\",\n        \"LS-EDGE-2b956313613e35251454\",\n        \"LS-EDGE-1806b750e9606b13936f\",\n        \"LS-EDGE-9ff5ed50c08a90c71fc8\",\n        \"LS-EDGE-a7fe1c3892d27a1d6049\",\n        \"LS-EDGE-0d403f383488b63c65b2\",\n        \"LS-EDGE-2e561a545b4640cd556e\",\n        \"LS-EDGE-d8656913d0f8e9e6ce32\",\n        \"LS-EDGE-0c8b238bf110d16cabff\",\n        \"LS-EDGE-c0830f79cb39421792ab\"\n      ],\n      \"meaning\": \"Полный смысл сохранён в Canon/Info; действия выделены отдельным авторским планом. Пояснения не превращаются автоматически в обязательные R.\"\n    },\n    {\n      \"anchor\": \"требуемый-результат-и-основания\",\n      \"title\": \"Требуемый результат и основания\",\n      \"startLine\": 7,\n      \"endLine\": 16,\n      \"sectionSHA256\": \"31987c02e9f364fd9102d291c915546efa26402f2b7fdd3b187d296dca31c2a5\",\n      \"nestedAnchors\": [],\n      \"entityIds\": [\n        \"R-LENS-EXPLORE\",\n        \"LS-TEXT-EXPLORE-2f197f40fd\"\n      ],\n      \"edgeIds\": [\n        \"D-A-EXPLORE-BUILD\",\n        \"INFO-explore\",\n        \"INFO-DECISION-API-TO-ROOT-EXPLORE\",\n        \"LS-EDGE-f4739cacbad73c011f19\",\n        \"LS-EDGE-c30e738a5fe00c4ef9da\",\n        \"LS-EDGE-c0830f79cb39421792ab\"\n      ],\n      \"meaning\": \"Полный смысл сохранён в Canon/Info; действия выделены отдельным авторским планом. Пояснения не превращаются автоматически в обязательные R.\"\n    },\n    {\n      \"anchor\": \"когда-оценить-применение\",\n      \"title\": \"Когда оценить применение\",\n      \"startLine\": 17,\n      \"endLine\": 25,\n      \"sectionSHA256\": \"ceb60b273ee5858e8a290ab29de578898d81f91424e9abe914aadeebec60bf4f\",\n      \"nestedAnchors\": [],\n      \"entityIds\": [\n        \"LS-TEXT-EXPLORE-0b40816ee4\",\n        \"I-LENS-EXPLORE\",\n        \"LS-WORKFLOW-EXPLORE\"\n      ],\n      \"edgeIds\": [\n        \"INFO-explore\",\n        \"LS-EDGE-0174fbc581330c5308b6\",\n        \"LS-EDGE-c30e738a5fe00c4ef9da\"\n      ],\n      \"meaning\": \"Полный смысл сохранён в Canon/Info; действия выделены отдельным авторским планом. Пояснения не превращаются автоматически в обязательные R.\"\n    },\n    {\n      \"anchor\": \"открыть-пространство-вариантов\",\n      \"title\": \"Открыть пространство вариантов\",\n      \"startLine\": 26,\n      \"endLine\": 35,\n      \"sectionSHA256\": \"353621b7b498ba55d3fd6bdbe531f3a1ea10f8b11125e62a56a5ffc733a7519d\",\n      \"nestedAnchors\": [],\n      \"entityIds\": [\n        \"R-EXPLORE-VARIANTS\",\n        \"A-EXPLORE-REUSE\",\n        \"A-EXPLORE-SITUATIONAL\",\n        \"K-A-EXPLORE-REUSE\",\n        \"K-A-EXPLORE-SITUATIONAL\",\n        \"LS-TEXT-EXPLORE-416019825b\",\n        \"LS-STEP-EXPLORE-VARIANTS\"\n      ],\n      \"edgeIds\": [\n        \"O-R-EXPLORE-VARIANTS\",\n        \"D-A-EXPLORE-REUSE\",\n        \"D-A-EXPLORE-SITUATIONAL\",\n        \"CANON-A-EXPLORE-REUSE\",\n        \"CANON-A-EXPLORE-SITUATIONAL\",\n        \"LS-EDGE-710bfe0ef5f749345fea\",\n        \"LS-EDGE-0d403f383488b63c65b2\",\n        \"LS-EDGE-b6ac14db2ac3cbe14e65\"\n      ],\n      \"meaning\": \"Полный смысл сохранён в Canon/Info; действия выделены отдельным авторским планом. Пояснения не превращаются автоматически в обязательные R.\"\n    },\n    {\n      \"anchor\": \"развернуть-полезное-продолжение\",\n      \"title\": \"Развернуть полезное продолжение\",\n      \"startLine\": 36,\n      \"endLine\": 43,\n      \"sectionSHA256\": \"7656a50b9dea28b292b62d8a7a2ebca51e716336c33e727b3ee65bc4cbac8769\",\n      \"nestedAnchors\": [],\n      \"entityIds\": [\n        \"K-A-EXPLORE-BUILD\",\n        \"LS-TEXT-EXPLORE-f602884522\"\n      ],\n      \"edgeIds\": [\n        \"CANON-A-EXPLORE-BUILD\",\n        \"LS-EDGE-ffecc18f5ec727aca991\"\n      ],\n      \"meaning\": \"Полный смысл сохранён в Canon/Info; действия выделены отдельным авторским планом. Пояснения не превращаются автоматически в обязательные R.\"\n    },\n    {\n      \"anchor\": \"сопоставить-основания-и-последствия\",\n      \"title\": \"Сопоставить основания и последствия\",\n      \"startLine\": 44,\n      \"endLine\": 53,\n      \"sectionSHA256\": \"66024fcc61e7f74dcac66d528f8620b0d416a606a7c2ed62599b9fb9adaec023\",\n      \"nestedAnchors\": [],\n      \"entityIds\": [\n        \"R-EXPLORE-ASSESSMENT\",\n        \"A-EXPLORE-CANONS\",\n        \"K-A-EXPLORE-CANONS\",\n        \"LS-TEXT-EXPLORE-0d28579e06\"\n      ],\n      \"edgeIds\": [\n        \"O-R-EXPLORE-ASSESSMENT\",\n        \"D-A-EXPLORE-CANONS\",\n        \"CANON-A-EXPLORE-CANONS\",\n        \"LS-EDGE-e1e3165fd838b298e536\"\n      ],\n      \"meaning\": \"Полный смысл сохранён в Canon/Info; действия выделены отдельным авторским планом. Пояснения не превращаются автоматически в обязательные R.\"\n    },\n    {\n      \"anchor\": \"оценить-общий-вклад-и-фактическую-разницу\",\n      \"title\": \"Оценить общий вклад и фактическую разницу\",\n      \"startLine\": 54,\n      \"endLine\": 73,\n      \"sectionSHA256\": \"7452584268cb5187452f7ac0da7b11016837fbb020534814a81f6e53a2001dbf\",\n      \"nestedAnchors\": [\n        \"учесть-виды-затрат-и-выполнимость\"\n      ],\n      \"entityIds\": [\n        \"LS-TEXT-EXPLORE-809845c278\",\n        \"LS-STEP-EXPLORE-TRADEOFF\"\n      ],\n      \"edgeIds\": [\n        \"LS-EDGE-d3b2452023c3ca4205a2\",\n        \"LS-EDGE-2e561a545b4640cd556e\",\n        \"LS-EDGE-a416883215f436c6c68c\"\n      ],\n      \"meaning\": \"Полный смысл сохранён в Canon/Info; действия выделены отдельным авторским планом. Пояснения не превращаются автоматически в обязательные R.\"\n    },\n    {\n      \"anchor\": \"удержать-сильный-вариант-требующий-пересмотра-upstream\",\n      \"title\": \"Удержать сильный вариант, требующий пересмотра upstream\",\n      \"startLine\": 74,\n      \"endLine\": 81,\n      \"sectionSHA256\": \"c18b3bb92244605f9e1056e9fd8e5e2b462a22238793e77a7bfd91780ee2f877\",\n      \"nestedAnchors\": [],\n      \"entityIds\": [\n        \"R-EXPLORE-UPSTREAM\",\n        \"A-EXPLORE-REFRAME\",\n        \"K-A-EXPLORE-REFRAME\",\n        \"LS-TEXT-EXPLORE-83ebb62bed\",\n        \"LS-STEP-EXPLORE-UPSTREAM\"\n      ],\n      \"edgeIds\": [\n        \"O-R-EXPLORE-UPSTREAM\",\n        \"D-A-EXPLORE-REFRAME\",\n        \"CANON-A-EXPLORE-REFRAME\",\n        \"LS-EDGE-2b956313613e35251454\",\n        \"LS-EDGE-d8656913d0f8e9e6ce32\",\n        \"LS-EDGE-c722cb9f3178e059aa33\"\n      ],\n      \"meaning\": \"Полный смысл сохранён в Canon/Info; действия выделены отдельным авторским планом. Пояснения не превращаются автоматически в обязательные R.\"\n    },\n    {\n      \"anchor\": \"завершить-исследование-в-подходящий-момент\",\n      \"title\": \"Завершить исследование в подходящий момент\",\n      \"startLine\": 82,\n      \"endLine\": 87,\n      \"sectionSHA256\": \"a542ebf50e14443de71ee9e32f7340a3974d394b2b7bdf9ec9fc7e753c18ce00\",\n      \"nestedAnchors\": [],\n      \"entityIds\": [\n        \"R-EXPLORE-PAPER\",\n        \"A-EXPLORE-COMPARE\",\n        \"K-A-EXPLORE-COMPARE\",\n        \"LS-TEXT-EXPLORE-0d4fc8ebdf\",\n        \"LS-STEP-EXPLORE-STOP\"\n      ],\n      \"edgeIds\": [\n        \"O-R-EXPLORE-PAPER\",\n        \"D-A-EXPLORE-COMPARE\",\n        \"CANON-A-EXPLORE-COMPARE\",\n        \"LS-EDGE-1806b750e9606b13936f\",\n        \"LS-EDGE-0c8b238bf110d16cabff\",\n        \"LS-EDGE-f61074aa6456ad1a730f\"\n      ],\n      \"meaning\": \"Полный смысл сохранён в Canon/Info; действия выделены отдельным авторским планом. Пояснения не превращаются автоматически в обязательные R.\"\n    },\n    {\n      \"anchor\": \"пример\",\n      \"title\": \"Пример\",\n      \"startLine\": 88,\n      \"endLine\": 95,\n      \"sectionSHA256\": \"056fec0f723f96c2dae869c4bb905b5efe7686170d4cd36d6bad3882afee5570\",\n      \"nestedAnchors\": [],\n      \"entityIds\": [\n        \"LS-TEXT-EXPLORE-266f263f02\"\n      ],\n      \"edgeIds\": [\n        \"LS-EDGE-9ff5ed50c08a90c71fc8\"\n      ],\n      \"meaning\": \"Полный смысл сохранён в Canon/Info; действия выделены отдельным авторским планом. Пояснения не превращаются автоматически в обязательные R.\"\n    },\n    {\n      \"anchor\": \"нормативные-источники\",\n      \"title\": \"Нормативные источники\",\n      \"startLine\": 96,\n      \"endLine\": 100,\n      \"sectionSHA256\": \"601205f4b4dc15f90d0c58489ef929d7be393153248d4ce1b9418e644b80946d\",\n      \"nestedAnchors\": [],\n      \"entityIds\": [\n        \"LS-TEXT-EXPLORE-c954c2cbf6\"\n      ],\n      \"edgeIds\": [\n        \"LS-EDGE-a7fe1c3892d27a1d6049\"\n      ],\n      \"meaning\": \"Полный смысл сохранён в Canon/Info; действия выделены отдельным авторским планом. Пояснения не превращаются автоматически в обязательные R.\"\n    }\n  ],\n  \"additionalSources\": [],\n  \"retainedIdentityIds\": [\n    \"R-LENS-EXPLORE\",\n    \"A-EXPLORE-BUILD\",\n    \"R-EXPLORE-VARIANTS\",\n    \"A-EXPLORE-REUSE\",\n    \"A-EXPLORE-SITUATIONAL\",\n    \"R-EXPLORE-ASSESSMENT\",\n    \"A-EXPLORE-CANONS\",\n    \"R-EXPLORE-UPSTREAM\",\n    \"A-EXPLORE-REFRAME\",\n    \"R-EXPLORE-PAPER\",\n    \"A-EXPLORE-COMPARE\",\n    \"K-A-EXPLORE-BUILD\",\n    \"K-A-EXPLORE-REUSE\",\n    \"K-A-EXPLORE-SITUATIONAL\",\n    \"K-A-EXPLORE-CANONS\",\n    \"K-A-EXPLORE-REFRAME\",\n    \"K-A-EXPLORE-COMPARE\",\n    \"I-LENS-EXPLORE\",\n    \"INFO-DECISION-API-EXPLORE\"\n  ],\n  \"notes\": [],\n  \"serviceObjects\": [\n    \"LS-SOURCE-EXPLORE\",\n    \"LS-MAP-EXPLORE\",\n    \"LS-WORKFLOW-EXPLORE\",\n    \"I-LENS-EXPLORE\"\n  ],\n  \"rules\": \"Карта прослеживает представление конкретной версии текста; не самостоятельный нормативный владелец или запись выполнения.\"\n}\n"
     }
   ],
   "externalActions": [],
@@ -324,13 +520,145 @@
       "type": "INFO_FOR",
       "from": "INFO-DECISION-API-EXPLORE",
       "to": "R-LENS-EXPLORE"
+    },
+    {
+      "id": "LS-EDGE-46350e1706c1862da4e9",
+      "type": "INFO_FOR",
+      "from": "LS-TEXT-EXPLORE-e3b0c44298",
+      "to": "A-EXPLORE-BUILD"
+    },
+    {
+      "id": "LS-EDGE-f4739cacbad73c011f19",
+      "type": "CANON_FOR",
+      "from": "LS-TEXT-EXPLORE-2f197f40fd",
+      "to": "A-EXPLORE-BUILD"
+    },
+    {
+      "id": "LS-EDGE-0174fbc581330c5308b6",
+      "type": "CANON_FOR",
+      "from": "LS-TEXT-EXPLORE-0b40816ee4",
+      "to": "A-EXPLORE-BUILD"
+    },
+    {
+      "id": "LS-EDGE-710bfe0ef5f749345fea",
+      "type": "CANON_FOR",
+      "from": "LS-TEXT-EXPLORE-416019825b",
+      "to": "A-EXPLORE-BUILD"
+    },
+    {
+      "id": "LS-EDGE-ffecc18f5ec727aca991",
+      "type": "CANON_FOR",
+      "from": "LS-TEXT-EXPLORE-f602884522",
+      "to": "A-EXPLORE-BUILD"
+    },
+    {
+      "id": "LS-EDGE-e1e3165fd838b298e536",
+      "type": "CANON_FOR",
+      "from": "LS-TEXT-EXPLORE-0d28579e06",
+      "to": "A-EXPLORE-BUILD"
+    },
+    {
+      "id": "LS-EDGE-d3b2452023c3ca4205a2",
+      "type": "CANON_FOR",
+      "from": "LS-TEXT-EXPLORE-809845c278",
+      "to": "A-EXPLORE-BUILD"
+    },
+    {
+      "id": "LS-EDGE-2b956313613e35251454",
+      "type": "CANON_FOR",
+      "from": "LS-TEXT-EXPLORE-83ebb62bed",
+      "to": "A-EXPLORE-BUILD"
+    },
+    {
+      "id": "LS-EDGE-1806b750e9606b13936f",
+      "type": "CANON_FOR",
+      "from": "LS-TEXT-EXPLORE-0d4fc8ebdf",
+      "to": "A-EXPLORE-BUILD"
+    },
+    {
+      "id": "LS-EDGE-9ff5ed50c08a90c71fc8",
+      "type": "CANON_FOR",
+      "from": "LS-TEXT-EXPLORE-266f263f02",
+      "to": "A-EXPLORE-BUILD"
+    },
+    {
+      "id": "LS-EDGE-a7fe1c3892d27a1d6049",
+      "type": "INFO_FOR",
+      "from": "LS-TEXT-EXPLORE-c954c2cbf6",
+      "to": "A-EXPLORE-BUILD"
+    },
+    {
+      "id": "LS-EDGE-0d403f383488b63c65b2",
+      "type": "REQUIRES_ACTION",
+      "from": "A-EXPLORE-BUILD",
+      "to": "LS-STEP-EXPLORE-VARIANTS"
+    },
+    {
+      "id": "LS-EDGE-b6ac14db2ac3cbe14e65",
+      "type": "CANON_FOR",
+      "from": "LS-TEXT-EXPLORE-416019825b",
+      "to": "LS-STEP-EXPLORE-VARIANTS"
+    },
+    {
+      "id": "LS-EDGE-2e561a545b4640cd556e",
+      "type": "REQUIRES_ACTION",
+      "from": "A-EXPLORE-BUILD",
+      "to": "LS-STEP-EXPLORE-TRADEOFF"
+    },
+    {
+      "id": "LS-EDGE-a416883215f436c6c68c",
+      "type": "CANON_FOR",
+      "from": "LS-TEXT-EXPLORE-809845c278",
+      "to": "LS-STEP-EXPLORE-TRADEOFF"
+    },
+    {
+      "id": "LS-EDGE-d8656913d0f8e9e6ce32",
+      "type": "REQUIRES_ACTION",
+      "from": "A-EXPLORE-BUILD",
+      "to": "LS-STEP-EXPLORE-UPSTREAM"
+    },
+    {
+      "id": "LS-EDGE-c722cb9f3178e059aa33",
+      "type": "CANON_FOR",
+      "from": "LS-TEXT-EXPLORE-83ebb62bed",
+      "to": "LS-STEP-EXPLORE-UPSTREAM"
+    },
+    {
+      "id": "LS-EDGE-0c8b238bf110d16cabff",
+      "type": "REQUIRES_ACTION",
+      "from": "A-EXPLORE-BUILD",
+      "to": "LS-STEP-EXPLORE-STOP"
+    },
+    {
+      "id": "LS-EDGE-f61074aa6456ad1a730f",
+      "type": "CANON_FOR",
+      "from": "LS-TEXT-EXPLORE-0d4fc8ebdf",
+      "to": "LS-STEP-EXPLORE-STOP"
+    },
+    {
+      "id": "LS-EDGE-c30e738a5fe00c4ef9da",
+      "type": "INFO_FOR",
+      "from": "LS-WORKFLOW-EXPLORE",
+      "to": "R-LENS-EXPLORE"
+    },
+    {
+      "id": "LS-EDGE-c0830f79cb39421792ab",
+      "type": "INFO_FOR",
+      "from": "LS-SOURCE-EXPLORE",
+      "to": "R-LENS-EXPLORE"
+    },
+    {
+      "id": "LS-EDGE-5929d85bb62e4de95c3b",
+      "type": "INFO_FOR",
+      "from": "LS-MAP-EXPLORE",
+      "to": "R-LENS-EXPLORE"
     }
   ],
   "decisionGroups": [],
   "workGraphs": [
     {
       "id": "WG-explore",
-      "title": "Исследовать способы на бумаге",
+      "title": "Explore — исследовать пространство способов до выбора",
       "rootIds": [
         "R-LENS-EXPLORE"
       ],
@@ -346,6 +674,10 @@
         "A-EXPLORE-REFRAME",
         "R-EXPLORE-PAPER",
         "A-EXPLORE-COMPARE",
+        "LS-STEP-EXPLORE-VARIANTS",
+        "LS-STEP-EXPLORE-TRADEOFF",
+        "LS-STEP-EXPLORE-UPSTREAM",
+        "LS-STEP-EXPLORE-STOP",
         "K-A-EXPLORE-BUILD",
         "K-A-EXPLORE-REUSE",
         "K-A-EXPLORE-SITUATIONAL",
@@ -353,7 +685,21 @@
         "K-A-EXPLORE-REFRAME",
         "K-A-EXPLORE-COMPARE",
         "I-LENS-EXPLORE",
-        "INFO-DECISION-API-EXPLORE"
+        "INFO-DECISION-API-EXPLORE",
+        "LS-TEXT-EXPLORE-e3b0c44298",
+        "LS-TEXT-EXPLORE-2f197f40fd",
+        "LS-TEXT-EXPLORE-0b40816ee4",
+        "LS-TEXT-EXPLORE-416019825b",
+        "LS-TEXT-EXPLORE-f602884522",
+        "LS-TEXT-EXPLORE-0d28579e06",
+        "LS-TEXT-EXPLORE-809845c278",
+        "LS-TEXT-EXPLORE-83ebb62bed",
+        "LS-TEXT-EXPLORE-0d4fc8ebdf",
+        "LS-TEXT-EXPLORE-266f263f02",
+        "LS-TEXT-EXPLORE-c954c2cbf6",
+        "LS-WORKFLOW-EXPLORE",
+        "LS-SOURCE-EXPLORE",
+        "LS-MAP-EXPLORE"
       ]
     }
   ],

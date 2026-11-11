@@ -48,7 +48,7 @@ class Catalog(unittest.TestCase):
         self.assertFalse(any(q['id']=='Q-THREE-CRITERIA'
             for n in shape['nodes'] for q in n.get('qrpe',[])))
         self.assertIn('preserve',next(e for e in catalog['entries'] if e['key']=='shape')['companions'])
-        preserve=A.lens_definition('preserve')[2]
+        preserve=A.lens_definition('preserve','rdg-core-v1')[2]
         self.assertFalse({'R-PRESERVE-C1','R-PRESERVE-C2','R-PRESERVE-C3'} & {n['id'] for n in preserve['nodes']})
         canon=next(n for n in preserve['objects'] if n['kind']=='canon')
         condition=canon['arguments'][0]['condition']
@@ -59,8 +59,9 @@ class Catalog(unittest.TestCase):
         catalog=A.read_lens_catalog()
         definitions=[]
         for entry in catalog['entries']:
-            if 'definition' not in entry:continue  # Decision-only fundamentals have no fake legacy variant.
-            graph=A.lens_definition(entry['key'])[2]
+            try:graph=A.lens_definition(entry['key'],'rdg-core-v1')[2]
+            except ValueError as exc:
+                self.assertIn('UNSUPPORTED_PROFILE_CAPABILITY',str(exc));continue
             self.assertEqual(graph['events'],[])
             self.assertEqual({n['kind'] for n in graph['nodes']},{'requirement','action'})
             self.assertTrue(all(n['status']=='candidate' for n in graph['nodes'] if n['kind']=='action'))
@@ -91,7 +92,7 @@ console.log(graphs.length);
             out=subprocess.run(['python3','-B',str(ROOT/'tools/rdg-agent.py'),'lens','--lens',entry['key'],'--model-profile','rdg-decision-v1'],capture_output=True,text=True,timeout=30,env={k:v for k,v in os.environ.items() if k not in ('RDG_AUTH_STORE','RDG_AUTH_TOKEN','RDG_AGENT_CONTEXT')})
             self.assertEqual(out.returncode,0,out.stderr);self.assertEqual(json.loads(out.stdout)['graph']['coreModel'],'rdg-decision-v1')
         code="const fs=require('node:fs'),m=require(process.argv[1]);for(const g of JSON.parse(fs.readFileSync(0,'utf8')))m.parsePreparedLens(g);"
-        out=subprocess.run(['node','-e',code,str(ROOT/'tools/rdg-lens-session.cjs')],input=json.dumps(definitions),capture_output=True,text=True,timeout=30);self.assertEqual(out.returncode,0,out.stderr);self.assertEqual(len(definitions),15)
+        out=subprocess.run(['node','-e',code,str(ROOT/'tools/rdg-lens-session.cjs')],input=json.dumps(definitions),capture_output=True,text=True,timeout=30);self.assertEqual(out.returncode,0,out.stderr);self.assertEqual(len(definitions),21)
 
     def with_copy(self):
         temp=tempfile.TemporaryDirectory(prefix='rdg-lens-catalog-')

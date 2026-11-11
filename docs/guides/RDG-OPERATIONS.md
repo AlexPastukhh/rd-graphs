@@ -57,6 +57,29 @@ python3 -B tools/graph-index.py
 
 Это обновляет производные `tools/rdg-published-owners.json`, `graphs/index.json` и `tools/rd-graph-data.js`, не означает автоматическое подтверждение корректности бизнес-решения или установку Viewer на компьютере пользователя. Offline опубликованный Gendocen — прошлый snapshot, не online check.
 
+## Публикация структурированных линз
+
+Полные Markdown, source JSON и установленное определение — связанные версии с разными подтверждениями. Содержание и результат переноса принадлежат [плану линз](RDG-LENSES.md#rdg-lens-structured-publication). Изменение исходника само по себе не меняет live Graph.
+
+Из корня Repo проверить соответствие подготовленных определений исходникам:
+
+~~~sh
+python3 -B tools/rdg-lens-content.py
+~~~
+
+`--write` пересобирает source definitions и source-map по полным текстам и авторскому плану; это локальная подготовка без публикации. Предварительный план работы с подготовленным API можно получить так:
+
+~~~sh
+python3 -B tools/rdg-lens-publish.py --context /workspace/repo/Workfiles/rdg-gateway-context.json --journal /workspace/repo/Workfiles/rdg-lens-structured-20261111/publication-19-v1.json
+~~~
+
+Флаг `--apply` исполняет именно подготовленный набор, а `--manage-existing-supplied` явно включает передачу прежних supplied owners под управление для этой авторской задачи. При этом сохраняются packageId, identitySpace, исходное происхождение и прежние Graph versions. Publisher не меняет working-процессы или общий supplied fundamental Registry; новые адресные советы принадлежат самим линзам.
+
+Журнал связан с SHA256 набора и сохраняет request/transactionId/inputBinding до эффекта. Повтор с тем же набором проверяет receipts и готовые результаты; при неподтверждённом исходе — STOP по [UC-RDG-004](../use-cases/ai-work.md#uc-rdg-004). Для другого содержания нужен отдельно проверенный план и новый журнал. Это утилита данного переноса, не автоматическая миграция произвольных будущих редакций recommendation definitions.
+
+Пользователь читает опубликованные данные после «Обновить» в Viewer. Три кнопки «Граф», «Структура», «Markdown» показывают одну линзу. Полный исходник и source-map доступны в Info; техническая schema остаётся у установленного API. Для самой публикации этих данных обновление Windows-runtime не требуется.
+
+
 ## Локальный Helper
 
 ### Предпосылки и выбор режима

@@ -81,8 +81,38 @@ async function start(){
  await page.waitForSelector('[data-search-entity="'+decision.id+'"]');
  assert.equal(await page.$eval('input[aria-label="Текст поиска"]',n=>n.value),'P95');
  assert.deepEqual((await api({method:'read',packageId:pid})).graph,before.graph);
+
+ await click('Закрыть поиск');
+ // The real 19-lens source set uses the same three presentations as working data.
+ // Exercise the largest authoring lens, multiple-root model and two new methods.
+ for(const key of ['model','lens-system','research','dry']){
+  const graph=JSON.parse(fs.readFileSync(path.join(ROOT,'tools/rdg-agent-lenses',key+'-decision.json'),'utf8'));
+  const form=(await api({method:'schema',op:'create',coreModel:'rdg-decision-v1',role:'lens'})).request;
+  Object.assign(form,{path:'lenses/'+key,role:'lens',lensKey:key,title:graph.title,
+   scope:'Isolated structured lens rendering',rootReason:'Read the actual converted lens without executing it',graph});
+  const lensId=(await apply(form)).packages[0].packageId;
+  const snapshot=(await api({method:'read',packageId:lensId})).graph;
+  await page.evaluate(pid=>RDG_PORTABLE_EDITOR.open(pid,{kind:'graph'}),lensId);await idle();
+  await click('Граф','.rdg-presentation-modes');
+  await page.waitForSelector('.rdg-node[data-entity-id="'+graph.rootRequirementId+'"]');
+  if(process.env.RDG_LENS_SCREENSHOTS&&key==='lens-system'){
+   fs.mkdirSync(process.env.RDG_LENS_SCREENSHOTS,{recursive:true});
+   await page.screenshot({path:path.join(process.env.RDG_LENS_SCREENSHOTS,'lens-system-graph.png')});
+  }
+  await click('Структура','.rdg-presentation-modes');
+  await page.waitForSelector('.rdg-structure-canvas');
+  if(process.env.RDG_LENS_SCREENSHOTS&&key==='lens-system')
+   await page.screenshot({path:path.join(process.env.RDG_LENS_SCREENSHOTS,'lens-system-structure.png')});
+  await click('Markdown','.rdg-presentation-modes');
+  await page.waitForSelector('[data-markdown-entity="'+graph.rootRequirementId+'"]');
+  assert((await page.$eval('.rdg-markdown-view',n=>n.textContent)).includes(graph.rootRequirementId));
+  if(process.env.RDG_LENS_SCREENSHOTS&&key==='lens-system')
+   await page.screenshot({path:path.join(process.env.RDG_LENS_SCREENSHOTS,'lens-system-markdown.png')});
+  assert.deepEqual((await api({method:'read',packageId:lensId})).graph,snapshot);
+ }
+
  assert.deepEqual(errors,[]);
- console.log('MARKDOWN_SEARCH_BROWSER PASS');
+ console.log('MARKDOWN_SEARCH_BROWSER PASS · four structured lenses, three modes, no data writes');
 }catch(e){console.error(e.stack||e);process.exitCode=1;}finally{
  if(browser)await browser.close();
  if(child&&child.exitCode===null){const exited=new Promise(r=>child.once('exit',r));child.kill();await exited;}
