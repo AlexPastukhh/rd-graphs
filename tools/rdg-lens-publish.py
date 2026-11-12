@@ -40,6 +40,8 @@ def delta_commands(before,desired):
     for ident in old:
         if old[ident]['kind']!=wanted[ident]['kind']:raise ValueError('ENTITY_KIND_CHANGE:'+ident)
     commands=[];present=set(old);edges={e['id']:copy.deepcopy(e) for e in before['edges']}
+    if before['title']!=desired['title']:
+        commands.append(('graph-title','graph_title',{'title':desired['title']}))
     target_edges={e['id']:e for e in desired['edges']}
     current_groups={group['id']:group for group in before.get('decisionGroups',[])}
     target_groups={group['id']:group for group in desired.get('decisionGroups',[])}
@@ -90,6 +92,8 @@ def delta_commands(before,desired):
     return commands
 
 def verify_graph(actual,desired):
+    if actual['title']!=desired['title']:raise ValueError('PUBLISHED_TITLE_MISMATCH')
+    if actual['rootRequirementId']!=desired['rootRequirementId']:raise ValueError('PUBLISHED_ROOT_MISMATCH')
     a=entities(actual);d=entities(desired)
     if set(a)!=set(d):raise ValueError('PUBLISHED_ENTITY_SET_MISMATCH')
     for ident,node in d.items():
@@ -120,6 +124,18 @@ def inventory(client,graphs):
         else:counts[key]={'mode':'create','commands':1}
     return catalog,existing,counts
 
+
+def navigation_inventory(client,graphs,existing):
+    """Freeze each existing advice definition before any owner mutation."""
+    reviewed={}
+    for key in graphs:
+        row=existing.get(key)
+        if row is None:
+            reviewed[key]=None;continue
+        ident=str(uuid.uuid5(uuid.UUID(row['package']['packageId']),'source-lens-navigation'))
+        registry=client.call({'method':'recommendation_catalog','query':'lens-source-'+key,'limit':100})
+        reviewed[key]=copy.deepcopy(next((d for d in registry['packages'] if d['id']==ident),None))
+    return reviewed
 
 def navigation_definitions(graphs,published):
     """Resolve authored prose cross-links to existing qualified lens addresses."""
@@ -175,6 +191,16 @@ def navigation_definitions(graphs,published):
                 'revision':1,'key':'lens-source-'+key,'title':'Связанные методики · '+key,'supplied':False,'authored':True,'rules':rules}
     return definitions
 
+def reviewed_navigation(state,key):
+    if key in state.get('reviewedNavigationBefore',{}):
+        return state['reviewedNavigationBefore'][key]
+    frozen=state.get('operations',{}).get('$inventory',{}).get('snapshot',{}).get('navigationBefore',{})
+    if key in frozen and frozen[key] is not None:return frozen[key]
+    created=state.get('operations',{}).get(key+'/navigation',{})
+    if created.get('result',{}).get('published'):return created['request']['definition']
+    if key in frozen:return None
+    raise ValueError('NAVIGATION_REVIEW_BASE_MISSING:'+key)
+
 def publish_navigation(client,graphs,state,write,save,progress,*,revise_navigation=False):
     navigation=state.setdefault('navigation',{})
     # A targeted owner update must retain advice pointing to other available lenses.
@@ -187,6 +213,10 @@ def publish_navigation(client,graphs,state,write,save,progress,*,revise_navigati
     available={key:g for key,g in bundle()[1].items() if key in bindings}
     definitions={key:d for key,d in navigation_definitions(available,bindings).items() if key in graphs}
     for key,definition in definitions.items():
+        # Reconcile original accepted attempts even if a later Registry version exists.
+        for saved_key,saved in list(state.get('operations',{}).items()):
+            if (saved_key==key+'/navigation' or saved_key.startswith(key+'/navigation-v')) and saved.get('applyAttempted'):
+                write(saved_key,saved['request'])
         pid=state['verified'][key]['packageId']
         registry=client.call({'method':'recommendation_catalog','query':definition['key'],'limit':100})
         existing=next((d for d in registry['packages'] if d['id']==definition['id']),None)
@@ -195,24 +225,26 @@ def publish_navigation(client,graphs,state,write,save,progress,*,revise_navigati
             same=all(existing.get(k)==v for k,v in definition.items() if k!='revision')
             definition['revision']=existing['revision'] if same else existing['revision']+1
             op_key=key+'/navigation-v'+str(definition['revision'])
-            if same and op_key in state.get('operations',{}):write(op_key,state['operations'][op_key]['request'])
             if not same:
                 if not revise_navigation or existing.get('supplied') or not existing.get('authored'):
                     raise ValueError('NAVIGATION_DEFINITION_EXISTS_REVIEW_NEW_VERSION:'+key)
-                reviewed=state.setdefault('reviewedNavigationBefore',{}).get(key)
-                if reviewed is not None and reviewed!=existing:raise ValueError('NAVIGATION_CHANGED_SINCE_REVIEW:'+key)
-                state['reviewedNavigationBefore'].setdefault(key,copy.deepcopy(existing));save()
+                reviewed=reviewed_navigation(state,key)
+                if reviewed!=existing:raise ValueError('NAVIGATION_CHANGED_SINCE_REVIEW:'+key)
+                state.setdefault('reviewedNavigationBefore',{})[key]=copy.deepcopy(reviewed);save()
                 req=client.call({'method':'schema','op':'recommendation_edit'})['request']
                 req.update(action='edit',packageId=definition['id'],definition=definition,expectedRegistryRevision=registry['registryRevision'],
                     note='Согласованное уточнение рекомендаций '+key+': конкретный контекст и роль для полноты текущей линзы; следующая версия того же определения.')
                 req.pop('attachTo',None)
-                write(key+'/navigation-v'+str(definition['revision']),req)
+                write(op_key,req)
                 verified=client.call({'method':'recommendation_catalog','query':definition['key'],'limit':100})
                 if not any(d==definition for d in verified['packages']):raise ValueError('NAVIGATION_READBACK_MISMATCH:'+key)
             row=client.call({'method':'read','packageId':pid,'detail':'full'})
             if definition['id'] not in row['graph']['recommendationPackageIds']:raise ValueError('NAVIGATION_ATTACHMENT_UNCONFIRMED:'+key)
         else:
             row=client.call({'method':'read','packageId':pid,'detail':'full'})
+            base=state['verified'][key]
+            if (row['package']['revision'],row['graph']['revision'])!=(base['packageRevision'],base['graphRevision']):
+                raise ValueError('LENS_CHANGED_SINCE_REVIEW:'+key)
             req=client.call({'method':'schema','op':'recommendation_edit'})['request']
             req.update(action='create',definition=definition,expectedRegistryRevision=registry['registryRevision'],
                 attachTo={'packageId':pid,'expectedPackageRevision':row['package']['revision'],'expectedGraphRevision':row['graph']['revision']},
@@ -281,7 +313,8 @@ def run(client,journal_file,*,apply=False,manage_supplied=False,revise_navigatio
             state['operations']['$inventory']={'snapshot':state.pop('inventory')};save('$inventory')
         if '$inventory' not in state['operations']:
             catalog,existing,counts=inventory(client,graphs)
-            state['operations']['$inventory']={'snapshot':{'catalog':catalog,'existing':existing,'counts':counts}};save('$inventory')
+            state['operations']['$inventory']={'snapshot':{'catalog':catalog,'existing':existing,'counts':counts,
+                'navigationBefore':navigation_inventory(client,graphs,existing)}};save('$inventory')
         else:
             snapshot=state['operations']['$inventory']['snapshot']
             catalog=snapshot['catalog'];existing=snapshot['existing'];counts=snapshot['counts']

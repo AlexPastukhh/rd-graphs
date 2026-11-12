@@ -89,6 +89,8 @@ Graph, Plan, layouts и Registry координируются своими owner
 
 Discovery конкретного owner учитывает его роль: atomicBatch, Plan и связанные процессные возможности доступны working/copy, а ready/lens сохраняют paper-авторинг. В schema/read возвращается capability batch с available для текущего owner и supportedRoles; профильная поддержка сама по себе не разрешает операцию в любой роли. Schema batch/plan_action возвращает capabilities выбранного owner, а не общий профиль.
 
+Заголовок самого Decision Graph меняется командой graph_title с data:{title} через core для working/copy или paper_edit для ready/lens. Это имя владельца, а не переименование root R: IDs, identitySpace, сущности, основания, Plan и результаты сохраняются. Общие Graph/package CAS, graph.write, edit locks корневых R, preflight/apply/receipt действуют; preflight показывает graphTitleChange, процессная History содержит техническое before/after. Бумажный owner сохраняет версии без фиктивного исполнения. Пустой title и лишние data-поля отклоняются; rootless paper допустим. Профиль rdg-core-v1 не расширяется, batch явно перечисляет graph_title среди неподдержанных команд. Наличие операции проверять в schema установленной сборки.
+
 Самостоятельная [Question](RDG-ACTIVE-CONTRACT.md#вопросы) поддерживает canonical CRUD, ответы/оценки, Viewer-редактирование, явный перенос legacy, copy/remap и batch. Старые embedded questions читаются без записи, их изменение требует `question_migrate`. T5/Planning Meta Action и сквозная приёмка по линзам остаются отдельными задачами.
 
 ## ТЗ оставшегося внедрения

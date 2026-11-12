@@ -228,6 +228,7 @@ def decision_request_data(graph, command, node_id, kernel, entity_kind=None):
             relations=[{'id':'REL-'+uuid.uuid4().hex,'type':'CANON_FOR' if kind=='canon' else 'INFO_FOR','from':ident,'to':node_id}]
         if kind not in ('requirement','decision','action'):work_id=None
         return {'entity':entity,'location':'graph','workGraphId':work_id,'initialRelations':relations}
+    if command=='graph_title':return {'title':graph['title']}
     if command=='edit':
         require(node is not None,'FOCUS_NOT_FOUND')
         return {'nodeId':node_id,'changes':{'title':node['title']},'cosmetic':True}

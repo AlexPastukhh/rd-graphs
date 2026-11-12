@@ -124,6 +124,14 @@ class Sources(unittest.TestCase):
         self.assertEqual(mapping['source']['sha256'],C.sha(changed.encode()))
         self.assertEqual([n for n in before['nodes']],[n for n in after['nodes']])
 
+    def test_publication_includes_the_graph_title_and_root_pointer(self):
+        desired=P.bundle(['research'])[1]['research'];old=copy.deepcopy(desired)
+        old['title']='Stale lens title'
+        self.assertEqual(P.delta_commands(old,desired),[('graph-title','graph_title',{'title':desired['title']})])
+        with self.assertRaisesRegex(ValueError,'PUBLISHED_TITLE_MISMATCH'):P.verify_graph(old,desired)
+        wrong_root=copy.deepcopy(desired);wrong_root['rootRequirementId']='Wrong root pointer'
+        with self.assertRaisesRegex(ValueError,'PUBLISHED_ROOT_MISMATCH'):P.verify_graph(wrong_root,desired)
+
     def test_root_bases_are_part_of_the_publication_delta_and_readback(self):
         desired=P.bundle(['research'])[1]['research']
         for change in ('missing','reason','enabled'):
@@ -169,7 +177,8 @@ class LensApplication(unittest.TestCase):
                     self.assertEqual(markdown['markdown'].count('<a id="'+anchor+'"></a>'),1,
                                      key+': one complete body for '+ident)
                 self.assertTrue(app.call({'method':'receipt','packageId':pid,'transactionId':req['transactionId']})['published'])
-        published={p['lensKey']:{'packageId':p['packageId'],'identitySpace':p['identitySpace']} for p in app.catalog()['packages']}
+        published={p['lensKey']:{'packageId':p['packageId'],'identitySpace':p['identitySpace'],
+            'packageRevision':p['revision'],'graphRevision':p['lensCard']['source']['graphRevision']} for p in app.catalog()['packages']}
         state={'verified':published}
         def write(key,request):
             return app.call({'method':'apply','request':request,'expectedInputBinding':app.call({'method':'preflight','request':request})['inputBinding']})
@@ -310,6 +319,21 @@ class LensApplication(unittest.TestCase):
             P.run(app,journal,apply=True,keys=['research'],progress=lambda _:None)
         self.assertEqual({k:v for k,v in self.sources().items() if k!=journal.name},before)
 
+    def test_graph_title_upgrade_preserves_owner_entities_and_historical_pin(self):
+        app=self.app();desired=P.bundle(['research'])[1]['research'];old=copy.deepcopy(desired)
+        old['title']='Previous published title'
+        req=app.schema('create',core_model='rdg-decision-v1',role='lens')['request']
+        req.update(path='lenses/research',lensKey='research',title=old['title'],scope='Title upgrade',rootReason='Acceptance',graph=old)
+        pid=app.request(req)['packages'][0]['packageId'];before=app.read(pid)
+        state=P.run(app,self.base/'title-upgrade.json',apply=True,keys=['research'],progress=lambda _:None)
+        after=app.read(pid);P.verify_graph(after['graph'],desired)
+        self.assertEqual(after['graph']['title'],desired['title'])
+        self.assertEqual(after['package']['identitySpace'],before['package']['identitySpace'])
+        self.assertEqual(P.entities(after['graph']),P.entities(before['graph']))
+        self.assertEqual(state['verified']['research']['packageId'],pid)
+        ref=before['references'][old['rootRequirementId']]
+        self.assertEqual(app.source_snapshot(pid,{k:ref[k] for k in ('packageId','identitySpace','graphRevision','sha256')})['graph'],before['graph'])
+
     def test_root_basis_upgrade_uses_the_existing_writer(self):
         app=self.app();desired=P.bundle(['research'])[1]['research'];old=copy.deepcopy(desired)
         old['rootCauses']=[]
@@ -340,6 +364,58 @@ class LensApplication(unittest.TestCase):
         ref=before['references'][old['rootRequirementId']]
         historical=app.source_snapshot(pid,{k:ref[k] for k in ('packageId','identitySpace','graphRevision','sha256')})
         self.assertEqual(historical['graph'],before['graph'])
+
+    def test_reviewed_inventory_preserves_an_independent_navigation_edit(self):
+        app=self.app();P.run(app,self.base/'nav-initial.json',apply=True,keys=['model','work'],progress=lambda _:None)
+        journal=self.base/'nav-reviewed.json';P.run(app,journal,keys=['work'],progress=lambda _:None)
+        registry=app.recommendation_catalog(query='lens-source-work')
+        definition=copy.deepcopy(registry['packages'][0]);definition['revision']+=1
+        definition['rules'][0]['usageText']='Independent author after reviewed inventory'
+        app.request({'op':'recommendation_edit','transactionId':str(uuid.uuid4()),'action':'edit','packageId':definition['id'],
+                     'expectedRegistryRevision':registry['registryRevision'],'definition':definition,'note':'Independent author'})
+        before={k:v for k,v in self.sources().items() if k!=journal.name}
+        with self.assertRaisesRegex(ValueError,'NAVIGATION_CHANGED_SINCE_REVIEW'):
+            P.run(app,journal,apply=True,keys=['work'],revise_navigation=True,progress=lambda _:None)
+        self.assertEqual({k:v for k,v in self.sources().items() if k!=journal.name},before)
+
+    def test_navigation_attachment_keeps_the_verified_graph_base(self):
+        from unittest.mock import patch
+        app=self.app();original=P.publish_navigation;observed={}
+        def independent_edit(client,graphs,state,write,save,progress,**options):
+            pid=state['verified']['model']['packageId'];root=graphs['model']['rootRequirementId']
+            request=app.schema('paper_edit',pid,node_id=root,command='edit')['request']
+            request.update(data={'nodeId':root,'changes':{'description':'Independent edit before attachment'},'cosmetic':False},note='Independent author')
+            app.request(request);observed.update(packageId=pid,registryRevision=app.recommendation_catalog()['registryRevision'])
+            return original(client,graphs,state,write,save,progress,**options)
+        with patch.object(P,'publish_navigation',side_effect=independent_edit):
+            with self.assertRaisesRegex(ValueError,'LENS_CHANGED_SINCE_REVIEW'):
+                P.run(app,self.base/'attach-race.json',apply=True,keys=['model','work'],progress=lambda _:None)
+        self.assertEqual(app.recommendation_catalog()['registryRevision'],observed['registryRevision'])
+        graph=app.read(observed['packageId'])['graph']
+        self.assertEqual(P.entities(graph)[graph['rootRequirementId']]['description'],'Independent edit before attachment')
+        self.assertEqual(graph['recommendationPackageIds'],[])
+
+    def test_lost_navigation_create_reply_resumes_from_its_original_receipt(self):
+        app=self.app();journal=self.base/'nav-create-lost.json'
+        class LostNavigationCreate:
+            def call(_,message):
+                result=app.call(message)
+                if message['method']=='apply' and message['request'].get('op')=='recommendation_edit':
+                    raise TimeoutError('Lost accepted navigation create reply')
+                return result
+        with self.assertRaisesRegex(RuntimeError,'UNCERTAIN_LENS_OPERATION_SAVED'):
+            P.run(LostNavigationCreate(),journal,apply=True,keys=['model','work'],progress=lambda _:None)
+        registry=app.recommendation_catalog()
+        later=copy.deepcopy(registry['packages'][0]);later['revision']+=1
+        app.request({'op':'recommendation_edit','transactionId':str(uuid.uuid4()),'action':'edit','packageId':later['id'],
+                     'expectedRegistryRevision':registry['registryRevision'],'definition':later,'note':'Independent same-content version'})
+        registry_revision=app.recommendation_catalog()['registryRevision']
+        state=P.run(app,journal,apply=True,keys=['model','work'],progress=lambda _:None)
+        op=next(v for k,v in state['operations'].items() if k.endswith('/navigation'))
+        self.assertTrue(op['receipt']['published'])
+        self.assertTrue(op['result']['reconciledFromReceipt'])
+        self.assertTrue(app.request(op['request'])['idempotent'])
+        self.assertEqual(app.recommendation_catalog()['registryRevision'],registry_revision+1)
 
     def test_completed_journal_does_not_hide_changed_navigation(self):
         app=self.app();journal=self.base/'changed-navigation.json'

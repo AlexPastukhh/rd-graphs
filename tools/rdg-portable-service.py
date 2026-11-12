@@ -80,6 +80,7 @@ class Application:
                        if basis_before.get(i,[])!=basis_after.get(i,[])]
         dependency_hits=[copy.deepcopy(hit) for ev in new_events for hit in ev.get('dependencyImpacts',[])]
         return {'profile': 'rdg-decision-v1',
+            **({'graphTitleChange':{'before':before['title'],'after':after['title']}} if before['title']!=after['title'] else {}),
             'basisChanges':basis_changed,'dependencyImpacts':dependency_hits,
             'questionLinks':[{'questionId':i,'removed':i in removed,'relatedRefs':copy.deepcopy((after_entities.get(i) or before_entities[i])['relatedRefs'])} for i in sorted(added|removed|changed) if (after_entities.get(i) or before_entities.get(i,{})).get('kind')=='question'],
             'changedIds': sorted(added | removed | changed), 'addedIds': sorted(added),
@@ -96,7 +97,7 @@ class Application:
     def authoring_commands(self,graph,role=None):
         commands=self.kernel.commands_for(graph)-{'remove','recommendation_packages','lens_application'}
         if role in ('ready','lens'):
-            commands=commands & ({'add','edit','link','unlink','decision_group','root_cause','work_graph'}
+            commands=commands & ({'add','edit','graph_title','link','unlink','decision_group','root_cause','work_graph'}
                 if graph['coreModel']=='rdg-decision-v1' else
                 {'add','edit','link','unlink','work_graph','include','join','exclusion_group','lens_recommendations','output_origin'})
         return commands
@@ -769,6 +770,7 @@ class Application:
                         'requirement':('scope',),'decision':(),'action':(),
                         'canon':(),'context':('value',),'info':('value',),
                         'finding':('subjectId','findingType','rationale'),'question':('relatedRefs','impact','answerCondition')}[data['entity']['kind']]]
+                if command=='graph_title':required=['note','data.title']
                 if command=='question_migrate':data['sourceRef']=self.model.reference(ident,graph,nid)
                 if command=='question_answer':required=['note','data.action','data.kind','data.text']
                 if command=='question_assess':required=['note','data.sufficient','data.basis']

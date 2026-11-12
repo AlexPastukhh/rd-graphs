@@ -223,6 +223,70 @@ class APIDiscovery(unittest.TestCase):
             with self.assertRaises(ValueError):app.call({'method':'schema','packageId':ident,**message})
         self.assertEqual(before,self.sources())
 
+    def test_graph_title_uses_the_common_writer_and_preserves_entities_in_every_role(self):
+        app=self.app();working=None
+        for role in ('working','ready','lens','copy'):
+            with self.subTest(role=role):
+                if role=='copy':
+                    req=app.schema('copy',working)['request'];req.update(path='copies/title',note='Copy title fixture')
+                    ident=app.request(req)['packages'][0]['packageId']
+                else:
+                    ident=self.create(role)
+                    if role=='working':working=ident
+                before=app.read(ident);operation='paper_edit' if role in ('ready','lens') else 'core'
+                req=app.schema(operation,ident,command='graph_title')['request']
+                req.update(data={'title':'Updated '+role+' title'},note='Rename the owning Graph only')
+                files=self.sources();preview=app.call({'method':'preflight','request':req})
+                self.assertEqual(self.sources(),files)
+                self.assertEqual(preview['effects']['graphTitleChange'],{'before':before['graph']['title'],'after':req['data']['title']})
+                result=app.call({'method':'apply','request':req,'expectedInputBinding':preview['inputBinding']})
+                self.assertTrue(result['published'])
+                after=app.read(ident)
+                self.assertEqual(after['graph']['title'],req['data']['title'])
+                self.assertEqual(next(p for p in app.catalog()['packages'] if p['packageId']==ident)['title'],req['data']['title'])
+                self.assertIn(req['data']['title'],app.call({'method':'read','packageId':ident,'format':'markdown'})['markdown'])
+                self.assertEqual(app.kernel.entities(after['graph']),app.kernel.entities(before['graph']))
+                self.assertEqual(after['graph']['identitySpace'],before['graph']['identitySpace'])
+                self.assertEqual(after['plan'],before['plan'])
+                self.assertTrue(app.call({'method':'receipt','packageId':ident,'transactionId':req['transactionId']})['published'])
+                self.assertTrue(app.call({'method':'apply','request':req})['idempotent'])
+                stale=app.schema(operation,ident,command='graph_title')['request']
+                stale.update(data={'title':'Stale overwrite'},note='Stale title intent')
+                edit=app.schema(operation,ident,command='edit')['request'];root=after['graph']['rootRequirementId']
+                edit.update(data={'nodeId':root,'changes':{'description':'Independent edit '+role},'cosmetic':False},note='Independent edit')
+                app.request(edit);files=self.sources()
+                with self.assertRaisesRegex(ValueError,'CAS'):app.request(stale)
+                self.assertEqual(self.sources(),files)
+                history=app.history(ident,{'kind':'graph','historyMode':'all'})
+                if role in ('working','copy'):
+                    event=next(e for e in history['events'] if e['event'].get('historyDetail',{}).get('command')=='graph_title')
+                    self.assertEqual(event['event']['historyDetail']['edits'][0]['after'],req['data']['title'])
+                    self.assertEqual(event['historyView']['level'],'technical')
+
+    def test_graph_title_handles_rootless_paper_and_respects_existing_root_locks(self):
+        import copy,uuid
+        app=self.app();kernel=app.kernel.for_profile('rdg-decision-v1')
+        graph=kernel.blank('title-fixture','Original graph title',str(uuid.uuid4()),'R1','Root','Explicit scope','Fixture basis')
+        for locked in (False,True):
+            candidate=copy.deepcopy(graph)
+            if locked:
+                candidate['nodes'][0]['locks']={'edit':{'mode':'hard','principals':['owner-fixture'],'message':'Keep the root edit lock'}}
+            else:candidate.update(rootRequirementId=None,rootCauses=[])
+            req=app.schema('create',core_model='rdg-decision-v1',role='ready')['request']
+            req.update(path='ready/title-'+str(locked),title=candidate['title'],scope='Title guards',rootReason='Acceptance',graph=candidate)
+            ident=app.request(req)['packages'][0]['packageId']
+            change=app.schema('paper_edit',ident,command='graph_title')['request']
+            change.update(data={'title':'Updated graph title'},note='Graph title guard acceptance')
+            before=self.sources()
+            if locked:
+                for method in ('preflight','apply'):
+                    with self.assertRaisesRegex(ValueError,'OBJECT_OPERATION_LOCK_REQUIRED'):app.call({'method':method,'request':change})
+                self.assertEqual(self.sources(),before)
+            else:
+                app.request(change)
+                self.assertEqual(app.read(ident)['graph']['title'],'Updated graph title')
+                self.assertIsNone(app.read(ident)['graph']['rootRequirementId'])
+
     def test_form_request_keeps_cas_and_rejected_changes_are_atomic(self):
         ident=self.create()
         stale=self.form(ident,'edit')['request'];stale['note']='Stale intent'

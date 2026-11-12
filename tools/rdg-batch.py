@@ -14,7 +14,7 @@ GRAPH_COMMANDS = ('add','edit','link','unlink','decision_group','root_cause',
                   'select','withdraw','question_answer','question_assess','question_migrate')
 PLAN_COMMANDS = ('plan_create','place','unplace')
 FUTURE = ()
-EXCLUDED = ('complete','finding_disposition','review','reopen','policy_change',
+EXCLUDED = ('graph_title','complete','finding_disposition','review','reopen','policy_change',
             'dependency_rule','lock_set','lock_remove','lens_application',
             'recommendation_packages','remove','attach_evidence','cross_owner_plan',
             'registry','migration','paper_edit')

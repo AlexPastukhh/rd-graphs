@@ -44,6 +44,39 @@ if (-not $SkipSetup) { throw 'Updater must not run setup' }
 
     def tearDown(self):self.temp.cleanup()
 
+    def invoke_ready_bootstrap(self, pinned_sha):
+        script=self.root/'invoke-ready.ps1'
+        script.write_text('''function global:docker {
+    param([Parameter(ValueFromRemainingArguments=$true)][string[]]$Rest)
+    if ($Rest.Count -ne 3 -or $Rest[0] -ne 'cp') { throw 'Unexpected Docker operation' }
+    $name=($Rest[1] -split '/')[-1]
+    if ($name -ne 'ready.json' -and $name -ne ('RDG-Server-'+$env:RDG_TEST_BUILD+'.zip')) { throw 'Unexpected source' }
+    Copy-Item -LiteralPath (Join-Path $env:RDG_TEST_FIXTURE $name) -Destination $Rest[2]
+    $global:LASTEXITCODE=0
+}
+& $env:RDG_TEST_BOOTSTRAP -AgentContainer '000000000001' -ExpectedBuildId $env:RDG_TEST_BUILD -PinnedSha256 $env:RDG_TEST_PIN
+''')
+        env=dict(os.environ,RDG_TEST_FIXTURE=str(self.root),RDG_TEST_BUILD=BUILD,
+            RDG_TEST_BOOTSTRAP=str(ROOT/'deploy/rdg-server/Invoke-RDG-Ready-Once.ps1'),
+            RDG_TEST_PIN=pinned_sha,LOCALAPPDATA=str(self.root),RDG_TEST_START_MARKER=str(self.marker))
+        return subprocess.run([PWSH,'-NoLogo','-NoProfile','-NonInteractive','-File',str(script)],
+                              env=env,text=True,capture_output=True,timeout=30)
+
+    def test_ready_bootstrap_rejects_wrong_pin_before_running_the_updater(self):
+        self.release()
+        result=self.invoke_ready_bootstrap('0'*64)
+        self.assertNotEqual(result.returncode,0)
+        self.assertIn('pinned checksum',result.stdout+result.stderr)
+        self.assertFalse(self.marker.exists())
+
+    def test_ready_bootstrap_rejects_a_changed_ready_pointer_before_update(self):
+        self.release();ready=json.loads((self.root/'ready.json').read_text());pinned=ready['sha256']
+        ready['buildId']='ci-another-ready-release';(self.root/'ready.json').write_text(json.dumps(ready))
+        result=self.invoke_ready_bootstrap(pinned)
+        self.assertNotEqual(result.returncode,0)
+        self.assertIn('updater would select another CI release',result.stdout+result.stderr)
+        self.assertFalse(self.marker.exists())
+
     def release(self, mutate=None, extra=None, wrong_digest=False, corrupt=False):
         payload = dict(self.files, **{'runtime/RDG-BUILD.json': json.dumps({'buildId': BUILD}).encode()})
         if mutate:mutate(payload)

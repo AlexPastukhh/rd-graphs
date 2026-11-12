@@ -37,7 +37,7 @@ DEPENDENCY_TYPES = frozenset(('DERIVES', 'INTRODUCES', 'DRIVES', 'REQUIRES_ACTIO
 LOCK_OPERATIONS = frozenset(('edit', 'link', 'unlink', 'select', 'withdraw', 'complete',
                              'falsify', 'reopen', 'review', 'assess', 'remove',
                              'dependency_add', 'dependency_remove', 'lock_set', 'lock_remove'))
-COMMANDS = frozenset(('add', 'edit', 'link', 'unlink', 'select', 'withdraw', 'complete',
+COMMANDS = frozenset(('add', 'edit', 'graph_title', 'link', 'unlink', 'select', 'withdraw', 'complete',
                       'reopen', 'decision_group', 'root_cause', 'work_graph', 'review',
                       'lock_set', 'lock_remove', 'recommendation_packages', 'lens_application', 'remove', 'dependency_rule', 'policy_change', 'finding_disposition', 'finding_transfer', 'decision_context', 'context_group', 'requirement_decision', 'context_record', 'question_answer', 'question_assess', 'question_migrate'))
 GRAPH_FIELDS = frozenset(('schemaVersion', 'actionModel', 'coreModel', 'id', 'title',
@@ -1499,7 +1499,13 @@ def apply(original, patch, trusted_verified=False, *, coordinated=False, paper=F
         def target(kind=None, operation='edit'):
             require(node is not None and (kind is None or node['kind'] == kind), 'TARGET_KIND')
             guard(node, raw_event, operation); return node
-        if cmd=='recommendation_packages':
+        if cmd=='graph_title':
+            require(set(data)=={'title'} and text(data.get('title')),'GRAPH_TITLE_FIELDS')
+            require(g['title']!=data['title'],'NO_CHANGE')
+            for root_id in {g['rootRequirementId'],*(c['requirementId'] for c in g['rootCauses'])}-{None}:
+                guard(ns[root_id],raw_event,'edit')
+            g['title']=data['title']
+        elif cmd=='recommendation_packages':
             require(set(data)=={'packageIds'} and unique_strings(data['packageIds']) and all(_uuid(i) for i in data['packageIds']),'SCHEMA_INVALID')
             require(g['recommendationPackageIds']!=data['packageIds'],'NO_CHANGE')
             for root in g['rootCauses']:guard(ns[root['requirementId']],raw_event,'edit')
