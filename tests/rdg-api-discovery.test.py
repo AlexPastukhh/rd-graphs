@@ -141,6 +141,33 @@ class APIDiscovery(unittest.TestCase):
             with self.assertRaises(ValueError):app.call({'method':'schema','op':'create',**selectors})
         self.assertEqual(self.sources(),before)
 
+    def test_batch_discovery_matches_each_owner_role(self):
+        app=self.app()
+        owners={role:self.create(role) for role in ('working','ready','lens')}
+        request=app.schema('copy',owners['working'])['request']
+        request.update(path='copy/discovery',note='Copy for role discovery')
+        owners['copy']=app.request(request)['packages'][0]['packageId']
+        before=self.sources()
+        for role,ident in owners.items():
+            with self.subTest(role=role):
+                working=role in ('working','copy')
+                view=app.read(ident)
+                for feature in ('atomicBatch','planningMetaAction','plan','planOrderOnly','planForks',
+                                'templateApply','externalReferences','questionApiSlice','questionMigration'):
+                    self.assertEqual(view['capabilities']['capabilities'][feature],working,feature)
+                self.assertEqual(view['capabilities']['batch']['available'],working)
+                self.assertEqual(view['capabilities']['batch']['supportedRoles'],['working','copy'])
+                command='core' if working else 'paper_edit'
+                form=app.schema(command,ident,node_id=view['graph']['rootRequirementId'],command='edit')
+                self.assertEqual(form['capabilities']['capabilities']['atomicBatch'],working)
+                if working:
+                    batch=app.schema('batch',ident)
+                    self.assertTrue(batch['capabilities']['capabilities']['atomicBatch'])
+                else:
+                    with self.assertRaisesRegex(ValueError,'BATCH_PROFILE'):
+                        app.schema('batch',ident)
+        self.assertEqual(self.sources(),before)
+
     def test_every_advertised_decision_command_has_a_readonly_form(self):
         ident,subject=self.finding_package();app=self.app();view=app.read(ident);before=self.sources()
         targets={'finding_transfer':'FINDING','finding_disposition':'FINDING','select':subject,'withdraw':subject,'decision_context':subject}

@@ -84,8 +84,9 @@ async function start(){
 
  await click('Закрыть поиск');
  // The real 19-lens source set uses the same three presentations as working data.
- // Exercise the largest authoring lens, multiple-root model and two new methods.
- for(const key of ['model','lens-system','research','dry']){
+ // Cover every definition, including shared roots and preserve's exclusive group.
+ const lensKeys=Object.keys(JSON.parse(fs.readFileSync(path.join(ROOT,'tools/rdg-lens-content-plan.json'),'utf8')));
+ for(const key of lensKeys){
   const graph=JSON.parse(fs.readFileSync(path.join(ROOT,'tools/rdg-agent-lenses',key+'-decision.json'),'utf8'));
   const form=(await api({method:'schema',op:'create',coreModel:'rdg-decision-v1',role:'lens'})).request;
   Object.assign(form,{path:'lenses/'+key,role:'lens',lensKey:key,title:graph.title,
@@ -95,12 +96,16 @@ async function start(){
   await page.evaluate(pid=>RDG_PORTABLE_EDITOR.open(pid,{kind:'graph'}),lensId);await idle();
   await click('Граф','.rdg-presentation-modes');
   await page.waitForSelector('.rdg-node[data-entity-id="'+graph.rootRequirementId+'"]');
+  assert.deepEqual(new Set(await page.$$eval('.rdg-node[data-entity-id]',nodes=>nodes.map(n=>n.dataset.entityId))),
+   new Set([...graph.nodes,...graph.objects,...graph.externalActions]
+    .filter(n=>['requirement','decision','action','context'].includes(n.kind)).map(n=>n.id)),key+' Graph identities');
   if(process.env.RDG_LENS_SCREENSHOTS&&key==='lens-system'){
    fs.mkdirSync(process.env.RDG_LENS_SCREENSHOTS,{recursive:true});
    await page.screenshot({path:path.join(process.env.RDG_LENS_SCREENSHOTS,'lens-system-graph.png')});
   }
   await click('Структура','.rdg-presentation-modes');
   await page.waitForSelector('.rdg-structure-canvas');
+  await page.waitForSelector('.rdg-outline-row[data-entity-id="'+graph.rootRequirementId+'"]');
   if(process.env.RDG_LENS_SCREENSHOTS&&key==='lens-system')
    await page.screenshot({path:path.join(process.env.RDG_LENS_SCREENSHOTS,'lens-system-structure.png')});
   await click('Markdown','.rdg-presentation-modes');
@@ -112,7 +117,7 @@ async function start(){
  }
 
  assert.deepEqual(errors,[]);
- console.log('MARKDOWN_SEARCH_BROWSER PASS · four structured lenses, three modes, no data writes');
+ console.log('MARKDOWN_SEARCH_BROWSER PASS · '+lensKeys.length+' structured lenses, three modes, no data writes');
 }catch(e){console.error(e.stack||e);process.exitCode=1;}finally{
  if(browser)await browser.close();
  if(child&&child.exitCode===null){const exited=new Promise(r=>child.once('exit',r));child.kill();await exited;}

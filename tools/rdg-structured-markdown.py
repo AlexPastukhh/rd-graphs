@@ -44,6 +44,9 @@ def inline(value):
 def fields(value, level=0):
     indent = '  ' * level
     if isinstance(value, dict):
+        if value.get('kind')=='canon':
+            value=dict(value);legacy=value.pop('knownErrors',[])
+            if legacy:value['canons']='\n\n'.join(v for v in [value.get('canons','')]+['\n'.join(v for v in (e['title'],e['description']) if v) for e in legacy] if v)
         for key, child in sorted(value.items()):
             label = inline(LABELS.get(key, key))
             if isinstance(child, (dict, list)) and child:

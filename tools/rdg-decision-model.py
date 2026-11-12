@@ -997,9 +997,22 @@ def _append_event(g, ev, extra=None):
     g['events'].append(ev)
 
 
+def validate_authored_theory(g, previous=None):
+    """New theory belongs to a Decision/Action; retain unchanged legacy data."""
+    ns=entities(g);old=entities(previous) if previous else {}
+    old_links={(e['id'],e['from'],e['to']) for e in previous.get('edges',[]) if e['type']=='CANON_FOR'} if previous else set()
+    for e in g['edges']:
+        if e['type']=='CANON_FOR' and ns[e['to']]['kind']=='requirement':
+            require((e['id'],e['from'],e['to']) in old_links,'THEORY_TARGET_DECISION_OR_ACTION')
+    for ident,n in ns.items():
+        if n['kind']=='canon' and n.get('knownErrors'):
+            require(ident in old and old[ident].get('knownErrors')==n['knownErrors'],'KNOWN_ERRORS_USE_CANONS')
+
+
 def _validate_new_relation(g, relation, new_id=None):
     ns = entities(g)
     _relation_error(relation, ns)
+    require(relation['type']!='CANON_FOR' or ns[relation['to']]['kind'] in ('decision','action'),'THEORY_TARGET_DECISION_OR_ACTION')
     require(relation['type'] not in FINDINGS.RELATIONS,'FINDING_WORKFLOW_RETIRED')
     require(not any(e['id'] == relation['id'] for e in g['edges']) and
             not any(m['id'] == relation['id'] for group in g['decisionGroups'] for m in group['members']), 'RELATION_ID_CONFLICT')
@@ -2187,6 +2200,7 @@ def apply(original, patch, trusted_verified=False, *, coordinated=False, paper=F
         HISTORY.annotate(before_operation,g,event,cmd,data,sys.modules[__name__],process=not paper)
         validate(g)
     g['revision'] = original['revision'] + 1
+    validate_authored_theory(g,original)
     validate(g)
     return g, True
 

@@ -105,15 +105,16 @@ class Application:
         profile = graph.get('coreModel')
         commands = sorted(self.authoring_commands(graph,role))
         if profile == 'rdg-decision-v1':
+            process = role is None or role in ('working','copy')
             return {'profile': profile, 'coreCommands': commands,'entityKinds':['requirement','decision','action','canon','context','info','question']+([] if role in ('ready','lens') else ['finding']),'historyModes':list(self.kernel.for_graph(graph).HISTORY.MODES),
-                    'planFeatures':['order','fork-start','fork-end','marker-date-time'],
+                    'planFeatures':['order','fork-start','fork-end','marker-date-time'] if process else [],
                 'capabilities': {'create': True, 'read': True, 'schema': True,
                     'preflight': True, 'apply': True, 'receipt': True, 'focus': True,
                     'groups': True, 'rootCauses': True, 'externalActions': True,
-                    'copy': True, 'templateApply': True, 'plan': True,
-                    'planOrderOnly': True, 'planForks': True, 'layoutWrite': True, 'layoutOccurrences': True,
-                    'recommendations': True, 'externalReferences': True, 'viewSessions': True, 'compactRead': True, 'atomicBatch': True, 'questionApiSlice': True, 'questionEditing':True, 'questionMigration':True, 'questionCopy':True, 'actionEstimates':True, 'decisionTheory':True, 'recommendationAuthoring':True, 'planningMetaAction':role in ('working','copy'), 'crossOwnerRefs': False},
-                'batch': BATCH.schema(),
+                    'copy': True, 'templateApply': process, 'plan': process,
+                    'planOrderOnly': process, 'planForks': process, 'layoutWrite': True, 'layoutOccurrences': True,
+                    'recommendations': True, 'externalReferences': process, 'viewSessions': True, 'compactRead': True, 'atomicBatch': process, 'questionApiSlice': process, 'questionEditing':True, 'questionMigration':process, 'questionCopy':True, 'actionEstimates':True, 'decisionTheory':True, 'recommendationAuthoring':True, 'planningMetaAction':process, 'crossOwnerRefs': False},
+                'batch': {**BATCH.schema(), 'available':process},
                 'unsupportedCapabilities': ['crossOwnerRefs']}
         return {'profile': profile, 'coreCommands': commands,
                 'capabilities': {'read': True, 'schema': True, 'preflight': True, 'apply': True, 'receipt': True}}
@@ -709,7 +710,8 @@ class Application:
         elif op in ('batch','plan_action'):
             self.check(ident is not None,'BATCH_OWNER')
             row=self.snapshot(ident,True)
-            self.check(row['graph']['coreModel']=='rdg-decision-v1' and
+            graph=row['graph']
+            self.check(graph['coreModel']=='rdg-decision-v1' and
                        row['head']['role'] in ('working','copy'), 'BATCH_PROFILE')
             req.update(targetPackageId=ident,expectedPackageRevision=row['head']['revision'],
                        expectedGraphRevision=row['graph']['revision'],
@@ -821,7 +823,7 @@ class Application:
                     'recommendations':{'authored':'boolean; independent advice identities','textFields':['whenText','usageText'],'anchorKinds':['entity','process','workGraph'],'lensStep':'optional lensRefs[].nodeId','compactFacet':'recommendations'},
                      'questionAnswerKinds':['hypothesis','observation','user_answer'],
                     'questionUserSource':'Direct trusted user entry, or exact quote of a current user-authored Context.',
-                    'decisionTheory':{'kind':'canon','fields':{'guidance':'General text (legacy field), may be empty','canons':'Optional free text','knownErrors':'Optional ordered array of {id,title,description}; id unique locally, title nonempty, description may be empty'},'contentRequired':'At least one nonblank guidance/canons or one knownErrors entry','clear':{'guidance':'','canons':'','knownErrors':[]},'edit':'core edit changes, cosmetic=false; omitted fields are preserved'},
+                    'decisionTheory':{'kind':'canon','targetKinds':['decision','action'],'fields':{'guidance':'General theory text, may be empty','canons':'Good, borderline and bad situations, including known mistakes'},'contentRequired':'At least one nonblank guidance/canons','legacy':'knownErrors is readable; new nonempty lists are rejected. Preserve text in canons.','clear':{'guidance':'','canons':''},'edit':'core edit changes, cosmetic=false; omitted fields are preserved'},
                     'planningMetaAction':{'operation':'plan_action','subjectRefs':'optional qualified entity or scope references; work subjects, no dependencies','atomic':'Action + placement via batch coordinator'},
                     'actionEstimates':{'optional':['complexity','time','basis'],'time':{'minSeconds':'finite >= 0','maxSeconds':'>= minSeconds'},'remove':'core edit changes.estimates=null'},
                     'questionAnswerActions':['add','edit','remove']} if 'graph' in locals() and graph['coreModel']=='rdg-decision-v1' else {}),
@@ -1771,6 +1773,7 @@ class Application:
         for changed in list(changes.values()):
             candidate=changed.get('graph')
             if not candidate or candidate.get('coreModel')!='rdg-decision-v1':continue
+            self.kernel.for_graph(candidate).validate_authored_theory(candidate,(changed.get('before') or {}).get('graph'))
             if (not changed.get('before') or op in ('copy','apply_ready','insert_copy')) and changed.get('role',(changed.get('before') or {}).get('head',{}).get('role')) in ('working','copy'):
                 enabled=[b for b in candidate.get('dependencyBindings',[]) if b['enabled']]
                 if enabled:

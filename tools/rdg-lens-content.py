@@ -30,7 +30,10 @@ def source_sections(path):
         end=starts[n+1][0] if n+1<len(starts) else len(lines)
         sections.append({'title':title,'anchor':slug(title),'startLine':i+1,'endLine':end,'text':''.join(lines[i:end])})
     commit=subprocess.check_output(['git','log','-1','--format=%H','--',str(path.relative_to(ROOT))],cwd=ROOT,text=True).strip()
-    return text,{'path':path.relative_to(ROOT).as_posix(),'sha256':sha(raw),'gitCommit':commit},sections
+    committed=subprocess.check_output(['git','show',commit+':'+path.relative_to(ROOT).as_posix()],cwd=ROOT) if commit else None
+    source={'path':path.relative_to(ROOT).as_posix(),'sha256':sha(raw),'gitCommit':commit if commit and committed==raw else None}
+    if source['gitCommit'] is None:source['baseGitCommit']=commit or None
+    return text,source,sections
 def select(sections,prefix):
     matches=[s for s in sections if s['title'].startswith(prefix)]
     if len(matches)!=1:raise ValueError('SOURCE_SECTION_AMBIGUOUS:'+prefix)
@@ -55,7 +58,7 @@ def compile_one(key,plan,existing=None):
         g['nodes']=[n for n in g['nodes'] if n['id'] in keep]
         g['objects']=[n for n in g['objects'] if n['id'] in keep]
         g['edges']=[e for e in g['edges'] if not e['id'].startswith('LS-EDGE-') and e['from'] in keep and e['to'] in keep]
-        g['decisionGroups']=[]
+        g['decisionGroups']=copy.deepcopy(plan.get('decisionGroups',g.get('decisionGroups',[])))
         g['externalActions']=[]
         if g['rootRequirementId']!=root_id:raise ValueError('ROOT_ID_CHANGED:'+key)
     else:
@@ -70,6 +73,9 @@ def compile_one(key,plan,existing=None):
     g.update(title=title,revision=plan['sourceRevision'],events=[],recommendationPackageIds=[])
     ns={n['id']:n for n in g['nodes']+g['objects']}
     assignments={root_id:purpose_section}
+    if plan['main'] in ns:assignments[plan['main']]=sections[0]
+    catalog_id='I-LENS-'+key.upper()
+    if catalog_id in ns:assignments[catalog_id]=select(sections,'Когда оценить')
     for prefix,ids in plan.get('assign',[]):
         section=select(sections,prefix)
         for ident in ids:
@@ -77,9 +83,10 @@ def compile_one(key,plan,existing=None):
             assignments[ident]=section
     main=plan['main']
     for ident,n in list(ns.items()):
-        section=assignments.get(ident,sections[0])
+        if ident not in assignments:raise ValueError('RETAINED_SECTION_UNASSIGNED:'+key+':'+ident)
+        section=assignments[ident]
         n['revision']=1
-        n['description']='Версия источника '+source['sha256']+'; '+source['path']+('#'+section['anchor'] if section['anchor'] else '')+'. Содержание раскрыто в '+source_id(key,section)+'.'
+        n['description']='Источник: '+source['path']+('#'+section['anchor'] if section['anchor'] else '')+'. Содержание раскрыто в '+source_id(key,section)+'; точная редакция — LS-MAP-'+key.upper()+'.'
         if n['kind']=='requirement':
             n.update(scope=scope+' Применяется к своей части выбранного метода и условиям текущей задачи.',result={'state':'open','truth':'unknown'})
         if n['kind']=='decision':n.update(selectionState='discovered',result={'state':'open','truth':'unknown'})
@@ -104,11 +111,20 @@ def compile_one(key,plan,existing=None):
         ident=source_id(key,section);section_nodes[section['anchor']]=ident
         is_reference=section['title'] in ('Введение','Нормативные источники','Источники и границы')
         n={'id':ident,'kind':'info' if is_reference else 'canon','title':section['title'],
-           'description':source['path']+('#'+section['anchor'] if section['anchor'] else '')+' · SHA256 '+source['sha256'],
+           'description':source['path']+('#'+section['anchor'] if section['anchor'] else '')+'; точная редакция — LS-MAP-'+key.upper()+'.',
            'revision':1}
         n['value' if is_reference else 'guidance']=section['text'].strip() or title
         g['objects'].append(n);ns[ident]=n;assignments[ident]=section
         g['edges'].append(relation('INFO_FOR' if is_reference else 'CANON_FOR',ident,main))
+    # A retained method must expose its assigned theory in an addressed read,
+    # not only mention a source ID in description. Reuse matching legacy bindings.
+    for ident,section in list(assignments.items()):
+        if ns[ident]['kind'] not in ('decision','action'):continue
+        sid=section_nodes[section['anchor']]
+        if ns[sid]['kind']!='canon':continue
+        bound=[ns[e['from']] for e in g['edges'] if e['type']=='CANON_FOR' and e['to']==ident]
+        if not any(n.get('guidance','').strip()==section['text'].strip() for n in bound):
+            g['edges'].append(relation('CANON_FOR',sid,ident))
     actions=[]
     for suffix,action_title,prefix in plan['steps']:
         section=select(sections,prefix);ident='LS-STEP-'+key.upper()+'-'+suffix
@@ -145,7 +161,7 @@ def compile_one(key,plan,existing=None):
     g['objects'].append(workflow);ns[workflow_id]=workflow;assignments[workflow_id]=trigger
     g['edges'].append(relation('INFO_FOR',workflow_id,root_id))
     full_id='LS-SOURCE-'+key.upper()
-    full={'id':full_id,'kind':'info','title':'Полный Markdown-источник · '+key,'description':source['path']+' · '+source['gitCommit']+' · SHA256 '+source['sha256'],
+    full={'id':full_id,'kind':'info','title':'Полный Markdown-источник · '+key,'description':source['path']+' · '+(source['gitCommit'] or 'незафиксированная редакция; base '+(source.get('baseGitCommit') or 'неизвестен'))+' · SHA256 '+source['sha256'],
           'revision':1,'tags':['rdg:lens-source'],'value':text}
     g['objects'].append(full);ns[full_id]=full;assignments[full_id]=sections[0]
     g['edges'].append(relation('INFO_FOR',full_id,root_id))
@@ -163,6 +179,10 @@ def compile_one(key,plan,existing=None):
             g['nodes'].append(n);ns[ident]=n
             g['rootCauses'].append({'id':'LS-ROOT-'+ident,'requirementId':ident,'reason':'Сохранённое исходное родительское основание model.','enabled':True})
             g['edges'].append(relation('DERIVES',ident,root_id))
+    # Group membership replaces the same DRIVES participation atomically on publication.
+    g['decisionGroups']=copy.deepcopy(plan.get('decisionGroups',g.get('decisionGroups',[])))
+    membership_pairs={(group['parentId'],m['decisionId']) for group in g['decisionGroups'] for m in group['members']}
+    g['edges']=[e for e in g['edges'] if not (e['type']=='DRIVES' and (e['from'],e['to']) in membership_pairs)]
     # Keep root causes unique across deterministic recompilation.
     g['rootCauses']=list({c['id']:c for c in g['rootCauses']}.values())
     map_id='LS-MAP-'+key.upper()
@@ -172,6 +192,7 @@ def compile_one(key,plan,existing=None):
         edge_ids=[e['id'] for e in g['edges'] if e['from'] in ids or e['to'] in ids]
         rows.append({'anchor':section['anchor'],'title':section['title'],'startLine':section['startLine'],'endLine':section['endLine'],
                      'sectionSHA256':sha(section['text'].encode()),'nestedAnchors':[slug(m.group(1)) for m in re.finditer(r'^#{3,6} (.+)$',section['text'],re.M)],'entityIds':ids,'edgeIds':edge_ids,
+                     'decisionGroupIds':[gr['id'] for gr in g['decisionGroups'] if gr['parentId'] in ids or any(m['decisionId'] in ids for m in gr['members'])],
                      'meaning':'Полный смысл сохранён в Canon/Info; действия выделены отдельным авторским планом. Пояснения не превращаются автоматически в обязательные R.'})
     correspondence={'schemaVersion':1,'lensKey':key,'source':source,'fullTextInfoId':full_id,'rows':rows,'additionalSources':additional,
                     'retainedIdentityIds':plan.get('retainedIds',[]),'notes':plan.get('notes',[]),

@@ -1377,15 +1377,17 @@ async function start(){return new Promise((resolve,reject)=>{let stderr='';child
  const oldSource=await page.$('[data-invalidation-kind=disabled][data-invalidation-active=false] [data-invalidation-participant-id="CTX-I3"]');
  assert(oldSource);assert((await oldSource.evaluate(n=>n.textContent)).includes('Нагрузка для проверки'));assert.equal(await oldSource.$('button'),null,'removed source stays recorded without a fabricated live link');
  await page.screenshot({path:path.join(base,'invalidation-history-cards.png'),fullPage:true});
- // Automatic application removal uses its own guarded writer and resolves its card.
+ // Automatic theory dependencies belong to a Decision/Action, never a Requirement.
+ await stage2Core('add',{entity:{id:'D-I3',kind:'decision',title:'Способ для проверки теории',description:'Synthetic automatic dependency target'},location:'graph',initialRelations:[{id:'D-I3-R',type:'DRIVES',from:'R-I3',to:'D-I3'}]});
  await stage2Core('add',{entity:{id:'CAN-I3',kind:'canon',title:'Критерий проверки',description:'Synthetic criterion',guidance:'Recorded constraints'},location:'graph'});
- await stage2Core('link',{relation:{id:'CAN-I3-R','type':'CANON_FOR',from:'CAN-I3',to:'R-I3'}});
- await click('Обновить','.rdg-head');
- const invAuto=(await state()).dependencyCatalog.localApplications.find(r=>r.policyId==='builtin:automatic-canon'&&r.targetId==='R-I3'&&r.binding.sourceId==='CAN-I3');assert(invAuto);
+ await stage2Core('link',{relation:{id:'CAN-I3-D','type':'CANON_FOR',from:'CAN-I3',to:'D-I3'}});
+ await click('Обновить','.rdg-head');await invSelect('element','D-I3');
+ const invAuto=(await state()).dependencyCatalog.localApplications.find(r=>r.policyId==='builtin:automatic-canon'&&r.targetId==='D-I3'&&r.binding.sourceId==='CAN-I3');assert(invAuto);
  await stage2Core('policy_change',{action:'automatic_disable',value:{id:invAuto.id}});await click('Обновить','.rdg-head');await invFilter('disabled');
  await click('Удалить применение',invCard('disabled'));await save();assert.equal((await state()).graph.dependencyAutomaticStates[invAuto.id].status,'deleted');
  assert.equal(await page.$(invCard('disabled')),null);await invFilter('history');
  assert((await state()).dependencyCatalog.invalidationRecords.some(r=>r.bindingId===invAuto.id&&r.resolution==='deleted'));
+ await invSelect('element','R-I3');
  const invOwnersBefore=JSON.stringify((await state()).graph);
  await invSelect('process',originalProcessId);assert.equal((await state()).package.packageId,originalProcessId);
  await invSelect('process',exampleRow.packageId);assert.equal((await state()).package.packageId,exampleRow.packageId);
@@ -1408,19 +1410,21 @@ async function start(){return new Promise((resolve,reject)=>{let stderr='';child
  await page.evaluate(id=>RDG_PORTABLE_EDITOR.open(id,{kind:'graph'}),checkpointId);await idle();
  let check=await state();const ownerGraph=JSON.stringify(check.graph),ownerLayouts=JSON.stringify(check.layouts);
  assert.equal(check.view.spec.compactGraph,true);
- assert.equal(check.view.visual.nodes.length,6,'overview has only Requirement and Decisions');
- assert.equal(check.view.visual.routes.length,5,'overview has only DRIVES');
- assert.equal(await page.$$eval('.rdg-node',a=>a.length),6);
- assert((await page.$eval('[data-entity-id="CP-A1"]',n=>n.textContent)).includes('7 Info'));
+ assert.equal(check.view.visual.nodes.length,9,'overview retains Requirement, Decisions and the three source-method Actions');
+ assert(check.view.visual.nodes.every(v=>checkpoint.nodes.some(n=>n.id===v.entityId)), 'overview hides theory and Info objects');
+ assert.equal(check.view.visual.routes.length,8,'overview retains DRIVES and REQUIRES_ACTION');
+ assert.equal(await page.$$eval('.rdg-node',a=>a.length),9);
+ assert((await page.$eval('[data-entity-id="CP-A1"]',n=>n.textContent)).includes('9 Info'));
  await field('Показать Info-блоки',true,'.rdg-tools');
  check=await state();assert.equal(check.view.spec.showAllBlocks,true);
- assert.equal(check.view.visual.nodes.length,7);assert.equal(check.view.visual.routes.length,6);
- assert.equal(await page.$$eval('.rdg-node',a=>a.length),7);
+ assert.equal(check.view.visual.nodes.length,16);assert.equal(check.view.visual.routes.length,15);
+ assert.equal(await page.$$eval('.rdg-node',a=>a.length),16);
+ for(const id of ['LS-SOURCE-CHECKPOINT','LS-MAP-CHECKPOINT','LS-WORKFLOW-CHECKPOINT'])assert(await page.$('.rdg-node[data-entity-id="'+id+'"]'),'expanded view exposes source provenance and mapping '+id);
  assert.equal(await page.$$eval('.rdg-node[data-entity-id^="CANON-"]',a=>a.length),0);
  assert.equal(await page.$$eval('.rdg-node[data-entity-id^="CP-C"]',a=>a.length),0,
    'Info only associated with Canon must not be orphan canvas cards');
  await field('Показать Info-блоки',false,'.rdg-tools');
- check=await state();assert.equal(check.view.visual.nodes.length,6);
+ check=await state();assert.equal(check.view.visual.nodes.length,9);
  assert.equal(JSON.stringify(check.layouts),ownerLayouts);
  await page.$eval('[data-entity-id="R-LENS-CHECKPOINT"]',n=>n.dispatchEvent(new MouseEvent('click',{bubbles:true})));
  await page.waitForFunction(()=>RDG_PORTABLE_EDITOR.view?.view?.spec?.kind==='focus');await idle();
@@ -1441,7 +1445,7 @@ async function start(){return new Promise((resolve,reject)=>{let stderr='';child
  assert.equal(JSON.stringify((await state()).graph),ownerGraph);
  assert.equal(JSON.stringify((await state()).layouts),ownerLayouts);
  await page.evaluate(id=>RDG_PORTABLE_EDITOR.open(id,{kind:'graph'}),originalProcessId);await idle();
- checks.push('checkpoint default 6 cards / 5 links; expanded 7 / 6 without Canon/Canon-only Info; Decision details expose Canon and 7 Info; no graph/layout write');
+ checks.push('checkpoint retains source-method Actions: default 9 cards / 8 links; expanded 16 / 15 including source provenance and mapping, without theory or theory-only Info; Decision details expose theory and seven linked Info; no graph/layout write');
  let first=await state();const processId=first.package.packageId;assert.equal(await page.$('.rdg-explorer'),null);assert((await page.$eval('.rdg-project small',n=>n.textContent)).includes('Process Graph'));assert((await page.$eval('.rdg-crumb',n=>n.textContent)).includes('Процесс-граф'));assert.equal(first.graph.workGraphs.length,0);
  const savedLayout=JSON.stringify(first.layouts),initialRoutes=first.view.visual.routes.map(r=>r.edge.id).sort();
  let compact=await state();

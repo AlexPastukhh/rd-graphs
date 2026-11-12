@@ -1,114 +1,113 @@
 #!/usr/bin/env python3
-"""B02A: common writer, legacy read, semantic observations and independent copies."""
+"""Two-section theory, Decision/Action targets, atomic authoring and legacy reads."""
 import copy
 from importlib.machinery import SourceFileLoader
 from pathlib import Path
 import unittest
-import uuid
+
 ROOT=Path(__file__).resolve().parents[1]
-T=SourceFileLoader('theory_fixture',str(ROOT/'tests/rdg-questions-estimates.test.py')).load_module()
+F=SourceFileLoader('theory_service_fixture',str(ROOT/'tests/rdg-portable-service.test.py')).load_module()
+M=SourceFileLoader('theory_decision_model',str(ROOT/'tools/rdg-decision-model.py')).load_module()
+MD=SourceFileLoader('theory_markdown',str(ROOT/'tools/rdg-structured-markdown.py')).load_module()
 
-class DecisionTheory(unittest.TestCase):
-    setUp=T.QuestionsEstimates.setUp
-    config=T.QuestionsEstimates.config
-    app=T.QuestionsEstimates.app
-    req=T.QuestionsEstimates.req
-    current=T.QuestionsEstimates.current
-    sources=T.QuestionsEstimates.sources
-    command=T.QuestionsEstimates.command
-    command_request=T.QuestionsEstimates.command_request
-    finding_package=T.QuestionsEstimates.finding_package
-    form=T.QuestionsEstimates.form
-    apply_checked=T.QuestionsEstimates.apply_checked
+class Theory(unittest.TestCase):
+    setUp=F.PortableApplication.setUp
+    app=F.PortableApplication.app
+    config=F.PortableApplication.config
+    current=F.PortableApplication.current
+    req=F.PortableApplication.req
+    command_request=F.PortableApplication.command_request
+    command=F.PortableApplication.command
+    sources=F.PortableApplication.sources
+    review=F.PortableApplication.review
 
-    def seed(self,**fields):
-        pid,d=self.finding_package()
-        self.command(pid,'add',entity={'id':'THEORY','kind':'canon','title':'Theory','description':'Legacy description','guidance':'Legacy unrestricted text',**fields},initialRelations=[{'id':'THEORY-LINK','type':'CANON_FOR','from':'THEORY','to':d}])
-        return pid,d
+    def fixture(self):
+        app=self.app();req=app.schema('create',core_model='rdg-decision-v1',role='working')['request']
+        req.update(path='working/theory-test',title='Theory test',scope='Synthetic',rootReason='Synthetic authoring acceptance')
+        pid=app.request(req)['packages'][0]['packageId']
+        self.command(pid,'add',entity={'id':'D','kind':'decision','title':'Candidate','description':'Concrete mechanism'},initialRelations=[{'id':'RD','type':'DRIVES','from':'R1','to':'D'}])
+        self.command(pid,'add',entity={'id':'A','kind':'action','title':'Whole task','description':'Inputs, method, output and acceptance in one task','actionType':'task','lowLevel':False,'targetIds':[],'groupIds':[]},initialRelations=[{'id':'RA','type':'REQUIRES_ACTION','from':'R1','to':'A'}])
+        return pid
 
-    def node(self,pid,nid='THEORY'):
-        app=self.app();return app.kernel.entities(app.read(pid)['graph'])[nid]
+    def add_theory(self,pid,target='D',ident='K',**fields):
+        self.command(pid,'add',entity={'id':ident,'kind':'canon','title':'Theory','description':'Source','guidance':'General',**fields},initialRelations=[{'id':ident+'-LINK','type':'CANON_FOR','from':ident,'to':target}])
+        return next(n for n in self.current(pid)['graph']['objects'] if n['id']==ident)
 
-    def test_legacy_read_is_byte_preserving_and_schema_discovers_all_sections(self):
-        pid,d=self.seed();before=self.sources();original=self.node(pid)
-        app=self.app()
-        for detail in ('full','item'):
-            app.call({'method':'read','packageId':pid,'detail':detail,**({'nodeId':'THEORY'} if detail=='item' else {})})
-        self.assertEqual(self.sources(),before)
-        self.assertNotIn('canons',original);self.assertNotIn('knownErrors',original)
-        schema=app.call({'method':'schema','op':'core','packageId':pid,'command':'add','nodeId':d,'entityKind':'canon'})
-        self.assertEqual(set(schema['request']['data']['entity'])&{'guidance','canons','knownErrors'},{'guidance','canons','knownErrors'})
-        self.assertNotIn('data.entity.guidance',schema['requiredInput'])
-        self.assertIn('decisionTheory',schema['inputChoices'])
-        req=self.command_request(pid,'edit',nodeId='THEORY',changes={'canons':'Useful at low load; risky at high load; borderline at bursts','knownErrors':[{'id':'one','title':'Assuming capacity','description':''}]},cosmetic=False)
-        self.apply_checked(req)
-        node=self.node(pid);self.assertEqual(node['guidance'],original['guidance']);self.assertEqual(node['description'],original['description'])
-        # An old client updates only guidance; optional fields are never lost.
-        self.command(pid,'edit',nodeId='THEORY',changes={'guidance':'Updated by a legacy client'},cosmetic=False)
-        self.assertEqual(self.node(pid)['knownErrors'],node['knownErrors']);self.assertEqual(self.node(pid)['canons'],node['canons'])
-        result=app.call({'method':'read','packageId':pid,'nodeId':d,'detail':'item','include':['canon']})
-        self.assertEqual(result['data']['canon']['items'][0],self.node(pid))
+    def test_schema_and_theory_for_decision_and_action(self):
+        pid=self.fixture();app=self.app()
+        for target in ('D','A'):
+            req=app.schema('core',pid,node_id=target,command='add',entity_kind='canon')['request']
+            self.assertEqual(set(req['data']['entity'])&{'guidance','canons','knownErrors'},{'guidance','canons'})
+            row=self.add_theory(pid,target,'K-'+target,canons='Good at bounded load; bad without a bound; known mistake: assuming capacity')
+            self.assertNotIn('knownErrors',row)
+            self.assertIn('known mistake',row['canons'])
+        root=app.schema('core',pid,node_id='R1',command='add',entity_kind='canon')['request']
+        self.assertEqual(root['data']['initialRelations'],[])
 
-    def test_partial_sections_validation_and_explicit_clear(self):
-        pid,d=self.seed()
-        for i,content in enumerate([{'guidance':'','canons':'Use with a bound'}, {'guidance':'','knownErrors':[{'id':'e','title':'Overconfidence','description':''}]}]):
-            req=self.app().schema('core',pid,node_id=d,command='add',entity_kind='canon')['request'];req['note']='Single section allowed';req['data']['entity'].update(title='Partial',**content);self.apply_checked(req)
-        for bad in [ {'guidance':''}, {'guidance':None}, {'canons':None}, {'canons':2}, {'knownErrors':{}}, {'knownErrors':None}, {'knownErrors':[{'id':'a','title':' ','description':''}]}, {'knownErrors':[{'id':'a','title':'Error','description':None}]}, {'knownErrors':[{'id':'a','title':'Error','description':'','extra':True}]}, {'knownErrors':[{'id':'a','title':'A','description':''},{'id':'a','title':'B','description':''}]} ]:
-            with self.subTest(bad=bad):
-                req=self.command_request(pid,'edit',nodeId='THEORY',changes=bad,cosmetic=False);before=self.sources()
-                with self.assertRaisesRegex(ValueError,'CANON_|THEORY_'):self.app().request(req)
-                self.assertEqual(self.sources(),before)
-        self.command(pid,'edit',nodeId='THEORY',changes={'canons':'Some scope','knownErrors':[{'id':'e','title':'Mistake','description':'Comment'}]},cosmetic=False)
-        self.command(pid,'edit',nodeId='THEORY',changes={'canons':'','knownErrors':[]},cosmetic=False)
-        self.assertEqual(self.node(pid)['knownErrors'],[])
-        before=self.sources()
-        with self.assertRaisesRegex(ValueError,'COSMETIC'):self.command(pid,'edit',nodeId='THEORY',changes={'canons':'Changed'},cosmetic=True)
-        self.assertEqual(self.sources(),before)
+    def test_requirement_initial_link_and_later_link_are_rejected_atomically(self):
+        pid=self.fixture();before=self.current(pid)['graph']
+        with self.assertRaisesRegex(ValueError,'THEORY_TARGET_DECISION_OR_ACTION'):
+            self.add_theory(pid,'R1')
+        self.assertEqual(self.current(pid)['graph'],before)
+        self.add_theory(pid);before=self.current(pid)['graph']
+        req=self.command_request(pid,'link',relation={'id':'BAD','type':'CANON_FOR','from':'K','to':'R1'})
+        for preflight in (True,False):
+            with self.assertRaisesRegex(ValueError,'THEORY_TARGET_DECISION_OR_ACTION'):self.app().request(req,preflight=preflight)
+        self.assertEqual(self.current(pid)['graph'],before)
 
-    def test_each_section_and_error_order_trigger_review_and_record_before_after(self):
-        pid,d=self.seed();app=self.app()
-        rows=[{'id':'a','title':'A','description':''},{'id':'b','title':'B','description':'Explanation'}]
-        for changes in [{'canons':'Bounded use'}, {'guidance':'New general'}, {'knownErrors':rows}, {'knownErrors':list(reversed(rows))}, {'knownErrors':[dict(rows[0],description='More detail')]}, {'knownErrors':[]}]:
-            req=self.form(pid,'review',d);self.apply_checked(req)
-            previous=self.node(pid)
-            req=self.command_request(pid,'edit',nodeId='THEORY',changes=changes,cosmetic=False);self.apply_checked(req)
-            graph=app.read(pid)['graph'];self.assertTrue(app.kernel.entities(graph)[d]['review']['required'])
-            event=next(e for e in reversed(graph['events']) if e.get('historyDetail',{}).get('command')=='edit')
-            for edit in event['historyDetail']['edits']:
-                self.assertEqual(edit['before'],previous.get(edit['field']));self.assertEqual(edit['after'],changes[edit['field']])
-            history=app.history(pid)['events'];view=next(r['historyView'] for r in history if r['event']['id']==event['id'])
-            self.assertEqual(view['level'],'semantic')
-            self.assertEqual(app.kernel.entities(graph)[d]['selectionState'],'discovered')
-            self.assertEqual(app.kernel.entities(graph)['FINDING']['disposition']['code'],'unresolved')
+    def test_new_error_cases_use_canons_and_separate_list_is_rejected(self):
+        pid=self.fixture();before=self.current(pid)['graph']
+        errors=[{'id':'e','title':'Assuming capacity','description':'Measure actual load'}]
+        with self.assertRaisesRegex(ValueError,'KNOWN_ERRORS_USE_CANONS'):self.add_theory(pid,knownErrors=errors)
+        self.assertEqual(self.current(pid)['graph'],before)
+        self.add_theory(pid,canons='Known mistake: assuming capacity. Measure actual load.')
+        before=self.current(pid)['graph']
+        with self.assertRaisesRegex(ValueError,'KNOWN_ERRORS_USE_CANONS'):self.command(pid,'edit',nodeId='K',changes={'knownErrors':errors},cosmetic=False)
+        self.assertEqual(self.current(pid)['graph'],before)
 
-    def test_batch_late_error_cas_retry_and_restart(self):
-        pid,d=self.seed();app=self.app();req=app.schema('batch',pid)['request'];req['note']='Theory batch'
-        req['steps']=[{'alias':'theory','op':'core','command':'add','data':{'entity':{'kind':'canon','title':'Batch theory','description':'','guidance':'','canons':'Mixed suitability','knownErrors':[]},'initialRelations':[]}}, {'alias':'edit','op':'core','command':'edit','data':{'nodeId':{'$alias':'theory'},'changes':{'knownErrors':[{'id':'one','title':'Do not assume','description':''}]},'cosmetic':False}}]
-        invalid=copy.deepcopy(req);invalid['steps'][1]['data']['changes']['knownErrors'][0]['title']='';before=self.sources()
-        with self.assertRaisesRegex(ValueError,'THEORY_'):app.request(invalid)
-        self.assertEqual(self.sources(),before)
-        result=self.apply_checked(req);nid=result['packages'][0]['receipt']['effects']['aliasIds']['theory'];self.assertEqual(self.node(pid,nid)['knownErrors'][0]['id'],'one')
-        stale=self.command_request(pid,'edit',nodeId=nid,changes={'canons':'Stale value'},cosmetic=False)
-        self.command(pid,'edit',nodeId=nid,changes={'canons':'Actual new value'},cosmetic=False);before=self.sources()
-        with self.assertRaisesRegex(ValueError,'CAS|REVISION'):app.request(stale)
-        self.assertEqual(self.sources(),before);self.assertEqual(self.node(pid,nid)['canons'],'Actual new value')
+    def test_late_invalid_batch_does_not_keep_prefix_edit(self):
+        pid=self.fixture();self.add_theory(pid);app=self.app();before=self.current(pid)['graph']
+        req=app.schema('batch',pid)['request'];req['note']='Synthetic late failure'
+        req['steps']=[{'alias':'rename','op':'core','command':'edit','data':{'nodeId':'K','changes':{'title':'Renamed'},'cosmetic':True}}, {'alias':'bad','op':'core','command':'link','data':{'relation':{'id':'BAD','type':'CANON_FOR','from':'K','to':'R1'}}}]
+        with self.assertRaisesRegex(ValueError,'THEORY_TARGET_DECISION_OR_ACTION'):app.request(req,preflight=True)
+        with self.assertRaisesRegex(ValueError,'THEORY_TARGET_DECISION_OR_ACTION'):app.request(req)
+        self.assertEqual(self.current(pid)['graph'],before)
 
-    def test_copy_import_capture_apply_and_delete_preserve_independent_data(self):
-        app=self.app();pid=app.request(self.req('create',path='working/theory-only',role='working',coreModel='rdg-decision-v1',title='Theory copy',scope='Synthetic',rootReason='No live owners'))['packages'][0]['packageId']
-        rows=[{'id':'local','title':'Repeated assumption','description':'A free comment https://example.test/source'}]
-        self.command(pid,'add',entity={'id':'THEORY','kind':'canon','title':'Reusable theory','description':'Keep description','guidance':'General','canons':'Mixed conditions','knownErrors':rows},initialRelations=[{'id':'THEORY-R','type':'CANON_FOR','from':'THEORY','to':'R1'}])
-        original=copy.deepcopy(app.read(pid)['graph']);copies=[]
-        for i in range(2):
-            req=app.schema('copy',pid)['request'];req.update(path='copy/theory-'+str(i),focus={'kind':'canon','id':'THEORY'},note='Independent copy');result=self.apply_checked(req);copies.append(result['packages'][0]['packageId'])
-        for cid in copies:
-            theory=next(n for n in app.read(cid)['graph']['objects'] if n['kind']=='canon');self.assertNotEqual(theory['id'],'THEORY');self.assertEqual(theory['knownErrors'],rows)
-        copied=next(n for n in app.read(copies[0])['graph']['objects'] if n['kind']=='canon')
-        self.command(copies[0],'edit',nodeId=copied['id'],changes={'knownErrors':[]},cosmetic=False)
-        self.assertEqual(app.read(pid)['graph'],original);self.assertEqual(next(n for n in app.read(copies[1])['graph']['objects'] if n['kind']=='canon')['knownErrors'],rows)
-        req=app.schema('capture_ready',pid)['request'];req.update(path='ready/theory',note='Capture only paper theory');ready=self.apply_checked(req)['packages'][0]['packageId']
-        req=app.schema('apply_ready',pid,source_id=ready)['request'];req.update(mode='ADD_ROOT',note='Create separate theory instance');self.apply_checked(req)
-        theories=[n for n in app.read(pid)['graph']['objects'] if n['kind']=='canon'];self.assertEqual(len(theories),2);self.assertTrue(all(n['knownErrors']==rows for n in theories))
-        imported=app.request(self.req('create',path='working/theory-import',role='working',coreModel='rdg-decision-v1',title='Imported',rootReason='Explicit isolated import',graph=app.read(ready)['graph']))['packages'][0]['packageId'];self.assertEqual(next(n for n in app.read(imported)['graph']['objects'] if n['kind']=='canon')['knownErrors'],rows)
-        req=app.schema('delete',pid,node_id='THEORY')['request'];req['note']='Delete theory only';self.apply_checked(req);self.assertNotIn('THEORY',app.kernel.entities(app.read(pid)['graph']));self.assertTrue(app.history(pid)['events'])
+    def test_import_cannot_reintroduce_forbidden_theory_shape(self):
+        pid=self.fixture();app=self.app();g=copy.deepcopy(self.current(pid)['graph'])
+        g['events']=[];g['externalActions']=[]
+        for n in g['nodes']+g['objects']:
+            n.pop('review',None)
+            if n['kind'] in ('requirement','decision','action'):n['result']={'state':'open','truth':'unknown'}
+        g['objects'].append({'id':'K','kind':'canon','title':'Imported theory','description':'','revision':1,'guidance':'General'})
+        for target,errors,code in [('R1',None,'THEORY_TARGET_DECISION_OR_ACTION'),('D',[{'id':'e','title':'Legacy error','description':''}],'KNOWN_ERRORS_USE_CANONS')]:
+            bad=copy.deepcopy(g);bad['edges'].append({'id':'KL','type':'CANON_FOR','from':'K','to':target})
+            if errors:bad['objects'][-1]['knownErrors']=errors
+            req=app.schema('create',core_model='rdg-decision-v1',role='working')['request'];req.update(path='working/bad-import',title='Bad import',scope='Synthetic',rootReason='Test invalid import',graph=bad)
+            with self.assertRaisesRegex(ValueError,code):app.request(req,preflight=True)
+
+    def test_canons_change_invalidates_the_decision_and_keeps_history(self):
+        pid=self.fixture();self.add_theory(pid,canons='Original conditions');before=self.current(pid)['graph']
+        self.command(pid,'edit',nodeId='K',changes={'canons':'Good under bounded load; bad under bursts. Known mistake: ignoring recovery.'},cosmetic=False)
+        g=self.current(pid)['graph'];self.assertTrue(M.entities(g)['D']['review']['required']);self.assertNotEqual(g['events'],before['events'])
+        self.assertEqual(M.entities(before)['K']['canons'],'Original conditions')
+        self.assertIn('Known mistake',M.entities(g)['K']['canons'])
+
+    def test_copy_uses_independent_theory_identity_and_source_is_unchanged(self):
+        pid=self.fixture();self.add_theory(pid,canons='Good, borderline and bad cases, including known mistakes');app=self.app();before=self.current(pid)['graph']
+        req=app.schema('copy',pid)['request'];req['path']='copies/theory';req['note']='Copy valid theory'
+        result=app.request(req);cid=result['packages'][0]['packageId'];g=self.current(cid)['graph'];theory=next(n for n in g['objects'] if n['kind']=='canon')
+        self.assertNotEqual(theory['id'],'K');self.assertEqual(theory['canons'],M.entities(before)['K']['canons'])
+        self.command(cid,'edit',nodeId=theory['id'],changes={'canons':'Changed only in copy'},cosmetic=False)
+        self.assertEqual(self.current(pid)['graph'],before)
+
+    def test_legacy_is_readable_without_automatic_rewrite(self):
+        pid=self.fixture();self.add_theory(pid);g=copy.deepcopy(self.current(pid)['graph']);n=M.entities(g)['K'];n['knownErrors']=[{'id':'old','title':'Old known mistake','description':'Retain this explanation'}]
+        g['edges'].append({'id':'OLD-R','type':'CANON_FOR','from':'K','to':'R1'})
+        before=copy.deepcopy(g);M.validate(g);M.validate_authored_theory(g,g)
+        markdown='\n'.join(MD.fields(n))
+        self.assertIn('Каноны',markdown);self.assertIn('Old known mistake',markdown);self.assertIn('Retain this explanation',markdown);self.assertNotIn('**Известные ошибки**',markdown)
+        self.assertEqual(g,before)
+        with self.assertRaisesRegex(ValueError,'THEORY_TARGET_DECISION_OR_ACTION'):M.validate_authored_theory(g)
 
 if __name__=='__main__':unittest.main()

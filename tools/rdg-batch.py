@@ -23,6 +23,7 @@ EXCLUDED = ('complete','finding_disposition','review','reopen','policy_change',
 def schema():
     return {
         'schemaVersion':1,'op':'batch','maxSteps':100,
+        'supportedRoles':['working','copy'],
         'steps':{'required':['alias','op'], 'core':{'op':'core','command':list(GRAPH_COMMANDS),
                  'data':'same as core command', 'note':'optional step note'},
                  'plan':list(PLAN_COMMANDS)+['plan_action'],

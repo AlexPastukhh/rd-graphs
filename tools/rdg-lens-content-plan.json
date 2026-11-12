@@ -32,6 +32,12 @@
         [
           "K-A-ORIENT-BUILD"
         ]
+      ],
+      [
+        "Введение",
+        [
+          "INFO-DECISION-API-ORIENT"
+        ]
       ]
     ],
     "steps": [
@@ -68,8 +74,13 @@
       "I-LENS-ORIENT",
       "INFO-DECISION-API-ORIENT"
     ],
-    "sourceRevision": 2,
-    "workGraphId": "WG-orient"
+    "sourceRevision": 4,
+    "workGraphId": "WG-orient",
+    "overrides": {
+      "INFO-DECISION-API-ORIENT": {
+        "title": "Введение и границы · orient"
+      }
+    }
   },
   "model": {
     "group": "bootstrap",
@@ -170,8 +181,16 @@
       "K-MODEL-TYPED",
       "C-MODEL-PAPER"
     ],
-    "sourceRevision": 2,
-    "workGraphId": "WG-MODEL"
+    "sourceRevision": 6,
+    "workGraphId": "WG-MODEL",
+    "overrides": {
+      "R-MODEL-LENSES": {
+        "title": "Маршрут переиспользования соответствует смыслу фрагмента"
+      },
+      "I-MODEL-REUSE": {
+        "title": "Переиспользование и сочетание способов сохранения"
+      }
+    }
   },
   "decision-logic": {
     "group": "bootstrap",
@@ -269,8 +288,16 @@
       "K-DECISION-LOGIC-COMPLETE",
       "C-DECISION-LOGIC-ALTERNATIVE"
     ],
-    "sourceRevision": 2,
-    "workGraphId": "WG-DECISION-LOGIC"
+    "sourceRevision": 5,
+    "workGraphId": "WG-DECISION-LOGIC",
+    "overrides": {
+      "D-DECISION-LOGIC-COMPLETE": {
+        "title": "Проверять обязательства и подтверждающие Context"
+      },
+      "I-DECISION-LOGIC-VISIBILITY": {
+        "title": "Отмена и сохранность вариантов"
+      }
+    }
   },
   "plan-history": {
     "group": "bootstrap",
@@ -346,8 +373,19 @@
       "K-PLAN-HISTORY-EVIDENCE",
       "K-PLAN-HISTORY-VIEW"
     ],
-    "sourceRevision": 2,
-    "workGraphId": "WG-PLAN-HISTORY"
+    "sourceRevision": 3,
+    "workGraphId": "WG-PLAN-HISTORY",
+    "overrides": {
+      "D-PLAN-HISTORY-EVIDENCE": {
+        "title": "Связывать подтверждающие Context и pins с действительной версией"
+      },
+      "I-PLAN-HISTORY-EVIDENCE": {
+        "title": "Подтверждающие Context и факт принятия записи"
+      },
+      "A-PLAN-HISTORY-CHECK": {
+        "title": "Проверить запись результата и его основания через Application"
+      }
+    }
   },
   "work": {
     "group": "bootstrap",
@@ -361,7 +399,7 @@
         ]
       ],
       [
-        "Выразить метод",
+        "Определить необходимость Plan",
         [
           "R-WORK-TIME",
           "A-WORK-PLAN",
@@ -380,6 +418,12 @@
         [
           "R-WORK-RECORD",
           "A-WORK-EVIDENCE"
+        ]
+      ],
+      [
+        "Введение",
+        [
+          "INFO-DECISION-API-WORK"
         ]
       ]
     ],
@@ -417,6 +461,9 @@
       },
       "CANON-WORK-DECISION": {
         "title": "Различать планирование, выбор и факты"
+      },
+      "INFO-DECISION-API-WORK": {
+        "title": "Введение и границы · work"
       }
     },
     "workflow": "Первоначальный бутстреп изучается целиком. Затем work используется в подходящем объёме по текущей задаче; триггеры помогают вернуться к нужному месту. Общий цикл решения задач принадлежит work. Авторство и преобразование линз относятся к соответствующему поручению.",
@@ -434,7 +481,7 @@
       "CANON-WORK-DECISION",
       "INFO-DECISION-API-WORK"
     ],
-    "sourceRevision": 2,
+    "sourceRevision": 6,
     "workGraphId": "WG-WORK"
   },
   "checkpoint": {
@@ -471,6 +518,12 @@
         [
           "CP-A5",
           "CANON-CP-A5"
+        ]
+      ],
+      [
+        "Введение",
+        [
+          "INFO-DECISION-API-CHECKPOINT"
         ]
       ]
     ],
@@ -522,6 +575,12 @@
       },
       "CANON-CP-A5": {
         "title": "Обоснованное продолжение"
+      },
+      "INFO-DECISION-API-CHECKPOINT": {
+        "title": "Введение и границы · checkpoint"
+      },
+      "CP-C7": {
+        "title": "Достаточность фактов, знаний и подтверждений; доступные источники недостающего"
       }
     },
     "notes": [
@@ -549,7 +608,7 @@
       "CANON-CP-A5",
       "INFO-DECISION-API-CHECKPOINT"
     ],
-    "sourceRevision": 2,
+    "sourceRevision": 4,
     "workGraphId": "WG-checkpoint"
   },
   "lens-system": {
@@ -628,7 +687,7 @@
       [
         "QUALITY",
         "Проверить качество определения в заданном scope",
-        "Достаточный результат"
+        "Проверить качество линзы"
       ]
     ],
     "workflow": "Первоначальный бутстреп изучается целиком. Затем lens-system используется в подходящем объёме по текущей задаче; триггеры помогают вернуться к нужному месту. Общий цикл решения задач принадлежит work. Авторство и преобразование линз относятся к соответствующему поручению.",
@@ -655,8 +714,35 @@
       "K-LENS-SYSTEM-SOURCE",
       "C-LENS-SYSTEM-CONTEXT"
     ],
-    "sourceRevision": 2,
-    "workGraphId": "WG-LENS-SYSTEM"
+    "sourceRevision": 7,
+    "workGraphId": "WG-LENS-SYSTEM",
+    "recommendationAdvice": [
+      {
+        "id": "quality-review",
+        "lensKey": "review",
+        "whenText": "Поручено проверить качество определения линзы в заданной редакции и scope.",
+        "usageText": "Использовать review для независимой проверки этой линзы по её цели, общим критериям, источнику и фактически доступной структуре. Выбирать нормальные случаи и контрпримеры; допустим вывод без исправлений. Авторский цикл и переписывание не запускаются без поручения.",
+        "anchorIds": [
+          "LS-METHOD-LENS-SYSTEM-QUALITY",
+          "LS-STEP-LENS-SYSTEM-QUALITY"
+        ]
+      },
+      {
+        "id": "dry-owner",
+        "lensKey": "dry",
+        "whenText": "При создании или пересмотре линзы повторяется изменяемый смысл либо неясен владелец правила.",
+        "usageText": "Применить DRY к определению линзы: сохранить одного нормативного владельца и прослеживаемые представления. Ссылки и производные виды допустимы; не копировать процедуру соседней линзы как независимое правило.",
+        "anchorIds": [
+          "LS-METHOD-LENS-SYSTEM-AUTHOR",
+          "LS-STEP-LENS-SYSTEM-AUTHOR"
+        ]
+      }
+    ],
+    "overrides": {
+      "D-LENS-SYSTEM-KINDS": {
+        "title": "Различать чтение линзы и явную вставку готового содержания"
+      }
+    }
   },
   "clarify": {
     "group": "methods",
@@ -699,6 +785,12 @@
         [
           "K-A-CLARIFY-BUILD"
         ]
+      ],
+      [
+        "Введение",
+        [
+          "INFO-DECISION-API-CLARIFY"
+        ]
       ]
     ],
     "steps": [
@@ -738,8 +830,13 @@
       "I-LENS-CLARIFY",
       "INFO-DECISION-API-CLARIFY"
     ],
-    "sourceRevision": 2,
-    "workGraphId": "WG-clarify"
+    "sourceRevision": 4,
+    "workGraphId": "WG-clarify",
+    "overrides": {
+      "INFO-DECISION-API-CLARIFY": {
+        "title": "Введение и границы · clarify"
+      }
+    }
   },
   "research": {
     "group": "methods",
@@ -770,7 +867,7 @@
     "retainedIds": [
       "R-LENS-RESEARCH"
     ],
-    "sourceRevision": 1,
+    "sourceRevision": 2,
     "workGraphId": "WG-RESEARCH"
   },
   "explore": {
@@ -815,6 +912,12 @@
         "Развернуть полезное",
         [
           "K-A-EXPLORE-BUILD"
+        ]
+      ],
+      [
+        "Введение",
+        [
+          "INFO-DECISION-API-EXPLORE"
         ]
       ]
     ],
@@ -862,8 +965,13 @@
       "I-LENS-EXPLORE",
       "INFO-DECISION-API-EXPLORE"
     ],
-    "sourceRevision": 2,
-    "workGraphId": "WG-explore"
+    "sourceRevision": 5,
+    "workGraphId": "WG-explore",
+    "overrides": {
+      "INFO-DECISION-API-EXPLORE": {
+        "title": "Введение и границы · explore"
+      }
+    }
   },
   "specify": {
     "group": "methods",
@@ -894,7 +1002,7 @@
     "retainedIds": [
       "R-LENS-SPECIFY"
     ],
-    "sourceRevision": 1,
+    "sourceRevision": 2,
     "workGraphId": "WG-SPECIFY"
   },
   "shape": {
@@ -910,7 +1018,7 @@
         ]
       ],
       [
-        "Выбрать границу",
+        "Найти достаточную",
         [
           "R-SHAPE-CRITERIA",
           "A-SHAPE-ORIGINAL",
@@ -936,6 +1044,12 @@
         "Найти достаточную",
         [
           "K-A-SHAPE-BUILD"
+        ]
+      ],
+      [
+        "Введение",
+        [
+          "INFO-DECISION-API-SHAPE"
         ]
       ]
     ],
@@ -970,6 +1084,18 @@
       },
       "R-SHAPE-SHAPE": {
         "title": "Структура соответствует действующей модели и смыслу задачи"
+      },
+      "INFO-DECISION-API-SHAPE": {
+        "title": "Введение и границы · shape"
+      },
+      "K-A-SHAPE-ORIGINAL": {
+        "title": "Оценить пользу и достаточный масштаб фрагмента"
+      },
+      "K-A-SHAPE-MODEL": {
+        "title": "Выбрать форму и отношения действующей модели RDG"
+      },
+      "A-SHAPE-PERSIST": {
+        "title": "Различать обоснование, запись и необязательную фиксацию применения"
       }
     },
     "workflow": "Методика shape выбирается по текущей задаче и условиям из собственного определения, после бутстрепа. Общую стратегию раскрывает work; переход к соседней методике не означает обязательного полного прохождения или исполнения.",
@@ -991,7 +1117,7 @@
       "I-LENS-SHAPE",
       "INFO-DECISION-API-SHAPE"
     ],
-    "sourceRevision": 2,
+    "sourceRevision": 5,
     "workGraphId": "WG-shape"
   },
   "preserve": {
@@ -1014,6 +1140,12 @@
         "Проверить основания",
         [
           "K-PRESERVE"
+        ]
+      ],
+      [
+        "Введение",
+        [
+          "INFO-DECISION-API-PRESERVE"
         ]
       ]
     ],
@@ -1038,13 +1170,42 @@
       "I-LENS-PRESERVE",
       "INFO-DECISION-API-PRESERVE"
     ],
-    "sourceRevision": 2,
-    "workGraphId": "WG-preserve"
+    "sourceRevision": 5,
+    "workGraphId": "WG-preserve",
+    "decisionGroups": [
+      {
+        "id": "DG-PRESERVE-SAVE-OR-SKIP",
+        "parentId": "R-LENS-PRESERVE",
+        "title": "Сохранить либо пропустить один фрагмент в одном scope",
+        "selectionRequired": false,
+        "mutuallyExclusive": true,
+        "members": [
+          {
+            "id": "M-PRESERVE-DRAW",
+            "decisionId": "A-PRESERVE-DRAW"
+          },
+          {
+            "id": "M-PRESERVE-SKIP",
+            "decisionId": "A-PRESERVE-SKIP"
+          }
+        ]
+      }
+    ],
+    "overrides": {
+      "INFO-DECISION-API-PRESERVE": {
+        "title": "Введение и границы · preserve"
+      }
+    }
   },
   "decision-analysis": {
     "group": "methods",
     "main": "D-DECISION-ANALYSIS-ASSESS",
     "steps": [
+      [
+        "REALIZATION",
+        "Раскрыть существенное продолжение и подготовить способ к оценке",
+        "Развернуть способ"
+      ],
       [
         "TARGET",
         "Установить конкретный способ, применимый Canon и контекст",
@@ -1070,7 +1231,7 @@
     "retainedIds": [
       "R-LENS-DECISION-ANALYSIS"
     ],
-    "sourceRevision": 1,
+    "sourceRevision": 3,
     "workGraphId": "WG-DECISION-ANALYSIS"
   },
   "review": {
@@ -1114,6 +1275,12 @@
         [
           "K-A-REVIEW-BUILD"
         ]
+      ],
+      [
+        "Введение",
+        [
+          "INFO-DECISION-API-REVIEW"
+        ]
       ]
     ],
     "steps": [
@@ -1144,6 +1311,15 @@
       },
       "A-REVIEW-AUDIT": {
         "title": "Проверить существенные слабые места в заданном scope"
+      },
+      "INFO-DECISION-API-REVIEW": {
+        "title": "Введение и границы · review"
+      },
+      "K-A-REVIEW-CRITERIA": {
+        "title": "Сверить цель, теорию и действующие основания ожидаемого поведения"
+      },
+      "K-A-REVIEW-AUDIT": {
+        "title": "Проверить существенные слабые места и полноту охвата"
       }
     },
     "workflow": "Методика review выбирается по текущей задаче и условиям из собственного определения, после бутстрепа. Общую стратегию раскрывает work; переход к соседней методике не означает обязательного полного прохождения или исполнения.",
@@ -1166,8 +1342,47 @@
       "I-LENS-REVIEW",
       "INFO-DECISION-API-REVIEW"
     ],
-    "sourceRevision": 2,
-    "workGraphId": "WG-review"
+    "sourceRevision": 6,
+    "workGraphId": "WG-review",
+    "recommendationAdvice": [
+      {
+        "id": "kiss-organization",
+        "lensKey": "kiss",
+        "whenText": "Организация самого review становится сложной или дорогой относительно цели проверки.",
+        "usageText": "Применить KISS к способу проверки: выбрать понятный достаточный охват и методы, сохранив существенные риски, обязательные проверки и evidence. Это помощь для корректного текущего review, а не выбор новой работы вместо него.",
+        "anchorIds": [
+          "A-REVIEW-BUILD",
+          "A-REVIEW-AUDIT",
+          "A-REVIEW-CHECKS",
+          "LS-STEP-REVIEW-SCOPE",
+          "LS-STEP-REVIEW-CHECK"
+        ]
+      },
+      {
+        "id": "yagni-additional-checks",
+        "lensKey": "yagni",
+        "whenText": "Предлагается дополнительный повтор, тест или расширение review с неясной пользой.",
+        "usageText": "Применить YAGNI к дополнительной работе: установить ожидаемое новое знание и полную цену. Явно запрошенный review и нужное доказательство выполнить; при каждом запросе действительно искать ошибки, не создавать находки ради обязательной правки.",
+        "anchorIds": [
+          "A-REVIEW-BUILD",
+          "A-REVIEW-AUDIT",
+          "A-REVIEW-CHECKS",
+          "LS-STEP-REVIEW-SCOPE",
+          "LS-STEP-REVIEW-CHECK"
+        ]
+      },
+      {
+        "id": "dry-knowledge",
+        "lensKey": "dry",
+        "whenText": "В проверяемом результате есть расходящиеся копии одного правила или несколько претендентов на владельца знания.",
+        "usageText": "Использовать DRY для оценки согласованности и реальных владельцев этого знания внутри текущего review. Сходство формулировок само по себе не доказывает дефект.",
+        "anchorIds": [
+          "A-REVIEW-BUILD",
+          "A-REVIEW-CRITERIA",
+          "LS-STEP-REVIEW-CHECK"
+        ]
+      }
+    ]
   },
   "handoff": {
     "group": "methods",
@@ -1201,6 +1416,12 @@
         "Передать работу",
         [
           "K-A-HANDOFF-BUILD"
+        ]
+      ],
+      [
+        "Введение",
+        [
+          "INFO-DECISION-API-HANDOFF"
         ]
       ]
     ],
@@ -1238,8 +1459,13 @@
       "I-LENS-HANDOFF",
       "INFO-DECISION-API-HANDOFF"
     ],
-    "sourceRevision": 2,
-    "workGraphId": "WG-handoff"
+    "sourceRevision": 4,
+    "workGraphId": "WG-handoff",
+    "overrides": {
+      "INFO-DECISION-API-HANDOFF": {
+        "title": "Введение и границы · handoff"
+      }
+    }
   },
   "dry": {
     "group": "methods",
@@ -1270,8 +1496,22 @@
     "retainedIds": [
       "R-LENS-DRY"
     ],
-    "sourceRevision": 1,
-    "workGraphId": "WG-DRY"
+    "sourceRevision": 2,
+    "workGraphId": "WG-DRY",
+    "recommendationAdvice": [
+      {
+        "id": "kiss-generalization",
+        "lensKey": "kiss",
+        "whenText": "Предлагаемое обобщение общего знания добавляет косвенность, исключения или связанность.",
+        "usageText": "С помощью KISS сравнить полную цену вариантов согласования знания. Сохранить реальные различия и нужное поведение; меньше копий само по себе не оправдывает более сложное обобщение."
+      },
+      {
+        "id": "yagni-future-cases",
+        "lensKey": "yagni",
+        "whenText": "Польза общей абстракции зависит от предполагаемых будущих потребителей.",
+        "usageText": "С помощью YAGNI проверить действительную нужность этих потребителей сейчас и цену позднего изменения. Не обосновывать текущую сложность одним гипотетическим повторным использованием."
+      }
+    ]
   },
   "kiss": {
     "group": "methods",
@@ -1302,8 +1542,22 @@
     "retainedIds": [
       "R-LENS-KISS"
     ],
-    "sourceRevision": 1,
-    "workGraphId": "WG-KISS"
+    "sourceRevision": 2,
+    "workGraphId": "WG-KISS",
+    "recommendationAdvice": [
+      {
+        "id": "yagni-need",
+        "lensKey": "yagni",
+        "whenText": "Неясно, требуется ли сама сравниваемая функция или работа.",
+        "usageText": "Использовать YAGNI для основания необходимости; затем применять KISS к достаточному способу удовлетворения действующей потребности. Принятые обязательства не отменяются автоматически."
+      },
+      {
+        "id": "dry-owner",
+        "lensKey": "dry",
+        "whenText": "Основная сложность возникает из расходящихся копий одного знания.",
+        "usageText": "Использовать DRY для владельца и согласованного изменения этого знания; оценивать результат по полной сложности, сохраняя существенные различия."
+      }
+    ]
   },
   "yagni": {
     "group": "methods",
@@ -1334,7 +1588,21 @@
     "retainedIds": [
       "R-LENS-YAGNI"
     ],
-    "sourceRevision": 1,
-    "workGraphId": "WG-YAGNI"
+    "sourceRevision": 2,
+    "workGraphId": "WG-YAGNI",
+    "recommendationAdvice": [
+      {
+        "id": "kiss-required-method",
+        "lensKey": "kiss",
+        "whenText": "Необходимость поведения установлена, но способ его обеспечения может быть проще.",
+        "usageText": "Использовать KISS для поиска достаточного способа сохранить требуемое поведение. Простота функции не доказывает её необходимость, а сложность не отменяет действующую потребность."
+      },
+      {
+        "id": "dry-real-consumers",
+        "lensKey": "dry",
+        "whenText": "Предлагается общая абстракция или задел для нескольких потребителей.",
+        "usageText": "Использовать DRY для проверки общего изменяемого знания и настоящих потребителей; предполагаемые потребители не получают статус текущих требований автоматически."
+      }
+    ]
   }
 }

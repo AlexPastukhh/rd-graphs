@@ -906,10 +906,13 @@ class DecisionKernel(unittest.TestCase):
             return {n['id'] for n in view['entities']},{e['type'] for e in view['edges']}
         roots,edges=ids('R-LENS-CHECKPOINT')
         self.assertEqual(roots,{'R-LENS-CHECKPOINT','CP-A1','CP-A2','CP-A3','CP-A4','CP-A5',
-                                'INFO-DECISION-API-CHECKPOINT'})
+                                'INFO-DECISION-API-CHECKPOINT','I-LENS-CHECKPOINT',
+                                'LS-MAP-CHECKPOINT','LS-SOURCE-CHECKPOINT','LS-WORKFLOW-CHECKPOINT'})
         self.assertIn('INFO_FOR',edges)
         decision,edges=ids('CP-A1')
-        self.assertEqual(decision,{'R-LENS-CHECKPOINT','CP-A1','CANON-CP-A1'})
+        self.assertTrue({'R-LENS-CHECKPOINT','CP-A1','CANON-CP-A1',
+                         'LS-STEP-CHECKPOINT-TRIGGER','LS-STEP-CHECKPOINT-BASIS','LS-STEP-CHECKPOINT-NEXT'}<=decision)
+        self.assertTrue(any(i.startswith('LS-TEXT-CHECKPOINT-') for i in decision))
         self.assertIn('CANON_FOR',edges)
         canon,edges=ids('CANON-CP-A1')
         self.assertEqual(len([i for i in canon if i.startswith('CP-C')]),7)

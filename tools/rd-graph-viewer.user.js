@@ -911,13 +911,11 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
  function contextPath(id){const groups=new Map((snapshot.graph.contextGroups||[]).map(g=>[g.id,g])),names=[],seen=new Set();while(groups.has(id)&&!seen.has(id)){seen.add(id);const g=groups.get(id);names.unshift(g.title);id=g.parentId;}return names.join(' / ');}
  function contextChoices(){return [['','Без группы'],...(snapshot.graph.contextGroups||[]).map(g=>[g.id,contextPath(g.id)]).sort((a,b)=>a[1].localeCompare(b[1],'ru'))];}
  function sourceTitle(n){return (kindCode[n.kind]||n.kind)+' · '+n.title+(n.contextGroupId?' · '+contextPath(n.contextGroupId):'');}
- function theoryExcerpt(n){return [n.canons&&'Каноны: '+n.canons,n.guidance&&'Общее: '+n.guidance,...(n.knownErrors||[]).map(e=>'Известная ошибка: '+e.title+(e.description?'\n'+e.description:''))].filter(Boolean).join('\n\n');}
+ function theoryCanons(n){return [n.canons||'',...(n.knownErrors||[]).map(e=>[e.title,e.description].filter(Boolean).join('\n'))].filter(Boolean).join('\n\n');}
+ function theoryExcerpt(n){return [theoryCanons(n)&&'Каноны: '+theoryCanons(n),n.guidance&&'Общее: '+n.guidance].filter(Boolean).join('\n\n');}
  function theoryContent(parent,n){
   const box=el('div',null,'rdg-theory-content');box.dataset.theoryId=n.id;parent.append(box);
-  for(const [label,value] of [['Каноны',n.canons],['Общее',n.guidance]]){box.append(el('h4',label),el('p',value||'Не заполнено','rdg-canon-guidance'));}
-  box.append(el('h4','Известные ошибки'));
-  if(!(n.knownErrors||[]).length)box.append(el('p','Не заполнено','rdg-muted'));
-  for(const row of n.knownErrors||[]){const item=el('div');item.dataset.theoryErrorId=row.id;item.append(el('strong',row.title));if(row.description)item.append(el('p',row.description,'rdg-canon-guidance'));box.append(item);}
+  for(const [label,value] of [['Каноны',theoryCanons(n)],['Общее',n.guidance]]){box.append(el('h4',label),el('p',value||'Не заполнено','rdg-canon-guidance'));}
  }
  function analysisSources(id){const n=policyEntities().get(id);return n?[{sourceId:n.id,revision:n.revision,excerpt:(n.kind==='canon'?theoryExcerpt(n):n.value)||n.description||n.title}]:[];}
  function renderContextBank(parent){
@@ -1854,7 +1852,7 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
   const processDecision=node.kind==='decision'&&['working','copy'].includes(snapshot.package.role);
   const canonIds=[...new Set(snapshot.graph.edges.filter(e=>!e.archived&&e.type==='CANON_FOR'&&e.to===node.id).map(e=>e.from))];
   const canons=canonIds.map(id=>entities.find(n=>n.id===id&&n.kind==='canon')).filter(Boolean);
-  const showCanonTab=node.kind==='decision'||canons.length>0;
+  const showCanonTab=['decision','action'].includes(node.kind);
   {
    const tabs=el('div',null,'rdg-inspector-tabs');tabs.setAttribute('role','tablist');
    tabs.setAttribute('aria-label','Вкладки сведений выбранного блока');panel.append(tabs);
@@ -1894,7 +1892,7 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
     if(isProcess()&&!snapshot.immutableDefinition){button(body,'+ Зависимость контекста',()=>showForm('contextEntry',{nodeId:node.id}));button(body,'Изменить контекст решения',()=>showForm('decisionContext',{nodeId:node.id,decisionContextIds:[...(node.decisionContextIds||[])]}));}
    });
    if(showCanonTab)addInspectorTab('canon','Теория принятия решения',body=>{
-    body.append(el('p','Теория содержит условия применимости, общие сведения и известные ошибки. Эти записи помогают анализу; выбор и выполнение фиксируются отдельно.','rdg-muted'));
+    body.append(el('p','Каноны описывают подходящие, пограничные и плохие ситуации, включая известные ошибки. Общее содержит остальные сведения. Теория относится к Decision или Action; выбор и выполнение фиксируются отдельно.','rdg-muted'));
     if(!canons.length)body.append(el('p','Теория принятия решения для этого блока пока не задана.','rdg-muted'));
     if(['working','copy'].includes(snapshot.package.role)&&!snapshot.immutableDefinition)
      button(body,'Добавить теорию',()=>showForm('add',{parentId:node.id,kind:'canon'}));
@@ -2969,18 +2967,8 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
    });return;
   }
   const theoryFields=node=>{
-    input('Каноны','canons',node?.canons||'','textarea');input('Общее','guidance',node?.guidance||'','textarea');
-    if(F().knownErrors===undefined)setDraft('knownErrors',clone(node?.knownErrors||[]));
-    const box=el('section');box.dataset.theoryErrorsEditor='';box.append(el('h3','Известные ошибки'));body.append(box);
-    const update=(id,key,value)=>setDraft('knownErrors',F().knownErrors.map(e=>e.id===id?{...e,[key]:value}:e));
-    for(const [index,row] of F().knownErrors.entries()){
-     const item=el('fieldset');item.dataset.theoryErrorEditId=row.id;box.append(item);
-     field(item,'Название ошибки',row.title,'text',v=>update(row.id,'title',v));
-     field(item,'Описание ошибки',row.description,'textarea',v=>update(row.id,'description',v));
-     button(item,'Удалить ошибку',()=>{setDraft('knownErrors',F().knownErrors.filter(e=>e.id!==row.id));render();});
-     for(const [label,offset] of [['Выше',-1],['Ниже',1]])button(item,label,()=>{const rows=clone(F().knownErrors);[rows[index],rows[index+offset]]=[rows[index+offset],rows[index]];setDraft('knownErrors',rows);render();},index+offset<0||index+offset>=F().knownErrors.length);
-    }
-    button(box,'Добавить ошибку',()=>{setDraft('knownErrors',[...F().knownErrors,{id:uid(),title:'',description:''}]);render();});
+    input('Каноны','canons',theoryCanons(node||{}),'textarea');input('Общее','guidance',node?.guidance||'','textarea');
+    if(node?.knownErrors?.length)setDraft('knownErrors',[]);
    };
    if(['question','questionAnswer','questionAssess','questionMigrate','questionRequest'].includes(form)){
    const q=entities.find(n=>n.id===data.nodeId&&n.kind==='question');
@@ -3295,8 +3283,11 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
     if(F().kind==='canon')theoryFields();else input('Значение Context или Info','value','','textarea');
     pick('Тип Action','actionType',[['task','Реальное действие'],['select_decision','Выбрать Decisions'],['decide_acceptance','Проверить принятие Decision']],data.actionType||'task');
    }
-   if(!data.processContextBank)
-    pick('Связать с блоком','parentId',[['','Без связи'],...entities.filter(n=>['requirement','decision','action','canon'].includes(n.kind)&&n.id!==data.nodeId).map(n=>[n.id,(kindCode[n.kind]||'?')+' · '+n.title])],data.parentId??focusId);
+   if(!data.processContextBank){
+     const parentKinds=F().kind==='canon'?['decision','action']:['requirement','decision','action','canon'];
+     if(F().kind==='canon'&&!entities.some(n=>n.id===(F().parentId??data.parentId??focusId)&&parentKinds.includes(n.kind)))setDraft('parentId','');
+     pick('Связать с блоком','parentId',[['','Без связи'],...entities.filter(n=>parentKinds.includes(n.kind)&&n.id!==data.nodeId).map(n=>[n.id,(kindCode[n.kind]||'?')+' · '+n.title])],data.parentId??focusId);
+   }
    if(!data.processContextBank){
     const targets=el('details');targets.append(el('summary','Контекст / targets Action'));body.append(targets);
     for(const node of snapshot.graph.nodes.filter(n=>['requirement','decision'].includes(n.kind)))field(targets,node.title,(data.targetIds||[]).includes(node.id),'checkbox',checked=>{const ids=new Set(F().targetIds||[]);if(checked)ids.add(node.id);else ids.delete(node.id);setDraft('targetIds',[...ids]);});
@@ -3314,7 +3305,7 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
      if(f.workGraphId&&!data.processContextBank)payload.workGraphId=f.workGraphId;
      let type=null;if(parentNode?.kind==='requirement')type=entity.kind==='decision'?'DRIVES':entity.kind==='requirement'?'DERIVES':entity.kind==='action'?'REQUIRES_ACTION':null;
      if(parentNode?.kind==='decision')type=entity.kind==='requirement'?'INTRODUCES':entity.kind==='action'?'REQUIRES_ACTION':null;
-     if(entity.kind==='canon'&&['requirement','decision','action'].includes(parentNode?.kind))type='CANON_FOR';
+     if(entity.kind==='canon'&&['decision','action'].includes(parentNode?.kind))type='CANON_FOR';
      if(entity.kind==='info'&&parentNode?.kind==='canon')type='INFO_FOR';
      if(type)payload.initialRelations=[{id:uid(),type,from:['CANON_FOR','INFO_FOR'].includes(type)?id:parentNode.id,
        to:['CANON_FOR','INFO_FOR'].includes(type)?parentNode.id:id}];

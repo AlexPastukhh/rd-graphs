@@ -104,14 +104,14 @@ class GatewayTests(BASE.Server):
         schema=self.private_call({'method':'schema','op':'core','packageId':pid,'nodeId':'R1','command':'add','entityKind':'canon'})
         self.assertIn('decisionTheory',schema['inputChoices'])
         request=schema['request'];request['note']='B02A through actual HTTP'
-        entity=request['data']['entity'];entity.update(title='HTTP theory',guidance='',canons='Bounded use; risky without measurements',knownErrors=[{'id':'e','title':'Assuming the result','description':''}])
+        entity=request['data']['entity'];entity.update(title='HTTP theory',guidance='',canons='Bounded use; risky without measurements. Known mistake: assuming the result.')
         nid=entity['id'];before=self.files();preview=self.private_call({'method':'preflight','request':request});self.assertEqual(self.files(),before)
         result=self.private_call({'method':'apply','request':request,'expectedInputBinding':preview['inputBinding']});self.assertTrue(result['published'])
         self.assertTrue(self.private_call({'method':'apply','request':request})['idempotent'])
-        request=self.private_call({'method':'schema','op':'core','packageId':pid,'nodeId':nid,'command':'edit'})['request'];request['note']='Partial legacy-compatible edit';request['data']={'nodeId':nid,'changes':{'guidance':'General from HTTP'},'cosmetic':False}
+        request=self.private_call({'method':'schema','op':'core','packageId':pid,'nodeId':nid,'command':'edit'})['request'];request['note']='Partial edit preserves canons';request['data']={'nodeId':nid,'changes':{'guidance':'General from HTTP'},'cosmetic':False}
         self.private_call({'method':'apply','request':request})
         item=self.private_call({'method':'read','packageId':pid,'nodeId':nid,'detail':'item'})['item']
-        self.assertEqual(item['guidance'],'General from HTTP');self.assertEqual(item['knownErrors'],entity['knownErrors']);self.assertEqual(item['canons'],entity['canons'])
+        self.assertEqual(item['guidance'],'General from HTTP');self.assertFalse(item.get('knownErrors'));self.assertEqual(item['canons'],entity['canons'])
         self.assertTrue(self.private_call({'method':'receipt','packageId':pid,'transactionId':request['transactionId']})['found'])
 
     def test_gateway_planning_meta_action_atomic_refs_receipt_retry(self):
