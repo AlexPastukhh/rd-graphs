@@ -262,6 +262,13 @@ def run(client,journal_file,*,apply=False,manage_supplied=False,revise_navigatio
         op['applyAttempted']=True;save(key)
         try:op['result']=client.call({'method':'apply','request':req,'expectedInputBinding':op['preview']['inputBinding']});save(key)
         except Exception as exc:
+            if getattr(exc,'definite',False) is True and str(exc) in (
+                    'RDG_REMOTE_PORTABLE_APP_PREVIEW_INPUTS_CHANGED','RDG_REMOTE_PREVIEW_INPUTS_CHANGED'):
+                # The server rejected before acceptance. Keep the exact intent/CAS;
+                # a deliberate resume may obtain a new preview for that same request.
+                op.setdefault('rejections',[]).append({'code':str(exc),'inputBinding':op['preview']['inputBinding']})
+                op['applyAttempted']=False;op.pop('uncertain',None);save(key)
+                raise RuntimeError('LENS_PREVIEW_CHANGED_RETRY_SAME_REQUEST:'+req['transactionId']) from exc
             op['uncertain']=type(exc).__name__;save(key)
             raise RuntimeError('UNCERTAIN_LENS_OPERATION_SAVED:'+req['transactionId']) from exc
         if not op['result'].get('published'):raise RuntimeError('LENS_PUBLICATION_UNCONFIRMED:'+req['transactionId'])

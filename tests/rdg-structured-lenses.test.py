@@ -231,6 +231,49 @@ class LensApplication(unittest.TestCase):
         self.assertEqual(self.sources(),before)
         self.assertEqual(P.entities(app.read(pid)['graph'])['I-LENS-RESEARCH']['title'],'Independent author')
 
+    def rejected_preview_update(self):
+        app=self.app();desired=P.bundle(['research'])[1]['research'];old=copy.deepcopy(desired)
+        P.entities(old)['I-LENS-RESEARCH']['title']='Previous title'
+        req=app.schema('create',core_model='rdg-decision-v1',role='lens')['request']
+        req.update(path='lenses/research',lensKey='research',title=old['title'],scope='Rejected preview',rootReason='Acceptance',graph=old)
+        pid=app.request(req)['packages'][0]['packageId'];journal=self.base/'rejected-preview.json'
+        class RejectedPreview:
+            def call(_,message):
+                if message['method']=='apply':
+                    error=ValueError('RDG_REMOTE_PORTABLE_APP_PREVIEW_INPUTS_CHANGED')
+                    error.definite=True
+                    raise error
+                return app.call(message)
+        before=app.read(pid)['graph']
+        with self.assertRaisesRegex(RuntimeError,'LENS_PREVIEW_CHANGED_RETRY_SAME_REQUEST'):
+            P.run(RejectedPreview(),journal,apply=True,keys=['research'],progress=lambda _:None)
+        self.assertEqual(app.read(pid)['graph'],before)
+        saved=P.JOURNAL.Journal(journal,{})
+        operation=next(v for k,v in saved.state['operations'].items() if k.startswith('research/edit-'))
+        request=copy.deepcopy(operation['request']);saved.checkpoint()
+        return app,pid,journal,desired,request
+
+    def test_definite_preview_rejection_reuses_the_exact_request_after_new_preflight(self):
+        app,pid,journal,desired,request=self.rejected_preview_update()
+        state=P.run(app,journal,apply=True,keys=['research'],progress=lambda _:None)
+        P.verify_graph(app.read(pid)['graph'],desired)
+        operation=next(v for k,v in state['operations'].items() if k.startswith('research/edit-'))
+        self.assertEqual(operation['request'],request)
+        self.assertEqual(len(operation['rejections']),1)
+        self.assertTrue(operation['receipt']['published'])
+        revision=app.read(pid)['package']['revision']
+        self.assertTrue(app.request(request)['idempotent'])
+        self.assertEqual(app.read(pid)['package']['revision'],revision)
+
+    def test_definite_preview_retry_keeps_cas_against_a_later_independent_edit(self):
+        app,pid,journal,_,_=self.rejected_preview_update()
+        req=app.schema('paper_edit',pid,node_id='I-LENS-RESEARCH',command='edit')['request']
+        req.update(data={'nodeId':'I-LENS-RESEARCH','changes':{'title':'Independent title'},'cosmetic':False},note='Independent edit before exact retry')
+        app.request(req);before={k:v for k,v in self.sources().items() if k!=journal.name}
+        with self.assertRaisesRegex(ValueError,'PACKAGE_CAS_MISMATCH'):
+            P.run(app,journal,apply=True,keys=['research'],progress=lambda _:None)
+        self.assertEqual({k:v for k,v in self.sources().items() if k!=journal.name},before)
+
     def interrupted_update(self):
         app=self.app();desired=P.bundle(['research'])[1]['research'];old=copy.deepcopy(desired)
         for ident in ('I-LENS-RESEARCH','LS-STEP-RESEARCH-QUESTION'):
