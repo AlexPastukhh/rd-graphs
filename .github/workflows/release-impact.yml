@@ -1,0 +1,29 @@
+# Owner-reviewed source-only shared Release Impact check.
+# Shared public validator pinned to a reviewed immutable commit; Fortis contract remains in fortis-container.
+name: Fortis Release Impact
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, edited, ready_for_review]
+
+permissions:
+  contents: read
+
+jobs:
+  release-impact:
+    name: release-impact
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact PR HEAD with full merge-base history
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Prepare Python for shared validation
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Validate catalog and PR Release Impact
+        uses: AlexPastukhh/fortis-release-impact-action@8c9abefdfbe4699aae97b9363a2a66c596680e62
