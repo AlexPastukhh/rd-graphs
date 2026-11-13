@@ -82,6 +82,56 @@ class Sources(unittest.TestCase):
         missing=copy.deepcopy(g);missing['decisionGroups']=[]
         with self.assertRaisesRegex(ValueError,'PUBLISHED_GROUPS_MISMATCH'):P.verify_graph(missing,g)
 
+    def test_model_methods_are_native_compatible_choices_with_guarded_skip(self):
+        plan,graphs,_=P.bundle(['model']);g=graphs['model'];ns=P.entities(g)
+        methods={suffix:'LS-METHOD-MODEL-'+suffix for suffix,_,_ in plan['model']['extraMethods']}
+        self.assertEqual(set(methods),{'R','D','A','K','C','I','F','Q','REUSE','ORGANIZE','SKIP'})
+        group=next(gr for gr in g['decisionGroups'] if gr['id']=='G-MODEL-FORMS')
+        self.assertTrue(group['selectionRequired']);self.assertFalse(group['mutuallyExclusive'])
+        self.assertEqual({m['decisionId'] for m in group['members']},set(methods.values()))
+        self.assertIn('group:'+group['id'],P.PROFILES.completion_state(g)['R-MODEL']['blockers'])
+        self.assertFalse(any(e['type']=='DRIVES' and e['from']=='R-MODEL' and e['to'] in methods.values() for e in g['edges']))
+        value=next(n['id'] for n in g['objects'] if n['title']=='Оценить ценность фрагмента')
+        def choose(graph,ident):
+            tx=str(uuid.uuid5(uuid.NAMESPACE_URL,'model-choice-'+ident))
+            event={'id':str(uuid.uuid5(uuid.UUID(tx),'select')),'type':'requested','by':'assistant',
+                   'note':'One synthetic fragment; do not write live data','recordedAt':'2026-11-13T12:00:00Z',
+                   'verifiedTrustReceipt':{'mode':'test-only','transactionId':tx}}
+            return P.PROFILES.apply(graph,{'schemaVersion':1,'expectedRevision':graph['revision'],
+                'operations':[{'op':'graph_edit','action':'core_select','data':{'nodeId':ident},'event':event}]},True)[0]
+        combined=g
+        for suffix,ident in methods.items():
+            self.assertEqual(ns[ident]['kind'],'decision')
+            self.assertEqual(ns[ident]['selectionState'],'discovered')
+            action='LS-STEP-MODEL-'+suffix
+            self.assertTrue(any(e['type']=='REQUIRES_ACTION' and e['from']==ident and e['to']==action for e in g['edges']))
+            focus=P.PROFILES.focused_view(g,ident)
+            self.assertIn(ns[ident]['title'],'\n'.join(n.get('guidance','') for n in focus['entities']))
+            canon_ids={e['from'] for e in g['edges'] if e['type']=='CANON_FOR' and e['to']==ident}
+            self.assertGreaterEqual(len(canon_ids),4)
+            self.assertEqual(value in canon_ids,suffix!='SKIP')
+            if suffix=='SKIP':continue
+            combined=choose(combined,ident)
+            for first,second in ((ident,methods['SKIP']),(methods['SKIP'],ident)):
+                selected=choose(g,first);before=copy.deepcopy(selected)
+                with self.assertRaisesRegex(ValueError,'DECISION_GROUP_CONFLICT'):choose(selected,second)
+                self.assertEqual(selected,before)
+        self.assertTrue(all(P.entities(combined)[ident]['selectionState']=='selected' for suffix,ident in methods.items() if suffix!='SKIP'))
+        self.assertNotIn('group:'+group['id'],P.PROFILES.completion_state(combined)['R-MODEL']['blockers'])
+        skipped=choose(g,methods['SKIP'])
+        self.assertNotIn('group:'+group['id'],P.PROFILES.completion_state(skipped)['R-MODEL']['blockers'])
+        self.assertEqual(skipped['rootCauses'],g['rootCauses'])
+        self.assertTrue(all(n.get('result',{}).get('truth')!='true' for n in P.entities(skipped).values()))
+
+    def test_shared_theory_rejects_wrong_roles_and_keeps_one_canon_identity(self):
+        plan,graphs,_=P.bundle(['model']);g=graphs['model'];p=copy.deepcopy(plan['model'])
+        prefix,targets=p['sharedTheory'][0];p['sharedTheory'].append([prefix,targets])
+        self.assertEqual(C.compile_one('model',p,g)[0],g)
+        p['sharedTheory']=[[prefix,['R-MODEL']]]
+        with self.assertRaisesRegex(ValueError,'SHARED_THEORY_TARGET_INVALID'):C.compile_one('model',p,g)
+        p['sharedTheory']=[['Введение',['LS-METHOD-MODEL-R']]]
+        with self.assertRaisesRegex(ValueError,'SHARED_THEORY_NOT_CANON'):C.compile_one('model',p,g)
+
     def test_retained_mappings_are_explicit_and_quality_focus_contains_the_method(self):
         plan,graphs,_=P.bundle()
         g=graphs['work'];ns=P.entities(g)
@@ -195,6 +245,27 @@ class LensApplication(unittest.TestCase):
         P.run(app,self.base/'partial-owner-upgrade.json',apply=True,keys=['model','work'],progress=lambda _:None)
         self.assertEqual(app.recommendation_catalog()['registryRevision'],registry_revision,
                          'updating two owners must not remove advice to other available lenses')
+
+    def test_model_native_choices_upgrade_the_existing_owner_and_resume(self):
+        app=self.app()
+        old=json.loads(subprocess.check_output(['git','show','a360551841c993c9db528ac1eab49c0fd3053bb8:tools/rdg-agent-lenses/model-decision.json'],cwd=ROOT,text=True))
+        req=app.schema('create',core_model='rdg-decision-v1',role='lens')['request']
+        req.update(path='lenses/model',lensKey='model',title=old['title'],scope='Original model',rootReason='Source fixture',graph=old)
+        pid=app.request(req)['packages'][0]['packageId'];before=app.read(pid)
+        ref=before['references']['R-MODEL'];pin={k:ref[k] for k in ('packageId','identitySpace','graphRevision','sha256')}
+        journal=self.base/'native-model-upgrade.json'
+        result=P.run(app,journal,apply=True,keys=['model'],progress=lambda _:None)
+        after=app.read(pid);desired=P.bundle(['model'])[1]['model']
+        P.verify_graph(after['graph'],desired)
+        self.assertEqual(result['verified']['model']['packageId'],pid)
+        self.assertEqual(before['package']['identitySpace'],after['package']['identitySpace'])
+        self.assertTrue(set(P.entities(before['graph']))<=set(P.entities(after['graph'])))
+        self.assertEqual(app.source_snapshot(pid,pin)['graph'],before['graph'])
+        self.assertIsNone(after['plan'])
+        self.assertEqual(len(after['graph']['decisionGroups']),11)
+        head=after['package']['revision']
+        P.run(app,journal,apply=True,keys=['model'],progress=lambda _:None)
+        self.assertEqual(app.read(pid)['package']['revision'],head)
 
     def test_supplied_upgrade_preserves_identity_history_working_data_and_resume(self):
         fixture=F.PortableApplication()

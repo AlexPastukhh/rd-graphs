@@ -147,6 +147,15 @@ def compile_one(key,plan,existing=None):
         g['nodes'].append(action);ns[aid]=action;assignments[aid]=section
         g['edges'].append(relation('REQUIRES_ACTION',ident,aid))
         for target in (ident,aid):g['edges'].append(relation('CANON_FOR',section_nodes[section['anchor']],target))
+    # Explicit authored bindings reuse one source Canon across compatible methods.
+    for prefix,targets in plan.get('sharedTheory',[]):
+        section=select(sections,prefix);canon=section_nodes[section['anchor']]
+        if ns[canon]['kind']!='canon':raise ValueError('SHARED_THEORY_NOT_CANON:'+key+':'+prefix)
+        for target in targets:
+            if target not in ns or ns[target]['kind'] not in ('decision','action'):
+                raise ValueError('SHARED_THEORY_TARGET_INVALID:'+key+':'+target)
+            edge=relation('CANON_FOR',canon,target)
+            if edge not in g['edges']:g['edges'].append(edge)
     trigger=select(sections,'Когда оценить')
     card_id='I-LENS-'+key.upper()
     if card_id not in ns:
