@@ -197,8 +197,8 @@ class PolicyKernel(BASE.DecisionKernel):
         self.assertFalse(K.POLICIES.role_impacts(root_graph,copy.deepcopy(root_graph),structural,bound,K,event={'type':'decision_unselected','nodeIds':['R1']}))
 
     def test_v2_canon_attachment_is_not_recorded_as_content_change(self):
-        self.add_node('CAN','canon',guidance='Criteria')
-        ev=self.do('link',{'relation':{'id':'CAN-R','type':'CANON_FOR','from':'CAN','to':'R1'}})
+        self.add_node('D1','decision');self.add_node('CAN','canon',guidance='Criteria')
+        ev=self.do('link',{'relation':{'id':'CAN-D','type':'CANON_FOR','from':'CAN','to':'D1'}})
         hit=next(h for h in ev['dependencyImpacts'] if h.get('policyId')=='builtin:automatic-canon')
         self.assertEqual((hit['ruleId'],hit['triggerOperation']),('canon-attached','added'))
         self.assertEqual(hit['ruleSnapshot']['memberRole'],'source')

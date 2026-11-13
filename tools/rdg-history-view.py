@@ -6,7 +6,7 @@ import copy
 
 MODES=('important','meaningful','technical','all')
 RESULTS={'decision_selected','decision_unselected','branch_cancelled','action_executed','requirement_achieved','decision_completed','reopened','completed'}
-TECHNICAL={'context_group','context_record','work_graph','decision_group','policy_change','dependency_rule','lock_set','lock_remove','recommendation_packages','lens_application','operation_record'}
+TECHNICAL={'graph_title','context_group','context_record','work_graph','decision_group','policy_change','dependency_rule','lock_set','lock_remove','recommendation_packages','lens_application','operation_record'}
 
 def snapshot(n):
     return {k:copy.deepcopy(n[k]) for k in ('id','kind','title','lowLevel') if k in n}
@@ -27,6 +27,10 @@ def detail(before,after,command,data,K,*,process=True):
     for relation in result['relations']:
         for ident in (relation['from'],relation['to']):
             if ident in new or ident in old:result['subjects'][ident]=snapshot(new.get(ident) or old[ident])
+    if command=='graph_title':
+        result['fields']=['title'];result['cosmetic']=True
+        result['edits']=[{'field':'title','beforePresent':True,'before':before['title'],
+                         'afterPresent':True,'after':after['title']}]
     if command in ('question_answer','question_assess'):
         result['fields']=['answers','answerHistory','assessment','assessmentHistory','assessmentReviewRequired']
     if command=='question_migrate':

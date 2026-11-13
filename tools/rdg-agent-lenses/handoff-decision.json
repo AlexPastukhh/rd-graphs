@@ -3,9 +3,9 @@
   "actionModel": "candidate-v6",
   "coreModel": "rdg-decision-v1",
   "id": "rdg-agent-handoff-decision-lens",
-  "title": "Продолжить и передать работу — Decision v1",
+  "title": "Handoff — передать работу для содержательного продолжения",
   "identitySpace": "e3895ce3-6b1d-581f-98c3-9d844c580229",
-  "revision": 1,
+  "revision": 4,
   "rootRequirementId": "R-LENS-HANDOFF",
   "rootCauses": [
     {
@@ -19,20 +19,20 @@
     {
       "id": "R-LENS-HANDOFF",
       "kind": "requirement",
-      "title": "Передать проверенное состояние, неопределённости и ближайшее действие следующему исполнителю",
-      "description": "Read receipt after uncertain outcome; retry the identical request/transactionId, or recover accepted payload. Report authoritative Graph/Plan/registry/layout revisions, evidence and remaining work. Opening a lens or copying a graph never proves execution.",
+      "title": "Работа может быть осмысленно продолжена другой сессией по доступному проверенному контексту",
+      "description": "## Требуемый результат и основания\n\n**R-LENS-HANDOFF:** «Работа может быть осмысленно продолжена другой сессией по доступному проверенному контексту».\n\nОбласть: текущая точка передачи, включая незавершённые операции. Родительские основания: [R-CONTINUITY](../requirements.md#r-continuity), [R-USEFUL-RESULT](../requirements.md#r-useful-result). Отношение при переносе определяется по [правилу оснований](../requirements.md#как-выразить-родительские-основания-в-графе).\n\nПередача уменьшает потерю оснований и риск повторного эффекта, сохраняя ближайший шаг. Новый архив и завершение всей задачи не обязательны для достижения этого результата.\n\nПроверка: [достаточность результата](#как-продолжает-получатель).\n\n",
       "revision": 1,
       "result": {
         "state": "open",
         "truth": "unknown"
       },
-      "scope": "Fundamental RDG handoff instructions"
+      "scope": "Область: текущая точка передачи, включая незавершённые операции."
     },
     {
       "id": "A-HANDOFF-BUILD",
       "kind": "decision",
       "title": "Продолжить и передать работу",
-      "description": "Read receipt after uncertain outcome; retry the identical request/transactionId, or recover accepted payload. Report authoritative Graph/Plan/registry/layout revisions, evidence and remaining work. Opening a lens or copying a graph never proves execution.",
+      "description": "Способ работы в оговорённом scope. Применимые принципы, условия, действия и достаточность раскрыты в связанных Canon. Открытие определения не исполняет метод.",
       "revision": 1,
       "result": {
         "state": "open",
@@ -44,19 +44,19 @@
       "id": "R-HANDOFF-FACTS",
       "kind": "requirement",
       "title": "Восстановлены текущие факты",
-      "description": "Read receipt after uncertain outcome; retry the identical request/transactionId, or recover accepted payload. Report authoritative Graph/Plan/registry/layout revisions, evidence and remaining work. Opening a lens or copying a graph never proves execution.",
+      "description": "Источник: docs/lenses/methods/handoff.md#восстановить-фактическое-состояние. Содержание раскрыто в LS-TEXT-HANDOFF-297d014940; точная редакция — LS-MAP-HANDOFF.",
       "revision": 1,
       "result": {
         "state": "open",
         "truth": "unknown"
       },
-      "scope": "Fundamental RDG handoff instructions"
+      "scope": "Область: текущая точка передачи, включая незавершённые операции. Применяется к своей части выбранного метода и условиям текущей задачи."
     },
     {
       "id": "A-HANDOFF-FACTS",
       "kind": "decision",
       "title": "Перечитать авторитетное состояние",
-      "description": "Read receipt after uncertain outcome; retry the identical request/transactionId, or recover accepted payload. Report authoritative Graph/Plan/registry/layout revisions, evidence and remaining work. Opening a lens or copying a graph never proves execution.",
+      "description": "Источник: docs/lenses/methods/handoff.md#восстановить-фактическое-состояние. Содержание раскрыто в LS-TEXT-HANDOFF-297d014940; точная редакция — LS-MAP-HANDOFF.",
       "revision": 1,
       "result": {
         "state": "open",
@@ -68,19 +68,19 @@
       "id": "R-HANDOFF-UNCERTAINTY",
       "kind": "requirement",
       "title": "Разобраны прерванные транзакции",
-      "description": "Read receipt after uncertain outcome; retry the identical request/transactionId, or recover accepted payload. Report authoritative Graph/Plan/registry/layout revisions, evidence and remaining work. Opening a lens or copying a graph never proves execution.",
+      "description": "Источник: docs/lenses/methods/handoff.md#разобрать-незавершённые-операции. Содержание раскрыто в LS-TEXT-HANDOFF-5e0fe02a9d; точная редакция — LS-MAP-HANDOFF.",
       "revision": 1,
       "result": {
         "state": "open",
         "truth": "unknown"
       },
-      "scope": "Fundamental RDG handoff instructions"
+      "scope": "Область: текущая точка передачи, включая незавершённые операции. Применяется к своей части выбранного метода и условиям текущей задачи."
     },
     {
       "id": "A-HANDOFF-RECEIPTS",
       "kind": "decision",
       "title": "Проверить прежний transactionId",
-      "description": "Read receipt after uncertain outcome; retry the identical request/transactionId, or recover accepted payload. Report authoritative Graph/Plan/registry/layout revisions, evidence and remaining work. Opening a lens or copying a graph never proves execution.",
+      "description": "Источник: docs/lenses/methods/handoff.md#разобрать-незавершённые-операции. Содержание раскрыто в LS-TEXT-HANDOFF-5e0fe02a9d; точная редакция — LS-MAP-HANDOFF.",
       "revision": 1,
       "result": {
         "state": "open",
@@ -92,25 +92,70 @@
       "id": "R-HANDOFF-CONTINUATION",
       "kind": "requirement",
       "title": "Новому чату достаточно данных для следующего шага",
-      "description": "Read receipt after uncertain outcome; retry the identical request/transactionId, or recover accepted payload. Report authoritative Graph/Plan/registry/layout revisions, evidence and remaining work. Opening a lens or copying a graph never proves execution.",
+      "description": "Источник: docs/lenses/methods/handoff.md#выбрать-достаточный-объём-передачи. Содержание раскрыто в LS-TEXT-HANDOFF-2d5c64a34c; точная редакция — LS-MAP-HANDOFF.",
       "revision": 1,
       "result": {
         "state": "open",
         "truth": "unknown"
       },
-      "scope": "Fundamental RDG handoff instructions"
+      "scope": "Область: текущая точка передачи, включая незавершённые операции. Применяется к своей части выбранного метода и условиям текущей задачи."
     },
     {
       "id": "A-HANDOFF-RESUME",
       "kind": "decision",
       "title": "Передать цель, пробелы и рабочий вход",
-      "description": "Read receipt after uncertain outcome; retry the identical request/transactionId, or recover accepted payload. Report authoritative Graph/Plan/registry/layout revisions, evidence and remaining work. Opening a lens or copying a graph never proves execution.",
+      "description": "Источник: docs/lenses/methods/handoff.md#выбрать-достаточный-объём-передачи. Содержание раскрыто в LS-TEXT-HANDOFF-2d5c64a34c; точная редакция — LS-MAP-HANDOFF.",
       "revision": 1,
       "result": {
         "state": "open",
         "truth": "unknown"
       },
       "selectionState": "discovered"
+    },
+    {
+      "id": "LS-STEP-HANDOFF-FACTS",
+      "kind": "action",
+      "title": "Сверить факты, версии и незавершённые операции",
+      "description": "Выполнить содержательно для текущего поручения и применимых условий. Методика: LS-TEXT-HANDOFF-297d014940; docs/lenses/methods/handoff.md#восстановить-фактическое-состояние",
+      "revision": 1,
+      "actionType": "task",
+      "lowLevel": false,
+      "targetIds": [],
+      "groupIds": [],
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "LS-STEP-HANDOFF-CONTENT",
+      "kind": "action",
+      "title": "Выбрать достаточный контекст и ближайший шаг",
+      "description": "Выполнить содержательно для текущего поручения и применимых условий. Методика: LS-TEXT-HANDOFF-2d5c64a34c; docs/lenses/methods/handoff.md#выбрать-достаточный-объём-передачи",
+      "revision": 1,
+      "actionType": "task",
+      "lowLevel": false,
+      "targetIds": [],
+      "groupIds": [],
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
+    },
+    {
+      "id": "LS-STEP-HANDOFF-TRANSFER",
+      "kind": "action",
+      "title": "Передать проверенное состояние в текущей точке работы",
+      "description": "Выполнить содержательно для текущего поручения и применимых условий. Методика: LS-TEXT-HANDOFF-dc594c68f8; docs/lenses/methods/handoff.md#передать-работу-в-её-текущей-точке",
+      "revision": 1,
+      "actionType": "task",
+      "lowLevel": false,
+      "targetIds": [],
+      "groupIds": [],
+      "result": {
+        "state": "open",
+        "truth": "unknown"
+      }
     }
   ],
   "objects": [
@@ -118,49 +163,173 @@
       "id": "K-A-HANDOFF-BUILD",
       "kind": "canon",
       "title": "Применимость: Продолжить и передать работу",
-      "description": "",
+      "description": "Источник: docs/lenses/methods/handoff.md#передать-работу-в-её-текущей-точке. Содержание раскрыто в LS-TEXT-HANDOFF-dc594c68f8; точная редакция — LS-MAP-HANDOFF.",
       "revision": 1,
-      "guidance": "Read receipt after uncertain outcome; retry the identical request/transactionId, or recover accepted payload. Report authoritative Graph/Plan/registry/layout revisions, evidence and remaining work. Opening a lens or copying a graph never proves execution.  Ситуация оправдывает этот способ в пределах его вклада Лишнее действие при уже достаточном состоянии"
+      "guidance": "## Передать работу в её текущей точке\n\nПередача возможна посреди незавершённого этапа. По прямому запросу пользователя сформировать понятный вход из уже доступных данных. Не создавать ради передачи новую обязательную фазу завершения, уборки или подробного архивирования.\n\nСущественные новые решения должны быть записаны у своих владельцев. В передаче отделяются действующие правила, будущий проект и результаты проверок. Непроверенное обозначается прямо.\n\n",
+      "canons": "",
+      "knownErrors": []
     },
     {
       "id": "K-A-HANDOFF-FACTS",
       "kind": "canon",
       "title": "Применимость: Перечитать авторитетное состояние",
-      "description": "",
+      "description": "Источник: docs/lenses/methods/handoff.md#восстановить-фактическое-состояние. Содержание раскрыто в LS-TEXT-HANDOFF-297d014940; точная редакция — LS-MAP-HANDOFF.",
       "revision": 1,
-      "guidance": "Read receipt after uncertain outcome; retry the identical request/transactionId, or recover accepted payload. Report authoritative Graph/Plan/registry/layout revisions, evidence and remaining work. Opening a lens or copying a graph never proves execution.  Ситуация оправдывает этот способ в пределах его вклада Лишнее действие при уже достаточном состоянии"
+      "guidance": "## Восстановить фактическое состояние\n\nНачать с исходной цели пользователя и актуального scope. Прочитать реальные owners, относящиеся Graph и Plan, существенные события History и подтверждения результатов.\n\nУстановить, что уже принято, выполнено и проверено, что остаётся на бумаге и что требует review. Исторический успех сохраняет свою область и версию. Поздняя геометрия графа и порядок узлов не восстанавливают прошлое исполнение.\n\nПередавать действующие источники смысла и данные, по которым можно проверить утверждения. Важные причины выбора и отвергнутые альтернативы должны оставаться доступными в уместном объёме.\n\n",
+      "canons": "",
+      "knownErrors": []
     },
     {
       "id": "K-A-HANDOFF-RECEIPTS",
       "kind": "canon",
       "title": "Применимость: Проверить прежний transactionId",
-      "description": "",
+      "description": "Источник: docs/lenses/methods/handoff.md#разобрать-незавершённые-операции. Содержание раскрыто в LS-TEXT-HANDOFF-5e0fe02a9d; точная редакция — LS-MAP-HANDOFF.",
       "revision": 1,
-      "guidance": "Read receipt after uncertain outcome; retry the identical request/transactionId, or recover accepted payload. Report authoritative Graph/Plan/registry/layout revisions, evidence and remaining work. Opening a lens or copying a graph never proves execution.  Ситуация оправдывает этот способ в пределах его вклада Лишнее действие при уже достаточном состоянии"
+      "guidance": "## Разобрать незавершённые операции\n\nДля прерванной записи найти исходные request, transactionId, inputBinding и журнал. Сопоставить receipt с фактическим состоянием. Успешная запись может сохраниться при потере ответа или ошибке обновления интерфейса.\n\nЕсли исход не установлен, передать конкретную неопределённость и предусмотренный маршрут восстановления. Новый исполнитель проверяет прежний запрос до возможного повторного эффекта. Базовый протокол раскрыт в [work](../bootstrap/work.md).\n\nОбоснованно различать выполненное, подготовленное, ожидающее решения и неизвестное. Поздняя похожая успешная операция не доказывает исход прежней.\n\n",
+      "canons": "",
+      "knownErrors": []
     },
     {
       "id": "K-A-HANDOFF-RESUME",
       "kind": "canon",
       "title": "Применимость: Передать цель, пробелы и рабочий вход",
-      "description": "",
+      "description": "Источник: docs/lenses/methods/handoff.md#выбрать-достаточный-объём-передачи. Содержание раскрыто в LS-TEXT-HANDOFF-2d5c64a34c; точная редакция — LS-MAP-HANDOFF.",
       "revision": 1,
-      "guidance": "Read receipt after uncertain outcome; retry the identical request/transactionId, or recover accepted payload. Report authoritative Graph/Plan/registry/layout revisions, evidence and remaining work. Opening a lens or copying a graph never proves execution.  Ситуация оправдывает этот способ в пределах его вклада Лишнее действие при уже достаточном состоянии"
+      "guidance": "## Выбрать достаточный объём передачи\n\nОбычно нужны цель и scope, владельцы и важные IDs, текущие решения и основания, подтверждённые результаты, ограничения, открытые Questions, применимые линзы и один ближайший шаг.\n\nТехнический вход можно передать несекретным путём к подготовленному context или разрешённой ссылкой. Ключи, bearer и другие credentials сохраняют свой защищённый канал.\n\nПроверить, что сведения для продолжения действительно доступны получателю. Различать путь внутри контейнера, ссылку пользователя и внешний источник. Указать версию или дату там, где это влияет на вывод.\n\nОбъём соразмерить цене восстановления. Сохранять первоисточники и адресные указатели вместо независимого повторного изложения изменяемого состояния.\n\n",
+      "canons": "",
+      "knownErrors": []
     },
     {
       "id": "I-LENS-HANDOFF",
       "kind": "info",
       "title": "Применение и границы линзы",
-      "description": "Определение линзы — бумага для исследования. Чтение, выбор линзы, применение к конкретной версии, выбор предметного A, Plan, исполнение и результат различаются. Рассматривать только применимые части. Условия канона показательны; реальные факты находятся в R/Context рабочей ситуации. Порядок в JSON не задаёт расписание. Точные команды и права остаются у технических владельцев.",
+      "description": "Работа может быть осмысленно продолжена другой сессией по доступному проверенному контексту",
       "revision": 1,
-      "value": "Определение линзы — бумага для исследования. Чтение, выбор линзы, применение к конкретной версии, выбор предметного A, Plan, исполнение и результат различаются. Рассматривать только применимые части. Условия канона показательны; реальные факты находятся в R/Context рабочей ситуации. Порядок в JSON не задаёт расписание. Точные команды и права остаются у технических владельцев."
+      "value": "## Когда оценить применение\n\n- Пользователь просит передать работу, меняется сессия либо нужен вход для другого исполнителя.\n- Этап остаётся незавершённым, а следующий шаг должен опираться на сохранённое состояние.\n- Есть операция с неизвестным исходом, которую получатель не должен повторить вслепую.\n\nHandoff помогает [продолжению work](../bootstrap/work.md#сохранить-полезное-и-выбрать-продолжение). Передача возможна в текущей точке; завершение всего этапа не становится её предварительным условием.",
+      "tags": [
+        "rdg:lens-catalog"
+      ]
     },
     {
       "id": "INFO-DECISION-API-HANDOFF",
       "kind": "info",
-      "title": "Проверенный маршрут API · handoff",
-      "description": "Контракт поддержанного Decision runtime; читать вместе с актуальной schema",
+      "title": "Введение и границы · handoff",
+      "description": "Источник: docs/lenses/methods/handoff.md. Содержание раскрыто в LS-TEXT-HANDOFF-e3b0c44298; точная редакция — LS-MAP-HANDOFF.",
       "revision": 1,
-      "value": "Общий протокол: catalog → read → schema → preflight(request) → apply(request, expectedInputBinding=preview.inputBinding) → receipt/readback. Новый логический запрос получает новый UUID transactionId; точный retry сохраняет его и весь request. Не подменяйте entity ID ключом occurrence. Версии и права проверяются общим Application. После apply проверьте published, receipt(transactionId) и read/history. Неопределённый результат сохраняет тот же request и transactionId: повторите его или recover принятую транзакцию. Сообщайте реальные Graph/Plan/layout/registry revisions и Evidence. Рекомендация и факт применения различаются: schema(lens_apply) записывает nodeIds/evidenceIds/recommendationIds/lensPackageId, фиксируя observedPins, definition versions и lens version; completion остаётся отдельным событием."
+      "value": "# Handoff — передать работу для содержательного продолжения\n\n> **СТАТУС: АКТУАЛЬНЫЙ СЕМАНТИЧЕСКИЙ ИСТОЧНИК ЛИНЗЫ.** Вторая группа, методики эффективной работы. Редакция 2026-11-12.\n\nHandoff помогает другой сессии продолжить работу по проверенным данным и основаниям. Её результат — достаточно ясный вход в текущую задачу, её состояние, существенные неизвестные и ближайшее действие.\n\n"
+    },
+    {
+      "id": "LS-TEXT-HANDOFF-e3b0c44298",
+      "kind": "info",
+      "title": "Введение",
+      "description": "docs/lenses/methods/handoff.md; точная редакция — LS-MAP-HANDOFF.",
+      "revision": 1,
+      "value": "# Handoff — передать работу для содержательного продолжения\n\n> **СТАТУС: АКТУАЛЬНЫЙ СЕМАНТИЧЕСКИЙ ИСТОЧНИК ЛИНЗЫ.** Вторая группа, методики эффективной работы. Редакция 2026-11-12.\n\nHandoff помогает другой сессии продолжить работу по проверенным данным и основаниям. Её результат — достаточно ясный вход в текущую задачу, её состояние, существенные неизвестные и ближайшее действие."
+    },
+    {
+      "id": "LS-TEXT-HANDOFF-2f197f40fd",
+      "kind": "canon",
+      "title": "Требуемый результат и основания",
+      "description": "docs/lenses/methods/handoff.md#требуемый-результат-и-основания; точная редакция — LS-MAP-HANDOFF.",
+      "revision": 1,
+      "guidance": "## Требуемый результат и основания\n\n**R-LENS-HANDOFF:** «Работа может быть осмысленно продолжена другой сессией по доступному проверенному контексту».\n\nОбласть: текущая точка передачи, включая незавершённые операции. Родительские основания: [R-CONTINUITY](../requirements.md#r-continuity), [R-USEFUL-RESULT](../requirements.md#r-useful-result). Отношение при переносе определяется по [правилу оснований](../requirements.md#как-выразить-родительские-основания-в-графе).\n\nПередача уменьшает потерю оснований и риск повторного эффекта, сохраняя ближайший шаг. Новый архив и завершение всей задачи не обязательны для достижения этого результата.\n\nПроверка: [достаточность результата](#как-продолжает-получатель)."
+    },
+    {
+      "id": "LS-TEXT-HANDOFF-0b40816ee4",
+      "kind": "canon",
+      "title": "Когда оценить применение",
+      "description": "docs/lenses/methods/handoff.md#когда-оценить-применение; точная редакция — LS-MAP-HANDOFF.",
+      "revision": 1,
+      "guidance": "## Когда оценить применение\n\n- Пользователь просит передать работу, меняется сессия либо нужен вход для другого исполнителя.\n- Этап остаётся незавершённым, а следующий шаг должен опираться на сохранённое состояние.\n- Есть операция с неизвестным исходом, которую получатель не должен повторить вслепую.\n\nHandoff помогает [продолжению work](../bootstrap/work.md#сохранить-полезное-и-выбрать-продолжение). Передача возможна в текущей точке; завершение всего этапа не становится её предварительным условием."
+    },
+    {
+      "id": "LS-TEXT-HANDOFF-297d014940",
+      "kind": "canon",
+      "title": "Восстановить фактическое состояние",
+      "description": "docs/lenses/methods/handoff.md#восстановить-фактическое-состояние; точная редакция — LS-MAP-HANDOFF.",
+      "revision": 1,
+      "guidance": "## Восстановить фактическое состояние\n\nНачать с исходной цели пользователя и актуального scope. Прочитать реальные owners, относящиеся Graph и Plan, существенные события History и подтверждения результатов.\n\nУстановить, что уже принято, выполнено и проверено, что остаётся на бумаге и что требует review. Исторический успех сохраняет свою область и версию. Поздняя геометрия графа и порядок узлов не восстанавливают прошлое исполнение.\n\nПередавать действующие источники смысла и данные, по которым можно проверить утверждения. Важные причины выбора и отвергнутые альтернативы должны оставаться доступными в уместном объёме."
+    },
+    {
+      "id": "LS-TEXT-HANDOFF-5e0fe02a9d",
+      "kind": "canon",
+      "title": "Разобрать незавершённые операции",
+      "description": "docs/lenses/methods/handoff.md#разобрать-незавершённые-операции; точная редакция — LS-MAP-HANDOFF.",
+      "revision": 1,
+      "guidance": "## Разобрать незавершённые операции\n\nДля прерванной записи найти исходные request, transactionId, inputBinding и журнал. Сопоставить receipt с фактическим состоянием. Успешная запись может сохраниться при потере ответа или ошибке обновления интерфейса.\n\nЕсли исход не установлен, передать конкретную неопределённость и предусмотренный маршрут восстановления. Новый исполнитель проверяет прежний запрос до возможного повторного эффекта. Базовый протокол раскрыт в [work](../bootstrap/work.md).\n\nОбоснованно различать выполненное, подготовленное, ожидающее решения и неизвестное. Поздняя похожая успешная операция не доказывает исход прежней."
+    },
+    {
+      "id": "LS-TEXT-HANDOFF-2d5c64a34c",
+      "kind": "canon",
+      "title": "Выбрать достаточный объём передачи",
+      "description": "docs/lenses/methods/handoff.md#выбрать-достаточный-объём-передачи; точная редакция — LS-MAP-HANDOFF.",
+      "revision": 1,
+      "guidance": "## Выбрать достаточный объём передачи\n\nОбычно нужны цель и scope, владельцы и важные IDs, текущие решения и основания, подтверждённые результаты, ограничения, открытые Questions, применимые линзы и один ближайший шаг.\n\nТехнический вход можно передать несекретным путём к подготовленному context или разрешённой ссылкой. Ключи, bearer и другие credentials сохраняют свой защищённый канал.\n\nПроверить, что сведения для продолжения действительно доступны получателю. Различать путь внутри контейнера, ссылку пользователя и внешний источник. Указать версию или дату там, где это влияет на вывод.\n\nОбъём соразмерить цене восстановления. Сохранять первоисточники и адресные указатели вместо независимого повторного изложения изменяемого состояния."
+    },
+    {
+      "id": "LS-TEXT-HANDOFF-dc594c68f8",
+      "kind": "canon",
+      "title": "Передать работу в её текущей точке",
+      "description": "docs/lenses/methods/handoff.md#передать-работу-в-её-текущей-точке; точная редакция — LS-MAP-HANDOFF.",
+      "revision": 1,
+      "guidance": "## Передать работу в её текущей точке\n\nПередача возможна посреди незавершённого этапа. По прямому запросу пользователя сформировать понятный вход из уже доступных данных. Не создавать ради передачи новую обязательную фазу завершения, уборки или подробного архивирования.\n\nСущественные новые решения должны быть записаны у своих владельцев. В передаче отделяются действующие правила, будущий проект и результаты проверок. Непроверенное обозначается прямо."
+    },
+    {
+      "id": "LS-TEXT-HANDOFF-266f263f02",
+      "kind": "canon",
+      "title": "Пример",
+      "description": "docs/lenses/methods/handoff.md#пример; точная редакция — LS-MAP-HANDOFF.",
+      "revision": 1,
+      "guidance": "## Пример\n\nОбновление приложения подготовлено и прошло CI, но merge выполняется владельцем. Следующей сессии нужны PR и точный HEAD, проверенный buildId, состояние публикации, текущий installed buildId и ближайшее действие.\n\nЕсли запрос публикации имеет неизвестный исход, передача дополнительно указывает исходный ID заявки, прочитанные свидетельства и предел уверенности. Формулировка «можно повторить» требует подтверждённых оснований по контракту."
+    },
+    {
+      "id": "LS-TEXT-HANDOFF-a60ab0c76f",
+      "kind": "canon",
+      "title": "Как продолжает получатель",
+      "description": "docs/lenses/methods/handoff.md#как-продолжает-получатель; точная редакция — LS-MAP-HANDOFF.",
+      "revision": 1,
+      "guidance": "## Как продолжает получатель\n\nНовый исполнитель применяет [orient](../bootstrap/orient.md), сверяет текущие версии и исход прежних операций. Затем выбирает методику для ближайшей задачи. Проверяемые данные позволяют скорректировать план без догадок о прошлой работе.\n\nОценку пользы сохраняемых сведений раскрывает [preserve](preserve.md). Задача handoff — дать достаточный контекст продолжения, а подтверждение предметных результатов сохраняет собственные критерии."
+    },
+    {
+      "id": "LS-TEXT-HANDOFF-c954c2cbf6",
+      "kind": "info",
+      "title": "Нормативные источники",
+      "description": "docs/lenses/methods/handoff.md#нормативные-источники; точная редакция — LS-MAP-HANDOFF.",
+      "revision": 1,
+      "value": "## Нормативные источники\n\n- [Владельцы и запись](../../guides/RDG-ACTIVE-CONTRACT.md#владельцы-и-запись)\n- [Пересмотр и история](../../guides/RDG-ACTIVE-CONTRACT.md#пересмотр-и-история)\n- [Вход рабочего чата](../../guides/RDG-AGENT-BOOTSTRAP.md)\n- [Передача по запросу](../../../AGENTS.md#передача-другому-чату-по-запросу)"
+    },
+    {
+      "id": "LS-WORKFLOW-HANDOFF",
+      "kind": "info",
+      "title": "Место методики в работе",
+      "description": "Контекст выбора; не автоматическое исполнение и не обязательный вызов соседней линзы.",
+      "revision": 1,
+      "tags": [
+        "rdg:lens-workflow"
+      ],
+      "value": "Методика handoff выбирается по текущей задаче и условиям из собственного определения, после бутстрепа. Общую стратегию раскрывает work; переход к соседней методике не означает обязательного полного прохождения или исполнения."
+    },
+    {
+      "id": "LS-SOURCE-HANDOFF",
+      "kind": "info",
+      "title": "Полный Markdown-источник · handoff",
+      "description": "docs/lenses/methods/handoff.md · 6aa813ef9a596cb6e9876733a8f9a75aa9695fbb · SHA256 3f025b78ab007668021c7e16b16c9b800b3cca6de4b1189bbf08d1313f2c2e42",
+      "revision": 1,
+      "tags": [
+        "rdg:lens-source"
+      ],
+      "value": "# Handoff — передать работу для содержательного продолжения\n\n> **СТАТУС: АКТУАЛЬНЫЙ СЕМАНТИЧЕСКИЙ ИСТОЧНИК ЛИНЗЫ.** Вторая группа, методики эффективной работы. Редакция 2026-11-12.\n\nHandoff помогает другой сессии продолжить работу по проверенным данным и основаниям. Её результат — достаточно ясный вход в текущую задачу, её состояние, существенные неизвестные и ближайшее действие.\n\n## Требуемый результат и основания\n\n**R-LENS-HANDOFF:** «Работа может быть осмысленно продолжена другой сессией по доступному проверенному контексту».\n\nОбласть: текущая точка передачи, включая незавершённые операции. Родительские основания: [R-CONTINUITY](../requirements.md#r-continuity), [R-USEFUL-RESULT](../requirements.md#r-useful-result). Отношение при переносе определяется по [правилу оснований](../requirements.md#как-выразить-родительские-основания-в-графе).\n\nПередача уменьшает потерю оснований и риск повторного эффекта, сохраняя ближайший шаг. Новый архив и завершение всей задачи не обязательны для достижения этого результата.\n\nПроверка: [достаточность результата](#как-продолжает-получатель).\n\n## Когда оценить применение\n\n- Пользователь просит передать работу, меняется сессия либо нужен вход для другого исполнителя.\n- Этап остаётся незавершённым, а следующий шаг должен опираться на сохранённое состояние.\n- Есть операция с неизвестным исходом, которую получатель не должен повторить вслепую.\n\nHandoff помогает [продолжению work](../bootstrap/work.md#сохранить-полезное-и-выбрать-продолжение). Передача возможна в текущей точке; завершение всего этапа не становится её предварительным условием.\n\n## Восстановить фактическое состояние\n\nНачать с исходной цели пользователя и актуального scope. Прочитать реальные owners, относящиеся Graph и Plan, существенные события History и подтверждения результатов.\n\nУстановить, что уже принято, выполнено и проверено, что остаётся на бумаге и что требует review. Исторический успех сохраняет свою область и версию. Поздняя геометрия графа и порядок узлов не восстанавливают прошлое исполнение.\n\nПередавать действующие источники смысла и данные, по которым можно проверить утверждения. Важные причины выбора и отвергнутые альтернативы должны оставаться доступными в уместном объёме.\n\n## Разобрать незавершённые операции\n\nДля прерванной записи найти исходные request, transactionId, inputBinding и журнал. Сопоставить receipt с фактическим состоянием. Успешная запись может сохраниться при потере ответа или ошибке обновления интерфейса.\n\nЕсли исход не установлен, передать конкретную неопределённость и предусмотренный маршрут восстановления. Новый исполнитель проверяет прежний запрос до возможного повторного эффекта. Базовый протокол раскрыт в [work](../bootstrap/work.md).\n\nОбоснованно различать выполненное, подготовленное, ожидающее решения и неизвестное. Поздняя похожая успешная операция не доказывает исход прежней.\n\n## Выбрать достаточный объём передачи\n\nОбычно нужны цель и scope, владельцы и важные IDs, текущие решения и основания, подтверждённые результаты, ограничения, открытые Questions, применимые линзы и один ближайший шаг.\n\nТехнический вход можно передать несекретным путём к подготовленному context или разрешённой ссылкой. Ключи, bearer и другие credentials сохраняют свой защищённый канал.\n\nПроверить, что сведения для продолжения действительно доступны получателю. Различать путь внутри контейнера, ссылку пользователя и внешний источник. Указать версию или дату там, где это влияет на вывод.\n\nОбъём соразмерить цене восстановления. Сохранять первоисточники и адресные указатели вместо независимого повторного изложения изменяемого состояния.\n\n## Передать работу в её текущей точке\n\nПередача возможна посреди незавершённого этапа. По прямому запросу пользователя сформировать понятный вход из уже доступных данных. Не создавать ради передачи новую обязательную фазу завершения, уборки или подробного архивирования.\n\nСущественные новые решения должны быть записаны у своих владельцев. В передаче отделяются действующие правила, будущий проект и результаты проверок. Непроверенное обозначается прямо.\n\n## Пример\n\nОбновление приложения подготовлено и прошло CI, но merge выполняется владельцем. Следующей сессии нужны PR и точный HEAD, проверенный buildId, состояние публикации, текущий installed buildId и ближайшее действие.\n\nЕсли запрос публикации имеет неизвестный исход, передача дополнительно указывает исходный ID заявки, прочитанные свидетельства и предел уверенности. Формулировка «можно повторить» требует подтверждённых оснований по контракту.\n\n## Как продолжает получатель\n\nНовый исполнитель применяет [orient](../bootstrap/orient.md), сверяет текущие версии и исход прежних операций. Затем выбирает методику для ближайшей задачи. Проверяемые данные позволяют скорректировать план без догадок о прошлой работе.\n\nОценку пользы сохраняемых сведений раскрывает [preserve](preserve.md). Задача handoff — дать достаточный контекст продолжения, а подтверждение предметных результатов сохраняет собственные критерии.\n\n## Нормативные источники\n\n- [Владельцы и запись](../../guides/RDG-ACTIVE-CONTRACT.md#владельцы-и-запись)\n- [Пересмотр и история](../../guides/RDG-ACTIVE-CONTRACT.md#пересмотр-и-история)\n- [Вход рабочего чата](../../guides/RDG-AGENT-BOOTSTRAP.md)\n- [Передача по запросу](../../../AGENTS.md#передача-другому-чату-по-запросу)\n"
+    },
+    {
+      "id": "LS-MAP-HANDOFF",
+      "kind": "info",
+      "title": "Карта соответствия Markdown и структуры",
+      "description": "Двустороннее соответствие разделов, сущностей и существенных отношений.",
+      "revision": 1,
+      "tags": [
+        "rdg:lens-source-map"
+      ],
+      "value": "{\n  \"schemaVersion\": 1,\n  \"lensKey\": \"handoff\",\n  \"source\": {\n    \"path\": \"docs/lenses/methods/handoff.md\",\n    \"sha256\": \"3f025b78ab007668021c7e16b16c9b800b3cca6de4b1189bbf08d1313f2c2e42\",\n    \"gitCommit\": \"6aa813ef9a596cb6e9876733a8f9a75aa9695fbb\"\n  },\n  \"fullTextInfoId\": \"LS-SOURCE-HANDOFF\",\n  \"rows\": [\n    {\n      \"anchor\": \"\",\n      \"title\": \"Введение\",\n      \"startLine\": 1,\n      \"endLine\": 6,\n      \"sectionSHA256\": \"f5a987d31992c37850e5bc8be124e48925f112dfb73e571b2eb4dc18fe4770d5\",\n      \"nestedAnchors\": [],\n      \"entityIds\": [\n        \"A-HANDOFF-BUILD\",\n        \"INFO-DECISION-API-HANDOFF\",\n        \"LS-TEXT-HANDOFF-e3b0c44298\",\n        \"LS-SOURCE-HANDOFF\"\n      ],\n      \"edgeIds\": [\n        \"D-A-HANDOFF-BUILD\",\n        \"O-R-HANDOFF-FACTS\",\n        \"O-R-HANDOFF-UNCERTAINTY\",\n        \"O-R-HANDOFF-CONTINUATION\",\n        \"CANON-A-HANDOFF-BUILD\",\n        \"INFO-DECISION-API-TO-ROOT-HANDOFF\",\n        \"LS-EDGE-15c2729f263608ae74ad\",\n        \"LS-EDGE-fefd14f6ccd8cfec9843\",\n        \"LS-EDGE-41582ed0a338b7dd894d\",\n        \"LS-EDGE-97fd384b8a9c27ce7796\",\n        \"LS-EDGE-cc000d5c35b268459f5c\",\n        \"LS-EDGE-1fea715cd7d4c3f18458\",\n        \"LS-EDGE-d83472cab1ae5159860f\",\n        \"LS-EDGE-5ab26f9acf45f8273358\",\n        \"LS-EDGE-6bae6c9b87f011679477\",\n        \"LS-EDGE-d489e5042da7eb9a9a89\",\n        \"LS-EDGE-6c4ae2b2a0dfa8b7b5c4\",\n        \"LS-EDGE-49356d928ca7d1828231\",\n        \"LS-EDGE-29dfc1949fe3161ed47a\",\n        \"LS-EDGE-c7f1072abd7feb111c3c\"\n      ],\n      \"decisionGroupIds\": [],\n      \"meaning\": \"Полный смысл сохранён в Canon/Info; действия выделены отдельным авторским планом. Пояснения не превращаются автоматически в обязательные R.\"\n    },\n    {\n      \"anchor\": \"требуемый-результат-и-основания\",\n      \"title\": \"Требуемый результат и основания\",\n      \"startLine\": 7,\n      \"endLine\": 16,\n      \"sectionSHA256\": \"29ca8c7b0c3fdd7980851b185acf8d3390850e2d85c7e790adeba132c8a5d5b9\",\n      \"nestedAnchors\": [],\n      \"entityIds\": [\n        \"R-LENS-HANDOFF\",\n        \"LS-TEXT-HANDOFF-2f197f40fd\"\n      ],\n      \"edgeIds\": [\n        \"D-A-HANDOFF-BUILD\",\n        \"INFO-handoff\",\n        \"INFO-DECISION-API-TO-ROOT-HANDOFF\",\n        \"LS-EDGE-fefd14f6ccd8cfec9843\",\n        \"LS-EDGE-73ea8ba3fded6179d1bd\",\n        \"LS-EDGE-c7f1072abd7feb111c3c\"\n      ],\n      \"decisionGroupIds\": [],\n      \"meaning\": \"Полный смысл сохранён в Canon/Info; действия выделены отдельным авторским планом. Пояснения не превращаются автоматически в обязательные R.\"\n    },\n    {\n      \"anchor\": \"когда-оценить-применение\",\n      \"title\": \"Когда оценить применение\",\n      \"startLine\": 17,\n      \"endLine\": 24,\n      \"sectionSHA256\": \"c3e128b3ada534788d5bb6925e3c058020ff6f3ed4dd0f93c97b0de3dad99709\",\n      \"nestedAnchors\": [],\n      \"entityIds\": [\n        \"I-LENS-HANDOFF\",\n        \"LS-TEXT-HANDOFF-0b40816ee4\",\n        \"LS-WORKFLOW-HANDOFF\"\n      ],\n      \"edgeIds\": [\n        \"INFO-handoff\",\n        \"LS-EDGE-41582ed0a338b7dd894d\",\n        \"LS-EDGE-73ea8ba3fded6179d1bd\"\n      ],\n      \"decisionGroupIds\": [],\n      \"meaning\": \"Полный смысл сохранён в Canon/Info; действия выделены отдельным авторским планом. Пояснения не превращаются автоматически в обязательные R.\"\n    },\n    {\n      \"anchor\": \"восстановить-фактическое-состояние\",\n      \"title\": \"Восстановить фактическое состояние\",\n      \"startLine\": 25,\n      \"endLine\": 32,\n      \"sectionSHA256\": \"575d01721206e8c8c1145c369f95fe39fe23b96e5d7ed7b7f960ed6feb623af6\",\n      \"nestedAnchors\": [],\n      \"entityIds\": [\n        \"R-HANDOFF-FACTS\",\n        \"A-HANDOFF-FACTS\",\n        \"K-A-HANDOFF-FACTS\",\n        \"LS-TEXT-HANDOFF-297d014940\",\n        \"LS-STEP-HANDOFF-FACTS\"\n      ],\n      \"edgeIds\": [\n        \"O-R-HANDOFF-FACTS\",\n        \"D-A-HANDOFF-FACTS\",\n        \"CANON-A-HANDOFF-FACTS\",\n        \"LS-EDGE-97fd384b8a9c27ce7796\",\n        \"LS-EDGE-6c4ae2b2a0dfa8b7b5c4\",\n        \"LS-EDGE-bbd5c4eac844fd1c9cd3\"\n      ],\n      \"decisionGroupIds\": [],\n      \"meaning\": \"Полный смысл сохранён в Canon/Info; действия выделены отдельным авторским планом. Пояснения не превращаются автоматически в обязательные R.\"\n    },\n    {\n      \"anchor\": \"разобрать-незавершённые-операции\",\n      \"title\": \"Разобрать незавершённые операции\",\n      \"startLine\": 33,\n      \"endLine\": 40,\n      \"sectionSHA256\": \"6e28aa39b3be6608f3c39b661699dca91df4996a81cb681f28fb31c4e31257ee\",\n      \"nestedAnchors\": [],\n      \"entityIds\": [\n        \"R-HANDOFF-UNCERTAINTY\",\n        \"A-HANDOFF-RECEIPTS\",\n        \"K-A-HANDOFF-RECEIPTS\",\n        \"LS-TEXT-HANDOFF-5e0fe02a9d\"\n      ],\n      \"edgeIds\": [\n        \"O-R-HANDOFF-UNCERTAINTY\",\n        \"D-A-HANDOFF-RECEIPTS\",\n        \"CANON-A-HANDOFF-RECEIPTS\",\n        \"LS-EDGE-cc000d5c35b268459f5c\"\n      ],\n      \"decisionGroupIds\": [],\n      \"meaning\": \"Полный смысл сохранён в Canon/Info; действия выделены отдельным авторским планом. Пояснения не превращаются автоматически в обязательные R.\"\n    },\n    {\n      \"anchor\": \"выбрать-достаточный-объём-передачи\",\n      \"title\": \"Выбрать достаточный объём передачи\",\n      \"startLine\": 41,\n      \"endLine\": 50,\n      \"sectionSHA256\": \"c9c0825d575113475069c96ba96c9f2c7d1c29be3b9cc9e5ac919b077e372467\",\n      \"nestedAnchors\": [],\n      \"entityIds\": [\n        \"R-HANDOFF-CONTINUATION\",\n        \"A-HANDOFF-RESUME\",\n        \"K-A-HANDOFF-RESUME\",\n        \"LS-TEXT-HANDOFF-2d5c64a34c\",\n        \"LS-STEP-HANDOFF-CONTENT\"\n      ],\n      \"edgeIds\": [\n        \"O-R-HANDOFF-CONTINUATION\",\n        \"D-A-HANDOFF-RESUME\",\n        \"CANON-A-HANDOFF-RESUME\",\n        \"LS-EDGE-1fea715cd7d4c3f18458\",\n        \"LS-EDGE-49356d928ca7d1828231\",\n        \"LS-EDGE-f4cd23cfa7a68ecc2f04\"\n      ],\n      \"decisionGroupIds\": [],\n      \"meaning\": \"Полный смысл сохранён в Canon/Info; действия выделены отдельным авторским планом. Пояснения не превращаются автоматически в обязательные R.\"\n    },\n    {\n      \"anchor\": \"передать-работу-в-её-текущей-точке\",\n      \"title\": \"Передать работу в её текущей точке\",\n      \"startLine\": 51,\n      \"endLine\": 56,\n      \"sectionSHA256\": \"37a26b747a3f2ff1b5990fdf9cdc8451fbf671886be2f3024a4e170866a47c39\",\n      \"nestedAnchors\": [],\n      \"entityIds\": [\n        \"K-A-HANDOFF-BUILD\",\n        \"LS-TEXT-HANDOFF-dc594c68f8\",\n        \"LS-STEP-HANDOFF-TRANSFER\"\n      ],\n      \"edgeIds\": [\n        \"CANON-A-HANDOFF-BUILD\",\n        \"LS-EDGE-d83472cab1ae5159860f\",\n        \"LS-EDGE-29dfc1949fe3161ed47a\",\n        \"LS-EDGE-2188943bd35f9fa5fafc\"\n      ],\n      \"decisionGroupIds\": [],\n      \"meaning\": \"Полный смысл сохранён в Canon/Info; действия выделены отдельным авторским планом. Пояснения не превращаются автоматически в обязательные R.\"\n    },\n    {\n      \"anchor\": \"пример\",\n      \"title\": \"Пример\",\n      \"startLine\": 57,\n      \"endLine\": 62,\n      \"sectionSHA256\": \"d7e5f41fe521e81e2b8c7cf2491483a8400030f62e5e8ed8e732d70e7844f062\",\n      \"nestedAnchors\": [],\n      \"entityIds\": [\n        \"LS-TEXT-HANDOFF-266f263f02\"\n      ],\n      \"edgeIds\": [\n        \"LS-EDGE-5ab26f9acf45f8273358\"\n      ],\n      \"decisionGroupIds\": [],\n      \"meaning\": \"Полный смысл сохранён в Canon/Info; действия выделены отдельным авторским планом. Пояснения не превращаются автоматически в обязательные R.\"\n    },\n    {\n      \"anchor\": \"как-продолжает-получатель\",\n      \"title\": \"Как продолжает получатель\",\n      \"startLine\": 63,\n      \"endLine\": 68,\n      \"sectionSHA256\": \"c33cfed84f69cce5bee46cb551eb0f12251d04625b492297545e0448dd9c8146\",\n      \"nestedAnchors\": [],\n      \"entityIds\": [\n        \"LS-TEXT-HANDOFF-a60ab0c76f\"\n      ],\n      \"edgeIds\": [\n        \"LS-EDGE-6bae6c9b87f011679477\"\n      ],\n      \"decisionGroupIds\": [],\n      \"meaning\": \"Полный смысл сохранён в Canon/Info; действия выделены отдельным авторским планом. Пояснения не превращаются автоматически в обязательные R.\"\n    },\n    {\n      \"anchor\": \"нормативные-источники\",\n      \"title\": \"Нормативные источники\",\n      \"startLine\": 69,\n      \"endLine\": 74,\n      \"sectionSHA256\": \"fa22b2bcb030517cd1be5f3e762027f7f9b4c877ab6988c9478f7def83fd8ab3\",\n      \"nestedAnchors\": [],\n      \"entityIds\": [\n        \"LS-TEXT-HANDOFF-c954c2cbf6\"\n      ],\n      \"edgeIds\": [\n        \"LS-EDGE-d489e5042da7eb9a9a89\"\n      ],\n      \"decisionGroupIds\": [],\n      \"meaning\": \"Полный смысл сохранён в Canon/Info; действия выделены отдельным авторским планом. Пояснения не превращаются автоматически в обязательные R.\"\n    }\n  ],\n  \"additionalSources\": [],\n  \"retainedIdentityIds\": [\n    \"R-LENS-HANDOFF\",\n    \"A-HANDOFF-BUILD\",\n    \"R-HANDOFF-FACTS\",\n    \"A-HANDOFF-FACTS\",\n    \"R-HANDOFF-UNCERTAINTY\",\n    \"A-HANDOFF-RECEIPTS\",\n    \"R-HANDOFF-CONTINUATION\",\n    \"A-HANDOFF-RESUME\",\n    \"K-A-HANDOFF-BUILD\",\n    \"K-A-HANDOFF-FACTS\",\n    \"K-A-HANDOFF-RECEIPTS\",\n    \"K-A-HANDOFF-RESUME\",\n    \"I-LENS-HANDOFF\",\n    \"INFO-DECISION-API-HANDOFF\"\n  ],\n  \"notes\": [],\n  \"serviceObjects\": [\n    \"LS-SOURCE-HANDOFF\",\n    \"LS-MAP-HANDOFF\",\n    \"LS-WORKFLOW-HANDOFF\",\n    \"I-LENS-HANDOFF\"\n  ],\n  \"rules\": \"Карта прослеживает представление конкретной версии текста; не самостоятельный нормативный владелец или запись выполнения.\"\n}\n"
     }
   ],
   "externalActions": [],
@@ -242,13 +411,127 @@
       "type": "INFO_FOR",
       "from": "INFO-DECISION-API-HANDOFF",
       "to": "R-LENS-HANDOFF"
+    },
+    {
+      "id": "LS-EDGE-15c2729f263608ae74ad",
+      "type": "INFO_FOR",
+      "from": "LS-TEXT-HANDOFF-e3b0c44298",
+      "to": "A-HANDOFF-BUILD"
+    },
+    {
+      "id": "LS-EDGE-fefd14f6ccd8cfec9843",
+      "type": "CANON_FOR",
+      "from": "LS-TEXT-HANDOFF-2f197f40fd",
+      "to": "A-HANDOFF-BUILD"
+    },
+    {
+      "id": "LS-EDGE-41582ed0a338b7dd894d",
+      "type": "CANON_FOR",
+      "from": "LS-TEXT-HANDOFF-0b40816ee4",
+      "to": "A-HANDOFF-BUILD"
+    },
+    {
+      "id": "LS-EDGE-97fd384b8a9c27ce7796",
+      "type": "CANON_FOR",
+      "from": "LS-TEXT-HANDOFF-297d014940",
+      "to": "A-HANDOFF-BUILD"
+    },
+    {
+      "id": "LS-EDGE-cc000d5c35b268459f5c",
+      "type": "CANON_FOR",
+      "from": "LS-TEXT-HANDOFF-5e0fe02a9d",
+      "to": "A-HANDOFF-BUILD"
+    },
+    {
+      "id": "LS-EDGE-1fea715cd7d4c3f18458",
+      "type": "CANON_FOR",
+      "from": "LS-TEXT-HANDOFF-2d5c64a34c",
+      "to": "A-HANDOFF-BUILD"
+    },
+    {
+      "id": "LS-EDGE-d83472cab1ae5159860f",
+      "type": "CANON_FOR",
+      "from": "LS-TEXT-HANDOFF-dc594c68f8",
+      "to": "A-HANDOFF-BUILD"
+    },
+    {
+      "id": "LS-EDGE-5ab26f9acf45f8273358",
+      "type": "CANON_FOR",
+      "from": "LS-TEXT-HANDOFF-266f263f02",
+      "to": "A-HANDOFF-BUILD"
+    },
+    {
+      "id": "LS-EDGE-6bae6c9b87f011679477",
+      "type": "CANON_FOR",
+      "from": "LS-TEXT-HANDOFF-a60ab0c76f",
+      "to": "A-HANDOFF-BUILD"
+    },
+    {
+      "id": "LS-EDGE-d489e5042da7eb9a9a89",
+      "type": "INFO_FOR",
+      "from": "LS-TEXT-HANDOFF-c954c2cbf6",
+      "to": "A-HANDOFF-BUILD"
+    },
+    {
+      "id": "LS-EDGE-6c4ae2b2a0dfa8b7b5c4",
+      "type": "REQUIRES_ACTION",
+      "from": "A-HANDOFF-BUILD",
+      "to": "LS-STEP-HANDOFF-FACTS"
+    },
+    {
+      "id": "LS-EDGE-bbd5c4eac844fd1c9cd3",
+      "type": "CANON_FOR",
+      "from": "LS-TEXT-HANDOFF-297d014940",
+      "to": "LS-STEP-HANDOFF-FACTS"
+    },
+    {
+      "id": "LS-EDGE-49356d928ca7d1828231",
+      "type": "REQUIRES_ACTION",
+      "from": "A-HANDOFF-BUILD",
+      "to": "LS-STEP-HANDOFF-CONTENT"
+    },
+    {
+      "id": "LS-EDGE-f4cd23cfa7a68ecc2f04",
+      "type": "CANON_FOR",
+      "from": "LS-TEXT-HANDOFF-2d5c64a34c",
+      "to": "LS-STEP-HANDOFF-CONTENT"
+    },
+    {
+      "id": "LS-EDGE-29dfc1949fe3161ed47a",
+      "type": "REQUIRES_ACTION",
+      "from": "A-HANDOFF-BUILD",
+      "to": "LS-STEP-HANDOFF-TRANSFER"
+    },
+    {
+      "id": "LS-EDGE-2188943bd35f9fa5fafc",
+      "type": "CANON_FOR",
+      "from": "LS-TEXT-HANDOFF-dc594c68f8",
+      "to": "LS-STEP-HANDOFF-TRANSFER"
+    },
+    {
+      "id": "LS-EDGE-73ea8ba3fded6179d1bd",
+      "type": "INFO_FOR",
+      "from": "LS-WORKFLOW-HANDOFF",
+      "to": "R-LENS-HANDOFF"
+    },
+    {
+      "id": "LS-EDGE-c7f1072abd7feb111c3c",
+      "type": "INFO_FOR",
+      "from": "LS-SOURCE-HANDOFF",
+      "to": "R-LENS-HANDOFF"
+    },
+    {
+      "id": "LS-EDGE-db33973e26af676a7247",
+      "type": "INFO_FOR",
+      "from": "LS-MAP-HANDOFF",
+      "to": "R-LENS-HANDOFF"
     }
   ],
   "decisionGroups": [],
   "workGraphs": [
     {
       "id": "WG-handoff",
-      "title": "Продолжить и передать работу",
+      "title": "Handoff — передать работу для содержательного продолжения",
       "rootIds": [
         "R-LENS-HANDOFF"
       ],
@@ -261,12 +544,28 @@
         "A-HANDOFF-RECEIPTS",
         "R-HANDOFF-CONTINUATION",
         "A-HANDOFF-RESUME",
+        "LS-STEP-HANDOFF-FACTS",
+        "LS-STEP-HANDOFF-CONTENT",
+        "LS-STEP-HANDOFF-TRANSFER",
         "K-A-HANDOFF-BUILD",
         "K-A-HANDOFF-FACTS",
         "K-A-HANDOFF-RECEIPTS",
         "K-A-HANDOFF-RESUME",
         "I-LENS-HANDOFF",
-        "INFO-DECISION-API-HANDOFF"
+        "INFO-DECISION-API-HANDOFF",
+        "LS-TEXT-HANDOFF-e3b0c44298",
+        "LS-TEXT-HANDOFF-2f197f40fd",
+        "LS-TEXT-HANDOFF-0b40816ee4",
+        "LS-TEXT-HANDOFF-297d014940",
+        "LS-TEXT-HANDOFF-5e0fe02a9d",
+        "LS-TEXT-HANDOFF-2d5c64a34c",
+        "LS-TEXT-HANDOFF-dc594c68f8",
+        "LS-TEXT-HANDOFF-266f263f02",
+        "LS-TEXT-HANDOFF-a60ab0c76f",
+        "LS-TEXT-HANDOFF-c954c2cbf6",
+        "LS-WORKFLOW-HANDOFF",
+        "LS-SOURCE-HANDOFF",
+        "LS-MAP-HANDOFF"
       ]
     }
   ],

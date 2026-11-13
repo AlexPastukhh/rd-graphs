@@ -96,3 +96,11 @@ noDeploymentPaths:
   - .gitattributes
   - BACKLOG-IMPROVEMENTS.md
   - POTENTIAL-IMPROVEMENTS.md
+  # Authoring clients and preview fixtures; live lens definitions are RDG FileStore data.
+  - tools/rdg-agent.py
+  - tools/rdg-agent-lenses/**
+  - tools/rdg-current-example.py
+  - tools/rdg-decision-ui.js
+  - tools/rdg-lens-content-plan.json
+  - tools/rdg-lens-content.py
+  - tools/rdg-lens-publish.py

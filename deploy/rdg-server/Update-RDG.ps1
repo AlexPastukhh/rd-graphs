@@ -3,11 +3,19 @@ param(
     [Parameter(Mandatory=$true)][string]$AgentContainer,
     [ValidateSet('Local','HTTPS')][string]$Mode = 'Local',
     [string]$Domain,
+    [string]$ExpectedBuildId = '',
+    [string]$PinnedSha256 = '',
     [switch]$Watch,
     [string]$StateDirectory = (Join-Path $env:LOCALAPPDATA 'RDG-Server\cicd')
 )
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
+if ($ExpectedBuildId -or $PinnedSha256) {
+    if ($ExpectedBuildId -cnotmatch '^ci-[a-z0-9-]{10,100}$' -or
+        $PinnedSha256 -cnotmatch '^[a-f0-9]{64}$' -or $Watch) {
+        throw 'Pinned updates require an exact ExpectedBuildId and PinnedSha256, without Watch.'
+    }
+}
 $bootstrap = $PSScriptRoot
 $trusted = Get-Content -Raw -LiteralPath (Join-Path $bootstrap 'BUILD.json') | ConvertFrom-Json
 $fixedFiles = @('Dockerfile','.dockerignore','compose.yaml','compose.local.yaml','compose.https.yaml',
@@ -66,6 +74,11 @@ function Update-RDGOnce {
             $ready.artifact -cne ('RDG-Server-' + $ready.buildId + '.zip') -or
             $ready.sha256 -notmatch '^[a-f0-9]{64}$' -or $ready.sourceSHA256 -notmatch '^[a-f0-9]{64}$' -or
             $ready.bytes -le 0 -or $ready.bytes -gt 50000000) { throw 'Invalid CI release metadata.' }
+        # Bind selection inside the updater before any installed release is used.
+        # The local ready object then pins the filename and digest through deployment.
+        if ($ExpectedBuildId -and ($ready.buildId -cne $ExpectedBuildId -or $ready.sha256 -cne $PinnedSha256)) {
+            throw 'Pinned CI release mismatch; no update performed.'
+        }
         $activePath = Join-Path $StateDirectory 'active.json'
         if (Test-Path -LiteralPath $activePath) {
             $active = Get-Content -Raw -LiteralPath $activePath | ConvertFrom-Json

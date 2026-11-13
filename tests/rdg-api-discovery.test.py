@@ -37,6 +37,96 @@ class APIDiscovery(unittest.TestCase):
     def form(self,ident,command,node='R1',**selectors):
         return self.app().call({'method':'schema','op':'core','packageId':ident,'command':command,'nodeId':node,**selectors})
 
+
+    def catalog_info(self, ident, purpose='Choose a useful method', triggers='When a fact is unknown', tags=None):
+        request=self.app().call({'method':'schema','op':'paper_edit','packageId':ident,
+            'command':'add','nodeId':'R1','entityKind':'info'})['request']
+        entity=request['data']['entity']
+        entity.update(title='Catalog guidance',description=purpose,value=triggers,
+                      tags=tags or ['rdg:lens-catalog'])
+        request['note']='Author catalog content in the owning definition'
+        before=self.sources()
+        preview=self.app().call({'method':'preflight','request':request})
+        self.assertEqual(before,self.sources())
+        self.app().call({'method':'apply','request':request,'expectedInputBinding':preview['inputBinding']})
+        return entity['id']
+
+    def test_lens_catalog_returns_owned_card_and_complete_snapshot_without_writes(self):
+        ident=self.create('lens');app=self.app()
+        node=self.catalog_info(ident)
+        self.catalog_info(ident,'Before choosing a method','Research stage of work',['rdg:lens-workflow'])
+        before=self.sources();catalog=app.call({'method':'catalog'})
+        self.assertTrue(catalog['complete']);self.assertEqual(len(catalog['catalogSHA256']),64)
+        row=next(x for x in catalog['packages'] if x['packageId']==ident)
+        card=row['lensCard'];self.assertEqual(card['status'],'available')
+        self.assertEqual(card['purpose'],'Choose a useful method')
+        self.assertEqual(card['appliesWhen'],'When a fact is unknown')
+        graph=app.read(ident)['graph']
+        self.assertEqual(card['source']['graphSHA256'],T.P.digest(graph))
+        self.assertEqual(card['source']['graphRevision'],graph['revision'])
+        self.assertEqual(card['sourceRef']['nodeId'],node)
+        self.assertEqual(card['workflow']['text'],'Research stage of work')
+        with patch.object(A,'portable_application',return_value=app):
+            listed=A.portable_command(SimpleNamespace(command='lenses',package_id=None,
+                expected_input_binding=None,format='json'),{'profile':'portable'})
+        self.assertEqual(listed['lenses'][0]['lensCard'],card)
+        self.assertEqual(listed['catalogSHA256'],catalog['catalogSHA256'])
+        self.assertEqual(self.sources(),before)
+
+    def test_lens_catalog_missing_and_ambiguous_metadata_never_borrows_drafts(self):
+        ident=self.create('lens');app=self.app()
+        before=self.sources()
+        card=app.call({'method':'catalog'})['packages'][0]['lensCard']
+        self.assertEqual(card['status'],'missing');self.assertIsNone(card['purpose'])
+        self.assertEqual(self.sources(),before)
+        self.catalog_info(ident);self.catalog_info(ident,'Another purpose','Different conditions')
+        before=self.sources();card=app.call({'method':'catalog'})['packages'][0]['lensCard']
+        self.assertEqual(card['status'],'invalid');self.assertIsNone(card['purpose'])
+        self.assertEqual(self.sources(),before)
+
+    def test_lens_catalog_schema_and_changed_revision_are_readable(self):
+        ident=self.create('lens');app=self.app()
+        form=app.call({'method':'schema','op':'catalog'})
+        self.assertFalse(form['pagination'])
+        self.assertEqual(form['lensCard']['authoring']['tags'],['rdg:lens-catalog'])
+        with self.assertRaisesRegex(ValueError,'CATALOG_SCHEMA_SELECTORS'):
+            app.call({'method':'schema','op':'catalog','packageId':ident})
+        old=app.call({'method':'catalog'})
+        self.catalog_info(ident,'Explain intent','When intent is unclear')
+        new=app.call({'method':'catalog'})
+        self.assertNotEqual(old['catalogSHA256'],new['catalogSHA256'])
+        self.assertGreater(new['packages'][0]['lensCard']['source']['graphRevision'],
+                           old['packages'][0]['lensCard']['source']['graphRevision'])
+
+
+    def test_catalog_authorization_precedes_card_projection_and_working_owners_stay_unchanged(self):
+        ident=self.create('lens');app=self.app()
+        self.catalog_info(ident,'Private purpose','Private trigger')
+        original=app.authorize
+        def authorize(package,permissions,path=None):
+            if package==ident:raise ValueError('Denied by fixture grant')
+            return original(package,permissions,path)
+        before=self.sources()
+        with patch.object(app,'authorize',side_effect=authorize), patch.object(app,'_lens_catalog_card',wraps=app._lens_catalog_card) as project:
+            listed=app.call({'method':'catalog'})
+            self.assertEqual(listed['packages'],[])
+            project.assert_not_called()
+        self.assertEqual(self.sources(),before)
+        working=self.create()
+        row=next(r for r in app.call({'method':'catalog'})['packages'] if r['packageId']==working)
+        self.assertNotIn('lensCard',row)
+
+    def test_legacy_lens_with_a_known_key_reports_missing_without_importing_source_catalog(self):
+        app=self.app()
+        request=self.req('create',path='lens/legacy-catalog',role='lens',lensKey='work',
+            title='Legacy work definition',graph=T.PortableApplication.graph(self,'legacy-catalog',paper=True))
+        ident=app.request(request)['packages'][0]['packageId']
+        before=self.sources()
+        row=next(r for r in app.call({'method':'catalog'})['packages'] if r['packageId']==ident)
+        self.assertEqual(row['lensCard']['status'],'missing')
+        self.assertIsNone(row['lensCard']['purpose'])
+        self.assertEqual(self.sources(),before)
+
     def test_create_selectors_are_explicit_and_legacy_schema_is_preserved(self):
         app=self.app();before=self.sources()
         legacy=app.call({'method':'schema','op':'create'})
@@ -49,6 +139,33 @@ class APIDiscovery(unittest.TestCase):
         self.assertIn('lensKey',lens['requiredInput'])
         for selectors in ({'coreModel':'unknown'},{'role':'copy'},{'entityKind':'decision'}):
             with self.assertRaises(ValueError):app.call({'method':'schema','op':'create',**selectors})
+        self.assertEqual(self.sources(),before)
+
+    def test_batch_discovery_matches_each_owner_role(self):
+        app=self.app()
+        owners={role:self.create(role) for role in ('working','ready','lens')}
+        request=app.schema('copy',owners['working'])['request']
+        request.update(path='copy/discovery',note='Copy for role discovery')
+        owners['copy']=app.request(request)['packages'][0]['packageId']
+        before=self.sources()
+        for role,ident in owners.items():
+            with self.subTest(role=role):
+                working=role in ('working','copy')
+                view=app.read(ident)
+                for feature in ('atomicBatch','planningMetaAction','plan','planOrderOnly','planForks',
+                                'templateApply','externalReferences','questionApiSlice','questionMigration'):
+                    self.assertEqual(view['capabilities']['capabilities'][feature],working,feature)
+                self.assertEqual(view['capabilities']['batch']['available'],working)
+                self.assertEqual(view['capabilities']['batch']['supportedRoles'],['working','copy'])
+                command='core' if working else 'paper_edit'
+                form=app.schema(command,ident,node_id=view['graph']['rootRequirementId'],command='edit')
+                self.assertEqual(form['capabilities']['capabilities']['atomicBatch'],working)
+                if working:
+                    batch=app.schema('batch',ident)
+                    self.assertTrue(batch['capabilities']['capabilities']['atomicBatch'])
+                else:
+                    with self.assertRaisesRegex(ValueError,'BATCH_PROFILE'):
+                        app.schema('batch',ident)
         self.assertEqual(self.sources(),before)
 
     def test_every_advertised_decision_command_has_a_readonly_form(self):
@@ -105,6 +222,70 @@ class APIDiscovery(unittest.TestCase):
                         {'op':'paper_edit','command':'add','entityKind':'finding'}):
             with self.assertRaises(ValueError):app.call({'method':'schema','packageId':ident,**message})
         self.assertEqual(before,self.sources())
+
+    def test_graph_title_uses_the_common_writer_and_preserves_entities_in_every_role(self):
+        app=self.app();working=None
+        for role in ('working','ready','lens','copy'):
+            with self.subTest(role=role):
+                if role=='copy':
+                    req=app.schema('copy',working)['request'];req.update(path='copies/title',note='Copy title fixture')
+                    ident=app.request(req)['packages'][0]['packageId']
+                else:
+                    ident=self.create(role)
+                    if role=='working':working=ident
+                before=app.read(ident);operation='paper_edit' if role in ('ready','lens') else 'core'
+                req=app.schema(operation,ident,command='graph_title')['request']
+                req.update(data={'title':'Updated '+role+' title'},note='Rename the owning Graph only')
+                files=self.sources();preview=app.call({'method':'preflight','request':req})
+                self.assertEqual(self.sources(),files)
+                self.assertEqual(preview['effects']['graphTitleChange'],{'before':before['graph']['title'],'after':req['data']['title']})
+                result=app.call({'method':'apply','request':req,'expectedInputBinding':preview['inputBinding']})
+                self.assertTrue(result['published'])
+                after=app.read(ident)
+                self.assertEqual(after['graph']['title'],req['data']['title'])
+                self.assertEqual(next(p for p in app.catalog()['packages'] if p['packageId']==ident)['title'],req['data']['title'])
+                self.assertIn(req['data']['title'],app.call({'method':'read','packageId':ident,'format':'markdown'})['markdown'])
+                self.assertEqual(app.kernel.entities(after['graph']),app.kernel.entities(before['graph']))
+                self.assertEqual(after['graph']['identitySpace'],before['graph']['identitySpace'])
+                self.assertEqual(after['plan'],before['plan'])
+                self.assertTrue(app.call({'method':'receipt','packageId':ident,'transactionId':req['transactionId']})['published'])
+                self.assertTrue(app.call({'method':'apply','request':req})['idempotent'])
+                stale=app.schema(operation,ident,command='graph_title')['request']
+                stale.update(data={'title':'Stale overwrite'},note='Stale title intent')
+                edit=app.schema(operation,ident,command='edit')['request'];root=after['graph']['rootRequirementId']
+                edit.update(data={'nodeId':root,'changes':{'description':'Independent edit '+role},'cosmetic':False},note='Independent edit')
+                app.request(edit);files=self.sources()
+                with self.assertRaisesRegex(ValueError,'CAS'):app.request(stale)
+                self.assertEqual(self.sources(),files)
+                history=app.history(ident,{'kind':'graph','historyMode':'all'})
+                if role in ('working','copy'):
+                    event=next(e for e in history['events'] if e['event'].get('historyDetail',{}).get('command')=='graph_title')
+                    self.assertEqual(event['event']['historyDetail']['edits'][0]['after'],req['data']['title'])
+                    self.assertEqual(event['historyView']['level'],'technical')
+
+    def test_graph_title_handles_rootless_paper_and_respects_existing_root_locks(self):
+        import copy,uuid
+        app=self.app();kernel=app.kernel.for_profile('rdg-decision-v1')
+        graph=kernel.blank('title-fixture','Original graph title',str(uuid.uuid4()),'R1','Root','Explicit scope','Fixture basis')
+        for locked in (False,True):
+            candidate=copy.deepcopy(graph)
+            if locked:
+                candidate['nodes'][0]['locks']={'edit':{'mode':'hard','principals':['owner-fixture'],'message':'Keep the root edit lock'}}
+            else:candidate.update(rootRequirementId=None,rootCauses=[])
+            req=app.schema('create',core_model='rdg-decision-v1',role='ready')['request']
+            req.update(path='ready/title-'+str(locked),title=candidate['title'],scope='Title guards',rootReason='Acceptance',graph=candidate)
+            ident=app.request(req)['packages'][0]['packageId']
+            change=app.schema('paper_edit',ident,command='graph_title')['request']
+            change.update(data={'title':'Updated graph title'},note='Graph title guard acceptance')
+            before=self.sources()
+            if locked:
+                for method in ('preflight','apply'):
+                    with self.assertRaisesRegex(ValueError,'OBJECT_OPERATION_LOCK_REQUIRED'):app.call({'method':method,'request':change})
+                self.assertEqual(self.sources(),before)
+            else:
+                app.request(change)
+                self.assertEqual(app.read(ident)['graph']['title'],'Updated graph title')
+                self.assertIsNone(app.read(ident)['graph']['rootRequirementId'])
 
     def test_form_request_keeps_cas_and_rejected_changes_are_atomic(self):
         ident=self.create()

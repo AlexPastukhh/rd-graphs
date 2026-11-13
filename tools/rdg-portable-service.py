@@ -80,6 +80,7 @@ class Application:
                        if basis_before.get(i,[])!=basis_after.get(i,[])]
         dependency_hits=[copy.deepcopy(hit) for ev in new_events for hit in ev.get('dependencyImpacts',[])]
         return {'profile': 'rdg-decision-v1',
+            **({'graphTitleChange':{'before':before['title'],'after':after['title']}} if before['title']!=after['title'] else {}),
             'basisChanges':basis_changed,'dependencyImpacts':dependency_hits,
             'questionLinks':[{'questionId':i,'removed':i in removed,'relatedRefs':copy.deepcopy((after_entities.get(i) or before_entities[i])['relatedRefs'])} for i in sorted(added|removed|changed) if (after_entities.get(i) or before_entities.get(i,{})).get('kind')=='question'],
             'changedIds': sorted(added | removed | changed), 'addedIds': sorted(added),
@@ -96,7 +97,7 @@ class Application:
     def authoring_commands(self,graph,role=None):
         commands=self.kernel.commands_for(graph)-{'remove','recommendation_packages','lens_application'}
         if role in ('ready','lens'):
-            commands=commands & ({'add','edit','link','unlink','decision_group','root_cause','work_graph'}
+            commands=commands & ({'add','edit','graph_title','link','unlink','decision_group','root_cause','work_graph'}
                 if graph['coreModel']=='rdg-decision-v1' else
                 {'add','edit','link','unlink','work_graph','include','join','exclusion_group','lens_recommendations','output_origin'})
         return commands
@@ -105,15 +106,16 @@ class Application:
         profile = graph.get('coreModel')
         commands = sorted(self.authoring_commands(graph,role))
         if profile == 'rdg-decision-v1':
+            process = role is None or role in ('working','copy')
             return {'profile': profile, 'coreCommands': commands,'entityKinds':['requirement','decision','action','canon','context','info','question']+([] if role in ('ready','lens') else ['finding']),'historyModes':list(self.kernel.for_graph(graph).HISTORY.MODES),
-                    'planFeatures':['order','fork-start','fork-end','marker-date-time'],
+                    'planFeatures':['order','fork-start','fork-end','marker-date-time'] if process else [],
                 'capabilities': {'create': True, 'read': True, 'schema': True,
                     'preflight': True, 'apply': True, 'receipt': True, 'focus': True,
                     'groups': True, 'rootCauses': True, 'externalActions': True,
-                    'copy': True, 'templateApply': True, 'plan': True,
-                    'planOrderOnly': True, 'planForks': True, 'layoutWrite': True, 'layoutOccurrences': True,
-                    'recommendations': True, 'externalReferences': True, 'viewSessions': True, 'compactRead': True, 'atomicBatch': True, 'questionApiSlice': True, 'questionEditing':True, 'questionMigration':True, 'questionCopy':True, 'actionEstimates':True, 'decisionTheory':True, 'recommendationAuthoring':True, 'planningMetaAction':role in ('working','copy'), 'crossOwnerRefs': False},
-                'batch': BATCH.schema(),
+                    'copy': True, 'templateApply': process, 'plan': process,
+                    'planOrderOnly': process, 'planForks': process, 'layoutWrite': True, 'layoutOccurrences': True,
+                    'recommendations': True, 'externalReferences': process, 'viewSessions': True, 'compactRead': True, 'atomicBatch': process, 'questionApiSlice': process, 'questionEditing':True, 'questionMigration':process, 'questionCopy':True, 'actionEstimates':True, 'decisionTheory':True, 'recommendationAuthoring':True, 'planningMetaAction':process, 'crossOwnerRefs': False},
+                'batch': {**BATCH.schema(), 'available':process},
                 'unsupportedCapabilities': ['crossOwnerRefs']}
         return {'profile': profile, 'coreCommands': commands,
                 'capabilities': {'read': True, 'schema': True, 'preflight': True, 'apply': True, 'receipt': True}}
@@ -151,6 +153,30 @@ class Application:
     def catalog(self):
         with self.store.lock(False,create=False):return self._catalog_locked()
 
+    def _lens_catalog_card(self, value):
+        """Project owned Info from this exact visible definition; never a key lookup."""
+        graph, head = value['graph'], value['head']
+        source = {'packageId':head['packageId'], 'identitySpace':graph['identitySpace'],
+                  'packageRevision':head['revision'], 'graphRevision':graph['revision'],
+                  'graphSHA256':self.model.digest(graph)}
+        infos = [n for n in self.kernel.entities(graph).values() if n['kind']=='info']
+        cards = [n for n in infos if 'rdg:lens-catalog' in n.get('tags',[])]
+        contexts = [n for n in infos if 'rdg:lens-workflow' in n.get('tags',[])]
+        result = {'status':'missing', 'purpose':None, 'appliesWhen':None,
+                  'workflow':None, 'source':source}
+        if not cards:return result
+        if len(cards)!=1 or len(contexts)>1 or not cards[0]['description'].strip() or (contexts and (contexts[0]['id']==cards[0]['id'] or not contexts[0]['description'].strip())):
+            result['status']='invalid'
+            return result
+        card=cards[0]
+        result.update(status='available',purpose=card['description'],appliesWhen=card['value'],
+                      sourceRef=self.model.reference(head['packageId'],graph,card['id']))
+        if contexts:
+            context=contexts[0]
+            result['workflow']={'text':context['value'],'explanation':context['description'],
+                'sourceRef':self.model.reference(head['packageId'],graph,context['id'])}
+        return result
+
     def _catalog_locked(self):
         """Read the catalog while the caller holds the namespace barrier."""
         rows=[]
@@ -159,10 +185,13 @@ class Application:
             except ValueError:continue
             result={k:row[k] for k in ('path','packageId','health')}
             if row.get('head'):result.update({k:row['head'].get(k) for k in ('role','identitySpace','revision','lensKey')})
+            if row.get('head',{}).get('role')=='lens':
+                result['lensCard']={'status':'unavailable','purpose':None,'appliesWhen':None,'workflow':None,'source':None}
             try:
                 if row['health']=='metadata-verified':
                     value=self.store.read(row['packageId'],include_plan=False,include_layouts=False)
                     self.kernel.validate_role(value['graph'],value['head']['role'])
+                    if value['head']['role']=='lens':result['lensCard']=self._lens_catalog_card(value)
                     result.update(title=value['graph']['title'],coreModel=value['graph']['coreModel'],recommendationPackageIds=value['graph'].get('recommendationPackageIds',[]),workGraphs=value['graph'].get('workGraphs',[]),detached=self.kernel.detached_components(value['graph']))
             except (ValueError,OSError) as exc:result.update(health='unhealthy',error=str(exc))
             rows.append(result)
@@ -172,7 +201,9 @@ class Application:
             try:self.authorize(None,['folder.write'],relative);manageable=True
             except ValueError:manageable=False
             if manageable or any(p==relative or p.startswith(relative+'/') for p in visible):folders.append({'path':relative,'manageable':manageable})
-        return {'schemaVersion':1,'namespaceId':self.store.namespace_id,'packages':rows,'folders':folders,'locationSource':'filesystem'}
+        result={'schemaVersion':1,'namespaceId':self.store.namespace_id,'packages':rows,'folders':folders,'locationSource':'filesystem','complete':True}
+        result['catalogSHA256']=self.model.digest(result)
+        return result
 
     def dependencies(self, ident):
         row = self.snapshot(ident, layouts=False)
@@ -641,6 +672,17 @@ class Application:
         with self.store.lock(False,create=False):return self._schema(op,ident,node_id,source_id,command,source_path,source_key,core_model=core_model,role=role,entity_kind=entity_kind)
 
     def _schema(self,op,ident=None,node_id=None,source_id=None,command=None,source_path=None,source_key=None,*,core_model=None,role=None,entity_kind=None):
+        if op == 'catalog':
+            self.check(all(v is None for v in (ident,node_id,source_id,command,source_path,source_key,core_model,role,entity_kind)), 'CATALOG_SCHEMA_SELECTORS')
+            return {'method':'catalog','schemaVersion':1,'pagination':False,'complete':True,
+                'snapshot':'catalogSHA256 binds the complete visible response under the namespace read barrier',
+                'lensCard':{'status':['available','missing','invalid','unavailable'],
+                    'source':'exact package and graph revisions/SHA256; sourceRef identifies the owning Info',
+                    'authoring':{'kind':'info','tags':['rdg:lens-catalog'],
+                        'description':'purpose','value':'free-text applicability triggers'},
+                    'workflowAuthoring':{'kind':'info','tags':['rdg:lens-workflow'],
+                        'description':'when/how explanation','value':'workflow context text'},
+                    'rules':'At most one Info per role. Use existing add/edit operations. No automatic execution or draft-key fallback.'}}
         if op == 'search':
             self.check(all(v is None for v in (ident,node_id,source_id,command,source_path,source_key,core_model,role,entity_kind)), 'SEARCH_SCHEMA_SELECTORS')
             return SEARCH.schema()
@@ -669,7 +711,8 @@ class Application:
         elif op in ('batch','plan_action'):
             self.check(ident is not None,'BATCH_OWNER')
             row=self.snapshot(ident,True)
-            self.check(row['graph']['coreModel']=='rdg-decision-v1' and
+            graph=row['graph']
+            self.check(graph['coreModel']=='rdg-decision-v1' and
                        row['head']['role'] in ('working','copy'), 'BATCH_PROFILE')
             req.update(targetPackageId=ident,expectedPackageRevision=row['head']['revision'],
                        expectedGraphRevision=row['graph']['revision'],
@@ -727,6 +770,7 @@ class Application:
                         'requirement':('scope',),'decision':(),'action':(),
                         'canon':(),'context':('value',),'info':('value',),
                         'finding':('subjectId','findingType','rationale'),'question':('relatedRefs','impact','answerCondition')}[data['entity']['kind']]]
+                if command=='graph_title':required=['note','data.title']
                 if command=='question_migrate':data['sourceRef']=self.model.reference(ident,graph,nid)
                 if command=='question_answer':required=['note','data.action','data.kind','data.text']
                 if command=='question_assess':required=['note','data.sufficient','data.basis']
@@ -781,7 +825,7 @@ class Application:
                     'recommendations':{'authored':'boolean; independent advice identities','textFields':['whenText','usageText'],'anchorKinds':['entity','process','workGraph'],'lensStep':'optional lensRefs[].nodeId','compactFacet':'recommendations'},
                      'questionAnswerKinds':['hypothesis','observation','user_answer'],
                     'questionUserSource':'Direct trusted user entry, or exact quote of a current user-authored Context.',
-                    'decisionTheory':{'kind':'canon','fields':{'guidance':'General text (legacy field), may be empty','canons':'Optional free text','knownErrors':'Optional ordered array of {id,title,description}; id unique locally, title nonempty, description may be empty'},'contentRequired':'At least one nonblank guidance/canons or one knownErrors entry','clear':{'guidance':'','canons':'','knownErrors':[]},'edit':'core edit changes, cosmetic=false; omitted fields are preserved'},
+                    'decisionTheory':{'kind':'canon','targetKinds':['decision','action'],'fields':{'guidance':'General theory text, may be empty','canons':'Good, borderline and bad situations, including known mistakes'},'contentRequired':'At least one nonblank guidance/canons','legacy':'knownErrors is readable; new nonempty lists are rejected. Preserve text in canons.','clear':{'guidance':'','canons':''},'edit':'core edit changes, cosmetic=false; omitted fields are preserved'},
                     'planningMetaAction':{'operation':'plan_action','subjectRefs':'optional qualified entity or scope references; work subjects, no dependencies','atomic':'Action + placement via batch coordinator'},
                     'actionEstimates':{'optional':['complexity','time','basis'],'time':{'minSeconds':'finite >= 0','maxSeconds':'>= minSeconds'},'remove':'core edit changes.estimates=null'},
                     'questionAnswerActions':['add','edit','remove']} if 'graph' in locals() and graph['coreModel']=='rdg-decision-v1' else {}),
@@ -1731,6 +1775,7 @@ class Application:
         for changed in list(changes.values()):
             candidate=changed.get('graph')
             if not candidate or candidate.get('coreModel')!='rdg-decision-v1':continue
+            self.kernel.for_graph(candidate).validate_authored_theory(candidate,(changed.get('before') or {}).get('graph'))
             if (not changed.get('before') or op in ('copy','apply_ready','insert_copy')) and changed.get('role',(changed.get('before') or {}).get('head',{}).get('role')) in ('working','copy'):
                 enabled=[b for b in candidate.get('dependencyBindings',[]) if b['enabled']]
                 if enabled:

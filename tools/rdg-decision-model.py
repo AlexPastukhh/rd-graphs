@@ -37,7 +37,7 @@ DEPENDENCY_TYPES = frozenset(('DERIVES', 'INTRODUCES', 'DRIVES', 'REQUIRES_ACTIO
 LOCK_OPERATIONS = frozenset(('edit', 'link', 'unlink', 'select', 'withdraw', 'complete',
                              'falsify', 'reopen', 'review', 'assess', 'remove',
                              'dependency_add', 'dependency_remove', 'lock_set', 'lock_remove'))
-COMMANDS = frozenset(('add', 'edit', 'link', 'unlink', 'select', 'withdraw', 'complete',
+COMMANDS = frozenset(('add', 'edit', 'graph_title', 'link', 'unlink', 'select', 'withdraw', 'complete',
                       'reopen', 'decision_group', 'root_cause', 'work_graph', 'review',
                       'lock_set', 'lock_remove', 'recommendation_packages', 'lens_application', 'remove', 'dependency_rule', 'policy_change', 'finding_disposition', 'finding_transfer', 'decision_context', 'context_group', 'requirement_decision', 'context_record', 'question_answer', 'question_assess', 'question_migrate'))
 GRAPH_FIELDS = frozenset(('schemaVersion', 'actionModel', 'coreModel', 'id', 'title',
@@ -997,9 +997,22 @@ def _append_event(g, ev, extra=None):
     g['events'].append(ev)
 
 
+def validate_authored_theory(g, previous=None):
+    """New theory belongs to a Decision/Action; retain unchanged legacy data."""
+    ns=entities(g);old=entities(previous) if previous else {}
+    old_links={(e['id'],e['from'],e['to']) for e in previous.get('edges',[]) if e['type']=='CANON_FOR'} if previous else set()
+    for e in g['edges']:
+        if e['type']=='CANON_FOR' and ns[e['to']]['kind']=='requirement':
+            require((e['id'],e['from'],e['to']) in old_links,'THEORY_TARGET_DECISION_OR_ACTION')
+    for ident,n in ns.items():
+        if n['kind']=='canon' and n.get('knownErrors'):
+            require(ident in old and old[ident].get('knownErrors')==n['knownErrors'],'KNOWN_ERRORS_USE_CANONS')
+
+
 def _validate_new_relation(g, relation, new_id=None):
     ns = entities(g)
     _relation_error(relation, ns)
+    require(relation['type']!='CANON_FOR' or ns[relation['to']]['kind'] in ('decision','action'),'THEORY_TARGET_DECISION_OR_ACTION')
     require(relation['type'] not in FINDINGS.RELATIONS,'FINDING_WORKFLOW_RETIRED')
     require(not any(e['id'] == relation['id'] for e in g['edges']) and
             not any(m['id'] == relation['id'] for group in g['decisionGroups'] for m in group['members']), 'RELATION_ID_CONFLICT')
@@ -1486,7 +1499,13 @@ def apply(original, patch, trusted_verified=False, *, coordinated=False, paper=F
         def target(kind=None, operation='edit'):
             require(node is not None and (kind is None or node['kind'] == kind), 'TARGET_KIND')
             guard(node, raw_event, operation); return node
-        if cmd=='recommendation_packages':
+        if cmd=='graph_title':
+            require(set(data)=={'title'} and text(data.get('title')),'GRAPH_TITLE_FIELDS')
+            require(g['title']!=data['title'],'NO_CHANGE')
+            for root_id in {g['rootRequirementId'],*(c['requirementId'] for c in g['rootCauses'])}-{None}:
+                guard(ns[root_id],raw_event,'edit')
+            g['title']=data['title']
+        elif cmd=='recommendation_packages':
             require(set(data)=={'packageIds'} and unique_strings(data['packageIds']) and all(_uuid(i) for i in data['packageIds']),'SCHEMA_INVALID')
             require(g['recommendationPackageIds']!=data['packageIds'],'NO_CHANGE')
             for root in g['rootCauses']:guard(ns[root['requirementId']],raw_event,'edit')
@@ -2187,6 +2206,7 @@ def apply(original, patch, trusted_verified=False, *, coordinated=False, paper=F
         HISTORY.annotate(before_operation,g,event,cmd,data,sys.modules[__name__],process=not paper)
         validate(g)
     g['revision'] = original['revision'] + 1
+    validate_authored_theory(g,original)
     validate(g)
     return g, True
 

@@ -223,11 +223,12 @@ def decision_request_data(graph, command, node_id, kernel, entity_kind=None):
         elif kind=='finding':
             entity.update(subjectId=node_id if node and node['kind']=='decision' else 'CHOOSE_DECISION_ID',findingType='',rationale='',evidenceIds=[])
         elif kind in ('context','info'):entity['value']=''
-        elif kind=='canon':entity.update(guidance='',canons='',knownErrors=[])
-        if node and (kind=='canon' and node['kind'] in ('requirement','decision','action') or kind=='info'):
+        elif kind=='canon':entity.update(guidance='',canons='')
+        if node and (kind=='canon' and node['kind'] in ('decision','action') or kind=='info'):
             relations=[{'id':'REL-'+uuid.uuid4().hex,'type':'CANON_FOR' if kind=='canon' else 'INFO_FOR','from':ident,'to':node_id}]
         if kind not in ('requirement','decision','action'):work_id=None
         return {'entity':entity,'location':'graph','workGraphId':work_id,'initialRelations':relations}
+    if command=='graph_title':return {'title':graph['title']}
     if command=='edit':
         require(node is not None,'FOCUS_NOT_FOUND')
         return {'nodeId':node_id,'changes':{'title':node['title']},'cosmetic':True}

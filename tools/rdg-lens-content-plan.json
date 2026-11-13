@@ -1,0 +1,2003 @@
+{
+  "orient": {
+    "group": "bootstrap",
+    "main": "A-ORIENT-BUILD",
+    "assign": [
+      [
+        "Установить предмет",
+        [
+          "R-ORIENT-OWNERS",
+          "A-ORIENT-READ",
+          "K-A-ORIENT-READ"
+        ]
+      ],
+      [
+        "Установить, чему",
+        [
+          "R-ORIENT-AUTHORITY",
+          "A-ORIENT-SOURCE",
+          "K-A-ORIENT-SOURCE"
+        ]
+      ],
+      [
+        "Изучить бутстреп",
+        [
+          "R-ORIENT-GUIDANCE",
+          "A-ORIENT-CATALOG",
+          "K-A-ORIENT-CATALOG"
+        ]
+      ],
+      [
+        "Выбрать достаточную",
+        [
+          "K-A-ORIENT-BUILD"
+        ]
+      ],
+      [
+        "Введение",
+        [
+          "INFO-DECISION-API-ORIENT"
+        ]
+      ]
+    ],
+    "steps": [
+      [
+        "TARGET",
+        "Восстановить действующие цель, target и scope",
+        "Установить предмет"
+      ],
+      [
+        "BASIS",
+        "Проверить источники, статус и версию оснований",
+        "Установить, чему"
+      ],
+      [
+        "ROUTE",
+        "Определить достаточное чтение и следующий метод",
+        "Изучить бутстреп"
+      ]
+    ],
+    "workflow": "Первоначальный бутстреп изучается целиком. Затем orient используется в подходящем объёме по текущей задаче; триггеры помогают вернуться к нужному месту. Общий цикл решения задач принадлежит work. Авторство и преобразование линз относятся к соответствующему поручению.",
+    "retainedIds": [
+      "R-LENS-ORIENT",
+      "A-ORIENT-BUILD",
+      "R-ORIENT-OWNERS",
+      "A-ORIENT-READ",
+      "R-ORIENT-GUIDANCE",
+      "A-ORIENT-CATALOG",
+      "R-ORIENT-AUTHORITY",
+      "A-ORIENT-SOURCE",
+      "K-A-ORIENT-BUILD",
+      "K-A-ORIENT-READ",
+      "K-A-ORIENT-CATALOG",
+      "K-A-ORIENT-SOURCE",
+      "I-LENS-ORIENT",
+      "INFO-DECISION-API-ORIENT"
+    ],
+    "sourceRevision": 4,
+    "workGraphId": "WG-orient",
+    "overrides": {
+      "INFO-DECISION-API-ORIENT": {
+        "title": "Введение и границы · orient"
+      }
+    }
+  },
+  "model": {
+    "group": "bootstrap",
+    "main": "D-MODEL-REPRESENT",
+    "assign": [
+      [
+        "Различить роли",
+        [
+          "R-MODEL-TYPES",
+          "D-MODEL-TYPES",
+          "I-MODEL-REQUIREMENT",
+          "I-MODEL-DECISION",
+          "I-MODEL-ACTION",
+          "I-MODEL-OBJECTS"
+        ]
+      ],
+      [
+        "Объяснить основания",
+        [
+          "R-MODEL-IDENTITY",
+          "D-MODEL-IDENTITY",
+          "R-MODEL-EDGES",
+          "D-MODEL-EDGES",
+          "I-MODEL-RELATIONS",
+          "I-MODEL-NAMESPACES",
+          "K-MODEL-NO-DUP",
+          "K-MODEL-TYPED"
+        ]
+      ],
+      [
+        "Различить состояния",
+        [
+          "R-MODEL-OWNERS",
+          "D-MODEL-OWNERS",
+          "R-MODEL-TIME",
+          "D-MODEL-TIME",
+          "I-MODEL-OWNERSHIP",
+          "K-MODEL-NO-FALSE",
+          "C-MODEL-PAPER"
+        ]
+      ],
+      [
+        "Выбрать один",
+        [
+          "R-MODEL-LENSES",
+          "D-MODEL-LENSES",
+          "I-MODEL-REUSE"
+        ]
+      ]
+    ],
+    "steps": [
+      [
+        "VALUE",
+        "Оценить ценность и достаточный масштаб фрагмента",
+        "Оценить ценность"
+      ],
+      [
+        "FORM",
+        "Выбрать подходящую форму и существующую identity",
+        "Различить роли"
+      ],
+      [
+        "GROUNDS",
+        "Сохранить все действующие основания и общие связи",
+        "Объяснить основания"
+      ],
+      [
+        "SAVE",
+        "Выполнить нужный способ сохранения либо обосновать пропуск",
+        "Выбрать один"
+      ]
+    ],
+    "workflow": "Первоначальный бутстреп изучается целиком. Затем model используется в подходящем объёме по текущей задаче; триггеры помогают вернуться к нужному месту. Общий цикл решения задач принадлежит work. Авторство и преобразование линз относятся к соответствующему поручению.",
+    "retainedIds": [
+      "R-MODEL",
+      "R-MODEL-TYPES",
+      "D-MODEL-TYPES",
+      "R-MODEL-IDENTITY",
+      "D-MODEL-IDENTITY",
+      "R-MODEL-EDGES",
+      "D-MODEL-EDGES",
+      "R-MODEL-OWNERS",
+      "D-MODEL-OWNERS",
+      "R-MODEL-TIME",
+      "D-MODEL-TIME",
+      "R-MODEL-LENSES",
+      "D-MODEL-LENSES",
+      "I-MODEL-REQUIREMENT",
+      "I-MODEL-DECISION",
+      "I-MODEL-ACTION",
+      "I-MODEL-OBJECTS",
+      "I-MODEL-RELATIONS",
+      "I-MODEL-NAMESPACES",
+      "I-MODEL-OWNERSHIP",
+      "I-MODEL-REUSE",
+      "K-MODEL-NO-DUP",
+      "K-MODEL-NO-FALSE",
+      "K-MODEL-TYPED",
+      "C-MODEL-PAPER"
+    ],
+    "sourceRevision": 7,
+    "workGraphId": "WG-MODEL",
+    "overrides": {
+      "R-MODEL-LENSES": {
+        "title": "Маршрут переиспользования соответствует смыслу фрагмента"
+      },
+      "I-MODEL-REUSE": {
+        "title": "Переиспользование и сочетание способов сохранения"
+      }
+    },
+    "extraMethods": [
+      [
+        "R",
+        "Добавить Requirement",
+        "Добавить Requirement"
+      ],
+      [
+        "D",
+        "Добавить Decision",
+        "Добавить Decision"
+      ],
+      [
+        "A",
+        "Добавить Action",
+        "Добавить Action"
+      ],
+      [
+        "K",
+        "Добавить Canon",
+        "Добавить Canon"
+      ],
+      [
+        "C",
+        "Добавить Context",
+        "Добавить Context"
+      ],
+      [
+        "I",
+        "Добавить Info",
+        "Добавить Info"
+      ],
+      [
+        "F",
+        "Добавить Finding",
+        "Добавить Finding"
+      ],
+      [
+        "Q",
+        "Добавить Question",
+        "Добавить Question"
+      ],
+      [
+        "REUSE",
+        "Использовать или дополнить существующую запись",
+        "Использовать или дополнить существующую запись"
+      ],
+      [
+        "ORGANIZE",
+        "Оформить связанную организационную структуру или связь",
+        "Оформить связанную организационную структуру или связь"
+      ],
+      [
+        "SKIP",
+        "Оставить фрагмент вне RDG",
+        "Оставить фрагмент вне RDG"
+      ]
+    ],
+    "sharedTheory": [
+      [
+        "Оценить ценность",
+        [
+          "LS-METHOD-MODEL-R",
+          "LS-STEP-MODEL-R",
+          "LS-METHOD-MODEL-D",
+          "LS-STEP-MODEL-D",
+          "LS-METHOD-MODEL-A",
+          "LS-STEP-MODEL-A",
+          "LS-METHOD-MODEL-K",
+          "LS-STEP-MODEL-K",
+          "LS-METHOD-MODEL-C",
+          "LS-STEP-MODEL-C",
+          "LS-METHOD-MODEL-I",
+          "LS-STEP-MODEL-I",
+          "LS-METHOD-MODEL-F",
+          "LS-STEP-MODEL-F",
+          "LS-METHOD-MODEL-Q",
+          "LS-STEP-MODEL-Q",
+          "LS-METHOD-MODEL-REUSE",
+          "LS-STEP-MODEL-REUSE",
+          "LS-METHOD-MODEL-ORGANIZE",
+          "LS-STEP-MODEL-ORGANIZE"
+        ]
+      ],
+      [
+        "Различить роли",
+        [
+          "LS-METHOD-MODEL-R",
+          "LS-STEP-MODEL-R",
+          "LS-METHOD-MODEL-D",
+          "LS-STEP-MODEL-D",
+          "LS-METHOD-MODEL-A",
+          "LS-STEP-MODEL-A",
+          "LS-METHOD-MODEL-K",
+          "LS-STEP-MODEL-K",
+          "LS-METHOD-MODEL-C",
+          "LS-STEP-MODEL-C",
+          "LS-METHOD-MODEL-I",
+          "LS-STEP-MODEL-I",
+          "LS-METHOD-MODEL-F",
+          "LS-STEP-MODEL-F",
+          "LS-METHOD-MODEL-Q",
+          "LS-STEP-MODEL-Q",
+          "LS-METHOD-MODEL-REUSE",
+          "LS-STEP-MODEL-REUSE",
+          "LS-METHOD-MODEL-ORGANIZE",
+          "LS-STEP-MODEL-ORGANIZE",
+          "LS-METHOD-MODEL-SKIP",
+          "LS-STEP-MODEL-SKIP"
+        ]
+      ],
+      [
+        "Объяснить основания",
+        [
+          "LS-METHOD-MODEL-R",
+          "LS-STEP-MODEL-R",
+          "LS-METHOD-MODEL-D",
+          "LS-STEP-MODEL-D",
+          "LS-METHOD-MODEL-A",
+          "LS-STEP-MODEL-A",
+          "LS-METHOD-MODEL-K",
+          "LS-STEP-MODEL-K",
+          "LS-METHOD-MODEL-C",
+          "LS-STEP-MODEL-C",
+          "LS-METHOD-MODEL-I",
+          "LS-STEP-MODEL-I",
+          "LS-METHOD-MODEL-F",
+          "LS-STEP-MODEL-F",
+          "LS-METHOD-MODEL-Q",
+          "LS-STEP-MODEL-Q",
+          "LS-METHOD-MODEL-REUSE",
+          "LS-STEP-MODEL-REUSE",
+          "LS-METHOD-MODEL-ORGANIZE",
+          "LS-STEP-MODEL-ORGANIZE",
+          "LS-METHOD-MODEL-SKIP",
+          "LS-STEP-MODEL-SKIP"
+        ]
+      ],
+      [
+        "Различить состояния",
+        [
+          "LS-METHOD-MODEL-R",
+          "LS-STEP-MODEL-R",
+          "LS-METHOD-MODEL-D",
+          "LS-STEP-MODEL-D",
+          "LS-METHOD-MODEL-A",
+          "LS-STEP-MODEL-A",
+          "LS-METHOD-MODEL-K",
+          "LS-STEP-MODEL-K",
+          "LS-METHOD-MODEL-C",
+          "LS-STEP-MODEL-C",
+          "LS-METHOD-MODEL-I",
+          "LS-STEP-MODEL-I",
+          "LS-METHOD-MODEL-F",
+          "LS-STEP-MODEL-F",
+          "LS-METHOD-MODEL-Q",
+          "LS-STEP-MODEL-Q",
+          "LS-METHOD-MODEL-REUSE",
+          "LS-STEP-MODEL-REUSE",
+          "LS-METHOD-MODEL-ORGANIZE",
+          "LS-STEP-MODEL-ORGANIZE",
+          "LS-METHOD-MODEL-SKIP",
+          "LS-STEP-MODEL-SKIP"
+        ]
+      ]
+    ],
+    "decisionGroups": [
+      {
+        "id": "G-MODEL-FORMS",
+        "parentId": "R-MODEL",
+        "title": "Способы сохранения или обоснованный пропуск",
+        "selectionRequired": true,
+        "mutuallyExclusive": false,
+        "members": [
+          {
+            "id": "M-MODEL-FORM-R",
+            "decisionId": "LS-METHOD-MODEL-R"
+          },
+          {
+            "id": "M-MODEL-FORM-D",
+            "decisionId": "LS-METHOD-MODEL-D"
+          },
+          {
+            "id": "M-MODEL-FORM-A",
+            "decisionId": "LS-METHOD-MODEL-A"
+          },
+          {
+            "id": "M-MODEL-FORM-K",
+            "decisionId": "LS-METHOD-MODEL-K"
+          },
+          {
+            "id": "M-MODEL-FORM-C",
+            "decisionId": "LS-METHOD-MODEL-C"
+          },
+          {
+            "id": "M-MODEL-FORM-I",
+            "decisionId": "LS-METHOD-MODEL-I"
+          },
+          {
+            "id": "M-MODEL-FORM-F",
+            "decisionId": "LS-METHOD-MODEL-F"
+          },
+          {
+            "id": "M-MODEL-FORM-Q",
+            "decisionId": "LS-METHOD-MODEL-Q"
+          },
+          {
+            "id": "M-MODEL-FORM-REUSE",
+            "decisionId": "LS-METHOD-MODEL-REUSE"
+          },
+          {
+            "id": "M-MODEL-FORM-ORGANIZE",
+            "decisionId": "LS-METHOD-MODEL-ORGANIZE"
+          },
+          {
+            "id": "M-MODEL-FORM-SKIP",
+            "decisionId": "LS-METHOD-MODEL-SKIP"
+          }
+        ]
+      },
+      {
+        "id": "G-MODEL-SKIP-R",
+        "parentId": "R-MODEL",
+        "title": "Пропуск или добавить requirement",
+        "selectionRequired": false,
+        "mutuallyExclusive": true,
+        "members": [
+          {
+            "id": "M-MODEL-SKIP-R-SAVE",
+            "decisionId": "LS-METHOD-MODEL-R"
+          },
+          {
+            "id": "M-MODEL-SKIP-R-SKIP",
+            "decisionId": "LS-METHOD-MODEL-SKIP"
+          }
+        ]
+      },
+      {
+        "id": "G-MODEL-SKIP-D",
+        "parentId": "R-MODEL",
+        "title": "Пропуск или добавить decision",
+        "selectionRequired": false,
+        "mutuallyExclusive": true,
+        "members": [
+          {
+            "id": "M-MODEL-SKIP-D-SAVE",
+            "decisionId": "LS-METHOD-MODEL-D"
+          },
+          {
+            "id": "M-MODEL-SKIP-D-SKIP",
+            "decisionId": "LS-METHOD-MODEL-SKIP"
+          }
+        ]
+      },
+      {
+        "id": "G-MODEL-SKIP-A",
+        "parentId": "R-MODEL",
+        "title": "Пропуск или добавить action",
+        "selectionRequired": false,
+        "mutuallyExclusive": true,
+        "members": [
+          {
+            "id": "M-MODEL-SKIP-A-SAVE",
+            "decisionId": "LS-METHOD-MODEL-A"
+          },
+          {
+            "id": "M-MODEL-SKIP-A-SKIP",
+            "decisionId": "LS-METHOD-MODEL-SKIP"
+          }
+        ]
+      },
+      {
+        "id": "G-MODEL-SKIP-K",
+        "parentId": "R-MODEL",
+        "title": "Пропуск или добавить canon",
+        "selectionRequired": false,
+        "mutuallyExclusive": true,
+        "members": [
+          {
+            "id": "M-MODEL-SKIP-K-SAVE",
+            "decisionId": "LS-METHOD-MODEL-K"
+          },
+          {
+            "id": "M-MODEL-SKIP-K-SKIP",
+            "decisionId": "LS-METHOD-MODEL-SKIP"
+          }
+        ]
+      },
+      {
+        "id": "G-MODEL-SKIP-C",
+        "parentId": "R-MODEL",
+        "title": "Пропуск или добавить context",
+        "selectionRequired": false,
+        "mutuallyExclusive": true,
+        "members": [
+          {
+            "id": "M-MODEL-SKIP-C-SAVE",
+            "decisionId": "LS-METHOD-MODEL-C"
+          },
+          {
+            "id": "M-MODEL-SKIP-C-SKIP",
+            "decisionId": "LS-METHOD-MODEL-SKIP"
+          }
+        ]
+      },
+      {
+        "id": "G-MODEL-SKIP-I",
+        "parentId": "R-MODEL",
+        "title": "Пропуск или добавить info",
+        "selectionRequired": false,
+        "mutuallyExclusive": true,
+        "members": [
+          {
+            "id": "M-MODEL-SKIP-I-SAVE",
+            "decisionId": "LS-METHOD-MODEL-I"
+          },
+          {
+            "id": "M-MODEL-SKIP-I-SKIP",
+            "decisionId": "LS-METHOD-MODEL-SKIP"
+          }
+        ]
+      },
+      {
+        "id": "G-MODEL-SKIP-F",
+        "parentId": "R-MODEL",
+        "title": "Пропуск или добавить finding",
+        "selectionRequired": false,
+        "mutuallyExclusive": true,
+        "members": [
+          {
+            "id": "M-MODEL-SKIP-F-SAVE",
+            "decisionId": "LS-METHOD-MODEL-F"
+          },
+          {
+            "id": "M-MODEL-SKIP-F-SKIP",
+            "decisionId": "LS-METHOD-MODEL-SKIP"
+          }
+        ]
+      },
+      {
+        "id": "G-MODEL-SKIP-Q",
+        "parentId": "R-MODEL",
+        "title": "Пропуск или добавить question",
+        "selectionRequired": false,
+        "mutuallyExclusive": true,
+        "members": [
+          {
+            "id": "M-MODEL-SKIP-Q-SAVE",
+            "decisionId": "LS-METHOD-MODEL-Q"
+          },
+          {
+            "id": "M-MODEL-SKIP-Q-SKIP",
+            "decisionId": "LS-METHOD-MODEL-SKIP"
+          }
+        ]
+      },
+      {
+        "id": "G-MODEL-SKIP-REUSE",
+        "parentId": "R-MODEL",
+        "title": "Пропуск или использовать или дополнить существующую запись",
+        "selectionRequired": false,
+        "mutuallyExclusive": true,
+        "members": [
+          {
+            "id": "M-MODEL-SKIP-REUSE-SAVE",
+            "decisionId": "LS-METHOD-MODEL-REUSE"
+          },
+          {
+            "id": "M-MODEL-SKIP-REUSE-SKIP",
+            "decisionId": "LS-METHOD-MODEL-SKIP"
+          }
+        ]
+      },
+      {
+        "id": "G-MODEL-SKIP-ORGANIZE",
+        "parentId": "R-MODEL",
+        "title": "Пропуск или оформить связанную организационную структуру или связь",
+        "selectionRequired": false,
+        "mutuallyExclusive": true,
+        "members": [
+          {
+            "id": "M-MODEL-SKIP-ORGANIZE-SAVE",
+            "decisionId": "LS-METHOD-MODEL-ORGANIZE"
+          },
+          {
+            "id": "M-MODEL-SKIP-ORGANIZE-SKIP",
+            "decisionId": "LS-METHOD-MODEL-SKIP"
+          }
+        ]
+      }
+    ],
+    "notes": [
+      "Решение пользователя 2026-11-13: одиннадцать полноценных Decisions; каждая ветвь имеет Action и собственный Canon. Сохранены прежние identity и общий метод.",
+      "Критерий ценности разделяется только способами сохранения; пропуск имеет собственный противоположный критерий. Общие каноны переиспользуются по ID.",
+      "Реальные предметные задачи и B05 отложены пользователем; новый учебный owner на этом этапе не создаётся."
+    ]
+  },
+  "decision-logic": {
+    "group": "bootstrap",
+    "main": "D-DECISION-LOGIC-READ",
+    "assign": [
+      [
+        "Разделить выбор",
+        [
+          "R-DECISION-LOGIC-CHOICE",
+          "D-DECISION-LOGIC-CHOICE",
+          "R-DECISION-LOGIC-COMPLETE",
+          "D-DECISION-LOGIC-COMPLETE",
+          "I-DECISION-LOGIC-STATES",
+          "I-DECISION-LOGIC-FINISH",
+          "K-DECISION-LOGIC-COMPLETE"
+        ]
+      ],
+      [
+        "Понимать свойства",
+        [
+          "R-DECISION-LOGIC-GROUPS",
+          "D-DECISION-LOGIC-GROUPS",
+          "I-DECISION-LOGIC-GROUP",
+          "K-DECISION-LOGIC-REQUIRED"
+        ]
+      ],
+      [
+        "Читать структуру",
+        [
+          "R-DECISION-LOGIC-SUPPORT",
+          "D-DECISION-LOGIC-SUPPORT",
+          "I-DECISION-LOGIC-SUPPORT"
+        ]
+      ],
+      [
+        "Отменить выбор",
+        [
+          "R-DECISION-LOGIC-CANCEL",
+          "D-DECISION-LOGIC-CANCEL",
+          "I-DECISION-LOGIC-HISTORY",
+          "K-DECISION-LOGIC-CAUSAL"
+        ]
+      ],
+      [
+        "Рассматривать продолжение",
+        [
+          "I-DECISION-LOGIC-VISIBILITY",
+          "C-DECISION-LOGIC-ALTERNATIVE"
+        ]
+      ]
+    ],
+    "steps": [
+      [
+        "SUPPORT",
+        "Разобрать отношения и действующие основания",
+        "Читать структуру"
+      ],
+      [
+        "PAPER",
+        "Различить бумажные варианты и свойства групп",
+        "Понимать свойства"
+      ],
+      [
+        "STATE",
+        "Сверить выбор, результат и причины пересмотра",
+        "Читать review"
+      ],
+      [
+        "WITHDRAW",
+        "При отмене проверить оставшиеся независимые основания",
+        "Отменить выбор"
+      ]
+    ],
+    "workflow": "Первоначальный бутстреп изучается целиком. Затем decision-logic используется в подходящем объёме по текущей задаче; триггеры помогают вернуться к нужному месту. Общий цикл решения задач принадлежит work. Авторство и преобразование линз относятся к соответствующему поручению.",
+    "retainedIds": [
+      "R-DECISION-LOGIC",
+      "R-DECISION-LOGIC-CHOICE",
+      "D-DECISION-LOGIC-CHOICE",
+      "R-DECISION-LOGIC-GROUPS",
+      "D-DECISION-LOGIC-GROUPS",
+      "R-DECISION-LOGIC-SUPPORT",
+      "D-DECISION-LOGIC-SUPPORT",
+      "R-DECISION-LOGIC-CANCEL",
+      "D-DECISION-LOGIC-CANCEL",
+      "R-DECISION-LOGIC-COMPLETE",
+      "D-DECISION-LOGIC-COMPLETE",
+      "I-DECISION-LOGIC-STATES",
+      "I-DECISION-LOGIC-GROUP",
+      "I-DECISION-LOGIC-SUPPORT",
+      "I-DECISION-LOGIC-VISIBILITY",
+      "I-DECISION-LOGIC-HISTORY",
+      "I-DECISION-LOGIC-FINISH",
+      "K-DECISION-LOGIC-REQUIRED",
+      "K-DECISION-LOGIC-CAUSAL",
+      "K-DECISION-LOGIC-COMPLETE",
+      "C-DECISION-LOGIC-ALTERNATIVE"
+    ],
+    "sourceRevision": 5,
+    "workGraphId": "WG-DECISION-LOGIC",
+    "overrides": {
+      "D-DECISION-LOGIC-COMPLETE": {
+        "title": "Проверять обязательства и подтверждающие Context"
+      },
+      "I-DECISION-LOGIC-VISIBILITY": {
+        "title": "Отмена и сохранность вариантов"
+      }
+    }
+  },
+  "plan-history": {
+    "group": "bootstrap",
+    "main": "D-PLAN-HISTORY-READ",
+    "assign": [
+      [
+        "Что задаёт",
+        [
+          "R-PLAN-HISTORY-IDENTITIES",
+          "D-PLAN-HISTORY-IDENTITIES",
+          "R-PLAN-HISTORY-PLACEMENT",
+          "D-PLAN-HISTORY-PLACEMENT",
+          "I-PLAN-HISTORY-PLAN",
+          "I-PLAN-HISTORY-PLACEMENTS",
+          "K-PLAN-HISTORY-FACT"
+        ]
+      ],
+      [
+        "Читать History",
+        [
+          "R-PLAN-HISTORY-FACTS",
+          "D-PLAN-HISTORY-FACTS",
+          "R-PLAN-HISTORY-EVIDENCE",
+          "D-PLAN-HISTORY-EVIDENCE",
+          "R-PLAN-HISTORY-VIEW",
+          "D-PLAN-HISTORY-VIEW",
+          "I-PLAN-HISTORY-EVENTS",
+          "I-PLAN-HISTORY-EVIDENCE",
+          "I-PLAN-HISTORY-VIEW",
+          "K-PLAN-HISTORY-EVIDENCE",
+          "K-PLAN-HISTORY-VIEW",
+          "A-PLAN-HISTORY-CHECK"
+        ]
+      ]
+    ],
+    "steps": [
+      [
+        "PLAN",
+        "Прочитать или задать порядок без вывода об исполнении",
+        "Что задаёт"
+      ],
+      [
+        "BRANCH",
+        "Если нужны альтернативы, сохранить их условия и общие части",
+        "Представить альтернативное"
+      ],
+      [
+        "HISTORY",
+        "Проверить фактические события и подтверждённые изменения",
+        "Читать History"
+      ]
+    ],
+    "workflow": "Первоначальный бутстреп изучается целиком. Затем plan-history используется в подходящем объёме по текущей задаче; триггеры помогают вернуться к нужному месту. Общий цикл решения задач принадлежит work. Авторство и преобразование линз относятся к соответствующему поручению.",
+    "retainedIds": [
+      "R-PLAN-HISTORY",
+      "R-PLAN-HISTORY-IDENTITIES",
+      "D-PLAN-HISTORY-IDENTITIES",
+      "R-PLAN-HISTORY-PLACEMENT",
+      "D-PLAN-HISTORY-PLACEMENT",
+      "R-PLAN-HISTORY-FACTS",
+      "D-PLAN-HISTORY-FACTS",
+      "R-PLAN-HISTORY-EVIDENCE",
+      "D-PLAN-HISTORY-EVIDENCE",
+      "R-PLAN-HISTORY-VIEW",
+      "D-PLAN-HISTORY-VIEW",
+      "A-PLAN-HISTORY-CHECK",
+      "I-PLAN-HISTORY-PLAN",
+      "I-PLAN-HISTORY-PLACEMENTS",
+      "I-PLAN-HISTORY-EVENTS",
+      "I-PLAN-HISTORY-EVIDENCE",
+      "I-PLAN-HISTORY-VIEW",
+      "K-PLAN-HISTORY-FACT",
+      "K-PLAN-HISTORY-EVIDENCE",
+      "K-PLAN-HISTORY-VIEW"
+    ],
+    "sourceRevision": 3,
+    "workGraphId": "WG-PLAN-HISTORY",
+    "overrides": {
+      "D-PLAN-HISTORY-EVIDENCE": {
+        "title": "Связывать подтверждающие Context и pins с действительной версией"
+      },
+      "I-PLAN-HISTORY-EVIDENCE": {
+        "title": "Подтверждающие Context и факт принятия записи"
+      },
+      "A-PLAN-HISTORY-CHECK": {
+        "title": "Проверить запись результата и его основания через Application"
+      }
+    }
+  },
+  "work": {
+    "group": "bootstrap",
+    "main": "A-WORK-BUILD",
+    "assign": [
+      [
+        "Общий цикл",
+        [
+          "R-WORK-CHOICE",
+          "A-WORK-SELECT"
+        ]
+      ],
+      [
+        "Определить необходимость Plan",
+        [
+          "R-WORK-TIME",
+          "A-WORK-PLAN",
+          "CANON-WORK-DECISION"
+        ]
+      ],
+      [
+        "Выполнить и подтвердить",
+        [
+          "R-WORK-EXECUTION",
+          "A-WORK-DO"
+        ]
+      ],
+      [
+        "Использовать общий",
+        [
+          "R-WORK-RECORD",
+          "A-WORK-EVIDENCE"
+        ]
+      ],
+      [
+        "Введение",
+        [
+          "INFO-DECISION-API-WORK"
+        ]
+      ]
+    ],
+    "steps": [
+      [
+        "TASK",
+        "Установить реальную задачу и обязательства",
+        "Начать с реальной"
+      ],
+      [
+        "METHOD",
+        "Выбрать достаточную методику и объём работы",
+        "Общий цикл"
+      ],
+      [
+        "DO",
+        "Выполнить предметную работу и проверить её эффект",
+        "Выполнить и подтвердить"
+      ],
+      [
+        "RECORD",
+        "При нужной записи проверить receipt и результат; при неопределённости восстановить прежнюю операцию",
+        "Обработать конфликт"
+      ]
+    ],
+    "overrides": {
+      "R-WORK-TIME": {
+        "title": "Нужность и достаточное размещение в Plan обоснованы"
+      },
+      "R-WORK-RECORD": {
+        "title": "Нужный сохраняемый результат и фактические записи проверены"
+      },
+      "A-WORK-EVIDENCE": {
+        "title": "Сохранить нужный результат и подтвердить фактическую запись"
+      },
+      "CANON-WORK-DECISION": {
+        "title": "Различать планирование, выбор и факты"
+      },
+      "INFO-DECISION-API-WORK": {
+        "title": "Введение и границы · work"
+      }
+    },
+    "workflow": "Первоначальный бутстреп изучается целиком. Затем work используется в подходящем объёме по текущей задаче; триггеры помогают вернуться к нужному месту. Общий цикл решения задач принадлежит work. Авторство и преобразование линз относятся к соответствующему поручению.",
+    "retainedIds": [
+      "R-LENS-WORK",
+      "A-WORK-BUILD",
+      "R-WORK-CHOICE",
+      "A-WORK-SELECT",
+      "R-WORK-TIME",
+      "A-WORK-PLAN",
+      "R-WORK-EXECUTION",
+      "A-WORK-DO",
+      "R-WORK-RECORD",
+      "A-WORK-EVIDENCE",
+      "CANON-WORK-DECISION",
+      "INFO-DECISION-API-WORK"
+    ],
+    "sourceRevision": 6,
+    "workGraphId": "WG-WORK"
+  },
+  "checkpoint": {
+    "group": "bootstrap",
+    "main": "CP-A1",
+    "assign": [
+      [
+        "Вернуться к основанию",
+        [
+          "CP-A1",
+          "CP-C1",
+          "CP-C2",
+          "CP-C3",
+          "CP-C4",
+          "CP-C5",
+          "CP-C6",
+          "CP-C7",
+          "CANON-CP-A1"
+        ]
+      ],
+      [
+        "Подготовить формальный",
+        [
+          "CP-A2",
+          "CP-A3",
+          "CP-A4",
+          "CANON-CP-A2",
+          "CANON-CP-A3",
+          "CANON-CP-A4"
+        ]
+      ],
+      [
+        "Чем может",
+        [
+          "CP-A5",
+          "CANON-CP-A5"
+        ]
+      ],
+      [
+        "Введение",
+        [
+          "INFO-DECISION-API-CHECKPOINT"
+        ]
+      ]
+    ],
+    "steps": [
+      [
+        "TRIGGER",
+        "Установить существенность намерения и необходимость checkpoint",
+        "Узнать момент"
+      ],
+      [
+        "BASIS",
+        "Проверить сведения, альтернативы, последствия и полномочия",
+        "Вернуться к основанию"
+      ],
+      [
+        "NEXT",
+        "Определить допустимый следующий шаг, вопрос или предложение",
+        "Чем может"
+      ]
+    ],
+    "overrides": {
+      "CP-A1": {
+        "title": "Самостоятельно перепроверить существенное намерение"
+      },
+      "CP-A2": {
+        "title": "Получить недостающие сведения у доступного авторитетного источника",
+        "description": "Прежний маршрут Higher AI final сужен до реального внешнего входа. В текущем контуре один ИИ и пользователь; существование другого ИИ или его полномочий не предполагается."
+      },
+      "CP-A3": {
+        "title": "Задать пользователю конкретный вопрос или представить требуемое решение"
+      },
+      "CP-A4": {
+        "title": "Получить доступную помощь, сохраняя основания и полномочия"
+      },
+      "CP-A5": {
+        "title": "Пересмотреть намерение или продолжить с обоснованными ограничениями"
+      },
+      "CANON-CP-A1": {
+        "title": "Самостоятельная перепроверка"
+      },
+      "CANON-CP-A2": {
+        "title": "Получение доступного внешнего входа"
+      },
+      "CANON-CP-A3": {
+        "title": "Формальный вопрос пользователю"
+      },
+      "CANON-CP-A4": {
+        "title": "Соразмерная помощь пользователя"
+      },
+      "CANON-CP-A5": {
+        "title": "Обоснованное продолжение"
+      },
+      "INFO-DECISION-API-CHECKPOINT": {
+        "title": "Введение и границы · checkpoint"
+      },
+      "CP-C7": {
+        "title": "Достаточность фактов, знаний и подтверждений; доступные источники недостающего"
+      }
+    },
+    "notes": [
+      "Сохранены исторические IDs CP-A1..CP-A5; смысл маршрута CP-A2 исправлен: другой ИИ и его полномочия не предполагаются. Это изменение содержания определения, не факт участия другого исполнителя."
+    ],
+    "workflow": "Первоначальный бутстреп изучается целиком. Затем checkpoint используется в подходящем объёме по текущей задаче; триггеры помогают вернуться к нужному месту. Общий цикл решения задач принадлежит work. Авторство и преобразование линз относятся к соответствующему поручению.",
+    "retainedIds": [
+      "R-LENS-CHECKPOINT",
+      "CP-A1",
+      "CP-A2",
+      "CP-A3",
+      "CP-A4",
+      "CP-A5",
+      "CP-C1",
+      "CP-C2",
+      "CP-C3",
+      "CP-C4",
+      "CP-C5",
+      "CP-C6",
+      "CP-C7",
+      "CANON-CP-A1",
+      "CANON-CP-A2",
+      "CANON-CP-A3",
+      "CANON-CP-A4",
+      "CANON-CP-A5",
+      "INFO-DECISION-API-CHECKPOINT"
+    ],
+    "sourceRevision": 4,
+    "workGraphId": "WG-checkpoint"
+  },
+  "lens-system": {
+    "group": "bootstrap",
+    "main": "D-LENS-SYSTEM-USE",
+    "assign": [
+      [
+        "Определение, источник",
+        [
+          "R-LENS-SYSTEM-KINDS",
+          "D-LENS-SYSTEM-KINDS",
+          "I-LENS-SYSTEM-LENS"
+        ]
+      ],
+      [
+        "Найти линзу",
+        [
+          "R-LENS-SYSTEM-CHOICE",
+          "D-LENS-SYSTEM-CHOICE",
+          "R-LENS-SYSTEM-RULES",
+          "D-LENS-SYSTEM-RULES",
+          "I-LENS-SYSTEM-REGISTRY",
+          "I-LENS-SYSTEM-SCOPES",
+          "K-LENS-SYSTEM-NO-RUN"
+        ]
+      ],
+      [
+        "Перейти в другую",
+        [
+          "R-LENS-SYSTEM-NESTED",
+          "D-LENS-SYSTEM-NESTED",
+          "I-LENS-SYSTEM-NESTING",
+          "K-LENS-SYSTEM-SCOPE",
+          "C-LENS-SYSTEM-CONTEXT"
+        ]
+      ],
+      [
+        "Выбрать уместный",
+        [
+          "R-LENS-SYSTEM-VERIFY",
+          "D-LENS-SYSTEM-VERIFY",
+          "I-LENS-SYSTEM-APPLY"
+        ]
+      ],
+      [
+        "Сохранить версии",
+        [
+          "I-LENS-SYSTEM-UPDATES",
+          "K-LENS-SYSTEM-SOURCE"
+        ]
+      ]
+    ],
+    "steps": [
+      [
+        "DISCOVER",
+        "Найти подходящее определение и проверить его источник",
+        "Найти линзу"
+      ],
+      [
+        "USE",
+        "Применить нужную часть и сохранить рабочий контекст",
+        "Выбрать уместный"
+      ]
+    ],
+    "extraMethods": [
+      [
+        "AUTHOR",
+        "Создать или пересмотреть определение линзы",
+        "Создать или пересмотреть"
+      ],
+      [
+        "CONVERT",
+        "Преобразовать инструкцию с сохранением смысла и условий",
+        "Преобразовать skill"
+      ],
+      [
+        "QUALITY",
+        "Проверить качество определения в заданном scope",
+        "Проверить качество линзы"
+      ]
+    ],
+    "workflow": "Первоначальный бутстреп изучается целиком. Затем lens-system используется в подходящем объёме по текущей задаче; триггеры помогают вернуться к нужному месту. Общий цикл решения задач принадлежит work. Авторство и преобразование линз относятся к соответствующему поручению.",
+    "retainedIds": [
+      "R-LENS-SYSTEM",
+      "R-LENS-SYSTEM-KINDS",
+      "D-LENS-SYSTEM-KINDS",
+      "R-LENS-SYSTEM-CHOICE",
+      "D-LENS-SYSTEM-CHOICE",
+      "R-LENS-SYSTEM-RULES",
+      "D-LENS-SYSTEM-RULES",
+      "R-LENS-SYSTEM-NESTED",
+      "D-LENS-SYSTEM-NESTED",
+      "R-LENS-SYSTEM-VERIFY",
+      "D-LENS-SYSTEM-VERIFY",
+      "I-LENS-SYSTEM-LENS",
+      "I-LENS-SYSTEM-REGISTRY",
+      "I-LENS-SYSTEM-SCOPES",
+      "I-LENS-SYSTEM-NESTING",
+      "I-LENS-SYSTEM-APPLY",
+      "I-LENS-SYSTEM-UPDATES",
+      "K-LENS-SYSTEM-NO-RUN",
+      "K-LENS-SYSTEM-SCOPE",
+      "K-LENS-SYSTEM-SOURCE",
+      "C-LENS-SYSTEM-CONTEXT"
+    ],
+    "sourceRevision": 7,
+    "workGraphId": "WG-LENS-SYSTEM",
+    "recommendationAdvice": [
+      {
+        "id": "quality-review",
+        "lensKey": "review",
+        "whenText": "Поручено проверить качество определения линзы в заданной редакции и scope.",
+        "usageText": "Использовать review для независимой проверки этой линзы по её цели, общим критериям, источнику и фактически доступной структуре. Выбирать нормальные случаи и контрпримеры; допустим вывод без исправлений. Авторский цикл и переписывание не запускаются без поручения.",
+        "anchorIds": [
+          "LS-METHOD-LENS-SYSTEM-QUALITY",
+          "LS-STEP-LENS-SYSTEM-QUALITY"
+        ]
+      },
+      {
+        "id": "dry-owner",
+        "lensKey": "dry",
+        "whenText": "При создании или пересмотре линзы повторяется изменяемый смысл либо неясен владелец правила.",
+        "usageText": "Применить DRY к определению линзы: сохранить одного нормативного владельца и прослеживаемые представления. Ссылки и производные виды допустимы; не копировать процедуру соседней линзы как независимое правило.",
+        "anchorIds": [
+          "LS-METHOD-LENS-SYSTEM-AUTHOR",
+          "LS-STEP-LENS-SYSTEM-AUTHOR"
+        ]
+      }
+    ],
+    "overrides": {
+      "D-LENS-SYSTEM-KINDS": {
+        "title": "Различать чтение линзы и явную вставку готового содержания"
+      }
+    }
+  },
+  "clarify": {
+    "group": "methods",
+    "main": "A-CLARIFY-BUILD",
+    "assign": [
+      [
+        "Понять результат",
+        [
+          "R-CLARIFY-GOAL",
+          "A-CLARIFY-INTENT",
+          "K-A-CLARIFY-INTENT"
+        ]
+      ],
+      [
+        "Установить достаточность",
+        [
+          "R-CLARIFY-CRITERIA",
+          "A-CLARIFY-SUCCESS",
+          "K-A-CLARIFY-SUCCESS"
+        ]
+      ],
+      [
+        "Разобрать доступные",
+        [
+          "R-CLARIFY-CONTEXT",
+          "A-CLARIFY-INPUTS",
+          "K-A-CLARIFY-INPUTS"
+        ]
+      ],
+      [
+        "Управлять неизвестными",
+        [
+          "R-CLARIFY-UNKNOWNS",
+          "A-CLARIFY-QUESTIONS",
+          "K-A-CLARIFY-QUESTIONS"
+        ]
+      ],
+      [
+        "Вести обсуждение",
+        [
+          "K-A-CLARIFY-BUILD"
+        ]
+      ],
+      [
+        "Введение",
+        [
+          "INFO-DECISION-API-CLARIFY"
+        ]
+      ]
+    ],
+    "steps": [
+      [
+        "GOAL",
+        "Выяснить пользу, нужный результат и границы задачи",
+        "Понять результат"
+      ],
+      [
+        "CRITERIA",
+        "Установить достаточность без молчаливого ослабления обязательств",
+        "Установить достаточность"
+      ],
+      [
+        "UNKNOWN",
+        "Разобрать существенные неизвестные и продолжить независимую работу",
+        "Управлять неизвестными"
+      ]
+    ],
+    "workflow": "Методика clarify выбирается по текущей задаче и условиям из собственного определения, после бутстрепа. Общую стратегию раскрывает work; переход к соседней методике не означает обязательного полного прохождения или исполнения.",
+    "retainedIds": [
+      "R-LENS-CLARIFY",
+      "A-CLARIFY-BUILD",
+      "R-CLARIFY-GOAL",
+      "A-CLARIFY-INTENT",
+      "R-CLARIFY-CRITERIA",
+      "A-CLARIFY-SUCCESS",
+      "R-CLARIFY-CONTEXT",
+      "A-CLARIFY-INPUTS",
+      "R-CLARIFY-UNKNOWNS",
+      "A-CLARIFY-QUESTIONS",
+      "K-A-CLARIFY-BUILD",
+      "K-A-CLARIFY-INTENT",
+      "K-A-CLARIFY-SUCCESS",
+      "K-A-CLARIFY-INPUTS",
+      "K-A-CLARIFY-QUESTIONS",
+      "I-LENS-CLARIFY",
+      "INFO-DECISION-API-CLARIFY"
+    ],
+    "sourceRevision": 4,
+    "workGraphId": "WG-clarify",
+    "overrides": {
+      "INFO-DECISION-API-CLARIFY": {
+        "title": "Введение и границы · clarify"
+      }
+    }
+  },
+  "research": {
+    "group": "methods",
+    "main": "D-RESEARCH-INVESTIGATE",
+    "steps": [
+      [
+        "QUESTION",
+        "Определить существенный вопрос и цену неизвестности",
+        "Определить вопрос"
+      ],
+      [
+        "SOURCES",
+        "Выбрать источники и способ независимой проверки",
+        "Выбрать источники"
+      ],
+      [
+        "VERIFY",
+        "Получить сведения и проверить противоречия",
+        "Получить проверяемые"
+      ],
+      [
+        "CONCLUDE",
+        "Сформулировать ответ, границы и достаточное продолжение",
+        "Завершить и передать"
+      ]
+    ],
+    "workflow": "Методика research выбирается по текущей задаче и условиям из собственного определения, после бутстрепа. Общую стратегию раскрывает work; переход к соседней методике не означает обязательного полного прохождения или исполнения.",
+    "retainedIds": [
+      "R-LENS-RESEARCH"
+    ],
+    "sourceRevision": 2,
+    "workGraphId": "WG-RESEARCH"
+  },
+  "explore": {
+    "group": "methods",
+    "main": "A-EXPLORE-BUILD",
+    "assign": [
+      [
+        "Открыть пространство",
+        [
+          "R-EXPLORE-VARIANTS",
+          "A-EXPLORE-REUSE",
+          "A-EXPLORE-SITUATIONAL",
+          "K-A-EXPLORE-REUSE",
+          "K-A-EXPLORE-SITUATIONAL"
+        ]
+      ],
+      [
+        "Сопоставить основания",
+        [
+          "R-EXPLORE-ASSESSMENT",
+          "A-EXPLORE-CANONS",
+          "K-A-EXPLORE-CANONS"
+        ]
+      ],
+      [
+        "Удержать сильный",
+        [
+          "R-EXPLORE-UPSTREAM",
+          "A-EXPLORE-REFRAME",
+          "K-A-EXPLORE-REFRAME"
+        ]
+      ],
+      [
+        "Завершить исследование",
+        [
+          "R-EXPLORE-PAPER",
+          "A-EXPLORE-COMPARE",
+          "K-A-EXPLORE-COMPARE"
+        ]
+      ],
+      [
+        "Развернуть полезное",
+        [
+          "K-A-EXPLORE-BUILD"
+        ]
+      ],
+      [
+        "Введение",
+        [
+          "INFO-DECISION-API-EXPLORE"
+        ]
+      ]
+    ],
+    "steps": [
+      [
+        "VARIANTS",
+        "Найти существенно разные способы и полезное продолжение",
+        "Открыть пространство"
+      ],
+      [
+        "TRADEOFF",
+        "Сравнить вклад, основания и реальную совокупную цену",
+        "Оценить общий"
+      ],
+      [
+        "UPSTREAM",
+        "Сохранить сильную upstream-альтернативу и условия её принятия",
+        "Удержать сильный"
+      ],
+      [
+        "STOP",
+        "Определить достаточность исследования и следующий шаг",
+        "Завершить исследование"
+      ]
+    ],
+    "workflow": "Методика explore выбирается по текущей задаче и условиям из собственного определения, после бутстрепа. Общую стратегию раскрывает work; переход к соседней методике не означает обязательного полного прохождения или исполнения.",
+    "retainedIds": [
+      "R-LENS-EXPLORE",
+      "A-EXPLORE-BUILD",
+      "R-EXPLORE-VARIANTS",
+      "A-EXPLORE-REUSE",
+      "A-EXPLORE-SITUATIONAL",
+      "R-EXPLORE-ASSESSMENT",
+      "A-EXPLORE-CANONS",
+      "R-EXPLORE-UPSTREAM",
+      "A-EXPLORE-REFRAME",
+      "R-EXPLORE-PAPER",
+      "A-EXPLORE-COMPARE",
+      "K-A-EXPLORE-BUILD",
+      "K-A-EXPLORE-REUSE",
+      "K-A-EXPLORE-SITUATIONAL",
+      "K-A-EXPLORE-CANONS",
+      "K-A-EXPLORE-REFRAME",
+      "K-A-EXPLORE-COMPARE",
+      "I-LENS-EXPLORE",
+      "INFO-DECISION-API-EXPLORE"
+    ],
+    "sourceRevision": 5,
+    "workGraphId": "WG-explore",
+    "overrides": {
+      "INFO-DECISION-API-EXPLORE": {
+        "title": "Введение и границы · explore"
+      }
+    }
+  },
+  "specify": {
+    "group": "methods",
+    "main": "D-SPECIFY-FORMULATE",
+    "steps": [
+      [
+        "SCOPE",
+        "Установить задачу, область и действующие источники постановки",
+        "Определить область"
+      ],
+      [
+        "CONTENT",
+        "Собрать достаточные требования, поведение и приёмку",
+        "Собрать достаточное"
+      ],
+      [
+        "CONSISTENCY",
+        "Проверить соответствие задаче, согласованность и неопределённости",
+        "Проверить согласованность"
+      ],
+      [
+        "OWNER",
+        "Сохранить постановку у одного владельца и подготовить исполнение",
+        "Сохранить один"
+      ]
+    ],
+    "workflow": "Методика specify выбирается по текущей задаче и условиям из собственного определения, после бутстрепа. Общую стратегию раскрывает work; переход к соседней методике не означает обязательного полного прохождения или исполнения.",
+    "retainedIds": [
+      "R-LENS-SPECIFY"
+    ],
+    "sourceRevision": 2,
+    "workGraphId": "WG-SPECIFY"
+  },
+  "shape": {
+    "group": "methods",
+    "main": "A-SHAPE-BUILD",
+    "assign": [
+      [
+        "Проверить существующее",
+        [
+          "R-SHAPE-IDENTITY",
+          "A-SHAPE-REUSE",
+          "K-A-SHAPE-REUSE"
+        ]
+      ],
+      [
+        "Найти достаточную",
+        [
+          "R-SHAPE-CRITERIA",
+          "A-SHAPE-ORIGINAL",
+          "K-A-SHAPE-ORIGINAL"
+        ]
+      ],
+      [
+        "Расставить правильные",
+        [
+          "R-SHAPE-SHAPE",
+          "A-SHAPE-MODEL",
+          "K-A-SHAPE-MODEL"
+        ]
+      ],
+      [
+        "Проверить структуру",
+        [
+          "A-SHAPE-PERSIST",
+          "K-A-SHAPE-PERSIST"
+        ]
+      ],
+      [
+        "Найти достаточную",
+        [
+          "K-A-SHAPE-BUILD"
+        ]
+      ],
+      [
+        "Введение",
+        [
+          "INFO-DECISION-API-SHAPE"
+        ]
+      ]
+    ],
+    "steps": [
+      [
+        "BOUNDARY",
+        "Выбрать полезную границу и проверить существующее содержание",
+        "Выбрать границу"
+      ],
+      [
+        "GRAIN",
+        "Найти достаточный масштаб исполняемых частей",
+        "Подготовить исполняемые"
+      ],
+      [
+        "RELATIONS",
+        "Сохранить identity и правильный смысл связей",
+        "Расставить правильные"
+      ],
+      [
+        "CHECK",
+        "Проверить полезность структуры для реальной следующей работы",
+        "Проверить структуру"
+      ]
+    ],
+    "overrides": {
+      "A-SHAPE-MODEL": {
+        "title": "Выбрать подходящую форму и смысловые связи RDG"
+      },
+      "A-SHAPE-ORIGINAL": {
+        "title": "Оценить ценность и масштаб сохраняемого фрагмента"
+      },
+      "R-SHAPE-SHAPE": {
+        "title": "Структура соответствует действующей модели и смыслу задачи"
+      },
+      "INFO-DECISION-API-SHAPE": {
+        "title": "Введение и границы · shape"
+      },
+      "K-A-SHAPE-ORIGINAL": {
+        "title": "Оценить пользу и достаточный масштаб фрагмента"
+      },
+      "K-A-SHAPE-MODEL": {
+        "title": "Выбрать форму и отношения действующей модели RDG"
+      },
+      "A-SHAPE-PERSIST": {
+        "title": "Различать обоснование, запись и необязательную фиксацию применения"
+      }
+    },
+    "workflow": "Методика shape выбирается по текущей задаче и условиям из собственного определения, после бутстрепа. Общую стратегию раскрывает work; переход к соседней методике не означает обязательного полного прохождения или исполнения.",
+    "retainedIds": [
+      "R-LENS-SHAPE",
+      "A-SHAPE-BUILD",
+      "R-SHAPE-IDENTITY",
+      "A-SHAPE-REUSE",
+      "R-SHAPE-CRITERIA",
+      "A-SHAPE-ORIGINAL",
+      "R-SHAPE-SHAPE",
+      "A-SHAPE-MODEL",
+      "A-SHAPE-PERSIST",
+      "K-A-SHAPE-BUILD",
+      "K-A-SHAPE-REUSE",
+      "K-A-SHAPE-ORIGINAL",
+      "K-A-SHAPE-MODEL",
+      "K-A-SHAPE-PERSIST",
+      "I-LENS-SHAPE",
+      "INFO-DECISION-API-SHAPE"
+    ],
+    "sourceRevision": 5,
+    "workGraphId": "WG-shape"
+  },
+  "preserve": {
+    "group": "methods",
+    "main": "D-PRESERVE-EVALUATE",
+    "assign": [
+      [
+        "Выбрать объём",
+        [
+          "A-PRESERVE-DRAW"
+        ]
+      ],
+      [
+        "Обоснованно пропустить",
+        [
+          "A-PRESERVE-SKIP"
+        ]
+      ],
+      [
+        "Проверить основания",
+        [
+          "K-PRESERVE"
+        ]
+      ],
+      [
+        "Введение",
+        [
+          "INFO-DECISION-API-PRESERVE"
+        ]
+      ]
+    ],
+    "steps": [
+      [
+        "VALUE",
+        "Оценить фрагмент и основания ценности",
+        "Проверить основания"
+      ],
+      [
+        "FORM",
+        "Выбрать достаточный объём сохранения либо обосновать пропуск",
+        "Выбрать объём"
+      ]
+    ],
+    "workflow": "Методика preserve выбирается по текущей задаче и условиям из собственного определения, после бутстрепа. Общую стратегию раскрывает work; переход к соседней методике не означает обязательного полного прохождения или исполнения.",
+    "retainedIds": [
+      "R-LENS-PRESERVE",
+      "A-PRESERVE-DRAW",
+      "A-PRESERVE-SKIP",
+      "K-PRESERVE",
+      "I-LENS-PRESERVE",
+      "INFO-DECISION-API-PRESERVE"
+    ],
+    "sourceRevision": 5,
+    "workGraphId": "WG-preserve",
+    "decisionGroups": [
+      {
+        "id": "DG-PRESERVE-SAVE-OR-SKIP",
+        "parentId": "R-LENS-PRESERVE",
+        "title": "Сохранить либо пропустить один фрагмент в одном scope",
+        "selectionRequired": false,
+        "mutuallyExclusive": true,
+        "members": [
+          {
+            "id": "M-PRESERVE-DRAW",
+            "decisionId": "A-PRESERVE-DRAW"
+          },
+          {
+            "id": "M-PRESERVE-SKIP",
+            "decisionId": "A-PRESERVE-SKIP"
+          }
+        ]
+      }
+    ],
+    "overrides": {
+      "INFO-DECISION-API-PRESERVE": {
+        "title": "Введение и границы · preserve"
+      }
+    }
+  },
+  "decision-analysis": {
+    "group": "methods",
+    "main": "D-DECISION-ANALYSIS-ASSESS",
+    "steps": [
+      [
+        "REALIZATION",
+        "Раскрыть существенное продолжение и подготовить способ к оценке",
+        "Развернуть способ"
+      ],
+      [
+        "TARGET",
+        "Установить конкретный способ, применимый Canon и контекст",
+        "Определить предмет"
+      ],
+      [
+        "CONTRIBUTION",
+        "Оценить вклад, независимые основания и последствия пересмотра",
+        "Оценить вклад"
+      ],
+      [
+        "FINDINGS",
+        "Проверить основания и правильный тип существенных находок",
+        "Проверить основания"
+      ],
+      [
+        "QUESTIONS",
+        "Разобрать вопросы, ограничения вывода и следующий шаг",
+        "Разобрать вопросы"
+      ]
+    ],
+    "workflow": "Методика decision-analysis выбирается по текущей задаче и условиям из собственного определения, после бутстрепа. Общую стратегию раскрывает work; переход к соседней методике не означает обязательного полного прохождения или исполнения.",
+    "retainedIds": [
+      "R-LENS-DECISION-ANALYSIS"
+    ],
+    "sourceRevision": 3,
+    "workGraphId": "WG-DECISION-ANALYSIS"
+  },
+  "review": {
+    "group": "methods",
+    "main": "A-REVIEW-BUILD",
+    "assign": [
+      [
+        "Сверить основания",
+        [
+          "R-REVIEW-CORRECTNESS",
+          "A-REVIEW-CRITERIA",
+          "K-A-REVIEW-CRITERIA"
+        ]
+      ],
+      [
+        "Проверить актуальность",
+        [
+          "R-REVIEW-DEPENDENCIES",
+          "A-REVIEW-DEPENDENCIES",
+          "K-A-REVIEW-DEPENDENCIES"
+        ]
+      ],
+      [
+        "Обосновать существенное",
+        [
+          "R-REVIEW-QUALITY",
+          "A-REVIEW-AUDIT",
+          "K-A-REVIEW-AUDIT"
+        ]
+      ],
+      [
+        "Получить подходящие",
+        [
+          "R-REVIEW-VALIDATION",
+          "A-REVIEW-CHECKS",
+          "K-A-REVIEW-CHECKS"
+        ]
+      ],
+      [
+        "Выбрать режим",
+        [
+          "K-A-REVIEW-BUILD"
+        ]
+      ],
+      [
+        "Введение",
+        [
+          "INFO-DECISION-API-REVIEW"
+        ]
+      ]
+    ],
+    "steps": [
+      [
+        "SCOPE",
+        "Установить target, версию, режим и независимые направления проверки",
+        "Выбрать режим"
+      ],
+      [
+        "CHECK",
+        "Выполнить работу выбранного режима с применимыми критериями",
+        "Получить подходящие"
+      ],
+      [
+        "CONCLUDE",
+        "Сопоставить существенные направления с evidence, выводами и ограничениями",
+        "Достаточный результат"
+      ],
+      [
+        "NEXT",
+        "Определить совместимое продолжение без фиктивного устранения находок",
+        "Принять решение"
+      ]
+    ],
+    "overrides": {
+      "A-REVIEW-CRITERIA": {
+        "title": "Сверить цель, действующие требования, Canon и основания ожидаемого поведения"
+      },
+      "A-REVIEW-AUDIT": {
+        "title": "Проверить существенные слабые места в заданном scope"
+      },
+      "INFO-DECISION-API-REVIEW": {
+        "title": "Введение и границы · review"
+      },
+      "K-A-REVIEW-CRITERIA": {
+        "title": "Сверить цель, теорию и действующие основания ожидаемого поведения"
+      },
+      "K-A-REVIEW-AUDIT": {
+        "title": "Проверить существенные слабые места и полноту охвата"
+      }
+    },
+    "workflow": "Методика review выбирается по текущей задаче и условиям из собственного определения, после бутстрепа. Общую стратегию раскрывает work; переход к соседней методике не означает обязательного полного прохождения или исполнения.",
+    "retainedIds": [
+      "R-LENS-REVIEW",
+      "A-REVIEW-BUILD",
+      "R-REVIEW-CORRECTNESS",
+      "A-REVIEW-CRITERIA",
+      "R-REVIEW-DEPENDENCIES",
+      "A-REVIEW-DEPENDENCIES",
+      "R-REVIEW-QUALITY",
+      "A-REVIEW-AUDIT",
+      "R-REVIEW-VALIDATION",
+      "A-REVIEW-CHECKS",
+      "K-A-REVIEW-BUILD",
+      "K-A-REVIEW-CRITERIA",
+      "K-A-REVIEW-DEPENDENCIES",
+      "K-A-REVIEW-AUDIT",
+      "K-A-REVIEW-CHECKS",
+      "I-LENS-REVIEW",
+      "INFO-DECISION-API-REVIEW"
+    ],
+    "sourceRevision": 6,
+    "workGraphId": "WG-review",
+    "recommendationAdvice": [
+      {
+        "id": "kiss-organization",
+        "lensKey": "kiss",
+        "whenText": "Организация самого review становится сложной или дорогой относительно цели проверки.",
+        "usageText": "Применить KISS к способу проверки: выбрать понятный достаточный охват и методы, сохранив существенные риски, обязательные проверки и evidence. Это помощь для корректного текущего review, а не выбор новой работы вместо него.",
+        "anchorIds": [
+          "A-REVIEW-BUILD",
+          "A-REVIEW-AUDIT",
+          "A-REVIEW-CHECKS",
+          "LS-STEP-REVIEW-SCOPE",
+          "LS-STEP-REVIEW-CHECK"
+        ]
+      },
+      {
+        "id": "yagni-additional-checks",
+        "lensKey": "yagni",
+        "whenText": "Предлагается дополнительный повтор, тест или расширение review с неясной пользой.",
+        "usageText": "Применить YAGNI к дополнительной работе: установить ожидаемое новое знание и полную цену. Явно запрошенный review и нужное доказательство выполнить; при каждом запросе действительно искать ошибки, не создавать находки ради обязательной правки.",
+        "anchorIds": [
+          "A-REVIEW-BUILD",
+          "A-REVIEW-AUDIT",
+          "A-REVIEW-CHECKS",
+          "LS-STEP-REVIEW-SCOPE",
+          "LS-STEP-REVIEW-CHECK"
+        ]
+      },
+      {
+        "id": "dry-knowledge",
+        "lensKey": "dry",
+        "whenText": "В проверяемом результате есть расходящиеся копии одного правила или несколько претендентов на владельца знания.",
+        "usageText": "Использовать DRY для оценки согласованности и реальных владельцев этого знания внутри текущего review. Сходство формулировок само по себе не доказывает дефект.",
+        "anchorIds": [
+          "A-REVIEW-BUILD",
+          "A-REVIEW-CRITERIA",
+          "LS-STEP-REVIEW-CHECK"
+        ]
+      }
+    ]
+  },
+  "handoff": {
+    "group": "methods",
+    "main": "A-HANDOFF-BUILD",
+    "assign": [
+      [
+        "Восстановить фактическое",
+        [
+          "R-HANDOFF-FACTS",
+          "A-HANDOFF-FACTS",
+          "K-A-HANDOFF-FACTS"
+        ]
+      ],
+      [
+        "Разобрать незавершённые",
+        [
+          "R-HANDOFF-UNCERTAINTY",
+          "A-HANDOFF-RECEIPTS",
+          "K-A-HANDOFF-RECEIPTS"
+        ]
+      ],
+      [
+        "Выбрать достаточный",
+        [
+          "R-HANDOFF-CONTINUATION",
+          "A-HANDOFF-RESUME",
+          "K-A-HANDOFF-RESUME"
+        ]
+      ],
+      [
+        "Передать работу",
+        [
+          "K-A-HANDOFF-BUILD"
+        ]
+      ],
+      [
+        "Введение",
+        [
+          "INFO-DECISION-API-HANDOFF"
+        ]
+      ]
+    ],
+    "steps": [
+      [
+        "FACTS",
+        "Сверить факты, версии и незавершённые операции",
+        "Восстановить фактическое"
+      ],
+      [
+        "CONTENT",
+        "Выбрать достаточный контекст и ближайший шаг",
+        "Выбрать достаточный"
+      ],
+      [
+        "TRANSFER",
+        "Передать проверенное состояние в текущей точке работы",
+        "Передать работу"
+      ]
+    ],
+    "workflow": "Методика handoff выбирается по текущей задаче и условиям из собственного определения, после бутстрепа. Общую стратегию раскрывает work; переход к соседней методике не означает обязательного полного прохождения или исполнения.",
+    "retainedIds": [
+      "R-LENS-HANDOFF",
+      "A-HANDOFF-BUILD",
+      "R-HANDOFF-FACTS",
+      "A-HANDOFF-FACTS",
+      "R-HANDOFF-UNCERTAINTY",
+      "A-HANDOFF-RECEIPTS",
+      "R-HANDOFF-CONTINUATION",
+      "A-HANDOFF-RESUME",
+      "K-A-HANDOFF-BUILD",
+      "K-A-HANDOFF-FACTS",
+      "K-A-HANDOFF-RECEIPTS",
+      "K-A-HANDOFF-RESUME",
+      "I-LENS-HANDOFF",
+      "INFO-DECISION-API-HANDOFF"
+    ],
+    "sourceRevision": 4,
+    "workGraphId": "WG-handoff",
+    "overrides": {
+      "INFO-DECISION-API-HANDOFF": {
+        "title": "Введение и границы · handoff"
+      }
+    }
+  },
+  "dry": {
+    "group": "methods",
+    "main": "D-DRY-CONSISTENCY",
+    "steps": [
+      [
+        "KNOWLEDGE",
+        "Установить повторяемое знание и существенные различия",
+        "Найти, какое"
+      ],
+      [
+        "METHOD",
+        "Выбрать оправданного владельца и способ согласования",
+        "Выбрать способ"
+      ],
+      [
+        "DELTA",
+        "Оценить общую цену и последствия изменения",
+        "Оценить цену"
+      ],
+      [
+        "VERIFY",
+        "Проверить согласованность реальных представлений",
+        "Применить принцип"
+      ]
+    ],
+    "workflow": "Методика dry выбирается по текущей задаче и условиям из собственного определения, после бутстрепа. Общую стратегию раскрывает work; переход к соседней методике не означает обязательного полного прохождения или исполнения.",
+    "retainedIds": [
+      "R-LENS-DRY"
+    ],
+    "sourceRevision": 2,
+    "workGraphId": "WG-DRY",
+    "recommendationAdvice": [
+      {
+        "id": "kiss-generalization",
+        "lensKey": "kiss",
+        "whenText": "Предлагаемое обобщение общего знания добавляет косвенность, исключения или связанность.",
+        "usageText": "С помощью KISS сравнить полную цену вариантов согласования знания. Сохранить реальные различия и нужное поведение; меньше копий само по себе не оправдывает более сложное обобщение."
+      },
+      {
+        "id": "yagni-future-cases",
+        "lensKey": "yagni",
+        "whenText": "Польза общей абстракции зависит от предполагаемых будущих потребителей.",
+        "usageText": "С помощью YAGNI проверить действительную нужность этих потребителей сейчас и цену позднего изменения. Не обосновывать текущую сложность одним гипотетическим повторным использованием."
+      }
+    ]
+  },
+  "kiss": {
+    "group": "methods",
+    "main": "D-KISS-SIMPLICITY",
+    "steps": [
+      [
+        "INVARIANTS",
+        "Установить требования и свойства, которые нужно сохранить",
+        "Определить, что"
+      ],
+      [
+        "OPTIONS",
+        "Найти достаточные способы и проверить существующие средства",
+        "Проверить существующие"
+      ],
+      [
+        "SCALE",
+        "Обосновать масштаб работы и необходимую сложность",
+        "Соразмерить планирование"
+      ],
+      [
+        "VERIFY",
+        "Проверить сохранение нужного поведения и качественной пользы",
+        "Сохранить необходимую"
+      ]
+    ],
+    "workflow": "Методика kiss выбирается по текущей задаче и условиям из собственного определения, после бутстрепа. Общую стратегию раскрывает work; переход к соседней методике не означает обязательного полного прохождения или исполнения.",
+    "retainedIds": [
+      "R-LENS-KISS"
+    ],
+    "sourceRevision": 2,
+    "workGraphId": "WG-KISS",
+    "recommendationAdvice": [
+      {
+        "id": "yagni-need",
+        "lensKey": "yagni",
+        "whenText": "Неясно, требуется ли сама сравниваемая функция или работа.",
+        "usageText": "Использовать YAGNI для основания необходимости; затем применять KISS к достаточному способу удовлетворения действующей потребности. Принятые обязательства не отменяются автоматически."
+      },
+      {
+        "id": "dry-owner",
+        "lensKey": "dry",
+        "whenText": "Основная сложность возникает из расходящихся копий одного знания.",
+        "usageText": "Использовать DRY для владельца и согласованного изменения этого знания; оценивать результат по полной сложности, сохраняя существенные различия."
+      }
+    ]
+  },
+  "yagni": {
+    "group": "methods",
+    "main": "D-YAGNI-NECESSITY",
+    "steps": [
+      [
+        "NEED",
+        "Установить основание потребности сейчас и цену позднего изменения",
+        "Установить основание"
+      ],
+      [
+        "OPTIONS",
+        "Сравнить достаточное решение, эксперимент и отсрочку",
+        "Сравнить доступные"
+      ],
+      [
+        "DECISION",
+        "Обосновать работу или отсрочку с условием возврата",
+        "Отложить с понятным"
+      ],
+      [
+        "LIMITS",
+        "Проверить допустимость сознательного ограничения и сохранение обязательств",
+        "Проверить границы"
+      ]
+    ],
+    "workflow": "Методика yagni выбирается по текущей задаче и условиям из собственного определения, после бутстрепа. Общую стратегию раскрывает work; переход к соседней методике не означает обязательного полного прохождения или исполнения.",
+    "retainedIds": [
+      "R-LENS-YAGNI"
+    ],
+    "sourceRevision": 2,
+    "workGraphId": "WG-YAGNI",
+    "recommendationAdvice": [
+      {
+        "id": "kiss-required-method",
+        "lensKey": "kiss",
+        "whenText": "Необходимость поведения установлена, но способ его обеспечения может быть проще.",
+        "usageText": "Использовать KISS для поиска достаточного способа сохранить требуемое поведение. Простота функции не доказывает её необходимость, а сложность не отменяет действующую потребность."
+      },
+      {
+        "id": "dry-real-consumers",
+        "lensKey": "dry",
+        "whenText": "Предлагается общая абстракция или задел для нескольких потребителей.",
+        "usageText": "Использовать DRY для проверки общего изменяемого знания и настоящих потребителей; предполагаемые потребители не получают статус текущих требований автоматически."
+      }
+    ]
+  }
+}

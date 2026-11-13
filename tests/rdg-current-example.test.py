@@ -31,7 +31,8 @@ class CurrentExample(unittest.TestCase):
   self.assertEqual(result['verified']['questions'],2);self.assertTrue(ns['Q-PEAK']['assessmentReviewRequired']);self.assertEqual(ns['Q-BUDGET']['answers'],[]);self.assertEqual(ns['A-MEASURE']['estimates']['time'],{'minSeconds':60,'maxSeconds':180})
   self.assertEqual(result['verified']['focusReadCases'],4);self.assertEqual(result['verified']['branchReadCases'],1)
   self.assertEqual(result['verified']['planningMetaActions'],2);self.assertEqual(result['verified']['authoredRecommendations'],2);self.assertEqual(len(row['recommendations']['matches']),2)
-  self.assertEqual(result['verified']['theorySections'],3);self.assertTrue(ns['CAN-SQL']['canons']);self.assertEqual(len(ns['CAN-SQL']['knownErrors']),2);self.assertEqual(ns['CAN-SQL']['knownErrors'][1]['description'],'');self.assertNotIn('knownErrors',ns['CAN-REPL'])
+  self.assertEqual(result['verified']['theorySections'],2);self.assertIn('Известная ошибка:',ns['CAN-SQL']['canons']);self.assertFalse(ns['CAN-SQL'].get('knownErrors'));self.assertNotIn('knownErrors',ns['CAN-REPL'])
+  self.assertEqual(result['verified']['actionTheories'],1);self.assertIn('Известная ошибка:',ns['CAN-TASK']['canons']);self.assertTrue(any(e['type']=='CANON_FOR' and e['from']=='CAN-TASK' and e['to']=='A-RELEASE' for e in g['edges']))
   self.assertTrue(app.receipt(pid,tx)['found']);self.assertEqual(json.loads(journal.read_text())['operations']['add-R-STORE']['request']['transactionId'],tx)
   self.assertEqual(ns['D-UP']['selectionState'],'discovered');self.assertEqual(ns['D-OUT']['selectionState'],'discovered');self.assertEqual(ns['D-SQL']['result']['state'],'confirmed')
   for index in (0,1):
