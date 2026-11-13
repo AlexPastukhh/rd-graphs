@@ -40,8 +40,8 @@
       },
       "sourceRef": {
         "path": "docs/lenses/bootstrap/model.md",
-        "sha256": "64588d01424057503308e99e849e07b5774eac4b4090ae68e69c1c622a27eeb5",
-        "gitCommit": "6aa813ef9a596cb6e9876733a8f9a75aa9695fbb"
+        "sha256": "94479b46f5fee33dd842c73a8b09912ad22e430a5901971d1b1b6cb0290f403b",
+        "gitCommit": "2a188214879c1abd004f76e9bc2896c15398307e"
       },
       "sourceMapInfoId": "LS-MAP-MODEL"
     },
