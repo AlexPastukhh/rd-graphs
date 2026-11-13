@@ -79,15 +79,15 @@ try {
     if ($pointer.PSObject.Properties.Name -cnotcontains 'buildId' -or
         $pointer.PSObject.Properties.Name -cnotcontains 'sha256' -or
         $pointer.buildId -cne $ExpectedBuildId -or $pointer.sha256 -cne $expectedSha) {
-        throw ('The existing updater would select another CI release (' + $pointer.buildId +
-               '). No update performed. Choose its exact build or publish a pinned-capable updater.')
+        throw ('READY now points to another CI release (' + $pointer.buildId +
+               '). No update performed. Review that release before updating.')
     }
-    $start=@{ AgentContainer=$AgentContainer;Mode=$Mode }
+    $start=@{ AgentContainer=$AgentContainer;Mode=$Mode;ExpectedBuildId=$ExpectedBuildId;PinnedSha256=$expectedSha }
     if ($Mode -eq 'HTTPS') { $start.Domain=$Domain }
     Write-Host ('Updating RDG from verified READY build '+$ExpectedBuildId)
     & (Join-Path $bootstrap 'Update-RDG.ps1') @start
-    # A CI watch may publish a newer ready pointer after the preflight check.
-    # Never claim success for an unverified actual build.
+    # The updater enforces the same pin before starting a release even if READY
+    # changes after our check. Independently verify the installed build as well.
     $origin=if($Mode -eq 'Local'){'http://localhost:18880'}else{'https://'+$Domain}
     $probe=[Net.HttpWebRequest]::Create($origin+'/healthz')
     $probe.Proxy=$null

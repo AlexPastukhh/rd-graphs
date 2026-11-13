@@ -44,13 +44,20 @@ if (-not $SkipSetup) { throw 'Updater must not run setup' }
 
     def tearDown(self):self.temp.cleanup()
 
-    def invoke_ready_bootstrap(self, pinned_sha):
+    def invoke_ready_bootstrap(self, pinned_sha, *, ready_race=False):
         script=self.root/'invoke-ready.ps1'
-        script.write_text('''function global:docker {
+        script.write_text('''$global:RDGReadyReads=0
+function global:docker {
     param([Parameter(ValueFromRemainingArguments=$true)][string[]]$Rest)
     if ($Rest.Count -ne 3 -or $Rest[0] -ne 'cp') { throw 'Unexpected Docker operation' }
     $name=($Rest[1] -split '/')[-1]
-    if ($name -ne 'ready.json' -and $name -ne ('RDG-Server-'+$env:RDG_TEST_BUILD+'.zip')) { throw 'Unexpected source' }
+    if ($name -eq 'ready.json') {
+        $global:RDGReadyReads+=1
+        if ($env:RDG_TEST_READY_RACE -eq '1' -and $global:RDGReadyReads -eq 2) {
+            Copy-Item -LiteralPath (Join-Path $env:RDG_TEST_FIXTURE 'new-ready.json') -Destination (Join-Path $env:RDG_TEST_FIXTURE 'ready.json') -Force
+        }
+    }
+    if ($name -ne 'ready.json' -and $name -notmatch '^RDG-Server-ci-[a-z0-9-]+\\.zip$') { throw 'Unexpected source' }
     Copy-Item -LiteralPath (Join-Path $env:RDG_TEST_FIXTURE $name) -Destination $Rest[2]
     $global:LASTEXITCODE=0
 }
@@ -58,7 +65,8 @@ if (-not $SkipSetup) { throw 'Updater must not run setup' }
 ''')
         env=dict(os.environ,RDG_TEST_FIXTURE=str(self.root),RDG_TEST_BUILD=BUILD,
             RDG_TEST_BOOTSTRAP=str(ROOT/'deploy/rdg-server/Invoke-RDG-Ready-Once.ps1'),
-            RDG_TEST_PIN=pinned_sha,LOCALAPPDATA=str(self.root),RDG_TEST_START_MARKER=str(self.marker))
+            RDG_TEST_PIN=pinned_sha,RDG_TEST_READY_RACE='1' if ready_race else '0',
+            LOCALAPPDATA=str(self.root),RDG_TEST_START_MARKER=str(self.marker))
         return subprocess.run([PWSH,'-NoLogo','-NoProfile','-NonInteractive','-File',str(script)],
                               env=env,text=True,capture_output=True,timeout=30)
 
@@ -74,8 +82,29 @@ if (-not $SkipSetup) { throw 'Updater must not run setup' }
         ready['buildId']='ci-another-ready-release';(self.root/'ready.json').write_text(json.dumps(ready))
         result=self.invoke_ready_bootstrap(pinned)
         self.assertNotEqual(result.returncode,0)
-        self.assertIn('updater would select another CI release',result.stdout+result.stderr)
+        self.assertIn('READY now points to another CI release',result.stdout+result.stderr)
         self.assertFalse(self.marker.exists())
+
+    def test_ready_bootstrap_installs_the_exact_matching_pin(self):
+        self.release();ready=json.loads((self.root/'ready.json').read_text())
+        with self.health():result=self.invoke_ready_bootstrap(ready['sha256'])
+        self.assertEqual(result.returncode,0,result.stdout+result.stderr)
+        self.assertTrue(self.marker.exists())
+        self.assertEqual(Path(self.marker.read_text()).name,BUILD)
+
+    def test_ready_bootstrap_pins_the_updater_across_a_late_ready_race(self):
+        global BUILD
+        self.release();original=json.loads((self.root/'ready.json').read_text());reviewed_build=BUILD
+        try:
+            BUILD='ci-bootstrap-race-newer';self.release()
+        finally:BUILD=reviewed_build
+        newer=json.loads((self.root/'ready.json').read_text())
+        (self.root/'new-ready.json').write_text(json.dumps(newer))
+        (self.root/'ready.json').write_text(json.dumps(original))
+        result=self.invoke_ready_bootstrap(original['sha256'],ready_race=True)
+        self.assertNotEqual(result.returncode,0)
+        self.assertIn('Pinned CI release mismatch',result.stdout+result.stderr)
+        self.assertFalse(self.marker.exists(),'a newer unreviewed release must never start')
 
     def release(self, mutate=None, extra=None, wrong_digest=False, corrupt=False):
         payload = dict(self.files, **{'runtime/RDG-BUILD.json': json.dumps({'buildId': BUILD}).encode()})
