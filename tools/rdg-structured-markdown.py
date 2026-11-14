@@ -14,7 +14,7 @@ LABELS = {
     'kind': 'Тип', 'id': 'ID', 'revision': 'Ревизия', 'selectionState': 'Выбор',
     'result': 'Результат', 'review': 'Актуальность', 'resultCondition': 'Условия результата',
     'estimates': 'Оценки исполнения', 'subjectRefs': 'Предметы работы', 'value': 'Содержание',
-    'guidance': 'Общее', 'canons': 'Каноны', 'knownErrors': 'Известные ошибки',
+    'guidance': 'Общее', 'canonItems': 'Каноны по ID', 'canons': 'Каноны', 'knownErrors': 'Известные ошибки',
     'findingType': 'Тип файндинга', 'rationale': 'Обоснование', 'answers': 'Ответы',
     'answerCondition': 'Условие достаточности', 'assessment': 'Оценка достаточности',
     'context': 'Контекст принятия решения', 'canon': 'Теория принятия решения',

@@ -31,6 +31,8 @@
 
 **Проверка после восстановления Fortis Repo, 2026-11-14.** Живой model соответствует сохранённому исходнику, Graph/package revision 173; все 52 квитанции подтверждены. Остальные 36 owners и состав каталога не изменились, Registry revision 52 сохраняет 19 собственных definitions / 173 правила. Источник, компилятор и тесты не менялись после проверенного коммита `2a188214879c1abd004f76e9bc2896c15398307e`; завершение касается подготовленных определений и документации. Evidence: `/workspace/repo/Workfiles/rdg-model-decisions-20261113/publication-independent-readback.json`.
 
+**Адресуемая теория реализована в исходниках 2026-11-14.** [Контракт и проверки](RDG-DECISION-V1-CONTRACT.md#rdg-theory-addressable-items): `canonItems`/`recommendations`, стабильные ID, объяснение в «Общем», адресное/полное чтение, Agent и Viewer. Обновлены model/work/orient/decision-analysis/lens-system и bootstrap. Runtime Windows, публикация изменённых определений линз и ручная UX-приёмка остаются отдельными шагами; живые owners и Registry этой реализацией не мигрируются.
+
 ## Основной учебный рецепт после уточнения 2026-11-12
 
 Рецепт в tools/rdg-current-example.py приведён к единому примеру «Выбор, анализ и выполнение» с целевым путём examples/decision-readiness-20261112. Он сочетает раскрытые варианты, теорию Decision и цельного Action, каноны с известными ошибками, контекст, Findings, Questions, Plan и историю. Наличие рецепта не подтверждает публикацию: доступный owner и его версию проверяют через настоящий каталог.

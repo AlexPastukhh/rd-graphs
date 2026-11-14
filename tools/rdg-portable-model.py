@@ -1104,10 +1104,17 @@ def decision_remap(graph,mapping):
                 for assessment in [*n['assessmentHistory'],*([n['assessment']] if 'assessment' in n else [])]:
                     assessment['id']=str(uuid.uuid5(uuid.NAMESPACE_URL,n['id']+':assessment:'+assessment['id']))
                     assessment['answerIds']=[ids[i] for i in assessment['answerIds']]
-            if n['kind']=='question' or 'subjectRefs' in n:
+            if n['kind']=='question' or 'subjectRefs' in n or n['kind']=='canon':
                 bindings={}
-                for refs in ([n['relatedRefs'],n['sourceRefs'],*(a['sourceRefs'] for a in answers)] if n['kind']=='question' else [n['subjectRefs']]):
+                theory_refs=[r.get('reference',r) for f in ('canonItems','recommendations') for item in n.get(f,[]) for r in [item.get('targetRef',{})] if r and r.get('kind') not in ('document','file')]
+                for refs in ([n['relatedRefs'],n['sourceRefs'],*(a['sourceRefs'] for a in answers)] if n['kind']=='question' else [theory_refs] if n['kind']=='canon' else [n['subjectRefs']]):
                     for ref in refs:
+                        if n['kind']=='canon' and ref.get('kind') in ('process','workGraph'):
+                            key=json.dumps(['scope',ref['packageId'],ref['identitySpace'],ref['kind'],ref.get('workGraphId')],separators=(',',':'))
+                            local=n.get('referenceBindings',{}).get(key)
+                            if local is None and ref['identitySpace']==graph['identitySpace']:local='@process' if ref['kind']=='process' else ref['workGraphId']
+                            if local=='@process':bindings[key]=local
+                            elif local in mapping['workGraph']:bindings[key]=mapping['workGraph'][local]
                         if 'nodeId' in ref and ref.get('mode')!='historical':
                             key=json.dumps([ref.get(k) for k in ('packageId','identitySpace','nodeId')],separators=(',',':'))
                             local=n.get('referenceBindings',{}).get(key)
@@ -1117,7 +1124,7 @@ def decision_remap(graph,mapping):
                                 require(len(matches)<=1,'QUESTION_REF_BINDING_AMBIGUOUS');local=matches[0] if matches else None
                             if local in entity:bindings[key]=entity[local]
                             if ref['mode']=='current' and (n['kind']=='question' or local in entity):ref['mode']='inherited'
-                        if ref.get('workGraphId') in mapping['workGraph']:ref['workGraphId']=mapping['workGraph'][ref['workGraphId']]
+                        if n['kind']!='canon' and ref.get('workGraphId') in mapping['workGraph']:ref['workGraphId']=mapping['workGraph'][ref['workGraphId']]
                 n['referenceBindings']=bindings
             if n['kind']=='finding':
                 n['subjectId']=entity.get(n['subjectId'],n['subjectId']);n['subjectSnapshot']['id']=n['subjectId']

@@ -26,6 +26,7 @@ def run(client,journal_file,path=PATH,progress=print):
 
 
 def _run(client,journal,path,progress):
+    if client.call({'method':'schema','op':'theory_read'}).get('method')!='theory_read':raise ValueError('INSTALL_THEORY_ITEMS_RUNTIME_FIRST')
     state=journal.state
     def save(key=None):journal.append(key)
     def accepted(key,op):
@@ -142,6 +143,12 @@ def _run(client,journal,path,progress):
     if not read().get('capabilities',{}).get('capabilities',{}).get('recommendationAuthoring'):raise ValueError('INSTALL_RECOMMENDATION_RUNTIME_FIRST')
     lens=next((p for p in client.call({'method':'catalog'})['packages'] if p.get('role')=='lens' and p.get('lensKey')=='work' and p.get('coreModel')=='rdg-decision-v1'),None)
     if lens is None:raise ValueError('EXAMPLE_REQUIRES_EXISTING_DECISION_WORK_LENS')
+    lensrow=client.call({'method':'read','packageId':lens['packageId']})
+    core('owned-action-theory','edit',{'nodeId':'CAN-TASK','cosmetic':False,'changes':{
+        'guidance':'Action можно вести как цельное задание, если внутренними выборами не нужно управлять отдельно. [Граница цельного задания](theory:canons/task-boundary) поясняет этот выбор. [Work](theory:recommendations/work) помогает выбрать достаточный следующий шаг при изменении задания; [инструкция чтения](theory:recommendations/material) нужна для адресного открытия большого материала.',
+        'canonItems':[{'id':'task-boundary','title':'Когда достаточно одного задания','body':'Хорошо: известны входы, границы и проверяемый результат. Плохо: внутри скрыт самостоятельный выбор, который нужно принимать и пересматривать отдельно.'}],
+        'recommendations':[{'id':'work','title':'Выбор достаточной работы','targetRef':{'schemaVersion':1,'kind':'lens','reference':{**lensrow['scopeReferences']['process'],'kind':'lens'}}},
+            {'id':'material','title':'Адресное чтение теории','targetRef':{'schemaVersion':1,'kind':'document','uri':'https://github.com/AlexPastukhh/rd-graphs/blob/main/docs/guides/RDG-DECISION-V1-CONTRACT.md#rdg-theory-addressable-items'}}]}})
     for index,(target,usage) in enumerate([('D-SQL','Перечитать методику перед пересмотром решения; сохранить только полезные результаты работы.'),('Q-PEAK','Уточнить следующий шаг исследования. Методика не требует копирования её графа.')]):
         key='recommendation-'+str(index)
         if state['operations'].get(key,{}).get('applyAttempted'):write(key,state['operations'][key]['request']);continue
@@ -165,6 +172,10 @@ def _run(client,journal,path,progress):
     assert all(n['id']!='A-ANALYSIS' for n in g['nodes']) and row['plan']['forks'][0]['afterStepId'] is None
     assert row['plan']['forks'][0]['end']['title']=='Общие условия выпуска' and len(row['plan']['mainStepIds'])==len(set(row['plan']['mainStepIds']))
     assert 'Известная ошибка:' in ns['CAN-SQL']['canons'] and not ns['CAN-SQL'].get('knownErrors') and ns['CAN-REPL']['guidance']
+    one=client.call({'method':'theory_read','packageId':pid,'theoryId':'CAN-TASK','collection':'canons','itemIds':['task-boundary']})
+    sources=client.call({'method':'theory_read','packageId':pid,'theoryId':'CAN-TASK','collection':'recommendations'})
+    assert one['data']['canons']['items'][0]['body']==ns['CAN-TASK']['canonItems'][0]['body']
+    assert sources['data']['recommendations']['page']['complete'] and len(sources['data']['recommendations']['items'])==2
     assert len([a for a in g['externalActions'] if 'subjectRefs' in a])==2
     reader=SourceFileLoader('rdg_example_scoped',str(ROOT/'tools/rdg-scoped-read.py')).load_module()
     for root in ('D-SQL','R-STORE','R-SAFE','R1'):

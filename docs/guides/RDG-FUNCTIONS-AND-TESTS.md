@@ -128,3 +128,5 @@ T5 Planning Meta Action в исходниках: [Action/refs](../../tools/rdg-d
 Ссылки на выбранные Python-сценарии выше дополнительно проверяются аудитом документации: тест существует и, где отмечено, его файл входит в CI. Это трассировка, не измерение покрытия строк и не доказательство произвольного сочетания правил.
 
 **Результат:** `rdg-ci/status.json`, `ready.json` и логи того же запуска в Workfiles. **Ограничения:** неизвестные legacy причины, локальные view-фильтры, Windows/UX и отдельные подсистемы — в [плане](RDG-DEVELOPMENT-PLAN.md). [Смысл состояния](RDG-ACTIVE-CONTRACT.md) не выводится из одного PASS.
+
+Адресуемая теория Decision/Action: [контракт](RDG-DECISION-V1-CONTRACT.md#rdg-theory-addressable-items), реализация [rdg-theory.py](../../tools/rdg-theory.py), [источники](../../tools/rdg-theory-sources.py), [проверки API/Agent/copy/полноты](../../tests/rdg-theory-items.test.py), [сценарий Viewer](../../tests/visual/rdg-decision-theory.cjs).

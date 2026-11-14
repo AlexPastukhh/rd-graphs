@@ -37,7 +37,7 @@ def atomic_json(path, value):
 
 PYTHON_TESTS = (
     'rdg-decision-model.test.py', 'rdg-findings.test.py', 'rdg-analysis.test.py', 'rdg-history-view.test.py', 'rdg-current-example.test.py', 'rdg-example-journal.test.py', 'rdg-snapshot-validation.test.py', 'rdg-read-projection-digests.test.py', 'rdg-projection-cache.test.py', 'rdg-dependency-policies-v2.test.py', 'rdg-relation-read-cache.test.py', 'rdg-writer-calculation-cache.test.py',
-    'rdg-portable-service.test.py', 'rdg-api-discovery.test.py', 'rdg-compact-read.test.py', 'rdg-scoped-read.test.py', 'rdg-markdown-search.test.py', 'rdg-batch.test.py', 'rdg-question-first-slice.test.py', 'rdg-questions-estimates.test.py', 'rdg-decision-theory.test.py', 'rdg-recommendations-authoring.test.py', 'rdg-planning-meta-actions.test.py', 'rdg-t1-t2-workflow.test.py', 'rdg-decision-integration.test.py',
+    'rdg-portable-service.test.py', 'rdg-api-discovery.test.py', 'rdg-compact-read.test.py', 'rdg-scoped-read.test.py', 'rdg-markdown-search.test.py', 'rdg-batch.test.py', 'rdg-question-first-slice.test.py', 'rdg-questions-estimates.test.py', 'rdg-decision-theory.test.py', 'rdg-theory-items.test.py', 'rdg-recommendations-authoring.test.py', 'rdg-planning-meta-actions.test.py', 'rdg-t1-t2-workflow.test.py', 'rdg-decision-integration.test.py',
     'rdg-native-dependencies.test.py', 'rdg-locks.test.py', 'rdg-lens-catalog.test.py', 'rdg-structured-lenses.test.py',
     'rdg-gateway.test.py', 'rdg-server.test.py', 'rdg-ci.test.py', 'rdg-cd.test.py',
 )

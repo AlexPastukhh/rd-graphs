@@ -18,8 +18,8 @@
       },
       "sourceRef": {
         "path": "docs/lenses/bootstrap/orient.md",
-        "sha256": "abfad5c0104f160b06598160f15ad4104764d46de45a20b281bc9151caf85ef9",
-        "gitCommit": "6aa813ef9a596cb6e9876733a8f9a75aa9695fbb"
+        "sha256": "e256a391bf291298bbf83c5a513a17aa267706a526a9c37e0c7c66a207fc0e73",
+        "gitCommit": "f332645eef64405967b30340526ba3eac3c6eee2"
       },
       "sourceMapInfoId": "LS-MAP-ORIENT"
     },
@@ -40,8 +40,8 @@
       },
       "sourceRef": {
         "path": "docs/lenses/bootstrap/model.md",
-        "sha256": "94479b46f5fee33dd842c73a8b09912ad22e430a5901971d1b1b6cb0290f403b",
-        "gitCommit": "2a188214879c1abd004f76e9bc2896c15398307e"
+        "sha256": "acca4368ae5e5cb30401fc23b35c668501b6d87b9ca8ca7bb359150487b3e962",
+        "gitCommit": "f332645eef64405967b30340526ba3eac3c6eee2"
       },
       "sourceMapInfoId": "LS-MAP-MODEL"
     },
@@ -107,8 +107,8 @@
       },
       "sourceRef": {
         "path": "docs/lenses/bootstrap/work.md",
-        "sha256": "03789180860013baa20b0438c2209d8034543a0d0e7d426c4032cd440685e7e8",
-        "gitCommit": "6aa813ef9a596cb6e9876733a8f9a75aa9695fbb"
+        "sha256": "98412d694c268f559d1aa463442ce7fc21f9d27bca98af67791025d0fd8ba655",
+        "gitCommit": "f332645eef64405967b30340526ba3eac3c6eee2"
       },
       "sourceMapInfoId": "LS-MAP-WORK"
     },
@@ -155,8 +155,8 @@
       },
       "sourceRef": {
         "path": "docs/lenses/bootstrap/lens-system.md",
-        "sha256": "e7b2888f9903238c5b988b029902be4aedd6fd3a6f4f26ebb4265afb00e1405d",
-        "gitCommit": "6aa813ef9a596cb6e9876733a8f9a75aa9695fbb"
+        "sha256": "56877a061e443dfde5c6ef0e16ba47b27c9964b988bd0d08a32898675ce452a2",
+        "gitCommit": "f332645eef64405967b30340526ba3eac3c6eee2"
       },
       "sourceMapInfoId": "LS-MAP-LENS-SYSTEM"
     },
@@ -301,8 +301,8 @@
       },
       "sourceRef": {
         "path": "docs/lenses/methods/decision-analysis.md",
-        "sha256": "2373c4b4a591584b30a69d9d5df9d308ed75c03b0b1f4c3278d37f1afeff4d2b",
-        "gitCommit": "6aa813ef9a596cb6e9876733a8f9a75aa9695fbb"
+        "sha256": "b6f99a10320f20a6fd7845275cede256fc099a0e73fa351f6e290ebfd13e03d6",
+        "gitCommit": "f332645eef64405967b30340526ba3eac3c6eee2"
       },
       "sourceMapInfoId": "LS-MAP-DECISION-ANALYSIS"
     },

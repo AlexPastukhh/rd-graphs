@@ -558,6 +558,11 @@ class Application:
                         'sourceId':edge['from'],'targetId':edge['to'],'enabled':True,'status':'active'}})
         return result
 
+    def theory_read(self, ident, theory_id, **options):
+        with self.store.lock(False,create=False):
+            row=self.snapshot(ident,layouts=False)
+        return self.kernel.for_graph(row['graph']).THEORY.read(self,row,theory_id,**options)
+
     def read(self, ident, include_plan=False, view=None, *, detail=None, include=None, node_id=None, record_id=None, limit=25, cursor=None, output_format=None):
         self.check(output_format in (None, 'json', 'markdown'), 'READ_FORMAT')
         if output_format == 'markdown':
@@ -686,6 +691,10 @@ class Application:
         if op == 'search':
             self.check(all(v is None for v in (ident,node_id,source_id,command,source_path,source_key,core_model,role,entity_kind)), 'SEARCH_SCHEMA_SELECTORS')
             return SEARCH.schema()
+        if op=='theory_read':
+            self.check(all(v is None for v in (node_id,source_id,command,source_path,source_key,core_model,role,entity_kind)), 'THEORY_SCHEMA_SELECTORS')
+            if ident:self.snapshot(ident,layouts=False)
+            return self.kernel.for_profile('rdg-decision-v1').THEORY.schema()
         if op in ('read','history'):
             self.check(core_model is None and role is None and entity_kind is None and command is None and source_id is None and source_path is None and source_key is None, 'READ_SCHEMA_SELECTORS')
             if ident:self.snapshot(ident,layouts=False)
@@ -825,7 +834,7 @@ class Application:
                     'recommendations':{'authored':'boolean; independent advice identities','textFields':['whenText','usageText'],'anchorKinds':['entity','process','workGraph'],'lensStep':'optional lensRefs[].nodeId','compactFacet':'recommendations'},
                      'questionAnswerKinds':['hypothesis','observation','user_answer'],
                     'questionUserSource':'Direct trusted user entry, or exact quote of a current user-authored Context.',
-                    'decisionTheory':{'kind':'canon','targetKinds':['decision','action'],'fields':{'guidance':'General theory text, may be empty','canons':'Good, borderline and bad situations, including known mistakes'},'contentRequired':'At least one nonblank guidance/canons','legacy':'knownErrors is readable; new nonempty lists are rejected. Preserve text in canons.','clear':{'guidance':'','canons':''},'edit':'core edit changes, cosmetic=false; omitted fields are preserved'},
+                    'decisionTheory':{'kind':'canon','targetKinds':['decision','action'],'fields':{'guidance':'Coherent theory: explain the context and role of each linked item','canonItems':'Owned {id,title,body} or {id,title,targetRef} entries','recommendations':'Owned minimal {id,title,targetRef} source entries','canons':'Legacy undivided text'},'read':self.kernel.for_graph(graph).THEORY.schema(),'contentRequired':'Nonempty guidance, legacy text, or an owned collection','legacy':'Read-only adapters do not migrate; edit explicitly, preserving all old text. Shared Registry rules retain their existing API.','edit':'core edit changes, cosmetic=false; omitted fields are preserved'},
                     'planningMetaAction':{'operation':'plan_action','subjectRefs':'optional qualified entity or scope references; work subjects, no dependencies','atomic':'Action + placement via batch coordinator'},
                     'actionEstimates':{'optional':['complexity','time','basis'],'time':{'minSeconds':'finite >= 0','maxSeconds':'>= minSeconds'},'remove':'core edit changes.estimates=null'},
                     'questionAnswerActions':['add','edit','remove']} if 'graph' in locals() and graph['coreModel']=='rdg-decision-v1' else {}),
@@ -868,7 +877,7 @@ class Application:
         """Closed shared transport contract for CLI, Agent and manual sessions."""
         self.check(isinstance(message,dict),'MESSAGE')
         method=message.get('method')
-        fields={'catalog':set(),'search':{'query','scope','packageId','limit','cursor'},'read':{'packageId','includePlan','view','detail','include','nodeId','recordId','limit','cursor','format'},'history':{'packageId','view','detail','include','eventId','limit','cursor'},
+        fields={'theory_read':{'packageId','theoryId','collection','itemIds','detail','expand','limit','cursor','format','expectedTheoryRevision'},'catalog':set(),'search':{'query','scope','packageId','limit','cursor'},'read':{'packageId','includePlan','view','detail','include','nodeId','recordId','limit','cursor','format'},'history':{'packageId','view','detail','include','eventId','limit','cursor'},
                 'resolve':{'packageId','reference'},'source_snapshot':{'packageId','pin','view'},
                 'schema':{'op','packageId','nodeId','sourcePackageId','command','sourcePath','sourceKey','coreModel','role','entityKind'},
                 'migration_sources':set(),'migration_inspect':{'sourceKey'},
@@ -889,6 +898,7 @@ class Application:
         if method=='approval_read':return self.approval_read(message['requestId'])
         if method=='migration_sources':return self.migration.sources()
         if method=='migration_inspect':return self.migration.inspect(message['sourceKey'])
+        if method=='theory_read':return self.theory_read(message['packageId'],message['theoryId'],collection=message.get('collection','overview'),item_ids=message.get('itemIds'),detail=message.get('detail','content'),expand=message.get('expand',False),limit=message.get('limit',25),cursor=message.get('cursor'),output_format=message.get('format','json'),expected_revision=message.get('expectedTheoryRevision'))
         if method=='read':return self.read(message['packageId'],message.get('includePlan',False),message.get('view'),detail=message.get('detail'),include=message.get('include'),node_id=message.get('nodeId'),record_id=message.get('recordId'),limit=message.get('limit',25),cursor=message.get('cursor'),output_format=message.get('format'))
         if method=='history':return self.history(message['packageId'],message.get('view'),detail=message.get('detail'),include=message.get('include'),event_id=message.get('eventId'),limit=message.get('limit',25),cursor=message.get('cursor'))
         if method=='resolve':return self.resolve(message['packageId'],message['reference'])
@@ -1142,6 +1152,16 @@ class Application:
                         target={**target,**{k:v for k,v in changes[ident].items() if k in ('graph','plan','layouts')}}
 
             graph,inventory=self.model.copy_graph(source_id,transferable,focus,mapping,space,graph_id,self.kernel,request.get('includeDescendants',True))
+            if template and graph.get('coreModel')=='rdg-decision-v1':
+                for theory in graph['objects']:
+                    if theory['kind']=='canon':
+                        self.validate_theory_sources('add',{'entity':theory},ident,graph,read,role='ready',local_source_id=source_id)
+            theory_files=[]
+            for theory in (graph['objects'] if graph.get('coreModel')=='rdg-decision-v1' else []):
+                if theory['kind']!='canon':continue
+                for target_ref in self.kernel.for_graph(graph).THEORY.targets(theory):
+                    if target_ref.get('kind')=='file' and target_ref.get('packageId')==source_id:
+                        theory_files.append(copy.deepcopy(target_ref));target_ref['packageId']=ident
             for action in graph.get('externalActions',[]):
                 for ref in action.get('subjectRefs',[]):
                     if ref.get('kind') in ('process','workGraph') and ref['packageId']==source_id:
@@ -1205,6 +1225,11 @@ class Application:
             directory=self.store.package_path(source['path']);source_inventory=self.store.inventory(source)
             if template:
                 artifacts={prefix+'/definition.json':self.model.encoded(self.model.decision_template(source['graph']))}
+                # Only theory-owned source files travel with a paper template;
+                # unrelated working evidence retains the existing exclusion.
+                for file_ref in theory_files:
+                    self.verify_evidence(source,[{'path':file_ref['path'],'sha256':file_ref['sha256']}])
+                    artifacts[file_ref['path']]=self.store.io.safe_path(directory,file_ref['path'],True).read_bytes()
             else:
                 for relative in source_inventory:
                     raw=self.store.io.safe_path(directory,relative,True).read_bytes()
@@ -1519,6 +1544,7 @@ class Application:
             if row['graph'].get('coreModel')=='rdg-decision-v1':
                 self.kernel.for_graph(row['graph']).QUESTIONS.require_owner_inputs(command,request['data'],ident,row['graph'],self.kernel.for_graph(row['graph']),self.model)
                 self.validate_action_subjects(command,request['data'],ident,row['graph'],read)
+                self.validate_theory_sources(command,request['data'],ident,row['graph'],read,role=row['head']['role'])
             ev=event('core');self.verify_evidence(row,ev.get('evidenceRefs',[]))
             if row['graph'].get('coreModel') == 'rdg-decision-v1' and command == 'review':
                 ev['reviewPinContext']={'packageId':ident,
@@ -1848,6 +1874,43 @@ class Application:
                     return {'reference':copy.deepcopy(ref),'status':'current' if node else 'missing','node':copy.deepcopy(node),'packageId':row['packageId'],'localBinding':True}
             return {'reference':copy.deepcopy(ref),**self.resolve_for(ref,row,register)}
         except (ValueError,OSError):return {'reference':copy.deepcopy(ref),'status':'unavailable','changed':None}
+
+    def validate_theory_sources(self,command,data,ident,graph,read,role='working',local_source_id=None):
+        K=self.kernel.for_graph(graph);T=K.THEORY
+        old=self.kernel.entities(graph).get(data.get('nodeId'),{}) if command=='edit' else {}
+        if command not in ('add','edit'):return
+        value=data.get('entity',{}) if command=='add' else {**old,**data.get('changes',{})}
+        if value.get('kind')!='canon':return
+        T.validate(value,self.model.validate_reference)
+        for target in T.targets(value):
+            if target in T.targets(old):continue
+            if target.get('uri'):continue  # Network reads require explicit expansion.
+            ref=T.entity_reference(target);pid=(ref or target)['packageId']
+            local=(K.QUESTIONS.reference_id(graph,ref,K,value) if ref and 'kind' not in ref else None)
+            scope=value.get('referenceBindings',{}).get(T.scope_key(ref)) if ref and 'kind' in ref else None
+            source=None if local and ref.get('mode')=='inherited' or scope else read(pid)
+            self.check(role not in ('ready','lens') or pid==ident or local or scope or
+                target.get('kind')=='file' and pid==local_source_id or source['head']['role'] in ('ready','lens'),'THEORY_TEMPLATE_LIVE_SOURCE')
+            if target.get('kind')=='file':
+                self.verify_evidence(source,[{'path':target['path'],'sha256':target['sha256']}]);continue
+            if source and (target.get('kind')=='lens' or ref.get('kind')=='lens'):
+                self.check(source['head']['role']=='lens','THEORY_SOURCE_NOT_LENS')
+            if scope:
+                node=({'kind':'process'} if scope=='@process' else next((w for w in graph['workGraphs'] if w['id']==scope),None))
+                self.check(node is not None,'THEORY_SOURCE_MISSING')
+            elif local and ref.get('mode')=='inherited':
+                node=K.entities(graph).get(local)
+                self.check(node is not None,'THEORY_SOURCE_MISSING')
+            else:
+                self.check(source['graph']['identitySpace']==ref['identitySpace'],'THEORY_SOURCE_IDENTITY')
+                if ref.get('mode') in (None,'current'):
+                    expected=(self.model.scope_reference(pid,source['graph'],ref['kind'],ref.get('workGraphId')) if 'kind' in ref else
+                              self.model.reference(pid,source['graph'],ref['nodeId']))
+                    self.check(ref==expected,'THEORY_SOURCE_PIN_CHANGED')
+                resolved=self.resolve_for(ref,source,read);node=resolved.get('node')
+                self.check(node is not None,'THEORY_SOURCE_MISSING')
+            if target.get('kind')=='theoryItem':
+                self.check(node.get('kind')=='canon' and any(x['id']==target['itemId'] for x in T.entries(node,target['collection'])),'THEORY_SOURCE_ITEM_MISSING')
 
     def validate_action_subjects(self,command,data,ident,graph,read):
         if command=='add':value=data.get('entity',{});prior=[]
