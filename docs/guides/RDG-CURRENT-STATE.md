@@ -51,7 +51,7 @@
 
 По отдельному поручению пользователя реализовано [уточнение API](RDG-DECISION-V1-CONTRACT.md#api-ergonomics-20261114): paper delete/batch, общий receipt, owned ref/nextRead, capabilities, preflight preview и менее дорогие чтения издателя. База отдельного worktree rdg-api-ergonomics-20261114 — main 7855276b87d49a8a3ea900930f8d83ee61c658ce после владельческого слияния PR #10. Результаты адресных проверок: /workspace/repo/Workfiles/rdg-api-ergonomics-implementation-20261114/.
 
-Полный CI по указанию пользователя не повторялся. Новый frozen/runtime-release не создан; source-функции не объявлены установленными. Живые определения линз, пользовательская UX-проверка и B05 этим дополнением не выполнялись. Прежний runtime-worktree, frozen-выпуск и журналы сохраняются. Отдельная ранее подготовленная CI-оптимизация остаётся в своём worktree.
+До запроса PR полный CI по указанию пользователя не повторялся. Следующим поручением разрешены PR и GitHub CI; актуальные HEAD/URL/status сохраняются в /workspace/repo/Workfiles/rdg-api-ergonomics-implementation-20261114/pr-publication.json. Actions создаёт новый frozen/runtime-release только после полного gate; это не подтверждает установленный runtime. Живые определения линз, пользовательская UX-проверка и B05 этим дополнением не выполнялись. Прежний runtime-worktree, frozen-выпуск и журналы сохраняются. Отдельная ранее подготовленная CI-оптимизация остаётся в своём worktree.
 
 ## Основной учебный рецепт после уточнения 2026-11-12
 
