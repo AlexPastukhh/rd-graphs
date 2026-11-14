@@ -267,10 +267,15 @@ def resolve_target(app, row, theory, target, expand, cache, budget):
                 node = next((x for x in entries(node, target['collection']) if x['id'] == target['itemId']), None)
                 if not node:
                     return {'status': 'missing', 'contentLoaded': False}
-                result['nextRead'] = {'method': 'theory_read',
-                    'packageId': source['head']['packageId'] if resolved.get('localBinding') else ref['packageId'],
-                    'theoryId': theory_source['id'], 'expectedTheoryRevision': theory_source['revision'],
-                    'collection': target['collection'], 'itemIds': [target['itemId']]}
+                owned_ref = {'theoryRef': app.model.reference(source['head']['packageId'], source_graph, theory_source['id']),
+                             'collection': target['collection'], 'itemId': target['itemId']}
+                if resolved['status'] in ('historical','deleted','historical-current-unavailable'):
+                    owned_ref['theoryRef']['mode']='historical'
+                result['ownedRefRead'] = app.ergonomics.next_read(owned_ref)
+                result['nextRead'] = (result['ownedRefRead'] if owned_ref['theoryRef']['mode']=='historical' else
+                    {'method':'theory_read','packageId':source['head']['packageId'],
+                     'theoryId':theory_source['id'],'expectedTheoryRevision':theory_source['revision'],
+                     'collection':target['collection'],'itemIds':[target['itemId']]})
                 if 'targetRef' in node:
                     result['targetRef'] = copy.deepcopy(node['targetRef'])
                     return result  # one level; no recursive source crawl
@@ -390,6 +395,7 @@ def read(app, row, theory_id, collection='overview', item_ids=None, detail='cont
                 break
             value = {k: copy.deepcopy(v) for k, v in entry.items() if k != 'body'}
             value['ref'] = item_ref(app, row, theory, name, entry['id'], result['theory']['ref'])
+            value['nextRead'] = app.ergonomics.next_read(value['ref'])
             value['mentions'] = [x for x in all_mentions if x['collection'] == name and x['itemId'] == entry['id']]
             if collection == 'overview' or detail == 'summary':
                 value['mentions'] = [{k: v for k, v in x.items() if k not in ('excerpt', 'excerptComplete')}
@@ -399,6 +405,7 @@ def read(app, row, theory_id, collection='overview', item_ids=None, detail='cont
                 value.update(body=entry['body'], contentLoaded=True)
             if 'targetRef' in entry:
                 value['sourceKind'] = source_kind(entry['targetRef'])
+                value['sourceAccess'] = app.ergonomics.source_access(entry['targetRef'])
                 if collection != 'overview':
                     value['resolved'] = resolve_target(app, row, theory, entry['targetRef'], expand, cache, budget)
                     value['contentLoaded'] = value['resolved']['contentLoaded']

@@ -474,6 +474,9 @@ def portable_command(args,c):
     if args.command=='doctor':
         catalog=app.catalog()
         return {'ready':True,'profile':c['profile'],'namespaceId':catalog['namespaceId'],'catalog':catalog,'writes':0}
+    if args.command=='capabilities':return app.call({'method':'capabilities',**({'packageId':ident} if ident else {})})
+    if args.command=='read_ref':return app.call({'method':'read_ref','reference':json.load(sys.stdin),
+        **({'packageId':ident} if ident else {}),'expand':getattr(args,'expand_sources',False),'format':output_format})
     if args.command=='catalog':return app.call({'method':'catalog'})
     if args.command=='search':
         return app.call({'method':'search','query':args.query,'scope':args.search_scope,
@@ -513,10 +516,11 @@ def portable_command(args,c):
         return app.call(message)
     if args.command in ('command','preflight'):
         message={'method':'apply' if args.command=='command' else 'preflight','request':json.load(sys.stdin)}
+        if getattr(args,'preview',None):message['preview']=json.loads(Path(args.preview).read_text())
         if args.expected_input_binding:message['expectedInputBinding']=json.loads(Path(args.expected_input_binding).read_text())
         result=app.call(message)
         return {**result,'saved':result.get('published') is True} if args.command=='command' else result
-    require(ident or args.command=='schema' and args.action in ('create','folder_create','folder_move','migrate','read','search','history'),'PACKAGE_ID_REQUIRED')
+    require(ident or args.command=='schema' and args.action in ('create','folder_create','folder_move','migrate','read','search','history','capabilities','read_ref'),'PACKAGE_ID_REQUIRED')
     if args.command=='schema':
         require(args.action,'ACTION_REQUIRED');op=args.action
         command=op[5:] if op.startswith('core_') else args.core_command
@@ -528,11 +532,11 @@ def portable_command(args,c):
             if args.role is not None:selectors['role']=args.role
         else:require(args.role is None and args.model_profile is None,'CREATE_SELECTORS_ONLY')
         if args.entity_kind is not None:selectors['entityKind']=args.entity_kind
-        return app.call({'method':'schema','op':op,'packageId':None if op=='search' else ident,'nodeId':args.node,
+        return app.call({'method':'schema','op':op,'packageId':None if op in ('search','capabilities','read_ref') else ident,'nodeId':args.node,
                           'sourcePackageId':args.source_package_id,'command':command,'sourcePath':args.source_folder,'sourceKey':args.source_key,**selectors})
     if args.command=='receipt':return app.call({'method':'receipt','packageId':ident,'transactionId':args.transaction_id})
     if args.command=='resolve':return app.call({'method':'resolve','packageId':ident,'reference':json.load(sys.stdin)})
-    if args.command=='source_snapshot':return app.call({'method':'source_snapshot','packageId':ident,'pin':json.load(sys.stdin),**({'view':{'kind':'focus','id':args.node}} if args.node else {})})
+    if args.command=='source_snapshot':return app.call({'method':'source_snapshot','packageId':ident,'pin':json.load(sys.stdin),**({'view':{'kind':'focus','id':args.node}} if args.node else {}),'detail':getattr(args,'source_detail','full')})
     if args.command in ('dependencies','locks'):return app.call({'method':args.command,'packageId':ident})
     if args.command=='history':
         require(args.node is None,'HISTORY_FOCUS_FILTER_UNAVAILABLE')
@@ -620,7 +624,7 @@ def core_request_data(graph,command,node_id):
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('command',choices=['doctor','catalog','lenses','lens','open','theory','schema','command','receipt','dependencies','locks','preflight','history','resolve','source_snapshot','migration_sources','migration_inspect','recover','cancel_migration','approval_request','approval_read','view_session','recommendation_catalog','search'])
+    p.add_argument('command',choices=['doctor','catalog','capabilities','read_ref','lenses','lens','open','theory','schema','command','receipt','dependencies','locks','preflight','history','resolve','source_snapshot','migration_sources','migration_inspect','recover','cancel_migration','approval_request','approval_read','view_session','recommendation_catalog','search'])
     p.add_argument('--context',default=os.environ.get('RDG_AGENT_CONTEXT'))
     p.add_argument('--lens',action='append',help='Registered lens key; repeat for several lenses')
     p.add_argument('--node')
@@ -655,16 +659,21 @@ def main():
     p.add_argument('--source-key')
     p.add_argument('--transaction-id')
     p.add_argument('--expected-input-binding')
+    p.add_argument('--preview',help='Preflight-only JSON file: packageId, detail focus/branch, nodeId, format, include')
+    p.add_argument('--source-detail',choices=['full','graph'],default='full')
     p.add_argument('--refresh',action='store_true',help='Explicit Gendocen refresh; may write engine state')
     a=p.parse_args()
+    require(a.preview is None or a.command=='preflight','PREVIEW_ONLY_FOR_PREFLIGHT')
+    require(a.source_detail=='full' or a.command=='source_snapshot','SOURCE_DETAIL_ONLY_FOR_SOURCE_SNAPSHOT')
     require(a.role is None and a.entity_kind is None or a.command=='schema','SCHEMA_SELECTORS_ONLY')
     require(a.history_mode is None or a.command=='history','HISTORY_MODE_ONLY')
     require((a.detail is None and a.include is None and a.limit==25 and a.cursor is None)
             or a.command in ('open','history','search','theory') or a.command=='lens' and a.format=='markdown' and a.detail is None and a.include is None and a.limit==25,'READ_OPTIONS_ONLY')
     require(not a.all_pages or a.command=='open' and a.detail in ('focus','branch') or
             a.command in ('open','lens') and a.format=='markdown' or a.command=='theory','READ_ALL_PAGES_ONLY')
-    require(a.format=='json' or a.command in ('open','lens','theory'),'MARKDOWN_COMMAND')
-    require(a.command=='theory' or not (a.theory_id or a.item_id or a.expand_sources or a.collection!='overview'),'THEORY_OPTIONS_ONLY')
+    require(a.format=='json' or a.command in ('open','lens','theory','read_ref'),'MARKDOWN_COMMAND')
+    require((a.command=='theory' or not (a.theory_id or a.item_id or a.collection!='overview')) and
+            (not a.expand_sources or a.command in ('theory','read_ref')),'THEORY_OPTIONS_ONLY')
     require(a.query is None and a.search_scope=='package' or a.command=='search','SEARCH_OPTIONS_ONLY')
     require(a.command!='search' or a.query is not None and a.detail is None and a.include is None,
             'SEARCH_OPTIONS')
@@ -685,7 +694,7 @@ def main():
         return
     require(a.detail not in ('focus','branch') and not a.all_pages and a.format=='json' and a.command!='search','PORTABLE_CONTEXT_REQUIRED')
     require(not a.expected_input_binding,'PORTABLE_CONTEXT_REQUIRED')
-    require(a.command not in ('preflight','history','locks','resolve','source_snapshot','migration_sources','migration_inspect','recover','cancel_migration','approval_request','approval_read','theory'),'PORTABLE_CONTEXT_REQUIRED')
+    require(a.command not in ('preflight','history','locks','resolve','source_snapshot','migration_sources','migration_inspect','recover','cancel_migration','approval_request','approval_read','theory','capabilities','read_ref'),'PORTABLE_CONTEXT_REQUIRED')
     require(a.role is None and a.entity_kind is None,'PORTABLE_CONTEXT_REQUIRED')
     if a.command=='lenses':out=lens_catalog()
     elif a.command=='lens':
