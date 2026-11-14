@@ -308,6 +308,16 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\Start-RDG.ps1 -Mode HT
 Файлы release gate: [CI](../../tools/rdg-ci.py), [packager](../../tools/rdg-server-package.py), [тесты CI](../../tests/rdg-ci.test.py) и [CD](../../tests/rdg-cd.test.py). Текущий outbox — `/workspace/repo/Workfiles/rdg-ci`; команда «обновить Windows» не исполняется в Linux Docker как будто это Windows host.
 
 
+## Объём GitHub CI
+
+**Подготовлено в исходниках 2026-11-14; принятие workflow и его GitHub-проверка отдельно.** RDG CI запускается для pull request в `main`, push в `main` и ручного `workflow_dispatch`. Push task-ветки не создаёт второй полный прогон того же PR. Release Impact сохраняет свой самостоятельный обязательный маршрут.
+
+Job `check-and-package` выполняется для каждого PR. После checkout `tools/rdg-ci-scope.py` проверяет полный локальный diff от подтверждённой базы до точного checkout. Только изменения содержимого обычных файлов из явного списка `DOCS_ONLY` направляются на семь документационных тестов, включая policy/link/anchor/source-parity audit. Этот режим не выпускает runtime ZIP, READY или Docker image; результат явно помечен scope `docs`. Успех документационной проверки не является свидетельством сборки runtime данного HEAD.
+
+Все остальные изменения используют прежний полный gate и сборку image. В частности, полный режим сохраняется для `docs/lenses`, handoff/fixture-материалов, `docs/DOCS-POLICY.json`, упаковываемого в сервер `RDG-OPERATIONS.md`, runtime, тестов и CI-конфигурации. Удаление, добавление, переименование, смена режима/типа файла, неизвестный путь или недоступная база также ведут на полный gate. Ручной запуск всегда полный. Глобальные `paths-ignore` и skip-маркеры не используются: обязательный job не исчезает при правке документов.
+
+Адресная проверка маршрутизации: `python3 -B tests/rdg-ci-scope.test.py`. Она использует изолированные Git fixtures и не запускает CI/runtime. Локальный `tools/rdg-ci.py` и его `--watch` по-прежнему выполняют полный выпускной gate; эта правка не меняет управление дочерними процессами, writer, runtime или публикацию линз.
+
 ## Тестовый процесс A0–A17 через private API
 
 На Fortis_M через gateway создан «RDG — сквозная проверка API», package `5ac9f3ec-2783-5b7e-802d-1b3518bbc371`, path `api-tests/rdg-acceptance-20261029`. Нажмите «Обновить» в Explorer, откройте процесс или одну из четырёх вложенных WG, затем Plan. В нём 18 проверок без назначенных дат; это план приёмки, не отметка об их выполнении. Ручная оценка Viewer и restart сервера выполняются отдельно от API readback.
