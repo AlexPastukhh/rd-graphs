@@ -6,7 +6,11 @@
 
 ## Основной серверный маршрут
 
-Для теории Decision/Action доступен `schema(op='theory_read')`. Начать с `{method:'theory_read',packageId,theoryId,collection:'overview'}`; затем получить `collection:'canons'` или `'recommendations'`, при необходимости `itemIds:[ID]`. Пропущенный `itemIds` означает всю коллекцию с явными страницами. Agent `theory --package-id OWNER --theory-id K --collection canons --all-pages` собирает её на одном снимке; для конкретного инстанса добавить `--item-id ID`. `--expand-sources` загружает один уровень источников явно. Маленькую нужную коллекцию удобно читать целиком; большие материалы — адресно. «Общее» объясняет роль ссылок, оглавление не заменяет содержимое. [Точный контракт](RDG-DECISION-V1-CONTRACT.md#rdg-theory-addressable-items).
+При продолжении после перерыва начать со [среза доставки и неподтверждённых шагов](RDG-CURRENT-STATE.md#theory-delivery-20261114): версия исходников, проверенный архив, установленный runtime и опубликованные определения линз — разные факты. Сверить реальные Git/PR и capabilities установленного сервера; не считать функции из source уже установленными.
+
+Для теории Decision/Action новый runtime предоставляет `schema(op='theory_read')`; сначала проверить эту возможность на установленном сервере. Начать с `{method:'theory_read',packageId,theoryId,collection:'overview'}`; затем получить `collection:'canons'` или `'recommendations'`, при необходимости `itemIds:[ID]`. Пропущенный `itemIds` означает всю коллекцию с явными страницами. Agent `theory --package-id OWNER --theory-id K --collection canons --all-pages` собирает её на одном снимке; для конкретного инстанса добавить `--item-id ID`. `--expand-sources` загружает один уровень источников явно. Маленькую нужную коллекцию удобно читать целиком; большие материалы — адресно. «Общее» объясняет роль ссылок, оглавление не заменяет содержимое. [Точный контракт](RDG-DECISION-V1-CONTRACT.md#rdg-theory-addressable-items).
+
+Новые рекомендательные записи находятся внутри теории, а прежние Registry rules читаются отдельным совместимым маршрутом. Для внешних материалов учитывать [контракт доступа](RDG-DECISION-V1-CONTRACT.md#theory-source-access): недоступный серверу HTTPS-источник не пуст; при необходимости читать его разрешённым внешним инструментом по точному адресу.
 
 С подготовленным context сначала выполните `doctor` и `catalog`. [Матрица операций](RDG-DECISION-V1-CONTRACT.md#матрица-операций-api-для-ии) связывает задачу с формой, результатом и проверкой. Команды из корня Repo:
 
