@@ -819,6 +819,29 @@
           },
           "uniqueItems": true,
           "$comment": "Local id uniqueness is additionally enforced by the kernel, including unequal records with the same id."
+        },
+        "canonItems": {
+          "type": "array",
+          "maxItems": 10000,
+          "items": {
+            "$ref": "#/$defs/theoryCanonItem"
+          },
+          "$comment": "IDs are unique within this owned collection; enforced by the kernel."
+        },
+        "recommendations": {
+          "type": "array",
+          "maxItems": 10000,
+          "items": {
+            "$ref": "#/$defs/theoryRecommendation"
+          },
+          "$comment": "IDs are unique within this owned collection; enforced by the kernel."
+        },
+        "referenceBindings": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "pattern": "\\S"
+          }
         }
       },
       "required": [
@@ -863,6 +886,28 @@
           "required": [
             "knownErrors"
           ]
+        },
+        {
+          "required": [
+            "canonItems"
+          ],
+          "properties": {
+            "canonItems": {
+              "type": "array",
+              "minItems": 1
+            }
+          }
+        },
+        {
+          "required": [
+            "recommendations"
+          ],
+          "properties": {
+            "recommendations": {
+              "type": "array",
+              "minItems": 1
+            }
+          }
         }
       ]
     },
@@ -2845,6 +2890,11 @@
                         "required": [
                           "kind"
                         ]
+                      },
+                      {
+                        "required": [
+                          "referenceBindings"
+                        ]
                       }
                     ]
                   },
@@ -3206,6 +3256,22 @@
                   },
                   "uniqueItems": true,
                   "$comment": "Local id uniqueness is additionally enforced by the kernel, including unequal records with the same id."
+                },
+                "canonItems": {
+                  "type": "array",
+                  "maxItems": 10000,
+                  "items": {
+                    "$ref": "#/$defs/theoryCanonItem"
+                  },
+                  "$comment": "IDs are unique within this owned collection; enforced by the kernel."
+                },
+                "recommendations": {
+                  "type": "array",
+                  "maxItems": 10000,
+                  "items": {
+                    "$ref": "#/$defs/theoryRecommendation"
+                  },
+                  "$comment": "IDs are unique within this owned collection; enforced by the kernel."
                 }
               },
               "required": [],
@@ -7954,6 +8020,216 @@
         "expectedPlanRevision",
         "note",
         "entity"
+      ],
+      "additionalProperties": false
+    },
+    "theoryItemRef": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "kind": {
+          "const": "theoryItem"
+        },
+        "reference": {
+          "$ref": "#/$defs/entityRef"
+        },
+        "collection": {
+          "enum": [
+            "canons",
+            "recommendations"
+          ]
+        },
+        "itemId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "kind",
+        "reference",
+        "collection",
+        "itemId"
+      ],
+      "additionalProperties": false
+    },
+    "theoryLensRef": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "kind": {
+          "const": "lens"
+        },
+        "reference": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/entityRef"
+            },
+            {
+              "$ref": "#/$defs/scopeRef"
+            }
+          ]
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "kind",
+        "reference"
+      ],
+      "additionalProperties": false
+    },
+    "theoryHTTPSRef": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "kind": {
+          "enum": [
+            "document",
+            "file"
+          ]
+        },
+        "uri": {
+          "type": "string",
+          "pattern": "^https://[^\\s]+$"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "\\S"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "kind",
+        "uri"
+      ],
+      "additionalProperties": false
+    },
+    "theoryFileRef": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "kind": {
+          "const": "file"
+        },
+        "packageId": {
+          "$ref": "#/$defs/uuid"
+        },
+        "path": {
+          "type": "string",
+          "pattern": "^evidence/(?!.*(?:^|/)[.][.]?(?:/|$))(?!.*\\\\).+"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "kind",
+        "packageId",
+        "path",
+        "sha256"
+      ],
+      "additionalProperties": false
+    },
+    "theoryTargetRef": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/entityRef"
+        },
+        {
+          "$ref": "#/$defs/scopeRef"
+        },
+        {
+          "$ref": "#/$defs/theoryItemRef"
+        },
+        {
+          "$ref": "#/$defs/theoryLensRef"
+        },
+        {
+          "$ref": "#/$defs/theoryHTTPSRef"
+        },
+        {
+          "$ref": "#/$defs/theoryFileRef"
+        }
+      ]
+    },
+    "theoryCanonItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^(?!legacy-)[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+        },
+        "title": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "body": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "targetRef": {
+          "$ref": "#/$defs/theoryTargetRef"
+        }
+      },
+      "required": [
+        "id",
+        "title"
+      ],
+      "additionalProperties": false,
+      "oneOf": [
+        {
+          "required": [
+            "body"
+          ],
+          "not": {
+            "required": [
+              "targetRef"
+            ]
+          }
+        },
+        {
+          "required": [
+            "targetRef"
+          ],
+          "not": {
+            "required": [
+              "body"
+            ]
+          }
+        }
+      ]
+    },
+    "theoryRecommendation": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^(?!legacy-)[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+        },
+        "title": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "targetRef": {
+          "$ref": "#/$defs/theoryTargetRef"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "targetRef"
       ],
       "additionalProperties": false
     }

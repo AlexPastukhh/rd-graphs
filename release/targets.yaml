@@ -26,6 +26,8 @@ buildUnits:
       - tools/rdg-analysis.py
       - tools/rdg-findings.py
       - tools/rdg-questions.py
+      - tools/rdg-theory.py
+      - tools/rdg-theory-sources.py
       - tools/rdg-dependency-policies.py
       - tools/rdg-recommendations.py
       - tools/rdg-package-transfer.py

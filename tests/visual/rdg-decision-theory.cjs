@@ -85,7 +85,7 @@ async function stop(){
  let state=await api({method:'read',packageId:pid}),theory=state.graph.objects.find(n=>n.id==='C-OLD');
  assert.equal(theory.guidance,'Entire old text\nhttps://example.test/source');assert(!theory.knownErrors?.length);assert(theory.canons.includes('Known mistake'));
  await open('D-UI','Структура');
- assert.deepEqual(await page.$$eval('[data-theory-id="C-OLD"] h4',ns=>ns.map(n=>n.textContent)),['Каноны','Общее']);
+ assert.deepEqual(await page.$$eval('[data-theory-id="C-OLD"] h4',ns=>ns.map(n=>n.textContent)),['Общее','Каноны · прежний текст']);
  await clickText('Записать файндинг','.rdg-canon-actions');await fill('Название файндинга','Capacity assumption may fail');await fill('Тип файндинга','risk');await fill('Обоснование находки','Burst growth can exceed the assumed capacity');await fill('Основание изменения','Record complete theory excerpt');await save('Проверить файндинг');
  state=await api({method:'read',packageId:pid});const finding=state.graph.objects.find(n=>n.kind==='finding');assert(finding);
  for(const text of ['Good for bounded','Bad under bursts','Known mistake','Entire old text'])assert(finding.analysisSources[0].excerpt.includes(text),text);
@@ -99,6 +99,23 @@ async function stop(){
  assert.deepEqual((await api({method:'read',packageId:pid})).graph,beforeBad);
  await page.reload({waitUntil:'load'});await page.waitForFunction(()=>!!RDG_PORTABLE_EDITOR&&!RDG_PORTABLE_EDITOR.busy);await open('A-UI','Структура');
  assert((await page.$eval('[data-theory-id="'+at.id+'"]',n=>n.textContent)).includes('Known mistake'));
+
+ await open('D-UI');await clickText('Изменить содержание','.rdg-canon-card');
+ await clickText('Добавить канон');await fill('Название','Owned canon','[data-theory-editor="canonItems"]');await fill('Текст канона','Complete canon, including the boundary case.','[data-theory-editor="canonItems"]');
+ await clickText('Вставить ссылку в Общее','[data-theory-editor="canonItems"]');
+ await clickText('Добавить источник');await fill('Название','Linked material','[data-theory-editor="recommendations"]');await fill('Ссылка HTTPS','https://example.org/read-more','[data-theory-editor="recommendations"]');
+ await clickText('Вставить ссылку в Общее','[data-theory-editor="recommendations"]');await fill('Основание изменения','Add owned canon and typed material');await save();
+ state=await api({method:'read',packageId:pid});theory=state.graph.objects.find(n=>n.id==='C-OLD');
+ const owned=theory.canonItems[0],recommended=theory.recommendations[0];assert(owned&&recommended);assert.deepEqual(Object.keys(recommended).sort(),['id','targetRef','title']);
+ assert(theory.guidance.includes('theory:canons/'+owned.id));assert(theory.guidance.includes('theory:recommendations/'+recommended.id));
+ const beforeRead=state.graph;await page.click('[data-theory-link="canons/'+owned.id+'"]');await idle();
+ assert((await page.$eval('[data-theory-item="canons/'+owned.id+'"]',n=>n.textContent)).includes(owned.body));
+ await page.click('[data-theory-link="recommendations/'+recommended.id+'"]');await idle();assert(await page.$('[data-theory-item="recommendations/'+recommended.id+'"]'));
+ assert.deepEqual((await api({method:'read',packageId:pid})).graph,beforeRead);
+ await page.$eval('[data-theory-collection="recommendations"]',n=>n.open=true);
+ const filter=await page.$('[data-theory-collection="recommendations"] select');await filter.select('lens');assert.equal(await page.$$eval('[data-theory-entry^="recommendations/"]',ns=>ns.length),0);await filter.select('material');assert.equal(await page.$$eval('[data-theory-entry^="recommendations/"]',ns=>ns.length),1);
+ await page.reload({waitUntil:'load'});await page.waitForFunction(()=>!!RDG_PORTABLE_EDITOR&&!RDG_PORTABLE_EDITOR.busy);await open('D-UI');
+ assert(await page.$('[data-theory-link="canons/'+owned.id+'"]'));
  await open('R1');assert.equal(await page.$('[data-inspector-tab="canon"]'),null);
  await open('D-UI');const screenshot=path.join(process.env.RDG_SCREENSHOT_DIR||base,'rdg-decision-theory.png');fs.mkdirSync(path.dirname(screenshot),{recursive:true});await page.screenshot({path:screenshot,fullPage:true});
  assert.deepEqual(errors,[]);console.log('DECISION_THEORY_VIEWER PASS',JSON.stringify({generalPreserved:true,twoSections:true,decisionAndAction:true,noRequirementTheory:true,sourceExcerpt:true,reload:true,screenshot}));

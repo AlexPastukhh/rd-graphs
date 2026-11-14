@@ -25,6 +25,7 @@ HISTORY = SourceFileLoader('rdg_history_view', str(Path(__file__).with_name('rdg
 QUESTIONS = SourceFileLoader('rdg_questions', str(Path(__file__).with_name('rdg-questions.py'))).load_module()
 
 REFERENCES = SourceFileLoader('rdg_action_references', str(Path(__file__).with_name('rdg-portable-model.py'))).load_module()
+THEORY = SourceFileLoader('rdg_theory', str(Path(__file__).with_name('rdg-theory.py'))).load_module()
 
 PROFILE = 'rdg-decision-v1'
 NODE_KINDS = frozenset(('requirement', 'decision', 'action'))
@@ -393,7 +394,8 @@ def validate_theory(n):
                 isinstance(row.get('description'), str), 'THEORY_KNOWN_ERROR')
         require(row['id'] not in seen, 'THEORY_ERROR_ID_DUPLICATE')
         seen.add(row['id'])
-    require(text(n['guidance']) or text(n.get('canons')) or bool(rows), 'CANON_GUIDANCE')
+    THEORY.validate(n, REFERENCES.validate_reference)
+    require(text(n['guidance']) or text(n.get('canons')) or bool(rows) or n.get('canonItems') or n.get('recommendations'), 'CANON_GUIDANCE')
 
 
 def _validate_entity(n, expected_kind, events):
@@ -406,7 +408,7 @@ def _validate_entity(n, expected_kind, events):
         'requirement': {'scope', 'result'},
         'decision': {'selectionState', 'result', 'decisionContextIds', 'contextNotes', 'analysisSources', 'findingOrigin', 'impactTargetIds'},
         'action': {'result', 'actionType', 'lowLevel', 'targetIds', 'groupIds', 'estimates', 'resultCondition', 'subjectRefs', 'referenceBindings'},
-        'canon': {'guidance', 'canons', 'knownErrors'}, 'context': {'value','contextGroupId','scope','version','source','artifact'}, 'info': {'value'},
+        'canon': {'guidance', 'canons', 'knownErrors', 'canonItems', 'recommendations', 'referenceBindings'}, 'context': {'value','contextGroupId','scope','version','source','artifact'}, 'info': {'value'},
         'evidence': {'claim', 'scope', 'version', 'source', 'artifact'}, 'finding': FINDINGS.FIELDS,
         'question': {'relatedRefs','sourceRefs','impact','answerCondition','blocking','answers','answerHistory','assessment','assessmentHistory','assessmentReviewRequired','referenceBindings'}
     }[expected_kind]
@@ -1176,7 +1178,7 @@ def _native_definition(g, ident):
     if node is None:
         return None
     # A semantic definition, not an entity revision or review/result event.
-    keys = {'title', 'description', 'tags', 'scope', 'guidance', 'canons', 'knownErrors', 'value',
+    keys = {'title', 'description', 'tags', 'scope', 'guidance', 'canons', 'knownErrors', 'canonItems', 'recommendations', 'value',
             'claim', 'version', 'source', 'artifact', 'actionType', 'targetIds', 'groupIds',
             'subjectId','findingType','rationale','evidenceIds','impactTargetIds','estimates','subjectRefs','resultCondition',
             'relatedRefs','sourceRefs','impact','answerCondition','blocking','answers','assessment'}
@@ -1581,6 +1583,8 @@ def apply(original, patch, trusted_verified=False, *, coordinated=False, paper=F
                     require(value['lowLevel'] is False and value['actionType'] in ('task','select_decision','decide_acceptance'), 'GRAPH_ACTION_TYPE')
                 else:
                     require(value['lowLevel'] is True or value['actionType'] == 'task', 'EXTERNAL_ACTION_ROLE')
+            if kind == 'canon':
+                require('referenceBindings' not in value, 'THEORY_REF_BINDINGS_READ_ONLY')
             require(text(value.get('title')) and isinstance(value.get('description'), str), 'NEW_ENTITY_TEXT')
             if kind == 'finding':
                 require(not paper,'FINDING_PROCESS_ONLY')
@@ -1635,7 +1639,7 @@ def apply(original, patch, trusted_verified=False, *, coordinated=False, paper=F
         elif cmd == 'edit':
             target();editable={'title','description','tags'}|{
                 'requirement':{'scope'},'decision':{'decisionContextIds','contextNotes','analysisSources','impactTargetIds'},'action':{'actionType','targetIds','groupIds','estimates','resultCondition','subjectRefs'},
-                'canon':{'guidance','canons','knownErrors'},'context':{'value','contextGroupId','scope','version','source','artifact'},'info':{'value'},'evidence':{'claim','scope','version','source'},'finding':FINDINGS.EDITABLE,'question':{'relatedRefs','sourceRefs','impact','answerCondition','blocking'}}[node['kind']]
+                'canon':{'guidance','canons','knownErrors','canonItems','recommendations'},'context':{'value','contextGroupId','scope','version','source','artifact'},'info':{'value'},'evidence':{'claim','scope','version','source'},'finding':FINDINGS.EDITABLE,'question':{'relatedRefs','sourceRefs','impact','answerCondition','blocking'}}[node['kind']]
             if node['kind']=='decision':editable |= FINDINGS.COMMON
             require(set(data) == {'nodeId','changes','cosmetic'} and isinstance(data.get('changes'), dict) and
                 bool(data['changes']) and set(data['changes']) <= editable and isinstance(data['cosmetic'], bool), 'EDIT_FIELDS')

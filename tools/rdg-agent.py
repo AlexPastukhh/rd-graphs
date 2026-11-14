@@ -479,6 +479,14 @@ def portable_command(args,c):
         return app.call({'method':'search','query':args.query,'scope':args.search_scope,
                          **({'packageId':ident} if args.search_scope=='package' else {}),
                          'limit':args.limit,'cursor':args.cursor})
+    if args.command=='theory':
+        require(ident and args.theory_id,'THEORY_OWNER_AND_ID_REQUIRED')
+        message={'method':'theory_read','packageId':ident,'theoryId':args.theory_id,
+                 'collection':args.collection,'detail':args.detail or 'content',
+                 'expand':args.expand_sources,'limit':args.limit,'format':output_format}
+        if args.item_id:message['itemIds']=args.item_id
+        if args.cursor:message['cursor']=args.cursor
+        return PORTABLE.module('rdg-theory').read_pages(app,message,args.all_pages)
     if args.command=='recommendation_catalog':return app.call({'method':'recommendation_catalog',**json.load(sys.stdin)})
     if args.command=='approval_request':
         body=json.load(sys.stdin)
@@ -612,10 +620,14 @@ def core_request_data(graph,command,node_id):
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('command',choices=['doctor','catalog','lenses','lens','open','schema','command','receipt','dependencies','locks','preflight','history','resolve','source_snapshot','migration_sources','migration_inspect','recover','cancel_migration','approval_request','approval_read','view_session','recommendation_catalog','search'])
+    p.add_argument('command',choices=['doctor','catalog','lenses','lens','open','theory','schema','command','receipt','dependencies','locks','preflight','history','resolve','source_snapshot','migration_sources','migration_inspect','recover','cancel_migration','approval_request','approval_read','view_session','recommendation_catalog','search'])
     p.add_argument('--context',default=os.environ.get('RDG_AGENT_CONTEXT'))
     p.add_argument('--lens',action='append',help='Registered lens key; repeat for several lenses')
     p.add_argument('--node')
+    p.add_argument('--theory-id')
+    p.add_argument('--collection',choices=['overview','canons','recommendations'],default='overview')
+    p.add_argument('--item-id',action='append',help='Owned entry ID; repeat for several entries')
+    p.add_argument('--expand-sources',action='store_true',help='Explicitly fetch one level of source content')
     p.add_argument('--format',choices=['json','markdown'],default='json')
     p.add_argument('--query',help='Literal text for search')
     p.add_argument('--search-scope',choices=['package','catalog'],default='package')
@@ -625,7 +637,7 @@ def main():
     p.add_argument('--role',choices=['working','ready','lens'],help='Role for schema --action create')
     p.add_argument('--entity-kind',choices=['requirement','decision','action','canon','context','info','finding','question'],help='Entity type for schema core/add')
     p.add_argument('--history-mode',choices=['important','meaningful','technical','all'])
-    p.add_argument('--detail',choices=['summary','item','full','compact','focus','branch'],
+    p.add_argument('--detail',choices=['summary','content','item','full','compact','focus','branch'],
                    help='item: one body (default with --node); focus: existing nearest scope; branch: all structural downstream')
     p.add_argument('--all-pages',action='store_true',help='Collect all focus/branch sections at one pinned snapshot')
     p.add_argument('--include',action='append',help='Read facet from schema --action read/history')
@@ -648,10 +660,11 @@ def main():
     require(a.role is None and a.entity_kind is None or a.command=='schema','SCHEMA_SELECTORS_ONLY')
     require(a.history_mode is None or a.command=='history','HISTORY_MODE_ONLY')
     require((a.detail is None and a.include is None and a.limit==25 and a.cursor is None)
-            or a.command in ('open','history','search') or a.command=='lens' and a.format=='markdown' and a.detail is None and a.include is None and a.limit==25,'READ_OPTIONS_ONLY')
+            or a.command in ('open','history','search','theory') or a.command=='lens' and a.format=='markdown' and a.detail is None and a.include is None and a.limit==25,'READ_OPTIONS_ONLY')
     require(not a.all_pages or a.command=='open' and a.detail in ('focus','branch') or
-            a.command in ('open','lens') and a.format=='markdown','READ_ALL_PAGES_ONLY')
-    require(a.format=='json' or a.command in ('open','lens'),'MARKDOWN_COMMAND')
+            a.command in ('open','lens') and a.format=='markdown' or a.command=='theory','READ_ALL_PAGES_ONLY')
+    require(a.format=='json' or a.command in ('open','lens','theory'),'MARKDOWN_COMMAND')
+    require(a.command=='theory' or not (a.theory_id or a.item_id or a.expand_sources or a.collection!='overview'),'THEORY_OPTIONS_ONLY')
     require(a.query is None and a.search_scope=='package' or a.command=='search','SEARCH_OPTIONS_ONLY')
     require(a.command!='search' or a.query is not None and a.detail is None and a.include is None,
             'SEARCH_OPTIONS')
@@ -664,7 +677,7 @@ def main():
         out=portable_command(a,selected)
         if a.format=='markdown':
             sys.stdout.write(out['markdown'])
-            if out['page']['nextCursor'] is not None:
+            if out.get('page',{}).get('nextCursor') is not None:
                 print('Markdown continuation: '+out['page']['nextCursor'],file=sys.stderr)
         else:
             print(json.dumps(out,ensure_ascii=False,indent=2,default=str))
@@ -672,7 +685,7 @@ def main():
         return
     require(a.detail not in ('focus','branch') and not a.all_pages and a.format=='json' and a.command!='search','PORTABLE_CONTEXT_REQUIRED')
     require(not a.expected_input_binding,'PORTABLE_CONTEXT_REQUIRED')
-    require(a.command not in ('preflight','history','locks','resolve','source_snapshot','migration_sources','migration_inspect','recover','cancel_migration','approval_request','approval_read'),'PORTABLE_CONTEXT_REQUIRED')
+    require(a.command not in ('preflight','history','locks','resolve','source_snapshot','migration_sources','migration_inspect','recover','cancel_migration','approval_request','approval_read','theory'),'PORTABLE_CONTEXT_REQUIRED')
     require(a.role is None and a.entity_kind is None,'PORTABLE_CONTEXT_REQUIRED')
     if a.command=='lenses':out=lens_catalog()
     elif a.command=='lens':

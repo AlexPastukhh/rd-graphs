@@ -223,7 +223,7 @@ def decision_request_data(graph, command, node_id, kernel, entity_kind=None):
         elif kind=='finding':
             entity.update(subjectId=node_id if node and node['kind']=='decision' else 'CHOOSE_DECISION_ID',findingType='',rationale='',evidenceIds=[])
         elif kind in ('context','info'):entity['value']=''
-        elif kind=='canon':entity.update(guidance='',canons='')
+        elif kind=='canon':entity.update(guidance='',canons='',canonItems=[],recommendations=[])
         if node and (kind=='canon' and node['kind'] in ('decision','action') or kind=='info'):
             relations=[{'id':'REL-'+uuid.uuid4().hex,'type':'CANON_FOR' if kind=='canon' else 'INFO_FOR','from':ident,'to':node_id}]
         if kind not in ('requirement','decision','action'):work_id=None

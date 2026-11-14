@@ -10,7 +10,7 @@ FIELDS = {
     'action': ('resultCondition', 'estimates'),
     'context': ('value',),
     'info': ('value',),
-    'canon': ('guidance', 'canons', 'knownErrors'),
+    'canon': ('guidance', 'canons', 'knownErrors', 'canonItems', 'recommendations'),
     'finding': ('rationale', 'limitation', 'disposition'),
     'question': ('impact', 'answerCondition', 'answers', 'assessment'),
     'evidence': ('claim',),
@@ -19,7 +19,7 @@ LABELS = {
     'id': 'ID', 'title': 'Название', 'description': 'Описание',
     'resultCondition': 'Условия результата', 'estimates': 'Оценки исполнения',
     'contextNotes': 'Контекст принятия решения', 'value': 'Содержание',
-    'guidance': 'Общее', 'canons': 'Каноны', 'knownErrors': 'Известные ошибки',
+    'guidance': 'Общее', 'canonItems': 'Каноны по ID', 'recommendations': 'Рекомендуемые источники', 'canons': 'Каноны', 'knownErrors': 'Известные ошибки',
     'claim': 'Утверждение',
     'rationale': 'Обоснование', 'limitation': 'Ограничение', 'disposition': 'Рассмотрение',
     'impact': 'Влияние', 'answerCondition': 'Условие достаточности', 'answers': 'Ответы',
@@ -28,7 +28,7 @@ LABELS = {
 }
 # Typed refs, provenance keys and version pins do not represent authored text.
 TECHNICAL = frozenset({
-    'id', 'ref', 'refs', 'source', 'sourceRef', 'sourceRefs', 'reference', 'provenance',
+    'id', 'ref', 'refs', 'targetRef', 'source', 'sourceRef', 'sourceRefs', 'reference', 'provenance',
     'author', 'by', 'recordedAt', 'eventId', 'packageId', 'identitySpace', 'sha256',
     'kind', 'type', 'state', 'status', 'mode',
 })
