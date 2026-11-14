@@ -1155,7 +1155,13 @@ class Application:
             if template and graph.get('coreModel')=='rdg-decision-v1':
                 for theory in graph['objects']:
                     if theory['kind']=='canon':
-                        self.validate_theory_sources('add',{'entity':theory},ident,graph,read,role='ready')
+                        self.validate_theory_sources('add',{'entity':theory},ident,graph,read,role='ready',local_source_id=source_id)
+            theory_files=[]
+            for theory in (graph['objects'] if graph.get('coreModel')=='rdg-decision-v1' else []):
+                if theory['kind']!='canon':continue
+                for target_ref in self.kernel.for_graph(graph).THEORY.targets(theory):
+                    if target_ref.get('kind')=='file' and target_ref.get('packageId')==source_id:
+                        theory_files.append(copy.deepcopy(target_ref));target_ref['packageId']=ident
             for action in graph.get('externalActions',[]):
                 for ref in action.get('subjectRefs',[]):
                     if ref.get('kind') in ('process','workGraph') and ref['packageId']==source_id:
@@ -1219,6 +1225,11 @@ class Application:
             directory=self.store.package_path(source['path']);source_inventory=self.store.inventory(source)
             if template:
                 artifacts={prefix+'/definition.json':self.model.encoded(self.model.decision_template(source['graph']))}
+                # Only theory-owned source files travel with a paper template;
+                # unrelated working evidence retains the existing exclusion.
+                for file_ref in theory_files:
+                    self.verify_evidence(source,[{'path':file_ref['path'],'sha256':file_ref['sha256']}])
+                    artifacts[file_ref['path']]=self.store.io.safe_path(directory,file_ref['path'],True).read_bytes()
             else:
                 for relative in source_inventory:
                     raw=self.store.io.safe_path(directory,relative,True).read_bytes()
@@ -1864,7 +1875,7 @@ class Application:
             return {'reference':copy.deepcopy(ref),**self.resolve_for(ref,row,register)}
         except (ValueError,OSError):return {'reference':copy.deepcopy(ref),'status':'unavailable','changed':None}
 
-    def validate_theory_sources(self,command,data,ident,graph,read,role='working'):
+    def validate_theory_sources(self,command,data,ident,graph,read,role='working',local_source_id=None):
         K=self.kernel.for_graph(graph);T=K.THEORY
         old=self.kernel.entities(graph).get(data.get('nodeId'),{}) if command=='edit' else {}
         if command not in ('add','edit'):return
@@ -1878,7 +1889,8 @@ class Application:
             local=(K.QUESTIONS.reference_id(graph,ref,K,value) if ref and 'kind' not in ref else None)
             scope=value.get('referenceBindings',{}).get(T.scope_key(ref)) if ref and 'kind' in ref else None
             source=None if local and ref.get('mode')=='inherited' or scope else read(pid)
-            self.check(role not in ('ready','lens') or pid==ident or local or scope or source['head']['role'] in ('ready','lens'),'THEORY_TEMPLATE_LIVE_SOURCE')
+            self.check(role not in ('ready','lens') or pid==ident or local or scope or
+                target.get('kind')=='file' and pid==local_source_id or source['head']['role'] in ('ready','lens'),'THEORY_TEMPLATE_LIVE_SOURCE')
             if target.get('kind')=='file':
                 self.verify_evidence(source,[{'path':target['path'],'sha256':target['sha256']}]);continue
             if source and (target.get('kind')=='lens' or ref.get('kind')=='lens'):

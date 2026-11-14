@@ -59,6 +59,8 @@ class TheoryItems(unittest.TestCase):
         self.assertTrue(any(x['ref']['nodeId']=='K' for x in hits))
         self.assertEqual(before,self.sources())
 
+
+
     def test_invalid_collections_and_inline_references_are_atomic(self):
         pid=self.fixture();self.add_theory(pid,canonItems=[{'id':'a','title':'A','body':'Full A'}])
         before=self.sources()
@@ -109,6 +111,11 @@ class TheoryItems(unittest.TestCase):
         resolved=self.app().call({'method':'theory_read','packageId':copied,'theoryId':canon['id'],'collection':'recommendations','expand':True})['data']['recommendations']['items'][0]['resolved']
         self.assertTrue(resolved['localBinding']);self.assertEqual(json.loads(resolved['content'])['kind'],'decision')
         self.assertEqual(resolved['sourcePin']['packageId'],copied)
+        second=next(n for n in graph['objects'] if n['kind']=='canon' and n['id']!=canon['id'])
+        target=self.app().call({'method':'theory_read','packageId':copied,'theoryId':second['id'],'collection':'recommendations','expand':True})['data']['recommendations']['items'][0]['resolved']
+        self.assertEqual(target['nextRead']['packageId'],copied)
+        self.assertEqual(target['nextRead']['theoryId'],canon['id'])
+        self.assertEqual(self.app().call(target['nextRead'])['data']['canons']['items'][0]['body'],'A useful complete theory')
 
     def test_explicit_source_expansion_network_budget_and_agent_all(self):
         pid=self.fixture();rows=[{'id':'r'+str(i),'title':'Document '+str(i),'targetRef':{'schemaVersion':1,'kind':'document','uri':'https://example.org/'+str(i)}} for i in range(11)]
@@ -160,6 +167,13 @@ class TheoryItems(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'EVIDENCE_BYTES_UNAVAILABLE'):
             self.command(pid,'edit',nodeId='K',changes={'recommendations':[{'id':'bad','title':'Wrong bytes','targetRef':bad}]},cosmetic=False)
         self.assertEqual(before,self.sources())
+        for operation in ('copy','capture_ready'):
+            request=app.schema(operation,pid,source_id=pid)['request'];request.update(path=operation+'/theory-file',note='Carry theory-owned file')
+            copied=app.request(request)['packages'][0]['packageId'];graph=self.current(copied)['graph']
+            theory=next(n for n in graph['objects'] if n['kind']=='canon')
+            self.assertEqual(theory['recommendations'][0]['targetRef']['packageId'],copied)
+            result=app.call({'method':'theory_read','packageId':copied,'theoryId':theory['id'],'collection':'recommendations','expand':True})
+            self.assertEqual(result['data']['recommendations']['items'][0]['resolved']['content'],raw.decode())
 
 
 class BoundedSources(unittest.TestCase):

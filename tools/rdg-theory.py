@@ -263,11 +263,14 @@ def resolve_target(app, row, theory, target, expand, cache, budget):
             if kind == 'theoryItem':
                 if node.get('kind') != 'canon':
                     return {'status': 'missing', 'contentLoaded': False}
+                theory_source = node
                 node = next((x for x in entries(node, target['collection']) if x['id'] == target['itemId']), None)
                 if not node:
                     return {'status': 'missing', 'contentLoaded': False}
-                result['nextRead'] = {'method': 'theory_read', 'packageId': ref['packageId'],
-                    'theoryId': ref['nodeId'], 'collection': target['collection'], 'itemIds': [target['itemId']]}
+                result['nextRead'] = {'method': 'theory_read',
+                    'packageId': source['head']['packageId'] if resolved.get('localBinding') else ref['packageId'],
+                    'theoryId': theory_source['id'], 'expectedTheoryRevision': theory_source['revision'],
+                    'collection': target['collection'], 'itemIds': [target['itemId']]}
                 if 'targetRef' in node:
                     result['targetRef'] = copy.deepcopy(node['targetRef'])
                     return result  # one level; no recursive source crawl
