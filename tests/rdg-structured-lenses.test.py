@@ -329,7 +329,7 @@ class LensApplication(unittest.TestCase):
             P.run(RejectedPreview(),journal,apply=True,keys=['research'],progress=lambda _:None)
         self.assertEqual(app.read(pid)['graph'],before)
         saved=P.JOURNAL.Journal(journal,{})
-        operation=next(v for k,v in saved.state['operations'].items() if k.startswith('research/edit-'))
+        operation=next(v for k,v in saved.state['operations'].items() if k.startswith(('research/edit-','research/batch/')))
         request=copy.deepcopy(operation['request']);saved.checkpoint()
         return app,pid,journal,desired,request
 
@@ -337,7 +337,7 @@ class LensApplication(unittest.TestCase):
         app,pid,journal,desired,request=self.rejected_preview_update()
         state=P.run(app,journal,apply=True,keys=['research'],progress=lambda _:None)
         P.verify_graph(app.read(pid)['graph'],desired)
-        operation=next(v for k,v in state['operations'].items() if k.startswith('research/edit-'))
+        operation=next(v for k,v in state['operations'].items() if k.startswith(('research/edit-','research/batch/')))
         self.assertEqual(operation['request'],request)
         self.assertEqual(len(operation['rejections']),1)
         self.assertTrue(operation['receipt']['published'])
@@ -354,7 +354,7 @@ class LensApplication(unittest.TestCase):
             P.run(app,journal,apply=True,keys=['research'],progress=lambda _:None)
         self.assertEqual({k:v for k,v in self.sources().items() if k!=journal.name},before)
 
-    def interrupted_update(self):
+    def interrupted_update(self,legacy=False):
         app=self.app();desired=P.bundle(['research'])[1]['research'];old=copy.deepcopy(desired)
         for ident in ('I-LENS-RESEARCH','LS-STEP-RESEARCH-QUESTION'):
             P.entities(old)[ident]['title']='Previous '+ident
@@ -363,6 +363,7 @@ class LensApplication(unittest.TestCase):
         pid=app.request(req)['packages'][0]['packageId'];journal=self.base/'interrupted-update.json'
         class LostReply:
             def call(_,message):
+                if legacy and message['method']=='capabilities':raise ValueError('PORTABLE_APP_MESSAGE_FIELDS')
                 result=app.call(message)
                 if message['method']=='apply':raise TimeoutError('Lost accepted authoring reply')
                 return result
@@ -374,12 +375,39 @@ class LensApplication(unittest.TestCase):
         app,pid,journal,desired=self.interrupted_update()
         state=P.run(app,journal,apply=True,keys=['research'],progress=lambda _:None)
         P.verify_graph(app.read(pid)['graph'],desired)
-        first=next(op for key,op in state['operations'].items() if key.startswith('research/edit-'))
+        first=next(op for key,op in state['operations'].items() if key.startswith(('research/edit-','research/batch/')))
         self.assertTrue(first['receipt']['published'])
         self.assertTrue(first['result']['reconciledFromReceipt'])
         revision=app.read(pid)['package']['revision']
         self.assertTrue(app.request(first['request'])['idempotent'])
         self.assertEqual(app.read(pid)['package']['revision'],revision)
+
+    def test_legacy_journal_continues_original_individual_requests(self):
+        app,pid,journal,desired=self.interrupted_update(legacy=True)
+        saved=P.JOURNAL.Journal(journal,{})
+        original=next(op['request'] for key,op in saved.state['operations'].items() if key.startswith('research/edit-'))
+        original=copy.deepcopy(original);saved.checkpoint()
+        state=P.run(app,journal,apply=True,keys=['research'],progress=lambda _:None)
+        self.assertFalse(any('/batch/' in key for key in state['operations']))
+        self.assertTrue(any(op.get('request')==original and op.get('result',{}).get('reconciledFromReceipt')
+                            for op in state['operations'].values()))
+        P.verify_graph(app.read(pid)['graph'],desired)
+
+    def test_uncertain_batch_receipt_is_checked_before_legacy_protocol_fallback(self):
+        app,pid,journal,desired=self.interrupted_update()
+        calls=[]
+        class OldContract:
+            def call(_,message):
+                calls.append(copy.deepcopy(message))
+                if message['method']=='capabilities':raise ValueError('PORTABLE_APP_MESSAGE_FIELDS')
+                if message['method']=='apply' and message['request']['op'] in ('paper_edit','batch'):raise AssertionError('Accepted batch must recover through its original receipt')
+                return app.call(message)
+        state=P.run(OldContract(),journal,apply=True,keys=['research'],progress=lambda _:None)
+        P.verify_graph(app.read(pid)['graph'],desired)
+        self.assertTrue(any(m['method']=='receipt' for m in calls))
+        self.assertFalse(any(k.startswith('research/edit-') for k in state['operations']))
+        self.assertTrue(any(k.startswith('research/batch/') and v['result'].get('reconciledFromReceipt')
+                            for k,v in state['operations'].items()))
 
     def test_interrupted_update_preserves_a_later_independent_edit(self):
         app,pid,journal,_=self.interrupted_update()
@@ -396,7 +424,13 @@ class LensApplication(unittest.TestCase):
         req=app.schema('create',core_model='rdg-decision-v1',role='lens')['request']
         req.update(path='lenses/research',lensKey='research',title=old['title'],scope='Title upgrade',rootReason='Acceptance',graph=old)
         pid=app.request(req)['packages'][0]['packageId'];before=app.read(pid)
-        state=P.run(app,self.base/'title-upgrade.json',apply=True,keys=['research'],progress=lambda _:None)
+        calls=[]
+        class CountingClient:
+            def call(_,message):
+                calls.append(copy.deepcopy(message));return app.call(message)
+        state=P.run(CountingClient(),self.base/'title-upgrade.json',apply=True,keys=['research'],progress=lambda _:None)
+        self.assertFalse(any(m.get('method')=='read' and m.get('detail')=='full' for m in calls))
+        self.assertEqual(sum(m.get('method')=='apply' and m.get('request',{}).get('op')=='batch' for m in calls),1)
         after=app.read(pid);P.verify_graph(after['graph'],desired)
         self.assertEqual(after['graph']['title'],desired['title'])
         self.assertEqual(after['package']['identitySpace'],before['package']['identitySpace'])

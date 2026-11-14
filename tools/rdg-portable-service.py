@@ -20,7 +20,11 @@ BATCH = SourceFileLoader('rdg_batch', str(Path(__file__).with_name('rdg-batch.py
 CACHE = SourceFileLoader('rdg_projection_cache', str(Path(__file__).with_name('rdg-projection-cache.py'))).load_module()
 
 
+ERGO = SourceFileLoader('rdg_api_ergonomics', str(Path(__file__).with_name('rdg-api-ergonomics.py'))).load_module()
+
+
 class Application:
+    ergonomics=ERGO
     def __init__(self, store, authority, kernel, model, token, layout_port=None, command_port=None, attribution='assistant'):
         self.store, self.authority, self.kernel, self.model, self.token = store, authority, kernel, model, token
         self.layout_port=layout_port;self.command_port=command_port;self.view_sessions={}
@@ -97,7 +101,7 @@ class Application:
     def authoring_commands(self,graph,role=None):
         commands=self.kernel.commands_for(graph)-{'remove','recommendation_packages','lens_application'}
         if role in ('ready','lens'):
-            commands=commands & ({'add','edit','graph_title','link','unlink','decision_group','root_cause','work_graph'}
+            commands=(commands | ({'remove'} if graph['coreModel']=='rdg-decision-v1' else set())) & ({'add','edit','graph_title','link','unlink','decision_group','root_cause','work_graph','remove'}
                 if graph['coreModel']=='rdg-decision-v1' else
                 {'add','edit','link','unlink','work_graph','include','join','exclusion_group','lens_recommendations','output_origin'})
         return commands
@@ -114,8 +118,8 @@ class Application:
                     'groups': True, 'rootCauses': True, 'externalActions': True,
                     'copy': True, 'templateApply': process, 'plan': process,
                     'planOrderOnly': process, 'planForks': process, 'layoutWrite': True, 'layoutOccurrences': True,
-                    'recommendations': True, 'externalReferences': process, 'viewSessions': True, 'compactRead': True, 'atomicBatch': process, 'questionApiSlice': process, 'questionEditing':True, 'questionMigration':process, 'questionCopy':True, 'actionEstimates':True, 'decisionTheory':True, 'recommendationAuthoring':True, 'planningMetaAction':process, 'crossOwnerRefs': False},
-                'batch': {**BATCH.schema(), 'available':process},
+                    'recommendations': True, 'externalReferences': process, 'viewSessions': True, 'compactRead': True, 'atomicBatch': True, 'questionApiSlice': process, 'questionEditing':True, 'questionMigration':process, 'questionCopy':True, 'actionEstimates':True, 'decisionTheory':True, 'recommendationAuthoring':True, 'planningMetaAction':process, 'crossOwnerRefs': False},
+                'batch': {**BATCH.schema(role), 'available':True},
                 'unsupportedCapabilities': ['crossOwnerRefs']}
         return {'profile': profile, 'coreCommands': commands,
                 'capabilities': {'read': True, 'schema': True, 'preflight': True, 'apply': True, 'receipt': True}}
@@ -380,11 +384,13 @@ class Application:
                  'effectPackageIds': sorted(prepared['changes'])}
         return {**value, 'sha256': self.model.digest(value)}
 
-    def preflight_result(self, request, prepared):
-        return {'preflight': True, 'accepted': False, 'effects': prepared['effects'],
+    def preflight_result(self, request, prepared, preview=None):
+        result = {'preflight': True, 'accepted': False, 'effects': prepared['effects'],
                 'requiredPermissions': prepared['checks'], 'readSet': prepared['readset'],
                 'allocation': prepared.get('allocation'),
                 'inputBinding': self.input_binding(request, prepared)}
+        if preview is not None:result['preview']=ERGO.preview(self,prepared,request['transactionId'],preview)
+        return result
 
     def approval_record(self, request_id):
         path = self.store.metadata_path('approval-requests', request_id)
@@ -677,6 +683,14 @@ class Application:
         with self.store.lock(False,create=False):return self._schema(op,ident,node_id,source_id,command,source_path,source_key,core_model=core_model,role=role,entity_kind=entity_kind)
 
     def _schema(self,op,ident=None,node_id=None,source_id=None,command=None,source_path=None,source_key=None,*,core_model=None,role=None,entity_kind=None):
+        if op in ('capabilities','read_ref'):
+            self.check(all(v is None for v in (node_id,source_id,command,source_path,source_key,core_model,role,entity_kind)), 'READ_SCHEMA_SELECTORS')
+            if ident:self.snapshot(ident,layouts=False)
+            return ({'method':'capabilities','schemaVersion':1,'optional':['packageId'],'contractVersion':2} if op=='capabilities' else
+                {'method':'read_ref','schemaVersion':1,'required':['reference'],
+                 'reference':'Exact owned ref returned by theory_read: {theoryRef,collection,itemId}',
+                 'optional':['packageId','expand','format'],'modes':['current','historical'],
+                 'staleCurrent':'OWNED_REF_CHANGED: reopen current theory; historical refs retain the pinned graph'})
         if op == 'catalog':
             self.check(all(v is None for v in (ident,node_id,source_id,command,source_path,source_key,core_model,role,entity_kind)), 'CATALOG_SCHEMA_SELECTORS')
             return {'method':'catalog','schemaVersion':1,'pagination':False,'complete':True,
@@ -722,7 +736,7 @@ class Application:
             row=self.snapshot(ident,True)
             graph=row['graph']
             self.check(graph['coreModel']=='rdg-decision-v1' and
-                       row['head']['role'] in ('working','copy'), 'BATCH_PROFILE')
+                       row['head']['role'] in (('working','copy') if op=='plan_action' else ('working','copy','ready','lens')), 'BATCH_PROFILE')
             req.update(targetPackageId=ident,expectedPackageRevision=row['head']['revision'],
                        expectedGraphRevision=row['graph']['revision'],
                        expectedPlanRevision=row['plan']['revision'] if row['plan'] else None,
@@ -770,7 +784,8 @@ class Application:
                 if entity_kind is not None:
                     self.check(graph['coreModel']=='rdg-decision-v1','ENTITY_KIND_REQUIRES_DECISION_PROFILE')
                     self.check(entity_kind in self.profile_capabilities(graph,owner_role)['entityKinds'],'ENTITY_KIND_UNSUPPORTED')
-                data=(self.command_port(graph,command,nid,self.kernel,entity_kind) if entity_kind is not None
+                data=({'nodeIds':[nid] if nid else []} if command=='remove' else
+                      self.command_port(graph,command,nid,self.kernel,entity_kind) if entity_kind is not None
                       else self.command_port(graph,command,nid,self.kernel))
                 req.update(command=command,data=data,note='')
                 required=['note']
@@ -826,7 +841,7 @@ class Application:
                 'profileSelector':{'default':'rdg-core-v1','preferred':'rdg-decision-v1','supported':['rdg-core-v1','rdg-decision-v1'],
                     'rootReasonRequiredFor':['rdg-decision-v1']},
                 'conditionalRequired':{'rootReason':{'when':{'coreModel':'rdg-decision-v1'}}},
-                'batch':BATCH.schema(),
+                'batch':BATCH.schema(row['head']['role'] if 'row' in locals() and row else None),
                 'capabilities':self.profile_capabilities(graph,row['head']['role']) if 'graph' in locals() else
                     {'profiles':['rdg-core-v1','rdg-decision-v1'],'selectionRequired':True},
                 'inputChoices':({'entityKind':self.profile_capabilities(graph,row['head']['role']).get('entityKinds',[]),
@@ -838,10 +853,13 @@ class Application:
                     'planningMetaAction':{'operation':'plan_action','subjectRefs':'optional qualified entity or scope references; work subjects, no dependencies','atomic':'Action + placement via batch coordinator'},
                     'actionEstimates':{'optional':['complexity','time','basis'],'time':{'minSeconds':'finite >= 0','maxSeconds':'>= minSeconds'},'remove':'core edit changes.estimates=null'},
                     'questionAnswerActions':['add','edit','remove']} if 'graph' in locals() and graph['coreModel']=='rdg-decision-v1' else {}),
-                'coreCommands':sorted(core_commands-{'remove','recommendation_packages','lens_application'}),'status':'unsubmitted',
+                'coreCommands':sorted(core_commands-{'recommendation_packages','lens_application'}),'status':'unsubmitted',
                 'instruction':'Supply actual data; preflight and apply the same request. Keep transactionId for exact retry.'}
 
     def receipt(self,ident,transaction_id):
+        return ERGO.receipt(self,ident,transaction_id)
+
+    def _legacy_receipt(self,ident,transaction_id):
         with self.store.lock(False,create=False):
             fallback=None
             accepted=self.store.metadata_path('accepted',transaction_id)
@@ -877,8 +895,8 @@ class Application:
         """Closed shared transport contract for CLI, Agent and manual sessions."""
         self.check(isinstance(message,dict),'MESSAGE')
         method=message.get('method')
-        fields={'theory_read':{'packageId','theoryId','collection','itemIds','detail','expand','limit','cursor','format','expectedTheoryRevision'},'catalog':set(),'search':{'query','scope','packageId','limit','cursor'},'read':{'packageId','includePlan','view','detail','include','nodeId','recordId','limit','cursor','format'},'history':{'packageId','view','detail','include','eventId','limit','cursor'},
-                'resolve':{'packageId','reference'},'source_snapshot':{'packageId','pin','view'},
+        fields={'capabilities':{'packageId'},'read_ref':{'reference','packageId','expand','format'},'theory_read':{'packageId','theoryId','collection','itemIds','detail','expand','limit','cursor','format','expectedTheoryRevision'},'catalog':set(),'search':{'query','scope','packageId','limit','cursor'},'read':{'packageId','includePlan','view','detail','include','nodeId','recordId','limit','cursor','format'},'history':{'packageId','view','detail','include','eventId','limit','cursor'},
+                'resolve':{'packageId','reference'},'source_snapshot':{'packageId','pin','view','detail'},
                 'schema':{'op','packageId','nodeId','sourcePackageId','command','sourcePath','sourceKey','coreModel','role','entityKind'},
                 'migration_sources':set(),'migration_inspect':{'sourceKey'},
                 'receipt':{'packageId','transactionId'},'recover':{'transactionId'},'cancel_migration':{'transactionId'},
@@ -886,8 +904,10 @@ class Application:
                 'view_session':{'action','sessionId','packageId','view','expectedRevision','value'},
                 'recommendation_catalog':{'query','offset','limit','revision','packageId'},
                 'approval_request':{'request','rationale'},'approval_read':{'requestId'},
-                'preflight':{'request','expectedInputBinding'},'apply':{'request','expectedInputBinding'}}
+                'preflight':{'request','expectedInputBinding','preview'},'apply':{'request','expectedInputBinding'}}
         self.check(method in fields and set(message)<={'method'}|fields[method],'MESSAGE_FIELDS')
+        if method=='capabilities':return ERGO.capabilities(self,message.get('packageId'))
+        if method=='read_ref':return ERGO.read_ref(self,message['reference'],message.get('packageId'),message.get('expand',False),message.get('format','json'))
         if method=='view_session':return self.view_session(message)
         if method=='catalog':return self.catalog()
         if method=='search':
@@ -902,17 +922,17 @@ class Application:
         if method=='read':return self.read(message['packageId'],message.get('includePlan',False),message.get('view'),detail=message.get('detail'),include=message.get('include'),node_id=message.get('nodeId'),record_id=message.get('recordId'),limit=message.get('limit',25),cursor=message.get('cursor'),output_format=message.get('format'))
         if method=='history':return self.history(message['packageId'],message.get('view'),detail=message.get('detail'),include=message.get('include'),event_id=message.get('eventId'),limit=message.get('limit',25),cursor=message.get('cursor'))
         if method=='resolve':return self.resolve(message['packageId'],message['reference'])
-        if method=='source_snapshot':return self.source_snapshot(message['packageId'],message['pin'],message.get('view'))
+        if method=='source_snapshot':return self.source_snapshot(message['packageId'],message['pin'],message.get('view'),detail=message.get('detail','full'))
         if method=='dependencies':return self.dependencies(message['packageId'])
         if method=='locks':return self.locks(message['packageId'])
         if method=='schema':return self.schema(message['op'],message.get('packageId'),message.get('nodeId'),
             message.get('sourcePackageId'),message.get('command'),message.get('sourcePath'),message.get('sourceKey'),
             core_model=message.get('coreModel'),role=message.get('role'),entity_kind=message.get('entityKind'))
-        if method=='receipt':return self.receipt(message['packageId'],message['transactionId'])
+        if method=='receipt':return self.receipt(message.get('packageId'),message['transactionId'])
         if method=='recover':return self.recover(message['transactionId'])
         if method=='cancel_migration':return self.migration.cancel(message['transactionId'])
         return self.request(message['request'],preflight=method=='preflight',
-                            expected_input_binding=message.get('expectedInputBinding'))
+                            expected_input_binding=message.get('expectedInputBinding'),preview=message.get('preview'))
 
     def recover(self,transaction_id):
         """Finish only a durable accepted intent, for its original bearer actor."""
@@ -930,8 +950,10 @@ class Application:
             return self.store.replay(transaction_id,certificate['requestSHA256'],actor)
 
     def request(self, request, *, preflight=False, failpoint=None, before_accept=None,
-                expected_input_binding=None):
+                expected_input_binding=None, preview=None):
         self.check(isinstance(request,dict) and isinstance(request.get('transactionId'),str),'REQUEST')
+        self.check(preview is None or preflight,'PREVIEW_ONLY_FOR_PREFLIGHT')
+        self.check(preview is None or request.get('op') not in ('migrate','move','folder_create','folder_move'),'PREVIEW_OPERATION_UNSUPPORTED')
         tx=request['transactionId'];self.check(str(uuid.UUID(tx))==tx,'TRANSACTION_ID')
         if request.get('op')=='migrate':
             return self.migration.handle(request,preflight=preflight,failpoint=failpoint,
@@ -956,7 +978,7 @@ class Application:
             if expected_input_binding is not None:
                 self.check(expected_input_binding == self.input_binding(request,prepared),
                            'PREVIEW_INPUTS_CHANGED')
-            if preflight:return self.preflight_result(request,prepared)
+            if preflight:return self.preflight_result(request,prepared,preview)
             if before_accept:before_accept()
             def authorize_all():
                 for check in prepared['checks']:self.authorize(check['packageId'],check['permissions'],check['path'])
@@ -971,6 +993,12 @@ class Application:
                   'principalId':approval_actor['principalId'],
                   'executorGrantId':approval_actor['executorGrantId']} if approval_actor else None)
         def now():return recorded_at if recorded_at is not None else datetime.now(timezone.utc).isoformat()
+        if request.get('op')=='paper_edit' and request.get('command')=='remove':
+            self.check(set(request)<={'op','transactionId','targetPackageId','expectedPackageRevision','expectedGraphRevision','command','data','note'},'CORE_FIELDS')
+            self.check(isinstance(request.get('data'),dict) and set(request['data'])=={'nodeIds'},'REMOVE_FIELDS')
+            target=self.snapshot(request['targetPackageId'],layouts=False)
+            self.check(target['head']['role'] in ('ready','lens') and target['graph']['coreModel']=='rdg-decision-v1','PAPER_OWNER_REQUIRED')
+            return self.prepare({k:v for k,v in {**request,'op':'delete','nodeIds':request['data']['nodeIds']}.items() if k not in ('command','data')},approval_actor=approval_actor,recorded_at=recorded_at)
         if request.get('op')=='batch':
             return BATCH.plan(self,request,attribution=attribution,trust=trust,recorded_at=recorded_at)
         op=request.get('op');tx=uuid.UUID(request['transactionId']);checks=[];rows={};changes={}
@@ -1344,7 +1372,9 @@ class Application:
             ident=target['packageId'];rows[ident]=target
             add_check(ident,['graph.read'],target['path'])
             expected(target)
-            self.check(target['head']['role'] in ('working','copy'), 'WORKING_TARGET_REQUIRED')
+            paper=target['head']['role'] in ('ready','lens')
+            self.check(paper or target['head']['role'] in ('working','copy'), 'WORKING_TARGET_REQUIRED')
+            self.check(not (target['head'].get('lineage',{}).get('supplied') and not target['head'].get('lineage',{}).get('userManaged')),'PACKAGE_IMMUTABLE')
             removed=request['nodeIds']
             self.check(isinstance(removed,list) and bool(removed) and
                 all(isinstance(i,str) and i.strip() for i in removed) and
@@ -1352,7 +1382,7 @@ class Application:
             # All current placement/layout participants are inventoried under this barrier.
             # Conservative incoming closure before invoking the pure reducer.
             # Prepare Plan/layout and qualified boundary changes as one transaction.
-            all_rows=self.store.scan()
+            all_rows=[] if paper else self.store.scan()
             self.check(self.store.initialized() and all(r['health'] in
                 ('metadata-verified','unaccepted-stage') for r in all_rows), 'INCOMING_INVENTORY_UNHEALTHY')
             for meta in all_rows:
@@ -1384,7 +1414,13 @@ class Application:
             graph,_=self.kernel.apply(before_graph, {'schemaVersion':1,
                 'expectedRevision':before_graph['revision'],
                 'operations':[{'op':'graph_edit','action':'core_remove',
-                    'data':{'nodeIds':removed},'event':ev}]}, True, coordinated=True)
+                    'data':{'nodeIds':removed},'event':ev}]}, True, coordinated=True,paper=paper)
+            if paper:
+                ERGO.normalize_paper(self,graph)
+                foreign,reg=ERGO.paper_removal_guard(self,target,removed,graph)
+                for pid,value in foreign.items():
+                    rows[pid]=value;add_check(pid,['graph.read']+(['plan.read'] if value['plan'] is not None else []),value['path'])
+                registry_read()
             self.model.validate_graph_payload(graph,self.kernel)
             self.kernel.validate_role(graph,target['head']['role'])
             values={'graph':graph}
@@ -1404,6 +1440,7 @@ class Application:
                 cleaned['revision']=target['layouts']['revision']+1;values['layouts']=cleaned
             change(ident,target,['graph.write'],**values)
             effects=self.decision_effects(before_graph,graph)
+            if paper:effects.update(ERGO.removal_effects(self,before_graph,graph))
         elif op=='unlink' and self.snapshot(request['targetPackageId'],layouts=False)['graph']['coreModel']=='rdg-decision-v1':
             self.check(set(request)=={'op','transactionId','targetPackageId','expectedPackageRevision','expectedGraphRevision','data','note'},'UNLINK_FIELDS')
             reduced={**request,'op':'core','command':'unlink'}
@@ -1960,7 +1997,8 @@ class Application:
         current,history=self.reference_snapshots(ref,consumer,register)
         return self.model.resolve_reference(ref,current,history,self.kernel)
 
-    def source_snapshot(self,ident,pin,spec=None):
+    def source_snapshot(self,ident,pin,spec=None,*,detail='full'):
+        self.check(detail in ('full','graph') and (detail!='graph' or spec is None),'SOURCE_SNAPSHOT_DETAIL')
         self.check(isinstance(pin,dict) and set(pin)=={'packageId','identitySpace','graphRevision','sha256'},'SOURCE_PIN_FIELDS')
         self.model.validate_graph_pin(pin)
         with self.store.lock(False,create=False):
@@ -1973,6 +2011,8 @@ class Application:
             self.check(graph is not None and graph['identitySpace']==pin['identitySpace'] and
                 graph['revision']==pin['graphRevision'] and self.model.digest(graph)==pin['sha256'],'HISTORICAL_GRAPH_UNAVAILABLE')
             self.model.validate_graph_payload(graph,self.kernel)
+            if detail=='graph':return {'readOnly':True,'pin':copy.deepcopy(pin),'graph':graph,'detail':'graph',
+                'currentOwnerAvailable':pin['packageId'] in current,'instruction':'Pinned Graph bytes; current state requires a separate read.'}
             return {'readOnly':True,'pin':copy.deepcopy(pin),'graph':graph,'view':self.model.presentation(graph,self.kernel,spec),
                 'completion':self.kernel.completion_state(graph),'layouts':None,'currentOwnerAvailable':pin['packageId'] in current,
                 'instruction':'Preserved source version. Current changes require reopening the current package.'}

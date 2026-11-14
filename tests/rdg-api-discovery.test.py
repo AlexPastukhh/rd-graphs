@@ -152,20 +152,19 @@ class APIDiscovery(unittest.TestCase):
             with self.subTest(role=role):
                 working=role in ('working','copy')
                 view=app.read(ident)
-                for feature in ('atomicBatch','planningMetaAction','plan','planOrderOnly','planForks',
+                for feature in ('planningMetaAction','plan','planOrderOnly','planForks',
                                 'templateApply','externalReferences','questionApiSlice','questionMigration'):
                     self.assertEqual(view['capabilities']['capabilities'][feature],working,feature)
-                self.assertEqual(view['capabilities']['batch']['available'],working)
-                self.assertEqual(view['capabilities']['batch']['supportedRoles'],['working','copy'])
+                self.assertTrue(view['capabilities']['capabilities']['atomicBatch'])
+                self.assertTrue(view['capabilities']['batch']['available'])
+                self.assertEqual(view['capabilities']['batch']['supportedRoles'],['working','copy','ready','lens'])
                 command='core' if working else 'paper_edit'
                 form=app.schema(command,ident,node_id=view['graph']['rootRequirementId'],command='edit')
-                self.assertEqual(form['capabilities']['capabilities']['atomicBatch'],working)
-                if working:
-                    batch=app.schema('batch',ident)
-                    self.assertTrue(batch['capabilities']['capabilities']['atomicBatch'])
-                else:
-                    with self.assertRaisesRegex(ValueError,'BATCH_PROFILE'):
-                        app.schema('batch',ident)
+                self.assertTrue(form['capabilities']['capabilities']['atomicBatch'])
+                batch=app.schema('batch',ident)
+                self.assertTrue(batch['capabilities']['capabilities']['atomicBatch'])
+                if not working:
+                    with self.assertRaisesRegex(ValueError,'BATCH_PROFILE'):app.schema('plan_action',ident)
         self.assertEqual(self.sources(),before)
 
     def test_every_advertised_decision_command_has_a_readonly_form(self):

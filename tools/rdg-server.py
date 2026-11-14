@@ -159,6 +159,7 @@ class Host:
             endpoint = object.__new__(self.endpoint_type)
             endpoint.application = self.compose(app_config(self.data, self.config), token,
                                                 'user' if browser else 'assistant')
+            endpoint.application.runtime_build_id = self.build_id
             endpoint.require_verified_locks = True
             self.endpoints[key] = endpoint
         return ident, self.endpoints[key]
