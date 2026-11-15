@@ -87,6 +87,7 @@ def project(app, ident, row, detail, include, node_id, limit, cursor, record_id=
     result = {'schemaVersion': 1, 'package': {k: row['head'][k] for k in
               ('packageId', 'role', 'identitySpace', 'revision')},
               'graph': {k: graph.get(k) for k in ('id', 'title', 'coreModel', 'revision', 'identitySpace', 'rootRequirementId')},
+              'path':row['path'], 'immutableDefinition':bool(row['head'].get('lineage',{}).get('supplied') and not row['head'].get('lineage',{}).get('userManaged')),
               'snapshot': snapshot, 'detail': detail,
               'loaded': {key: key in facets for key in FACETS}, 'data': {}}
     if detail == 'item':

@@ -102,6 +102,47 @@ class Server(unittest.TestCase):
             HOST.initialize(other, self.base / 'other-secrets')
         self.assertEqual((other / 'keep').read_text(), 'unchanged')
 
+    def test_api_ergonomics_http_and_remote_cli_keep_one_contract(self):
+        context=self.base/'ergonomics-context.json';context.write_text(json.dumps(self.context))
+        def cli(command,*args,body=None):
+            run=subprocess.run(['python3','-B',str(ROOT/'tools/rdg-agent.py'),command,
+                '--context',str(context),*args],input=json.dumps(body) if body is not None else None,
+                text=True,capture_output=True,timeout=30)
+            self.assertEqual(run.returncode,0,run.stderr)
+            self.assertNotIn(self.agent,run.stdout+run.stderr)
+            return json.loads(run.stdout)
+        caps=cli('capabilities')
+        self.assertEqual(caps['contractVersion'],2)
+        self.assertEqual(caps['runtime']['buildId'],None if self.host.build_id=='source' else self.host.build_id)
+        self.assertEqual(caps['runtime']['identityAvailable'],self.host.build_id!='source')
+        request=self.client.call({'method':'schema','op':'create','coreModel':'rdg-decision-v1','role':'lens'})['request']
+        request.update(path='lenses/api-http',lensKey='api-http',title='HTTP paper',scope='Synthetic',rootReason='HTTP acceptance')
+        pid=str(uuid.uuid5(uuid.UUID(request['transactionId']),'package'))
+        before=self.files()
+        pre=self.client.call({'method':'preflight','request':request,
+            'preview':{'packageId':pid,'detail':'focus','nodeId':'R1','format':'markdown'}})
+        self.assertIn('HTTP paper',pre['preview']['projection']['markdown'])
+        self.assertEqual(self.files(),before)
+        self.client.call({'method':'apply','request':request,'expectedInputBinding':pre['inputBinding']})
+        request=self.client.call({'method':'schema','op':'batch','packageId':pid})['request']
+        request.update(note='Synthetic HTTP paper batch',steps=[{'alias':'theory','op':'paper_edit','command':'add',
+            'data':{'entity':{'id':'K','kind':'canon','title':'HTTP theory','description':'Source','guidance':'Read the canon.',
+                'canonItems':[{'id':'one','title':'One','body':'HTTP body'}]}}}])
+        options=self.base/'preview-options.json'
+        options.write_text(json.dumps({'packageId':pid,'detail':'focus','nodeId':'K','format':'markdown'}))
+        pre=cli('preflight','--preview',str(options),body=request)
+        self.assertIn('HTTP theory',pre['preview']['projection']['markdown'])
+        result=self.client.call({'method':'apply','request':request,'expectedInputBinding':pre['inputBinding']})
+        receipt=self.client.call({'method':'receipt','transactionId':request['transactionId']})
+        self.assertTrue(receipt['published']);self.assertEqual(receipt['requestSHA256'],result['requestSHA256'])
+        item=self.client.call({'method':'theory_read','packageId':pid,'theoryId':'K','collection':'canons'})['data']['canons']['items'][0]
+        self.assertEqual(cli('read_ref',body=item['ref'])['data']['canons']['items'][0]['body'],'HTTP body')
+        summary=self.client.call({'method':'read','packageId':pid,'detail':'summary'})
+        pin={'packageId':pid,'identitySpace':summary['package']['identitySpace'],
+            'graphRevision':summary['snapshot']['graphRevision'],'sha256':summary['snapshot']['graphSHA256']}
+        graph=cli('source_snapshot','--package-id',pid,'--source-detail','graph',body=pin)
+        self.assertEqual(graph['detail'],'graph');self.assertNotIn('view',graph)
+
     def test_auth_host_namespace_origin_and_closed_dispatch(self):
         before = self.files()
         for options, status in [({'token': 'invalid'}, 401),

@@ -13,6 +13,7 @@ buildUnits:
       - tools/rdg-portable-model.py
       - tools/rdg-portable-store.py
       - tools/rdg-portable-service.py
+      - tools/rdg-api-ergonomics.py
       - tools/rdg-projection-cache.py
       - tools/rdg-compact-read.py
       - tools/rdg-scoped-read.py

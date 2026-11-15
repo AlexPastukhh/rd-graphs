@@ -46,6 +46,13 @@
 
 Для продолжения сначала сверить Git/worktree, PR #9 и main через typed Gateway, затем фактический установленный build и доступность `schema(op='theory_read')`. Не повторять уже подтверждённые операции; неопределённый исход исследовать по исходным UUID/receipt. Проверить также [доступ к материалам](RDG-DECISION-V1-CONTRACT.md#theory-source-access). Найденные при работе ограничения и кандидаты улучшений сохранены в [практических наблюдениях](../../POTENTIAL-IMPROVEMENTS.md#rdg-practical-review-20261114); это предложения, а не принятый план реализации.
 
+<a id="api-ergonomics-source-20261114"></a>
+## Дополнение API — исходники 2026-11-14
+
+По отдельному поручению пользователя реализовано [уточнение API](RDG-DECISION-V1-CONTRACT.md#api-ergonomics-20261114): paper delete/batch, общий receipt, owned ref/nextRead, capabilities, preflight preview и менее дорогие чтения издателя. База отдельного worktree rdg-api-ergonomics-20261114 — main 7855276b87d49a8a3ea900930f8d83ee61c658ce после владельческого слияния PR #10. Результаты адресных проверок: /workspace/repo/Workfiles/rdg-api-ergonomics-implementation-20261114/.
+
+До запроса PR полный CI по указанию пользователя не повторялся. Следующим поручением разрешены PR и GitHub CI; актуальные HEAD/URL/status сохраняются в /workspace/repo/Workfiles/rdg-api-ergonomics-implementation-20261114/pr-publication.json. Actions создаёт новый frozen/runtime-release только после полного gate; это не подтверждает установленный runtime. Живые определения линз, пользовательская UX-проверка и B05 этим дополнением не выполнялись. Прежний runtime-worktree, frozen-выпуск и журналы сохраняются. Отдельная ранее подготовленная CI-оптимизация остаётся в своём worktree.
+
 ## Основной учебный рецепт после уточнения 2026-11-12
 
 Рецепт в tools/rdg-current-example.py приведён к единому примеру «Выбор, анализ и выполнение» с целевым путём examples/decision-readiness-20261112. Он сочетает раскрытые варианты, теорию Decision и цельного Action, каноны с известными ошибками, контекст, Findings, Questions, Plan и историю. Наличие рецепта не подтверждает публикацию: доступный owner и его версию проверяют через настоящий каталог.

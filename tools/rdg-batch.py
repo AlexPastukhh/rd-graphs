@@ -12,26 +12,32 @@ GRAPH_COMMANDS = ('add','edit','link','unlink','decision_group','root_cause',
                   'work_graph','context_group','decision_context',
                   'requirement_decision','finding_transfer','context_record',
                   'select','withdraw','question_answer','question_assess','question_migrate')
+PAPER_COMMANDS = ('add','edit','graph_title','link','unlink','decision_group','root_cause','work_graph','remove')
 PLAN_COMMANDS = ('plan_create','place','unplace')
 FUTURE = ()
 EXCLUDED = ('graph_title','complete','finding_disposition','review','reopen','policy_change',
             'dependency_rule','lock_set','lock_remove','lens_application',
             'recommendation_packages','remove','attach_evidence','cross_owner_plan',
-            'registry','migration','paper_edit')
+            'registry','migration')
 
 
-def schema():
+def schema(role=None):
+    paper=role in ('ready','lens')
     return {
         'schemaVersion':1,'op':'batch','maxSteps':100,
-        'supportedRoles':['working','copy'],
+        'supportedRoles':['working','copy','ready','lens'],
         'steps':{'required':['alias','op'], 'core':{'op':'core','command':list(GRAPH_COMMANDS),
                  'data':'same as core command', 'note':'optional step note'},
+                 'paper':{'op':'paper_edit','command':list(PAPER_COMMANDS),'data':'same as paper_edit command; no Plan or process transitions'},
                  'plan':list(PLAN_COMMANDS)+['plan_action'],
                  'planAction':{'op':'plan_action','entity':'ordinary external task with optional subjectRefs','placement':'optional placement fields','alias':'Action ID; alias+Placement identifies placement'},
                  'aliasRef':{'$alias':'earlier-step-alias'},
                  'entityRef':{'$entityRef':'earlier-step-alias'},
                  'aliasMeaning':'generated or explicit entity/edge/group/step ID'},
-        'unsupported':list(FUTURE)+list(EXCLUDED),
+        'stepOp':'paper_edit' if paper else 'core',
+        'unsupported':[c for c in EXCLUDED if not paper or c not in PAPER_COMMANDS],
+        'unsupportedByRole':{'working/copy':list(EXCLUDED),
+            'ready/lens':list(PLAN_COMMANDS)+['plan_action']+sorted(set(GRAPH_COMMANDS+EXCLUDED)-set(PAPER_COMMANDS))},
         'transaction':'one owner, one preflight/apply/receipt, one initial CAS',
         'required':['transactionId','targetPackageId','expectedPackageRevision',
                     'expectedGraphRevision','steps','note'],
@@ -69,9 +75,11 @@ def plan(app, request, *, attribution, trust, recorded_at=None):
     check(isinstance(ident,str) and bool(ident),'BATCH_OWNER')
     tx=uuid.UUID(request['transactionId'])
     requested_plan=any(isinstance(step,dict) and step.get('op') in PLAN_COMMANDS for step in steps)
-    row=app.snapshot(ident,requested_plan)
+    read_plan=requested_plan or 'expectedPlanRevision' in request
+    row=app.snapshot(ident,read_plan)
     check(row['graph'].get('coreModel')=='rdg-decision-v1', 'BATCH_PROFILE')
-    check(row['head']['role'] in ('working','copy') and not
+    paper=row['head']['role'] in ('ready','lens')
+    check(row['head']['role'] in ('working','copy','ready','lens') and not
           (row['head'].get('lineage',{}).get('supplied') and
            not row['head'].get('lineage',{}).get('userManaged')),'PACKAGE_IMMUTABLE')
     check(request.get('expectedPackageRevision')==row['head']['revision'],'PACKAGE_CAS_MISMATCH')
@@ -79,6 +87,7 @@ def plan(app, request, *, attribution, trust, recorded_at=None):
     if requested_plan or 'expectedPlanRevision' in request:
         check(request.get('expectedPlanRevision') ==
               (row['plan']['revision'] if row['plan'] else None),'PLAN_CAS_MISMATCH')
+    check(not paper or not requested_plan,'BATCH_PAPER_PLAN_UNSUPPORTED')
     aliases={};results=[];operations=[];plan_specs=[];graph_phase=True
     external_rows={};boundary=None
     now=recorded_at if recorded_at is not None else datetime.now(timezone.utc).isoformat()
@@ -106,14 +115,14 @@ def plan(app, request, *, attribution, trust, recorded_at=None):
         check(isinstance(alias,str) and bool(re.fullmatch(r'[A-Za-z][A-Za-z0-9_-]{0,63}',alias))
               and alias not in aliases,'BATCH_ALIAS_DUPLICATE')
         op=step.get('op')
-        check(op in ('core',)+PLAN_COMMANDS,'BATCH_STEP_UNSUPPORTED')
+        check(op in (('paper_edit',) if paper else ('core',)+PLAN_COMMANDS),'BATCH_STEP_UNSUPPORTED')
         note=step.get('note',request['note'])
         check(isinstance(note,str) and bool(note.strip()),'BATCH_STEP_NOTE')
-        if op=='core':
+        if op in ('core','paper_edit'):
             check(graph_phase,'BATCH_GRAPH_AFTER_PLAN_UNSUPPORTED')
             check(set(step)<={'alias','op','command','data','note'},'BATCH_STEP_FIELDS')
             command=step.get('command')
-            check(command in GRAPH_COMMANDS,'BATCH_COMMAND_UNSUPPORTED')
+            check(command in (PAPER_COMMANDS if paper else GRAPH_COMMANDS),'BATCH_COMMAND_UNSUPPORTED')
             check(command in app.authoring_commands(row['graph'],row['head']['role']),'CORE_COMMAND')
             check(isinstance(step.get('data'),dict),'BATCH_DATA')
             data=copy.deepcopy(step['data'])
@@ -199,7 +208,7 @@ def plan(app, request, *, attribution, trust, recorded_at=None):
             results.append({'alias':alias,'op':op,'id':result_id})
     check(bool(operations or plan_specs),'BATCH_STEPS')
     # All Graph operations run through the existing kernel as one ordered patch.
-    graph=row['graph']
+    graph=row['graph'];removed_ids=set();removal=False
     if operations:
         def resolve_data(value,current):
             if isinstance(value,dict):
@@ -207,14 +216,27 @@ def plan(app, request, *, attribution, trust, recorded_at=None):
                 return {k:resolve_data(v,current) for k,v in value.items()}
             if isinstance(value,list):return [resolve_data(v,current) for v in value]
             return value
+        validation_index=0
         def checked_data(value,current):
+            nonlocal validation_index
+            command=operations[validation_index]['action'][5:];validation_index+=1
             value=resolve_data(value,current)
-            app.validate_action_subjects('add' if 'entity' in value else 'edit',value,ident,current,external)
+            app.validate_action_subjects(command,value,ident,current,external)
+            app.validate_theory_sources(command,value,ident,current,external,role=row['head']['role'])
+            if command=='remove':removed_ids.update(value.get('nodeIds',[]))
             return value
         graph,_=app.kernel.for_graph(graph).apply(graph,{'schemaVersion':1,
-            'expectedRevision':graph['revision'],'operations':operations},True,resolve_data=checked_data)
+            'expectedRevision':graph['revision'],'operations':operations},True,resolve_data=checked_data,paper=paper,
+            coordinated=paper and any(o['action']=='core_remove' for o in operations))
+        if paper:app.ergonomics.normalize_paper(app,graph)
+        app.kernel.for_graph(graph).validate_authored_theory(graph,row['graph'])
         app.model.validate_graph_payload(graph,app.kernel)
         app.kernel.validate_role(graph,row['head']['role'])
+    registry_row=None
+    if paper and removed_ids:
+        check(not removed_ids & set(app.kernel.entities(graph)),'BATCH_REMOVED_ID_REUSED')
+        foreign,registry_row=app.ergonomics.paper_removal_guard(app,row,removed_ids,graph)
+        external_rows.update(foreign);removal=True
     actual_plan=row['plan']
     if plan_specs:
         for operation,spec,result_id in plan_specs:
@@ -249,28 +271,37 @@ def plan(app, request, *, attribution, trust, recorded_at=None):
         ['plan.edit'] if plan_specs else [])
     if plan_specs and row['plan'] and actual_plan.get('forks')!=row['plan'].get('forks'):
         permissions.append('plan.branch')
-    read_permissions=['graph.read']+(['plan.read'] if requested_plan and row['plan'] else [])
+    read_permissions=['graph.read']+(['plan.read'] if read_plan and row['plan'] else [])
     checks=[{'namespaceId':app.store.namespace_id,'packageId':ident,'path':row['path'],
              'permissions':read_permissions},
             {'namespaceId':app.store.namespace_id,'packageId':ident,'path':row['path'],
              'permissions':permissions}]
     for source_id,source in external_rows.items():
         checks.append({'namespaceId':app.store.namespace_id,'packageId':source_id,
-                       'path':source['path'],'permissions':['graph.read']})
+                       'path':source['path'],'permissions':['graph.read']+(['plan.read'] if source.get('plan') else [])})
+    if registry_row is not None:
+        checks.append({'namespaceId':app.store.namespace_id,'packageId':None,'path':None,'permissions':['graph.read']})
     for entry in checks:
         app.authorize(entry['packageId'],entry['permissions'],entry['path'])
     effect={'operation':'batch','aliasIds':{k:v for k,v in aliases.items() if v is not None},
             'stepResults':results,'stepCount':len(steps),
             'graphRevision':graph['revision']}
+    if removal:effect.update(app.ergonomics.removal_effects(app,row['graph'],graph))
     if plan_specs:effect['planRevision']=actual_plan['revision']
     changed={'path':row['path'],'before':row,'permissions':permissions,
              'effects':copy.deepcopy(effect)}
     if operations:changed['graph']=graph
+    if removal and row['layouts'] is not None:changed['layouts']=app.ergonomics.cleaned_layouts(app,row,graph)
     if plan_specs:changed['plan']=actual_plan
     readset={ident:row['headSHA256'], **{sid:source['headSHA256'] for sid,source in external_rows.items()}}
     pins=[{'kind':'package','namespaceId':app.store.namespace_id,'packageId':sid,
            'revision':source['head']['revision'],'sha256':source['headSHA256']}
           for sid,source in sorted({ident:row,**external_rows}.items())]
+    if registry_row is not None:
+        readset[app.store.registry_key()]=registry_row['headSHA256']
+        if registry_row['headSHA256']:
+            pins.append({'kind':'recommendationRegistry','namespaceId':app.store.namespace_id,
+                'revision':registry_row['registry']['revision'],'sha256':registry_row['headSHA256']})
     return {'changes':{ident:changed},'checks':checks,
             'readset':readset,'ownerPins':pins,
             'decisionProfile':True,

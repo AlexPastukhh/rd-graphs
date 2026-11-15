@@ -35,7 +35,7 @@ def application(config,token,attribution='assistant',*,io_override=None,authorit
 
 def main(argv=None):
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('command',choices=('catalog','read','history','dependencies','locks','resolve','source_snapshot','migration_sources','migration_inspect','preflight','apply','schema','receipt','recover','cancel_migration','approval_request','approval_read'))
+    parser.add_argument('command',choices=('capabilities','read_ref','catalog','read','history','dependencies','locks','resolve','source_snapshot','migration_sources','migration_inspect','preflight','apply','schema','receipt','recover','cancel_migration','approval_request','approval_read'))
     parser.add_argument('--packages',required=True,type=Path)
     parser.add_argument('--namespace',required=True)
     parser.add_argument('--coordination-root',type=Path)
@@ -46,6 +46,8 @@ def main(argv=None):
                         help='Read-only Decision group visibility override')
     parser.add_argument('--request',type=Path)
     parser.add_argument('--expected-input-binding',type=Path)
+    parser.add_argument('--preview',type=Path)
+    parser.add_argument('--source-detail',choices=('full','graph'),default='full')
     parser.add_argument('--op')
     parser.add_argument('--node')
     parser.add_argument('--source-package-id')
@@ -77,6 +79,8 @@ def main(argv=None):
         raise ValueError('PORTABLE_READ_OPTIONS_ONLY')
     if args.expected_input_binding and args.command not in ('preflight','apply'):
         raise ValueError('PORTABLE_INPUT_BINDING_ONLY_FOR_PREFLIGHT_APPLY')
+    if args.preview and args.command!='preflight':raise ValueError('PORTABLE_PREVIEW_ONLY_FOR_PREFLIGHT')
+    if args.source_detail!='full' and args.command!='source_snapshot':raise ValueError('PORTABLE_SOURCE_DETAIL_ONLY_FOR_SOURCE_SNAPSHOT')
     token=os.environ.get('RDG_AUTH_TOKEN')
     if not token or not args.store:raise ValueError('PORTABLE_CREDENTIALS_REQUIRED')
     app=application({'packageRoot':str(args.packages),'namespaceId':args.namespace,
@@ -87,6 +91,8 @@ def main(argv=None):
     elif args.command=='receipt':result=app.receipt(args.package_id,args.transaction_id)
     elif args.command=='recover':result=app.recover(args.transaction_id)
     elif args.command=='cancel_migration':result=app.migration.cancel(args.transaction_id)
+    elif args.command=='capabilities':result=app.call({'method':'capabilities',**({'packageId':args.package_id} if args.package_id else {})})
+    elif args.command=='read_ref':result=app.call({'method':'read_ref','reference':json.load(sys.stdin),**({'packageId':args.package_id} if args.package_id else {})})
     elif args.command=='catalog':result=app.catalog()
     elif args.command in ('dependencies','locks'):result=app.call({'method':args.command,'packageId':args.package_id})
     elif args.command=='approval_request':
@@ -98,7 +104,7 @@ def main(argv=None):
     elif args.command=='migration_inspect':result=app.migration.inspect(args.source_key)
     elif args.command=='source_snapshot':
         if not args.package_id:raise ValueError('PORTABLE_PACKAGE_ID_REQUIRED')
-        result=app.source_snapshot(args.package_id,json.loads(sys.stdin.read()),{'kind':'focus','id':args.node} if args.node else None)
+        result=app.source_snapshot(args.package_id,json.loads(sys.stdin.read()),{'kind':'focus','id':args.node} if args.node else None,detail=args.source_detail)
     elif args.command in ('read','history','resolve'):
         if not args.package_id:raise ValueError('PORTABLE_PACKAGE_ID_REQUIRED')
         if args.command=='history':
@@ -132,7 +138,7 @@ def main(argv=None):
     else:
         request=json.loads(args.request.read_text() if args.request else sys.stdin.read())
         binding=json.loads(args.expected_input_binding.read_text()) if args.expected_input_binding else None
-        result=app.request(request,preflight=args.command=='preflight',expected_input_binding=binding)
+        result=app.request(request,preflight=args.command=='preflight',expected_input_binding=binding,preview=json.loads(args.preview.read_text()) if args.preview else None)
     print(json.dumps(result,ensure_ascii=False,sort_keys=True,indent=2))
 
 if __name__=='__main__':

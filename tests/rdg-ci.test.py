@@ -124,6 +124,36 @@ assert not base.exists()
                     self.assertEqual(hashlib.sha256(archive.read('RDG-Server/' + name)).hexdigest(), digest)
             with self.assertRaisesRegex(ValueError, 'CHOOSE_NEW_ZIP_OUTPUT'):PKG.build(file)
 
+    def test_frozen_runtime_loads_application_and_new_api_without_source_checkout(self):
+        import sys
+        with tempfile.TemporaryDirectory(prefix='rdg-frozen-api-') as tmp:
+            base=Path(tmp);artifact=base/'release.zip'
+            with patch.object(PKG.subprocess,'check_output',return_value='0'*40):
+                PKG.build(artifact,'ci-frozen-api-test')
+            with zipfile.ZipFile(artifact) as archive:
+                self.assertIn('RDG-Server/runtime/tools/rdg-api-ergonomics.py',archive.namelist())
+                archive.extractall(base/'frozen runtime')
+            state=base/'isolated state';state.mkdir()
+            script='''from importlib.machinery import SourceFileLoader
+from pathlib import Path
+import json,sys,uuid
+runtime=Path(sys.argv[1]);state=Path(sys.argv[2])
+portable=SourceFileLoader('frozen_portable',str(runtime/'tools/rdg-portable.py')).load_module()
+authority=portable.module('rdg-authority').Authority(state/'authority.json')
+namespace=str(uuid.uuid4())
+token=authority.init_local(plan_capable=True,graph_read_capable=True,portable_roots=[namespace])['token']
+app=portable.application({'packageRoot':str(state/'packages'),'namespaceId':namespace,
+    'coordinationRoot':str(state),'authorityStore':str(authority.path)},token)
+result=app.call({'method':'capabilities'})
+assert result['contractVersion']==2
+assert result['features']['paperBatch']['available']
+print(json.dumps(result))
+'''
+            run=subprocess.run([sys.executable,'-I','-B','-c',script,
+                str(base/'frozen runtime/RDG-Server/runtime'),str(state)],cwd=state,
+                text=True,capture_output=True,timeout=30)
+            self.assertEqual(run.returncode,0,run.stdout+run.stderr)
+
     def test_checked_timeout_reaps_test_owned_descendants(self):
         # Synthetic process tree only; never exercise or signal a live RDG PID.
         import os

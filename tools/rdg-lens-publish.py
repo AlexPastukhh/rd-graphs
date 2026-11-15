@@ -109,6 +109,33 @@ def verify_graph(actual,desired):
     if any(n.get('selectionState')=='selected' or n.get('result',{}).get('state') in ('confirmed','completed') for n in a.values()):raise ValueError('FALSE_DEFINITION_EXECUTION')
     return {'entities':len(a),'edges':len(actual['edges']),'sourceSHA256':json.loads(next(n for n in actual['objects'] if 'rdg:lens-source-map' in n.get('tags',[]))['value'])['source']['sha256']}
 
+def api_features(client):
+    cached=getattr(client,'_rdg_api_features',None)
+    if cached is not None:return cached
+    try:cached=client.call({'method':'capabilities'}).get('features',{})
+    except ValueError as exc:
+        # Only an explicit old-server method rejection permits legacy reads.
+        if not any(code in str(exc) for code in ('MESSAGE_FIELDS','UNKNOWN_METHOD')):raise
+        cached={}
+    client._rdg_api_features=cached
+    return cached
+
+
+def read_graph(client,pid):
+    if not api_features(client).get('graphSnapshotRead',{}).get('available'):
+        return client.call({'method':'read','packageId':pid,'detail':'full'})
+    summary=client.call({'method':'read','packageId':pid,'detail':'summary','include':[]})
+    snap=summary['snapshot']
+    pin={'packageId':pid,'identitySpace':summary['package']['identitySpace'],
+         'graphRevision':snap['graphRevision'],'sha256':snap['graphSHA256']}
+    graph=client.call({'method':'source_snapshot','packageId':pid,'pin':pin,'detail':'graph'})['graph']
+    if MODEL.digest(graph)!=pin['sha256']:raise ValueError('PINNED_GRAPH_READ_MISMATCH')
+    root=graph.get('rootRequirementId')
+    return {'package':summary['package'],'graph':graph,'path':summary['path'],
+            'immutableDefinition':summary['immutableDefinition'],
+            'references':{root:MODEL.reference(pid,graph,root)} if root else {}}
+
+
 def inventory(client,graphs):
     catalog=client.call({'method':'catalog'})
     if catalog.get('complete') is False:raise ValueError('INCOMPLETE_CATALOG')
@@ -116,7 +143,7 @@ def inventory(client,graphs):
     existing={};counts={}
     for key,graph in graphs.items():
         if key in rows:
-            row=client.call({'method':'read','packageId':rows[key]['packageId'],'detail':'full'})
+            row=read_graph(client,rows[key]['packageId'])
             if row['graph']['coreModel']!='rdg-decision-v1':raise ValueError('EXISTING_PROFILE_MISMATCH:'+key)
             commands=delta_commands(row['graph'],graph)
             existing[key]=row
@@ -238,10 +265,10 @@ def publish_navigation(client,graphs,state,write,save,progress,*,revise_navigati
                 write(op_key,req)
                 verified=client.call({'method':'recommendation_catalog','query':definition['key'],'limit':100})
                 if not any(d==definition for d in verified['packages']):raise ValueError('NAVIGATION_READBACK_MISMATCH:'+key)
-            row=client.call({'method':'read','packageId':pid,'detail':'full'})
+            row=read_graph(client,pid)
             if definition['id'] not in row['graph']['recommendationPackageIds']:raise ValueError('NAVIGATION_ATTACHMENT_UNCONFIRMED:'+key)
         else:
-            row=client.call({'method':'read','packageId':pid,'detail':'full'})
+            row=read_graph(client,pid)
             base=state['verified'][key]
             if (row['package']['revision'],row['graph']['revision'])!=(base['packageRevision'],base['graphRevision']):
                 raise ValueError('LENS_CHANGED_SINCE_REVIEW:'+key)
@@ -252,7 +279,7 @@ def publish_navigation(client,graphs,state,write,save,progress,*,revise_navigati
             # Schema may expose edit-only optional selectors.
             req.pop('packageId',None)
             write(key+'/navigation',req)
-            row=client.call({'method':'read','packageId':pid,'detail':'full'})
+            row=read_graph(client,pid)
             verified=client.call({'method':'recommendation_catalog','query':definition['key'],'limit':100})
             if not any(d==definition for d in verified['packages']):raise ValueError('NAVIGATION_READBACK_MISMATCH:'+key)
             if definition['id'] not in row['graph']['recommendationPackageIds']:raise ValueError('NAVIGATION_ATTACHMENT_UNCONFIRMED:'+key)
@@ -324,7 +351,7 @@ def run(client,journal_file,*,apply=False,manage_supplied=False,revise_navigatio
         # Mutations affect only the requested lens owners, never working processes.
         for key,desired in graphs.items():
             if key in state['verified']:
-                row=client.call({'method':'read','packageId':state['verified'][key]['packageId'],'detail':'full'})
+                row=read_graph(client,state['verified'][key]['packageId'])
                 verify_graph(row['graph'],desired);continue
             old=existing.get(key)
             if old is None:
@@ -350,28 +377,49 @@ def run(client,journal_file,*,apply=False,manage_supplied=False,revise_navigatio
                     package_revision=changed['revision'];graph_revision=changed['receipt']['graphRevision']
                 # Build once against the reviewed initial graph. Each request is persisted before effect.
                 commands=delta_commands(old['graph'],desired)
-                for index,(name,command,data) in enumerate(commands):
-                    op_key=key+'/'+name
-                    if op_key in state['operations']:
-                        req=state['operations'][op_key]['request']
-                    else:
-                        message={'method':'schema','op':'paper_edit','packageId':pid,'nodeId':data.get('nodeId',old['graph']['rootRequirementId']),'command':command}
-                        if command=='add':message['entityKind']=data['entity']['kind']
-                        req=client.call(message)['request']
-                        if (req['expectedPackageRevision'],req['expectedGraphRevision'])!=(package_revision,graph_revision):raise ValueError('LENS_CHANGED_SINCE_REVIEW:'+key)
-                        req.update(data=data,note='Структурный перенос '+key+': '+name+'; полный исходник и карта сохранены.')
-                    result=write(op_key,req)
-                    changed=next(p for p in result['packages'] if p['packageId']==pid)
-                    package_revision=changed['revision'];graph_revision=changed['receipt']['graphRevision']
-                    if (index+1)%10==0:progress('LENS_PROGRESS '+key+' '+str(index+1)+'/'+str(len(commands)))
-            actual=client.call({'method':'read','packageId':pid,'detail':'full'})
+                legacy=any(key+'/'+name in state['operations'] for name,_,_ in commands)
+                saved_batch=any(k.startswith(key+'/batch/') for k in state['operations'])
+                if legacy and saved_batch:raise ValueError('LENS_JOURNAL_MIXED_AUTHORING_PROTOCOL:'+key)
+                # An existing uncertain batch retains its protocol even if the server later changes.
+                use_batch=saved_batch or not legacy and api_features(client).get('paperBatch',{}).get('available')
+                if use_batch:
+                    for offset in range(0,len(commands),100):
+                        chunk=commands[offset:offset+100];op_key=key+'/batch/'+str(offset//100)
+                        op=state['operations'].get(op_key)
+                        req=op['request'] if op else client.call({'method':'schema','op':'batch','packageId':pid})['request']
+                        if not op:
+                            if (req['expectedPackageRevision'],req['expectedGraphRevision'])!=(package_revision,graph_revision):
+                                raise ValueError('LENS_CHANGED_SINCE_REVIEW:'+key)
+                            req.update(steps=[{'alias':'c'+str(offset+i),'op':'paper_edit','command':command,'data':data,
+                                'note':'Структурный перенос '+key+': '+name} for i,(name,command,data) in enumerate(chunk)],
+                                note='Согласованные структурные правки линзы '+key+'; исходники и история сохранены.')
+                        result=write(op_key,req)
+                        changed=next(p for p in result['packages'] if p['packageId']==pid)
+                        package_revision=changed['revision'];graph_revision=changed['receipt']['graphRevision']
+                        progress('LENS_PROGRESS '+key+' '+str(min(offset+100,len(commands)))+'/'+str(len(commands)))
+                else:
+                    for index,(name,command,data) in enumerate(commands):
+                        op_key=key+'/'+name
+                        if op_key in state['operations']:
+                            req=state['operations'][op_key]['request']
+                        else:
+                            message={'method':'schema','op':'paper_edit','packageId':pid,'nodeId':data.get('nodeId',old['graph']['rootRequirementId']),'command':command}
+                            if command=='add':message['entityKind']=data['entity']['kind']
+                            req=client.call(message)['request']
+                            if (req['expectedPackageRevision'],req['expectedGraphRevision'])!=(package_revision,graph_revision):raise ValueError('LENS_CHANGED_SINCE_REVIEW:'+key)
+                            req.update(data=data,note='Структурный перенос '+key+': '+name+'; полный исходник и карта сохранены.')
+                        result=write(op_key,req)
+                        changed=next(p for p in result['packages'] if p['packageId']==pid)
+                        package_revision=changed['revision'];graph_revision=changed['receipt']['graphRevision']
+                        if (index+1)%10==0:progress('LENS_PROGRESS '+key+' '+str(index+1)+'/'+str(len(commands)))
+            actual=read_graph(client,pid)
             if (actual['package']['revision'],actual['graph']['revision'])!=(package_revision,graph_revision):
                 raise ValueError('LENS_CHANGED_SINCE_REVIEW:'+key)
             checked=verify_graph(actual['graph'],desired)
             if old:
                 ref=old['references'][old['graph']['rootRequirementId']]
                 pin={k:ref[k] for k in ('packageId','identitySpace','graphRevision','sha256')}
-                historical=client.call({'method':'source_snapshot','packageId':pid,'pin':pin})
+                historical=client.call({'method':'source_snapshot','packageId':pid,'pin':pin,**({'detail':'graph'} if api_features(client).get('graphSnapshotRead',{}).get('available') else {})})
                 if historical['graph']!=old['graph']:raise ValueError('HISTORICAL_LENS_CHANGED:'+key)
                 if actual['package']['identitySpace']!=old['package']['identitySpace']:raise ValueError('LENS_IDENTITY_CHANGED')
             state['verified'][key]={'packageId':pid,'identitySpace':actual['package']['identitySpace'],'packageRevision':actual['package']['revision'],
