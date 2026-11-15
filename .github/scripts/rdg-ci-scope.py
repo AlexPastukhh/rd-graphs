@@ -6,7 +6,7 @@ from pathlib import Path
 import re
 import subprocess
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 # Exact audited inputs only. In particular OPERATIONS supplies the runtime ZIP
 # README; lenses, handoffs, fixtures, policy JSON and new paths stay on full CI.
 DOCS_ONLY = frozenset((

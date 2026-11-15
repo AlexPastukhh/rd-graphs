@@ -9,7 +9,7 @@ import tempfile
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
-spec = importlib.util.spec_from_file_location('ci_scope_test', ROOT/'tools/rdg-ci-scope.py')
+spec = importlib.util.spec_from_file_location('ci_scope_test', ROOT/'.github/scripts/rdg-ci-scope.py')
 SCOPE = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(SCOPE)
 
@@ -153,7 +153,10 @@ class Workflow(unittest.TestCase):
             self.assertTrue(matched, needle)
             for step in matched:
                 self.assertIn("steps.scope.outputs.mode == 'full'", step)
-        self.assertIn("'rdg-ci-scope.test.py'", (ROOT/'tools/rdg-ci.py').read_text())
+        routing = next(step for step in steps if 'name: CI routing contract tests' in step)
+        self.assertNotIn('if:', routing)
+        self.assertIn('run: python -B tests/rdg-ci-scope.test.py', routing)
+        self.assertIn('run: python -B .github/scripts/rdg-ci-scope.py', text)
 
 
 if __name__ == '__main__':
