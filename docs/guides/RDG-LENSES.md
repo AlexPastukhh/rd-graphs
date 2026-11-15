@@ -124,6 +124,22 @@ Evidence: `/workspace/repo/Workfiles/rdg-lens-corrections-20261112/`, journals `
 
 На срезе этой проверки живой API не обнаружил graph_title. План `review-followup/title-publication.json` содержит ровно девять изменений заголовка, без смены identities и без изменений Registry. Применение возможно после установки новой сборки и повторной проверки schema; до receipt/readback эти заголовки не считаются исправленными в live. Пользователь сообщил об исполнении Windows-команды 2026-11-13; live schema обнаружила graph_title, девять переименований применены и проверены тем же journal. Выбраны 11 полноценных Decisions model; B05 отложен до реальных задач, GitHub UNCERTAIN сохраняет отдельный статус. Evidence — `/workspace/repo/Workfiles/rdg-independent-audit-20261113/review-followup/`; текущий выпуск подтверждается полным CI/READY, а не прежним PASS.
 
+
+<a id="theory-lenses-publication-20261114"></a>
+### Пять линз адресуемой теории — 2026-11-14
+
+Обновлённые model/work/orient/decision-analysis/lens-system опубликованы отдельным API-проходом 2026-11-14 в 11:43 Asia/Bangkok. Все 31 операции имеют квитанции; identities и исторические версии сохранены. Собственные навигационные определения опубликованы и прикреплены к соответствующим линзам.
+
+| Линза | Package revision | Graph revision | Navigation revision |
+| --- | --- | --- | --- |
+| model | 180 | 180 | 2 |
+| work | 128 | 127 | 2 |
+| orient | 64 | 63 | 3 |
+| decision-analysis | 38 | 38 | 3 |
+| lens-system | 174 | 174 | 3 |
+
+Исходный результат: `/workspace/repo/Workfiles/rdg-theory-items-design-20261114/continuation-20261114/publication-result.json` и journal `publication-five.json`. Повторное read-only сравнение 2026-11-14 подтвердило точные тексты/source-map, Graph, SHA256 источников, рекомендации и attachment: source bundle `37a014431291f0118b71deb867896b4281cafe2d56adadef715d57ee183f55a4`, ноль команд изменения всех пяти. Evidence: `/workspace/repo/Workfiles/rdg-lenses-ci-completion-20261114/five-lenses-current-readback.json`. Устаревшая пометка о незавершённой публикации в карте состояния исправлена; повторные writes не выполнялись. Пользовательская UX-проверка и предметный B05 остаются самостоятельными.
+
 ## Базовая линза модели
 
 `model` задаёт смысловую основу построения процессов и всех остальных линз. Она должна учить выбирать форму записи: что является требуемым результатом R, его подтребованием, вариантом Decision, действием Action, фактом Context или методологией Canon. Для подцели R и требования, вводимого Decision, различаются основания и отношения; общие сущности сохраняют identity при нескольких родителях. Нормы — в [модели](RDG-ACTIVE-CONTRACT.md#модель-и-профили), [структуре](RDG-ACTIVE-CONTRACT.md#структура-актуальность-и-выполнение) и [масштабе записи](RDG-ACTIVE-CONTRACT.md#ценность-сохранения-и-масштаб-описания).
