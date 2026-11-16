@@ -21,7 +21,7 @@ test('authoritative documentation audit verifies policy classification, links, D
  assert(report.checkedTestCases>0);
 });
 
-test('current documentation has one entry, separate active semantics and operations',()=>{
+test('current documentation separates canonical lens semantics, compatibility index and operations',()=>{
  const registry=json('docs/DOCS-POLICY.json');
  assert.equal(registry.schemaVersion,1);
  const normative=new Set(registry.normative);
@@ -39,7 +39,38 @@ test('current documentation has one entry, separate active semantics and operati
  assert(contents('README.md').includes(sourceVersion()));
  assert(contents('docs/guides/RDG-CURRENT-STATE.md').includes(sourceVersion()));
  assert.match(contents('docs/guides/RDG-OPERATIONS.md'),/Операционный регламент|операционный регламент/);
- assert.match(contents('docs/guides/RDG-ACTIVE-CONTRACT.md'),/не создаёт writer rights/);
+ assert.match(contents('docs/lenses/bootstrap/model.md'),/не создаёт writer rights/);
+  assert.equal(registry.canonicalFacts.semanticSources,'docs/lenses/README.md');
+  assert.equal(registry.canonicalFacts.semanticCompatibilityIndex,'docs/guides/RDG-ACTIVE-CONTRACT.md');
+});
+
+test('semantic compatibility routes preserve the public rule addresses and lead to canonical sources',()=>{
+ const index=contents('docs/guides/RDG-ACTIVE-CONTRACT.md');
+ const slug=title=>title.toLowerCase().replace(/[^\p{L}\p{N}_\s-]/gu,'').replace(/ /g,'-');
+ const sections=new Map([...index.matchAll(/^(#{2,3}) (.+)\n([\s\S]*?)(?=^#{2,3} |$(?![\s\S]))/gm)]
+  .map(m=>[slug(m[2]),m[3]]));
+ const routes={
+  'ценность-сохранения-и-масштаб-описания':'../lenses/bootstrap/model.md#оценить-ценность-фрагмента',
+  'вопросы':'../lenses/bootstrap/model.md#questions-и-ответы',
+  'структура-актуальность-и-выполнение':'../lenses/bootstrap/decision-logic.md#читать-структуру-по-смыслу-отношений',
+  'checkpoint-перед-существенным-действием':'../lenses/bootstrap/checkpoint.md#узнать-момент-проверки',
+  'возможные-ветви-plan':'../lenses/bootstrap/plan-history.md#представить-альтернативное-продолжение',
+  'готовые-графы-линзы-и-рекомендации':'../lenses/bootstrap/lens-system.md#выбрать-уместный-объём-использования',
+  'владельцы-и-запись':'../lenses/bootstrap/work.md#использовать-общий-маршрут-записи'};
+ for(const [anchor,target] of Object.entries(routes)){
+  assert(sections.has(anchor),'lost public semantic address '+anchor);
+  assert(sections.get(anchor).includes(']('+target+')'),'wrong semantic owner for '+anchor);
+ }
+ for(const file of ['docs/guides/RDG-ACTIVE-CONTRACT.md','docs/guides/RDG-LENSES.md'])
+  assert.doesNotMatch(contents(file),/\(C1 OR C2\) AND C3/,'router must link to the criterion owner');
+ for(const file of json('docs/DOCS-POLICY.json').normative.filter(f=>/^docs\/lenses\/(bootstrap|methods)\//.test(f)))
+  assert(!contents(file).includes('RDG-ACTIVE-CONTRACT.md'),'canonical prose delegates back to compatibility index: '+file);
+ const registry=contents('docs/lenses/README.md');
+ assert.doesNotMatch(registry,/открытый выбор детализации model|native Decisions для каждого ещё не утверждены/);
+ assert(!contents('docs/guides/RDG-AGENT-BOOTSTRAP.md').includes('пробелы переноса в Decision definitions'));
+ for(const file of ['docs/README.md','docs/guides/RDG-AGENT-BOOTSTRAP.md','docs/guides/RDG-DEVELOPMENT-PLAN.md',
+  'docs/guides/RDG-DECISION-V1-CONTRACT.md','docs/guides/RDG-CURRENT-STATE.md','docs/guides/RDG-FUNCTIONS-AND-TESTS.md'])
+  assert(!contents(file).includes('RDG-ACTIVE-CONTRACT'),'current entry points must use canonical semantic owners: '+file);
 });
 
 test('present legacy entry points are unambiguously non-normative',()=>{

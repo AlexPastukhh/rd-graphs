@@ -7,7 +7,7 @@
 | Функционал, реализация, проверяемые сценарии | [Функции и тесты](guides/RDG-FUNCTIONS-AND-TESTS.md) |
 | Текущий статус / оставшаяся работа | [Состояние](guides/RDG-CURRENT-STATE.md) · [План](guides/RDG-DEVELOPMENT-PLAN.md) · [Backlog](../BACKLOG-IMPROVEMENTS.md) |
 | Практика: первый запуск Viewer, работа с решениями, ИИ, recovery и разработка | [Реестр Use Cases](use-cases/README.md) |
-| Смысл R/Decision/Action, зависимости и история | [Контракт](guides/RDG-ACTIVE-CONTRACT.md) |
+| Смысл R/Decision/Action, зависимости и история | [Источники принципов](lenses/README.md#владельцы-правил-и-карта-покрытия) |
 | Схемы, API и владельцы данных | [Технический контракт](guides/RDG-DECISION-V1-CONTRACT.md) |
 | Интерфейс | [Viewer](guides/VIEWER-EXPLORER.md) |
 | Запуск, API, тесты, обновление | [Регламент](guides/RDG-OPERATIONS.md) · [Браузерные проверки](../tests/visual/README.md) |
