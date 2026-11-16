@@ -1,8 +1,8 @@
 # RDG → Gendocen: действующий контракт зависимостей
 
-> **СТАТУС: ДЕЙСТВУЮЩИЙ КОНТРАКТ GENDOCEN.** Источник общих понятий и прав: [RDG-ACTIVE-CONTRACT](RDG-ACTIVE-CONTRACT.md). Предыдущий протокол внедрения оставлен [в архиве](RDG-GENDOCEN-REQUIREMENT-DEPENDENCIES-HISTORY.md).
+> **СТАТУС: ДЕЙСТВУЮЩИЙ КОНТРАКТ GENDOCEN.** Источник общих понятий и прав: [реестр смысловых источников](../lenses/README.md#владельцы-правил-и-карта-покрытия). Предыдущий протокол внедрения оставлен [в архиве](RDG-GENDOCEN-REQUIREMENT-DEPENDENCIES-HISTORY.md).
 
-Этот документ описывает отдельную подсистему Gendocen для прежних owners. Native политики, `review.required` и карточки Decision-инвалидации описаны в [текущем контракте](RDG-ACTIVE-CONTRACT.md#политики-зависимостей); их проверка не доказывает состояние внешнего engine.
+Этот документ описывает отдельную подсистему Gendocen для прежних owners. Native политики, `review.required` и карточки Decision-инвалидации описаны в [текущем контракте](../lenses/bootstrap/decision-logic.md#читать-review-и-disabled); их проверка не доказывает состояние внешнего engine.
 
 ## Раздельные владельцы
 

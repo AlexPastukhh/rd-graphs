@@ -68,6 +68,9 @@ test('semantic compatibility routes preserve the public rule addresses and lead 
  const registry=contents('docs/lenses/README.md');
  assert.doesNotMatch(registry,/открытый выбор детализации model|native Decisions для каждого ещё не утверждены/);
  assert(!contents('docs/guides/RDG-AGENT-BOOTSTRAP.md').includes('пробелы переноса в Decision definitions'));
+ for(const file of ['docs/README.md','docs/guides/RDG-AGENT-BOOTSTRAP.md','docs/guides/RDG-DEVELOPMENT-PLAN.md',
+  'docs/guides/RDG-DECISION-V1-CONTRACT.md','docs/guides/RDG-CURRENT-STATE.md','docs/guides/RDG-FUNCTIONS-AND-TESTS.md'])
+  assert(!contents(file).includes('RDG-ACTIVE-CONTRACT'),'current entry points must use canonical semantic owners: '+file);
 });
 
 test('present legacy entry points are unambiguously non-normative',()=>{

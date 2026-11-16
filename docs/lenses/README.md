@@ -129,6 +129,6 @@ DRY оценивает согласованность знания, KISS — о�
 
 ## Источники
 
-- [Смысловой контракт RDG](../guides/RDG-ACTIVE-CONTRACT.md)
+- [Прежние адреса смысловых правил](../guides/RDG-ACTIVE-CONTRACT.md)
 - [Полный план линз и целевое содержание model](../guides/RDG-LENSES.md)
 - [Технические требования к содержанию и переносу](../guides/RDG-DECISION-V1-CONTRACT.md)
