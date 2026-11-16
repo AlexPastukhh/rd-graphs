@@ -6,6 +6,9 @@ param(
     [string]$ExpectedBuildId = '',
     [string]$PinnedSha256 = '',
     [switch]$Watch,
+    [switch]$ValidateOnly,
+    [string]$ArtifactDirectory = '',
+    [string]$ExpectedRepositoryHead = '',
     [string]$StateDirectory = (Join-Path $env:LOCALAPPDATA 'RDG-Server\cicd')
 )
 $ErrorActionPreference = 'Stop'
@@ -15,6 +18,10 @@ if ($ExpectedBuildId -or $PinnedSha256) {
         $PinnedSha256 -cnotmatch '^[a-f0-9]{64}$' -or $Watch) {
         throw 'Pinned updates require an exact ExpectedBuildId and PinnedSha256, without Watch.'
     }
+}
+if ($ValidateOnly -and $Watch) { throw 'ValidateOnly does not support Watch.' }
+if ($ArtifactDirectory -and (-not $ExpectedBuildId -or $ExpectedRepositoryHead -cnotmatch '^[a-f0-9]{40}$')) {
+    throw 'Local artifact updates require exact build, checksum and repository HEAD pins.'
 }
 $bootstrap = $PSScriptRoot
 $trusted = Get-Content -Raw -LiteralPath (Join-Path $bootstrap 'BUILD.json') | ConvertFrom-Json
@@ -29,6 +36,12 @@ $mutex = New-Object Threading.Mutex($false, 'Local\RDG-CICD-Updater')
 if (-not $mutex.WaitOne(0)) { throw 'Another RDG updater is already running.' }
 function Copy-RDGArtifact {
     param([string]$RemotePath, [string]$Destination)
+    if ($ArtifactDirectory) {
+        $name = ($RemotePath -split '/')[-1]
+        if ($name -cne 'ready.json' -and $name -cnotmatch '^RDG-Server-ci-[a-z0-9-]{10,100}\.zip$') { throw 'Unexpected local artifact name.' }
+        Copy-Item -LiteralPath (Join-Path $ArtifactDirectory $name) -Destination $Destination
+        return
+    }
     # Docker cp writes successful transfer statistics to stderr. Capture both
     # streams even under Windows PowerShell 5.1 (which can treat native stderr
     # as an error with ErrorActionPreference=Stop). Never hide a failed exit.
@@ -79,20 +92,6 @@ function Update-RDGOnce {
         if ($ExpectedBuildId -and ($ready.buildId -cne $ExpectedBuildId -or $ready.sha256 -cne $PinnedSha256)) {
             throw 'Pinned CI release mismatch; no update performed.'
         }
-        $activePath = Join-Path $StateDirectory 'active.json'
-        if (Test-Path -LiteralPath $activePath) {
-            $active = Get-Content -Raw -LiteralPath $activePath | ConvertFrom-Json
-            if ($active.sha256 -eq $ready.sha256) {
-                $currentOrigin = if ($Mode -eq 'Local') { 'http://localhost:18880' } else { 'https://' + $Domain }
-                try {
-                    $currentHealth = Read-RDGHealth $currentOrigin
-                    if ($currentHealth.status -eq 'ok' -and $currentHealth.service -eq 'rdg' -and
-                        $currentHealth.buildId -ceq $ready.buildId) { return }
-                } catch {
-                    Write-Warning 'Recorded release is not verified on the running server; attempting an update.'
-                }
-            }
-        }
         $archive = Join-Path $temporary 'release.zip'
         Copy-RDGArtifact ('/workspace/repo/Workfiles/rdg-ci/' + $ready.artifact) $archive
         if ((Get-Item -LiteralPath $archive).Length -ne $ready.bytes -or
@@ -118,11 +117,14 @@ function Update-RDGOnce {
             if ($expanded -gt 100000000) { throw 'Expanded release is too large.' }
         } finally { $zip.Dispose() }
         $expandedPath = Join-Path $temporary 'expanded'
-        Expand-Archive -LiteralPath $archive -DestinationPath $expandedPath
+        [IO.Compression.ZipFile]::ExtractToDirectory($archive, $expandedPath)
         $package = Join-Path $expandedPath 'RDG-Server'
         $manifest = Get-Content -Raw -LiteralPath (Join-Path $package 'BUILD.json') | ConvertFrom-Json
         if ($manifest.kind -ne 'rdg-personal-server-package' -or $manifest.serverBuild -cne $ready.buildId -or
             $manifest.imageTag -cne $ready.buildId -or $manifest.includesUserData -ne $false) { throw 'Release manifest mismatch.' }
+        if ($ExpectedRepositoryHead -and $manifest.repositoryHead -cne $ExpectedRepositoryHead) {
+            throw 'Release repository HEAD mismatch.'
+        }
         foreach ($property in $manifest.files.PSObject.Properties) {
             $name = $property.Name
             if ($name -notmatch '^[a-zA-Z0-9_./-]+$' -or $name.StartsWith('/') -or
@@ -133,6 +135,21 @@ function Update-RDGOnce {
         if (@(Get-ChildItem -LiteralPath $package -File -Recurse -Force).Count -ne $expectedCount) { throw 'Unlisted package files.' }
         foreach ($name in $fixedFiles) {
             if ($manifest.files.$name -ne $trusted.files.$name) { throw ('Deployment config changed; install a reviewed new bootstrap first: ' + $name) }
+        }
+        if ($ValidateOnly) { Write-Host ('RDG package verified: ' + $ready.buildId); return }
+        $activePath = Join-Path $StateDirectory 'active.json'
+        if (Test-Path -LiteralPath $activePath) {
+            $active = Get-Content -Raw -LiteralPath $activePath | ConvertFrom-Json
+            if ($active.sha256 -eq $ready.sha256) {
+                $currentOrigin = if ($Mode -eq 'Local') { 'http://localhost:18880' } else { 'https://' + $Domain }
+                try {
+                    $currentHealth = Read-RDGHealth $currentOrigin
+                    if ($currentHealth.status -eq 'ok' -and $currentHealth.service -eq 'rdg' -and
+                        $currentHealth.buildId -ceq $ready.buildId) { return }
+                } catch {
+                    Write-Warning 'Recorded release is not verified on the running server; attempting an update.'
+                }
+            }
         }
         $releasePath = Join-Path $StateDirectory $ready.buildId
         if (Test-Path -LiteralPath $releasePath) {

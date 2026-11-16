@@ -57,6 +57,12 @@
 
 Доставка завершена через [PR #11](https://github.com/AlexPastukhh/rd-graphs/pull/11): HEAD `7cb5ff5…`, владелец слил main `7e5e3b6…`; GitHub runtime CI и Release Impact прошли. Docker primary обновлён штатно; полный локальный gate занял 1305,88 с. Владелец установил `ci-20261114t145358118427-c18653ac9d`; health и capabilities подтвердили host identity и contractVersion 2. Evidence: `/workspace/repo/Workfiles/rdg-api-runtime-delivery-20261114/installed-readback.json`. UX и B05 остаются отдельными. Runtime-worktree, frozen-выпуски и журналы сохраняются. [Оптимизация маршрута CI](../use-cases/development.md#rdg-github-ci-scope) выполняется отдельным изменением исходников.
 
+## Windows source mirror и GitHub runtime delivery — 2026-11-16
+
+Владелец выполнил замену старого dirty Windows checkout на чистый clone принятого GitHub main `9e97f26ff738da2bda0303a03811344ae873cf60`. Прежний каталог целиком, включая `.git` и ignored-файлы, сохранён в `Fortis-Recovery/rd-graphs-mirror-20261116-231702-b6fa8240a54a4edbbece8fe062a7f62c/previous-repository`; receipt — соседний `migration.json`. Восстановление source не обновляло работающий сервер. Дальнейшее обновление исходников — Mirror Pull Windows main.
+
+В исходниках подготовлен отдельный [owner-run путь установки из GitHub CI](RDG-OPERATIONS.md#разработка-и-обновление-серверного-runtime): exact main/run/artifact pins, проверка двух ZIP/manifest и deployment scripts, health/receipt, runtime вне Git clone. Принятие этих исходников, новый GitHub artifact и первый Windows запуск этого пути проверяются отдельно; установленный buildId остаётся указанным выше. B05/T7 и пользовательская UX-приёмка не закрываются. Evidence диагностики и восстановления: `/workspace/repo/Workfiles/rdg-windows-dirty-investigation-20261116/`; разработки доставки: `/workspace/repo/Workfiles/rdg-github-runtime-delivery-20261116/`.
+
 ## Основной учебный рецепт после уточнения 2026-11-12
 
 Рецепт в tools/rdg-current-example.py приведён к единому примеру «Выбор, анализ и выполнение» с целевым путём examples/decision-readiness-20261112. Он сочетает раскрытые варианты, теорию Decision и цельного Action, каноны с известными ошибками, контекст, Findings, Questions, Plan и историю. Наличие рецепта не подтверждает публикацию: доступный owner и его версию проверяют через настоящий каталог.

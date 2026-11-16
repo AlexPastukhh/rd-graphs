@@ -217,7 +217,7 @@ RDG и private API gateway используют прежние Application/Autho
 
 ## Запуск на Fortis_M
 
-Нужны Docker с Linux containers, Compose v2 и свободное место на Windows-диске Docker. Распакуйте весь ZIP в новую папку кода. В PowerShell из каталога RDG-Server:
+Нужны Docker с Linux containers, Compose v2 и свободное место на Windows-диске Docker. Для первичной установки распакуйте весь проверенный ZIP в новую папку вне Git clone. В PowerShell из каталога RDG-Server:
 
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\Start-RDG.ps1 -Mode Local -AgentContainer CONTAINER_ID
@@ -235,7 +235,7 @@ Get-Content "$env:LOCALAPPDATA\RDG-Server\secrets\browser-token.txt"
 
 Если входящий 18880 занят, namespace/ключи не пересоздавайте: сначала проверьте конфликт порта. При EROFS/EIO восстановите Docker storage до повторного запуска. `Stop-RDG.ps1` останавливает сервисы, сохраняя volumes.
 
-Для закреплённого выпуска Update-RDG.ps1 принимает ExpectedBuildId и PinnedSha256 только в паре, без Watch. Он проверяет их при собственном чтении READY до установки; дальнейшее чтение ZIP использует уже выбранные имя и SHA. Invoke-RDG-Ready-Once.ps1 передаёт эту пару автоматически. Обычный явно запущенный Watch без pin сохраняет прежний режим отслеживания новых READY.
+Обычные обновления выполняйте из чистого GitHub source mirror через Install-RDGFromGitHub.ps1 по [регламенту установки](https://github.com/AlexPastukhh/rd-graphs/blob/main/docs/guides/RDG-OPERATIONS.md#разработка-и-обновление-серверного-runtime): Windows gh получает закреплённый успешный CI artifact, updater проверяет pins до Start. Этот runtime ZIP не является исходным Git clone; не распаковывайте его поверх репозитория. Прежние Invoke-RDG-Ready-Once.ps1 и Update-RDG.ps1 -Watch используют Docker outbox и сохранены как legacy, вне обычного GitHub маршрута.
 
 ## Где находятся ключи и данные
 
@@ -294,19 +294,23 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\Start-RDG.ps1 -Mode HT
 
 <!-- RDG SERVER PACKAGE END -->
 
-**Fortis Approvals/Sonar — уже работающий контур для одного actor/project:** R7 Unified Gateway принимает typed READ/ASK, владелец подтверждает точную заявку через WebAuthn, затем Sonar Issue переходит в `ACCEPTED` с независимым readback. Это не означает, что защищённая доставка кода уже внедрена: GitHub PR/required checks, exact SHA admission, Windows Importer/AV и owner RUN остаются отдельными будущими D1–D4 gates. Ниже описан **существующий legacy RDG updater**, который может получить ZIP прямо из Fortis Repo Docker; он не обеспечивает эти D1–D4 guarantees. См. [Fortis current state](FORTIS-APPROVALS-SECURE-DEVELOPMENT.md). Credential и Docker admin не передавать AI. Принятые Graph/Plan/namespace/volumes сохранять.
+**Доставка Fortis и локальная установка RDG имеют разные границы.** Ниже описан owner-run путь из GitHub CI. Он проверяет source/run/artifact и сохраняет прежние volumes; это не внедрение всех D1–D4 gates (защищённый Windows Importer/AV и отдельный owner RUN остаются в [Fortis runbook](FORTIS-APPROVALS-SECURE-DEVELOPMENT.md)). Credential и Docker admin не передавать AI.
 
 ## Разработка и обновление серверного runtime
 
-1. Изменить source и подходящие тесты; сохранить чужой staged/dirty worktree.
-2. Запустить `DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1 PYTHONWARNINGS=ignore python3 -B tools/rdg-ci.py`. Проверки используют временные owners. Во время прогона исходники не менять.
-3. Проверить `status.json`, `ready.json`, SHA архива и совпадение source fingerprint. READY указывает на проверенный код, а не на установленный сервер.
-4. ИИ выдаёт пользователю готовую команду PowerShell с фактическим ID рабочего Fortis Repo контейнера, точными `ExpectedBuildId` и `PinnedSha256` проверенного ZIP. Исходник bootstrap хранится в [Invoke-RDG-Ready-Once.ps1](../../deploy/rdg-server/Invoke-RDG-Ready-Once.ps1). Команда копирует его проверенную передаточную копию из новой task-папки `/workspace/repo/Workfiles/_fortis_windows_transfer_tmp/` и запускает установку. По общему регламенту Fortis сначала проверить running-контейнер, создать новый локальный каталог без перезаписи и сверить заранее вычисленный SHA256 самого bootstrap; только затем исполнять его с точными buildId и ZIP SHA256. Перед выдачей проверить исходник bootstrap, расположение копии и соответствие значений READY. Bootstrap передаёт ExpectedBuildId/PinnedSha256 самому updater: одной предварительной проверки READY или проверки buildId после установки недостаточно. Updater сравнивает pin с собственным неизменяемым снимком READY до запуска; при расхождении выполняется STOP, другой выпуск не выбирается. Не оставлять пользователю подстановку этих значений вручную.
-5. Пользователь выполняет команду в PowerShell на Windows, вне Docker. Setup сохраняет действующие данные и credentials. Сам READY не подтверждает этот шаг.
-6. После успешного установщика проверить установленный `/healthz` buildId; пользователь нажимает F5 в RDG и проверяет нужный сценарий. Readback и пользовательская UX-приёмка остаются отдельными свидетельствами.
+Исходники Windows — чистое зеркало GitHub `main` в `%USERPROFILE%\Repos\rd-graphs`. Их обновляет **Mirror Pull Windows main** после свежего Preview. ZIP релиза содержит runtime, а не Git-репозиторий: его нельзя распаковывать поверх исходников. Установка сервера выполняется отдельно; исходники, `.git`, index и refs установщик не меняет.
 
-Файлы release gate: [CI](../../tools/rdg-ci.py), [packager](../../tools/rdg-server-package.py), [тесты CI](../../tests/rdg-ci.test.py) и [CD](../../tests/rdg-cd.test.py). Текущий outbox — `/workspace/repo/Workfiles/rdg-ci`; команда «обновить Windows» не исполняется в Linux Docker как будто это Windows host.
+1. Изменить source и адресные тесты в task-worktree. Проверить diff и docs audit; доставить PR через typed Gateway. Полный gate `tools/rdg-ci.py` выполняется GitHub CI для точного изменения, затем успешного принятого `main`. Локальный full gate остаётся доступен для диагностики: `DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1 PYTHONWARNINGS=ignore python3 -B tools/rdg-ci.py`; его Docker outbox сам по себе не является поставкой Windows.
+2. После владельческого Merge проверить свежий GitHub `main` и его успешный **RDG CI**: repository/head repository `AlexPastukhh/rd-graphs`, workflow `.github/workflows/rdg-ci.yml`, event `push` либо `workflow_dispatch`, branch `main`, полный 40-символьный SHA, run ID и attempt. Выбрать неистёкший artifact `rdg-server-<SHA>` этого run; сохранить artifact ID и `sha256:...` digest. Docs-only run без runtime artifact не даёт новый релиз; нужен полный run актуального main. Artifact хранится 7 дней; при истечении получить новый проверенный full run, не переключаться на Docker ZIP автоматически.
+3. Пользователь обновляет Windows source через Mirror. На Windows нужны Git, Docker Desktop (Linux engine) и GitHub CLI `gh` с уже настроенным доступом владельца к Actions этого репозитория. Токен в чат, Docker, аргументы или логи не передают. Установщик сам не логинится и не устанавливает зависимости.
+4. ИИ выдаёт готовую PowerShell 5.1 команду из фактического чистого Windows clone для [Install-RDGFromGitHub.ps1](../../deploy/rdg-server/Install-RDGFromGitHub.ps1) с заполненными `ExpectedCommitSha`, `RunId`, `RunAttempt`, `ArtifactId`, `PinnedArtifactSha256` и фактическим `AgentContainer`. Добавить `-Apply` для установки; без него выполняется полный download/проверка пакета без запуска Docker и изменения активного релиза. Mode/Domain должны соответствовать установленному серверу. Не оставлять подстановку pins пользователю.
+5. Установщик повторно проверяет чистоту/HEAD/origin/upstream source, актуальный GitHub main, CI и artifact metadata; скачивает ZIP **через Windows gh из GitHub** в отдельный transfer-каталог под `%LOCALAPPDATA%\RDG-Server\cicd`, сверяет внешний digest/size и внутренний READY/ZIP SHA256. Updater и Start берутся из проверенного checkout, не исполняются из download. [Update-RDG.ps1](../../deploy/rdg-server/Update-RDG.ps1) проверяет безопасные ZIP paths, полный manifest, source HEAD и байтовое соответствие deployment scripts/Compose доверенной копии. Перед запуском источник и GitHub selection проверяются снова. При несовпадении — STOP без выбора другого выпуска.
+6. Только `-Apply` вызывает прежний Start с `SkipSetup`, сохраняет данные/credentials/volumes и проверяет точный `/healthz` buildId. Успех выводит `RDG_GITHUB_INSTALL_READY` и путь несекретного `github-install-*.json` с source/run/artifact/payload/build и подтверждением health. Неудача не выдаёт этот receipt; после сбоя во время Start проверять фактический сервер перед повтором. Это не автоматический rollback runtime.
+7. После успешной установки пользователь нажимает F5 и проверяет нужный сценарий. Health, пользовательская UX-приёмка и B05/T7 — отдельные свидетельства. Установщик ничего не публикует в RDG FileStore.
 
+[CI](../../tools/rdg-ci.py), [packager](../../tools/rdg-server-package.py), [package tests](../../tests/rdg-ci.test.py), [updater tests](../../tests/rdg-cd.test.py) и [GitHub delivery tests](../../tests/rdg-github-delivery.test.py) проверяют изолированные fixtures. Linux PowerShell PASS не является native Windows PASS. Runtime версии находятся вне source clone; старый Windows checkout с незакоммиченными файлами сначала сохраняют целиком и исследуют, не делают reset/clean ради Pull.
+
+**Legacy:** [Invoke-RDG-Ready-Once.ps1](../../deploy/rdg-server/Invoke-RDG-Ready-Once.ps1) и `Update-RDG.ps1 -Watch` используют Docker outbox `/workspace/repo/Workfiles/rdg-ci`. Они сохранены для совместимости и диагностики и не входят в новый GitHub маршрут. Не выдавать прямую Docker ZIP-команду как обычное обновление Windows и не запускать Watch одновременно с owner-run установкой. Команда «обновить Windows» не исполняется внутри Linux Docker как host-команда.
 
 ## Тестовый процесс A0–A17 через private API
 
