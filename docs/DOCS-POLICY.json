@@ -80,7 +80,9 @@
     "modules": "tools/rdg-module-registry.json",
     "primaryProfile": "tools/rdg-decision-model.py",
     "primaryProfileSchema": "tools/contracts/rdg-decision-v1.schema.json",
-    "releaseGate": "tools/rdg-ci.py"
+    "releaseGate": "tools/rdg-ci.py",
+    "semanticSources": "docs/lenses/README.md",
+    "semanticCompatibilityIndex": "docs/guides/RDG-ACTIVE-CONTRACT.md"
   },
   "statusMarkers": {
     "normative": "СТАТУС:",

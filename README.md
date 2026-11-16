@@ -10,7 +10,7 @@ RDG хранит цели, варианты решений, действия и 
 | Узнать, что реализовано и что остаётся | [Текущее состояние](docs/guides/RDG-CURRENT-STATE.md) · [План](docs/guides/RDG-DEVELOPMENT-PLAN.md) · [Backlog](BACKLOG-IMPROVEMENTS.md) |
 | Начать пользоваться RDG, открыть Viewer, вести решение | [Практические Use Cases](docs/use-cases/README.md) |
 | ИИ: работать через API и продолжать после обрыва | [UC-RDG-003/004](docs/use-cases/ai-work.md) |
-| Понять смысл модели и зависимостей | [Контракт](docs/guides/RDG-ACTIVE-CONTRACT.md) |
+| Понять смысл модели и зависимостей | [Источники принципов](docs/lenses/README.md#владельцы-правил-и-карта-покрытия) |
 | Пользоваться интерфейсом | [Viewer](docs/guides/VIEWER-EXPLORER.md) |
 | Запустить, проверить или обновить | [Операционный регламент](docs/guides/RDG-OPERATIONS.md) |
 | Менять код и схемы | [AGENTS](AGENTS.md) · [Технический контракт](docs/guides/RDG-DECISION-V1-CONTRACT.md) |
