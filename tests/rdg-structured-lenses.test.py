@@ -160,9 +160,12 @@ class Sources(unittest.TestCase):
         key='research';plan,graphs,_=P.bundle([key]);path=ROOT/'docs/lenses/methods/research.md'
         text,source,sections=C.source_sections(path)
         before=C.compile_one(key,plan[key],graphs[key])[0]
-        changed=text.replace('Редакция 2026-11-12.','Редакция 2026-11-13.',1)
+        editorial=next(line for line in sections[0]['text'].splitlines() if 'СТАТУС:' in line)
+        replacement=editorial+' Редакторское уточнение для проверки.'
+        changed=text.replace(editorial,replacement,1)
+        self.assertNotEqual(changed,text)
         revised=copy.deepcopy(sections)
-        revised[0]['text']=revised[0]['text'].replace('Редакция 2026-11-12.','Редакция 2026-11-13.',1)
+        revised[0]['text']=revised[0]['text'].replace(editorial,replacement,1)
         next_source={**source,'sha256':C.sha(changed.encode()),'gitCommit':None}
         with patch.object(C,'source_sections',return_value=(changed,next_source,revised)):
             after=C.compile_one(key,plan[key],before)[0]
