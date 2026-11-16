@@ -18,8 +18,8 @@
       },
       "sourceRef": {
         "path": "docs/lenses/bootstrap/orient.md",
-        "sha256": "24efa59d1bf88c656ac861ad11fbc060d1c1c852d3e5a339605aa64b19b11ead",
-        "gitCommit": "1948833d146df92156ca3d165f50f16cb1e35441"
+        "sha256": "7691942944097a4065e8f532433a309a128bf149ac516ddc7140a51a3adff83d",
+        "gitCommit": "650378c0a772a93007602b026f3ff8cbd7cc2186"
       },
       "sourceMapInfoId": "LS-MAP-ORIENT"
     },
@@ -40,8 +40,8 @@
       },
       "sourceRef": {
         "path": "docs/lenses/bootstrap/model.md",
-        "sha256": "7e7abf11e7dc0b13065e431af3918b9d8e26291cdb047005969650925d98fcd2",
-        "gitCommit": "1948833d146df92156ca3d165f50f16cb1e35441"
+        "sha256": "b713b048dc205309836077a35bab67c651a213a4eebf63a0e7da836fc0bffd85",
+        "gitCommit": "650378c0a772a93007602b026f3ff8cbd7cc2186"
       },
       "sourceMapInfoId": "LS-MAP-MODEL"
     },
@@ -107,8 +107,8 @@
       },
       "sourceRef": {
         "path": "docs/lenses/bootstrap/work.md",
-        "sha256": "e469e49af2ed2130ac11035db038d542eff19f183a7f9b9b9f3cf6449094452f",
-        "gitCommit": "1948833d146df92156ca3d165f50f16cb1e35441"
+        "sha256": "cfe895dff539e34934b05cb23b413f81290cf7d67b197449b7110f39b64f76f1",
+        "gitCommit": "650378c0a772a93007602b026f3ff8cbd7cc2186"
       },
       "sourceMapInfoId": "LS-MAP-WORK"
     },
@@ -301,8 +301,8 @@
       },
       "sourceRef": {
         "path": "docs/lenses/methods/decision-analysis.md",
-        "sha256": "69d3fe94cee5cd759b78fa1094f40862e5a9729d1a534e032894abc3c5dc2ded",
-        "gitCommit": "1948833d146df92156ca3d165f50f16cb1e35441"
+        "sha256": "55f4cdeedc8a0acc1d5c410f9c045d85efb1ef2f2091db367131b0f5c820627d",
+        "gitCommit": "650378c0a772a93007602b026f3ff8cbd7cc2186"
       },
       "sourceMapInfoId": "LS-MAP-DECISION-ANALYSIS"
     },
