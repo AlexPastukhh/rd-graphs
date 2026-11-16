@@ -181,7 +181,7 @@
       "K-MODEL-TYPED",
       "C-MODEL-PAPER"
     ],
-    "sourceRevision": 7,
+    "sourceRevision": 8,
     "workGraphId": "WG-MODEL",
     "overrides": {
       "R-MODEL-LENSES": {
@@ -876,8 +876,19 @@
       "CANON-WORK-DECISION",
       "INFO-DECISION-API-WORK"
     ],
-    "sourceRevision": 6,
-    "workGraphId": "WG-WORK"
+    "sourceRevision": 7,
+    "workGraphId": "WG-WORK",
+    "sharedTheory": [
+      [
+        "Поддерживать процесс",
+        [
+          "A-WORK-DO",
+          "A-WORK-EVIDENCE",
+          "LS-STEP-WORK-DO",
+          "LS-STEP-WORK-RECORD"
+        ]
+      ]
+    ]
   },
   "checkpoint": {
     "group": "bootstrap",
@@ -1565,7 +1576,7 @@
       "I-LENS-PRESERVE",
       "INFO-DECISION-API-PRESERVE"
     ],
-    "sourceRevision": 5,
+    "sourceRevision": 6,
     "workGraphId": "WG-preserve",
     "decisionGroups": [
       {
