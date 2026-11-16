@@ -21,12 +21,12 @@
    DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1 PYTHONWARNINGS=ignore python3 -B tools/rdg-ci.py
    ```
 
-   Затем сверить `status.json`, `ready.json`, source SHA256, ZIP SHA256 и содержимое release. `ready` относится **только** к этому проверенному срезу. Если изменена только документация — проверить её адресными docs-тестами; новый READY не следует из docs-only правки.
+   Затем сверить `status.json`, `ready.json`, source SHA256, ZIP SHA256 и содержимое release. Обычная поставка Windows выполняется из успешного GitHub CI принятого main по [регламенту установки](../guides/RDG-OPERATIONS.md#разработка-и-обновление-серверного-runtime); Mirror обновляет только source clone. `ready` относится **только** к этому проверенному срезу. Если изменена только документация — проверить её адресными docs-тестами; новый READY не следует из docs-only правки.
 5. Зафиксировать **статус задачи** в [backlog](../../BACKLOG-IMPROVEMENTS.md) и обновить **владельца правила** (contract/API/Viewer/lenses), а UC только если поменялся повторяемый практический маршрут. При смене чата дать короткий handoff по [AGENTS](../../AGENTS.md) с точным SHA, PASS и ограничениями; не множить архивные планы.
 
 **STOP / UNKNOWN:** работающий Git checkout dirty, неподтверждённые owners или несовместимые профили, неправильно выбранная модель, отсутствие прав, просроченный READY, непроверенный browser или неизвестные GitHub capabilities — не делать reset/clean, массовый stage, push через обход Gateway, установка Windows или live migration без отдельного разрешённого пути. Общий container [README](https://github.com/AlexPastukhh/fortis-container/blob/main/README.md) и `UC-CONT-003` регулируют GitHub.
 
-**Готово:** изменение и соответствующий смысл/документы совпадают, адресные проверки PASS, при runtime изменении точный Docker READY подтверждён; отдельные live/Windows/user acceptance помечены как **непроверенные**, пока не проведены.
+**Готово:** изменение и соответствующий смысл/документы совпадают, адресные проверки PASS, при runtime изменении точный полный CI/READY подтверждён; для Windows выбран GitHub artifact принятого main; отдельные live/Windows/user acceptance помечены как **непроверенные**, пока не проведены.
 
 **Владельцы и тесты:** [AGENTS](../../AGENTS.md), [операции](../guides/RDG-OPERATIONS.md#разработка-и-обновление-серверного-runtime), [CI driver](../../tools/rdg-ci.py), [docs audit](../../tools/rdg-docs-audit.py), [функции и тесты](../guides/RDG-FUNCTIONS-AND-TESTS.md).
 
