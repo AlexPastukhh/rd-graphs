@@ -134,4 +134,11 @@ console.log(graphs.length);
             with self.assertRaisesRegex(ValueError,'UNSAFE_LENS_DEFINITION'):A.read_lens_catalog()
 
 
+class ChatLauncherCatalogCI(unittest.TestCase):
+    def test_rdg_owned_commands_validation_in_standard_ci(self):
+        result=subprocess.run(['python3','-B',str(ROOT/'tests/rdg-helper-commands.test.py')],
+            capture_output=True,text=True,timeout=30)
+        self.assertEqual(result.returncode,0,result.stdout+'\n'+result.stderr)
+
+
 if __name__=='__main__':unittest.main()
