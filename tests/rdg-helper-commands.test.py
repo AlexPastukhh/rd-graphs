@@ -7,7 +7,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-SCRIPT = ROOT / "tools/rdg-helper-commands.py"
+SCRIPT = ROOT / "kit/helper-commands/build.py"
 spec = importlib.util.spec_from_file_location("rdg_helper_commands", SCRIPT)
 module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)

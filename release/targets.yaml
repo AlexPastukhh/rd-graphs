@@ -107,7 +107,3 @@ noDeploymentPaths:
   - tools/rdg-lens-content-plan.json
   - tools/rdg-lens-content.py
   - tools/rdg-lens-publish.py
-  # RDG-owned read-only chat launchers; not part of the running RDG server image.
-  - tools/rdg-helper-commands.py
-  - work-kit/helper-commands/**
-  - release/targets.yaml

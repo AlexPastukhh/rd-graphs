@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Validate author-owned chat commands and publish one complete read-only manifest.
 
-Authoring file: work-kit/helper-commands/commands.json.
+Authoring file: kit/helper-commands/commands.json.
 The source RDG lens catalog is used for identity checks only: command text is
 not synthesized on fetch/build and is independent of Markdown/source-map.
 """
@@ -11,9 +11,9 @@ import json
 import re
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / "work-kit/helper-commands/commands.json"
-OUTPUT = ROOT / "work-kit/helper-commands/catalog.json"
+ROOT = Path(__file__).resolve().parents[2]
+SOURCE = ROOT / "kit/helper-commands/commands.json"
+OUTPUT = ROOT / "kit/helper-commands/catalog.json"
 LENSES = ROOT / "tools/rdg-agent-lenses/catalog.json"
 PROFILE = "rdg-decision-v1"
 KEY = re.compile(r"^[a-z][a-z0-9-]{0,79}$")
