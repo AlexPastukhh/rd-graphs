@@ -434,7 +434,13 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
  function note(text,isError=false){message=text;error=isError;const n=root.querySelector('.rdg-status');if(n){n.textContent=text;n.classList.toggle('rdg-error',isError);}}
  function sync(mutator,renderAfter=false){queue=queue.catch(()=>{}).then(async()=>{
   const before=screen(),value={activeScreenId:session.activeScreenId,screens:clone(session.screens),explorer:clone(session.explorer)};mutator(value,value.screens.find(s=>s.id===value.activeScreenId));
-  session=await call({method:'view_session',action:'update',sessionId:session.id,expectedRevision:session.revision,value});if(renderAfter){const after=screen();if(before?.packageId!==after?.packageId||JSON.stringify(before?.spec)!==JSON.stringify(after?.spec))await load();else render();}return session;
+  session=await call({method:'view_session',action:'update',sessionId:session.id,expectedRevision:session.revision,value});
+  if(renderAfter){
+   const after=screen();
+   if(before?.packageId!==after?.packageId||JSON.stringify(before?.spec)!==JSON.stringify(after?.spec))await load();
+   else await renderScreen();
+  }
+  return session;
  });return queue;}
  function draftValue(){return pendingDraft||screen()?.draft||(!screen()&&session?.explorer.drafts['new-process'])||{};}
  function sessionDraft(v,s,draft){if(s)s.draft=draft;else v.explorer.drafts['new-process']=draft;}
@@ -453,12 +459,33 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
  async function run(fn){if(busy)return;busy=true;if(error)note('');try{await flushDraft();return await fn();}catch(e){note(e.message,true);}finally{busy=false;}}
  async function loadCatalogs(initial=null){catalog=initial||await call({method:'catalog'});try{registry=await call({method:'recommendation_catalog',limit:20});}catch(e){if(!e.message.includes('PORTABLE_SCOPE_DENIED'))throw e;registry={unavailable:true,packages:[],total:0,offset:0,participation:{}};}}
  async function start(initial=null){if(!session)session=await call({method:'view_session',action:'create',sessionId:uid()});await loadCatalogs(initial);return load();}
+ function readScreen(s,spec=s.spec){
+  return call({method:'read',packageId:s.packageId,includePlan:true,view:spec,includeDependencyApplications:false});
+ }
+ let policyUsageFailure=null;
+ async function ensurePolicyUsage(){
+  const value=snapshot,catalog=value?.dependencyCatalog,presentation=screen()?.presentation;
+  if(presentation?.mode!=='dependencies'||presentation.dependencyTab!=='policies'||
+     !catalog||Object.hasOwn(catalog,'applications')||policyUsageFailure?.snapshot===value)return;
+  try{
+   const usage=await call({method:'dependency_usage',packageId:value.package.packageId,
+     expectedPackageRevision:value.package.revision,expectedRegistryRevision:catalog.revision});
+   if(snapshot===value)catalog.applications=usage.applications;
+  }catch(error){
+   if(snapshot===value)policyUsageFailure={snapshot:value,message:error.message};
+  }
+  return snapshot===value;
+ }
+ async function renderScreen(){
+  render();
+  if(await ensurePolicyUsage())render();
+ }
  async function load({catalogs=false}={}){if(catalogs||!catalog)await loadCatalogs();let s=screen();if(s&&s.spec.kind!=='focus'&&s.spec.compactGraph===undefined){
    // Existing sessions get the new readable default without altering the owner layout.
    await sync((v,t)=>{if(t.spec.compactGraph===undefined){t.spec.compactGraph=true;delete t.spec.camera;}});
    s=screen();
   }
-  if(!s){snapshot=null;history=null;form=session.explorer.drafts['new-process']?.open?'create':null;render();return null;}try{snapshot=await call({method:'read',packageId:s.packageId,includePlan:true,view:s.spec});}catch(e){if(!/FOCUS|VIEW_CASES|REFERENCE_MISSING:group/.test(e.message))throw e;const spec={...s.spec,kind:'graph',groupIds:[],shownCases:{}};delete spec.id;await sync((v,s)=>s.spec=spec);snapshot=await call({method:'read',packageId:s.packageId,includePlan:true,view:spec});note('Состав представления изменился; черновик сохранён.');}
+  if(!s){snapshot=null;history=null;form=session.explorer.drafts['new-process']?.open?'create':null;render();return null;}try{snapshot=await readScreen(s);}catch(e){if(!/FOCUS|VIEW_CASES|REFERENCE_MISSING:group/.test(e.message))throw e;const spec={...s.spec,kind:'graph',groupIds:[],shownCases:{}};delete spec.id;await sync((v,s)=>s.spec=spec);snapshot=await readScreen(s,spec);note('Состав представления изменился; черновик сохранён.');}
   if(isProcess()&&s.spec.kind==='focus'){
    const finding=snapshot.graph.objects.find(n=>n.id===s.spec.id&&n.kind==='finding');
    if(finding){const subject=[...snapshot.graph.nodes,...snapshot.graph.objects].find(n=>n.id===finding.subjectId);inspectorTabState.set(subject?.id||finding.id,'findings');await sync((v,t)=>{t.spec={...t.spec,kind:subject?'focus':'graph',...(subject?{id:subject.id}:{})};if(!subject)delete t.spec.id;t.inspector={kind:'entity',id:subject?.id||finding.id};});return load();}
@@ -472,7 +499,9 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
    await sync((v,t)=>{t.spec={...t.spec,kind:'graph',groupIds:[]};delete t.spec.id;delete t.spec.camera;delete t.spec.focusPositions;t.inspector=null;});
    return load();
   }
-  const meta=graphMeta(s.packageId);if(meta)Object.assign(meta,{revision:snapshot.package.revision,title:snapshot.graph.title,workGraphs:snapshot.graph.workGraphs,recommendationPackageIds:snapshot.graph.recommendationPackageIds});form=s.draft?.open?s.draft.form?.mode:null;history=snapshot.package.role==='working'||snapshot.package.role==='copy'?await call({method:'history',packageId:s.packageId}):null;render();return snapshot;}
+  const meta=graphMeta(s.packageId);if(meta)Object.assign(meta,{revision:snapshot.package.revision,title:snapshot.graph.title,workGraphs:snapshot.graph.workGraphs,recommendationPackageIds:snapshot.graph.recommendationPackageIds});form=s.draft?.open?s.draft.form?.mode:null;history=snapshot.package.role==='working'||snapshot.package.role==='copy'?await call({method:'history',packageId:s.packageId}):null;
+  policyUsageFailure=null;
+  await renderScreen();return snapshot;}
  async function open(id,spec={kind:'graph'}){
   if(!session)session=await call({method:'view_session',action:'create',sessionId:uid()});if(!catalog)await loadCatalogs();return navigate(id,spec);
  }
@@ -2352,7 +2381,15 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
   if(chosen!=='stale'&&invalidationReturns.get(screen().id)?.packageId===snapshot.package.packageId)button(head,'← К инвалидации',returnToInvalidation);
   button(head,'← К графу',()=>sync((v,t)=>{t.presentation.mode='graph';},true));
   const content=el('div',null,'rdg-policy-scroll');content.setAttribute('role','tabpanel');content.dataset.dependencyPanel=chosen;shell.append(content);
-  if(chosen==='policies')renderPolicyCatalog(content);else renderStaleWorkspace(content);
+  if(chosen==='policies'){
+   if(snapshot.dependencyCatalog&&!Object.hasOwn(snapshot.dependencyCatalog,'applications')){
+    const failed=policyUsageFailure?.snapshot===snapshot;
+    const status=el('p',failed?'Применения политик недоступны. Нажмите «Обновить». '+policyUsageFailure.message:
+      'Загрузка применений политик…');
+    status.setAttribute('role',failed?'alert':'status');
+    content.append(status);
+   }else renderPolicyCatalog(content);
+  }else renderStaleWorkspace(content);
  }
  function policyBindings(policy){return (snapshot.graph.dependencyBindings||[]).filter(b=>b.policyId===policy.id&&b.status!=='deleted');}
  function policyLegacyEdges(policy){if(!policy.builtIn||policy.automatic)return [];

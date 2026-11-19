@@ -932,7 +932,12 @@ async function start(){return new Promise((resolve,reject)=>{let stderr='';child
  assert(reviewCard.causes.includes(change.id));
  assert(reviewCard.actions>=2,'open entity and confirm review are independent actions');
  await page.screenshot({path:path.join(base,'decision-stale-dependencies-panel.png'),fullPage:true});
+ const policyUsageStart=requests.length;
+ assert(!Object.hasOwn((await state()).dependencyCatalog,'applications'));
  await click('Политики','.rdg-policy-tabs');
+ assert.equal(requests.slice(policyUsageStart).filter(method=>method==='dependency_usage').length,1,
+   'Only the Policies tab fetches namespace policy applications');
+ assert(Array.isArray((await state()).dependencyCatalog.applications));
  assert(await page.$('[data-policy-id="builtin:L1"]'),'built-in policy and usage are visible in catalog');
  await page.$eval('[data-dependency-tab=stale]',n=>n.click());await idle();
  assert(await page.$('[data-stale-node-id="R-STALE-UI"]'));
