@@ -90,6 +90,17 @@ async function start(){return new Promise((resolve,reject)=>{let stderr='';child
    await response;
   }
   try{
+   // Earlier visual scenarios can leave Structure or Markdown selected.
+   await open(source);
+   const graphMode='[data-presentation-mode="graph"][aria-pressed="false"]';
+   if(await page.$(graphMode)){
+    await page.$eval(graphMode,button=>button.click());
+    await idle();
+   }
+   await page.waitForSelector('.rdg-canvas svg');
+   if(!await page.$('[data-road=history]'))await click('Показать Plan / History','.rdg-tools');
+   await historyReady();
+
    let request=await holdHistory(source);
    await page.waitForSelector('.rdg-canvas svg');
    await page.waitForSelector('[data-road=plan]');
