@@ -32,6 +32,8 @@
 
 `describe_applications` и `describe_invalidation` не записывают Graph. Исторические данные берутся из события; текущая проверка применимости использует kernel. Snapshot нельзя заменить текущими именами/отношениями без отметки. Совместимый `info` у прямой политики Decision означает прежнее Info его Canon; прямое Info элемента — отдельное наблюдение.
 
+Полное JSON-чтение по умолчанию включает `dependencyCatalog.applications`. Параметр `includeDependencyApplications: false` опускает только этот список. UI запрашивает его при открытии вкладки «Политики» через `dependency_usage`, используя `package.revision` как обязательную `expectedPackageRevision` и `dependencyCatalog.revision` как `expectedRegistryRevision` при наличии. Отдельное чтение возвращает `{applications}` по доступным читателю владельцам. При изменении указанной ревизии клиент обновляет исходный снимок.
+
 Команды `binding_save/disable/activate/remove`, `automatic_disable/activate/remove` проходят существующий writer/CAS/guards. `automatic_remove` оставляет tombstone; явная активация deleted ID отвергается. Изменение версии определения не меняет pinned binding. Матрица: [policy suite](../../tests/rdg-dependency-policies-v2.test.py).
 
 ## Владельцы и API

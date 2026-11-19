@@ -15,6 +15,7 @@ def capabilities(app, ident=None):
         'receiptEnvelope': {'available': True, 'version': 1},
         'preflightPreview': {'available': True, 'version': 1},
         'graphSnapshotRead': {'available': True, 'version': 1},
+        'deferredDependencyUsage': {'available': True, 'version': 1},
         'paperBatch': {'available': True, 'version': 1},
         'paperRemoval': {'available': True, 'version': 1},
         'externalReaderRoute': {'available': True, 'version': 1},

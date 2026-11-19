@@ -7,6 +7,7 @@ import copy
 from importlib.machinery import SourceFileLoader
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 ROOT=Path(__file__).resolve().parents[1]
 BASE=SourceFileLoader('policy_v2_kernel_fixture',str(ROOT/'tests/rdg-decision-model.test.py')).load_module()
@@ -571,6 +572,43 @@ class PolicyApplication(API.DecisionIntegration):
         self.assertNotIn(other,str(scoped['invalidationRecords']))
         self.assertTrue(all(r['packageId']==ident for r in scoped['applications']))
         self.assertNotIn(other,str(scoped['localApplications']))
+
+    def test_deferred_namespace_usage_preserves_projection_and_authority(self):
+        ident = self.setup_shared()
+        app = self.app()
+        other = app.request(self.req('create', path='working/usage-other', role='working', title='Other',
+            scope='Synthetic', coreModel='rdg-decision-v1', rootReason='Policy usage test'))['packages'][0]['packageId']
+        self.command(other, 'add', entity={'id':'D1','kind':'decision','title':'Other decision','description':'Synthetic'})
+        self.command(other, 'add', entity={'id':'CTX','kind':'context','title':'Other context','description':'Synthetic','value':'before'})
+        self.command(other, 'policy_change', action='binding_save', value=binding())
+        before = self.sources()
+        full = app.call({'method':'read','packageId':ident})
+        use = full['dependencyCatalog'].pop('applications')
+        self.assertEqual({r['packageId'] for r in use if r['policyId']=='POL-V2'}, {ident, other})
+        with patch.object(app, 'dependency_applications', side_effect=AssertionError('Namespace usage was evaluated')):
+            view = app.call({'method':'read','packageId':ident,'includeDependencyApplications':False})
+        self.assertEqual(view, full)
+        catalog = view['dependencyCatalog']
+        self.assertTrue(catalog['localApplications'])
+        self.assertNotIn('applications', catalog)
+        request = {'method':'dependency_usage','packageId':ident,
+                   'expectedPackageRevision':view['package']['revision'],'expectedRegistryRevision':catalog['revision']}
+        self.assertEqual(app.call(request), {'applications':use})
+        for key, code in (('expectedPackageRevision','PACKAGE_CHANGED'), ('expectedRegistryRevision','REGISTRY_CHANGED')):
+            with self.subTest(key=key):
+                with self.assertRaisesRegex(ValueError, 'DEPENDENCY_USAGE_'+code):
+                    app.call({**request,key:request[key]+1})
+        with self.assertRaisesRegex(ValueError,'READ_DEPENDENCY_APPLICATIONS_DETAIL'):
+            app.call({'method':'read','packageId':ident,'detail':'summary','includeDependencyApplications':False})
+        self.assertEqual(self.sources(), before)
+
+        grant = self.authority.manage('issue', self.admin, {'permissions':['graph.read'],
+            'scopes':['packages/'+self.namespace+'/'+ident]})
+        scoped = self.app(grant['token'])
+        visible = scoped.call({**request,'expectedRegistryRevision':None})['applications']
+        self.assertEqual(visible,[r for r in use if r['packageId']==ident])
+        with self.assertRaisesRegex(ValueError,'PORTABLE_SCOPE_DENIED'):
+            scoped.call({**request,'packageId':other,'expectedRegistryRevision':None})
 
     def test_v2_shared_catalog_cross_process_and_restarted_reader(self):
         ident=self.setup_shared()

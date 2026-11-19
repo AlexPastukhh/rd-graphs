@@ -56,6 +56,21 @@ class GatewayTests(BASE.Server):
         return result['packages'][0]['packageId'], request, preview
 
 
+    def test_gateway_can_read_deferred_policy_usage(self):
+        pid, _, _ = self.gateway_create()
+        schema = self.private_call({'method':'schema','op':'dependency_usage','packageId':pid})
+        self.assertEqual(schema['required'], ['packageId', 'expectedPackageRevision'])
+        request = {'method':'read','packageId':pid}
+        expected = self.private_call(request)
+        usage = expected['dependencyCatalog'].pop('applications')
+        before = self.files()
+        actual = self.private_call({**request,'includeDependencyApplications':False})
+        self.assertEqual(actual, expected)
+        self.assertEqual(self.private_call({'method':'dependency_usage','packageId':pid,
+            'expectedPackageRevision':actual['package']['revision'],
+            'expectedRegistryRevision':actual['dependencyCatalog']['revision']}), {'applications':usage})
+        self.assertEqual(before,self.files())
+
     def test_gateway_markdown_and_literal_search_are_read_only(self):
         pid,_,_=self.gateway_create()
         before=self.files()
