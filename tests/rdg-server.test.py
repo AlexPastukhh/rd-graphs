@@ -174,7 +174,19 @@ class Server(unittest.TestCase):
         headers = {'Origin': self.origin, 'X-RDG-Session': cap}
         _, raw, _ = self.raw('/session/' + cap + '/command', browser=True,
             headers=headers, message={'method': 'read', 'packageId': ident, 'includePlan': True})
-        self.assertEqual(json.loads(raw)['graph'], self.client.call({'method': 'read', 'packageId': ident})['graph'])
+        browser_snapshot = json.loads(raw)
+        self.assertEqual(browser_snapshot['graph'], self.client.call({'method': 'read', 'packageId': ident})['graph'])
+        revision = browser_snapshot['package']['revision']
+        history_request = {'method': 'history', 'packageId': ident, 'expectedPackageRevision': revision}
+        path = '/session/' + cap + '/command'
+        status, raw_history, _ = self.raw(path, browser=True, headers=headers, message=history_request)
+        self.assertEqual(status, 200)
+        self.assertEqual(json.loads(raw_history), self.client.call({'method': 'history', 'packageId': ident}))
+        with self.assertRaises(urllib.error.HTTPError) as conflict:
+            self.raw(path, browser=True, headers=headers,
+                     message={**history_request, 'expectedPackageRevision': revision + 1})
+        self.assertEqual(conflict.exception.code, 400)
+        self.assertEqual(json.loads(conflict.exception.read())['error'], 'PORTABLE_APP_HISTORY_PACKAGE_CHANGED')
         for missing in ('Origin', 'X-RDG-Session'):
             bad = {k: v for k, v in headers.items() if k != missing}
             with self.assertRaises(urllib.error.HTTPError) as error:

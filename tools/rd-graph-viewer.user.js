@@ -500,7 +500,7 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
    request.state='ready';
   }catch(error){
    if(!currentHistoryLoad(request))return;
-   request.state=error.message==='HISTORY_PACKAGE_CHANGED'?'stale':'error';
+   request.state=error.message==='PORTABLE_APP_HISTORY_PACKAGE_CHANGED'?'stale':'error';
   }
   updateRoadHistory?.();
  }
@@ -2861,7 +2861,7 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
  }
  function renderHistoryStatus(parent){
   const state=historyLoad?.state;
-  const text=state==='stale'?'История уже обновилась. Обновите экран, чтобы открыть её для текущего графа.':
+  const text=state==='stale'?'Снимок изменился. Обновите экран, чтобы загрузить историю.':
     state==='error'?'Не удалось загрузить историю.':'Загрузка истории…';
   const status=el('p',text,'rdg-explorer-note');
   status.setAttribute('role',state==='error'||state==='stale'?'alert':'status');

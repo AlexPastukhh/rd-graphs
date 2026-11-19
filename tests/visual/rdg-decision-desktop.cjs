@@ -133,7 +133,7 @@ async function start(){return new Promise((resolve,reject)=>{let stderr='';child
    assert.deepEqual(requests.slice(start).filter(method=>['read','history'].includes(method)),['history']);
 
    request=await holdHistory(target);
-   await finish(request,{status:400,code:'HISTORY_PACKAGE_CHANGED'});
+   await finish(request,{status:400,code:'PORTABLE_APP_HISTORY_PACKAGE_CHANGED'});
    await page.waitForSelector('[data-road=history][data-history-state=stale] [role=alert]');
    await click('Обновить экран','[data-road=history]');
    await historyReady();

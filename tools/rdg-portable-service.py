@@ -750,7 +750,7 @@ class Application:
             if ident:self.snapshot(ident,layouts=False)
             result = COMPACT.schema()
             result['history']['expectedPackageRevision'] = {
-                'optional': True, 'minimum': 1, 'mismatch': 'HISTORY_PACKAGE_CHANGED'}
+                'optional': True, 'minimum': 1, 'mismatch': 'PORTABLE_APP_HISTORY_PACKAGE_CHANGED'}
             if op == 'read':
                 result['read']['format'] = ['json','markdown']
                 result['read']['includeDependencyApplications'] = {
