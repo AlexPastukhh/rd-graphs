@@ -104,6 +104,9 @@ async function start(){return new Promise((resolve,reject)=>{let stderr='';child
    let request=await holdHistory(source);
    await page.waitForSelector('.rdg-canvas svg');
    await page.waitForSelector('[data-road=plan]');
+   await click('Добавить план во времени','[data-road=plan]');
+   await page.waitForSelector('.rdg-modal[aria-label="Предварительная проверка"]');
+   await click('Отменить подготовку','.rdg-modal');
    await click('Сведения','.rdg-tools');
    await page.waitForSelector('.rdg-inspector');
    const parts=await page.evaluateHandle(()=>[document.querySelector('.rdg-canvas svg'),document.querySelector('[data-road=plan]')]);
@@ -1659,7 +1662,8 @@ async function start(){return new Promise((resolve,reject)=>{let stderr='';child
   'membership rectangles are opaque, correctly colored and painted over the entity fill');
  await page.screenshot({path:path.join(base,'graph-workarea-visible-markers.png'),fullPage:true});
  checks.push('overlapping areas share Decision identity and display distinct visible painted color markers inside Graph, not outlines');
- await click('Добавить план во времени');await save();await click('+ Размещение','.rdg-tools');await field('Разместить блок',decision.id);await click('Проверить размещение','.rdg-modal');await save();const plan=JSON.stringify((await state()).plan);
+ await historyReady();
+ await click('Добавить план во времени','[data-road=plan]');await save();await click('+ Размещение','.rdg-tools');await field('Разместить блок',decision.id);await click('Проверить размещение','.rdg-modal');await save();const plan=JSON.stringify((await state()).plan);
  const ownerBeforeRoad=await api({method:'read',packageId:processId,includePlan:true});
  await click('Настройки временной дороги','.rdg-road-head-actions');
  assert.equal(await page.$$eval('[data-road-popover=settings] input[type=range]',a=>a.length),9);
