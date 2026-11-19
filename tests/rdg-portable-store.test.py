@@ -224,6 +224,31 @@ class PortableStore(unittest.TestCase):
         graph.write_bytes(b'{}')
         with self.assertRaisesRegex(ValueError, 'CURRENT_HASH_MISMATCH'):self.store.read(ident)
 
+    def test_read_from_scan_checks_duplicate_markers_and_changed_head(self):
+        ident, original, _ = self.create('reused-scan')
+        directory = self.root / original['path']
+        with self.store.lock(False, create=False):
+            rows = self.store.scan()
+            self.assertEqual(self.store.read(ident, scan_rows=rows), original)
+            head = directory / 'package.json'
+            try:
+                head.write_bytes(original['headBytes'] + b'\n')
+                with self.assertRaisesRegex(ValueError, 'HEAD_CHANGED_DURING_READ'):
+                    self.store.read(ident, scan_rows=rows)
+            finally:
+                head.write_bytes(original['headBytes'])
+
+        broken = self.root / 'broken'
+        (broken / '.rdg').mkdir(parents=True)
+        (broken / '.rdg/package.json').write_text(json.dumps({'packageId': ident}))
+        (broken / 'package.json').write_bytes(b'garbled')
+        with self.store.lock(False, create=False):
+            rows = self.store.scan()
+            self.assertEqual(sorted(row['health'] for row in rows), ['invalid', 'metadata-verified'])
+            for scanned in (None, rows):
+                with self.assertRaisesRegex(ValueError, 'DUPLICATE_IDENTITY'):
+                    self.store.read(ident, scan_rows=scanned)
+
     def test_completed_package_rename_preserves_identity_and_historical_pins(self):
         ident, initial, _ = self.create('rename')
         self.commit(self.edit(initial, 'Second generation'))

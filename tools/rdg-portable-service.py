@@ -124,13 +124,13 @@ class Application:
         return {'profile': profile, 'coreCommands': commands,
                 'capabilities': {'read': True, 'schema': True, 'preflight': True, 'apply': True, 'receipt': True}}
 
-    def snapshot(self, ident, plan=False, layouts=True, *, scoped_read=False):
+    def snapshot(self, ident, plan=False, layouts=True, *, scoped_read=False, scan_rows=None):
         def authorize_loaded_head(metadata):
             self.authorize(ident,['graph.read'],metadata['path'])
             if plan and 'plan' in metadata['head']['current']:
                 self.authorize(ident,['plan.read'],metadata['path'])
         value = self.store.read(ident, include_plan=plan, include_layouts=layouts,
-                                on_located=authorize_loaded_head)
+                                on_located=authorize_loaded_head, scan_rows=scan_rows)
         graph = value['graph']
         if scoped_read and graph.get('coreModel') == 'rdg-decision-v1':
             # Validate every rule. Only repeated entity indexing is memoized.
@@ -183,8 +183,9 @@ class Application:
 
     def _catalog_locked(self):
         """Read the catalog while the caller holds the namespace barrier."""
+        scan_rows=self.store.scan()
         rows=[]
-        for row in self.store.scan():
+        for row in scan_rows:
             try:self.authorize(row.get('packageId'), ['graph.read'], row['path'])
             except ValueError:continue
             result={k:row[k] for k in ('path','packageId','health')}
@@ -193,7 +194,7 @@ class Application:
                 result['lensCard']={'status':'unavailable','purpose':None,'appliesWhen':None,'workflow':None,'source':None}
             try:
                 if row['health']=='metadata-verified':
-                    value=self.store.read(row['packageId'],include_plan=False,include_layouts=False)
+                    value=self.store.read(row['packageId'],include_plan=False,include_layouts=False,scan_rows=scan_rows)
                     self.kernel.validate_role(value['graph'],value['head']['role'])
                     if value['head']['role']=='lens':result['lensCard']=self._lens_catalog_card(value)
                     result.update(title=value['graph']['title'],coreModel=value['graph']['coreModel'],recommendationPackageIds=value['graph'].get('recommendationPackageIds',[]),workGraphs=value['graph'].get('workGraphs',[]),detached=self.kernel.detached_components(value['graph']))
@@ -201,7 +202,7 @@ class Application:
             rows.append(result)
         visible={str(Path(r['path']).parent) for r in rows}
         folders=[]
-        for relative in self.store.folders():
+        for relative in self.store.folders(scan_rows=scan_rows):
             try:self.authorize(None,['folder.write'],relative);manageable=True
             except ValueError:manageable=False
             if manageable or any(p==relative or p.startswith(relative+'/') for p in visible):folders.append({'path':relative,'manageable':manageable})
@@ -525,10 +526,10 @@ class Application:
                 self.metadata(value['targetPackageId'], ['graph.read'])
             return self.approval_view(value)
 
-    def dependency_applications(self,current):
+    def dependency_applications(self,current,scan_rows):
         """Authorized, derived namespace usage; never a manually edited count."""
         decision=self.kernel.for_graph({'coreModel':'rdg-decision-v1'});result=[]
-        for meta in self.store.scan():
+        for meta in scan_rows:
             pid=meta.get('packageId')
             if not pid or meta.get('health')!='metadata-verified':continue
             try:self.authorize(pid,['graph.read'],meta['path'])
@@ -536,7 +537,7 @@ class Application:
                 if 'PORTABLE_SCOPE_DENIED' not in str(exc):raise
                 continue
             graph=(current['graph'] if pid==current['packageId'] else
-                   self.store.read(pid,include_plan=False,include_layouts=False)['graph'])
+                   self.store.read(pid,include_plan=False,include_layouts=False,scan_rows=scan_rows)['graph'])
             if graph.get('coreModel')!='rdg-decision-v1':continue
             for binding in graph.get('dependencyBindings',[]):
                 if binding.get('status')=='deleted':continue
@@ -597,11 +598,12 @@ class Application:
                 with scope:return COMPACT.project(self,ident,row,detail,include or [],node_id,limit,cursor,record_id)
         self.check(include is None and node_id is None and record_id is None and cursor is None and limit==25, 'READ_DETAIL_REQUIRED')
         with self.store.lock(False, create=False):
-            row=self.snapshot(ident,include_plan)
+            scan_rows=self.store.scan()
+            row=self.snapshot(ident,include_plan,scan_rows=scan_rows)
             scope=(self.kernel.for_graph(row['graph']).ANALYSIS.read_scope(row['graph'])
                    if row['graph']['coreModel']=='rdg-decision-v1' else nullcontext())
             # One immutable snapshot, one read calculation; never cache across writes.
-            with scope:return self._read_projection(ident,row,view)
+            with scope:return self._read_projection(ident,row,view,scan_rows)
 
     def recommendation_projection(self,ident,graph,*,node_ids=None,register=None):
         try:self.authorize(None,['graph.read'])
@@ -624,19 +626,22 @@ class Application:
             match['target']=copy.deepcopy(cache[key])
         return result
 
-    def _read_projection(self,ident,row,view):
-        external=self.boundaries(row);completion=self.states(row,external)
+    def _read_projection(self,ident,row,view,scan_rows):
+        def read_related(package_id):
+            return self.snapshot(package_id,layouts=False,scan_rows=scan_rows)
+
+        external=self.boundaries(row,read_related);completion=self.states(row,external)
         sources={ident:{'graph':row['graph'],'completion':completion}}
         if row['plan'] is not None:
             for ref_id in {s['ref']['packageId'] for s in row['plan']['steps']}-{ident}:
                 try:
-                    source=self.snapshot(ref_id,layouts=False)
-                    sources[ref_id]={'graph':source['graph'],'completion':self.states(source,self.boundaries(source))}
+                    source=read_related(ref_id)
+                    sources[ref_id]={'graph':source['graph'],'completion':self.states(source,self.boundaries(source,read_related))}
                 except (ValueError,OSError) as exc:sources[ref_id]={'error':str(exc)}
         projection=self.model.presentation(row['graph'],self.kernel,view)
         projection['completion']=completion
         if row['graph']['coreModel']=='rdg-decision-v1':projection['visual']=self.layout('project',graph=row['graph'],view=projection,document=row['layouts'])
-        recommendations=self.recommendation_projection(ident,row['graph']) if row['graph']['coreModel']=='rdg-decision-v1' else None
+        recommendations=self.recommendation_projection(ident,row['graph'],register=read_related) if row['graph']['coreModel']=='rdg-decision-v1' else None
         dependency_catalog=None
         if row['graph']['coreModel']=='rdg-decision-v1':
             decision=self.kernel.for_graph(row['graph'])
@@ -657,7 +662,7 @@ class Application:
                 'migrationRequired':bool(row['graph'].get('dependencyPresets')) or any(not any(p['id']==q['id'] and p['version']==q['version'] and {k:v for k,v in p.items() if k!='status'}=={k:v for k,v in q.items() if k!='status'} for q in reg.get('dependencyPolicies',[])) for p in row['graph'].get('dependencyPolicies',[])) if available else False,
                 'localPolicyCount':len(row['graph'].get('dependencyPolicies',[])),
                 'localPresetCount':len(row['graph'].get('dependencyPresets',[])),
-                'applications':self.dependency_applications(row)}
+                'applications':self.dependency_applications(row,scan_rows)}
         reference_nodes=self.kernel.entities(row['graph'])
         reference_sha=self.model.digest(row['graph'])
         references={nid:self.model.reference(ident,row['graph'],nid,graph_sha256=reference_sha,node_revision=node['revision'])
@@ -668,7 +673,7 @@ class Application:
                 'references':references,
                 'scopeReferences':{'process':self.model.scope_reference(ident,row['graph']),
                     'workGraphs':{w['id']:self.model.scope_reference(ident,row['graph'],'workGraph',w['id']) for w in row['graph']['workGraphs']}},
-                'actionSubjects':{a['id']:[self.resolve_action_subject(ref,a,row) for ref in a.get('subjectRefs',[])] for a in row['graph'].get('externalActions',[]) if 'subjectRefs' in a},
+                'actionSubjects':{a['id']:[self.resolve_action_subject(ref,a,row,register=read_related) for ref in a.get('subjectRefs',[])] for a in row['graph'].get('externalActions',[]) if 'subjectRefs' in a},
                 'view':projection,'planView':self.model.project_plan(row['plan'],sources,self.kernel,view),
                 'detached':[{**c,'reviewIds':sorted(set(c['reviewIds']) | (set(c['memberIds']) & set(external['reviewIds'])))} for c in self.kernel.detached_components(row['graph'])],
                 'recommendations':recommendations,'completion':completion,'external':external,'receipt':row['receiptValue']}

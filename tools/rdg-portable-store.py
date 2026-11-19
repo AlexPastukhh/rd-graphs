@@ -164,9 +164,10 @@ class FileStore:
         rows.sort(key=lambda r:r['path'])
         return {'sha256':self.codec.digest(rows),'ignoreIds':sorted(ignored)}
 
-    def folders(self):
+    def folders(self, *, scan_rows=None):
         if not self.root.is_dir():return []
-        packages={r['path'] for r in self.scan()};result=[];pending=[self.root]
+        if scan_rows is None:scan_rows=self.scan()
+        packages={r['path'] for r in scan_rows};result=[];pending=[self.root]
         while pending:
             directory=pending.pop()
             for child in directory.iterdir():
@@ -176,8 +177,9 @@ class FileStore:
                 self.path(relative);result.append(relative);pending.append(child)
         return sorted(result)
 
-    def locate(self, package_id, allow_incomplete=False):
-        rows = [row for row in self.scan() if row.get('packageId') == package_id]
+    def locate(self, package_id, allow_incomplete=False, *, scan_rows=None):
+        if scan_rows is None:scan_rows=self.scan()
+        rows = [row for row in scan_rows if row.get('packageId') == package_id]
         self.check(len(rows) == 1, 'NOT_FOUND' if not rows else 'DUPLICATE_IDENTITY')
         row = rows[0]
         self.check(row['health'] == 'metadata-verified' or allow_incomplete and row['health'] == 'incomplete',
@@ -215,8 +217,9 @@ class FileStore:
             if row['headSHA256']==marker['afterSHA256'] or not self.initialized():
                 raise RecoveryRequired('PACKAGE_COORDINATOR_COMPLETION_UNAVAILABLE:'+tx)
 
-    def read(self, package_id, include_plan=True, include_layouts=True, include_graph=True, *, on_located=None):
-        row = self.locate(package_id)
+    def read(self, package_id, include_plan=True, include_layouts=True, include_graph=True, *, on_located=None, scan_rows=None):
+        """Read verified artifacts. Supplied scan rows must come from the same namespace lock."""
+        row = self.locate(package_id, scan_rows=scan_rows)
         # The Application authorizes the verified metadata before payload IO.
         # Using the same located row avoids a second namespace-wide scan;
         # all pending, hash, witness and head-change checks still run below.

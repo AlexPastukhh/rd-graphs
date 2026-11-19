@@ -10,6 +10,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
+from unittest.mock import patch
 import unittest
 import uuid
 
@@ -265,6 +266,48 @@ class PortableApplication(unittest.TestCase):
         self.assertEqual((row['path'],row['role'],row['packageId']),('templates/actual-folder','ready',ident))
         graph=self.current(ident)['graph'];self.assertFalse(graph['events']);self.assertEqual('potential',graph['nodes'][0]['status'])
         self.assertIsNone(self.current(ident)['plan'])
+
+    def test_catalog_and_full_read_reuse_one_namespace_scan(self):
+        app = self.app()
+        owner = app.request(self.req(
+            'create', role='working', path='working/discovery-owner',
+            title='Current process', coreModel='rdg-decision-v1',
+            rootReason='Synthetic namespace discovery'))['packages'][0]['packageId']
+        other = self.create('discovery-other')
+        self.create('discovery-paper', 'ready')
+
+        for name, call in (
+            ('catalog', app.catalog),
+            ('recommendation_catalog', app.recommendation_catalog),
+            ('full_read', lambda: app.read(owner, include_plan=True)),
+        ):
+            with self.subTest(operation=name):
+                with patch.object(app.store, 'scan', wraps=app.store.scan) as scan:
+                    actual = call()
+                self.assertEqual(scan.call_count, 1)
+                original_read, original_folders = app.store.read, app.store.folders
+
+                def lookup_again(*args, **kwargs):
+                    kwargs.pop('scan_rows', None)
+                    return original_read(*args, **kwargs)
+
+                with patch.object(app.store, 'read', side_effect=lookup_again), patch.object(
+                    app.store, 'folders', side_effect=lambda **_: original_folders(),
+                ):
+                    self.assertEqual(actual, call())
+
+        grant = self.authority.manage('issue', self.admin, {
+            'permissions': ['graph.read'],
+            'scopes': ['packages/' + self.namespace + '/' + owner],
+        })
+        scoped = self.app(grant['token'])
+        with patch.object(scoped.store, 'read', wraps=scoped.store.read) as reads:
+            self.assertEqual([row['packageId'] for row in scoped.catalog()['packages']], [owner])
+            scoped.read(owner)
+        self.assertNotIn(other, [call.args[0] for call in reads.call_args_list])
+        self.authority.manage('revoke', self.admin, {'id': grant['id']})
+        with self.assertRaisesRegex(ValueError, 'TOKEN_REVOKED'):
+            scoped.read(owner)
 
     def test_ready_authoring_never_saves_choices_history_or_plan(self):
         ident=self.create('editable','ready');current=self.current(ident)
