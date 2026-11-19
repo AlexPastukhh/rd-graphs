@@ -16,6 +16,7 @@ async function start(){return new Promise((resolve,reject)=>{let stderr='';child
  const click=async(text,scope='.rdg-decision')=>{for(let i=0;i<8;i++){const summary=await page.evaluateHandle(({text,scope})=>{const b=[...document.querySelectorAll(scope+' button')].find(b=>(b.textContent===text||b.getAttribute('aria-label')===text)&&!b.disabled);let outer=null;for(let n=b?.parentElement;n;n=n.parentElement)if(n.tagName==='DETAILS'&&!n.open)outer=n;return outer?.querySelector(':scope > summary')||null;},{text,scope});if(!summary.asElement()){await summary.dispose();break;}await summary.asElement().click();await summary.dispose();await idle();}const target=await page.evaluateHandle(({text,scope})=>[...document.querySelectorAll(scope+' button')].find(b=>(b.textContent===text||b.getAttribute('aria-label')===text)&&!b.disabled),{text,scope});assert(target.asElement(),'Missing '+text);await target.asElement().click();await target.dispose();await idle();assert.equal(await page.$eval('.rdg-status',n=>n.classList.contains('rdg-error')?n.textContent:''),'',text);};
  const field=async(label,value,scope='.rdg-modal')=>{await page.evaluate(({label,value,scope})=>{const row=[...document.querySelectorAll(scope+' label')].find(n=>n.firstChild?.textContent.trim()===label);if(!row)throw Error('Missing field '+label);const n=row.querySelector('input,textarea,select');if(n.type==='checkbox')n.checked=!!value;else n.value=value;n.dispatchEvent(new Event(n.tagName==='SELECT'?'change':'input',{bubbles:true}));},{label,value,scope});await idle();};
  const save=()=>click('Сохранить','.rdg-modal');
+ const historyReady=()=>page.waitForSelector('[data-road=history][data-history-state=ready]');
  const launch=async()=>{await page.setRequestInterception(true);let delay=true;const intercept=req=>{let body;try{body=JSON.parse(req.postData()||'{}');}catch{}if(delay&&body?.method==='catalog'){delay=false;setTimeout(()=>void req.continue(),600);}else void req.continue();};page.on('request',intercept);await page.goto(ready.url,{waitUntil:'load'});await page.waitForSelector('.rdg-explorer-home');assert.equal(await page.$eval('.rp-grid',n=>getComputedStyle(n).display),'none');assert.equal(await page.$('.rdg-graph'),null);await page.waitForSelector('.rdg-tree-process > [data-package-id]');await idle();page.off('request',intercept);await page.setRequestInterception(false);assert.equal(await state(),null);assert.deepEqual((await page.evaluate(()=>RDG_PORTABLE_EDITOR.session)).screens,[]);assert.equal(requests.filter(m=>m==='read').length,0);const box=await page.$eval('.rdg-explorer-home',n=>({x:n.getBoundingClientRect().x,width:n.getBoundingClientRect().width}));assert.deepEqual(box,{x:0,width:1440});await page.screenshot({path:path.join(base,'startup-explorer.png'),fullPage:true});checks.push('first paint is full-window Explorer, no legacy flash, graph read or implicit selection');await click('Пакеты','.rdg-explorer-tabs');assert(await page.$eval('.rdg-explorer-list',n=>n.textContent.includes('Определений: 0')));await click('Создать пакет','.rdg-explorer-list');await idle();assert(await page.$('.rdg-explorer-list h3'));assert.equal(await state(),null);await click('Графы','.rdg-explorer-tabs');checks.push('empty recommendation registry is valid; package editor opens from Explorer before any process is selected');await click('Ручная проверка Decision','.rdg-explorer');await page.waitForSelector('.rdg-decision[data-ui-build="decision-desktop-20261103-inspector-tabs"] svg');await idle();};await launch();
  // Real checkpoint lens fixture through the disposable preview API: the same
  // layout/viewer implementation works for working, ready and lens roles.
@@ -52,12 +53,107 @@ async function start(){return new Promise((resolve,reject)=>{let stderr='';child
  checks.push('Removing an optional end hides only the boundary; common steps, exact start date/time, root groups and original Graph facts survive');
  await page.evaluate(id=>RDG_PORTABLE_EDITOR.open(id,{kind:'graph'}),originalProcessId);await idle();
  }
+ async function backgroundHistoryAcceptance(source,target){
+  let held=null;
+  let filter=null;
+  await page.setRequestInterception(true);
+  const intercept=req=>{
+   let message;
+   try{message=JSON.parse(req.postData()||'{}');}catch{}
+   if(filter&&message?.method==='history'&&message.packageId===filter.owner){
+    held=req;
+    filter.resolve({request:req,message});
+    filter=null;
+   }else void req.continue();
+  };
+  page.on('request',intercept);
+  const open=owner=>page.evaluate(id=>RDG_PORTABLE_EDITOR.open(id,{kind:'graph',historyMode:'all'}),owner);
+  async function holdHistory(owner){
+   const hit=new Promise(resolve=>{filter={owner,resolve};});
+   const opening=open(owner);
+   let timer;
+   try{
+    const delay=new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('History did not start')),10000);});
+    const result=await Promise.race([hit,delay]);
+    await opening;
+    await idle();
+    assert.equal(result.message.expectedPackageRevision,(await state()).package.revision);
+    await page.waitForSelector('[data-road=history][data-history-state=loading]');
+    return result.request;
+   }finally{clearTimeout(timer);}
+  }
+  async function finish(request,error=null){
+   const response=page.waitForResponse(r=>r.request()===request);
+   if(error)await request.respond({status:error.status,contentType:'application/json',body:JSON.stringify({error:error.code})});
+   else await request.continue();
+   held=null;
+   await response;
+  }
+  try{
+   // Earlier visual scenarios can leave Structure or Markdown selected.
+   await open(source);
+   const graphMode='[data-presentation-mode="graph"][aria-pressed="false"]';
+   if(await page.$(graphMode)){
+    await page.$eval(graphMode,button=>button.click());
+    await idle();
+   }
+   await page.waitForSelector('.rdg-canvas svg');
+   if(!await page.$('[data-road=history]'))await click('Показать Plan / History','.rdg-tools');
+   await historyReady();
+
+   let request=await holdHistory(source);
+   await page.waitForSelector('.rdg-canvas svg');
+   await page.waitForSelector('[data-road=plan]');
+   await click('Добавить план во времени','[data-road=plan]');
+   await page.waitForSelector('.rdg-modal[aria-label="Предварительная проверка"]');
+   await click('Отменить подготовку','.rdg-modal');
+   await click('Сведения','.rdg-tools');
+   await page.waitForSelector('.rdg-inspector');
+   const parts=await page.evaluateHandle(()=>[document.querySelector('.rdg-canvas svg'),document.querySelector('[data-road=plan]')]);
+   await finish(request);
+   await historyReady();
+   assert(await page.evaluate(parts=>parts[0]===document.querySelector('.rdg-canvas svg')&&
+       parts[1]===document.querySelector('[data-road=plan]'),parts),'History only replaces its own section');
+   await parts.dispose();
+
+   request=await holdHistory(source);
+   await open(target);
+   await historyReady();
+   await finish(request,{status:503,code:'SYNTHETIC_HISTORY_FAILURE'});
+   // Let the old command's completion reach the viewer after target is ready.
+   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+   assert.equal((await state()).package.packageId,target);
+   assert(await page.$('[data-road=history][data-history-state=ready]'));
+   assert.equal(await page.$('[data-road=history] [role=alert]'),null);
+
+   request=await holdHistory(target);
+   await finish(request,{status:503,code:'SYNTHETIC_HISTORY_FAILURE'});
+   await page.waitForSelector('[data-road=history][data-history-state=error] [role=alert]');
+   assert(await page.$('.rdg-canvas svg'));
+   const start=requests.length;
+   await click('Повторить','[data-road=history]');
+   await historyReady();
+   assert.deepEqual(requests.slice(start).filter(method=>['read','history'].includes(method)),['history']);
+
+   request=await holdHistory(target);
+   await finish(request,{status:400,code:'PORTABLE_APP_HISTORY_PACKAGE_CHANGED'});
+   await page.waitForSelector('[data-road=history][data-history-state=stale] [role=alert]');
+   await click('Обновить экран','[data-road=history]');
+   await historyReady();
+   checks.push('Graph and Plan stay interactive during held History; late failure is isolated; retry and revision re-open work');
+  }finally{
+   if(held&&!held.isInterceptResolutionHandled())await held.continue();
+   page.off('request',intercept);
+   await page.setRequestInterception(false);
+  }
+ }
  async function inheritedHistoryAcceptance(){
  const create=async(path,title)=>{const r=(await api({method:'schema',op:'create'})).request;Object.assign(r,{path,role:'working',title,scope:'Synthetic history identity test',coreModel:'rdg-decision-v1',rootReason:'Isolated source identity'});return (await writeExample(r)).packages[0].packageId;};
  const source=await create('processes/history-source','Исходная цель истории'),target=await create('processes/history-target','Другая локальная цель');
  const add=(await api({method:'schema',op:'core',packageId:source,command:'add'})).request;
  add.note='Source candidate';add.data={entity:{id:'SOURCE-D',kind:'decision',title:'Исходное решение',description:'Synthetic'},initialRelations:[{id:'SOURCE-RD',type:'DRIVES',from:'R1',to:'SOURCE-D'}]};await writeExample(add);
  const inserted=(await api({method:'schema',op:'insert_copy',packageId:target,sourcePackageId:source})).request;inserted.note='Copy source facts into another R1 owner';await writeExample(inserted);
+ await backgroundHistoryAcceptance(source,target);
  const history=await api({method:'history',packageId:target});const event=history.events.find(r=>r.inherited&&r.event.type==='created'&&r.historyView.createdIds.includes('SOURCE-D'));assert(event);
  await page.evaluate(id=>RDG_PORTABLE_EDITOR.open(id,{kind:'graph',historyMode:'all'}),target);await idle();
  const row='[data-event-id="'+event.event.id+'"]';await page.waitForSelector(row);
@@ -773,8 +869,10 @@ async function start(){return new Promise((resolve,reject)=>{let stderr='';child
  await page.evaluate(id=>RDG_PORTABLE_EDITOR.open(id,{kind:'graph',historyMode:'important'}),exampleRow.packageId);await idle();
  const historyOwnerBefore=await api({method:'read',packageId:exampleRow.packageId,includePlan:true});
  const levels=await api({method:'history',packageId:exampleRow.packageId});
+ await historyReady();
  for(const mode of ['important','meaningful','technical','all']){
   const planBefore=await page.$eval('[data-road=plan]',n=>n.textContent);await field('События истории',mode,'[data-road=history]');
+  await historyReady();
   const shown=await page.$$eval('[data-road=history] [data-history-level]',rows=>rows.map(n=>n.dataset.historyLevel));
   assert(await page.$eval('[data-road=history] .rdg-road-section',n=>n.scrollWidth<=n.clientWidth+2),'History selector fits the road');
   assert(shown.length);assert(shown.every(l=>mode==='all'||mode==='important'&&l==='important'||mode==='technical'&&l==='technical'||mode==='meaningful'&&l!=='technical'));
@@ -808,7 +906,9 @@ async function start(){return new Promise((resolve,reject)=>{let stderr='';child
    'one-hop stale must not invent a distant affected Requirement in the creation event');
  await page.setViewport({width:1440,height:1000});
  await page.evaluate(id=>RDG_PORTABLE_EDITOR.open(id,{kind:'graph'}),exampleRow.packageId);await idle();
+ await historyReady();
  await field('События истории','all','[data-road=history]');
+ await historyReady();
  const eventSel='[data-event-id="'+largeEvent.id+'"]';
  const linkedSel='[data-event-id="'+linkedEvent.id+'"]';
  const createdSel='[data-event-id="'+createdHost.id+'"]';
@@ -1562,7 +1662,8 @@ async function start(){return new Promise((resolve,reject)=>{let stderr='';child
   'membership rectangles are opaque, correctly colored and painted over the entity fill');
  await page.screenshot({path:path.join(base,'graph-workarea-visible-markers.png'),fullPage:true});
  checks.push('overlapping areas share Decision identity and display distinct visible painted color markers inside Graph, not outlines');
- await click('Добавить план во времени');await save();await click('+ Размещение','.rdg-tools');await field('Разместить блок',decision.id);await click('Проверить размещение','.rdg-modal');await save();const plan=JSON.stringify((await state()).plan);
+ await historyReady();
+ await click('Добавить план во времени','[data-road=plan]');await save();await click('+ Размещение','.rdg-tools');await field('Разместить блок',decision.id);await click('Проверить размещение','.rdg-modal');await save();const plan=JSON.stringify((await state()).plan);
  const ownerBeforeRoad=await api({method:'read',packageId:processId,includePlan:true});
  await click('Настройки временной дороги','.rdg-road-head-actions');
  assert.equal(await page.$$eval('[data-road-popover=settings] input[type=range]',a=>a.length),9);
@@ -1581,9 +1682,11 @@ async function start(){return new Promise((resolve,reject)=>{let stderr='';child
   return {today:iso,yesterday:previous.toISOString().slice(0,10)};});
  const editDate=iso=>iso.slice(8,10)+'.'+iso.slice(5,7)+'.'+iso.slice(0,4);
  const chooseDate=async(kind,edge,day)=>page.$eval('[data-road-bound="'+kind+'.'+edge+'"]',(n,value)=>{n.value=value;n.dispatchEvent(new Event('input',{bubbles:true}));},editDate(day));
+ await historyReady();
  await chooseDate('historyWindow','from',windows.yesterday);await chooseDate('historyWindow','to',windows.yesterday);
  await click('Применить History','.rdg-road-flyout');
  assert.deepEqual((await state()).view.spec.historyWindow,{from:windows.yesterday,to:windows.yesterday});
+ await historyReady();
  assert.equal(await page.$$eval('[data-road=history] [data-event-id]',a=>a.length),0);
  assert((await page.$$eval('[data-road=plan] [data-placement-id]',a=>a.length))>0,
    'Undated placements must remain visible when History is filtered');

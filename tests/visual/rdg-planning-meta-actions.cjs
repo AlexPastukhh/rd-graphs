@@ -77,6 +77,7 @@ async function stop(){
  assert.deepEqual((await api({method:'read',packageId:pid})).graph,before);await save();
  let row=await api({method:'read',packageId:pid,includePlan:true});const action=row.graph.externalActions.find(n=>n.title==='Investigate the process');assert(action);assert.equal(action.subjectRefs.length,2);assert.equal(action.resultCondition,'Keep useful conclusions');assert.equal(row.plan.steps.length,1);
  assert(!row.graph.nodes.some(n=>n.id===action.id));assert.equal(await page.$('[data-entity-id="'+action.id+'"]'),null);
+ await page.waitForSelector('[data-road=history][data-history-state=ready]');
  await click(action.title,'[data-road=plan]');assert(await page.$('[data-action-subjects="'+action.id+'"]'));
  const planSpec=await page.evaluate(()=>RDG_PORTABLE_EDITOR.session.screens.find(s=>s.id===RDG_PORTABLE_EDITOR.session.activeScreenId).spec);
  await page.$eval('[data-action-subjects] button',n=>n.click());await idle();await click('К метадействию в Plan');assert(await page.$('[data-action-subjects="'+action.id+'"]'));
@@ -87,6 +88,7 @@ async function stop(){
  await click('Структура');assert.equal(await page.$('[data-entity-id="'+action.id+'"]'),null);
  await page.reload({waitUntil:'load'});await page.waitForFunction(()=>!!RDG_PORTABLE_EDITOR&&!RDG_PORTABLE_EDITOR.busy);await page.evaluate(pid=>RDG_PORTABLE_EDITOR.open(pid,{kind:'graph'}),pid);await idle();await click(action.title,'[data-road=plan]');assert(await page.$('[data-action-subjects="'+action.id+'"]'));
  const screenshot=path.join(process.env.RDG_SCREENSHOT_DIR||base,'rdg-planning-meta-actions.png');fs.mkdirSync(path.dirname(screenshot),{recursive:true});await page.screenshot({path:screenshot,fullPage:true});
+ await page.waitForSelector('[data-road=history][data-history-state=ready]');
  await page.$$eval('[data-road=plan] details',ns=>ns.forEach(n=>n.open=true));await click('Убрать размещение','[data-road=plan]');await click('Сохранить');row=await api({method:'read',packageId:pid,includePlan:true});assert.equal(row.plan.steps.length,0);assert(row.graph.externalActions.some(n=>n.id===action.id));assert.deepEqual(errors,[]);
  console.log('PLANNING_META_ACTION PASS',JSON.stringify({create:true,edit:true,lensAndLocalReturn:true,ordinaryAction:true,noGraphOrStructure:true,noImplicitEffects:true,reload:true,unplacePreservesAction:true,screenshot}));
 }catch(e){console.error('PLANNING_META_ACTION FAIL',e.stack||e);process.exitCode=1;}finally{await stop();fs.rmSync(base,{recursive:true,force:true});}})();
