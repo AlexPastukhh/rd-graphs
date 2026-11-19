@@ -749,6 +749,8 @@ class Application:
             self.check(core_model is None and role is None and entity_kind is None and command is None and source_id is None and source_path is None and source_key is None, 'READ_SCHEMA_SELECTORS')
             if ident:self.snapshot(ident,layouts=False)
             result = COMPACT.schema()
+            result['history']['expectedPackageRevision'] = {
+                'optional': True, 'minimum': 1, 'mismatch': 'HISTORY_PACKAGE_CHANGED'}
             if op == 'read':
                 result['read']['format'] = ['json','markdown']
                 result['read']['includeDependencyApplications'] = {
@@ -933,7 +935,7 @@ class Application:
         """Closed shared transport contract for CLI, Agent and manual sessions."""
         self.check(isinstance(message,dict),'MESSAGE')
         method=message.get('method')
-        fields={'capabilities':{'packageId'},'read_ref':{'reference','packageId','expand','format'},'theory_read':{'packageId','theoryId','collection','itemIds','detail','expand','limit','cursor','format','expectedTheoryRevision'},'catalog':set(),'search':{'query','scope','packageId','limit','cursor'},'read':{'packageId','includePlan','view','detail','include','nodeId','recordId','limit','cursor','format','includeDependencyApplications'},'history':{'packageId','view','detail','include','eventId','limit','cursor'},
+        fields={'capabilities':{'packageId'},'read_ref':{'reference','packageId','expand','format'},'theory_read':{'packageId','theoryId','collection','itemIds','detail','expand','limit','cursor','format','expectedTheoryRevision'},'catalog':set(),'search':{'query','scope','packageId','limit','cursor'},'read':{'packageId','includePlan','view','detail','include','nodeId','recordId','limit','cursor','format','includeDependencyApplications'},'history':{'packageId','view','detail','include','eventId','limit','cursor','expectedPackageRevision'},
                 'resolve':{'packageId','reference'},'source_snapshot':{'packageId','pin','view','detail'},
                 'schema':{'op','packageId','nodeId','sourcePackageId','command','sourcePath','sourceKey','coreModel','role','entityKind'},
                 'migration_sources':set(),'migration_inspect':{'sourceKey'},
@@ -961,7 +963,8 @@ class Application:
         if method=='theory_read':return self.theory_read(message['packageId'],message['theoryId'],collection=message.get('collection','overview'),item_ids=message.get('itemIds'),detail=message.get('detail','content'),expand=message.get('expand',False),limit=message.get('limit',25),cursor=message.get('cursor'),output_format=message.get('format','json'),expected_revision=message.get('expectedTheoryRevision'))
         if method=='read':return self.read(message['packageId'],message.get('includePlan',False),message.get('view'),detail=message.get('detail'),include=message.get('include'),node_id=message.get('nodeId'),record_id=message.get('recordId'),limit=message.get('limit',25),cursor=message.get('cursor'),output_format=message.get('format'),
             include_dependency_applications=message.get('includeDependencyApplications',True))
-        if method=='history':return self.history(message['packageId'],message.get('view'),detail=message.get('detail'),include=message.get('include'),event_id=message.get('eventId'),limit=message.get('limit',25),cursor=message.get('cursor'))
+        if method=='history':return self.history(message['packageId'],message.get('view'),detail=message.get('detail'),include=message.get('include'),event_id=message.get('eventId'),limit=message.get('limit',25),cursor=message.get('cursor'),
+                                                 expected_package_revision=message.get('expectedPackageRevision'))
         if method=='resolve':return self.resolve(message['packageId'],message['reference'])
         if method=='source_snapshot':return self.source_snapshot(message['packageId'],message['pin'],message.get('view'),detail=message.get('detail','full'))
         if method=='dependencies':return self.dependencies(message['packageId'])
@@ -2083,7 +2086,11 @@ class Application:
     def resolve(self,ident,reference):
         with self.store.lock(False,create=False):return self.resolve_for(reference,self.snapshot(ident,layouts=False))
 
-    def history(self,ident,view=None,*,detail=None,include=None,event_id=None,limit=25,cursor=None):
+    def history(self,ident,view=None,*,detail=None,include=None,event_id=None,limit=25,cursor=None,
+                expected_package_revision=None):
+        self.check(expected_package_revision is None or
+                   type(expected_package_revision) is int and expected_package_revision >= 1,
+                   'HISTORY_PACKAGE_REVISION')
         self.check(detail in (None,'full','compact','item'), 'READ_HISTORY_DETAIL')
         self.check((detail=='item')==(isinstance(event_id,str) and bool(event_id)), 'READ_HISTORY_EVENT_ID')
         if detail in (None,'full','item'):
@@ -2092,7 +2099,10 @@ class Application:
             self.model.validate_view_spec(view)
             self.check(view.get('kind')=='graph' and set(view)<={'kind','historyMode','historyWindow'}, 'READ_HISTORY_VIEW_UNSUPPORTED')
         with self.store.lock(False,create=False):
-            row=self.snapshot(ident,True,False);directory=self.store.package_path(row['path'])
+            row=self.snapshot(ident,True,False)
+            if expected_package_revision is not None:
+                self.check(row['head']['revision'] == expected_package_revision, 'HISTORY_PACKAGE_CHANGED')
+            directory=self.store.package_path(row['path'])
             inventory=self.store.inventory(row)
             # Full History only: compact/item must still run their own input
             # validation and projection. Auth, snapshot, every inventory byte,

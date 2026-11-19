@@ -462,7 +462,7 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
  function readScreen(s,spec=s.spec){
   return call({method:'read',packageId:s.packageId,includePlan:true,view:spec,includeDependencyApplications:false});
  }
- let policyUsageFailure=null;
+ let policyUsageFailure=null,historyLoad=null,updateRoadHistory=null;
  async function ensurePolicyUsage(){
   const value=snapshot,catalog=value?.dependencyCatalog,presentation=screen()?.presentation;
   if(presentation?.mode!=='dependencies'||presentation.dependencyTab!=='policies'||
@@ -480,12 +480,37 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
   render();
   if(await ensurePolicyUsage())render();
  }
- async function load({catalogs=false}={}){if(catalogs||!catalog)await loadCatalogs();let s=screen();if(s&&s.spec.kind!=='focus'&&s.spec.compactGraph===undefined){
+ function currentHistoryLoad(request){
+  const active=screen();
+  return !!request&&request===historyLoad&&request.snapshot===snapshot&&active?.id===request.screenId&&
+    active?.packageId===request.snapshot.package.packageId;
+ }
+ async function fetchRoadHistory(request){
+  if(!currentHistoryLoad(request))return;
+  if(request.state!=='loading'){
+   request.state='loading';
+   updateRoadHistory?.();
+  }
+  const owner=request.snapshot.package;
+  try{
+   const result=await call({method:'history',packageId:owner.packageId,expectedPackageRevision:owner.revision});
+   if(!currentHistoryLoad(request))return;
+   if(result.packageId!==owner.packageId)throw Error('HISTORY_OWNER_CHANGED');
+   history=result;
+   request.state='ready';
+  }catch(error){
+   if(!currentHistoryLoad(request))return;
+   request.state=error.message==='HISTORY_PACKAGE_CHANGED'?'stale':'error';
+  }
+  updateRoadHistory?.();
+ }
+ async function load({catalogs=false}={}){
+  if(catalogs||!catalog)await loadCatalogs();let s=screen();if(s&&s.spec.kind!=='focus'&&s.spec.compactGraph===undefined){
    // Existing sessions get the new readable default without altering the owner layout.
    await sync((v,t)=>{if(t.spec.compactGraph===undefined){t.spec.compactGraph=true;delete t.spec.camera;}});
    s=screen();
   }
-  if(!s){snapshot=null;history=null;form=session.explorer.drafts['new-process']?.open?'create':null;render();return null;}try{snapshot=await readScreen(s);}catch(e){if(!/FOCUS|VIEW_CASES|REFERENCE_MISSING:group/.test(e.message))throw e;const spec={...s.spec,kind:'graph',groupIds:[],shownCases:{}};delete spec.id;await sync((v,s)=>s.spec=spec);snapshot=await readScreen(s,spec);note('Состав представления изменился; черновик сохранён.');}
+  if(!s){snapshot=null;history=null;historyLoad=null;form=session.explorer.drafts['new-process']?.open?'create':null;render();return null;}try{snapshot=await readScreen(s);}catch(e){if(!/FOCUS|VIEW_CASES|REFERENCE_MISSING:group/.test(e.message))throw e;const spec={...s.spec,kind:'graph',groupIds:[],shownCases:{}};delete spec.id;await sync((v,s)=>s.spec=spec);snapshot=await readScreen(s,spec);note('Состав представления изменился; черновик сохранён.');}
   if(isProcess()&&s.spec.kind==='focus'){
    const finding=snapshot.graph.objects.find(n=>n.id===s.spec.id&&n.kind==='finding');
    if(finding){const subject=[...snapshot.graph.nodes,...snapshot.graph.objects].find(n=>n.id===finding.subjectId);inspectorTabState.set(subject?.id||finding.id,'findings');await sync((v,t)=>{t.spec={...t.spec,kind:subject?'focus':'graph',...(subject?{id:subject.id}:{})};if(!subject)delete t.spec.id;t.inspector={kind:'entity',id:subject?.id||finding.id};});return load();}
@@ -499,9 +524,15 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
    await sync((v,t)=>{t.spec={...t.spec,kind:'graph',groupIds:[]};delete t.spec.id;delete t.spec.camera;delete t.spec.focusPositions;t.inspector=null;});
    return load();
   }
-  const meta=graphMeta(s.packageId);if(meta)Object.assign(meta,{revision:snapshot.package.revision,title:snapshot.graph.title,workGraphs:snapshot.graph.workGraphs,recommendationPackageIds:snapshot.graph.recommendationPackageIds});form=s.draft?.open?s.draft.form?.mode:null;history=snapshot.package.role==='working'||snapshot.package.role==='copy'?await call({method:'history',packageId:s.packageId}):null;
+  const meta=graphMeta(s.packageId);if(meta)Object.assign(meta,{revision:snapshot.package.revision,title:snapshot.graph.title,workGraphs:snapshot.graph.workGraphs,recommendationPackageIds:snapshot.graph.recommendationPackageIds});form=s.draft?.open?s.draft.form?.mode:null;
+  history=null;
+  const roadHistory=isProcess()?{screenId:s.id,snapshot,state:'loading'}:null;
+  historyLoad=roadHistory;
   policyUsageFailure=null;
-  await renderScreen();return snapshot;}
+  await renderScreen();
+  if(roadHistory)void fetchRoadHistory(roadHistory);
+  return snapshot;
+ }
  async function open(id,spec={kind:'graph'}){
   if(!session)session=await call({method:'view_session',action:'create',sessionId:uid()});if(!catalog)await loadCatalogs();return navigate(id,spec);
  }
@@ -878,7 +909,7 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
   list.scrollTop=state.scroll;
  }
  function renderLanding(){root.dataset.mode='explorer';root.replaceChildren(style);const status=el('p',message||(catalog?'Выберите процесс-граф, рабочую область или готовый граф.':'Загрузка Explorer…'),'rdg-status');status.setAttribute('role','status');status.classList.toggle('rdg-error',error);root.append(status);renderExplorer(root,true);const footer=el('footer',null,'rdg-footer');footer.append(el('span','Explorer · граф ещё не выбран'),el('span','Decision UI · 20261029-fix2'));root.append(footer);if(pending)renderPreview(root);else if(form)renderForm(root);}
- function render(){captureInvalidationPosition();closeStructureContextMenu();if(!snapshot||!screen())return renderLanding();root.dataset.mode='graph';root.replaceChildren(style);const s=screen(),work=isProcess(),area=activeArea();
+ function render(){updateRoadHistory=null;captureInvalidationPosition();closeStructureContextMenu();if(!snapshot||!screen())return renderLanding();root.dataset.mode='graph';root.replaceChildren(style);const s=screen(),work=isProcess(),area=activeArea();
   if(contextBank.packageId!==s.packageId)contextBank={packageId:s.packageId,open:false,selectedId:null,query:''};
   if(!work)contextBank.open=false;
   const head=el('header',null,'rdg-row rdg-head');root.append(head);const brand=button(head,'☷ RDG Viewer',()=>sync(v=>v.explorer.open=!v.explorer.open,true));brand.className='rdg-brand';brand.setAttribute('aria-expanded',String(session.explorer.open));brand.title='Открыть или закрыть Explorer';head.append(el('span','v2.7.0','rdg-version'));
@@ -2077,42 +2108,50 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
    return;
   }
   for(const [kind,title] of [['historyWindow','History'],['planWindow','Plan']]){
-   const area=el('fieldset');area.dataset.roadArea=title.toLowerCase();box.append(area);area.append(el('legend',title));
-   const window=roadWindow(s,kind),bounds=roadAvailableBounds(kind),draft=ui.drafts[kind]??={from:roadEditDay(window.from),to:roadEditDay(window.to)};
-   const inputs=el('div',null,'rdg-road-date-inputs');area.append(inputs);
-   for(const edge of ['from','to']){
-    const label=el('label',edge==='from'?'С':'По'),input=el('input');input.type='text';input.placeholder='дд.мм.гггг';
-    input.value=draft[edge];input.dataset.roadBound=kind+'.'+edge;input.setAttribute('aria-invalid',String(!!ui.errors[kind]));
-    label.append(input);inputs.append(label);input.oninput=()=>{draft[edge]=input.value;ui.errors[kind]='';input.setAttribute('aria-invalid','false');};
-   }
-   if(ui.errors[kind]){const err=el('p',ui.errors[kind],'rdg-road-error');err.setAttribute('role','alert');area.append(err);}
-   const month=ui.months[kind]||validRoadDay(draft.from)?.slice(0,7)||window.from.slice(0,7);ui.months[kind]=month;
-   const nav=el('div',null,'rdg-row');area.append(nav);
-   const shift=n=>{const d=new Date(month+'-01T12:00:00Z');d.setUTCMonth(d.getUTCMonth()+n);ui.months[kind]=d.toISOString().slice(0,7);render();};
-   button(nav,'‹',()=>shift(-1),month<=bounds.from.slice(0,7)).setAttribute('aria-label','Предыдущий месяц '+title);
-   nav.append(el('strong',new Intl.DateTimeFormat('ru-RU',{month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(month+'-01T12:00:00Z'))));
-   button(nav,'›',()=>shift(1),month>=bounds.to.slice(0,7)).setAttribute('aria-label','Следующий месяц '+title);
-   const grid=el('div',null,'rdg-calendar');area.append(grid);
-   for(const d of ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'])grid.append(el('small',d));
-   const first=new Date(month+'-01T12:00:00Z'),offset=(first.getUTCDay()+6)%7,total=new Date(Date.UTC(first.getUTCFullYear(),first.getUTCMonth()+1,0)).getUTCDate();
-   for(let i=0;i<offset;i++)grid.append(el('span'));
-   for(let i=1;i<=total;i++){
-    const day=month+'-'+String(i).padStart(2,'0');
-    const b=button(grid,String(i),async()=>{
-      const anchor=ui.anchors[kind];
-      if(!anchor){ui.anchors[kind]=day;ui.drafts[kind]={from:roadEditDay(day),to:roadEditDay(day)};render();return;}
-      ui.anchors[kind]=null;ui.drafts[kind]={from:roadEditDay(anchor<day?anchor:day),to:roadEditDay(anchor>day?anchor:day)};
-      await applyRoadWindow(kind,ui);
-    },day<bounds.from||day>bounds.to);
-    b.dataset.roadDay=day;b.dataset.area=kind;b.setAttribute('aria-label',roadEditDay(day));
-    b.setAttribute('aria-pressed',String(day>=window.from&&day<=window.to));
-    if(day===window.from||day===window.to)b.classList.add('rdg-range-edge');
-   }
-   area.append(el('p',ui.anchors[kind]?'Начало: '+roadEditDay(ui.anchors[kind])+' · выберите конец':'Первый клик — начало, второй — конец','rdg-road-window-note'));
-   button(area,'Применить '+title,()=>applyRoadWindow(kind,ui));
-   area.append(el('p','Доступный период: '+roadEditDay(bounds.from)+' — '+roadEditDay(bounds.to),'rdg-road-window-note'));
+   const area=el('fieldset');area.dataset.roadArea=title.toLowerCase();box.append(area);
+   renderRoadWindow(area,s,ui,kind,title);
   }
   box.append(el('p','Границы включают оба дня. Шаги Plan без даты остаются в порядке.','rdg-road-window-note'));
+ }
+ function renderRoadWindow(area,s,ui,kind,title){
+  area.replaceChildren(el('legend',title));
+  if(kind==='historyWindow'&&!history){
+   renderHistoryStatus(area);
+   return;
+  }
+  const window=roadWindow(s,kind),bounds=roadAvailableBounds(kind),draft=ui.drafts[kind]??={from:roadEditDay(window.from),to:roadEditDay(window.to)};
+  const inputs=el('div',null,'rdg-road-date-inputs');area.append(inputs);
+  for(const edge of ['from','to']){
+   const label=el('label',edge==='from'?'С':'По'),input=el('input');input.type='text';input.placeholder='дд.мм.гггг';
+   input.value=draft[edge];input.dataset.roadBound=kind+'.'+edge;input.setAttribute('aria-invalid',String(!!ui.errors[kind]));
+   label.append(input);inputs.append(label);input.oninput=()=>{draft[edge]=input.value;ui.errors[kind]='';input.setAttribute('aria-invalid','false');};
+  }
+  if(ui.errors[kind]){const err=el('p',ui.errors[kind],'rdg-road-error');err.setAttribute('role','alert');area.append(err);}
+  const month=ui.months[kind]||validRoadDay(draft.from)?.slice(0,7)||window.from.slice(0,7);ui.months[kind]=month;
+  const nav=el('div',null,'rdg-row');area.append(nav);
+  const shift=n=>{const d=new Date(month+'-01T12:00:00Z');d.setUTCMonth(d.getUTCMonth()+n);ui.months[kind]=d.toISOString().slice(0,7);render();};
+  button(nav,'‹',()=>shift(-1),month<=bounds.from.slice(0,7)).setAttribute('aria-label','Предыдущий месяц '+title);
+  nav.append(el('strong',new Intl.DateTimeFormat('ru-RU',{month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(month+'-01T12:00:00Z'))));
+  button(nav,'›',()=>shift(1),month>=bounds.to.slice(0,7)).setAttribute('aria-label','Следующий месяц '+title);
+  const grid=el('div',null,'rdg-calendar');area.append(grid);
+  for(const d of ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'])grid.append(el('small',d));
+  const first=new Date(month+'-01T12:00:00Z'),offset=(first.getUTCDay()+6)%7,total=new Date(Date.UTC(first.getUTCFullYear(),first.getUTCMonth()+1,0)).getUTCDate();
+  for(let i=0;i<offset;i++)grid.append(el('span'));
+  for(let i=1;i<=total;i++){
+   const day=month+'-'+String(i).padStart(2,'0');
+   const b=button(grid,String(i),async()=>{
+     const anchor=ui.anchors[kind];
+     if(!anchor){ui.anchors[kind]=day;ui.drafts[kind]={from:roadEditDay(day),to:roadEditDay(day)};render();return;}
+     ui.anchors[kind]=null;ui.drafts[kind]={from:roadEditDay(anchor<day?anchor:day),to:roadEditDay(anchor>day?anchor:day)};
+     await applyRoadWindow(kind,ui);
+   },day<bounds.from||day>bounds.to);
+   b.dataset.roadDay=day;b.dataset.area=kind;b.setAttribute('aria-label',roadEditDay(day));
+   b.setAttribute('aria-pressed',String(day>=window.from&&day<=window.to));
+   if(day===window.from||day===window.to)b.classList.add('rdg-range-edge');
+  }
+  area.append(el('p',ui.anchors[kind]?'Начало: '+roadEditDay(ui.anchors[kind])+' · выберите конец':'Первый клик — начало, второй — конец','rdg-road-window-note'));
+  button(area,'Применить '+title,()=>applyRoadWindow(kind,ui));
+  area.append(el('p','Доступный период: '+roadEditDay(bounds.from)+' — '+roadEditDay(bounds.to),'rdg-road-window-note'));
  }
  function policyRoleName(policy,id){return policy.roles?.find(r=>r.id===id)?.name||({target:'Зависимый элемент',source:'Источник изменений',parent:'Родительский Decision',parents:'Непосредственные родители',children:'Непосредственные дети',context:'Элементы контекста'}[id])||id;}
  function dependencyCapabilities(){return snapshot?.dependencyCatalog?.capabilities||{};}
@@ -2773,8 +2812,73 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
    return container;
   }
   function entry(parent,node,caption,headline=null){const row=el('article',null,'rdg-road-row'),card=el('div',null,'rdg-road-card');colorize(card,node?.kind);card.append(el('small',caption));if(headline)card.append(el('b',headline,'rdg-road-headline'));else if(node){if(byId.has(node.id))button(card,node.title,()=>focusNode(node.id));else card.append(el('b',node.title));}else card.append(el('b','Сохранённый факт'));row.append(card);parent.append(row);return {row,card};}
+  const facts=el('section',null,'rdg-road-part');
+  facts.dataset.road='history';
+  scroll.append(facts);
+  updateRoadHistory=()=>{
+   if(root.querySelector('[data-road="history"]')!==facts)return;
+   const active=screen();
+   renderRoadHistory(facts,active,ui,byId,side,entry);
+   const historyDates=road.querySelector('[data-road-area="history"]');
+   if(historyDates)renderRoadWindow(historyDates,active,ui,'historyWindow','History');
+  };
+  renderRoadHistory(facts,s,ui,byId,side,entry);
+  const planWindow=roadWindow(s,'planWindow');
+  const now=el('div',null,'rdg-now');now.append(el('i'),el('b','Сейчас'),el('span','History / Plan'));scroll.append(now);
+  const plan=el('section',null,'rdg-road-part');plan.dataset.road='plan';scroll.append(plan);const planHead=el('div',null,'rdg-road-section');planHead.append(el('b','Plan'),el('small','Порядок и необязательное время'));plan.append(planHead);
+  if(!snapshot.plan){const empty=el('div',null,'rdg-card');empty.append(el('p','План процесса ещё не создан.','rdg-muted'));button(empty,'Добавить план во времени',async()=>prepare(await schema('plan_create')));plan.append(empty);}
+  else{
+   const rows=new Map(snapshot.planView.placements.map(r=>[r.step.id,r]));let shown=0;
+   for(const item of snapshot.planView.road||[]){
+    if(item.type==='fork'||item.type==='join'){
+     const fork=snapshot.planView.forks.find(f=>f.id===item.forkId),end=item.type==='join';
+     const {row,card}=entry(plan,null,end?'Конец ветвления':'Начало ветвления',end?fork.end.title:fork.title);row.dataset[end?'forkEndId':'forkId']=fork.id;
+     card.style.setProperty('--rdg-node-fill','#29263f');card.style.setProperty('--rdg-node-line','#9d8ad6');card.append(el('small',planMomentLabel(end?fork.end.at:fork.startAt),'rdg-plan-moment'));
+     if(end)card.append(el('p','Дальше — общая последовательность для всех продолжений.'));
+     else{
+      card.append(el('small','Просмотр продолжения не принимает решение.','rdg-muted'));
+      select(card,'Показать продолжение',fork.cases.map(c=>[c.id,c.title]),fork.shownCaseId,id=>run(()=>changeView({shownCases:{...(screen().spec.shownCases||{}),[fork.id]:id}})));
+      planRoots(card,fork.cases.find(c=>c.id===fork.shownCaseId).decisionIds);
+      const others=el('details');others.append(el('summary','Другие корни и их группы'));for(const c of fork.cases.filter(c=>c.id!==fork.shownCaseId)){others.append(el('b',c.title));planRoots(others,c.decisionIds);}card.append(others);
+     }
+     const details=el('details');details.append(el('summary','Настроить'));button(details,'Изменить ветвление',()=>showForm('fork',{forkId:fork.id}));card.append(details);continue;
+    }
+    const placement=rows.get(item.stepId);if(!placement||!s.spec.showLowLevel&&placement.node?.lowLevel)continue;
+    const days=(placement.timeConstraints||[]).map(v=>String(v.at||'').slice(0,10)).filter(validRoadDay).sort();
+    if(days.length&&(days.at(-1)<planWindow.from||days[0]>planWindow.to))continue;
+    shown++;const node=placement.node||byId.get(placement.step.ref.nodeId),{row,card}=entry(plan,node,(placement.step.state==='possible'?'Возможное размещение · ':'Размещение · ')+(kindLabel[node?.kind]||'Блок')+' · '+(placement.timeConstraints.length?placement.timeConstraints.map(r=>(r.type==='deadline'?'До ':'С ')+r.at).join(' · '):'Только порядок, без даты'),node?null:placement.step.title+' · элемент недоступен');row.dataset.placementId=placement.step.id;
+    const sourceIds=snapshot.graph.edges.filter(e=>e.to===node?.id&&['INTRODUCES','DERIVES','DRIVES','REQUIRES_ACTION'].includes(e.type)).map(e=>e.from);side(row,[...new Set(sourceIds)],'Происхождение',0);side(row,node?.targetIds||[],'Контекст Action',1);
+    const badge=el('span',ui.badgeMode==='label'?'Есть связь с Plan':'',ui.badgeMode==='label'?'rdg-road-label planned':'rdg-road-indicator planned');
+    badge.title='Есть связь с Plan';card.prepend(badge);
+    const details=el('details');details.open=ui.details;details.append(el('summary','Размещение'));button(details,'Изменить размещение',()=>showForm('place',{nodeId:placement.step.ref.nodeId,stepId:placement.step.id}));button(details,'Убрать размещение',async()=>{const request=await schema('unplace');Object.assign(request,{stepId:placement.step.id,note:'Явно убрать размещение из Plan'});await prepare(request);});card.append(details);
+   }
+   if(!shown)plan.append(el('p','В выбранном периоде и продолжении нет размещений.','rdg-explorer-note'));button(plan,'Проверить размещение',()=>showForm('place'));
+  }
+  scroll.scrollTop=ui.scroll??s.panels.planScroll;let timer;scroll.onscroll=()=>{
+   ui.scroll=scroll.scrollTop;clearTimeout(timer);
+   if(screen()?.panels.planScroll!==scroll.scrollTop)timer=setTimeout(()=>void sync((v,s)=>s.panels.planScroll=scroll.scrollTop).catch(()=>{}),120);
+  };
+ }
+ function renderHistoryStatus(parent){
+  const state=historyLoad?.state;
+  const text=state==='stale'?'История уже обновилась. Обновите экран, чтобы открыть её для текущего графа.':
+    state==='error'?'Не удалось загрузить историю.':'Загрузка истории…';
+  const status=el('p',text,'rdg-explorer-note');
+  status.setAttribute('role',state==='error'||state==='stale'?'alert':'status');
+  parent.append(status);
+  if(state==='error')button(parent,'Повторить',()=>{void fetchRoadHistory(historyLoad);});
+  if(state==='stale')button(parent,'Обновить экран',refresh);
+ }
+ function renderRoadHistory(facts,s,ui,byId,side,entry){
   function historyBlockList(parent,ids,label,recorded={},inherited=false){const found=ids.map(id=>recorded[id]||(!inherited?byId.get(id):null)||{id,kind:'requirement',title:'Записанный ID · '+id});if(!found.length)return;const list=el('div',null,'rdg-road-change-list');list.append(el('small',label));for(const node of found){const b=!inherited&&byId.has(node.id)?button(list,node.title,()=>focusNode(node.id)):el('span',node.title);if(inherited||!byId.has(node.id))list.append(b);colorize(b,node.kind);b.title=(kindLabel[node.kind]||node.kind)+' · '+node.id;}parent.append(list);}
-  const facts=el('section',null,'rdg-road-part');facts.dataset.road='history';scroll.append(facts);const historyHead=el('div',null,'rdg-road-section');historyHead.append(el('b','History'),el('small','Записанные события, не равнозначные выполнению'));facts.append(historyHead);
+  facts.dataset.historyState=historyLoad?.state||'loading';
+  const historyHead=el('div',null,'rdg-road-section');
+  historyHead.append(el('b','History'),el('small','Записанные события, не равнозначные выполнению'));
+  facts.replaceChildren(historyHead);
+  if(!history){
+   renderHistoryStatus(facts);
+   return;
+  }
   const historyMode=s.spec.historyMode||'important';select(historyHead,'События истории',[['important','Важное'],['meaningful','Без технических'],['technical','Технические'],['all','Всё']],historyMode,v=>run(()=>changeView({historyMode:v}))).dataset.historyMode='';
   const eventNames={created:'Создан блок',edited:'Изменён блок',linked:'Добавлена связь',unlinked:'Связь удалена',group_changed:'Изменена группа решений',work_graph_changed:'Изменена рабочая область',root_cause_changed:'Изменено основание',decision_selected:'Решение выбрано',decision_unselected:'Решение отменено',branch_cancelled:'Ветвь автоматически деактивирована',action_executed:'Действие выполнено',requirement_achieved:'Требование достигнуто',decision_completed:'Решение завершено',reopened:'Результат открыт для пересмотра',removed:'Блок удалён',lock_set:'Установлено ограничение',lock_removed:'Снято ограничение',lens_application_recorded:'Записано применение линзы',completed:'Результат зафиксирован',reviewed:'Проверена актуальность',lens_applied:'Применение линзы',policy_changed:'Изменена политика зависимостей',binding_changed:'Изменено применение зависимости'};
   const eventCategories={created:'ИЗМЕНЕНИЕ GRAPH',edited:'ИЗМЕНЕНИЕ GRAPH',linked:'ИЗМЕНЕНИЕ GRAPH',unlinked:'ИЗМЕНЕНИЕ GRAPH',removed:'ИЗМЕНЕНИЕ GRAPH',group_changed:'ОРГАНИЗАЦИЯ',work_graph_changed:'ОРГАНИЗАЦИЯ',root_cause_changed:'ОСНОВАНИЕ',decision_selected:'ВЫБОР',decision_unselected:'ВЫБОР',branch_cancelled:'СОСТОЯНИЕ',action_executed:'РЕЗУЛЬТАТ',requirement_achieved:'РЕЗУЛЬТАТ',decision_completed:'РЕЗУЛЬТАТ',reopened:'ПЕРЕСМОТР',lock_set:'УПРАВЛЕНИЕ',lock_removed:'УПРАВЛЕНИЕ',lens_application_recorded:'ПРИМЕНЕНИЕ',completed:'РЕЗУЛЬТАТ',reviewed:'ПЕРЕСМОТР',lens_applied:'ПРИМЕНЕНИЕ'};
@@ -2822,7 +2926,7 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
   }
   const createdNames={requirement:'Создано требование',decision:'Создано решение',action:'Создано действие',
    canon:'Создана теория принятия решения',context:'Создан контекст процесса',info:'Создана информация',evidence:'Создано свидетельство'};
-  let visibleEvents=0;const historyWindow=roadWindow(s,'historyWindow'),planWindow=roadWindow(s,'planWindow');
+  let visibleEvents=0;const historyWindow=roadWindow(s,'historyWindow');
   for(const record of history?.events||[]){const event=record.event,day=event.recordedAt?.slice(0,10),change=event.workGraphChange;
    if(day&&(day<historyWindow.from||day>historyWindow.to))continue;
    const hv=record.historyView||{level:'unknown',targetIds:[],subjects:{},createdIds:[],activatedRequirementIds:[],deactivatedRequirementIds:[],edits:[]};
@@ -2931,40 +3035,6 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
    const details=el('details');details.open=ui.details;details.append(el('summary','Сведения о факте'));if(hv.reason==='cosmetic-flag-not-recorded')details.append(el('p','В прежней записи не сохранён признак семантического переименования. Она не скрывается как техническая.'));if(record.inherited)details.append(el('p','Наследованная запись исходного процесса.'));if(edits.length)details.append(el('pre',JSON.stringify(edits,null,2)));if(event.placementIds?.length)details.append(el('p','Размещений при событии: '+event.placementIds.length));button(details,'Версия события',async()=>{const source=await call({method:'source_snapshot',packageId:screen().packageId,pin:record.source});form='snapshot';packageDetail={...source,planAtEvent:history.planVersions.find(v=>v.sha256===record.planPin?.sha256)?.plan||null};render();});card.append(details);
   }
   if(!visibleEvents)facts.append(el('p','В выбранном периоде и режиме истории нет событий.','rdg-explorer-note'));
-  const now=el('div',null,'rdg-now');now.append(el('i'),el('b','Сейчас'),el('span','History / Plan'));scroll.append(now);
-  const plan=el('section',null,'rdg-road-part');plan.dataset.road='plan';scroll.append(plan);const planHead=el('div',null,'rdg-road-section');planHead.append(el('b','Plan'),el('small','Порядок и необязательное время'));plan.append(planHead);
-  if(!snapshot.plan){const empty=el('div',null,'rdg-card');empty.append(el('p','План процесса ещё не создан.','rdg-muted'));button(empty,'Добавить план во времени',async()=>prepare(await schema('plan_create')));plan.append(empty);}
-  else{
-   const rows=new Map(snapshot.planView.placements.map(r=>[r.step.id,r]));let shown=0;
-   for(const item of snapshot.planView.road||[]){
-    if(item.type==='fork'||item.type==='join'){
-     const fork=snapshot.planView.forks.find(f=>f.id===item.forkId),end=item.type==='join';
-     const {row,card}=entry(plan,null,end?'Конец ветвления':'Начало ветвления',end?fork.end.title:fork.title);row.dataset[end?'forkEndId':'forkId']=fork.id;
-     card.style.setProperty('--rdg-node-fill','#29263f');card.style.setProperty('--rdg-node-line','#9d8ad6');card.append(el('small',planMomentLabel(end?fork.end.at:fork.startAt),'rdg-plan-moment'));
-     if(end)card.append(el('p','Дальше — общая последовательность для всех продолжений.'));
-     else{
-      card.append(el('small','Просмотр продолжения не принимает решение.','rdg-muted'));
-      select(card,'Показать продолжение',fork.cases.map(c=>[c.id,c.title]),fork.shownCaseId,id=>run(()=>changeView({shownCases:{...(screen().spec.shownCases||{}),[fork.id]:id}})));
-      planRoots(card,fork.cases.find(c=>c.id===fork.shownCaseId).decisionIds);
-      const others=el('details');others.append(el('summary','Другие корни и их группы'));for(const c of fork.cases.filter(c=>c.id!==fork.shownCaseId)){others.append(el('b',c.title));planRoots(others,c.decisionIds);}card.append(others);
-     }
-     const details=el('details');details.append(el('summary','Настроить'));button(details,'Изменить ветвление',()=>showForm('fork',{forkId:fork.id}));card.append(details);continue;
-    }
-    const placement=rows.get(item.stepId);if(!placement||!s.spec.showLowLevel&&placement.node?.lowLevel)continue;
-    const days=(placement.timeConstraints||[]).map(v=>String(v.at||'').slice(0,10)).filter(validRoadDay).sort();
-    if(days.length&&(days.at(-1)<planWindow.from||days[0]>planWindow.to))continue;
-    shown++;const node=placement.node||byId.get(placement.step.ref.nodeId),{row,card}=entry(plan,node,(placement.step.state==='possible'?'Возможное размещение · ':'Размещение · ')+(kindLabel[node?.kind]||'Блок')+' · '+(placement.timeConstraints.length?placement.timeConstraints.map(r=>(r.type==='deadline'?'До ':'С ')+r.at).join(' · '):'Только порядок, без даты'),node?null:placement.step.title+' · элемент недоступен');row.dataset.placementId=placement.step.id;
-    const sourceIds=snapshot.graph.edges.filter(e=>e.to===node?.id&&['INTRODUCES','DERIVES','DRIVES','REQUIRES_ACTION'].includes(e.type)).map(e=>e.from);side(row,[...new Set(sourceIds)],'Происхождение',0);side(row,node?.targetIds||[],'Контекст Action',1);
-    const badge=el('span',ui.badgeMode==='label'?'Есть связь с Plan':'',ui.badgeMode==='label'?'rdg-road-label planned':'rdg-road-indicator planned');
-    badge.title='Есть связь с Plan';card.prepend(badge);
-    const details=el('details');details.open=ui.details;details.append(el('summary','Размещение'));button(details,'Изменить размещение',()=>showForm('place',{nodeId:placement.step.ref.nodeId,stepId:placement.step.id}));button(details,'Убрать размещение',async()=>{const request=await schema('unplace');Object.assign(request,{stepId:placement.step.id,note:'Явно убрать размещение из Plan'});await prepare(request);});card.append(details);
-   }
-   if(!shown)plan.append(el('p','В выбранном периоде и продолжении нет размещений.','rdg-explorer-note'));button(plan,'Проверить размещение',()=>showForm('place'));
-  }
-  scroll.scrollTop=ui.scroll??s.panels.planScroll;let timer;scroll.onscroll=()=>{
-   ui.scroll=scroll.scrollTop;clearTimeout(timer);
-   if(screen()?.panels.planScroll!==scroll.scrollTop)timer=setTimeout(()=>void sync((v,s)=>s.panels.planScroll=scroll.scrollTop).catch(()=>{}),120);
-  };
  }
  function modal(parent,title){const shade=el('div',null,'rdg-modal-shade'),body=el('section',null,'rdg-modal');body.setAttribute('role','dialog');body.setAttribute('aria-label',title);shade.append(body);parent.append(shade);const head=el('div',null,'rdg-row');body.append(head);head.append(el('h2',title));button(head,'Закрыть',async()=>{form=null;calendar=null;await sync((v,s)=>{const d=s?.draft||v.explorer.drafts['new-process'];if(d)d.open=false;});render();});return body;}
  function renderPreview(parent){const body=modal(parent,pending.uncertain?'Исход записи требует проверки':'Предварительная проверка');body.append(el('p','Операция: '+pending.request.op));const details=el('details');details.open=true;details.append(el('summary','Последствия'),el('pre',JSON.stringify(pending.preview.effects,null,2)));body.append(details);

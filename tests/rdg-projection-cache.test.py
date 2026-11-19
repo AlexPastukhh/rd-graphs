@@ -41,6 +41,18 @@ class ProjectionCacheTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'READ_DETAIL_REQUIRED'):
             self.app.history(self.owner,detail='full',include=['events'])
 
+    def test_history_revision_pin_is_checked_before_serving_a_warm_projection(self):
+        row = self.app.snapshot(self.owner, True, False)
+        request = {'method': 'history', 'packageId': self.owner,
+                   'expectedPackageRevision': row['head']['revision']}
+        expected = self.app.history(self.owner)
+        self.assertEqual(self.app.call(request), expected)
+        with patch.object(self.app.store, 'inventory', side_effect=AssertionError('inventory read')):
+            with self.assertRaisesRegex(ValueError, 'HISTORY_PACKAGE_CHANGED'):
+                self.app.call({**request, 'expectedPackageRevision': row['head']['revision'] + 1})
+        with self.assertRaisesRegex(ValueError, 'HISTORY_PACKAGE_REVISION'):
+            self.app.call({**request, 'expectedPackageRevision': True})
+
     def test_history_modes_do_not_mix_and_recheck_inventory(self):
         for mode in ('all','important','meaningful','technical'):
             opts={'view':{'kind':'graph','historyMode':mode}}
