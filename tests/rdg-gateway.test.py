@@ -71,6 +71,28 @@ class GatewayTests(BASE.Server):
             'expectedRegistryRevision':actual['dependencyCatalog']['revision']}), {'applications':usage})
         self.assertEqual(before,self.files())
 
+    def test_gateway_can_load_local_dependency_details_for_a_read_snapshot(self):
+        pid, _, _ = self.gateway_create()
+        before = self.files()
+        schema = self.private_call({'method':'schema','op':'read'})
+        self.assertEqual(schema['read']['includeDependencyDetails']['deferredMethod'], 'dependency_details')
+        request = {'method':'read','packageId':pid,'includeDependencyApplications':False}
+        full = self.private_call(request)
+        initial = self.private_call({**request,'includeDependencyDetails':False})
+        self.assertNotIn('localApplications', initial['dependencyCatalog'])
+        self.assertNotIn('invalidationRecords', initial['dependencyCatalog'])
+        details_request = {'method':'dependency_details','packageId':pid,
+                           'expectedPackageRevision':initial['package']['revision']}
+        details = self.private_call(details_request)
+        self.assertEqual(details.pop('packageId'), pid)
+        self.assertEqual(details.pop('packageRevision'), details_request['expectedPackageRevision'])
+        initial['dependencyCatalog'].update(details)
+        self.assertEqual(initial, full)
+        with self.assertRaises(urllib.error.HTTPError) as stale:
+            self.private_call({**details_request,'expectedPackageRevision':details_request['expectedPackageRevision']+1})
+        self.assertEqual(json.load(stale.exception)['error'], 'PORTABLE_APP_DEPENDENCY_DETAILS_PACKAGE_CHANGED')
+        self.assertEqual(before, self.files())
+
     def test_gateway_markdown_and_literal_search_are_read_only(self):
         pid,_,_=self.gateway_create()
         before=self.files()

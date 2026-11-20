@@ -583,17 +583,40 @@ class Application:
             with decision.ANALYSIS.read_scope(row['graph']):
                 return {'applications': self.dependency_applications(row, scan_rows)}
 
+    @staticmethod
+    def _local_dependency_details(graph, decision):
+        applications = decision.POLICIES.describe_applications(graph, decision)
+        return {'localApplications': applications,
+                'invalidationRecords': decision.POLICIES.describe_invalidation(graph, decision, applications)}
+
+    def dependency_details(self, ident, expected_package_revision):
+        self.check(type(expected_package_revision) is int and expected_package_revision >= 1,
+                   'DEPENDENCY_DETAILS_PACKAGE_REVISION')
+        with self.store.lock(False, create=False):
+            row = self.snapshot(ident, layouts=False)
+            self.check(row['head']['revision'] == expected_package_revision, 'DEPENDENCY_DETAILS_PACKAGE_CHANGED')
+            graph = row['graph']
+            self.check(graph['coreModel'] == 'rdg-decision-v1', 'READ_PROFILE_UNSUPPORTED')
+            decision = self.kernel.for_graph(graph)
+            with decision.ANALYSIS.read_scope(graph):
+                return {'packageId': ident, 'packageRevision': row['head']['revision'],
+                        **self._local_dependency_details(graph, decision)}
+
     def theory_read(self, ident, theory_id, **options):
         with self.store.lock(False,create=False):
             row=self.snapshot(ident,layouts=False)
         return self.kernel.for_graph(row['graph']).THEORY.read(self,row,theory_id,**options)
 
     def read(self, ident, include_plan=False, view=None, *, detail=None, include=None, node_id=None, record_id=None,
-             limit=25, cursor=None, output_format=None, include_dependency_applications=True):
+             limit=25, cursor=None, output_format=None, include_dependency_applications=True,
+             include_dependency_details=True):
         self.check(output_format in (None, 'json', 'markdown'), 'READ_FORMAT')
         self.check(type(include_dependency_applications) is bool, 'READ_DEPENDENCY_APPLICATIONS')
         self.check(include_dependency_applications or
                    detail in (None, 'full') and output_format != 'markdown', 'READ_DEPENDENCY_APPLICATIONS_DETAIL')
+        self.check(type(include_dependency_details) is bool, 'READ_DEPENDENCY_DETAILS')
+        self.check(include_dependency_details or
+                   detail in (None, 'full') and output_format != 'markdown', 'READ_DEPENDENCY_DETAILS_DETAIL')
         if output_format == 'markdown':
             self.check(record_id is None and limit == 25, 'MARKDOWN_OPTIONS')
             return MARKDOWN.read(self, ident, detail=detail, view=view, node_id=node_id,
@@ -625,7 +648,9 @@ class Application:
             scope=(self.kernel.for_graph(row['graph']).ANALYSIS.read_scope(row['graph'])
                    if row['graph']['coreModel']=='rdg-decision-v1' else nullcontext())
             # One immutable snapshot, one read calculation; never cache across writes.
-            with scope:return self._read_projection(ident,row,view,scan_rows,include_dependency_applications)
+            with scope:
+                return self._read_projection(ident, row, view, scan_rows, include_dependency_applications,
+                                             include_dependency_details)
 
     def recommendation_projection(self,ident,graph,*,node_ids=None,register=None):
         try:self.authorize(None,['graph.read'])
@@ -648,7 +673,7 @@ class Application:
             match['target']=copy.deepcopy(cache[key])
         return result
 
-    def _read_projection(self,ident,row,view,scan_rows,include_dependency_applications):
+    def _read_projection(self,ident,row,view,scan_rows,include_dependency_applications,include_dependency_details):
         def read_related(package_id):
             return self.snapshot(package_id,layouts=False,scan_rows=scan_rows)
 
@@ -674,13 +699,11 @@ class Application:
             except ValueError as exc:
                 if 'PORTABLE_SCOPE_DENIED' not in str(exc):raise
             for p in row['graph'].get('dependencyPolicies',[]):shared.setdefault((p['id'],p['version']),copy.deepcopy(p))
-            local_applications=decision.POLICIES.describe_applications(row['graph'],decision)
             dependency_catalog={'available':available,'revision':catalog_revision,
                 'policyAliases':row['graph'].get('dependencyPolicyAliases',{}),
                 'policies':list(shared.values()),'systemPolicies':decision.POLICIES.builtins(decision),
                 'capabilities':decision.dependency_capabilities(),
-                'localApplications':local_applications,
-                'invalidationRecords':decision.POLICIES.describe_invalidation(row['graph'],decision,local_applications),
+                **(self._local_dependency_details(row['graph'], decision) if include_dependency_details else {}),
                 'migrationRequired':bool(row['graph'].get('dependencyPresets')) or any(not any(p['id']==q['id'] and p['version']==q['version'] and {k:v for k,v in p.items() if k!='status'}=={k:v for k,v in q.items() if k!='status'} for q in reg.get('dependencyPolicies',[])) for p in row['graph'].get('dependencyPolicies',[])) if available else False,
                 'localPolicyCount':len(row['graph'].get('dependencyPolicies',[])),
                 'localPresetCount':len(row['graph'].get('dependencyPresets',[]))}
@@ -737,11 +760,15 @@ class Application:
             self.check(all(v is None for v in (node_id,source_id,command,source_path,source_key,core_model,role,entity_kind)), 'THEORY_SCHEMA_SELECTORS')
             if ident:self.snapshot(ident,layouts=False)
             return self.kernel.for_profile('rdg-decision-v1').THEORY.schema()
-        if op == 'dependency_usage':
+        if op in ('dependency_usage', 'dependency_details'):
             self.check(all(v is None for v in (node_id,source_id,command,source_path,source_key,core_model,role,entity_kind)),
                        'READ_SCHEMA_SELECTORS')
             if ident:
                 self.snapshot(ident, layouts=False)
+            if op == 'dependency_details':
+                return {'method':op,'schemaVersion':1,'required':['packageId','expectedPackageRevision'],
+                        'optional':[], 'response':['packageId','packageRevision','localApplications','invalidationRecords'],
+                        'mismatch':'PORTABLE_APP_DEPENDENCY_DETAILS_PACKAGE_CHANGED'}
             return {'method':'dependency_usage','schemaVersion':1,
                     'required':['packageId','expectedPackageRevision'],'optional':['expectedRegistryRevision'],
                     'response':'applications from visible packages using the supplied RDG Decision package and registry revisions'}
@@ -755,6 +782,8 @@ class Application:
                 result['read']['format'] = ['json','markdown']
                 result['read']['includeDependencyApplications'] = {
                     'default': True, 'detail': 'full', 'format': 'json', 'deferredMethod': 'dependency_usage'}
+                result['read']['includeDependencyDetails'] = {
+                    'default': True, 'detail': 'full', 'format': 'json', 'deferredMethod': 'dependency_details'}
                 result['markdown'] = MARKDOWN.schema()
             return result
         self.check(op in self.OPERATIONS,'UNKNOWN_OPERATION')
@@ -935,13 +964,14 @@ class Application:
         """Closed shared transport contract for CLI, Agent and manual sessions."""
         self.check(isinstance(message,dict),'MESSAGE')
         method=message.get('method')
-        fields={'capabilities':{'packageId'},'read_ref':{'reference','packageId','expand','format'},'theory_read':{'packageId','theoryId','collection','itemIds','detail','expand','limit','cursor','format','expectedTheoryRevision'},'catalog':set(),'search':{'query','scope','packageId','limit','cursor'},'read':{'packageId','includePlan','view','detail','include','nodeId','recordId','limit','cursor','format','includeDependencyApplications'},'history':{'packageId','view','detail','include','eventId','limit','cursor','expectedPackageRevision'},
+        fields={'capabilities':{'packageId'},'read_ref':{'reference','packageId','expand','format'},'theory_read':{'packageId','theoryId','collection','itemIds','detail','expand','limit','cursor','format','expectedTheoryRevision'},'catalog':set(),'search':{'query','scope','packageId','limit','cursor'},'read':{'packageId','includePlan','view','detail','include','nodeId','recordId','limit','cursor','format','includeDependencyApplications','includeDependencyDetails'},'history':{'packageId','view','detail','include','eventId','limit','cursor','expectedPackageRevision'},
                 'resolve':{'packageId','reference'},'source_snapshot':{'packageId','pin','view','detail'},
                 'schema':{'op','packageId','nodeId','sourcePackageId','command','sourcePath','sourceKey','coreModel','role','entityKind'},
                 'migration_sources':set(),'migration_inspect':{'sourceKey'},
                 'receipt':{'packageId','transactionId'},'recover':{'transactionId'},'cancel_migration':{'transactionId'},
                 'dependencies':{'packageId'},
                 'dependency_usage':{'packageId','expectedPackageRevision','expectedRegistryRevision'},
+                'dependency_details':{'packageId','expectedPackageRevision'},
                 'locks':{'packageId'},
                 'view_session':{'action','sessionId','packageId','view','expectedRevision','value'},
                 'recommendation_catalog':{'query','offset','limit','revision','packageId'},
@@ -962,7 +992,8 @@ class Application:
         if method=='migration_inspect':return self.migration.inspect(message['sourceKey'])
         if method=='theory_read':return self.theory_read(message['packageId'],message['theoryId'],collection=message.get('collection','overview'),item_ids=message.get('itemIds'),detail=message.get('detail','content'),expand=message.get('expand',False),limit=message.get('limit',25),cursor=message.get('cursor'),output_format=message.get('format','json'),expected_revision=message.get('expectedTheoryRevision'))
         if method=='read':return self.read(message['packageId'],message.get('includePlan',False),message.get('view'),detail=message.get('detail'),include=message.get('include'),node_id=message.get('nodeId'),record_id=message.get('recordId'),limit=message.get('limit',25),cursor=message.get('cursor'),output_format=message.get('format'),
-            include_dependency_applications=message.get('includeDependencyApplications',True))
+            include_dependency_applications=message.get('includeDependencyApplications',True),
+            include_dependency_details=message.get('includeDependencyDetails',True))
         if method=='history':return self.history(message['packageId'],message.get('view'),detail=message.get('detail'),include=message.get('include'),event_id=message.get('eventId'),limit=message.get('limit',25),cursor=message.get('cursor'),
                                                  expected_package_revision=message.get('expectedPackageRevision'))
         if method=='resolve':return self.resolve(message['packageId'],message['reference'])
@@ -971,6 +1002,8 @@ class Application:
         if method=='dependency_usage':
             return self.dependency_usage(message['packageId'],message.get('expectedPackageRevision'),
                                          message.get('expectedRegistryRevision'))
+        if method=='dependency_details':
+            return self.dependency_details(message['packageId'],message.get('expectedPackageRevision'))
         if method=='locks':return self.locks(message['packageId'])
         if method=='schema':return self.schema(message['op'],message.get('packageId'),message.get('nodeId'),
             message.get('sourcePackageId'),message.get('command'),message.get('sourcePath'),message.get('sourceKey'),

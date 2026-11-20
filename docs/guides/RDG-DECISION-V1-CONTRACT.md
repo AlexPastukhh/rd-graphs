@@ -34,6 +34,12 @@
 
 Полное JSON-чтение по умолчанию включает `dependencyCatalog.applications`. Параметр `includeDependencyApplications: false` опускает только этот список. UI запрашивает его при открытии вкладки «Политики» через `dependency_usage`, используя `package.revision` как обязательную `expectedPackageRevision` и `dependencyCatalog.revision` как `expectedRegistryRevision` при наличии. Отдельное чтение возвращает `{applications}` по доступным читателю владельцам. При изменении указанной ревизии клиент обновляет исходный снимок.
 
+В полном JSON-чтении `includeDependencyDetails: false` опускает `dependencyCatalog.localApplications` и `dependencyCatalog.invalidationRecords`. Значение по умолчанию — `true`. Параметр `includeDependencyApplications` управляет списком из доступного каталога независимо. Определения политик, состояния Graph и данные Plan входят в исходный снимок.
+
+`dependency_details` принимает `packageId` и положительную целую `expectedPackageRevision`. Чтение повторно проверяет доступ `graph.read`, снимок и ревизию Decision-пакета под общей блокировкой. Ответ содержит `packageId`, `packageRevision`, `localApplications` и `invalidationRecords`. При `PORTABLE_APP_DEPENDENCY_DETAILS_PACKAGE_CHANGED` нужно повторно прочитать снимок.
+
+Explorer запрашивает подробности при входе в «Зависимости», выборе вкладки зависимостей элемента или открытии использующей их формы. Подробности присоединяются только к совпадающему снимку и экрану.
+
 Команды `binding_save/disable/activate/remove`, `automatic_disable/activate/remove` проходят существующий writer/CAS/guards. `automatic_remove` оставляет tombstone; явная активация deleted ID отвергается. Изменение версии определения не меняет pinned binding. Матрица: [policy suite](../../tests/rdg-dependency-policies-v2.test.py).
 
 ## Владельцы и API

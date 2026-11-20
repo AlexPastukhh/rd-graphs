@@ -460,9 +460,51 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
  async function loadCatalogs(initial=null){catalog=initial||await call({method:'catalog'});try{registry=await call({method:'recommendation_catalog',limit:20});}catch(e){if(!e.message.includes('PORTABLE_SCOPE_DENIED'))throw e;registry={unavailable:true,packages:[],total:0,offset:0,participation:{}};}}
  async function start(initial=null){if(!session)session=await call({method:'view_session',action:'create',sessionId:uid()});await loadCatalogs(initial);return load();}
  function readScreen(s,spec=s.spec){
-  return call({method:'read',packageId:s.packageId,includePlan:true,view:spec,includeDependencyApplications:false});
+  return call({method:'read',packageId:s.packageId,includePlan:true,view:spec,
+    includeDependencyApplications:false,includeDependencyDetails:false});
  }
- let policyUsageFailure=null,historyLoad=null,updateRoadHistory=null;
+ let policyUsageFailure=null,dependencyDetailsLoad=null,historyLoad=null,updateRoadHistory=null;
+ function currentDependencyDetailsLoad(request){
+  const active=screen();
+  return request===dependencyDetailsLoad&&request.snapshot===snapshot&&active?.id===request.screenId&&
+    active?.packageId===request.snapshot.package.packageId;
+ }
+ async function fetchDependencyDetails(request){
+  const catalog=request.snapshot.dependencyCatalog,owner=request.snapshot.package;
+  try{
+   const details=await call({method:'dependency_details',packageId:owner.packageId,expectedPackageRevision:owner.revision});
+   if(!currentDependencyDetailsLoad(request))return;
+   if(details.packageId!==owner.packageId||details.packageRevision!==owner.revision||
+      !Array.isArray(details.localApplications)||!Array.isArray(details.invalidationRecords))throw Error('DEPENDENCY_DETAILS_RESPONSE');
+   catalog.localApplications=details.localApplications;
+   catalog.invalidationRecords=details.invalidationRecords;
+  }catch(error){
+   if(!currentDependencyDetailsLoad(request))return;
+   request.state=error.message==='PORTABLE_APP_DEPENDENCY_DETAILS_PACKAGE_CHANGED'?'stale':'error';
+  }
+  const views=request.views;
+  request.views=[];
+  for(const {status,update} of views)if(status.isConnected)update();
+ }
+ function renderDependencyDetailsState(parent,update){
+  const catalog=snapshot?.dependencyCatalog;
+  if(!catalog||Object.hasOwn(catalog,'localApplications'))return false;
+  let request=dependencyDetailsLoad;
+  if(!request||!currentDependencyDetailsLoad(request)){
+   request={snapshot,screenId:screen().id,state:'loading',views:[]};
+   dependencyDetailsLoad=request;
+   void fetchDependencyDetails(request);
+  }
+  const stale=request.state==='stale',loading=request.state==='loading';
+  const status=el('div');status.dataset.dependencyDetailsState=request.state;parent.append(status);
+  if(loading)request.views.push({status,update});
+  const text=el('p',loading?'Загрузка подробностей зависимостей…':
+    stale?'Процесс изменился. Перечитайте снимок.':'Не удалось загрузить подробности зависимостей.');
+  text.setAttribute('role',loading?'status':'alert');status.append(text);
+  if(stale)button(status,'Перечитать снимок',()=>load());
+  else if(!loading)button(status,'Повторить загрузку',()=>{dependencyDetailsLoad=null;update();});
+  return true;
+ }
  async function ensurePolicyUsage(){
   const value=snapshot,catalog=value?.dependencyCatalog,presentation=screen()?.presentation;
   if(presentation?.mode!=='dependencies'||presentation.dependencyTab!=='policies'||
@@ -510,7 +552,7 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
    await sync((v,t)=>{if(t.spec.compactGraph===undefined){t.spec.compactGraph=true;delete t.spec.camera;}});
    s=screen();
   }
-  if(!s){snapshot=null;history=null;historyLoad=null;form=session.explorer.drafts['new-process']?.open?'create':null;render();return null;}try{snapshot=await readScreen(s);}catch(e){if(!/FOCUS|VIEW_CASES|REFERENCE_MISSING:group/.test(e.message))throw e;const spec={...s.spec,kind:'graph',groupIds:[],shownCases:{}};delete spec.id;await sync((v,s)=>s.spec=spec);snapshot=await readScreen(s,spec);note('Состав представления изменился; черновик сохранён.');}
+  if(!s){snapshot=null;history=null;historyLoad=null;dependencyDetailsLoad=null;form=session.explorer.drafts['new-process']?.open?'create':null;render();return null;}try{snapshot=await readScreen(s);}catch(e){if(!/FOCUS|VIEW_CASES|REFERENCE_MISSING:group/.test(e.message))throw e;const spec={...s.spec,kind:'graph',groupIds:[],shownCases:{}};delete spec.id;await sync((v,s)=>s.spec=spec);snapshot=await readScreen(s,spec);note('Состав представления изменился; черновик сохранён.');}
   if(isProcess()&&s.spec.kind==='focus'){
    const finding=snapshot.graph.objects.find(n=>n.id===s.spec.id&&n.kind==='finding');
    if(finding){const subject=[...snapshot.graph.nodes,...snapshot.graph.objects].find(n=>n.id===finding.subjectId);inspectorTabState.set(subject?.id||finding.id,'findings');await sync((v,t)=>{t.spec={...t.spec,kind:subject?'focus':'graph',...(subject?{id:subject.id}:{})};if(!subject)delete t.spec.id;t.inspector={kind:'entity',id:subject?.id||finding.id};});return load();}
@@ -529,6 +571,7 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
   const roadHistory=isProcess()?{screenId:s.id,snapshot,state:'loading'}:null;
   historyLoad=roadHistory;
   policyUsageFailure=null;
+  dependencyDetailsLoad=null;
   await renderScreen();
   if(roadHistory)void fetchRoadHistory(roadHistory);
   return snapshot;
@@ -1727,10 +1770,15 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
  }
  function renderPolicyInstances(parent){const view=policyInstancesView;if(!view)return;
   if(view.packageId!==snapshot?.package.packageId||view.screenId!==screen()?.id){closePolicyInstances(false);return;}
-  const rows=dependencyDetails().filter(row=>policyInstanceKey(row)===view.key&&row.nodeIds.includes(view.nodeId));
   const shade=el('div',null,'rdg-modal-shade'),body=el('section',null,'rdg-modal rdg-policy-instances');body.dataset.policyInstancesDialog='';body.setAttribute('role','dialog');body.setAttribute('aria-modal','true');body.setAttribute('aria-label','Инстансы политики');shade.append(body);parent.append(shade);
   const top=el('div',null,'rdg-instance-header');body.append(top);top.append(el('h2',view.policy.name+' · v'+view.policy.version));const close=button(top,'Закрыть инстансы',()=>closePolicyInstances());
   body.append(el('p',view.policy.description,'rdg-instance-description'));
+  shade.onkeydown=event=>{if(event.key==='Escape'){event.preventDefault();event.stopPropagation();closePolicyInstances();}
+   else if(event.key==='Tab'){const nodes=[...body.querySelectorAll('button,[tabindex]')].filter(node=>!node.disabled&&node.getClientRects().length);const first=nodes[0],last=nodes.at(-1);if(event.shiftKey&&doc.activeElement===first){event.preventDefault();last?.focus();}else if(!event.shiftKey&&doc.activeElement===last){event.preventDefault();first?.focus();}}
+  };
+  queueMicrotask(()=>{if(close.isConnected)close.focus({preventScroll:true});});
+  if(renderDependencyDetailsState(body,()=>{shade.remove();renderPolicyInstances(parent);}))return;
+  const rows=dependencyDetails().filter(row=>policyInstanceKey(row)===view.key&&row.nodeIds.includes(view.nodeId));
   const selected=el('div',null,'rdg-instance-selected');body.append(selected);selected.append(el('span','Для элемента:','rdg-muted'));instanceReference(selected,rows[0]||{participants:{}},view.nodeId,view.nodeId);
   if(!view.policy.id.startsWith('legacy:'))button(selected,'Открыть политику · v'+view.policy.version,()=>{closePolicyInstances(false);return openPolicyFromInspector({policyId:view.policy.id,policyVersion:view.policy.version},view.nodeId);});
   const groups=[['incoming','Что инвалидирует выбранный элемент',row=>row.targetId===view.nodeId],['outgoing','Что инвалидируется при его изменении',row=>row.targetId!==view.nodeId&&row.observedIds.includes(view.nodeId)],['participation','Участие в политике',row=>row.targetId!==view.nodeId&&!row.observedIds.includes(view.nodeId)]];
@@ -1752,10 +1800,7 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
    }
   }
   if(!rows.length)body.append(el('p','Сейчас нет применений этой версии с выбранным элементом.'));
-  shade.onkeydown=event=>{if(event.key==='Escape'){event.preventDefault();event.stopPropagation();closePolicyInstances();}
-   else if(event.key==='Tab'){const nodes=[...body.querySelectorAll('button,[tabindex]')].filter(node=>!node.disabled&&node.getClientRects().length);const first=nodes[0],last=nodes.at(-1);if(event.shiftKey&&doc.activeElement===first){event.preventDefault();last?.focus();}else if(!event.shiftKey&&doc.activeElement===last){event.preventDefault();first?.focus();}}
-  };
-  queueMicrotask(()=>{if(close.isConnected)close.focus({preventScroll:true});});
+
  }
  function renderDependencyApplication(parent,row,nodeId){const card=el('article',null,'rdg-dependency-application');parent.append(card);card.dataset.dependencyApplicationId=row.id;card.dataset.dependencyApplicationKind=row.kind;card.dataset.dependencyStatus=row.status;
   card.append(el('h4',row.policy.name),el('p','Версия '+row.policyVersion+' · '+(row.enabled?'Действует':'Отключено')+' · '+({automatic:'автоматическое применение',policy:'применение сохранённой политики',legacy:'настройки отдельной связи','legacy-context':'контекст Decision'})[row.kind],'rdg-dependency-status'));
@@ -1779,6 +1824,7 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
  }
  function renderEntityDependencies(parent,node){parent.dataset.entityDependenciesId=node.id;
   if(invalidationReturns.get(screen().id)?.packageId===snapshot.package.packageId)button(parent,'← К инвалидации',returnToInvalidation);
+  if(renderDependencyDetailsState(parent,()=>{parent.replaceChildren();renderEntityDependencies(parent,node);}))return;
   parent.append(el('p','Применения политик всего процесса, включая отключённые. Рабочая область и фокус не ограничивают список.','rdg-muted'));
   const rows=dependencyDetails().filter(row=>row.nodeIds.includes(node.id));
   const byDirection={incoming:rows.filter(row=>row.targetId===node.id),outgoing:rows.filter(row=>row.targetId!==node.id&&row.observedIds.includes(node.id)),participation:rows.filter(row=>row.targetId!==node.id&&!row.observedIds.includes(node.id))};
@@ -1955,12 +2001,16 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
    const selectInspectorTab=key=>{
     inspectorTabState.set(node.id,key);
     for(const [name,tab] of tabButtons){const selected=name===key;tab.setAttribute('aria-selected',String(selected));tab.tabIndex=selected?0:-1;tabPanels.get(name).hidden=!selected;}
+    const dependencies=tabPanels.get('dependencies');
+    if(key==='dependencies'&&(!dependencies.hasChildNodes()||dependencies.querySelector('[data-dependency-details-state]'))){
+     dependencies.replaceChildren();renderEntityDependencies(dependencies,node);
+    }
    };
    const addInspectorTab=(key,title,renderBody)=>{
     const tab=button(tabs,title,()=>selectInspectorTab(key));tab.className='rdg-inspector-tab';
     tab.setAttribute('role','tab');tab.setAttribute('aria-selected','false');tab.tabIndex=-1;tab.dataset.inspectorTab=key;
     const body=el('section',null,'rdg-inspector-tabpanel');body.setAttribute('role','tabpanel');body.setAttribute('aria-label',title);body.dataset.inspectorPanel=key;body.hidden=true;
-    tabButtons.set(key,tab);tabPanels.set(key,body);panel.append(body);renderBody(body);
+    tabButtons.set(key,tab);tabPanels.set(key,body);panel.append(body);renderBody?.(body);
    };
    addInspectorTab('recommendations','Рекомендации · '+recommendationRows(node.id).length,body=>renderRecommendations(body,node));
    if(processDecision)addInspectorTab('context','Контекст принятия решения',body=>{
@@ -2034,7 +2084,7 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
      }
     });
    }
-   addInspectorTab('dependencies','Зависимости',body=>renderEntityDependencies(body,node,entities));
+   addInspectorTab('dependencies','Зависимости');
    const remembered=inspectorTabState.get(node.id),fallback=processDecision?'context':showCanonTab?'canon':'dependencies';
    selectInspectorTab(tabButtons.has(remembered)?remembered:fallback);
   }
@@ -2209,6 +2259,10 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
   }return out;
  }
  function renderActualPolicyRoles(parent,policy,binding){
+  if(!Object.hasOwn(snapshot.dependencyCatalog||{},'localApplications')&&snapshot.graph.dependencyBindings?.some(row=>row.id===binding.id)){
+   const details=el('div');parent.append(details);
+   if(renderDependencyDetailsState(details,()=>{details.replaceChildren();renderActualPolicyRoles(details,policy,binding);}))return;
+  }
   const saved=dependencyDetails().find(row=>row.id===binding.id&&row.policyId===policy.id&&row.policyVersion===policy.version&&row.targetId===binding.targetId&&row.binding.sourceId===binding.sourceId&&row.binding.parentId===binding.parentId&&JSON.stringify(row.binding.participantBindings||{})===JSON.stringify(binding.participantBindings||{}));if(saved){renderApplicationParticipants(parent,saved);return;}
   const out=actualPolicyRoles(policy,binding);for(const [role,ids] of Object.entries(out)){
    const row=el('div',null,'rdg-policy-participants');parent.append(row);row.append(el('b',policyRoleName(policy,role)+': '));
@@ -2412,14 +2466,17 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
   const head=el('header',null,'rdg-policy-header');shell.append(head);const title=el('div');title.append(el('h2','Зависимости'),el('p','Политики и инвалидация · '+snapshot.graph.title));head.append(title);
   const tabs=el('div',null,'rdg-policy-tabs');tabs.setAttribute('role','tablist');head.append(tabs);
   const chosen=screen().presentation?.dependencyTab||'stale';
-  const count=(snapshot.dependencyCatalog?.invalidationRecords||[]).filter(row=>row.active).length;
-  for(const [id,label] of [['stale','Инвалидация · '+count],['policies','Политики']]){
+  const count=snapshot.dependencyCatalog?.invalidationRecords?.filter(row=>row.active).length;
+  for(const [id,label] of [['stale',count===undefined?'Инвалидация':'Инвалидация · '+count],['policies','Политики']]){
    const control=button(tabs,label,()=>sync((v,t)=>{t.presentation.dependencyTab=id;},true));control.setAttribute('role','tab');control.setAttribute('aria-selected',String(chosen===id));control.dataset.dependencyTab=id;
   }
   const dependencyBack=dependencyInspectorReturns.get(screen().id);if(dependencyBack?.packageId===snapshot.package.packageId)button(head,'← К сведениям элемента',()=>{inspectorTabState.set(dependencyBack.nodeId,'dependencies');dependencyInspectorReturns.delete(screen().id);return sync((v,t)=>{t.presentation.mode=dependencyBack.mode;t.inspector={kind:'entity',id:dependencyBack.nodeId};},true);});
   if(chosen!=='stale'&&invalidationReturns.get(screen().id)?.packageId===snapshot.package.packageId)button(head,'← К инвалидации',returnToInvalidation);
   button(head,'← К графу',()=>sync((v,t)=>{t.presentation.mode='graph';},true));
   const content=el('div',null,'rdg-policy-scroll');content.setAttribute('role','tabpanel');content.dataset.dependencyPanel=chosen;shell.append(content);
+  if(renderDependencyDetailsState(content,()=>{
+   const next=doc.createDocumentFragment();renderDependencyWorkspace(next);shell.replaceWith(next);
+  }))return;
   if(chosen==='policies'){
    if(snapshot.dependencyCatalog&&!Object.hasOwn(snapshot.dependencyCatalog,'applications')){
     const failed=policyUsageFailure?.snapshot===snapshot;
