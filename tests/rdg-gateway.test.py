@@ -88,6 +88,13 @@ class GatewayTests(BASE.Server):
         self.assertEqual(details.pop('packageRevision'), details_request['expectedPackageRevision'])
         initial['dependencyCatalog'].update(details)
         self.assertEqual(initial, full)
+        paged_schema = self.private_call({'method':'schema','op':'dependency_details'})
+        self.assertIn('cursor',paged_schema['optional'])
+        for facet in ('localApplications','invalidationRecords'):
+            page = self.private_call({**details_request,'facet':facet,'limit':1})
+            self.assertEqual(page['items'],details[facet][:1])
+            self.assertEqual(page['snapshot']['packageId'],pid)
+            self.assertEqual(page['page']['total'],len(details[facet]))
         with self.assertRaises(urllib.error.HTTPError) as stale:
             self.private_call({**details_request,'expectedPackageRevision':details_request['expectedPackageRevision']+1})
         self.assertEqual(json.load(stale.exception)['error'], 'PORTABLE_APP_DEPENDENCY_DETAILS_PACKAGE_CHANGED')

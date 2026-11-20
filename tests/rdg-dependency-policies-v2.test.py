@@ -655,6 +655,50 @@ class PolicyApplication(API.DecisionIntegration):
             with self.assertRaisesRegex(ValueError, 'DEPENDENCY_DETAILS_PACKAGE_CHANGED'):
                 app.call(details_request)
 
+    def test_dependency_details_pages_match_full_records_and_recheck_revision_and_scope(self):
+        ident = self.setup_shared()
+        self.command(ident, 'edit', nodeId='CTX', changes={'value':'Recorded review'}, cosmetic=False)
+        self.command(ident, 'policy_change', action='binding_disable', value={'id':'B-V2','expectedRevision':1})
+        app = self.app()
+        revision = app.snapshot(ident, layouts=False)['head']['revision']
+        request = {'method':'dependency_details','packageId':ident,'expectedPackageRevision':revision}
+        full = app.call(request)
+        self.assertEqual({row['kind'] for row in full['invalidationRecords']}, {'review','disabled'})
+        decision = app.kernel.for_profile('rdg-decision-v1')
+        with patch.object(decision.POLICIES, 'application_plan', wraps=decision.POLICIES.application_plan) as build:
+            for facet in ('localApplications','invalidationRecords'):
+                response = app.call({**request,'facet':facet,'limit':1})
+                self.assertEqual(response['snapshot']['packageRevision'], revision)
+                items = list(response['items'])
+                while response['page']['nextCursor']:
+                    response = app.call({**request,'facet':facet,'limit':1,'cursor':response['page']['nextCursor']})
+                    items.extend(response['items'])
+                self.assertEqual(items, full[facet])
+            self.assertEqual(build.call_count, 1)
+        binding = next(row for row in full['localApplications'] if row['id']=='B-V2')
+        self.assertEqual(app.call({**request,'facet':'localApplications','recordId':binding['id']})['items'], [binding])
+        self.assertEqual(app.call({**request,'facet':'invalidationRecords'})['applicationTargets'], {'B-V2':binding['targetId']})
+        first = app.call({**request,'facet':'localApplications','limit':1})
+        cursor = first['page']['nextCursor']
+        self.assertTrue(cursor)
+        with self.assertRaisesRegex(ValueError, 'READ_CURSOR_INVALID'):
+            app.call({**request,'facet':'invalidationRecords','cursor':cursor})
+        with self.assertRaisesRegex(ValueError, 'READ_CURSOR_INVALID'):
+            app.call({**request,'facet':'localApplications','cursor':cursor,'recordId':'B-V2'})
+        grant = self.authority.manage('issue', self.admin, {'permissions':['graph.read'],
+            'scopes':['packages/'+self.namespace+'/'+ident]})
+        scoped = self.app(grant['token'])
+        self.assertEqual(first, scoped.call({**request,'facet':'localApplications','limit':1}))
+        self.authority.manage('revoke', self.admin, {'id':grant['id']})
+        with self.assertRaisesRegex(ValueError, 'TOKEN_REVOKED'):
+            scoped.call({**request,'facet':'localApplications','cursor':cursor})
+        app.request(app.schema('plan_create', ident)['request'])
+        with self.assertRaisesRegex(ValueError, 'DEPENDENCY_DETAILS_PACKAGE_CHANGED'):
+            app.call({**request,'facet':'localApplications','cursor':cursor})
+        new_revision = app.snapshot(ident, layouts=False)['head']['revision']
+        with self.assertRaisesRegex(ValueError, 'READ_CURSOR_STALE'):
+            app.call({**request,'facet':'localApplications','cursor':cursor,'expectedPackageRevision':new_revision})
+
     def test_v2_shared_catalog_cross_process_and_restarted_reader(self):
         ident=self.setup_shared()
         second=self.app().request(self.req('create',path='working/other',role='working',title='Other',scope='Synthetic',coreModel='rdg-decision-v1',rootReason='Test shared policy'))['packages'][0]['packageId']

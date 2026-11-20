@@ -38,7 +38,9 @@
 
 `dependency_details` принимает `packageId` и положительную целую `expectedPackageRevision`. Чтение повторно проверяет доступ `graph.read`, снимок и ревизию Decision-пакета под общей блокировкой. Ответ содержит `packageId`, `packageRevision`, `localApplications` и `invalidationRecords`. При `PORTABLE_APP_DEPENDENCY_DETAILS_PACKAGE_CHANGED` нужно повторно прочитать снимок.
 
-Explorer запрашивает подробности при входе в «Зависимости», выборе вкладки зависимостей элемента или открытии использующей их формы. Подробности присоединяются только к совпадающему снимку и экрану.
+Для постраничного ответа передают `facet: localApplications | invalidationRecords`, необязательный `limit` (1–100, по умолчанию 25) и выданный сервером `cursor`. Страница содержит `snapshot`, `facet`, `items` и `page` с количеством записей и курсором продолжения. Курсор привязан к владельцу, SHA256 head, ревизиям пакета и Graph, набору записей и точному `recordId`, если он задан. `recordId` выбирает одно применение только в `localApplications`. Страница инвалидации дополнительно возвращает `applicationTargets` для ссылок на текущие применения. Лимит JSON-ответа — 4 МБ. Если одна запись превышает бюджет, метод возвращает `PORTABLE_APP_DEPENDENCY_DETAILS_ROW_TOO_LARGE`. При смене снимка обновляют исходный `read`, затем начинают с первой страницы.
+
+Explorer запрашивает записи инвалидации отдельно от применений, а форма сохранённого применения может прочитать его по ID. Следующую страницу загружает пользователь. Пока есть продолжение, фильтры и счётчики учитывают загруженные записи. Подробности присоединяются только к совпадающему снимку и экрану.
 
 Команды `binding_save/disable/activate/remove`, `automatic_disable/activate/remove` проходят существующий writer/CAS/guards. `automatic_remove` оставляет tombstone; явная активация deleted ID отвергается. Изменение версии определения не меняет pinned binding. Матрица: [policy suite](../../tests/rdg-dependency-policies-v2.test.py).
 

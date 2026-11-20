@@ -630,6 +630,9 @@ def _has_parent_basis(g, decision_id, active=None):
 def support_state(g):
     """Least fixed point of enabled roots and selected composition, not graph reachability."""
     ns = entities(g); edges = active_edges(g); active = set(); basis = defaultdict(set); queue = deque()
+    outgoing = defaultdict(list)
+    for edge in edges:
+        outgoing[edge['from']].append(edge)
     def add(ident, cause):
         if ident not in active:
             active.add(ident); queue.append(ident)
@@ -644,9 +647,7 @@ def support_state(g):
     while queue:
         ident = queue.popleft(); node = ns[ident]
         if node['kind'] == 'requirement':
-            for edge in edges:
-                if edge['from'] != ident:
-                    continue
+            for edge in outgoing.get(ident, ()):
                 if edge['type'] in ('DERIVES', 'REQUIRES_ACTION'):
                     add(edge['to'], 'relation:' + edge['id'])
                 elif edge['type'] in ('DRIVES','FINDING_RESPONSE') and ns[edge['to']]['selectionState'] == 'selected':
@@ -655,15 +656,14 @@ def support_state(g):
                 if ns[decision_id]['selectionState'] == 'selected':
                     add(decision_id, 'membership:' + ident + ':' + decision_id)
         elif node['kind'] == 'decision' and node['selectionState'] == 'selected':
-            for edge in edges:
-                if edge['from'] != ident:continue
+            for edge in outgoing.get(ident, ()):
                 if edge['type'] in ('INTRODUCES','REQUIRES_ACTION') or (edge['type'] in FINDINGS.RELATIONS and ns[edge['to']]['selectionState']=='selected'):
                     add(edge['to'], 'relation:' + edge['id'])
             for decision_id in memberships_by_parent.get(ident,set()):
                 if ns[decision_id]['selectionState']=='selected':add(decision_id,'membership:'+ident+':'+decision_id)
         elif node['kind']=='action':
-            for edge in edges:
-                if edge['from']==ident and edge['type']=='FINDING_RESPONSE' and ns[edge['to']]['selectionState']=='selected':add(edge['to'],'relation:'+edge['id'])
+            for edge in outgoing.get(ident, ()):
+                if edge['type']=='FINDING_RESPONSE' and ns[edge['to']]['selectionState']=='selected':add(edge['to'],'relation:'+edge['id'])
     return {'activeIds': sorted(active), 'basisById': {i: sorted(v) for i, v in basis.items()}}
 
 
@@ -1051,31 +1051,36 @@ def _selection_allowed(g, decision_ids, ev):
 def completion_state(g):
     validate(g)
     ns = entities(g); active = set(support_state(g)['activeIds']); blockers = {}
+    outgoing = defaultdict(list)
+    for edge in active_edges(g):
+        outgoing[edge['from']].append(edge)
+    groups = defaultdict(list)
+    for group in g['decisionGroups']:
+        groups[group['parentId']].append(group)
+    external_tasks = {action['id'] for action in g['externalActions'] if action['actionType'] in
+                      ('task', 'discover_requirement', 'discover_decision', 'rename_block')}
     for ident, node in ns.items():
         if node['kind'] not in NODE_KINDS:
             continue
         rows = set()
         if ident in active and node['kind'] == 'requirement':
-            rows.update(e['to'] for e in active_edges(g) if e['from'] == ident and e['type'] in ('DERIVES', 'REQUIRES_ACTION'))
-            rows.update(e['to'] for e in active_edges(g) if e['from'] == ident and e['type'] == 'DRIVES' and ns[e['to']]['selectionState'] == 'selected')
-            for group in g['decisionGroups']:
-                if group['parentId'] != ident:
-                    continue
+            rows.update(e['to'] for e in outgoing.get(ident, ()) if e['type'] in ('DERIVES', 'REQUIRES_ACTION'))
+            rows.update(e['to'] for e in outgoing.get(ident, ()) if e['type'] == 'DRIVES' and ns[e['to']]['selectionState'] == 'selected')
+            for group in groups.get(ident, ()):
                 selected = [m['decisionId'] for m in group['members'] if ns[m['decisionId']]['selectionState'] == 'selected']
                 rows.update(selected)
                 if group['selectionRequired'] and not selected:
                     rows.add('group:' + group['id'])
         elif ident in active and node['kind'] == 'decision':
-            rows.update(e['to'] for e in active_edges(g) if e['from'] == ident and e['type'] in ('INTRODUCES', 'REQUIRES_ACTION'))
-        rows.update(e['to'] for e in active_edges(g) if e['from']==ident and e['type'] in FINDINGS.RELATIONS and ns[e['to']]['selectionState']=='selected')
-        for group in g['decisionGroups']:
-            if group['parentId']==ident and node['kind']=='decision':
+            rows.update(e['to'] for e in outgoing.get(ident, ()) if e['type'] in ('INTRODUCES', 'REQUIRES_ACTION'))
+        rows.update(e['to'] for e in outgoing.get(ident, ()) if e['type'] in FINDINGS.RELATIONS and ns[e['to']]['selectionState']=='selected')
+        for group in groups.get(ident, ()):
+            if node['kind']=='decision':
                 rows.update(m['decisionId'] for m in group['members'] if ns[m['decisionId']]['selectionState']=='selected')
                 if group['selectionRequired'] and not any(ns[m['decisionId']]['selectionState']=='selected' for m in group['members']):rows.add('group:'+group['id'])
         blockers[ident] = rows
     eligible = {i for i, n in ns.items() if n['kind'] in NODE_KINDS and
-                (i in active or i in {a['id'] for a in g['externalActions']
-                    if a['actionType'] in ('task','discover_requirement','discover_decision','rename_block')}) and
+                (i in active or i in external_tasks) and
                 n['result']['state'] == 'confirmed' and not n.get('review', {}).get('required')}
     while True:
         removed = {i for i in eligible if any(child.startswith('group:') or child not in eligible for child in blockers.get(i, set()))}
@@ -1449,7 +1454,9 @@ def native_dependency_impacts(before, after, *, cosmetic_ids=(), command=None, c
     operations: apply() mutates the same Graph dict in the next step. A fresh
     scope also isolates this writer from an unrelated nested read scope.
     """
-    with ANALYSIS.read_scope(after, fresh=True):
+    with ANALYSIS.read_scope(after, fresh=True) as analysis:
+        if before is after:
+            analysis['scopedImmutableEntityMode'] = True
         return _native_dependency_impacts_unscoped(before, after,
             cosmetic_ids=cosmetic_ids, command=command,
             changed_id=changed_id, policy_event=policy_event)

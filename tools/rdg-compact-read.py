@@ -50,7 +50,7 @@ def pin(app, row):
             'planRevision': row['plan']['revision'] if row['plan'] is not None else None}
 
 
-def paginate(app, rows, facet, token, snapshot, node_id, limit):
+def cursor_offset(app, facet, token, snapshot, node_id):
     offset = 0
     if token is not None:
         try:
@@ -63,14 +63,26 @@ def paginate(app, rows, facet, token, snapshot, node_id, limit):
         check(app, payload['facet'] == facet and payload['nodeId'] == node_id and
               type(payload['offset']) is int and payload['offset'] >= 0, 'CURSOR_INVALID')
         offset = payload['offset']
-    take = rows[offset:offset+limit]
-    end = offset + len(take)
+    return offset
+
+
+def page_info(facet, snapshot, node_id, limit, offset, returned, total):
+    end = offset + returned
     nxt = None
-    if end < len(rows):
+    if end < total:
         value = {'pin': snapshot, 'facet': facet, 'nodeId': node_id, 'offset': end}
         nxt = base64.urlsafe_b64encode(json.dumps(value, sort_keys=True, separators=(',', ':')).encode()).decode('ascii')
-    return {'items': copy.deepcopy(take), 'page': {'total': len(rows), 'limit': limit,
-            'returned': len(take), 'nextCursor': nxt, 'hasMore': nxt is not None}}
+    return {'total': total, 'limit': limit, 'returned': returned, 'nextCursor': nxt,
+            'hasMore': nxt is not None}
+
+
+def paginate(app, rows, facet, token, snapshot, node_id, limit):
+    offset = cursor_offset(app, facet, token, snapshot, node_id)
+    take = rows[offset:offset+limit]
+    return {'items': copy.deepcopy(take),
+            'page': page_info(facet, snapshot, node_id, limit, offset, len(take), len(rows))}
+
+
 def project(app, ident, row, detail, include, node_id, limit, cursor, record_id=None):
     facets = validate(app, detail, include, node_id, limit, cursor)
     check(app, record_id is None or isinstance(record_id,str) and bool(record_id) and
