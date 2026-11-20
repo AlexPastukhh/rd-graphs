@@ -14,6 +14,8 @@ from zoneinfo import ZoneInfo
 
 COMPACT = SourceFileLoader('rdg_compact_read', str(Path(__file__).with_name('rdg-compact-read.py'))).load_module()
 SCOPED = COMPACT.SCOPED
+DEPENDENCY_DETAILS_FACETS = ("localApplications", "invalidationRecords")
+DEPENDENCY_DETAILS_MAX_BYTES = 4_000_000
 MARKDOWN = SourceFileLoader('rdg_structured_markdown', str(Path(__file__).with_name('rdg-structured-markdown.py'))).load_module()
 SEARCH = SourceFileLoader('rdg_text_search', str(Path(__file__).with_name('rdg-text-search.py'))).load_module()
 BATCH = SourceFileLoader('rdg_batch', str(Path(__file__).with_name('rdg-batch.py'))).load_module()
@@ -31,6 +33,7 @@ class Application:
         # Volatile, bounded per-Application projections; never authority or file facts.
         self._visual_cache=CACHE.ProjectionCache(max_bytes=8*1024*1024)
         self._history_cache=CACHE.ProjectionCache(max_bytes=12*1024*1024)
+        self._dependency_plan_cache=CACHE.ProjectionCache(max_entries=2,max_bytes=12*1024*1024)
         self._scoped_cache=CACHE.ProjectionCache(max_entries=4,max_bytes=48*1024*1024)
         self.check(attribution in ('assistant','user'),'ATTRIBUTION');self.attribution=attribution
         self.check(not authority.path.resolve().is_relative_to(store.root.resolve()), 'AUTHORITY_OUTSIDE_PACKAGES_REQUIRED')
@@ -589,18 +592,86 @@ class Application:
         return {'localApplications': applications,
                 'invalidationRecords': decision.POLICIES.describe_invalidation(graph, decision, applications)}
 
-    def dependency_details(self, ident, expected_package_revision):
+    def dependency_details(self, ident, expected_package_revision, *, facet=None, limit=None,
+                           cursor=None, record_id=None):
         self.check(type(expected_package_revision) is int and expected_package_revision >= 1,
                    'DEPENDENCY_DETAILS_PACKAGE_REVISION')
+        self.check(facet is None or facet in DEPENDENCY_DETAILS_FACETS, 'DEPENDENCY_DETAILS_FACET')
+        self.check(limit is None or facet is not None and type(limit) is int and 1 <= limit <= COMPACT.MAX_LIMIT,
+                   'DEPENDENCY_DETAILS_LIMIT')
+        self.check(cursor is None or facet is not None and isinstance(cursor, str) and 0 < len(cursor) <= 4096,
+                   'READ_CURSOR_INVALID')
+        self.check(record_id is None or facet == 'localApplications' and
+                   isinstance(record_id, str) and 0 < len(record_id) <= 1024, 'DEPENDENCY_DETAILS_RECORD_ID')
         with self.store.lock(False, create=False):
-            row = self.snapshot(ident, layouts=False)
+            row = self.snapshot(ident, layouts=False, scoped_read=facet is not None)
             self.check(row['head']['revision'] == expected_package_revision, 'DEPENDENCY_DETAILS_PACKAGE_CHANGED')
             graph = row['graph']
             self.check(graph['coreModel'] == 'rdg-decision-v1', 'READ_PROFILE_UNSUPPORTED')
             decision = self.kernel.for_graph(graph)
-            with decision.ANALYSIS.read_scope(graph):
+            with decision.ANALYSIS.read_scope(graph) as analysis:
+                if facet is not None:
+                    analysis['scopedImmutableEntityMode'] = True
+                    return self._dependency_details_page(ident, row, decision, facet,
+                                                         limit or COMPACT.DEFAULT_LIMIT, cursor, record_id)
                 return {'packageId': ident, 'packageRevision': row['head']['revision'],
                         **self._local_dependency_details(graph, decision)}
+
+    def _dependency_details_page(self, ident, row, decision, facet, limit, cursor, record_id):
+        graph = row['graph']
+        pin = {'packageId': ident, 'packageRevision': row['head']['revision'],
+               'graphRevision': graph['revision'], 'headSHA256': row['headSHA256']}
+        scope = hashlib.sha256(record_id.encode()).hexdigest() if record_id is not None else None
+        offset = COMPACT.cursor_offset(self, facet, cursor, pin, scope)
+        key = (ident, row['headSHA256'])
+        plan = self._dependency_plan_cache.get(key)
+        if plan is None:
+            plan = decision.POLICIES.application_plan(graph, decision)
+            self._dependency_plan_cache.put(key, plan)
+        render = decision.POLICIES.application_renderer(graph, decision)
+
+        def application(task):
+            return render(plan['definitions'][task[0]], *task[1:])
+
+        targets = {}
+        if facet == 'invalidationRecords':
+            current = []
+            for task in plan['tasks']:
+                binding = task[1]
+                if binding.get('status', 'active' if binding.get('enabled', True) else 'disabled') == 'active':
+                    current.append({'id': binding['id'], 'targetId': binding['targetId'], 'enabled': True})
+                else:
+                    current.append(application(task))
+                targets[binding['id']] = binding['targetId']
+            rows = decision.POLICIES.describe_invalidation(graph, decision, current)
+        else:
+            rows = plan['tasks'] if record_id is None else [
+                task for task in plan['tasks'] if task[1]['id'] == record_id]
+
+        items, links = [], {}
+        # Reserve room for the snapshot, page metadata and the continuation cursor.
+        size, allowance = 1024, DEPENDENCY_DETAILS_MAX_BYTES
+        for spec in rows[offset:offset + limit]:
+            value = application(spec) if facet == 'localApplications' else spec
+            binding_id = value.get('bindingId')
+            link = targets.get(binding_id)
+            encoded = len(json.dumps(value, ensure_ascii=False, allow_nan=False).encode()) + 2
+            if link is not None:
+                encoded += len(json.dumps({binding_id: link}, ensure_ascii=False).encode()) + 2
+            if size + encoded > allowance:
+                self.check(bool(items), 'DEPENDENCY_DETAILS_ROW_TOO_LARGE')
+                break
+            items.append(value)
+            if link is not None:
+                links[binding_id] = link
+            size += encoded
+        result = {'snapshot': pin, 'facet': facet, 'items': items,
+                  'page': COMPACT.page_info(facet, pin, scope, limit, offset, len(items), len(rows))}
+        if facet == 'invalidationRecords':
+            result['applicationTargets'] = links
+        self.check(len(json.dumps(result, ensure_ascii=False, allow_nan=False).encode()) <= allowance,
+                   'DEPENDENCY_DETAILS_PAGE_TOO_LARGE')
+        return result
 
     def theory_read(self, ident, theory_id, **options):
         with self.store.lock(False,create=False):
@@ -767,7 +838,14 @@ class Application:
                 self.snapshot(ident, layouts=False)
             if op == 'dependency_details':
                 return {'method':op,'schemaVersion':1,'required':['packageId','expectedPackageRevision'],
-                        'optional':[], 'response':['packageId','packageRevision','localApplications','invalidationRecords'],
+                        'optional':['facet','limit','cursor','recordId'],
+                        'response':['packageId','packageRevision','localApplications','invalidationRecords'],
+                        'paged':{'facet':list(DEPENDENCY_DETAILS_FACETS), 'cursor':'opaque, snapshot-bound',
+                                 'limit':{'default':COMPACT.DEFAULT_LIMIT,'min':1,'max':COMPACT.MAX_LIMIT},
+                                 'recordId':'optional exact application ID, localApplications only',
+                                 'response':['snapshot','facet','items','page'],
+                                 'applicationTargets':'current targets keyed by binding ID, invalidationRecords only',
+                                 'maxResponseBytes':DEPENDENCY_DETAILS_MAX_BYTES},
                         'mismatch':'PORTABLE_APP_DEPENDENCY_DETAILS_PACKAGE_CHANGED'}
             return {'method':'dependency_usage','schemaVersion':1,
                     'required':['packageId','expectedPackageRevision'],'optional':['expectedRegistryRevision'],
@@ -971,7 +1049,7 @@ class Application:
                 'receipt':{'packageId','transactionId'},'recover':{'transactionId'},'cancel_migration':{'transactionId'},
                 'dependencies':{'packageId'},
                 'dependency_usage':{'packageId','expectedPackageRevision','expectedRegistryRevision'},
-                'dependency_details':{'packageId','expectedPackageRevision'},
+                'dependency_details':{'packageId','expectedPackageRevision','facet','limit','cursor','recordId'},
                 'locks':{'packageId'},
                 'view_session':{'action','sessionId','packageId','view','expectedRevision','value'},
                 'recommendation_catalog':{'query','offset','limit','revision','packageId'},
@@ -1003,7 +1081,9 @@ class Application:
             return self.dependency_usage(message['packageId'],message.get('expectedPackageRevision'),
                                          message.get('expectedRegistryRevision'))
         if method=='dependency_details':
-            return self.dependency_details(message['packageId'],message.get('expectedPackageRevision'))
+            return self.dependency_details(message['packageId'],message.get('expectedPackageRevision'),
+                                           facet=message.get('facet'), limit=message.get('limit'),
+                                           cursor=message.get('cursor'), record_id=message.get('recordId'))
         if method=='locks':return self.locks(message['packageId'])
         if method=='schema':return self.schema(message['op'],message.get('packageId'),message.get('nodeId'),
             message.get('sourcePackageId'),message.get('command'),message.get('sourcePath'),message.get('sourceKey'),

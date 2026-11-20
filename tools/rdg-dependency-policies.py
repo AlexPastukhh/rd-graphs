@@ -704,13 +704,18 @@ def describe_applications(g, K):
 
 
 def _describe_applications(g, K):
+    plan = application_plan(g, K)
+    render = application_renderer(g, K)
+    return [render(plan['definitions'][job[0]], *job[1:]) for job in plan['tasks']]
+
+
+def application_renderer(g, K):
     """Read-only current-Graph details from the execution resolver, including latches.
 
     A path is a witness graph, not an invented ordered path: execution can merge
     several paths to the same participant. Removed facts keep only recorded IDs.
     """
-    ns=K.entities(g);edges={e['id']:e for e in relations(g,K)};result=[]
-    definitions={p['id']:p for p in builtins(K)};cache={}
+    ns=K.entities(g);edges={e['id']:e for e in relations(g,K)};cache={}
     def entity_ids(value):
         found=set()
         if isinstance(value,dict):
@@ -736,7 +741,7 @@ def _describe_applications(g, K):
         elif isinstance(value,list):
             for item in value:found.update(witness_ids(item,owner))
         return found
-    def add(p,b,kind,edge=None,context=False,matched=True):
+    def render(p,b,kind,edge=None,context=False,matched=True):
         p=copy.deepcopy(p);b=copy.deepcopy(b);trace={}
         resolved,paths,problems=resolve(g,p,b,K,trace)
         if kind=='automatic' and not matched:problems=sorted(set(problems+['AUTOMATIC_RELATION_MISSING']))
@@ -828,14 +833,32 @@ def _describe_applications(g, K):
             n=ns.get(ident) or historical.get(ident)
             participants[ident]={'id':ident,'kind':n.get('kind') if n else None,'title':n.get('title',ident) if n else ident,'present':ident in ns,'recorded':ident in historical}
         status=b.get('status','active' if b.get('enabled',True) else 'disabled')
-        result.append({'id':b['id'],'kind':kind,'policyId':p['id'],'policyVersion':p['version'],
+        return {'id':b['id'],'kind':kind,'policyId':p['id'],'policyVersion':p['version'],
             'policy':p,'binding':b,'targetId':b['targetId'],'status':status,'enabled':status=='active',
             'reasonCode':b.get('reasonCode'),'violations':copy.deepcopy(b.get('violations',[])),
             'currentViolations':problems,'applicable':not problems,'roles':roles,'participants':participants,
             'nodeIds':sorted(relevant),'observedIds':sorted(observed_ids),'relations':relation_rows,
             'paths':[{'role':role,'participantId':ident,'relationIds':ids,'nodeIds':trace.get((role,ident),{}).get('nodeIds',[])} for (role,ident),ids in sorted(paths.items()) if ids]+observation_paths,
             'rules':rule_rows,'legacyEdgeId':edge['id'] if edge and kind=='legacy' else None,
-            'legacyContextId':b['sourceId'] if kind=='legacy-context' else None,'decisionContext':context})
+            'legacyContextId':b['sourceId'] if kind=='legacy-context' else None,'decisionContext':context}
+    return render
+
+
+def application_plan(g, K):
+    """Discover and sort current applications without resolving their participants."""
+    ns = K.entities(g)
+    edges = {edge['id']: edge for edge in g['edges']}
+    policies = {p['id']: p for p in builtins(K)}
+    definitions, indexes, tasks = [], {}, []
+
+    def add(policy, binding, kind, edge=None, context=False, matched=True):
+        # Automatic policies and saved definitions are shared by many applications.
+        key = json.dumps(policy, sort_keys=True, separators=(',', ':'))
+        if key not in indexes:
+            indexes[key] = len(definitions)
+            definitions.append(policy)
+        tasks.append([indexes[key], binding, kind, edge, context, matched])
+
     for b in g.get('dependencyBindings',[]):
         if b.get('status')=='deleted':continue
         p=K._policy_at(g,b['policyId'],b['policyVersion'])
@@ -846,22 +869,23 @@ def _describe_applications(g, K):
         if state.get('status')=='deleted':continue
         origin=match['origin'] if match else state['origin']
         source=match['sourceId'] if match else state['sourceId'];target=match['dependentId'] if match else state['targetId']
-        p=definitions[automatic_policy_id(origin)]
+        p=policies[automatic_policy_id(origin)]
         b={**copy.deepcopy(state),'id':key,'sourceId':source,'targetId':target,'parentId':None,
             'policyId':p['id'],'policyVersion':p['version'],'enabled':state.get('status','active')=='active',
             'status':state.get('status','active'),'revision':state.get('revision',1),'participantBindings':{'source':source}}
         add(p,b,'automatic',matched=match is not None)
     for row in K._subscriptions(g).values():
         if row['origin'] not in ('manual','decisionContext'):continue
-        rule=row['rule'];preset=rule['preset'];p=copy.deepcopy(definitions.get('builtin:'+preset,definitions['builtin:L1']))
+        rule=row['rule'];preset=rule['preset'];p=copy.deepcopy(policies.get('builtin:'+preset,policies['builtin:L1']))
         if preset=='custom':p.update(id='legacy:custom',name='Индивидуальные наблюдения прямой зависимости')
         p['rules']=[{'id':'watch-'+watch,'name':WATCH_HELP['canonInfo' if watch=='info' else watch][0],
             'watch':watch,'operations':WATCHES[watch][2],'enabled':True} for watch in rule['watch']]
         p['sourceKinds']=[ns[row['sourceId']]['kind']];p['targetKinds']=[ns[row['dependentId']]['kind']]
-        edge=next((edge for edge in g['edges'] if edge['id']==row['id']),None);context=row['origin']=='decisionContext' or bool(edge and edge.get('dependencyPurpose')=='decisionContext')
+        edge=edges.get(row['id']);context=row['origin']=='decisionContext' or bool(edge and edge.get('dependencyPurpose')=='decisionContext')
         b={'id':row['id'],'policyId':p['id'],'policyVersion':1,'sourceId':row['sourceId'],'targetId':row['dependentId'],'parentId':None,'enabled':True,'status':'active'}
         add(p,b,'legacy-context' if row['origin']=='decisionContext' else 'legacy',edge,context)
-    return sorted(result,key=lambda row:(row['policy']['name'],row['id']))
+    tasks.sort(key=lambda job: (definitions[job[0]]['name'], job[1]['id']))
+    return {'definitions': definitions, 'tasks': tasks}
 
 
 def transition_evidence(before, after, K, transitions):

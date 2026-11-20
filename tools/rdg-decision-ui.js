@@ -452,47 +452,82 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
   return call({method:'read',packageId:s.packageId,includePlan:true,view:spec,
     includeDependencyApplications:false,includeDependencyDetails:false});
  }
- let policyUsageFailure=null,dependencyDetailsLoad=null,historyLoad=null,updateRoadHistory=null;
+ let policyUsageFailure=null,historyLoad=null,updateRoadHistory=null;
+ const dependencyDetailLoads=new Map();
  function currentDependencyDetailsLoad(request){
   const active=screen();
-  return request===dependencyDetailsLoad&&request.snapshot===snapshot&&active?.id===request.screenId&&
-    active?.packageId===request.snapshot.package.packageId;
+  return dependencyDetailLoads.get(request.key)===request&&request.snapshot===snapshot&&
+    active?.id===request.screenId&&active?.packageId===request.snapshot.package.packageId;
+ }
+ function dependencyDetailKey(facet,recordId){return recordId?JSON.stringify([facet,recordId]):facet;}
+ function dependencyDetailLoad(facet,recordId){
+  const request=dependencyDetailLoads.get(dependencyDetailKey(facet,recordId));
+  return request&&currentDependencyDetailsLoad(request)?request:null;
  }
  async function fetchDependencyDetails(request){
   const catalog=request.snapshot.dependencyCatalog,owner=request.snapshot.package;
+  const {facet,recordId,cursor}=request;
   try{
-   const details=await call({method:'dependency_details',packageId:owner.packageId,expectedPackageRevision:owner.revision});
+   const page=await call({method:'dependency_details',packageId:owner.packageId,expectedPackageRevision:owner.revision,
+     facet,limit:100,...(recordId?{recordId}:{}),...(cursor?{cursor}:{})});
    if(!currentDependencyDetailsLoad(request))return;
-   if(details.packageId!==owner.packageId||details.packageRevision!==owner.revision||
-      !Array.isArray(details.localApplications)||!Array.isArray(details.invalidationRecords))throw Error('DEPENDENCY_DETAILS_RESPONSE');
-   catalog.localApplications=details.localApplications;
-   catalog.invalidationRecords=details.invalidationRecords;
+   const next=page.page?.nextCursor,total=page.page?.total;
+   if(page.snapshot?.packageId!==owner.packageId||page.snapshot?.packageRevision!==owner.revision||
+      typeof page.snapshot.headSHA256!=='string'||
+      (request.headSHA256&&page.snapshot.headSHA256!==request.headSHA256)||page.facet!==facet||
+      !Array.isArray(page.items)||!Number.isSafeInteger(total)||page.page.returned!==page.items.length||
+      (request.total!==undefined&&request.total!==total)||total<request.items.length+page.items.length||
+      (next!==null&&(typeof next!=='string'||!next||next===cursor||!page.items.length))||
+      (next===null&&total!==request.items.length+page.items.length))throw Error('DEPENDENCY_DETAILS_RESPONSE');
+   request.headSHA256=page.snapshot.headSHA256;
+   request.items=request.items.concat(page.items);
+   request.cursor=next;
+   request.total=total;
+   request.state='ready';
+   if(!recordId)catalog[facet]=request.items;
+   if(facet==='invalidationRecords')catalog.invalidationApplicationTargets={
+     ...catalog.invalidationApplicationTargets,...page.applicationTargets};
   }catch(error){
    if(!currentDependencyDetailsLoad(request))return;
-   request.state=error.message==='PORTABLE_APP_DEPENDENCY_DETAILS_PACKAGE_CHANGED'?'stale':'error';
+   request.state=['PORTABLE_APP_DEPENDENCY_DETAILS_PACKAGE_CHANGED','PORTABLE_APP_READ_CURSOR_STALE'].includes(error.message)?'stale':'error';
   }
+  redrawDependencyDetails(request);
+ }
+ function redrawDependencyDetails(request){
   const views=request.views;
   request.views=[];
   for(const {status,update} of views)if(status.isConnected)update();
  }
- function renderDependencyDetailsState(parent,update){
-  const catalog=snapshot?.dependencyCatalog;
-  if(!catalog||Object.hasOwn(catalog,'localApplications'))return false;
-  let request=dependencyDetailsLoad;
-  if(!request||!currentDependencyDetailsLoad(request)){
-   request={snapshot,screenId:screen().id,state:'loading',views:[]};
-   dependencyDetailsLoad=request;
+ function renderDependencyDetailsState(parent,update,facet='localApplications',recordId=null){
+  if(!snapshot?.dependencyCatalog)return false;
+  const key=dependencyDetailKey(facet,recordId);
+  let request=dependencyDetailLoad(facet,recordId);
+  if(!request){
+   request={key,facet,recordId,snapshot,screenId:screen().id,state:'loading',views:[],items:[],cursor:null};
+   dependencyDetailLoads.set(key,request);
    void fetchDependencyDetails(request);
   }
-  const stale=request.state==='stale',loading=request.state==='loading';
+  if(request.state==='ready'&&!request.cursor)return false;
+  const stale=request.state==='stale',loading=request.state==='loading',hasItems=!!request.items.length;
   const status=el('div');status.dataset.dependencyDetailsState=request.state;parent.append(status);
-  if(loading)request.views.push({status,update});
-  const text=el('p',loading?'Загрузка подробностей зависимостей…':
-    stale?'Процесс изменился. Перечитайте снимок.':'Не удалось загрузить подробности зависимостей.');
-  text.setAttribute('role',loading?'status':'alert');status.append(text);
+  request.views=request.views.filter(view=>view.status.isConnected);
+  request.views.push({status,update});
+  if(hasItems)status.append(el('p','Загружено записей процесса: '+request.items.length+' из '+request.total+
+    '. Фильтры и счётчики учитывают загруженные записи.'));
+  if(request.state!=='ready'){
+   const text=el('p',loading?'Загрузка подробностей зависимостей…':
+     stale?'Процесс изменился. Перечитайте снимок.':'Не удалось загрузить подробности зависимостей.');
+   text.setAttribute('role',loading?'status':'alert');status.append(text);
+  }
+  const fetchNext=()=>{
+   if(!currentDependencyDetailsLoad(request)||request.state==='loading')return;
+   request.state='loading';
+   redrawDependencyDetails(request);
+   void fetchDependencyDetails(request);
+  };
   if(stale)button(status,'Перечитать снимок',()=>load());
-  else if(!loading)button(status,'Повторить загрузку',()=>{dependencyDetailsLoad=null;update();});
-  return true;
+  else if(!loading)button(status,request.state==='ready'?'Загрузить ещё':'Повторить загрузку',fetchNext);
+  return !hasItems;
  }
  async function ensurePolicyUsage(){
   const value=snapshot,catalog=value?.dependencyCatalog,presentation=screen()?.presentation;
@@ -541,7 +576,7 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
    await sync((v,t)=>{if(t.spec.compactGraph===undefined){t.spec.compactGraph=true;delete t.spec.camera;}});
    s=screen();
   }
-  if(!s){snapshot=null;history=null;historyLoad=null;dependencyDetailsLoad=null;form=session.explorer.drafts['new-process']?.open?'create':null;render();return null;}try{snapshot=await readScreen(s);}catch(e){if(!/FOCUS|VIEW_CASES|REFERENCE_MISSING:group/.test(e.message))throw e;const spec={...s.spec,kind:'graph',groupIds:[],shownCases:{}};delete spec.id;await sync((v,s)=>s.spec=spec);snapshot=await readScreen(s,spec);note('Состав представления изменился; черновик сохранён.');}
+  if(!s){snapshot=null;history=null;historyLoad=null;dependencyDetailLoads.clear();form=session.explorer.drafts['new-process']?.open?'create':null;render();return null;}try{snapshot=await readScreen(s);}catch(e){if(!/FOCUS|VIEW_CASES|REFERENCE_MISSING:group/.test(e.message))throw e;const spec={...s.spec,kind:'graph',groupIds:[],shownCases:{}};delete spec.id;await sync((v,s)=>s.spec=spec);snapshot=await readScreen(s,spec);note('Состав представления изменился; черновик сохранён.');}
   if(isProcess()&&s.spec.kind==='focus'){
    const finding=snapshot.graph.objects.find(n=>n.id===s.spec.id&&n.kind==='finding');
    if(finding){const subject=[...snapshot.graph.nodes,...snapshot.graph.objects].find(n=>n.id===finding.subjectId);inspectorTabState.set(subject?.id||finding.id,'findings');await sync((v,t)=>{t.spec={...t.spec,kind:subject?'focus':'graph',...(subject?{id:subject.id}:{})};if(!subject)delete t.spec.id;t.inspector={kind:'entity',id:subject?.id||finding.id};});return load();}
@@ -560,7 +595,7 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
   const roadHistory=isProcess()?{screenId:s.id,snapshot,state:'loading'}:null;
   historyLoad=roadHistory;
   policyUsageFailure=null;
-  dependencyDetailsLoad=null;
+  dependencyDetailLoads.clear();
   await renderScreen();
   if(roadHistory)void fetchRoadHistory(roadHistory);
   return snapshot;
@@ -1406,9 +1441,11 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
   const lines=[],pathLines=[],seenGroups=new Set();
   // Render group labels in a foreground SVG layer, above opaque entity cards.
   const groupLabelLayer=append('g',{class:'rdg-decision-group-labels','aria-label':'Подписи групп решений'});
-  const nodeHeight=id=>picture.nodes.find(n=>n.id===id)?.alias&&s.spec.kind!=='focus'?126:
-    picture.supportingCounts?.[picture.nodes.find(n=>n.id===id)?.entityId]?116:100;
-  const visualEntityId=id=>picture.nodes.find(n=>n.id===id)?.entityId||id;
+  const nodesByVisualId=new Map();
+  for(const node of picture.nodes)if(!nodesByVisualId.has(node.id))nodesByVisualId.set(node.id,node);
+  const nodeHeight=id=>nodesByVisualId.get(id)?.alias&&s.spec.kind!=='focus'?126:
+    picture.supportingCounts?.[nodesByVisualId.get(id)?.entityId]?116:100;
+  const visualEntityId=id=>nodesByVisualId.get(id)?.entityId||id;
   function routeGeometry(route){const a=visualPosition(route.from),b=visualPosition(route.to);if(!a||!b)return null;const vertical=Math.abs(b.y-a.y)>Math.abs(b.x-a.x);let x1=a.x+110,y1=a.y+nodeHeight(route.from)/2,x2=b.x+110,y2=b.y+nodeHeight(route.to)/2,d;
    if(vertical){y1=a.y+(b.y>a.y?nodeHeight(route.from):0);y2=b.y+(b.y>a.y?0:nodeHeight(route.to));const middle=(y1+y2)/2;d=`M${x1} ${y1} C${x1} ${middle} ${x2} ${middle} ${x2} ${y2}`;}else{x1=a.x+(b.x>a.x?220:0);x2=b.x+(b.x>a.x?0:220);const middle=(x1+x2)/2;d=`M${x1} ${y1} C${middle} ${y1} ${middle} ${y2} ${x2} ${y2}`;}return {d,x:(x1+x2)/2,y:(y1+y2)/2-9,vertical};}
   for(const route of picture.routes){const shape=routeGeometry(route);if(!shape)continue;const e=route.edge,isGroup=e.type==='DECISION_MEMBER',key=route.from+'|'+route.to;if(isGroup&&seenGroups.has(key))continue;if(isGroup)seenGroups.add(key);
@@ -1451,9 +1488,10 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
    label.onkeydown=event=>{if(['Enter',' '].includes(event.key)){event.preventDefault();open(event);}};
   }
   function paintEdges(){
+   for(const [route,line,areaOffset] of pathLines){const shape=routeGeometry(route);if(shape){line.setAttribute('d',shape.d);if(areaOffset!=null)line.setAttribute('transform',shape.vertical?`translate(${areaOffset} 0)`:`translate(0 ${areaOffset})`);}}
+   if(!lines.length)return;
    const occupied=picture.nodes.map(item=>{const p=visualPosition(item.id);return p?{x:p.x-5,y:p.y-5,w:230,h:nodeHeight(item.id)+10}:null;}).filter(Boolean);
    const overlap=(a,b)=>a.x<b.x+b.w&&b.x<a.x+a.w&&a.y<b.y+b.h&&b.y<a.y+a.h;
-   for(const [route,line,areaOffset] of pathLines){const shape=routeGeometry(route);if(shape){line.setAttribute('d',shape.d);if(areaOffset!=null)line.setAttribute('transform',shape.vertical?`translate(${areaOffset} 0)`:`translate(0 ${areaOffset})`);}}
    // Sample other routed paths to keep badges off crossing connections.
    const pathPoints=new Map();
    for(const [,line] of pathLines){
@@ -1788,7 +1826,9 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
     if(!conditions.length){const line=el('tr'),empty=el('td','Сейчас нет участников с отслеживаемыми изменениями.','rdg-muted');empty.colSpan=3;line.append(empty);instance.append(line);}
    }
   }
-  if(!rows.length)body.append(el('p','Сейчас нет применений этой версии с выбранным элементом.'));
+  if(!rows.length)body.append(el('p',dependencyDetailLoad('localApplications')?.cursor?
+    'На загруженных страницах применений этой версии с выбранным элементом нет.':
+    'Сейчас нет применений этой версии с выбранным элементом.'));
 
  }
  function renderDependencyApplication(parent,row,nodeId){const card=el('article',null,'rdg-dependency-application');parent.append(card);card.dataset.dependencyApplicationId=row.id;card.dataset.dependencyApplicationKind=row.kind;card.dataset.dependencyStatus=row.status;
@@ -1813,13 +1853,21 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
  }
  function renderEntityDependencies(parent,node){parent.dataset.entityDependenciesId=node.id;
   if(invalidationReturns.get(screen().id)?.packageId===snapshot.package.packageId)button(parent,'← К инвалидации',returnToInvalidation);
-  if(renderDependencyDetailsState(parent,()=>{parent.replaceChildren();renderEntityDependencies(parent,node);}))return;
+  const key=snapshot.package.packageId+':'+node.id;
+  const selection=dependencyInspectorFilters.get(key)||{direction:'incoming',group:'all'};
+  dependencyInspectorFilters.set(key,selection);
+  const redraw=()=>{parent.replaceChildren();renderEntityDependencies(parent,node);};
+  // A link from invalidation names an exact current application, which may be on a later page.
+  const exact=selection.bindingId;
+  if(exact&&!dependencyDetails().some(row=>row.id===exact)&&
+     renderDependencyDetailsState(parent,redraw,'localApplications',exact))return;
+  const exactItem=exact?dependencyDetailLoad('localApplications',exact)?.items[0]:null;
+  if(renderDependencyDetailsState(parent,redraw)&&!exactItem)return;
   parent.append(el('p','Применения политик всего процесса, включая отключённые. Рабочая область и фокус не ограничивают список.','rdg-muted'));
   const rows=dependencyDetails().filter(row=>row.nodeIds.includes(node.id));
+  if(exactItem?.nodeIds.includes(node.id)&&!rows.some(row=>row.id===exact))rows.unshift(exactItem);
   const byDirection={incoming:rows.filter(row=>row.targetId===node.id),outgoing:rows.filter(row=>row.targetId!==node.id&&row.observedIds.includes(node.id)),participation:rows.filter(row=>row.targetId!==node.id&&!row.observedIds.includes(node.id))};
   const groups=[['all','Показать все','Все зависимости или влияния выбранного направления. Справочное участие в схемах сюда не входит.'],['context','Контекст Decision','Подписки из контекста принятия Decision — ссылки и настроенные наблюдения его участников.'],['automatic','Автоматические','Наблюдение родителя, непосредственной структуры и групп решений, привязанной теории принятия решения.'],['explicit','Явные зависимости','Индивидуально настроенные связи и применения сохранённых политик. Способ настройки указан в карточке.']];
-  const key=snapshot.package.packageId+':'+node.id;
-  const selection=dependencyInspectorFilters.get(key)||{direction:'incoming',group:'all'};dependencyInspectorFilters.set(key,selection);
   const controls=el('div',null,'rdg-dependency-filters');controls.dataset.dependencyFilters='';parent.append(controls);
   const choices=[];
   const results=el('div',null,'rdg-dependency-results');results.dataset.dependencyResults='';
@@ -1831,7 +1879,8 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
    const category=[...groups,['participation','Участие в схеме']].find(([id])=>id===selection.group)?.[1];
    const heading=el('h3',title+' · '+category+' · '+selectedRows.length);heading.tabIndex=-1;results.append(heading);
    results.append(el('p',selection.group==='participation'?'Участие в поиске и применимости. Эти записи не включены в счётчик влияний.':selection.direction==='incoming'?'При изменении каких данных или связей этот элемент может потребовать пересмотра.':'Какие зависимые элементы могут потребовать пересмотра при изменении наблюдаемых данных или связей этого элемента.','rdg-muted'));
-   if(!selectedRows.length){results.append(el('p','В этой группе нет применений.','rdg-muted'));return;}
+   if(!selectedRows.length){results.append(el('p',dependencyDetailLoad('localApplications')?.cursor?
+     'На загруженных страницах в этой группе нет применений.':'В этой группе нет применений.','rdg-muted'));return;}
    const sections=selection.direction==='incoming'?[['incoming',selectedRows]]:[['outgoing',selectedRows.filter(row=>row.observedIds.includes(node.id))],['participation',selectedRows.filter(row=>!row.observedIds.includes(node.id))]];
    for(const [direction,records] of sections){if(!records.length)continue;const box=el('section',null,'rdg-dependency-section');box.dataset.dependencyDirection=direction;results.append(box);
     if(direction==='participation')box.append(el('h4','Участие в схеме'),el('p','Промежуточные роли, пути поиска и сохранённые сведения отключённых применений. Содержание этого участника не наблюдается данным применением.','rdg-muted'));
@@ -2248,11 +2297,14 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
   }return out;
  }
  function renderActualPolicyRoles(parent,policy,binding){
-  if(!Object.hasOwn(snapshot.dependencyCatalog||{},'localApplications')&&snapshot.graph.dependencyBindings?.some(row=>row.id===binding.id)){
+  const isSaved=snapshot.graph.dependencyBindings?.some(row=>row.id===binding.id);
+  if(isSaved&&!dependencyDetails().some(row=>row.id===binding.id)){
    const details=el('div');parent.append(details);
-   if(renderDependencyDetailsState(details,()=>{details.replaceChildren();renderActualPolicyRoles(details,policy,binding);}))return;
+   if(renderDependencyDetailsState(details,()=>{details.replaceChildren();renderActualPolicyRoles(details,policy,binding);},
+      'localApplications',binding.id))return;
   }
-  const saved=dependencyDetails().find(row=>row.id===binding.id&&row.policyId===policy.id&&row.policyVersion===policy.version&&row.targetId===binding.targetId&&row.binding.sourceId===binding.sourceId&&row.binding.parentId===binding.parentId&&JSON.stringify(row.binding.participantBindings||{})===JSON.stringify(binding.participantBindings||{}));if(saved){renderApplicationParticipants(parent,saved);return;}
+  const candidates=dependencyDetailLoad('localApplications',binding.id)?.items||dependencyDetails();
+  const saved=candidates.find(row=>row.id===binding.id&&row.policyId===policy.id&&row.policyVersion===policy.version&&row.targetId===binding.targetId&&row.binding.sourceId===binding.sourceId&&row.binding.parentId===binding.parentId&&JSON.stringify(row.binding.participantBindings||{})===JSON.stringify(binding.participantBindings||{}));if(saved){renderApplicationParticipants(parent,saved);return;}
   const out=actualPolicyRoles(policy,binding);for(const [role,ids] of Object.entries(out)){
    const row=el('div',null,'rdg-policy-participants');parent.append(row);row.append(el('b',policyRoleName(policy,role)+': '));
    if(!ids.length)row.append(el('span','Набор пуст'));for(const id of ids)policyReference(row,id,role);
@@ -2455,7 +2507,8 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
   const head=el('header',null,'rdg-policy-header');shell.append(head);const title=el('div');title.append(el('h2','Зависимости'),el('p','Политики и инвалидация · '+snapshot.graph.title));head.append(title);
   const tabs=el('div',null,'rdg-policy-tabs');tabs.setAttribute('role','tablist');head.append(tabs);
   const chosen=screen().presentation?.dependencyTab||'stale';
-  const count=snapshot.dependencyCatalog?.invalidationRecords?.filter(row=>row.active).length;
+  const count=dependencyDetailLoad('invalidationRecords')?.cursor?undefined:
+    snapshot.dependencyCatalog?.invalidationRecords?.filter(row=>row.active).length;
   for(const [id,label] of [['stale',count===undefined?'Инвалидация':'Инвалидация · '+count],['policies','Политики']]){
    const control=button(tabs,label,()=>sync((v,t)=>{t.presentation.dependencyTab=id;},true));control.setAttribute('role','tab');control.setAttribute('aria-selected',String(chosen===id));control.dataset.dependencyTab=id;
   }
@@ -2463,9 +2516,9 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
   if(chosen!=='stale'&&invalidationReturns.get(screen().id)?.packageId===snapshot.package.packageId)button(head,'← К инвалидации',returnToInvalidation);
   button(head,'← К графу',()=>sync((v,t)=>{t.presentation.mode='graph';},true));
   const content=el('div',null,'rdg-policy-scroll');content.setAttribute('role','tabpanel');content.dataset.dependencyPanel=chosen;shell.append(content);
-  if(renderDependencyDetailsState(content,()=>{
+  if(chosen==='stale'&&renderDependencyDetailsState(content,()=>{
    const next=doc.createDocumentFragment();renderDependencyWorkspace(next);shell.replaceWith(next);
-  }))return;
+  },'invalidationRecords'))return;
   if(chosen==='policies'){
    if(snapshot.dependencyCatalog&&!Object.hasOwn(snapshot.dependencyCatalog,'applications')){
     const failed=policyUsageFailure?.snapshot===snapshot;
@@ -2631,9 +2684,10 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
   for(const relation of record.relationSnapshot||[])details.append(el('p',(record.participants[relation.from]?.title||relation.from)+' → '+relationName(relation.type)+' → '+(record.participants[relation.to]?.title||relation.to)));
   if(record.kind==='disabled'&&!record.targetRecorded)details.append(el('p','Историческая схема полностью не записана. Цель, если доступна, показана по текущему применению.'));
  }
- function openInvalidationApplication(record){const app=dependencyDetails().find(row=>row.id===record.bindingId);if(!app)return;
-  rememberInvalidation(record);dependencyInspectorFilters.set(snapshot.package.packageId+':'+app.targetId,{direction:'incoming',group:'all'});
-  return openDependencyInspector(app.targetId);
+ function openInvalidationApplication(record,targetId){
+  rememberInvalidation(record);dependencyInspectorFilters.set(snapshot.package.packageId+':'+targetId,
+    {direction:'incoming',group:'all',bindingId:record.bindingId});
+  return openDependencyInspector(targetId);
  }
  function renderInvalidationCard(parent,record){const card=el('article',null,'rdg-invalidation-card');parent.append(card);card.dataset.invalidationId=record.id;card.dataset.invalidationKind=record.kind;card.dataset.invalidationActive=String(record.active);card.tabIndex=-1;
   if(invalidationState().selectedId===record.id)card.dataset.invalidationSelected='true';card.onfocus=()=>{invalidationState().selectedId=record.id;};card.onclick=()=>{invalidationState().selectedId=record.id;for(const other of parent.querySelectorAll('[data-invalidation-selected]'))delete other.dataset.invalidationSelected;card.dataset.invalidationSelected='true';};
@@ -2670,7 +2724,10 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
     if(writable){button(actions,'Активировать снова',()=>{rememberInvalidation(record);return savePolicyChange(record.applicationKind==='automatic'?'automatic_activate':'binding_activate',{id:record.bindingId,expectedRevision:record.bindingRevision},'Повторная активация применения');}).dataset.invalidationActivate=record.bindingId;
      button(actions,'Удалить применение',()=>{rememberInvalidation(record);return savePolicyChange(record.applicationKind==='automatic'?'automatic_remove':'binding_remove',{id:record.bindingId,expectedRevision:record.bindingRevision},'Удалено отключённое применение');}).dataset.invalidationRemove=record.bindingId;}
    }
-   if(dependencyDetails().some(row=>row.id===record.bindingId))button(actions,'Открыть применение',()=>openInvalidationApplication(record));invalidationDetails(reason,record);
+   const targetId=Object.hasOwn(snapshot.dependencyCatalog.invalidationApplicationTargets||{},record.bindingId)?
+     snapshot.dependencyCatalog.invalidationApplicationTargets[record.bindingId]:null;
+   if(targetId)button(actions,'Открыть применение',()=>openInvalidationApplication(record,targetId));
+   invalidationDetails(reason,record);
   }
   if(record.resolvedAt)card.append(el('small','Разрешено: '+invalidationTime(record.resolvedAt),'rdg-muted'));
  }
@@ -2701,7 +2758,8 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
   function accepts(record,filter){return filter==='history'?!record.active:record.active&&(filter==='all'||record.kind===filter);}
   function renderResults(){const filtered=records.filter(matches);for(const choice of choices){choice.b.replaceChildren(el('span',choice.label),el('span',String(filtered.filter(r=>accepts(r,choice.id)).length),'rdg-dependency-filter-count'));choice.b.setAttribute('aria-pressed',String(ui.filter===choice.id));}
    results.replaceChildren();const shown=filtered.filter(r=>accepts(r,ui.filter));results.append(el('h3',ui.filter==='history'?'История инвалидации':'Актуальные записи'));
-   if(!shown.length)results.append(el('p','Нет записей по выбранным фильтрам.','rdg-policy-empty'));
+   if(!shown.length)results.append(el('p',dependencyDetailLoad('invalidationRecords')?.cursor?
+    'На загруженных страницах нет записей по выбранным фильтрам.':'Нет записей по выбранным фильтрам.','rdg-policy-empty'));
    for(const record of shown)renderInvalidationCard(results,record);
    if(ui.filter==='history'){const cancelled=snapshot.graph.events.filter(e=>e.type==='branch_cancelled'&&(!ui.element||e.nodeIds.includes(ui.element))&&!ui.policy&&!ui.version&&!ui.cause).slice().reverse();if(cancelled.length){const details=el('details');results.append(details);details.append(el('summary','Структурные отмены — отдельная история · '+cancelled.length));for(const event of cancelled)details.append(el('p',invalidationTime(event.recordedAt)+' · '+event.basis));}}
   }

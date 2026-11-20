@@ -41,7 +41,7 @@ async function start(){return new Promise((resolve,reject)=>{let stderr='';child
    await page.evaluate(()=>[...document.querySelectorAll('.rdg-tools button')].find(n=>n.textContent==='Сведения').click());
    await page.waitForSelector('[data-dependency-details-state=loading]',{visible:true});
    assert.deepEqual(await held,{method:'dependency_details',packageId:originalProcessId,
-     expectedPackageRevision:initial.package.revision});
+     expectedPackageRevision:initial.package.revision,facet:'localApplications',limit:100});
    const canvas=await page.$('.rdg-graph');
    const road=await page.$('.rdg-road');
    assert(canvas&&road);
@@ -55,7 +55,7 @@ async function start(){return new Promise((resolve,reject)=>{let stderr='';child
    await page.waitForSelector('[data-dependency-filters]',{visible:true});
    const loaded=await state();
    assert(Array.isArray(loaded.dependencyCatalog.localApplications));
-   assert(Array.isArray(loaded.dependencyCatalog.invalidationRecords));
+   assert(!Object.hasOwn(loaded.dependencyCatalog,'invalidationRecords'));
    assert.equal(requests.slice(start).filter(method=>method==='dependency_details').length,2);
   }finally{
    if(intercepted&&!intercepted.isInterceptResolutionHandled())await intercepted.continue();
@@ -1092,6 +1092,7 @@ async function start(){return new Promise((resolve,reject)=>{let stderr='';child
  assert(Array.isArray((await state()).dependencyCatalog.applications));
  assert(await page.$('[data-policy-id="builtin:L1"]'),'built-in policy and usage are visible in catalog');
  await page.$eval('[data-dependency-tab=stale]',n=>n.click());await idle();
+ await page.waitForSelector('[data-invalidation-controls]',{visible:true});
  assert(await page.$('[data-stale-node-id="R-STALE-UI"]'));
  await verifyStale('Reviewed changed budget requirement and confirmed subscription remains usable');
  await click('← К графу','.rdg-policy-header');
@@ -1219,6 +1220,7 @@ async function start(){return new Promise((resolve,reject)=>{let stderr='';child
  assert.equal(hits[0].ruleId,policy.rules[0].id);
  assert.equal(hits[0].policyVersion,1);
  await page.$eval('[data-dependency-tab=stale]',n=>n.click());await idle();
+ await page.waitForSelector('[data-invalidation-controls]',{visible:true});
  const triggerCard=await page.$eval('[data-stale-node-id="R-STALE-UI"] [data-trigger-policy-id="'+policy.id+'"]',n=>n.textContent);
  assert(triggerCard.includes('Контекст изменён')&&triggerCard.includes('C-HOST'),
   'stale view shows exact named rule and concrete triggering participants, without fabricated checks');
@@ -1245,7 +1247,7 @@ async function start(){return new Promise((resolve,reject)=>{let stderr='';child
  await page.screenshot({path:path.join(base,'dependency-policy-v2-shared-catalog.png'),fullPage:true});
  await click('← К графу','.rdg-policy-header');
  await click('Сведения','.rdg-tools');
- await page.$eval('.rdg-inspector-tab[data-inspector-tab=dependencies]',n=>n.click());
+ await click('Зависимости','.rdg-inspector-tabs');
  const actualInspector=await page.$eval('[data-entity-dependencies-id]',n=>n.textContent);
  assert(actualInspector.includes('Зависимости')&&actualInspector.includes('Влияния'),
   'selected block inspector exposes a separate Dependencies tab');
@@ -1477,8 +1479,12 @@ async function start(){return new Promise((resolve,reject)=>{let stderr='';child
  await stage2Core('policy_change',{action:'policy_save',value:{...invPolicy,version:2,name:'Наблюдение нагрузки · новая версия'}});
  await page.evaluate(id=>RDG_PORTABLE_EDITOR.open(id,{kind:'graph'}),exampleRow.packageId);await idle();await click('Зависимости','.rdg-tools');
  await page.$eval('[data-dependency-tab=stale]',n=>n.click());await idle();
+ await page.waitForSelector('[data-invalidation-controls]',{visible:true});
  const invFilter=async value=>{await page.click('[data-invalidation-filter="'+value+'"]');await idle();};
- const invSelect=async(key,value)=>{await page.select('[data-invalidation-'+key+']',value);await idle();};
+ const invSelect=async(key,value)=>{
+  await page.select('[data-invalidation-'+key+']',value);await idle();
+  if(key==='process')await page.waitForSelector('[data-invalidation-controls]',{visible:true});
+ };
  await invSelect('element','R-I3');
  const invCard=kind=>'[data-invalidation-kind="'+kind+'"][data-invalidation-active=true]';
  assert.equal(await page.$$eval('[data-review-node-id="R-I3"]',nodes=>nodes.length),1,'multiple causes have one target-level review action');
@@ -1539,7 +1545,11 @@ async function start(){return new Promise((resolve,reject)=>{let stderr='';child
  await stage2Core('add',{entity:{id:'CAN-I3',kind:'canon',title:'Критерий проверки',description:'Synthetic criterion',guidance:'Recorded constraints'},location:'graph'});
  await stage2Core('link',{relation:{id:'CAN-I3-D','type':'CANON_FOR',from:'CAN-I3',to:'D-I3'}});
  await click('Обновить','.rdg-head');await invSelect('element','D-I3');
- const invAuto=(await state()).dependencyCatalog.localApplications.find(r=>r.policyId==='builtin:automatic-canon'&&r.targetId==='D-I3'&&r.binding.sourceId==='CAN-I3');assert(invAuto);
+ const invSnapshot=await state();
+ assert(!Object.hasOwn(invSnapshot.dependencyCatalog,'localApplications'),'invalidation leaves application details deferred');
+ const invApps=await api({method:'dependency_details',packageId:invSnapshot.package.packageId,
+   expectedPackageRevision:invSnapshot.package.revision});
+ const invAuto=invApps.localApplications.find(r=>r.policyId==='builtin:automatic-canon'&&r.targetId==='D-I3'&&r.binding.sourceId==='CAN-I3');assert(invAuto);
  await stage2Core('policy_change',{action:'automatic_disable',value:{id:invAuto.id}});await click('Обновить','.rdg-head');await invFilter('disabled');
  await click('Удалить применение',invCard('disabled'));await save();assert.equal((await state()).graph.dependencyAutomaticStates[invAuto.id].status,'deleted');
  assert.equal(await page.$(invCard('disabled')),null);await invFilter('history');
