@@ -610,6 +610,51 @@ class PolicyApplication(API.DecisionIntegration):
         with self.assertRaisesRegex(ValueError,'PORTABLE_SCOPE_DENIED'):
             scoped.call({**request,'packageId':other,'expectedRegistryRevision':None})
 
+    def test_deferred_local_details_preserve_projection_and_require_current_scope(self):
+        ident = self.setup_shared()
+        app = self.app()
+        other = app.request(self.req('create', path='working/details-other', role='working', title='Other',
+            scope='Synthetic', coreModel='rdg-decision-v1', rootReason='Policy details scope'))['packages'][0]['packageId']
+        request = {'method':'read', 'packageId':ident, 'includePlan':True, 'includeDependencyApplications':False}
+        self.command(ident, 'edit', nodeId='CTX', changes={'value':'Updated context'}, cosmetic=False)
+        before = self.sources()
+        full = app.call(request)
+        details_request = {'method':'dependency_details', 'packageId':ident,
+                           'expectedPackageRevision':full['package']['revision']}
+        self.assertTrue(full['dependencyCatalog']['localApplications'])
+        self.assertTrue(full['dependencyCatalog']['invalidationRecords'])
+        decision = app.kernel.for_profile('rdg-decision-v1')
+        with patch.object(decision.POLICIES, 'describe_applications', side_effect=AssertionError('local applications computed')), \
+             patch.object(decision.POLICIES, 'describe_invalidation', side_effect=AssertionError('invalidations computed')):
+            initial = app.call({**request, 'includeDependencyDetails':False})
+        catalog = initial['dependencyCatalog']
+        self.assertNotIn('localApplications', catalog)
+        self.assertNotIn('invalidationRecords', catalog)
+        details = app.call(details_request)
+        self.assertEqual(details.pop('packageId'), ident)
+        self.assertEqual(details.pop('packageRevision'), details_request['expectedPackageRevision'])
+        catalog.update(details)
+        self.assertEqual(initial, full)
+        for value in (True, 0, None):
+            with self.subTest(value=value), self.assertRaisesRegex(ValueError, 'DEPENDENCY_DETAILS_PACKAGE_REVISION'):
+                app.call({**details_request, 'expectedPackageRevision':value})
+        with self.assertRaisesRegex(ValueError, 'READ_DEPENDENCY_DETAILS_DETAIL'):
+            app.call({**request, 'detail':'summary', 'includeDependencyApplications':True, 'includeDependencyDetails':False})
+        with self.assertRaisesRegex(ValueError, 'READ_DEPENDENCY_DETAILS'):
+            app.call({**request, 'includeDependencyDetails':1})
+        self.assertEqual(before, self.sources())
+
+        grant = self.authority.manage('issue', self.admin, {'permissions':['graph.read'],
+            'scopes':['packages/'+self.namespace+'/'+ident]})
+        scoped = self.app(grant['token'])
+        self.assertEqual(scoped.call(details_request), app.call(details_request))
+        with self.assertRaisesRegex(ValueError, 'PORTABLE_SCOPE_DENIED'):
+            scoped.call({**details_request, 'packageId':other})
+        app.request(app.schema('plan_create', ident)['request'])
+        with patch.object(app, '_local_dependency_details', side_effect=AssertionError('stale details computed')):
+            with self.assertRaisesRegex(ValueError, 'DEPENDENCY_DETAILS_PACKAGE_CHANGED'):
+                app.call(details_request)
+
     def test_v2_shared_catalog_cross_process_and_restarted_reader(self):
         ident=self.setup_shared()
         second=self.app().request(self.req('create',path='working/other',role='working',title='Other',scope='Synthetic',coreModel='rdg-decision-v1',rootReason='Test shared policy'))['packages'][0]['packageId']

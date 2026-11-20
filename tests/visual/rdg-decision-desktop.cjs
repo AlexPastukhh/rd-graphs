@@ -13,7 +13,7 @@ async function start(){return new Promise((resolve,reject)=>{let stderr='';child
 (async()=>{try{
  ready=await start();browser=await puppeteer.launch({executablePath:process.env.RDG_CHROME_PATH,headless:true,protocolTimeout:30000,args:['--no-sandbox','--disable-dev-shm-usage'],env});page=await browser.newPage();page.on('pageerror',e=>errors.push(e.message));page.on('request',req=>{try{const body=JSON.parse(req.postData()||'{}');if(body.method)requests.push(body.method);}catch{}});await page.setViewport({width:1440,height:1000});
  const idle=()=>page.waitForFunction(()=>globalThis.RDG_PORTABLE_EDITOR&&!RDG_PORTABLE_EDITOR.busy),state=()=>page.evaluate(()=>RDG_PORTABLE_EDITOR.view),api=message=>page.evaluate(message=>RDG_PORTABLE_EDITOR.api(message),message);
- const click=async(text,scope='.rdg-decision')=>{for(let i=0;i<8;i++){const summary=await page.evaluateHandle(({text,scope})=>{const b=[...document.querySelectorAll(scope+' button')].find(b=>(b.textContent===text||b.getAttribute('aria-label')===text)&&!b.disabled);let outer=null;for(let n=b?.parentElement;n;n=n.parentElement)if(n.tagName==='DETAILS'&&!n.open)outer=n;return outer?.querySelector(':scope > summary')||null;},{text,scope});if(!summary.asElement()){await summary.dispose();break;}await summary.asElement().click();await summary.dispose();await idle();}const target=await page.evaluateHandle(({text,scope})=>[...document.querySelectorAll(scope+' button')].find(b=>(b.textContent===text||b.getAttribute('aria-label')===text)&&!b.disabled),{text,scope});assert(target.asElement(),'Missing '+text);await target.asElement().click();await target.dispose();await idle();assert.equal(await page.$eval('.rdg-status',n=>n.classList.contains('rdg-error')?n.textContent:''),'',text);};
+ const click=async(text,scope='.rdg-decision')=>{for(let i=0;i<8;i++){const summary=await page.evaluateHandle(({text,scope})=>{const b=[...document.querySelectorAll(scope+' button')].find(b=>(b.textContent===text||b.getAttribute('aria-label')===text)&&!b.disabled);let outer=null;for(let n=b?.parentElement;n;n=n.parentElement)if(n.tagName==='DETAILS'&&!n.open)outer=n;return outer?.querySelector(':scope > summary')||null;},{text,scope});if(!summary.asElement()){await summary.dispose();break;}await summary.asElement().click();await summary.dispose();await idle();}const target=await page.evaluateHandle(({text,scope})=>[...document.querySelectorAll(scope+' button')].find(b=>(b.textContent===text||b.getAttribute('aria-label')===text)&&!b.disabled),{text,scope});assert(target.asElement(),'Missing '+text);await target.asElement().click();await target.dispose();await idle();await page.waitForFunction(()=>![...document.querySelectorAll('[data-dependency-details-state=loading]')].some(n=>!n.closest('[hidden]')));assert.equal(await page.$eval('.rdg-status',n=>n.classList.contains('rdg-error')?n.textContent:''),'',text);};
  const field=async(label,value,scope='.rdg-modal')=>{await page.evaluate(({label,value,scope})=>{const row=[...document.querySelectorAll(scope+' label')].find(n=>n.firstChild?.textContent.trim()===label);if(!row)throw Error('Missing field '+label);const n=row.querySelector('input,textarea,select');if(n.type==='checkbox')n.checked=!!value;else n.value=value;n.dispatchEvent(new Event(n.tagName==='SELECT'?'change':'input',{bubbles:true}));},{label,value,scope});await idle();};
  const save=()=>click('Сохранить','.rdg-modal');
  const historyReady=()=>page.waitForSelector('[data-road=history][data-history-state=ready]');
@@ -21,6 +21,58 @@ async function start(){return new Promise((resolve,reject)=>{let stderr='';child
  // Real checkpoint lens fixture through the disposable preview API: the same
  // layout/viewer implementation works for working, ready and lens roles.
  const originalProcessId=(await state()).package.packageId;
+ async function deferredLocalDetailsAcceptance(){
+  const start=requests.length,initial=await state();
+  assert.equal(requests.filter(method=>method==='dependency_details').length,0,'Graph opens without policy details');
+  assert(!Object.hasOwn(initial.dependencyCatalog,'localApplications'));
+  let intercepted;
+  let capture;
+  const held=new Promise(resolve=>{capture=resolve;});
+  const bodyOf=request=>{try{return JSON.parse(request.postData()||'{}');}catch{return {};}};
+  const intercept=request=>{
+   const message=bodyOf(request);
+   if(!intercepted&&message.method==='dependency_details'){
+    intercepted=request;capture(message);
+   }else void request.continue();
+  };
+  await page.setRequestInterception(true);
+  page.on('request',intercept);
+  try{
+   await page.evaluate(()=>[...document.querySelectorAll('.rdg-tools button')].find(n=>n.textContent==='Сведения').click());
+   await page.waitForSelector('[data-dependency-details-state=loading]',{visible:true});
+   assert.deepEqual(await held,{method:'dependency_details',packageId:originalProcessId,
+     expectedPackageRevision:initial.package.revision});
+   const canvas=await page.$('.rdg-graph');
+   const road=await page.$('.rdg-road');
+   assert(canvas&&road);
+   assert.equal(await page.$('[data-dependency-filters]'),null,'Loading is distinct from an empty panel');
+   await intercepted.respond({status:400,contentType:'application/json',
+     body:JSON.stringify({error:'PORTABLE_APP_DEPENDENCY_DETAILS_PACKAGE_CHANGED',definite:true})});
+   await page.waitForSelector('[data-dependency-details-state=stale]',{visible:true});
+   assert(await canvas.evaluate(node=>node.isConnected),'Detail state leaves Graph mounted');
+   assert(await road.evaluate(node=>node.isConnected),'Detail state leaves Plan mounted');
+   await click('Перечитать снимок','[data-dependency-details-state=stale]');
+   await page.waitForSelector('[data-dependency-filters]',{visible:true});
+   const loaded=await state();
+   assert(Array.isArray(loaded.dependencyCatalog.localApplications));
+   assert(Array.isArray(loaded.dependencyCatalog.invalidationRecords));
+   assert.equal(requests.slice(start).filter(method=>method==='dependency_details').length,2);
+  }finally{
+   if(intercepted&&!intercepted.isInterceptResolutionHandled())await intercepted.continue();
+   page.off('request',intercept);
+   await page.setRequestInterception(false);
+  }
+  await page.click('[data-inspector-tab=recommendations]');await idle();
+  const recommendationStart=requests.length;
+  await page.evaluate(()=>RDG_PORTABLE_EDITOR.refresh());
+  await idle();
+  assert.equal(await page.$eval('[data-inspector-tab=recommendations]',n=>n.getAttribute('aria-selected')),'true');
+  assert(!Object.hasOwn((await state()).dependencyCatalog,'localApplications'));
+  assert.equal(requests.slice(recommendationStart).includes('dependency_details'),false,'Hidden dependency tab leaves details deferred');
+  await click('Закрыть сведения','.rdg-inspector');
+  checks.push('Explorer and an unrelated inspector tab open without local dependency details; explicit tab loads a revision-pinned snapshot and recovers from a stale response');
+ }
+ await deferredLocalDetailsAcceptance();
  // This example is an ordinary synthetic Process Graph constructed through
  // public create/core-edit calls. Application startup has no demo injection.
  const writeExample=async request=>{const pre=await api({method:'preflight',request});
@@ -1623,7 +1675,30 @@ async function start(){return new Promise((resolve,reject)=>{let stderr='';child
  checks.push('focus drag is session-local, survives reentry, resets independently, and Back preserves owner layout');
  const frame=await page.$eval('.rdg-decision',n=>({top:n.getBoundingClientRect().top,left:n.getBoundingClientRect().left,bottom:n.getBoundingClientRect().bottom}));assert.deepEqual(frame,{top:0,left:0,bottom:1000});checks.push('manual launch: fullscreen three-strip desktop, explicit Process Graph, no synthetic Working Graph owner');
  await page.screenshot({path:path.join(base,'initial-process.png'),fullPage:true});
-  await api({method:'view_session',sessionId:(await page.evaluate(()=>RDG_PORTABLE_EDITOR.session.id))});requests.length=0;let started=Date.now();await click('☷ RDG Viewer');await click('Закрыть Explorer');timings.explorerRoundTripMs=Date.now()-started;assert(requests.every(m=>m==='view_session'),JSON.stringify(requests));requests.length=0;started=Date.now();await click('Сведения','.rdg-tools');await click('Закрыть сведения');timings.inspectorRoundTripMs=Date.now()-started;assert(requests.every(m=>m==='view_session'),JSON.stringify(requests));requests.length=0;started=Date.now();await page.click('[data-entity-id="R1"]');await idle();timings.focusMs=Date.now()-started;assert.equal(requests.filter(m=>m==='read').length,1);assert(!requests.some(m=>['catalog','recommendation_catalog'].includes(m)),JSON.stringify(requests));await click('Весь процесс','.rdg-tools');await click('Закрыть сведения');checks.push('Explorer and inspector use view-state requests only; focus reads one current Graph without catalog rescans');
+ await api({method:'view_session',sessionId:(await page.evaluate(()=>RDG_PORTABLE_EDITOR.session.id))});
+ requests.length=0;
+ let started=Date.now();
+ await click('☷ RDG Viewer');await click('Закрыть Explorer');
+ timings.explorerRoundTripMs=Date.now()-started;
+ assert(requests.every(m=>m==='view_session'),JSON.stringify(requests));
+ const needsDetails=!Object.hasOwn((await state()).dependencyCatalog,'localApplications');
+ requests.length=0;
+ started=Date.now();
+ await click('Сведения','.rdg-tools');await click('Закрыть сведения');
+ timings.inspectorRoundTripMs=Date.now()-started;
+ assert(requests.every(m=>m==='view_session'||m==='dependency_details'),JSON.stringify(requests));
+ assert.equal(requests.filter(m=>m==='dependency_details').length,Number(needsDetails));
+ requests.length=0;
+ await click('Сведения','.rdg-tools');await click('Закрыть сведения');
+ assert(requests.every(m=>m==='view_session'),'Inspector reuses details of its current snapshot');
+ requests.length=0;
+ started=Date.now();
+ await page.click('[data-entity-id="R1"]');await idle();
+ timings.focusMs=Date.now()-started;
+ assert.equal(requests.filter(m=>m==='read').length,1);
+ assert(!requests.some(m=>['catalog','recommendation_catalog'].includes(m)),JSON.stringify(requests));
+ await click('Весь процесс','.rdg-tools');await click('Закрыть сведения');
+ checks.push('Explorer uses view-state requests; inspector loads details once per snapshot; focus reads one Graph without catalog rescans');
  await click('☷ RDG Viewer');const canvasBefore=await page.$eval('.rdg-canvas',n=>n.getBoundingClientRect().width);assert.equal(await page.$$eval('.rdg-tree-process[data-process-id="'+processId+'"]',a=>a.length),1);assert((await page.$eval('.rdg-tree-process[data-process-id="'+processId+'"]',n=>n.textContent)).includes('Рабочих областей пока нет'));
  await page.$eval('[data-package-id="'+processId+'"]',n=>{
    const button=[...n.parentElement.querySelectorAll('button')].find(b=>b.textContent.trim()==='+ Новая рабочая область');
