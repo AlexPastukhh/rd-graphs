@@ -2104,17 +2104,19 @@ class Application:
                 self.check(row['head']['revision'] == expected_package_revision, 'HISTORY_PACKAGE_CHANGED')
             directory=self.store.package_path(row['path'])
             inventory=self.store.inventory(row)
-            # Full History only: compact/item must still run their own input
-            # validation and projection. Auth, snapshot, every inventory byte,
-            # and the shared writer barrier are checked even on a cache hit.
+            # Reuse reconstruction only after auth, snapshot, and verification
+            # of the entire inventory under the shared writer barrier.
             history_key=None
-            if detail in (None,'full'):
-                evidence={'version':'history-full-v1','owner':ident,
+            if detail != 'item':
+                evidence={'version':'history-reconstruction-v1','owner':ident,
                           'head':row['headSHA256'],'inventory':inventory,
                           'view':view,'detail':detail}
                 history_key=hashlib.sha256(CACHE.ProjectionCache.encode(evidence)).digest()
                 cached=self._history_cache.get(history_key)
-                if cached is not None:return cached
+                if cached is not None:
+                    if detail=='compact':
+                        return COMPACT.project_history(self,row,cached,include or [],limit,cursor,view)
+                    return cached
             records=[];seen_heads=set()
             def artifact(relative,sha):
                 raw=self.store.io.safe_path(directory,relative,True).read_bytes()
@@ -2204,5 +2206,5 @@ class Application:
                 return {'schemaVersion':1,'packageId':ident,'snapshot':COMPACT.pin(self,row),
                         'detail':'item','loaded':{'event':True},'item':copy.deepcopy(match)}
             output=COMPACT.project_history(self,row,result,include or [],limit,cursor,view) if detail=='compact' else result
-            if history_key is not None:self._history_cache.put(history_key,output)
+            if history_key is not None:self._history_cache.put(history_key,result)
             return output

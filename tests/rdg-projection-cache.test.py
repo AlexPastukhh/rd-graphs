@@ -62,18 +62,48 @@ class ProjectionCacheTests(unittest.TestCase):
             self.app.history(self.owner,view={'kind':'graph','historyMode':'all'})
             self.assertEqual(verified.call_count,1)
 
-    def test_compact_and_item_never_cache_or_bypass_invalid_options(self):
-        opts={'detail':'compact','include':['events']}
-        expected=self.uncached(**opts)
-        self.assertEqual(self.app.history(self.owner,**opts),expected)
-        self.assertEqual(self.app.history(self.owner,**opts),expected)
-        self.assertEqual(len(self.app._history_cache),0)
-        with self.assertRaisesRegex(ValueError,'READ_HISTORY_INCLUDE'):
-            self.app.history(self.owner,detail='compact',include=('events',))
-        event=self.uncached()['events'][0]['event']['id']
-        self.assertEqual(self.app.history(self.owner,detail='item',event_id=event),
-                         self.uncached(detail='item',event_id=event))
-        self.assertEqual(len(self.app._history_cache),0)
+    def test_compact_history_reuses_reconstruction_across_pages_and_facets(self):
+        self.app.request(self.app.schema('plan_create', self.owner)['request'])
+        opts = {'detail': 'compact', 'limit': 1}
+        expected = self.uncached(**opts)
+        first = self.app.history(self.owner, **opts)
+        self.assertEqual(first, expected)
+        cursor = first['data']['events']['page']['nextCursor']
+        self.assertTrue(cursor)
+        first['data']['events'].clear()
+        second = self.uncached(**opts, cursor=cursor)
+        plan = self.uncached(detail='compact', include=['planVersions'])
+        with patch.object(self.app.store, 'inventory', wraps=self.app.store.inventory) as verified, \
+             patch.object(self.app.migration, 'historical_records', side_effect=AssertionError('cache miss')):
+            self.assertEqual(self.app.history(self.owner, **opts), expected)
+            self.assertEqual(self.app.history(self.owner, **opts, cursor=cursor), second)
+            self.assertEqual(self.app.history(self.owner, detail='compact', include=['planVersions']), plan)
+            self.assertEqual(verified.call_count, 3)
+            for invalid, code in (
+                ({'include': ('events',)}, 'READ_HISTORY_INCLUDE'),
+                ({'limit': 0}, 'LIMIT'),
+                ({'cursor': 'invalid'}, 'CURSOR'),
+            ):
+                with self.subTest(invalid=invalid), self.assertRaisesRegex(ValueError, code):
+                    self.app.history(self.owner, detail='compact', **invalid)
+        self.assertEqual(len(self.app._history_cache), 1)
+
+    def test_compact_history_keeps_filtered_views_separate(self):
+        for mode in ('all', 'important', 'technical'):
+            opts = {'detail': 'compact', 'view': {'kind': 'graph', 'historyMode': mode}}
+            expected = self.uncached(**opts)
+            self.assertEqual(self.app.history(self.owner, **opts), expected)
+            with patch.object(self.app.migration, 'historical_records', side_effect=AssertionError('cache miss')):
+                self.assertEqual(self.app.history(self.owner, **opts), expected)
+        self.assertEqual(len(self.app._history_cache), 3)
+
+    def test_invalid_compact_request_and_item_do_not_populate_cache(self):
+        with self.assertRaisesRegex(ValueError, 'READ_HISTORY_INCLUDE'):
+            self.app.history(self.owner, detail='compact', include=('events',))
+        event = self.uncached()['events'][0]['event']['id']
+        opts = {'detail': 'item', 'event_id': event}
+        self.assertEqual(self.app.history(self.owner, **opts), self.uncached(**opts))
+        self.assertEqual(len(self.app._history_cache), 0)
 
     def test_revoke_permission_still_denies_warm_history(self):
         self.app.history(self.owner)
@@ -81,15 +111,15 @@ class ProjectionCacheTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'DENIED'):
                 self.app.history(self.owner)
     def test_revoked_real_grant_and_new_application_cannot_reuse_cache(self):
-        self.app.history(self.owner)
         fresh=self.fixture.app()
         self.assertEqual(len(fresh._history_cache),0)
-        self.assertEqual(fresh.history(self.owner),self.app.history(self.owner))
+        for detail in (None, 'compact'):
+            self.assertEqual(fresh.history(self.owner, detail=detail), self.app.history(self.owner, detail=detail))
         self.fixture.authority.manage('revoke',self.fixture.admin,{'id':self.fixture.grant_id})
-        with self.assertRaisesRegex(ValueError,'TOKEN_REVOKED'):
-            self.app.history(self.owner)
-        with self.assertRaisesRegex(ValueError,'TOKEN_REVOKED'):
-            fresh.history(self.owner)
+        for reader in (self.app, fresh):
+            for detail in (None, 'compact'):
+                with self.subTest(detail=detail), self.assertRaisesRegex(ValueError, 'TOKEN_REVOKED'):
+                    reader.history(self.owner, detail=detail)
 
     def test_tampered_historical_artifact_still_fails_warm_history(self):
         self.app.history(self.owner)
@@ -106,6 +136,22 @@ class ProjectionCacheTests(unittest.TestCase):
             path.write_bytes(original)
         self.assertEqual(self.app.history(self.owner),self.uncached())
 
+    def test_tampered_historical_graph_still_fails_warm_compact_history(self):
+        expected = self.app.history(self.owner, detail='compact')
+        row = self.app.snapshot(self.owner, True, False)
+        heads = list(self.app.store.head_chain(row))
+        relative = heads[-1]['current']['graph']
+        self.assertNotEqual(relative, row['head']['current']['graph'])
+        path = self.app.store.io.safe_path(self.app.store.package_path(row['path']), relative, True)
+        original = path.read_bytes()
+        try:
+            path.write_bytes(original + b' ')
+            with self.assertRaisesRegex(ValueError, 'INVENTORY_BYTES_MISSING'):
+                self.app.history(self.owner, detail='compact')
+        finally:
+            path.write_bytes(original)
+        self.assertEqual(self.app.history(self.owner, detail='compact'), expected)
+
     def test_new_head_invalidates_full_history(self):
         before=self.app.history(self.owner)
         self.fixture.command(self.owner,'edit',nodeId=self.subject,
@@ -118,6 +164,10 @@ class ProjectionCacheTests(unittest.TestCase):
     def test_plan_only_commit_invalidates_history_even_with_same_graph(self):
         before_graph=self.app.snapshot(self.owner,True,False)['graph']
         before=self.app.history(self.owner)
+        opts = {'detail': 'compact', 'limit': 1}
+        compact = self.app.history(self.owner, **opts)
+        cursor = compact['data']['events']['page']['nextCursor']
+        self.assertTrue(cursor)
         request=self.app.schema('plan_create',self.owner)['request']
         self.app.request(request)
         self.assertEqual(self.app.snapshot(self.owner,True,False)['graph'],before_graph)
@@ -125,20 +175,26 @@ class ProjectionCacheTests(unittest.TestCase):
         self.assertNotEqual(before,after)
         self.assertTrue(after['planVersions'])
         self.assertEqual(after,self.uncached())
-        self.assertEqual(len(self.app._history_cache),2)
+        self.assertEqual(self.app.history(self.owner, **opts), self.uncached(**opts))
+        with patch.object(self.app.migration, 'historical_records', side_effect=AssertionError('cache miss')):
+            with self.assertRaisesRegex(ValueError, 'CURSOR_STALE'):
+                self.app.history(self.owner, **opts, cursor=cursor)
+        self.assertEqual(len(self.app._history_cache),4)
 
     def test_plan_read_denied_after_warm_cache(self):
         request=self.app.schema('plan_create',self.owner)['request']
         self.app.request(request)
-        self.app.history(self.owner)
+        for detail in (None, 'compact'):
+            self.app.history(self.owner, detail=detail)
         authorized=self.app.authorize
         def check(ident,permissions,path=None):
             if 'plan.read' in permissions:
                 raise ValueError('AUTH_MISSING_PERMISSION: plan.read')
             return authorized(ident,permissions,path)
         with patch.object(self.app,'authorize',side_effect=check):
-            with self.assertRaisesRegex(ValueError,'AUTH_MISSING_PERMISSION: plan.read'):
-                self.app.history(self.owner)
+            for detail in (None, 'compact'):
+                with self.subTest(detail=detail), self.assertRaisesRegex(ValueError, 'AUTH_MISSING_PERMISSION: plan.read'):
+                    self.app.history(self.owner, detail=detail)
         self.assertEqual(self.app.history(self.owner),self.uncached())
 
     def test_failed_history_reconstruction_never_populates_cache(self):
