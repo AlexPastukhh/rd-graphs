@@ -41,11 +41,19 @@ class HelperCommandsTest(unittest.TestCase):
         self.assertEqual(first["schemaVersion"], 2)
         self.assertEqual(first["kind"], "rdg-chat-commands")
         self.assertTrue(first["complete"])
-        self.assertEqual([g["id"] for g in first["groups"]], ["start", "lenses"])
-        self.assertEqual(len(first["commands"]), 22)
+        self.assertEqual([(g["id"], g["title"]) for g in first["groups"]], [
+            ("start", "Начало работы"),
+            ("lenses", "Структурированные линзы"),
+            ("plain-text", "Плейн-текст"),
+        ])
+        self.assertEqual(len(first["commands"]), 24)
         self.assertEqual(first["commands"], sorted(first["commands"], key=lambda c: c["id"]))
         lens = [c for c in first["commands"] if c["kind"] == "lens-launcher"]
         self.assertEqual(len(lens), 21)
+        self.assertEqual({c["groupId"] for c in lens}, {"lenses"})
+        plain = [c for c in first["commands"] if c["groupId"] == "plain-text"]
+        self.assertEqual({c["id"] for c in plain}, {"rdg.command.plain-task", "rdg.command.plain-lens"})
+        self.assertTrue(all(c["kind"] == "instruction" and not c["lensRefs"] for c in plain))
         self.assertEqual({c["lensRefs"][0]["lensKey"] for c in lens}, module.lens_keys())
         self.assertIn("rdg.lens.operate", [c["id"] for c in lens])
         self.assertIn("rdg.lens.develop", [c["id"] for c in lens])
@@ -132,7 +140,7 @@ class HelperCommandsTest(unittest.TestCase):
         })
         self.write_source(data)
         catalog = module.validate()
-        self.assertEqual(len(catalog["commands"]), 24)
+        self.assertEqual(len(catalog["commands"]), len(self.original["commands"]) + 2)
         data["commands"][-1]["lensRefs"].append(data["commands"][-1]["lensRefs"][0])
         self.write_source(data)
         with self.assertRaisesRegex(ValueError, "RDG_COMMAND_DUPLICATE_LENS"):
