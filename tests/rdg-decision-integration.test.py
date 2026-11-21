@@ -142,8 +142,8 @@ class DecisionIntegration(BASE.PortableApplication):
         self.assertEqual(self.current(ident)['graph'],graph)
 
     def test_pr6_fundamental_work_variant_uses_profile_dispatch(self):
-        run=subprocess.run(['python3','-B',str(ROOT/'tools/rdg-agent.py'),'lens','--lens','work',
-            '--model-profile','rdg-decision-v1'],capture_output=True,text=True,timeout=30)
+        run=subprocess.run(['python3','-B',str(ROOT/'tools/rdg-agent.py'),'lens','--offline-snapshot',
+            '--lens','work','--model-profile','rdg-decision-v1'],capture_output=True,text=True,timeout=30)
         self.assertEqual(run.returncode,0,run.stderr);value=json.loads(run.stdout)
         self.assertTrue(value['validated']);self.assertEqual(value['graph']['coreModel'],'rdg-decision-v1')
         self.assertEqual(value['graphWrites'],0);self.assertEqual(value['planWrites'],0)

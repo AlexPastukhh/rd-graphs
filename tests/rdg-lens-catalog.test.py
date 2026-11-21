@@ -16,14 +16,20 @@ A=SourceFileLoader('lens_catalog_agent',str(ROOT/'tools/rdg-agent.py')).load_mod
 
 
 class Catalog(unittest.TestCase):
-    def test_guidance_is_readable_without_owner_or_credentials(self):
+    def test_archived_guidance_requires_explicit_offline_selection(self):
         env={k:v for k,v in os.environ.items() if k not in
              ('RDG_AUTH_STORE','RDG_AUTH_TOKEN','RDG_AGENT_CONTEXT')}
         for command in [('lenses',),('lens','--lens','explore')]:
-            result=subprocess.run(['python3','-B',str(ROOT/'tools/rdg-agent.py'),*command],
+            invocation=['python3','-B',str(ROOT/'tools/rdg-agent.py'),*command]
+            unbound=subprocess.run(invocation,capture_output=True,text=True,env=env,timeout=30)
+            self.assertNotEqual(unbound.returncode,0)
+            self.assertIn('LENS_SERVER_CONTEXT_REQUIRED',unbound.stderr)
+            result=subprocess.run([*invocation,'--offline-snapshot'],
                 capture_output=True,text=True,env=env,timeout=30)
             self.assertEqual(result.returncode,0,result.stderr)
             data=json.loads(result.stdout)
+            self.assertEqual(data['source'],'repository-snapshot')
+            self.assertFalse(data['current'])
             self.assertEqual(data['graphWrites'],0)
             self.assertEqual(data['planWrites'],0)
             if command[0]=='lenses':
@@ -39,7 +45,7 @@ class Catalog(unittest.TestCase):
         catalog=A.read_lens_catalog()
         policy=json.loads((ROOT/'docs/DOCS-POLICY.json').read_text())
         routes=catalog['instructionCoverage']
-        self.assertEqual(set(policy['normative']),{r['source'] for r in routes})
+        self.assertEqual(set(policy['normative'])|set(policy['frozenLensSources']),{r['source'] for r in routes})
         for route in routes:
             self.assertTrue((ROOT/route['source']).is_file())
             graph=A.lens_definition(route['lens'])[2]
@@ -89,7 +95,7 @@ console.log(graphs.length);
             A.PORTABLE.module('rdg-model-profiles').validate_role(graph,'lens')
             self.assertEqual(graph['events'],[]);self.assertTrue(all(n['selectionState']=='discovered' for n in graph['nodes'] if n['kind']=='decision'))
             self.assertTrue(any(e['type']=='CANON_FOR' for e in graph['edges']));definitions.append(graph)
-            out=subprocess.run(['python3','-B',str(ROOT/'tools/rdg-agent.py'),'lens','--lens',entry['key'],'--model-profile','rdg-decision-v1'],capture_output=True,text=True,timeout=30,env={k:v for k,v in os.environ.items() if k not in ('RDG_AUTH_STORE','RDG_AUTH_TOKEN','RDG_AGENT_CONTEXT')})
+            out=subprocess.run(['python3','-B',str(ROOT/'tools/rdg-agent.py'),'lens','--lens',entry['key'],'--model-profile','rdg-decision-v1','--offline-snapshot'],capture_output=True,text=True,timeout=30,env={k:v for k,v in os.environ.items() if k not in ('RDG_AUTH_STORE','RDG_AUTH_TOKEN','RDG_AGENT_CONTEXT')})
             self.assertEqual(out.returncode,0,out.stderr);self.assertEqual(json.loads(out.stdout)['graph']['coreModel'],'rdg-decision-v1')
         code="const fs=require('node:fs'),m=require(process.argv[1]);for(const g of JSON.parse(fs.readFileSync(0,'utf8')))m.parsePreparedLens(g);"
         out=subprocess.run(['node','-e',code,str(ROOT/'tools/rdg-lens-session.cjs')],input=json.dumps(definitions),capture_output=True,text=True,timeout=30);self.assertEqual(out.returncode,0,out.stderr);self.assertEqual(len(definitions),21)

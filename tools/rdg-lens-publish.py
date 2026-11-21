@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
-"""Publish the reviewed 19-lens content through existing Application operations.
+"""Inspect a frozen lens import and exercise it on isolated local fixtures.
 
-Dry planning is the default. --apply uses the same durable journal for every
-preflight/apply/receipt. Existing lens identities, anchors and historical pins
-are preserved; working processes and existing recommendation definitions are not
-rewritten. Supplied owners require the explicit management option.
+The CLI previews a repository snapshot. Published lenses are edited in RDG.
+Fixture tests can still use the original import and receipt workflow locally.
 """
 import argparse
 import copy
@@ -291,6 +289,9 @@ def publish_navigation(client,graphs,state,write,save,progress,*,revise_navigati
 
 
 def run(client,journal_file,*,apply=False,manage_supplied=False,revise_navigation=False,keys=None,progress=print):
+    config = getattr(client, 'config', None)
+    if apply and isinstance(config, dict) and config.get('profile') in ('remote', 'gateway'):
+        raise ValueError('LENS_SNAPSHOT_PUBLISH_RETIRED: edit the published lens through RDG')
     plan,graphs,digest=bundle(keys)
     journal=JOURNAL.Journal(Path(journal_file),{'operations':{},'bundleSHA256':digest,'lensKeys':list(graphs),'verified':{}})
     state=journal.state
@@ -433,8 +434,11 @@ def run(client,journal_file,*,apply=False,manage_supplied=False,revise_navigatio
 if __name__=='__main__':
     parser=argparse.ArgumentParser()
     parser.add_argument('--context',required=True);parser.add_argument('--journal',required=True)
-    parser.add_argument('--apply',action='store_true');parser.add_argument('--manage-existing-supplied',action='store_true')
-    parser.add_argument('--revise-navigation',action='store_true',help='Publish the reviewed next revision of this transfer’s authored advice only')
+    parser.add_argument('--apply',action='store_true',help='Retired for server authoring')
+    parser.add_argument('--manage-existing-supplied',action='store_true',help=argparse.SUPPRESS)
+    parser.add_argument('--revise-navigation',action='store_true',help=argparse.SUPPRESS)
     args=parser.parse_args()
+    if args.apply:
+        parser.error('LENS_SNAPSHOT_PUBLISH_RETIRED: edit the published lens through RDG')
     client=AGENT.portable_application(AGENT.config(args.context))
-    run(client,args.journal,apply=args.apply,manage_supplied=args.manage_existing_supplied,revise_navigation=args.revise_navigation)
+    run(client,args.journal)
