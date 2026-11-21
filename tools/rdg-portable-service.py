@@ -194,6 +194,7 @@ class Application:
             result={k:row[k] for k in ('path','packageId','health')}
             if row.get('head'):result.update({k:row['head'].get(k) for k in ('role','identitySpace','revision','lensKey')})
             if row.get('head',{}).get('role')=='lens':
+                result['lensFormat']=row['head'].get('lensFormat',self.model.DEFAULT_LENS_FORMAT)
                 result['lensCard']={'status':'unavailable','purpose':None,'appliesWhen':None,'workflow':None,'source':None}
             try:
                 if row['health']=='metadata-verified':
@@ -237,7 +238,7 @@ class Application:
 
     OPERATIONS=('create','apply_ready','copy','insert_copy','delete','unlink','core','paper_edit','batch','plan_action',
                 'dependency_add','dependency_remove','lock_set','lock_remove',
-                'place','unplace','plan_create','plan_edit','external_edit','layout_edit','attach_evidence','move','folder_create','folder_move','migrate','recommendation_edit','recommendation_attach','lens_apply','capture_ready','lens_manage')
+                'place','unplace','plan_create','plan_edit','external_edit','layout_edit','attach_evidence','move','folder_create','folder_move','migrate','recommendation_edit','recommendation_attach','lens_apply','capture_ready','lens_manage','lens_format')
 
     def view_session(self,message):
         actor,_=self.authority._actor(self.authority._read(),self.token)
@@ -784,7 +785,9 @@ class Application:
         reference_sha=self.model.digest(row['graph'])
         references={nid:self.model.reference(ident,row['graph'],nid,graph_sha256=reference_sha,node_revision=node['revision'])
                     for nid,node in reference_nodes.items()}
-        return {'decisionContexts':({n['id']:decision.decision_context(row['graph'],n['id']) for n in row['graph']['nodes'] if n['kind']=='decision'} if row['graph']['coreModel']=='rdg-decision-v1' else {}),'findings':(decision.FINDINGS.describe(row['graph'],decision,(view or {}).get('id') if (view or {}).get('kind')=='focus' else row['graph'].get('rootRequirementId')) if row['graph']['coreModel']=='rdg-decision-v1' else []),'dependencyCatalog':dependency_catalog,'package':{k:row['head'][k] for k in ('packageId','role','identitySpace','revision')},
+        package={k:row['head'][k] for k in ('packageId','role','identitySpace','revision')}
+        if package['role']=='lens':package['lensFormat']=row['head'].get('lensFormat',self.model.DEFAULT_LENS_FORMAT)
+        return {'decisionContexts':({n['id']:decision.decision_context(row['graph'],n['id']) for n in row['graph']['nodes'] if n['kind']=='decision'} if row['graph']['coreModel']=='rdg-decision-v1' else {}),'findings':(decision.FINDINGS.describe(row['graph'],decision,(view or {}).get('id') if (view or {}).get('kind')=='focus' else row['graph'].get('rootRequirementId')) if row['graph']['coreModel']=='rdg-decision-v1' else []),'dependencyCatalog':dependency_catalog,'package':package,
                 'capabilities':self.profile_capabilities(row['graph'],row['head']['role']),
                 'immutableDefinition':bool(row['head'].get('lineage',{}).get('supplied') and not row['head'].get('lineage',{}).get('userManaged')),'path':row['path'],'graph':row['graph'],'plan':row['plan'],'layouts':row['layouts'],
                 'references':references,
@@ -817,6 +820,7 @@ class Application:
             self.check(all(v is None for v in (ident,node_id,source_id,command,source_path,source_key,core_model,role,entity_kind)), 'CATALOG_SCHEMA_SELECTORS')
             return {'method':'catalog','schemaVersion':1,'pagination':False,'complete':True,
                 'snapshot':'catalogSHA256 binds the complete visible response under the namespace read barrier',
+                'lensFormat':{'choices':list(self.model.LENS_FORMATS),'default':self.model.DEFAULT_LENS_FORMAT},
                 'lensCard':{'status':['available','missing','invalid','unavailable'],
                     'source':'exact package and graph revisions/SHA256; sourceRef identifies the owning Info',
                     'authoring':{'kind':'info','tags':['rdg:lens-catalog'],
@@ -877,7 +881,9 @@ class Application:
                         rootReason='' if core_model=='rdg-decision-v1' else 'Explicit reason for this process')
             required=['path','role','title','scope','coreModel']
             if profile=='rdg-decision-v1':required.append('rootReason')
-            if selected_role=='lens':req['lensKey']='';required.append('lensKey')
+            if selected_role=='lens':
+                req.update(lensKey='',lensFormat=self.model.DEFAULT_LENS_FORMAT)
+                required.append('lensKey')
         elif op in ('batch','plan_action'):
             self.check(ident is not None,'BATCH_OWNER')
             row=self.snapshot(ident,True)
@@ -976,6 +982,10 @@ class Application:
             elif op=='layout_edit':req.update(expectedLayoutRevision=row['layouts']['revision'] if row['layouts'] else 0,commands=[])
             elif op=='lens_manage':
                 req.update(confirmOwnerManagement=False,note='')
+            elif op=='lens_format':
+                self.check(row['head']['role']=='lens','LENS_FORMAT_ROLE')
+                req['lensFormat']=row['head'].get('lensFormat',self.model.DEFAULT_LENS_FORMAT)
+                required.append('lensFormat')
             elif op=='recommendation_attach':
                 self.check(graph['coreModel']=='rdg-decision-v1','UNSUPPORTED_PROFILE_CAPABILITY');req.update(packageIds=graph['recommendationPackageIds'],note='')
             elif op=='lens_apply':
@@ -985,6 +995,8 @@ class Application:
         core_commands = (self.authoring_commands(graph,row['head']['role']) if 'graph' in locals() else
                          self.authoring_commands({'coreModel':req['coreModel']},req['role']) if op=='create' else self.kernel.COMMANDS)
         return {'request':req,'requiredInput':required,'operations':list(self.OPERATIONS),
+                **({'lensFormatChoices':list(self.model.LENS_FORMATS)} if op in ('capture_ready','lens_format') or
+                   op=='create' and req['role']=='lens' else {}),
                 'profileSelector':{'default':'rdg-core-v1','preferred':'rdg-decision-v1','supported':['rdg-core-v1','rdg-decision-v1'],
                     'rootReasonRequiredFor':['rdg-decision-v1']},
                 'conditionalRequired':{'rootReason':{'when':{'coreModel':'rdg-decision-v1'}}},
@@ -1174,7 +1186,7 @@ class Application:
                 self.check(op not in unsupported, 'UNSUPPORTED_PROFILE_CAPABILITY')
             lineage=row['head'].get('lineage',{})
             if lineage.get('supplied') and (op in ('core','delete','unlink') or
-                                           op=='paper_edit' and not lineage.get('userManaged')):
+                                           op in ('paper_edit','lens_format') and not lineage.get('userManaged')):
                 self.check(False,'PACKAGE_IMMUTABLE')
             rows[ident]=row
             add_check(ident,['graph.read']+(['plan.read'] if plan and row['plan'] is not None else []),row['path']);return row
@@ -1228,9 +1240,15 @@ class Application:
                 self.recommendations.validate_definition(value);reg['packages'].append(value);result.append(new_id);changed=True
             graph['recommendationPackageIds']=result
             if changed:reg['revision']+=1;registry_write()
+        def lens_format(role):
+            if 'lensFormat' not in request:return {}
+            self.check(role=='lens','LENS_FORMAT_ROLE')
+            self.check(request['lensFormat'] in self.model.LENS_FORMATS,'LENS_FORMAT')
+            return {'lensFormat':request['lensFormat']}
         if op=='create':
-            self.check(set(request)<={'op','transactionId','path','role','graph','title','scope','lensKey','coreModel','rootReason'},'CREATE_FIELDS')
+            self.check(set(request)<={'op','transactionId','path','role','graph','title','scope','lensKey','coreModel','rootReason','lensFormat'},'CREATE_FIELDS')
             role=request['role'];self.check(role in ('working','ready','lens'),'CREATE_ROLE')
+            format_fields=lens_format(role)
             ident=str(uuid.uuid5(tx,'package'));space=str(uuid.uuid5(tx,'identity-space'))
             graph=copy.deepcopy(request.get('graph'))
             core_model=request.get('coreModel', graph.get('coreModel') if graph else self.kernel.PROFILE)
@@ -1263,7 +1281,7 @@ class Application:
                     ids=sorted(i for i in decision.support_state(graph)['activeIds'] if decision.entities(graph)[i]['kind']=='requirement');d['activatedRequirementIds']=ids;d['subjects'].update({i:decision.HISTORY.snapshot(decision.entities(graph)[i]) for i in ids})
                 e['historyDetail']=d
             self.kernel.validate_role(graph,role)
-            values={'graph':graph,'role':role,'path':request['path'],'permissions':checks[-1]['permissions']}
+            values={'graph':graph,'role':role,'path':request['path'],'permissions':checks[-1]['permissions'],**format_fields}
             if role=='working' and graph.get('coreModel') != 'rdg-decision-v1':
                 values['plan']=self.empty_plan(str(uuid.uuid5(tx,'plan')),space,graph['title'])
             if role=='lens':
@@ -1276,7 +1294,14 @@ class Application:
             if graph['coreModel']=='rdg-decision-v1' and graph['recommendationPackageIds']:
                 self.check(set(graph['recommendationPackageIds'])<=
                            {p['id'] for p in registry_read()['packages']},'REFERENCE_MISSING:recommendation')
-            changes[ident]=values;effects={'createdPackageId':ident,'role':role}
+            changes[ident]=values;effects={'createdPackageId':ident,'role':role,**format_fields}
+        elif op=='lens_format':
+            self.check(set(request)=={'op','transactionId','targetPackageId','expectedPackageRevision',
+                'expectedGraphRevision','lensFormat'},'LENS_FORMAT_FIELDS')
+            row=read(request['targetPackageId']);expected(row)
+            format_fields=lens_format(row['head']['role'])
+            change(row['packageId'],row,['graph.write'],**format_fields)
+            effects={'previousLensFormat':row['head'].get('lensFormat',self.model.DEFAULT_LENS_FORMAT),**format_fields}
         elif op=='lens_manage':
             self.check(set(request)=={'op','transactionId','targetPackageId','expectedPackageRevision',
                 'expectedGraphRevision','confirmOwnerManagement','note'},'LENS_MANAGE_FIELDS')
@@ -1295,7 +1320,8 @@ class Application:
         elif op in ('copy','insert_copy','capture_ready') or op=='apply_ready' and self.snapshot(request['sourcePackageId'],layouts=False)['graph']['coreModel']=='rdg-decision-v1':
             template=op in ('capture_ready','apply_ready')
             self.check(set(request)<={'op','transactionId','sourcePackageId','sourcePin','focus','includeDescendants','path',
-                'targetPackageId','expectedPackageRevision','expectedGraphRevision','mode','targetRequirementId','parentRequirementId','targetWorkGraphId','role','lensKey','title','recommendationIds','note'},'COPY_FIELDS')
+                'targetPackageId','expectedPackageRevision','expectedGraphRevision','mode','targetRequirementId','parentRequirementId','targetWorkGraphId','role','lensKey','title','recommendationIds','note','lensFormat'},'COPY_FIELDS')
+            format_fields=lens_format(request.get('role') if op=='capture_ready' else None)
             source_id=request['sourcePackageId'];meta=self.metadata(source_id,['graph.read','package.copy'])
             source=read(source_id,'plan' in meta['head']['current']);add_check(source_id,['package.copy'],source['path'])
             self.check(request['sourcePin']=={'revision':source['head']['revision'],'sha256':self.model.digest(source['graph'])},'SOURCE_CAS_MISMATCH')
@@ -1469,12 +1495,13 @@ class Application:
                 role=request.get('role','ready') if op=='capture_ready' else 'copy'
                 self.check(role in ('ready','lens','copy'),'COPY_ROLE')
                 if role in ('ready','lens'):self.kernel.validate_role(graph,role)
-                changes[ident]={'path':destination,'role':role,'permissions':permissions,'lineage':lineage,**values}
+                changes[ident]={'path':destination,'role':role,'permissions':permissions,'lineage':lineage,**values,**format_fields}
                 if role=='lens':
                     self.check(isinstance(request.get('lensKey'),str) and request['lensKey'].strip(),'LENS_KEY_REQUIRED')
                     changes[ident]['lensKey']=request['lensKey']
             effects={'operation':op,'createdPackageId':ident if not target else None,'idMap':mapping,'capture':inventory,
-                'boundaryReferences':graph.get('externalRefs',[]),'planContext':plan_context,'layouts':layout_report,'insertedWorkGraphId':scope}
+                'boundaryReferences':graph.get('externalRefs',[]),'planContext':plan_context,'layouts':layout_report,
+                'insertedWorkGraphId':scope,**format_fields}
         elif op=='external_edit':
             self.check(set(request)<={'op','transactionId','targetPackageId','expectedPackageRevision','expectedGraphRevision',
                 'referenceId','target','remove','note'},'EXTERNAL_EDIT_FIELDS')

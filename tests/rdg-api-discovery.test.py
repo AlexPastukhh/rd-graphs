@@ -8,6 +8,7 @@ import os
 from pathlib import Path
 from types import SimpleNamespace
 import unittest
+import uuid
 from unittest.mock import patch
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -72,6 +73,51 @@ class APIDiscovery(unittest.TestCase):
         self.assertEqual(listed['lenses'][0]['lensCard'],card)
         self.assertEqual(listed['catalogSHA256'],catalog['catalogSHA256'])
         self.assertEqual(self.sources(),before)
+
+    def test_lens_format_is_manual_package_metadata(self):
+        app=self.app()
+        create=app.call({'method':'schema','op':'create','role':'lens','coreModel':'rdg-decision-v1'})['request']
+        create.update(path='lenses/format-test',lensKey='format-test',title='Format fixture',
+                      scope='Isolated test',rootReason='Test lens metadata')
+        del create['lensFormat']
+        ident=app.request(create)['packages'][0]['packageId']
+        self.catalog_info(ident)
+        before=app.read(ident)
+        self.assertEqual(before['package']['lensFormat'],'structured')
+
+        form=app.call({'method':'schema','op':'lens_format','packageId':ident})
+        self.assertEqual(form['lensFormatChoices'],['structured','textual'])
+        request={**form['request'],'lensFormat':'textual'}
+        before_sources=self.sources()
+        invalid={**request,'lensFormat':'guessed'}
+        with self.assertRaisesRegex(ValueError,'LENS_FORMAT'):
+            app.call({'method':'preflight','request':invalid})
+        preview=app.call({'method':'preflight','request':request})
+        self.assertEqual(self.sources(),before_sources)
+        self.assertEqual(preview['effects'],{'previousLensFormat':'structured','lensFormat':'textual'})
+        message={'method':'apply','request':request,'expectedInputBinding':preview['inputBinding']}
+        result=app.call(message)
+        self.assertTrue(result['published'])
+
+        restarted=self.app()
+        after=restarted.read(ident)
+        self.assertEqual(after['package']['revision'],before['package']['revision']+1)
+        self.assertEqual(after['package']['lensFormat'],'textual')
+        self.assertEqual(after['graph'],before['graph'])
+        self.assertEqual(after['references'],before['references'])
+        self.assertEqual(restarted.catalog()['packages'][0]['lensFormat'],'textual')
+        replay=restarted.call(message)
+        self.assertTrue(replay['idempotent'])
+        self.assertEqual(replay['packages'][0]['receipt'],result['packages'][0]['receipt'])
+        self.assertEqual(restarted.read(ident)['package'],after['package'])
+
+        stale={**form['request'],'transactionId':str(uuid.uuid4())}
+        with self.assertRaisesRegex(ValueError,'PACKAGE_CAS_MISMATCH'):
+            restarted.call({'method':'preflight','request':stale})
+        switch_back=restarted.call({'method':'schema','op':'lens_format','packageId':ident})['request']
+        self.assertTrue(restarted.request({**switch_back,'lensFormat':'structured'})['published'])
+        self.assertEqual(restarted.catalog()['packages'][0]['lensFormat'],'structured')
+        self.assertEqual(restarted.read(ident)['graph'],before['graph'])
 
     def test_lens_catalog_missing_and_ambiguous_metadata_never_borrows_drafts(self):
         ident=self.create('lens');app=self.app()

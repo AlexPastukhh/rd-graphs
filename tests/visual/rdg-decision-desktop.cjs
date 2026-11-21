@@ -1933,6 +1933,38 @@ async function start(){return new Promise((resolve,reject)=>{let stderr='';child
  await findingAcceptance();
  await inheritedHistoryAcceptance();
  await temporalPlanAcceptance();
+
+ const legacyLens=(await api({method:'schema',op:'create',role:'lens',coreModel:'rdg-decision-v1'})).request;
+ delete legacyLens.lensFormat;
+ Object.assign(legacyLens,{path:'lenses/legacy-format-ui',lensKey:'legacy-format-ui',title:'Линза без отметки',scope:'Synthetic lens',rootReason:'Verify legacy display'});
+ const legacyLensId=(await writeExample(legacyLens)).packages[0].packageId;
+ const formatSource=(await api({method:'schema',op:'create',role:'working',coreModel:'rdg-decision-v1'})).request;
+ Object.assign(formatSource,{path:'processes/lens-format-ui',title:'Граф для создания линзы',scope:'Synthetic capture source',rootReason:'Verify manual lens format'});
+ const formatSourceId=(await writeExample(formatSource)).packages[0].packageId;
+ await page.evaluate(id=>RDG_PORTABLE_EDITOR.open(id,{kind:'graph'}),formatSourceId);await idle();
+ await click('Сохранить как готовый граф…','.rdg-tools');
+ await field('Тип','lens');await field('Формат','textual');
+ await field('Название готового графа','Линза с отметкой');
+ await field('Папка','lenses/manual-format-ui');await field('Ключ линзы','manual-format-ui');
+ await field('Основание','Проверка произвольного формата');
+ await click('Проверить упаковку','.rdg-modal');await save();
+ const formatsCatalog=await api({method:'catalog'});
+ const capturedLensId=formatsCatalog.packages.find(row=>row.lensKey==='manual-format-ui').packageId;
+ const explorerLabel=id=>page.$eval('.rdg-explorer [data-package-id="'+id+'"] small',n=>n.textContent);
+ const labelStart=requests.length;
+ if(!await page.$('.rdg-explorer'))await click('☷ RDG Viewer');
+ assert.equal(await explorerLabel(legacyLensId),'Структурированная');
+ assert.equal(await explorerLabel(capturedLensId),'Текстовая');
+ assert.equal(requests.slice(labelStart).filter(method=>method==='read').length,0);
+ await click('Линза с отметкой','.rdg-explorer');
+ const capturedGraph=(await state()).graph;
+ await click('Изменить формат…','.rdg-ready');
+ await field('Формат','structured');await click('Проверить формат','.rdg-modal');await save();
+ assert.equal(await explorerLabel(capturedLensId),'Структурированная');
+ assert.equal((await state()).package.lensFormat,'structured');
+ assert.deepEqual((await state()).graph,capturedGraph);
+ checks.push('Explorer labels both lens formats from catalog without owner reads, capture sets the mark, and the editor can switch it without changing Graph');
+
   referenceServer=http.createServer((req,res)=>{res.setHeader('Content-Type','text/html; charset=utf-8');res.end(fs.readFileSync(path.join(ROOT,'tests/visual/rdg-ui-prototype.html')));});await new Promise(r=>referenceServer.listen(0,'127.0.0.1',r));const reference=page;await reference.setViewport({width:1440,height:1000});await reference.goto('http://127.0.0.1:'+referenceServer.address().port,{waitUntil:'load'});await reference.screenshot({path:path.join(base,'prototype-reference.png'),fullPage:true});assert.deepEqual(errors,[]);
  const result={pass:true,cases:checks.length,checks,timings,artifacts:base,windowsRuntimeVerified:false};fs.writeFileSync(path.join(base,'result.json'),JSON.stringify(result,null,2));console.log(JSON.stringify(result));
  }catch(e){fs.writeFileSync(path.join(base,'failure.json'),JSON.stringify({error:safe(e),checks,errors},null,2));if(page)await page.screenshot({path:path.join(base,'failure.png'),fullPage:true}).catch(()=>{});console.error('Artifacts: '+base);throw e;}finally{if(referenceServer)await new Promise(r=>referenceServer.close(r));if(browser)await browser.close();if(child&&child.exitCode===null){const exit=new Promise(r=>child.once('exit',r));child.kill();await exit;}}})().catch(e=>{console.error(safe(e));process.exitCode=1;});

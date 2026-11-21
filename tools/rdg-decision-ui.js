@@ -419,6 +419,9 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
  function button(parent,text,fn,disabled=false){const b=el('button',text);b.type='button';b.disabled=disabled;b.onclick=e=>run(()=>fn(e));parent.append(b);return b;}
  function field(parent,label,value='',type='text',onchange=null){const row=el('label',label+' '),n=el(type==='textarea'?'textarea':'input');if(type!=='textarea')n.type=type;if(type==='checkbox')n.checked=!!value;else n.value=value??'';row.append(n);parent.append(row);if(onchange)n.oninput=()=>onchange(type==='checkbox'?n.checked:n.value);return n;}
  function select(parent,label,items,value,onchange=null){const row=el('label',label+' '),n=el('select');for(const [id,text] of items){const o=el('option',text);o.value=id;n.append(o);}n.value=value??items[0]?.[0]??'';row.append(n);parent.append(row);if(onchange)n.onchange=()=>onchange(n.value);return n;}
+ const lensFormatLabels={structured:'Структурированная',textual:'Текстовая'};
+ const lensFormatChoices=Object.entries(lensFormatLabels);
+ function lensFormatLabel(value){return lensFormatLabels[value]||lensFormatLabels.structured;}
  function screen(){return session?.screens.find(s=>s.id===session.activeScreenId);}
  function note(text,isError=false){message=text;error=isError;const n=root.querySelector('.rdg-status');if(n){n.textContent=text;n.classList.toggle('rdg-error',isError);}}
  function sync(mutator,renderAfter=false){queue=queue.catch(()=>{}).then(async()=>{
@@ -590,7 +593,7 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
    await sync((v,t)=>{t.spec={...t.spec,kind:'graph',groupIds:[]};delete t.spec.id;delete t.spec.camera;delete t.spec.focusPositions;t.inspector=null;});
    return load();
   }
-  const meta=graphMeta(s.packageId);if(meta)Object.assign(meta,{revision:snapshot.package.revision,title:snapshot.graph.title,workGraphs:snapshot.graph.workGraphs,recommendationPackageIds:snapshot.graph.recommendationPackageIds});form=s.draft?.open?s.draft.form?.mode:null;
+  const meta=graphMeta(s.packageId);if(meta)Object.assign(meta,{revision:snapshot.package.revision,title:snapshot.graph.title,workGraphs:snapshot.graph.workGraphs,recommendationPackageIds:snapshot.graph.recommendationPackageIds,...(snapshot.package.lensFormat?{lensFormat:snapshot.package.lensFormat}:{})});form=s.draft?.open?s.draft.form?.mode:null;
   history=null;
   const roadHistory=isProcess()?{screenId:s.id,snapshot,state:'loading'}:null;
   historyLoad=roadHistory;
@@ -623,7 +626,7 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
  }
  async function refresh(){markdownView=null;if(pending)throw Error('Завершите предварительную проверку.');await flushDraft();if(!session)return start();session=await call({method:'view_session',sessionId:session.id});return load({catalogs:true});}
  async function schema(op,nodeId,extra={}){return (await call({method:'schema',op,packageId:screen().packageId,nodeId,...extra})).request;}
- function draftStale(){const d=draftValue();return !!snapshot&&(d.baseGraphRevision!=null?d.baseGraphRevision!==snapshot.graph.revision:d.basePackageRevision!=null&&d.basePackageRevision!==snapshot.package.revision);}
+ function draftStale(){const d=draftValue();return !!snapshot&&(d.form?.mode!=='lensFormat'&&d.baseGraphRevision!=null?d.baseGraphRevision!==snapshot.graph.revision:d.basePackageRevision!=null&&d.basePackageRevision!==snapshot.package.revision);}
  function checkDraft(){if(draftStale())throw Error('Данные изменились. Черновик сохранён; перечитайте изменения и обновите его основание.');}
  async function prepare(request){if(pending)throw Error('Завершите предыдущую проверку.');const exact=clone(request);const preview=await call({method:'preflight',request:exact});pending={request:exact,preview,uncertain:false};note('Проверьте последствия перед сохранением.');render();return preview;}
  async function commit(){if(!pending)return;const exact=pending.request;const origin=clone(draftValue().form||{});let result;
@@ -634,7 +637,7 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
    if(exact.command==='add'&&exact.data?.entity?.kind==='context')contextBank.selectedId=exact.data.entity.id;
    if(exact.command==='delete'&&exact.nodeId===contextBank.selectedId)contextBank.selectedId=null;
   }
-  await sync((v,s)=>{if(exact.op==='create'&&result.packages?.[0]){const id=result.packages[0].packageId;if(!s){s=newScreen(id,{kind:'graph'});v.screens.push(s);v.activeScreenId=s.id;v.explorer.open=false;}else{s.packageId=id;s.spec={kind:'graph'};s.inspector=null;s.trail=[];}delete v.explorer.drafts['new-process'];}if(exact.op==='recommendation_edit'){delete v.explorer.drafts[exact.definition?.id||exact.packageId];if(s?.draft)s.draft.open=false;}else if(s)s.draft=null;if(exact.command==='work_graph'){s.spec={...s.spec,kind:'workGraph',id:exact.data.workGraph.id,groupIds:[]};delete s.spec.workGraphId;s.inspector=null;}});await load({catalogs:!['core','paper_edit','layout_edit','place','unplace','plan_create','plan_edit'].includes(exact.op)});if(exact.command==='requirement_decision')await revealCreatedDecision(exact.data.decisionId);if(exact.command==='add'&&exact.data.entity.kind==='finding'){inspectorTabState.set(exact.data.entity.subjectId,'findings');render();}note('Сохранено и перечитано из Application.');if(origin.returnToDependencies){inspectorTabState.set(origin.returnToDependencies,'dependencies');if(origin.applyAfterCreate&&exact.command==='policy_change'&&exact.data.action==='policy_save')await showForm('policyBinding',dependencyForm(origin.returnToDependencies,{policyId:exact.data.value.id,policyVersion:exact.data.value.version}));}return result;
+  await sync((v,s)=>{if(exact.op==='create'&&result.packages?.[0]){const id=result.packages[0].packageId;if(!s){s=newScreen(id,{kind:'graph'});v.screens.push(s);v.activeScreenId=s.id;v.explorer.open=false;}else{s.packageId=id;s.spec={kind:'graph'};s.inspector=null;s.trail=[];}delete v.explorer.drafts['new-process'];}if(exact.op==='recommendation_edit'){delete v.explorer.drafts[exact.definition?.id||exact.packageId];if(s?.draft)s.draft.open=false;}else if(s)s.draft=null;if(exact.command==='work_graph'){s.spec={...s.spec,kind:'workGraph',id:exact.data.workGraph.id,groupIds:[]};delete s.spec.workGraphId;s.inspector=null;}});await load({catalogs:!['core','paper_edit','layout_edit','place','unplace','plan_create','plan_edit','lens_format'].includes(exact.op)});if(exact.command==='requirement_decision')await revealCreatedDecision(exact.data.decisionId);if(exact.command==='add'&&exact.data.entity.kind==='finding'){inspectorTabState.set(exact.data.entity.subjectId,'findings');render();}note('Сохранено и перечитано из Application.');if(origin.returnToDependencies){inspectorTabState.set(origin.returnToDependencies,'dependencies');if(origin.applyAfterCreate&&exact.command==='policy_change'&&exact.data.action==='policy_save')await showForm('policyBinding',dependencyForm(origin.returnToDependencies,{policyId:exact.data.value.id,policyVersion:exact.data.value.version}));}return result;
  }
  async function saveLayout(positions,occurrences){
   const prior=screen().draft?.layout,same=prior&&JSON.stringify(prior.positions)===JSON.stringify(positions)&&JSON.stringify(prior.occurrences)===JSON.stringify(occurrences);
@@ -1021,7 +1024,7 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
   if(screen().draft?.form?.mode&&!form)button(tools,'Продолжить черновик',()=>{form=screen().draft.form.mode;return sync((v,s)=>s.draft.open=true,true);});
   const status=el('p',message||scopeTitle(s)+' · '+snapshot.graph.title,'rdg-status');status.setAttribute('role','status');status.classList.toggle('rdg-error',error);root.append(status);
   if(area){const bar=el('div',null,'rdg-scope');bar.setAttribute('aria-label','Рабочая область');bar.dataset.workgraphId=area.id;const title=el('div');title.append(el('small','Working Graph · рабочая область'),el('b',area.title),el('span',' · '+area.memberIds.length+' блоков процесса','rdg-muted'));bar.append(title);button(bar,'Состав…',()=>showForm('workGraph',{workGraphId:area.id}));button(bar,'Внешние связи · '+areaEdges(area).length,()=>sync((v,s)=>s.inspector={kind:'boundaries',workGraphId:area.id},true));button(bar,'Процесс-граф ↗',()=>changeView({kind:'graph',id:undefined,groupIds:[]}));root.append(bar);}
-  else if(!work){const bar=el('div',null,'rdg-scope rdg-ready');const title=el('div');title.append(el('small',snapshot.package.role==='lens'?'Граф линзы':'Шаблон графа'),el('b',snapshot.graph.title));bar.append(title);if(snapshot.package.role==='ready')button(bar,'Вставить в процесс…',()=>showForm('insert',{sourcePackageId:snapshot.package.packageId}));root.append(bar);}
+  else if(!work){const bar=el('div',null,'rdg-scope rdg-ready');const title=el('div');title.append(el('small',snapshot.package.role==='lens'?lensFormatLabel(snapshot.package.lensFormat):'Шаблон графа'),el('b',snapshot.graph.title));bar.append(title);if(snapshot.package.role==='lens'&&snapshot.package.lensFormat&&!snapshot.immutableDefinition)button(bar,'Изменить формат…',()=>showForm('lensFormat'));if(snapshot.package.role==='ready')button(bar,'Вставить в процесс…',()=>showForm('insert',{sourcePackageId:snapshot.package.packageId}));root.append(bar);}
   if(searchView?.open)renderTextSearch(root);
   const body=el('main',null,'rdg-body');root.append(body);if(session.explorer.open)renderExplorer(root);
   if(mode==='dependencies')renderDependencyWorkspace(body);
@@ -1680,10 +1683,10 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
     const definitions=catalog.packages.filter(r=>r.coreModel==='rdg-decision-v1'&&['ready','lens'].includes(r.role)&&(!query||(r.title+' '+r.path+' '+r.lensKey).toLocaleLowerCase().includes(query))),ready=folder(list,'ready','▰ Готовые графы',definitions.length);
     const categories=[['fundamental','Основы RDG'],['other','Свои готовые графы']];
     for(const [category,title] of categories){const graphs=definitions.filter(r=>category==='fundamental'?r.role==='lens'&&r.lensKey&&r.path.includes('lenses/'):!(r.role==='lens'&&r.lensKey&&r.path.includes('lenses/')));if(!graphs.length)continue;const categoryBox=folder(ready,'category:'+category,title,graphs.length);
-     for(const [role,label] of [['ready','Шаблоны графов'],['lens','Графы линз']]){const items=graphs.filter(r=>r.role===role);if(!items.length)continue;const roleBox=folder(categoryBox,'category:'+category+':'+role,label,items.length);for(const graph of items){const b=row(roleBox,graph.title||graph.path,role==='lens'?'Линза · переиспользовать в работе':'Шаблон · вставить в процесс',role==='lens'?'◇':'▣',e=>navigate(graph.packageId,{kind:'graph'},e.ctrlKey||e.metaKey),graph.packageId===screen()?.packageId);b.dataset.packageId=graph.packageId;packages(roleBox,graph);}}
+     for(const [role,label] of [['ready','Шаблоны графов'],['lens','Графы линз']]){const items=graphs.filter(r=>r.role===role);if(!items.length)continue;const roleBox=folder(categoryBox,'category:'+category+':'+role,label,items.length);for(const graph of items){const subtitle=role==='lens'?lensFormatLabel(graph.lensFormat):'Шаблон · вставить в процесс';const b=row(roleBox,graph.title||graph.path,subtitle,role==='lens'?'◇':'▣',e=>navigate(graph.packageId,{kind:'graph'},e.ctrlKey||e.metaKey),graph.packageId===screen()?.packageId);if(role==='lens')b.setAttribute('aria-description',subtitle);b.dataset.packageId=graph.packageId;packages(roleBox,graph);}}
     }
     list.append(el('p','Process Graph — весь процесс со своими блоками, Plan и History. Working Graph — рабочая область внутри него. Области могут пересекаться и используют общие блоки и связи.','rdg-explorer-note'));
-    const legacy=catalog.packages.filter(r=>r.coreModel&&r.coreModel!=='rdg-decision-v1');if(legacy.length){const group=folder(list,'legacy','Другие профили',legacy.length);for(const graph of legacy)row(group,graph.title||graph.path,graph.coreModel,'▤',()=>navigate(graph.packageId));}
+    const legacy=catalog.packages.filter(r=>r.coreModel&&r.coreModel!=='rdg-decision-v1');if(legacy.length){const group=folder(list,'legacy','Другие профили',legacy.length);for(const graph of legacy)row(group,graph.title||graph.path,graph.role==='lens'?lensFormatLabel(graph.lensFormat)+' · '+graph.coreModel:graph.coreModel,'▤',()=>navigate(graph.packageId));}
    }else{
     if(registry.unavailable){list.append(el('p','Каталог пакетов недоступен с текущими правами.'));return;}
     button(list,'Создать пакет',()=>openPackage(null,newDefinition()));
@@ -3161,7 +3164,7 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
    {workGraph:{...clone(current),colorKey}});
   await prepare(request);
  }
- function renderForm(parent){const names={planAction:'Планировочное метадействие',question:'Вопрос',questionAnswer:'Ответ на вопрос',questionAssess:'Достаточность ответа',questionMigrate:'Перенос прежних вопросов',questionRequest:'Подготовка обращения',actionEstimates:'Оценки исполнения Action',contextRecord:'Перевести запись в контекст',finding:'Файндинг',findingQuestions:'Вопросы решения',contextGroup:'Группа контекстов',contextMove:'Переместить контекст',contextEntry:'Роль в контексте решения',findingTransfer:'Перенести файндинг',requirementDecision:'Обязательность requirement',findingDisposition:'Итог рассмотрения файндинга',policyEditor:'Редактор политики',policyBinding:'Применение политики',dependencyRule:'Настройка зависимости',decisionContext:'Контекст принятия решения',add:'Добавить блок',rename:'Переименовать блок',command:'Действие',place:'Разместить существующий блок',fork:'Ветвления Plan',windows:'Границы показа',workGraph:'Рабочая область',group:'Группа решений',attachments:'Пакеты линз процесса',capture:'Сохранить как готовый граф',insert:'Вставить шаблон',create:'Создать процесс',snapshot:'Сохранённая версия',relation:'Связь'};
+ function renderForm(parent){const names={planAction:'Планировочное метадействие',question:'Вопрос',questionAnswer:'Ответ на вопрос',questionAssess:'Достаточность ответа',questionMigrate:'Перенос прежних вопросов',questionRequest:'Подготовка обращения',actionEstimates:'Оценки исполнения Action',contextRecord:'Перевести запись в контекст',finding:'Файндинг',findingQuestions:'Вопросы решения',contextGroup:'Группа контекстов',contextMove:'Переместить контекст',contextEntry:'Роль в контексте решения',findingTransfer:'Перенести файндинг',requirementDecision:'Обязательность requirement',findingDisposition:'Итог рассмотрения файндинга',policyEditor:'Редактор политики',policyBinding:'Применение политики',dependencyRule:'Настройка зависимости',decisionContext:'Контекст принятия решения',add:'Добавить блок',rename:'Переименовать блок',command:'Действие',place:'Разместить существующий блок',fork:'Ветвления Plan',windows:'Границы показа',workGraph:'Рабочая область',group:'Группа решений',attachments:'Пакеты линз процесса',capture:'Сохранить как готовый граф',lensFormat:'Формат линзы',insert:'Вставить шаблон',create:'Создать процесс',snapshot:'Сохранённая версия',relation:'Связь'};
   const body=modal(parent,form==='add'&&draftValue().form?.processContextBank?'Новый контекст процесса':names[form]||form),{values:F,input,pick}=formFields(body),entities=snapshot?[...snapshot.graph.nodes,...snapshot.graph.objects,...snapshot.graph.externalActions]:[];
   const data=F(),focusId=data.nodeId||data.parentId||(screen()?.spec.kind==='focus'?screen().spec.id:snapshot?.graph.rootRequirementId);
   if(draftStale()){body.append(el('p','Данные процесса изменились. Черновик сохранён; проверьте актуальные значения.','rdg-error'));button(body,'Обновить основание после проверки',async()=>{await sync((v,s)=>{s.draft.basePackageRevision=snapshot.package.revision;s.draft.baseGraphRevision=snapshot.graph.revision;});render();});}
@@ -3790,11 +3793,27 @@ function mount(container,transport,{document:doc=globalThis.document,onLegacyOpe
    for(const id of snapshot.graph.recommendationPackageIds){const p=definitionMeta(id),card=el('div',null,'rdg-card');card.append(el('strong',p?.title||'Определение недоступно'));button(card,'Подробности пакета',()=>openPackage(id));button(card,'Отключить',async()=>{const req=await schema('recommendation_attach');req.packageIds=snapshot.graph.recommendationPackageIds.filter(i=>i!==id);req.note='Явно отключён пакет рекомендаций';await prepare(req);});body.append(card);}
    button(body,'Добавить пакет…',async()=>{form=null;await sync(v=>{v.explorer.open=true;v.explorer.tab='packages';v.explorer.selectedPackageId=null;});render();});return;
   }
+  if(form==='lensFormat'){
+   pick('Формат','lensFormat',lensFormatChoices,snapshot.package.lensFormat);
+   button(body,'Проверить формат',async()=>{
+    checkDraft();const req=await schema('lens_format');
+    req.expectedPackageRevision=snapshot.package.revision;req.lensFormat=F().lensFormat;
+    await prepare(req);
+   });return;
+  }
   if(form==='capture'){
-   input('Название готового графа','title',snapshot.graph.title);pick('Тип','role',[['ready','Шаблон графа'],['lens','Граф линзы']],data.role||'ready');input('Папка','path');input('Ключ линзы','lensKey');input('Основание','note');
+   input('Название готового графа','title',snapshot.graph.title);
+   const role=pick('Тип','role',[['ready','Шаблон графа'],['lens','Граф линзы']],data.role||'ready');
+   role.onchange=()=>{setDraft('role',role.value);render();};
+   input('Папка','path');
+   if(F().role==='lens'){
+    input('Ключ линзы','lensKey');
+    pick('Формат','lensFormat',lensFormatChoices,'structured');
+   }
+   input('Основание','note');
    for(const p of (snapshot.recommendations?.packages||[]))field(body,'Включить пакет: '+p.title,(data.recommendationIds||[]).includes(p.id),'checkbox',yes=>{const ids=new Set(F().recommendationIds||[]);if(yes)ids.add(p.id);else ids.delete(p.id);setDraft('recommendationIds',[...ids]);});
    button(body,'Проверить упаковку',async()=>{checkDraft();const f=F(),req=await schema('capture_ready');Object.assign(req,{role:f.role||'ready',title:f.title||snapshot.graph.title,path:f.path,note:f.note,recommendationIds:f.recommendationIds||[]});
-    if(req.role==='lens')req.lensKey=f.lensKey;const spec=screen().spec;if(spec.kind==='workGraph')req.focus={kind:'workGraph',id:spec.id};else if(spec.kind==='focus'){const n=entities.find(n=>n.id===spec.id);req.focus={kind:n.kind,id:n.id};}await prepare(req);
+    if(req.role==='lens')Object.assign(req,{lensKey:f.lensKey,lensFormat:f.lensFormat});const spec=screen().spec;if(spec.kind==='workGraph')req.focus={kind:'workGraph',id:spec.id};else if(spec.kind==='focus'){const n=entities.find(n=>n.id===spec.id);req.focus={kind:n.kind,id:n.id};}await prepare(req);
    });return;
   }
   if(form==='insert'){

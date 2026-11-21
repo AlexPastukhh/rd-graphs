@@ -62,7 +62,7 @@ class FileStore:
         self.check(isinstance(value, dict) and value.get('schemaVersion') == 1 and value.get('kind') == 'rdgGraphPackage', 'FORMAT')
         required = {'schemaVersion', 'kind', 'packageId', 'namespaceId', 'role', 'identitySpace', 'graphId', 'revision',
                     'generation', 'current', 'files', 'lastTransactionId', 'receipt'}
-        self.check(required <= set(value) and set(value) <= required | {'previousHead', 'lineage', 'lensKey'}, 'MANIFEST_FIELDS')
+        self.check(required <= set(value) and set(value) <= required | {'previousHead', 'lineage', 'lensKey', 'lensFormat'}, 'MANIFEST_FIELDS')
         self.check(str(uuid.UUID(value['packageId'])) == value['packageId'] and value['namespaceId'] == self.namespace_id, 'IDENTITY')
         self.check(value['role'] in self.codec.ROLES and type(value['revision']) is int and value['revision'] >= 1 and
                    all(isinstance(value[k], str) and value[k] for k in ('identitySpace', 'graphId')), 'MANIFEST_OWNER')
@@ -81,6 +81,8 @@ class FileStore:
                        str(uuid.UUID(parts[1])) == parts[1] and relative in value['files'], 'CURRENT_FILE')
         if value['role'] in ('ready', 'lens'):self.check('plan' not in value['current'], 'PAPER_NO_WORK_HISTORY')
         if value['role']=='lens':self.check(isinstance(value.get('lensKey'),str) and bool(value['lensKey'].strip()),'LENS_KEY_REQUIRED')
+        if 'lensFormat' in value:
+            self.check(value['role'] == 'lens' and value['lensFormat'] in self.codec.LENS_FORMATS, 'LENS_FORMAT')
         receipt = value['receipt']
         self.check(isinstance(receipt, dict) and set(receipt) == {'path', 'sha256'} and
                    receipt['path'] == '.rdg/receipts/' + value['lastTransactionId'] + '.json' and
@@ -456,7 +458,7 @@ class FileStore:
             self.check(not directory.exists() or directory.is_dir() and not any(directory.iterdir()) or staged_retry,
                        'DESTINATION_EXISTS')
         material={'beforeSHA256':before['headSHA256'] if before else None,
-                  'state':{k:change[k] for k in ('graph','plan','layouts','role','lineage','lensKey','effects') if k in change},
+                  'state':{k:change[k] for k in ('graph','plan','layouts','role','lineage','lensKey','lensFormat','effects') if k in change},
                   'artifacts':{k:self.sha(v) for k,v in change.get('artifacts',{}).items()}}
         generation=str(uuid.uuid5(uuid.UUID(transaction_id),package_id+':'+self.codec.digest(material)))
         graph = change.get('graph');role = change.get('role', before['head']['role'] if before else None)
@@ -498,7 +500,7 @@ class FileStore:
         if before:
             old_bytes = before['headBytes'];sha = self.sha(old_bytes);path = 'history/heads/' + sha + '.json'
             add(path, old_bytes);head['previousHead'] = {'path': path, 'sha256': sha}
-        for field in ('lineage', 'lensKey'):
+        for field in ('lineage', 'lensKey', 'lensFormat'):
             value = change.get(field, before['head'].get(field) if before else None)
             if value is not None:head[field] = copy.deepcopy(value)
         self.validate_head(head);after_bytes = self.encode(head)
