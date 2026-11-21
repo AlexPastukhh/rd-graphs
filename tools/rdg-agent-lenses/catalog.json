@@ -155,8 +155,8 @@
       },
       "sourceRef": {
         "path": "docs/lenses/bootstrap/lens-system.md",
-        "sha256": "a15ee471a03fafd27184800cbffddf8500971dd20bcdbb714330a37c226bf905",
-        "gitCommit": "1948833d146df92156ca3d165f50f16cb1e35441"
+        "sha256": "36d0e2d8ff09aa1e3d66f0c96567644da9ee5872900ab71c1701511978e5ce56",
+        "gitCommit": "d6d5aeea20e768225fb64ad7b6111290dbb3aeab"
       },
       "sourceMapInfoId": "LS-MAP-LENS-SYSTEM"
     },
