@@ -336,6 +336,22 @@ port=sys.argv.pop(1);sys.argv=sys.argv[1:];runpy.run_path(sys.argv[0],run_name='
             self.assertNotIn(self.agent, run.stdout + run.stderr); self.assertEqual(run.returncode, 0, run.stderr)
             return json.loads(run.stdout)
         self.assertEqual(cli('doctor')['profile'], 'gateway'); cli('catalog')
+        self.assertEqual(cli('chat_catalog')['revision'], 0)
+        def write_catalog(action, **fields):
+            catalog_request = cli('schema', '--action', action)['request']
+            catalog_request.update(note='Verify command catalog via Agent and private Gateway', **fields)
+            preview = cli('preflight', body=catalog_request)
+            binding = self.base/'chat-catalog-binding.json'
+            binding.write_text(json.dumps(preview['inputBinding']))
+            self.assertTrue(cli('command', '--expected-input-binding', str(binding), body=catalog_request)['saved'])
+            receipt = cli('receipt', '--transaction-id', catalog_request['transactionId'])
+            self.assertEqual(receipt['participants'][0]['owner']['kind'], 'chatCommandCatalog')
+            self.assertTrue(receipt['published'])
+        write_catalog('chat_catalog_initialize')
+        write_catalog('chat_catalog_edit', steps=[
+            {'op': 'group_edit', 'id': 'plain-text', 'changes': {'title': 'Agent change'}},
+        ])
+        self.assertEqual(cli('chat_catalog')['groups'][-1]['title'], 'Agent change')
         create_form=cli('schema','--action','create')
         self.assertEqual(create_form['request']['coreModel'],'rdg-decision-v1')
         self.assertEqual(create_form['request']['role'],'working')

@@ -8,6 +8,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from importlib.machinery import SourceFileLoader
 import json
 import os
+import re
 from pathlib import Path
 import subprocess
 import tempfile
@@ -101,6 +102,30 @@ class Server(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'EXISTING_DATA_REFUSED'):
             HOST.initialize(other, self.base / 'other-secrets')
         self.assertEqual((other / 'keep').read_text(), 'unchanged')
+
+    def test_chat_catalog_browser_and_agent_use_one_revision(self):
+        _, page, _ = self.raw('/', browser=True)
+        cap = re.search(rb'globalThis.RDG_SESSION="([^"]+)"', page)[1].decode()
+        def browser(message):
+            _, raw, _ = self.raw('/session/' + cap + '/command', message=message, browser=True,
+                                 headers={'Origin': self.origin, 'X-RDG-Session': cap})
+            return json.loads(raw)
+        def publish(call, op, **fields):
+            request = call({'method': 'schema', 'op': op})['request']
+            request.update(note='Edit the shared catalog with the current actor', **fields)
+            preview = call({'method': 'preflight', 'request': request})
+            return call({'method': 'apply', 'request': request,
+                         'expectedInputBinding': preview['inputBinding']})
+        initialized = publish(self.client.call, 'chat_catalog_initialize')
+        self.assertEqual(initialized['participants'][0]['receipt']['effects']['by'], 'assistant')
+        self.assertEqual(browser({'method': 'chat_catalog'})['revision'], 1)
+        result = publish(browser, 'chat_catalog_edit', steps=[
+            {'op': 'group_edit', 'id': 'plain-text', 'changes': {'title': 'Changed in browser'}},
+        ])
+        self.assertEqual(result['participants'][0]['receipt']['effects']['by'], 'user')
+        current = self.client.call({'method': 'chat_catalog'})
+        self.assertEqual(current['revision'], 2)
+        self.assertEqual(current['groups'][-1]['title'], 'Changed in browser')
 
     def test_api_ergonomics_http_and_remote_cli_keep_one_contract(self):
         context=self.base/'ergonomics-context.json';context.write_text(json.dumps(self.context))

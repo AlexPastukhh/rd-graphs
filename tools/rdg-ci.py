@@ -46,6 +46,7 @@ PYTHON_TESTS = (
 def fingerprint(root=ROOT):
     names = subprocess.check_output(['git', 'ls-files', '-z', '--cached', '--others',
         '--exclude-standard', '--', 'tools', 'tests', 'deploy', 'docs', '.github',
+        'kit/helper-commands/catalog-v2.json',
         'AGENTS.md', 'README.md', '.gitignore', '.gitattributes', '.ignore'], cwd=root).split(b'\0')
     digest = hashlib.sha256()
     for name in sorted(set(n for n in names if n)):

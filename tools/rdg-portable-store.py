@@ -19,6 +19,11 @@ class RecoveryRequired(ValueError):
 
 
 class FileStore:
+    REGISTRIES = {
+        'recommendationRegistry': ('registry:', '.rdg/recommendations', 'rdgRecommendationRegistryHead', 'rdgRegistryReceipt'),
+        'chatCommandCatalog': ('chat-catalog:', '.rdg/chat-commands', 'rdgChatCommandCatalogHead', 'rdgChatCommandCatalogReceipt'),
+    }
+
     def __init__(self, root, namespace_id, io, codec, coordination_root=None):
         self.root = Path(root).absolute()
         self.namespace_id = namespace_id
@@ -395,29 +400,35 @@ class FileStore:
                 json.loads(manifest.read_bytes()).get('kind')!='rdgGraphPackage'),'DESTINATION_INSIDE_PACKAGE')
         return directory
 
-    def registry_key(self):return 'registry:'+self.namespace_id
+    def registry_key(self, kind='recommendationRegistry'):
+        return self.REGISTRIES[kind][0] + self.namespace_id
+
+    def registry_kind(self, key):
+        return next((kind for kind in self.REGISTRIES if self.registry_key(kind) == key), None)
 
     def entry_owner(self,entry):
         return entry.get('owner') or {'kind':'package','namespaceId':self.namespace_id,'packageId':entry['packageId']}
 
     def entry_directory(self,entry):
-        return self.path('.rdg/recommendations',True) if entry.get('owner',{}).get('kind')=='recommendationRegistry' else self.package_path(entry['path'])
+        kind = entry.get('owner', {}).get('kind')
+        return self.path(self.REGISTRIES[kind][1], True) if kind in self.REGISTRIES else self.package_path(entry['path'])
 
     def entry_head_path(self,entry):
-        return self.entry_directory(entry)/('head.json' if entry.get('owner',{}).get('kind')=='recommendationRegistry' else 'package.json')
+        return self.entry_directory(entry)/('head.json' if entry.get('owner',{}).get('kind') in self.REGISTRIES else 'package.json')
 
-    def registry_read(self):
-        directory=self.path('.rdg/recommendations',True);path=directory/'head.json'
+    def registry_read(self, kind='recommendationRegistry'):
+        _, relative, head_kind, _ = self.REGISTRIES[kind]
+        directory=self.path(relative,True);path=directory/'head.json'
         # The namespace barrier serializes all participants; accepted registry
         # publication is never returned as a healthy half transaction.
         for accepted in self.path('.rdg/accepted',True).glob('*.json'):
             value=json.loads(accepted.read_bytes())
-            if any(e.get('owner',{}).get('kind')=='recommendationRegistry' for e in value['entries']):
+            if any(e.get('owner',{}).get('kind')==kind for e in value['entries']):
                 if not self.metadata_path('completed',value['transactionId']).is_file():
                     raise RecoveryRequired('PACKAGE_REGISTRY_RECOVERY_REQUIRED:'+value['transactionId'])
-        if not path.is_file():return {'ownerKey':self.registry_key(),'path':'.rdg/recommendations','headSHA256':None,'head':None,'registry':None}
+        if not path.is_file():return {'ownerKey':self.registry_key(kind),'path':relative,'headSHA256':None,'head':None,'registry':None}
         raw=self.io.safe_path(directory,'head.json',True).read_bytes();head=json.loads(raw)
-        self.check(head.get('kind')=='rdgRecommendationRegistryHead' and head.get('namespaceId')==self.namespace_id,'REGISTRY_HEAD')
+        self.check(head.get('kind')==head_kind and head.get('namespaceId')==self.namespace_id,'REGISTRY_HEAD')
         artifact=self.io.safe_path(directory,head['artifact'],True);data=artifact.read_bytes()
         self.check(self.sha(data)==head['sha256'],'REGISTRY_ARTIFACT_HASH')
         tx=head['lastTransactionId'];completed=directory/'.rdg/completed'/(tx+'.json')
@@ -426,25 +437,28 @@ class FileStore:
         self.check(self.io.file_sha(receipt_path)==head['receipt']['sha256'],'REGISTRY_RECEIPT_HASH')
         commit=json.loads((directory/'.rdg/commits'/(tx+'.json')).read_bytes())
         self.check(commit['headSHA256']==self.sha(raw),'REGISTRY_COMMIT_WITNESS')
-        return {'ownerKey':self.registry_key(),'path':'.rdg/recommendations','headSHA256':self.sha(raw),
+        return {'ownerKey':self.registry_key(kind),'path':relative,'headSHA256':self.sha(raw),
                 'head':head,'registry':json.loads(data),'receiptValue':json.loads(receipt_path.read_bytes())}
 
-    def _prepare_registry_entry(self,transaction_id,request_sha,change,authorization_context):
+    def _prepare_registry_entry(self,transaction_id,request_sha,change,authorization_context,kind):
+        _, relative, head_kind, receipt_kind = self.REGISTRIES[kind]
         before=change['before'];value=change['registry'];raw=self.encode(value);sha=self.sha(raw)
-        owner={'kind':'recommendationRegistry','namespaceId':self.namespace_id}
-        receipt={'schemaVersion':1,'kind':'rdgRegistryReceipt','transactionId':transaction_id,'requestSHA256':request_sha,
+        owner={'kind':kind,'namespaceId':self.namespace_id}
+        receipt={'schemaVersion':1,'kind':receipt_kind,'transactionId':transaction_id,'requestSHA256':request_sha,
                  'owner':owner,'revision':value['revision'],'effects':copy.deepcopy(change.get('effects',{}))}
         if authorization_context is not None:receipt.update(schemaVersion=2,authorizationContext=self.public_authorization_context(authorization_context))
         rb=self.encode(receipt);rp='.rdg/receipts/'+transaction_id+'.json';artifact='versions/'+sha+'.json'
-        head={'schemaVersion':1,'kind':'rdgRecommendationRegistryHead','namespaceId':self.namespace_id,
+        head={'schemaVersion':1,'kind':head_kind,'namespaceId':self.namespace_id,
               'revision':value['revision'],'artifact':artifact,'sha256':sha,'files':{artifact:sha},
               'lastTransactionId':transaction_id,'receipt':{'path':rp,'sha256':self.sha(rb)}}
-        return {'owner':owner,'path':'.rdg/recommendations','beforeSHA256':before['headSHA256'],
+        return {'owner':owner,'path':relative,'beforeSHA256':before['headSHA256'],
             'afterSHA256':self.sha(self.encode(head)),'afterHead':head,'artifacts':{artifact:base64.b64encode(raw).decode('ascii')},
             'receipt':{'path':rp,'bytes':base64.b64encode(rb).decode('ascii')},'permissions':change['permissions']}
 
     def _prepare_entry(self, transaction_id, request_sha, package_id, change, authorization_context=None):
-        if package_id==self.registry_key():return self._prepare_registry_entry(transaction_id,request_sha,change,authorization_context)
+        kind = self.registry_kind(package_id)
+        if kind:
+            return self._prepare_registry_entry(transaction_id,request_sha,change,authorization_context,kind)
         before = change.get('before');relative = change['path'];directory = self.package_path(relative)
         if before:
             self.check(before['packageId'] == package_id and before['path'] == relative, 'BEFORE_OWNER_MISMATCH')
@@ -516,7 +530,7 @@ class FileStore:
     def _write_artifacts(self, entry):
         directory = self.entry_directory(entry);self.io.mkdirs(directory)
         path=self.io.safe_path(directory,'.rdg/package.json',True)
-        if entry.get('owner',{}).get('kind')=='recommendationRegistry':
+        if entry.get('owner',{}).get('kind') in self.REGISTRIES:
             for relative,data in entry['artifacts'].items():
                 raw=base64.b64decode(data,validate=True)
                 self.check(self.sha(raw)==entry['afterHead']['files'][relative],'STAGED_BYTES_DIGEST')
@@ -659,7 +673,8 @@ class FileStore:
                 self.check(self.catalog_signature(expected_catalog['ignoreIds']) == expected_catalog,
                            'INCOMING_CATALOG_CHANGED')
             for package_id, before_sha in expected_reads.items():
-                current = self.registry_read() if package_id==self.registry_key() else self.locate(package_id)
+                kind = self.registry_kind(package_id)
+                current = self.registry_read(kind) if kind else self.locate(package_id)
                 self.check(current['headSHA256'] == before_sha, 'READ_SET_CONFLICT')
             for entry in entries:self._verify_before(entry)
             participants = [{**({'packageId':e['packageId']} if 'packageId' in e else {'owner':e['owner']}),'afterSHA256':e['afterSHA256']} for e in entries]

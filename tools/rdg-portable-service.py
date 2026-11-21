@@ -22,6 +22,9 @@ BATCH = SourceFileLoader('rdg_batch', str(Path(__file__).with_name('rdg-batch.py
 CACHE = SourceFileLoader('rdg_projection_cache', str(Path(__file__).with_name('rdg-projection-cache.py'))).load_module()
 
 
+CHAT_CATALOG = SourceFileLoader('rdg_chat_catalog', str(Path(__file__).with_name('rdg-chat-catalog.py'))).load_module()
+
+
 ERGO = SourceFileLoader('rdg_api_ergonomics', str(Path(__file__).with_name('rdg-api-ergonomics.py'))).load_module()
 
 
@@ -238,7 +241,7 @@ class Application:
 
     OPERATIONS=('create','apply_ready','copy','insert_copy','delete','unlink','core','paper_edit','batch','plan_action',
                 'dependency_add','dependency_remove','lock_set','lock_remove',
-                'place','unplace','plan_create','plan_edit','external_edit','layout_edit','attach_evidence','move','folder_create','folder_move','migrate','recommendation_edit','recommendation_attach','lens_apply','capture_ready','lens_manage','lens_format')
+                'place','unplace','plan_create','plan_edit','external_edit','layout_edit','attach_evidence','move','folder_create','folder_move','migrate','recommendation_edit','recommendation_attach','lens_apply','capture_ready','lens_manage','lens_format',*CHAT_CATALOG.OPERATIONS)
 
     def view_session(self,message):
         actor,_=self.authority._actor(self.authority._read(),self.token)
@@ -338,6 +341,34 @@ class Application:
         self.kernel.for_graph({'coreModel':'rdg-decision-v1'}).validate_policy_definitions(value.get('dependencyPolicies',[]))
         return {**row,'registry':value}
 
+    def _chat_catalog(self):
+        self.authorize(None, ['graph.read'])
+        row = self.store.registry_read('chatCommandCatalog')
+        value = CHAT_CATALOG.validate(row['registry']) if row['head'] is not None else CHAT_CATALOG.empty()
+        self.check(row['head'] is None or value['revision'] == row['head']['revision'],
+                   'CHAT_CATALOG_REVISION_MISMATCH')
+        return row, value
+
+    def chat_catalog(self):
+        with self.store.lock(False, create=False):
+            _, value = self._chat_catalog()
+            return {**value, 'namespaceId': self.store.namespace_id, 'complete': True}
+
+    def _prepare_chat_catalog(self, request, attribution):
+        row, before = self._chat_catalog()
+        self.authorize(None, ['graph.write'])
+        value, report = CHAT_CATALOG.plan(before, request)
+        owner = {'kind': 'chatCommandCatalog', 'namespaceId': self.store.namespace_id}
+        effects = {'catalogRevision': value['revision'], 'by': attribution, 'note': request['note'], **report}
+        check = {'namespaceId': self.store.namespace_id, 'packageId': None, 'path': None,
+                 'permissions': ['graph.read', 'graph.write']}
+        change = {'path': row['path'], 'before': row, 'registry': value,
+                  'permissions': check['permissions'], 'effects': effects}
+        return {'changes': {row['ownerKey']: change}, 'checks': [check], 'catalog': None,
+                'readset': {row['ownerKey']: row['headSHA256']}, 'decisionProfile': True,
+                'ownerPins': [{**owner, 'revision': before['revision'], 'sha256': row['headSHA256']}],
+                'effects': effects, 'allocation': None}
+
     def recommendation_catalog(self,query='',offset=0,limit=50,revision=None,package_id=None):
         with self.store.lock(False,create=False):
             row=self.registry(revision);value=row['registry'];rows=[]
@@ -366,7 +397,11 @@ class Application:
                            key=lambda item: tuple(str(part) for part in item[0]))]
         if prepared['decisionProfile']:
             def owner(ident):
-                return ({'kind':'recommendationRegistry','namespaceId':self.store.namespace_id} if ident in (None,self.store.registry_key()) else
+                if ident is None:
+                    kind = 'chatCommandCatalog' if request['op'] in CHAT_CATALOG.OPERATIONS else 'recommendationRegistry'
+                else:
+                    kind = self.store.registry_kind(ident)
+                return ({'kind':kind,'namespaceId':self.store.namespace_id} if kind else
                         {'kind':'package', 'namespaceId':self.store.namespace_id,'packageId':ident})
             typed_permissions = [{'owner':owner(key[1]), 'permissions':sorted(value)}
                 for key, value in sorted(checks.items(),
@@ -379,6 +414,8 @@ class Application:
                      'requiredPermissions':typed_permissions,
                      'catalog':copy.deepcopy(prepared['catalog']),
                      'effectOwners':effect_owners}
+            if request['op'] == 'chat_catalog_initialize':
+                typed['seedSHA256'] = prepared['effects']['seedSHA256']
             return {**typed, 'sha256':self.model.digest(typed)}
         value = {'schemaVersion': 1, 'policy': 'full-read-set-v1',
                  'namespaceId': self.store.namespace_id, 'actorGrantId': actor,
@@ -816,6 +853,16 @@ class Application:
                  'reference':'Exact owned ref returned by theory_read: {theoryRef,collection,itemId}',
                  'optional':['packageId','expand','format'],'modes':['current','historical'],
                  'staleCurrent':'OWNED_REF_CHANGED: reopen current theory; historical refs retain the pinned graph'})
+        if op in ('chat_catalog', *CHAT_CATALOG.OPERATIONS):
+            self.check(all(v is None for v in (ident,node_id,source_id,command,source_path,source_key,core_model,role,entity_kind)),
+                       'CHAT_CATALOG_SCHEMA_SELECTORS')
+            if op == 'chat_catalog':
+                self.authorize(None, ['graph.read'])
+                return {'schemaVersion': 1, 'method': 'chat_catalog', 'required': [],
+                        'complete': True, 'uninitializedRevision': 0}
+            _, value = self._chat_catalog()
+            self.authorize(None, ['graph.write'])
+            return CHAT_CATALOG.schema(op, value['revision'], str(uuid.uuid4()))
         if op == 'catalog':
             self.check(all(v is None for v in (ident,node_id,source_id,command,source_path,source_key,core_model,role,entity_kind)), 'CATALOG_SCHEMA_SELECTORS')
             return {'method':'catalog','schemaVersion':1,'pagination':False,'complete':True,
@@ -1064,6 +1111,7 @@ class Application:
                 'dependency_details':{'packageId','expectedPackageRevision','facet','limit','cursor','recordId'},
                 'locks':{'packageId'},
                 'view_session':{'action','sessionId','packageId','view','expectedRevision','value'},
+                'chat_catalog':set(),
                 'recommendation_catalog':{'query','offset','limit','revision','packageId'},
                 'approval_request':{'request','rationale'},'approval_read':{'requestId'},
                 'preflight':{'request','expectedInputBinding','preview'},'apply':{'request','expectedInputBinding'}}
@@ -1072,6 +1120,7 @@ class Application:
         if method=='read_ref':return ERGO.read_ref(self,message['reference'],message.get('packageId'),message.get('expand',False),message.get('format','json'))
         if method=='view_session':return self.view_session(message)
         if method=='catalog':return self.catalog()
+        if method=='chat_catalog':return self.chat_catalog()
         if method=='search':
             return SEARCH.search(self,message.get('query'),message.get('scope','package'),
                                  message.get('packageId'),message.get('limit',25),message.get('cursor'))
@@ -1126,6 +1175,9 @@ class Application:
         self.check(isinstance(request,dict) and isinstance(request.get('transactionId'),str),'REQUEST')
         self.check(preview is None or preflight,'PREVIEW_ONLY_FOR_PREFLIGHT')
         self.check(preview is None or request.get('op') not in ('migrate','move','folder_create','folder_move'),'PREVIEW_OPERATION_UNSUPPORTED')
+        if request.get('op') in CHAT_CATALOG.OPERATIONS:
+            self.check(preview is None, 'PREVIEW_OPERATION_UNSUPPORTED')
+            self.check(preflight or expected_input_binding is not None, 'CHAT_CATALOG_BINDING_REQUIRED')
         tx=request['transactionId'];self.check(str(uuid.UUID(tx))==tx,'TRANSACTION_ID')
         if request.get('op')=='migrate':
             return self.migration.handle(request,preflight=preflight,failpoint=failpoint,
@@ -1161,6 +1213,8 @@ class Application:
     def prepare(self, request, *, approval_actor=None, recorded_at=None):
         # Internal host inputs only; the closed message contract never accepts them.
         attribution = 'user' if approval_actor is not None else self.attribution
+        if request.get('op') in CHAT_CATALOG.OPERATIONS:
+            return self._prepare_chat_catalog(request, attribution)
         trust = ({'mode':'webauthn-approval-v1', 'transactionId':request['transactionId'],
                   'principalId':approval_actor['principalId'],
                   'executorGrantId':approval_actor['executorGrantId']} if approval_actor else None)

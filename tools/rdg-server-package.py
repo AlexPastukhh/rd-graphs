@@ -24,6 +24,7 @@ def build(output, build_id=None):
         'rdg-layout-cli.cjs', 'rdg-layout-core.js', 'rdg-visual-projection.js')]
     # Lens definitions are RDG FileStore data, not executable server inputs.
     # Agent/standalone preview fixtures keep their own source definitions.
+    sources += [Path('kit/helper-commands/catalog-v2.json')]
     sources += sorted(p.relative_to(ROOT) for p in (ROOT / 'tools/contracts').glob('*.json'))
     payload = {}
     for relative in sources:

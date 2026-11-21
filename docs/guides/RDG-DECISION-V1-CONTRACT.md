@@ -529,6 +529,18 @@ UI: отдельная вкладка «Рекомендации · N» в св�
 
 Доступ к пакету проверяется до чтения его пояснений. Ответ не подключает линзы и не меняет Registry, selection или данные. Наполнение карточек согласованными текстами 19 линз, source-map и публикация definitions остаются T6; старые доступные определения без Info-карточки честно возвращают missing. Изолированную приёмку обеспечивает [discovery suite](../../tests/rdg-api-discovery.test.py); установленный runtime и B05 проверяются отдельно.
 
+<a id="rdg-chat-command-catalog"></a>
+### Серверный каталог команд Planning Helper
+
+Application хранит один каталог на namespace с собственным состоянием `{schemaVersion:1, revision, groups, commands}`. `chat_catalog` отдаёт всё состояние, `namespaceId` и `complete:true` одним ответом. Для пустого хранилища возвращается ревизия 0. Чтение не создаёт каталог и не читает графы линз.
+
+- `schema(op=chat_catalog_initialize)` выдаёт форму для явной загрузки 24 комплектных команд из [снимка v2](../../kit/helper-commands/catalog-v2.json). Инициализация возможна только на ревизии 0. Контрольная сумма исходного снимка входит в привязку предварительной проверки. Обновление программы и повтор того же запроса сохраняют пользовательские правки.
+- `schema(op=chat_catalog_edit)` описывает до 100 шагов над тем же каталогом. Группы и команды поддерживают create, edit, move и delete. `beforeId` задаёт место перед указанным элементом в целевой группе или списке групп. Пустое значение добавляет в конец, `groupId:null` означает «Без группы». Удаление группы переносит её команды туда. ID сохраняется при правке текста, порядка и группы.
+- Обе формы требуют `note` и `expectedCatalogRevision`. Применяется точный запрос с `inputBinding` от preflight. Пакетная правка увеличивает ревизию один раз. Конфликт или недопустимый шаг отклоняет всю правку. `receipt` по transactionId возвращает участника `chatCommandCatalog`. При неопределённом исходе допускается точный повтор с тем же transactionId и binding.
+- Чтение требует `graph.read` на namespace. Запись требует также `graph.write` на namespace. Действуют существующие права и контуры Agent/private Gateway и пользовательской сессии RDG. Текст и типизированные ссылки на линзы хранятся как данные для вставки в чат. Сохранение каталога не исполняет команды.
+
+Agent использует `chat_catalog`, `schema --action chat_catalog_initialize` или `schema --action chat_catalog_edit`, затем штатные `preflight`, `command --expected-input-binding FILE` и `receipt --transaction-id ID` с namespace-контекстом. [Подключение Agent](../use-cases/ai-work.md#uc-rdg-003). Старый Helper продолжает пользоваться публичным снимком до перевода на серверный каталог.
+
 ### Совместимость, пример и сквозная приёмка
 
 **T7 — проверки.** Расширить обязательный CI адресными suites для Questions, estimates, Planning Meta Action atomic create/place, compact/batch и содержания линз; базовая discovery suite проверяет все новые формы/возвращённые IDs через настоящий публичный маршрут. Для каждого writer — successful preflight/no-write, apply, bad input/CAS atomic failure, exact retry, restart/readback; для новых полей — copy/remap и старый owner без автозаписи. Browser/desktop проверяют полный пользовательский сценарий, общие действия из Graph/Structure и отсутствие скрытых сущностей в дереве. Semantic source-map и разрешимость рекомендаций проверяются машинно; правильность содержательных переходов — на положительных/отрицательных случаях, не по числу заголовков.

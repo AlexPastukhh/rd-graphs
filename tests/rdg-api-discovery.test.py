@@ -74,6 +74,105 @@ class APIDiscovery(unittest.TestCase):
         self.assertEqual(listed['catalogSHA256'],catalog['catalogSHA256'])
         self.assertEqual(self.sources(),before)
 
+    def test_chat_catalog_initialize_atomic_edit_permissions_and_recovery(self):
+        app = self.app()
+        read = {'method': 'chat_catalog'}
+        before = self.sources()
+        self.assertEqual(app.call(read)['revision'], 0)
+        self.assertEqual(self.sources(), before)
+        reader = self.authority.manage('issue', self.admin, {
+            'scopes': ['packages/' + self.namespace + '/'], 'permissions': ['graph.read']})
+        self.assertEqual(self.app(reader['token']).call(read)['commands'], [])
+        before = self.sources()
+        init = app.call({'method': 'schema', 'op': 'chat_catalog_initialize'})['request']
+        init['note'] = 'Import bundled commands once'
+        with self.assertRaisesRegex(ValueError, 'MISSING_PERMISSION: graph.write'):
+            self.app(reader['token']).call({'method': 'preflight', 'request': init})
+        with self.assertRaisesRegex(ValueError, 'CHAT_CATALOG_BINDING_REQUIRED'):
+            app.call({'method': 'apply', 'request': init})
+        def bind(request):
+            return app.call({'method': 'preflight', 'request': request})['inputBinding']
+        binding = bind(init)
+        self.assertEqual(self.sources(), before)
+        self.assertEqual(binding['effectOwners'][0]['kind'], 'chatCommandCatalog')
+        first = app.call({'method': 'apply', 'request': init, 'expectedInputBinding': binding})
+        self.assertTrue(first['published'])
+        seeded = app.call(read)
+        manifest = json.loads((ROOT/'kit/helper-commands/catalog-v2.json').read_bytes())
+        self.assertEqual(seeded['groups'], manifest['groups'])
+        self.assertEqual(seeded['commands'], manifest['commands'])
+        recommendation_before = app.registry()['registry']
+        edit = app.call({'method': 'schema', 'op': 'chat_catalog_edit'})['request']
+        edit.update(note='Group and revise two existing entries', steps=[
+            {'op': 'group_create', 'id': 'examples', 'title': 'Examples', 'description': 'Group of sample instructions'},
+            {'op': 'command_move', 'id': 'rdg.command.plain-task', 'groupId': 'examples'},
+            {'op': 'command_move', 'id': 'rdg.command.plain-lens', 'groupId': 'examples',
+             'beforeId': 'rdg.command.plain-task'},
+            {'op': 'command_edit', 'id': 'rdg.command.plain-task', 'changes': {'insertText': 'First line.\\n\\nSecond line.  '}},
+        ])
+        stale = {**edit, 'transactionId': str(uuid.uuid4())}
+        invalid = {**stale, 'steps': [*edit['steps'],
+            {'op': 'command_move', 'id': 'rdg.command.bootstrap', 'groupId': 'missing'}]}
+        before_invalid = self.sources()
+        with self.assertRaisesRegex(ValueError, 'CHAT_CATALOG_GROUP_NOT_FOUND'):
+            bind(invalid)
+        self.assertEqual(self.sources(), before_invalid)
+        binding = bind(edit)
+        self.assertEqual(self.sources(), before_invalid)
+        def interrupt(phase):
+            if phase == 'head:1':
+                raise RuntimeError('simulated interrupted publication')
+        with self.assertRaisesRegex(RuntimeError, 'interrupted'):
+            app.request(edit, expected_input_binding=binding, failpoint=interrupt)
+        restarted = self.app()
+        with self.assertRaisesRegex(ValueError, 'PACKAGE_REGISTRY_RECOVERY_REQUIRED'):
+            restarted.call(read)
+        self.assertFalse(restarted.receipt(None, edit['transactionId'])['published'])
+        message = {'method': 'apply', 'request': edit, 'expectedInputBinding': binding}
+        self.assertTrue(restarted.call(message)['idempotent'])
+        current = restarted.call(read)
+        self.assertEqual(current['revision'], 2)
+        moved = [row for row in current['commands'] if row['groupId'] == 'examples']
+        self.assertEqual([row['id'] for row in moved], ['rdg.command.plain-lens', 'rdg.command.plain-task'])
+        self.assertEqual(moved[1]['insertText'], edit['steps'][-1]['changes']['insertText'])
+        receipt = restarted.call({'method': 'receipt', 'transactionId': edit['transactionId']})
+        self.assertTrue(receipt['published'])
+        self.assertEqual(receipt['participants'][0]['receipt']['effects']['catalogRevision'], 2)
+        self.assertEqual(restarted.registry()['registry'], recommendation_before)
+        with self.assertRaisesRegex(ValueError, 'CHAT_CATALOG_REVISION_CHANGED'):
+            bind(stale)
+        init = restarted.call({'method': 'schema', 'op': 'chat_catalog_initialize'})
+        self.assertFalse(init['initializationAvailable'])
+        with self.assertRaisesRegex(ValueError, 'CHAT_CATALOG_ALREADY_INITIALIZED'):
+            bind({**init['request'], 'note': 'Do not replace existing data'})
+        self.assertEqual(restarted.call(read), current)
+
+    def test_chat_catalog_create_rename_reorder_and_delete_without_losing_commands(self):
+        app = self.app()
+        def save(op, **fields):
+            request = app.call({'method': 'schema', 'op': op})['request']
+            request.update(note='Synthetic command catalog test', **fields)
+            preview = app.call({'method': 'preflight', 'request': request})
+            app.call({'method': 'apply', 'request': request, 'expectedInputBinding': preview['inputBinding']})
+        save('chat_catalog_initialize')
+        save('chat_catalog_edit', steps=[
+            {'op': 'command_create', 'id': 'rdg.command.example', 'kind': 'instruction',
+             'groupId': 'plain-text', 'title': 'Example', 'description': 'Example command',
+             'lensRefs': [], 'insertText': 'Read the current task.'},
+            {'op': 'group_edit', 'id': 'plain-text', 'changes': {'title': 'Instructions'}},
+            {'op': 'group_move', 'id': 'plain-text', 'beforeId': 'start'},
+        ])
+        value = app.call({'method': 'chat_catalog'})
+        self.assertEqual(value['groups'][0]['title'], 'Instructions')
+        save('chat_catalog_edit', steps=[
+            {'op': 'group_delete', 'id': 'plain-text'},
+            {'op': 'command_delete', 'id': 'rdg.command.example'},
+        ])
+        commands = {row['id']: row for row in app.call({'method': 'chat_catalog'})['commands']}
+        self.assertNotIn('rdg.command.example', commands)
+        self.assertIsNone(commands['rdg.command.plain-task']['groupId'])
+        self.assertIsNone(commands['rdg.command.plain-lens']['groupId'])
+
     def test_lens_format_is_manual_package_metadata(self):
         app=self.app()
         create=app.call({'method':'schema','op':'create','role':'lens','coreModel':'rdg-decision-v1'})['request']
