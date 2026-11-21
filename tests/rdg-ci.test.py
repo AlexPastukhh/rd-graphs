@@ -86,6 +86,12 @@ assert not base.exists()
             before = CI.fingerprint(root); source.write_text('second')
             self.assertNotEqual(before, CI.fingerprint(root))
             source.unlink(); self.assertNotEqual(before, CI.fingerprint(root))
+            seed = root / 'kit/helper-commands/catalog-v2.json'
+            seed.parent.mkdir(parents=True)
+            seed.write_text('seed v1')
+            fingerprint = CI.fingerprint(root)
+            seed.write_text('seed v2')
+            self.assertNotEqual(fingerprint, CI.fingerprint(root))
             source.symlink_to('/etc/passwd')
             with self.assertRaisesRegex(ValueError, 'CI_SOURCE_SYMLINK'):CI.fingerprint(root)
 
@@ -147,6 +153,11 @@ app=portable.application({'packageRoot':str(state/'packages'),'namespaceId':name
 result=app.call({'method':'capabilities'})
 assert result['contractVersion']==2
 assert result['features']['paperBatch']['available']
+request=app.call({'method':'schema','op':'chat_catalog_initialize'})['request']
+request['note']='Verify frozen seed'
+preview=app.call({'method':'preflight','request':request})
+app.call({'method':'apply','request':request,'expectedInputBinding':preview['inputBinding']})
+assert len(app.call({'method':'chat_catalog'})['commands'])==24
 print(json.dumps(result))
 '''
             run=subprocess.run([sys.executable,'-I','-B','-c',script,

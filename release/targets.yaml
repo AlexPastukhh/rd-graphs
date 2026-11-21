@@ -13,6 +13,8 @@ buildUnits:
       - tools/rdg-portable-model.py
       - tools/rdg-portable-store.py
       - tools/rdg-portable-service.py
+      - tools/rdg-chat-catalog.py
+      - kit/helper-commands/catalog-v2.json
       - tools/rdg-api-ergonomics.py
       - tools/rdg-projection-cache.py
       - tools/rdg-compact-read.py

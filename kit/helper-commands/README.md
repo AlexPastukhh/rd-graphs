@@ -4,9 +4,9 @@
 
 ## Authority and files
 
-- **Author-owned source:** [commands.json](commands.json). Change command strings, grouping, composition and descriptions here, never in OBS.
+- **Bundled seed and legacy clients:** [commands.json](commands.json) owns the shipped snapshot. The [live RDG catalog](../../docs/guides/RDG-DECISION-V1-CONTRACT.md#rdg-chat-command-catalog) is edited through Application after explicit initialization.
 - **Published projection:** [catalog-v2.json](catalog-v2.json), generated deterministically by [build.py](build.py). Run **python3 -B kit/helper-commands/build.py** and then **python3 -B kit/helper-commands/build.py --check**. Both **catalog-v2.json** (new grouped v2) and the existing **catalog.json** (v1 direct-lens projection) are generated and byte-checked from the same author source. The v1 file deliberately stays byte-identical if the existing 21 launchers are unchanged, so installed v0.40.9 Helpers continue to work. Run **python3 -B tests/rdg-helper-commands.test.py** and **python3 -B tests/rdg-lens-catalog.test.py**.
-- **Transport:** one public GET of the versioned V2 endpoint from RDG GitHub main, **https://raw.githubusercontent.com/AlexPastukhh/rd-graphs/main/kit/helper-commands/catalog-v2.json**. This is a static projection; no RDG server release is required by this catalog itself. New revisions are effective only after merge to main. Old clients keep reading catalog.json (v1); new clients select catalog-v2.json (v2).
+- **Transport:** one public GET of the versioned V2 endpoint from RDG GitHub main, **https://raw.githubusercontent.com/AlexPastukhh/rd-graphs/main/kit/helper-commands/catalog-v2.json**. This is a static compatibility endpoint for the existing Helper. It updates after merge to main. The server package contains the same projection as its one-time seed. Old clients keep reading catalog.json (v1); new clients select catalog-v2.json (v2).
 
 The manifest has **schemaVersion=2**, **kind=rdg-chat-commands**, **complete=true**, a SHA-256 **catalogRevision**, ordered presentation **groups[]**, and **commands[]** sorted by stable ID. Each group defines id, title and description. Each command defines id, kind, title, description, groupId, typed lensRefs array and **exact insertText**. The revision changes with group text, order, membership and command content.
 

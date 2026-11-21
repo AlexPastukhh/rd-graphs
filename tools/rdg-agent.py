@@ -480,6 +480,7 @@ def portable_command(args,c):
     if args.command=='read_ref':return app.call({'method':'read_ref','reference':json.load(sys.stdin),
         **({'packageId':ident} if ident else {}),'expand':getattr(args,'expand_sources',False),'format':output_format})
     if args.command=='catalog':return app.call({'method':'catalog'})
+    if args.command=='chat_catalog':return app.call({'method':'chat_catalog'})
     if args.command=='search':
         return app.call({'method':'search','query':args.query,'scope':args.search_scope,
                          **({'packageId':ident} if args.search_scope=='package' else {}),
@@ -522,6 +523,12 @@ def portable_command(args,c):
         if args.expected_input_binding:message['expectedInputBinding']=json.loads(Path(args.expected_input_binding).read_text())
         result=app.call(message)
         return {**result,'saved':result.get('published') is True} if args.command=='command' else result
+    if args.command == 'receipt' and not ident:
+        return app.call({'method': 'receipt', 'transactionId': args.transaction_id})
+    if args.command == 'schema' and args.action in ('chat_catalog','chat_catalog_initialize','chat_catalog_edit'):
+        require(not (args.package_id or args.node or args.source_package_id or args.source_folder or args.source_key
+                     or args.core_command or args.model_profile or args.role or args.entity_kind), 'CHAT_CATALOG_SCHEMA_SELECTORS')
+        return app.call({'method':'schema','op':args.action})
     require(ident or args.command=='schema' and args.action in ('create','folder_create','folder_move','migrate','read','search','history','capabilities','read_ref'),'PACKAGE_ID_REQUIRED')
     if args.command=='schema':
         require(args.action,'ACTION_REQUIRED');op=args.action
@@ -626,7 +633,7 @@ def core_request_data(graph,command,node_id):
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('command',choices=['doctor','catalog','capabilities','read_ref','lenses','lens','open','theory','schema','command','receipt','dependencies','locks','preflight','history','resolve','source_snapshot','migration_sources','migration_inspect','recover','cancel_migration','approval_request','approval_read','view_session','recommendation_catalog','search'])
+    p.add_argument('command',choices=['doctor','catalog','capabilities','read_ref','lenses','lens','open','theory','schema','command','receipt','dependencies','locks','preflight','history','resolve','source_snapshot','migration_sources','migration_inspect','recover','cancel_migration','approval_request','approval_read','view_session','recommendation_catalog','search','chat_catalog'])
     p.add_argument('--context',default=os.environ.get('RDG_AGENT_CONTEXT'))
     p.add_argument('--lens',action='append',help='Registered lens key; repeat for several lenses')
     p.add_argument('--offline-snapshot',action='store_true',
@@ -699,7 +706,7 @@ def main():
         return
     require(a.detail not in ('focus','branch') and not a.all_pages and a.format=='json' and a.command!='search','PORTABLE_CONTEXT_REQUIRED')
     require(not a.expected_input_binding,'PORTABLE_CONTEXT_REQUIRED')
-    require(a.command not in ('preflight','history','locks','resolve','source_snapshot','migration_sources','migration_inspect','recover','cancel_migration','approval_request','approval_read','theory','capabilities','read_ref'),'PORTABLE_CONTEXT_REQUIRED')
+    require(a.command not in ('preflight','history','locks','resolve','source_snapshot','migration_sources','migration_inspect','recover','cancel_migration','approval_request','approval_read','theory','capabilities','read_ref','chat_catalog'),'PORTABLE_CONTEXT_REQUIRED')
     require(a.role is None and a.entity_kind is None,'PORTABLE_CONTEXT_REQUIRED')
     if a.command in ('lens','lenses'):
         require(a.offline_snapshot,'LENS_SERVER_CONTEXT_REQUIRED: use --context FILE or RDG_AGENT_CONTEXT; '

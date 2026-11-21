@@ -11,6 +11,7 @@ def capabilities(app, ident=None):
     app.authority._actor(app.authority._read(), app.token)
     owner = app.snapshot(ident, layouts=False) if ident else None
     features = {
+        'chatCommandCatalog': {'available': True, 'version': 1},
         'ownedRefRead': {'available': True, 'version': 1},
         'receiptEnvelope': {'available': True, 'version': 1},
         'preflightPreview': {'available': True, 'version': 1},

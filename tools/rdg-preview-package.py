@@ -9,7 +9,7 @@ import zipfile
 
 ROOT=Path(__file__).resolve().parents[1]
 PYTHON_FILES=('rdg-preview','rdg-windows-lock','rdg-authority','rdg-transaction-io','rdg-portable',
-    'rdg-portable-model','rdg-portable-store','rdg-portable-service','rdg-api-ergonomics','rdg-projection-cache','rdg-compact-read','rdg-scoped-read','rdg-structured-markdown','rdg-text-search','rdg-batch','rdg-model-profiles','rdg-core-model',
+    'rdg-portable-model','rdg-portable-store','rdg-portable-service','rdg-chat-catalog','rdg-api-ergonomics','rdg-projection-cache','rdg-compact-read','rdg-scoped-read','rdg-structured-markdown','rdg-text-search','rdg-batch','rdg-model-profiles','rdg-core-model',
     'rdg-decision-model','rdg-history-view','rdg-analysis','rdg-findings','rdg-questions','rdg-theory','rdg-theory-sources','rdg-dependency-policies','rdg-recommendations','rdg-package-transfer','rdg-legacy-migration',
     'rdg-workflow-commands','rdg-loopback-helper')
 ENTRY='RDG-Decision-Preview'
@@ -61,6 +61,7 @@ def build(output):
     files += [Path('tools')/(name+'.py') for name in PYTHON_FILES]
     files += [Path('tools')/name for name in ('rd-graph-viewer.user.js','rdg-layout-cli.cjs','rdg-layout-core.js','rdg-visual-projection.js')]
     files += sorted(p.relative_to(ROOT) for p in (ROOT/'tools/rdg-agent-lenses').glob('*.json'))
+    files += [Path('kit/helper-commands/catalog-v2.json')]
     files += sorted(p.relative_to(ROOT) for p in (ROOT/'tools/contracts').glob('*.json'))
     payload={}
     for relative in files:
