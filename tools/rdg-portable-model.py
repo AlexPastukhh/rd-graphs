@@ -16,6 +16,8 @@ from collections import deque
 
 FORMAT_VERSION = 1
 ROLES = frozenset(('working', 'ready', 'copy', 'lens'))
+LENS_FORMATS = ('structured', 'textual')
+DEFAULT_LENS_FORMAT = 'structured'
 CURRENT_GRAPH_FIELDS = frozenset(('schemaVersion', 'actionModel', 'coreModel', 'id', 'title',
     'identitySpace', 'revision', 'rootRequirementId', 'planningScale', 'nodes', 'objects', 'edges',
     'events', 'collections', 'workGraphs', 'workGraphLinks', 'exclusionGroups', 'lensRecommendations',
