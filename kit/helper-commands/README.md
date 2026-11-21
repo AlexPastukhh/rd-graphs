@@ -27,7 +27,9 @@ The **Начало работы** group contains **rdg.command.bootstrap**, a co
 
 **A bootstrap insertion is not a user authorization to create a Graph, Action or process.** Explicit user instructions to work inside RDG may authorize ordinary task steps under the current Agent/Gateway contracts; protected operations remain subject to their own authority. The command does not copy methodology into the UI and should report unavailable Agent access rather than fabricate lens content.
 
-The **Линзы** group retains all 21 direct launchers. New groups and additional workflow/instruction commands can be authored later without changing OBS rendering. Prompt Modules are not part of this RDG command catalog.
+The **Структурированные линзы** group contains all 21 existing direct launchers. **Плейн-текст** contains standalone instructions for carrying out a whole task and shaping a textual lens. The Helper inserts each instruction in full. **Начало работы** contains Bootstrap.
+
+Set each command's `groupId` explicitly in `commands.json`. A lens's runtime format marker and a Helper command's group are edited independently; changing one does not change the other. Prompt Modules belong to the separate OBS prompt library.
 
 ## Browser consumer and release sequence
 
