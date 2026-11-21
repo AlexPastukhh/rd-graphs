@@ -15,6 +15,14 @@ MD=SourceFileLoader('structured_lens_markdown',str(ROOT/'tools/rdg-structured-ma
 C=SourceFileLoader('structured_lens_compiler',str(ROOT/'tools/rdg-lens-content.py')).load_module()
 
 class Sources(unittest.TestCase):
+    def test_repository_bundle_cannot_write_to_a_server(self):
+        class Remote:
+            config={'profile':'gateway'}
+            def call(self,message):
+                raise AssertionError('No network request expected for a retired publishing path')
+        with self.assertRaisesRegex(ValueError,'LENS_SNAPSHOT_PUBLISH_RETIRED'):
+            P.run(Remote(),Path('/unused.json'),apply=True,keys=['lens-system'])
+
     def test_source_commit_is_claimed_only_for_the_exact_source_bytes(self):
         from unittest.mock import patch
         path=ROOT/'docs/lenses/methods/research.md';raw=path.read_bytes();commit='a'*40

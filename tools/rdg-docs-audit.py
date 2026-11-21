@@ -94,6 +94,11 @@ def validate():
     policy=json_read(P)
     check(policy.get('schemaVersion')==1,'DOC_POLICY_SCHEMA_INVALID')
     normative=set(policy['normative'])
+    frozen_lenses=set(policy['frozenLensSources'])
+    check(len(frozen_lenses)==len(policy['frozenLensSources']) and not normative & frozen_lenses,
+          'FROZEN_LENS_SOURCE_CLASSIFICATION')
+    for file in frozen_lenses:
+        check(file.startswith('docs/lenses/') and (ROOT/file).is_file(),'FROZEN_LENS_SOURCE_MISSING: '+file)
     anchors_cache={}
     try:ci_files=ci_python_files(ROOT)
     except (ValueError,SyntaxError) as exc:problems.append(str(exc));ci_files=set()
@@ -124,7 +129,7 @@ def validate():
         if not path.is_file():continue
         rel=path.relative_to(ROOT).as_posix();text=read(path)
         statistics['markdownFiles']+=1
-        immutable=((rel.startswith('docs/handoffs/') and rel!='docs/handoffs/README.md') or
+        immutable=((rel.startswith('docs/handoffs/') and rel!='docs/handoffs/README.md') or rel in frozen_lenses or
                    rel=='docs/examples/requirements-decisions-graph-examples-v0.2.source.md')
         if immutable:
             statistics['immutableSnapshots']+=1

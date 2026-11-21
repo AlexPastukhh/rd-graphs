@@ -410,7 +410,8 @@ def lens_catalog():
                      'fileSHA256':sha(path.read_bytes())})
     return {'lenses':rows,'instructionCoverage':c['instructionCoverage'],
             'limitations':c['limitations'],'rules':c.get('rules',[]),
-            'graphWrites':0,'planWrites':0,'requiresOwnerContext':False}
+            'graphWrites':0,'planWrites':0,'requiresOwnerContext':False,
+            'source':'repository-snapshot','current':False}
 
 
 def lens_definition(key,profile=None):
@@ -434,7 +435,8 @@ def inspect_lens(key,profile=None):
                        text=True,capture_output=True,timeout=30)
     require(run.returncode==0,'LENS_FAILED: '+run.stderr[-700:])
     return {'key':key,'title':entry['title'],'graph':definition,
-            'validated':True,'bound':False,'graphWrites':0,'planWrites':0}
+            'validated':True,'bound':False,'graphWrites':0,'planWrites':0,
+            'source':'repository-snapshot','current':False}
 
 def portable_application(c):
     if c.get('profile') in ('remote','gateway'):
@@ -627,6 +629,8 @@ def main():
     p.add_argument('command',choices=['doctor','catalog','capabilities','read_ref','lenses','lens','open','theory','schema','command','receipt','dependencies','locks','preflight','history','resolve','source_snapshot','migration_sources','migration_inspect','recover','cancel_migration','approval_request','approval_read','view_session','recommendation_catalog','search'])
     p.add_argument('--context',default=os.environ.get('RDG_AGENT_CONTEXT'))
     p.add_argument('--lens',action='append',help='Registered lens key; repeat for several lenses')
+    p.add_argument('--offline-snapshot',action='store_true',
+                   help='Explicitly read archived repository lens fixtures without using a server context')
     p.add_argument('--node')
     p.add_argument('--theory-id')
     p.add_argument('--collection',choices=['overview','canons','recommendations'],default='overview')
@@ -681,7 +685,8 @@ def main():
             'MARKDOWN_OPTIONS_ONLY')
     require(a.record_id is None or a.command=='open','READ_RECORD_ID_ONLY')
     require(a.event_id is None or a.command=='history','READ_EVENT_ID_ONLY')
-    selected=config(a.context) if a.context else None
+    require(not a.offline_snapshot or a.command in ('lens','lenses'),'OFFLINE_SNAPSHOT_LENS_COMMAND_ONLY')
+    selected=config(a.context) if a.context and not a.offline_snapshot else None
     if selected and selected.get('profile') in ('portable','remote','gateway'):
         out=portable_command(a,selected)
         if a.format=='markdown':
@@ -696,6 +701,9 @@ def main():
     require(not a.expected_input_binding,'PORTABLE_CONTEXT_REQUIRED')
     require(a.command not in ('preflight','history','locks','resolve','source_snapshot','migration_sources','migration_inspect','recover','cancel_migration','approval_request','approval_read','theory','capabilities','read_ref'),'PORTABLE_CONTEXT_REQUIRED')
     require(a.role is None and a.entity_kind is None,'PORTABLE_CONTEXT_REQUIRED')
+    if a.command in ('lens','lenses'):
+        require(a.offline_snapshot,'LENS_SERVER_CONTEXT_REQUIRED: use --context FILE or RDG_AGENT_CONTEXT; '
+                                    '--offline-snapshot reads archived fixtures')
     if a.command=='lenses':out=lens_catalog()
     elif a.command=='lens':
         require(a.lens is not None and len(a.lens)==1,'ONE_LENS_REQUIRED')

@@ -104,6 +104,7 @@ noDeploymentPaths:
   - tools/rdg-agent-lenses/**
   - tools/rdg-current-example.py
   - tools/rdg-decision-ui.js
+  - tools/rdg-docs-audit.py
   - tools/rdg-lens-content-plan.json
   - tools/rdg-lens-content.py
   - tools/rdg-lens-publish.py

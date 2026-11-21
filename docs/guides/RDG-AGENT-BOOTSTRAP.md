@@ -62,6 +62,8 @@ python3 -B tools/rdg-agent.py history --context /workspace/repo/Workfiles/rdg-ga
 
 **Исторический срез 2026-10-22:** десять графов линз и прежняя редакция модели описаны в [handoff](../handoffs/rdg-action-canon-model-20261022/PROPOSAL.md). Этот счёт и формулировки относятся к тому снимку. Сейчас используйте [реестр смысловых источников](../lenses/README.md), профиль `coreModel` из реального `open` и [технический контракт](RDG-DECISION-V1-CONTRACT.md). Старые Graph не мигрируются автоматически; смешивание форматов и произвольные kinds запрещены.
 
+Линзы для работы открываются из каталога RDG через `lenses` и `lens` с `--context` или `RDG_AGENT_CONTEXT`. Без подключения можно явно выбрать `--offline-snapshot`. Это архивная редакция из репозитория с признаком `current:false`. [Порядок изменения живой линзы](RDG-OPERATIONS.md#публикация-структурированных-линз).
+
 ### Адресное чтение фокуса и ветви
 
 Для установленного B03A сначала проверить schema --action read: detail должен содержать focus/branch, а scoped — состав секций и supported root kinds. Обычный open --node остаётся карточкой item. Focus читает существующее ближайшее окружение RDG; branch от R/Decision — всё структурное продолжение, включая невыбранные варианты. Прямые родители — краткие ссылки, общие узлы/циклы не раскрываются повторно. Данные приходят как JSON с полными каноническими bodies и qualified refs; Markdown в описаниях остаётся текстом.
@@ -216,6 +218,6 @@ dependencies без --refresh читает явно выбранный engine pr
 
 ## Decision runtime и открытый Viewer — 2026-10-28
 
-Для `profile=portable` используйте текущие catalog/read/schema и capabilities. `lens --lens KEY --model-profile rdg-decision-v1` выбирает профильную definition: 11 существующих ключей имеют варианты core/decision, четыре дополнительных объясняющих графа доступны только в `rdg-decision-v1`. Это чтение source definition, не создание или подключение live package. `recommendation_catalog` принимает из stdin объект query/offset/limit/packageId/revision; mutation по-прежнему через schema → preflight → command с exact input binding и receipt/readback.
+Для `profile=portable` используйте текущие catalog/read/schema и capabilities. `lens --offline-snapshot --lens KEY --model-profile rdg-decision-v1` выбирает профильную definition: 11 существующих ключей имеют варианты core/decision, четыре дополнительных объясняющих графа доступны только в `rdg-decision-v1`. Это чтение source definition, не создание или подключение live package. `recommendation_catalog` принимает из stdin объект query/offset/limit/packageId/revision; mutation по-прежнему через schema → preflight → command с exact input binding и receipt/readback.
 
 Чтобы настроить уже открытый Viewer, context может явно содержать `helperUrlFile`: абсолютный приватный файл с текущим loopback session URL. `rdg-agent.py view_session --context FILE` принимает из stdin сообщение `{method:"view_session",...}` для той же Application. Actor должен совпасть; Agent не ищет сессии и не печатает capability URL. Read без sessionId перечисляет доступные сессии; update требует sessionId/expectedRevision/value. При CAS-конфликте перечитайте сессию и сохраните независимые drafts. Камеры/вкладки — session state, Graph/Plan/registry/layout сохраняются штатным FileStore. Полная форма и ограничения находятся в [Decision v1](RDG-DECISION-V1-CONTRACT.md).
