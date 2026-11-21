@@ -60,7 +60,7 @@
 
 ## Базовая линза модели
 
-[Полный смысловой источник model](../lenses/bootstrap/model.md).
+Текущую линзу model открывают из каталога RDG. Доступен [снимок импорта model](../lenses/bootstrap/model.md).
 
 ### Полное целевое содержание model
 
@@ -68,7 +68,7 @@
 
 ### Теоретический текст и его представление линзой
 
-[Полный источник и карта соответствия](../lenses/bootstrap/lens-system.md#сохранить-полный-источник-и-карту-соответствия). Формат JSON/source-map и проверка — в существующем [компиляторе](../../tools/rdg-lens-content.py) и [приёмке](../../tests/rdg-structured-lenses.test.py).
+Теория и пояснения принадлежат элементам текущего Graph линзы. [Описание исходника и карты соответствия](../lenses/bootstrap/lens-system.md#сохранить-полный-источник-и-карту-соответствия) относится к первоначальному переносу. Проверки [компилятора](../../tools/rdg-lens-content.py) и [приёмки](../../tests/rdg-structured-lenses.test.py) поддерживают совместимость снимка.
 
 ### Фундаментальные линзы как образцы и полный учебный процесс
 
@@ -76,7 +76,7 @@
 
 ## DRY, KISS и YAGNI — покрытие и целевое разбиение
 
-Полные источники: [DRY](../lenses/methods/dry.md), [KISS](../lenses/methods/kiss.md), [YAGNI](../lenses/methods/yagni.md). Их назначение и различия определены там.
+Текущие определения dry, kiss и yagni содержатся в RDG. Доступны снимки импорта [DRY](../lenses/methods/dry.md), [KISS](../lenses/methods/kiss.md) и [YAGNI](../lenses/methods/yagni.md).
 
 ## Supplied lens management — исходная реализация (2026-11-03)
 
